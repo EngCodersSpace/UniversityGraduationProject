@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
 
 void main() {
@@ -11,24 +12,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      GetPlatform.isIOS
-      //IOS UI
-          ? GetCupertinoApp(
-        title: "StudentServices",
-        initialRoute: "/login",
-        getPages: AppRoutes.routes,
-      )
-      // Android and web UI
-      : GetMaterialApp(
-      title: "StudentServices",
-      initialRoute: "/login",
-      getPages: AppRoutes.routes,
-    );
+    return GetPlatform.isIOS
+        //IOS UI
+        ? GetCupertinoApp(
+            title: "StudentServices",
+            initialRoute: "/login",
+            translations: Languages(),
+            locale: Get.deviceLocale,
+            fallbackLocale: const Locale('en'),
+            getPages: AppRoutes.routes,
+            debugShowCheckedModeBanner: false,
+          )
+        // Android and web UI
+        : GetMaterialApp(
+            title: "StudentServices",
+            initialRoute: "/login",
+            translations: Languages(),
+            locale: Get.deviceLocale,
+            fallbackLocale: const Locale('en'),
+            getPages: AppRoutes.routes,
+            debugShowCheckedModeBanner: false,
+          );
   }
 }
-
-
-
-
-
