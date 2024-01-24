@@ -12,9 +12,9 @@ class LoginPage extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth <= 767 && constraints.maxHeight <= 1024) {
-            return const PhoneLoginView();
+            return  PhoneLoginView(height: constraints.maxHeight,width: constraints.maxWidth,);
           } else {
-            return const WebLoginView();
+            return  WebLoginView(height: constraints.maxHeight,width: constraints.maxWidth,);
           }
         },
       ),
