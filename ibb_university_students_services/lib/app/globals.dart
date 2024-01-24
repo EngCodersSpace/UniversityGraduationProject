@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static ButtonColors buttonColors = ButtonColors();
+  static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("FF0D3976",radix: 16)));
   static Color mainTextColor = Colors.white;
   static Color secTextColor = Colors.black;
-  static Color color0 = Color(int.parse("FFFFFF",radix: 16));
-  static Color color1 = Color(int.parse("0D3976",radix: 16));
-  static Color color2 = Color(int.parse("EDF1FD",radix: 16));
+  static Color backColor = Color(int.parse("FFFFFFFF",radix: 16));
+  static Color iconColor = Color(int.parse("FF0D3976",radix: 16));
+  static Color color2 = Color(int.parse("FFEDF1FD",radix: 16));
 
 }
 
