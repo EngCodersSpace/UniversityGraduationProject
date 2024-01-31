@@ -10,11 +10,14 @@ class BasicButton extends StatelessWidget {
     this.size ,
     this.text = "",
     this.textColor,
+    this.icon,
+    this.iconColor,
     this.pressedColor,
     this.disableColor,
     this.borderRadius = 10,
   }) {
     textColor = AppColors.mainTextColor;
+    iconColor = (iconColor!=null)?iconColor:textColor;
     color = AppColors.buttonColors.color;
     pressedColor = AppColors.buttonColors.pressedColor;
     disableColor = AppColors.buttonColors.disableColor;
@@ -24,6 +27,8 @@ class BasicButton extends StatelessWidget {
   Size? size;
   String text;
   Color? textColor;
+  Widget? icon;
+  Color? iconColor;
   Color? color;
   Color? pressedColor;
   Color? disableColor;
@@ -37,7 +42,6 @@ class BasicButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPress,
         style: ButtonStyle(
-
             backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
               if (states.contains(MaterialState.pressed)) {
                 return pressedColor!;
@@ -49,7 +53,13 @@ class BasicButton extends StatelessWidget {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(borderRadius)))),
-        child: Text(text, style: TextStyle(color: textColor)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(text, style: TextStyle(color: textColor)),
+            if(icon != null)...[const SizedBox(width: 5,),icon!,],
+          ],
+        ),
       ),
     );
 
