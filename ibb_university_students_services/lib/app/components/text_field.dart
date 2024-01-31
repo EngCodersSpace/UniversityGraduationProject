@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
     super.key,
     this.isPassword = false,
     this.controller,
+    this.validator,
     this.icon,
     this.labelText,
     this.width,
@@ -19,16 +20,19 @@ class CustomTextFormField extends StatelessWidget {
   IconData? icon;
   String? labelText;
   double? width;
+  String? Function(String?)? validator;
+
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: 50,
       child: (isPassword)?Obx(()=>TextFormField(
         controller: controller,
         obscureText:  hide.value,
+        validator: validator,
         decoration: InputDecoration(
+            isDense: true,
             border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30))),
             icon: Icon(
@@ -51,7 +55,9 @@ class CustomTextFormField extends StatelessWidget {
       )):
       TextFormField(
         controller: controller,
+        validator: validator,
         decoration: InputDecoration(
+            isDense: true,
             border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30))),
             icon: Icon(
