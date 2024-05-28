@@ -3,31 +3,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  TextEditingController ID = TextEditingController();
+  TextEditingController id = TextEditingController();
   TextEditingController password = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FocusNode idFocus = FocusNode();
+  FocusNode passwordFocus = FocusNode();
   String logWith = "ID";
   RxBool logging = false.obs;
+  RxDouble heightScale = 0.6.obs;
+
 
   @override
   void onClose() {
-    ID.dispose();
+    id.dispose();
     password.dispose();
+    idFocus.dispose();
+    passwordFocus.dispose();
   }
 
-  String? validateID(String? ID) {
-    bool valide = false;
-    if (ID == "" || ID == null) {
+  String? validateID(String? id) {
+    bool valid = false;
+    if (id == "" || id == null) {
       return "required ID";
-    } else if (GetUtils.isNumericOnly(ID)) {
+    } else if (GetUtils.isNumericOnly(id)) {
       logWith = "ID";
-      valide = true;
+      valid = true;
     }
-    else if (GetUtils.isEmail(ID)) {
+    else if (GetUtils.isEmail(id)) {
       logWith = "Email";
-      valide = true;
+      valid = true;
     }
-    return (valide)?null:"Invalid ID";
+    return (valid)?null:"Invalid ID";
   }
 
   String? validatePassword(String? password) {
@@ -44,15 +50,13 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 3));
-      if (ID.text == "2070093" && password.text == "123456789") {
-        if (Get.locale.toString() == "en_US") {
-          Get.updateLocale(const Locale('ar'));
-        } else {
-          Get.updateLocale(const Locale('en_US'));
-        }
+      if (id.text == "2070093" && password.text == "123456789") {
+        Get.offNamed("/main");
       }
       logging.value = false;
     }
-
+  }
+  void changeLang(String lang){
+    Get.updateLocale(Locale(lang));
   }
 }

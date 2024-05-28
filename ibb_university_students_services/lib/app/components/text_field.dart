@@ -7,11 +7,17 @@ class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     super.key,
     this.isPassword = false,
+    this.readOnly = false,
     this.controller,
     this.validator,
     this.icon,
     this.labelText,
     this.width,
+    this.onTap,
+    this.onTapOutside,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.onSaved,
   });
 
   bool isPassword;
@@ -21,6 +27,12 @@ class CustomTextFormField extends StatelessWidget {
   String? labelText;
   double? width;
   String? Function(String?)? validator;
+  void Function()? onTap;
+  void Function(PointerDownEvent)? onTapOutside;
+  FocusNode? focusNode ;
+  void Function(String?)? onSaved;
+  void Function(String?)? onFieldSubmitted;
+  bool readOnly;
 
 
   @override
@@ -29,6 +41,12 @@ class CustomTextFormField extends StatelessWidget {
       width: width,
       child: (isPassword)?Obx(()=>TextFormField(
         controller: controller,
+        focusNode: focusNode,
+        onSaved: onSaved,
+        onFieldSubmitted: onFieldSubmitted,
+        readOnly: readOnly,
+        onTap: onTap,
+        onTapOutside: onTapOutside,
         obscureText:  hide.value,
         validator: validator,
         decoration: InputDecoration(
@@ -55,6 +73,12 @@ class CustomTextFormField extends StatelessWidget {
       )):
       TextFormField(
         controller: controller,
+        focusNode: focusNode,
+        onSaved: onSaved,
+        onFieldSubmitted: onFieldSubmitted,
+        readOnly: readOnly,
+        onTap: onTap,
+        onTapOutside: onTapOutside,
         validator: validator,
         decoration: InputDecoration(
             isDense: true,
