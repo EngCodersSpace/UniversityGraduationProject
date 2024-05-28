@@ -10,6 +10,7 @@ class AppColors {
 
 }
 
+// structure for Buttons Coloring
 class ButtonColors {
   ButtonColors({
     this.color = Colors.blueAccent,
