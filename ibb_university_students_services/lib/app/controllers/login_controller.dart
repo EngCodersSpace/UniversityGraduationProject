@@ -50,7 +50,7 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 3));
-      if (id.text == "2070093" && password.text == "123456789") {
+      if (id.text == "1" && password.text == "12345678") {
         Get.offNamed("/main");
       }
       logging.value = false;
