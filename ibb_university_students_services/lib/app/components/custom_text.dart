@@ -37,7 +37,7 @@ class SecText extends MainText {
     double? fontSize,
     FontWeight? fontWeight,
   }) : super(text,
-            textColor: AppColors.secTextColor,
+            textColor: textColor??AppColors.secTextColor,
             fontSize: fontSize??16,
             fontWeight: fontWeight??FontWeight.normal);
 }
