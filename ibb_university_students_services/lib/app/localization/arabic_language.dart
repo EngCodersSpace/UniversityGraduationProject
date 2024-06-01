@@ -5,5 +5,6 @@ class Arabic {
     'password': 'كلمة المرور',
     'login': 'تسجيل الدخول',
     'logging': 'جاري تسجيل الدخول',
+    'forgotPassword?':'نسيت كلمة المرور؟',
   };
 }

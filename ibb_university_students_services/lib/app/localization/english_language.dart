@@ -5,5 +5,6 @@ class Engilsh {
     'password': 'Password',
     'login': 'Login',
     'logging': 'logging',
+    'forgotPassword?':'Forgot Password?',
   };
 }

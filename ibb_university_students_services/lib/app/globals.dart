@@ -4,8 +4,11 @@ class AppColors {
   static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("FF0D3976",radix: 16)));
   static Color mainTextColor = Colors.white;
   static Color secTextColor = Colors.black;
+  static Color linkTextColor = Colors.blueAccent;
   static Color backColor = Color(int.parse("FFFFFFFF",radix: 16));
+  static Color tabBackColor = Color(int.parse("EFFFFFFF",radix: 16));
   static Color iconColor = Color(int.parse("FF0D3976",radix: 16));
+  static Color inverseIconColor = Colors.white;
   static Color color2 = Color(int.parse("FFEDF1FD",radix: 16));
 
 }
