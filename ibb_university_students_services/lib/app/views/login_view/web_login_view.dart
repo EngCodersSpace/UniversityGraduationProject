@@ -18,7 +18,6 @@ class WebLoginView extends StatelessWidget {
 
   double? height;
   double? width;
-
   LoginController controller = Get.find();
 
   List<PopupMenuItem<String>> menuItems = [
@@ -141,6 +140,13 @@ class WebLoginView extends StatelessWidget {
                           onFieldSubmitted: (e) {
                             controller.onLogin();
                           }),
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton(
+                          onPressed: ()=>controller.forgotPassword,
+                          child: SecText("forgotPassword?".tr,textColor: AppColors.linkTextColor,),
+                        ),
+                      ),
                       SizedBox(
                         height: height! * 0.6 * 0.1,
                       ),

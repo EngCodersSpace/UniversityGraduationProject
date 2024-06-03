@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -19,6 +21,18 @@ class LoginController extends GetxController {
     password.dispose();
     idFocus.dispose();
     passwordFocus.dispose();
+  }
+  @override
+  void onInit() {
+    id.text = "1";
+    password.text = "12345678";
+
+    super.onInit();
+  }
+  @override
+  void onReady() {
+    onLogin();
+    super.onReady();
   }
 
   String? validateID(String? id) {
@@ -46,10 +60,15 @@ class LoginController extends GetxController {
     }
   }
 
+  void forgotPassword(){
+    Get.toNamed("/forgotPassword");
+  }
+
   Future<void> onLogin() async {
     if (formKey.currentState!.validate()) {
       logging.value = true;
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 1));
+      AppData.user = UserModel.fetchUser();
       if (id.text == "1" && password.text == "12345678") {
         Get.offNamed("/main");
       }

@@ -3,26 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
-
 import '../../components/custom_text.dart';
 import '../../globals.dart';
 
-class PhoneMainView extends StatelessWidget {
+class PhoneMainView extends GetView<MainController> {
+
   PhoneMainView({
     super.key,
-    this.height,
-    this.width,
+    required this.height,
+    required this.width,
   });
-
-  double? height;
-  double? width;
-  double? fontScale;
-
-  MainController controller = Get.find();
+  double height;
+  double width;
 
   @override
   Widget build(BuildContext context) {
-    controller.setHeightWidth(height!, width!);
+    controller.setHeightWidth(height, width);
     return Obx(
       () => Scaffold(
         body: controller.screens?[controller.selectedIndex.value],
@@ -34,15 +30,15 @@ class PhoneMainView extends StatelessWidget {
             mainAxisAlignment:MainAxisAlignment.center ,
             children: [
               Icon(
-                Icons.home,
-                color: AppColors.inverseIconColor,
+                Icons.home_outlined,
+                color: AppColors.mainIconColor,
                 size: 30,
               ),
               SecText(
                 "Home",
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                textColor:AppColors.inverseIconColor,
+                textColor:AppColors.mainTextColor,
               )
 
             ],
@@ -51,10 +47,12 @@ class PhoneMainView extends StatelessWidget {
         backgroundColor: AppColors.tabBackColor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
-          color: AppColors.backColor,
+          surfaceTintColor: AppColors.tabBackColor,
+          color: AppColors.tabBackColor,
+          shadowColor: Colors.black,
+          elevation: 32,
           height: 70,
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-          elevation: 0,
           notchMargin: 8,
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -64,7 +62,7 @@ class PhoneMainView extends StatelessWidget {
                 onPressed: () => controller.changeTabIndex(1),
                 icon: Column(
                   children: [
-                    const Icon(Icons.notifications),
+                    const Icon(Icons.notifications_none),
                     SecText(
                       "Notification",
                       fontSize: 10,
@@ -122,7 +120,7 @@ class PhoneMainView extends StatelessWidget {
                 onPressed: () => controller.changeTabIndex(4),
                 icon: Column(
                   children: [
-                    const Icon(Icons.person),
+                    const Icon(Icons.person_outline_sharp),
                     SecText(
                       "Profile",
                       fontSize: 10,
