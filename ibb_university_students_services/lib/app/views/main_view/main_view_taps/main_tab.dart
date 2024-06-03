@@ -26,11 +26,11 @@ class MainTab extends GetView<MainTabController> {
 
     height = parentController.height ?? 1;
     width = parentController.width ?? 10;
-    cardSize = width*0.3;
+    cardSize = width*0.38;
 
 
     return SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+        minimum: const EdgeInsets.only(left:20,right:20,top:70,),
         child: Obx(
           () => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,15 +193,15 @@ class MainTab extends GetView<MainTabController> {
                   ),
                 ),
               ),
-               SizedBox(
-                height: height*0.05,
+               const SizedBox(
+                height: 15,
               ),
               SecText(
                 "Services",
                 textColor: AppColors.inverseSecTextColor,
               ),
-               SizedBox(
-                height: height*0.05,
+               const SizedBox(
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -216,21 +216,6 @@ class MainTab extends GetView<MainTabController> {
                         SecText(
                           "Service",
                           textColor: AppColors.mainTextColor,
-                        )
-                      ],
-                    ),
-                  ),
-                  ServicesCard(
-                    color: AppColors.mainCardColor,
-                    size: cardSize,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.access_alarms,
-                            color: AppColors.inverseIconColor),
-                        SecText(
-                          "Service",
-                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
@@ -253,7 +238,7 @@ class MainTab extends GetView<MainTabController> {
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -275,30 +260,15 @@ class MainTab extends GetView<MainTabController> {
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.mainCardColor,
+                    color: AppColors.inverseCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.access_alarms,
-                            color: AppColors.inverseIconColor),
+                        Icon(Icons.add_chart,
+                            color: AppColors.mainIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.inverseIconColor,
-                        )
-                      ],
-                    ),
-                  ),
-                  ServicesCard(
-                    size: cardSize,
-                    color: AppColors.mainCardColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.access_alarms,
-                            color: AppColors.inverseIconColor),
-                        SecText(
-                          "Service",
-                          textColor: AppColors.inverseIconColor,
+                          textColor: AppColors.mainIconColor,
                         )
                       ],
                     ),
@@ -306,48 +276,33 @@ class MainTab extends GetView<MainTabController> {
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.mainCardColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.access_alarms,
-                            color: AppColors.inverseIconColor),
-                        SecText(
-                          "Service",
-                          textColor: AppColors.inverseIconColor,
-                        )
-                      ],
-                    ),
-                  ),
-                  ServicesCard(
-                    size: cardSize,
-                    color: AppColors.mainCardColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.access_alarms,
-                            color: AppColors.inverseIconColor),
-                        SecText(
-                          "Service",
-                          textColor: AppColors.inverseIconColor,
-                        )
-                      ],
-                    ),
-                  ),
-                  ServicesCard(
-                    size: cardSize,
-                    color: AppColors.mainCardColor,
+                    color: AppColors.inverseCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.add_chart,
+                            color: AppColors.mainIconColor),
+                        SecText(
+                          "Service",
+                          textColor: AppColors.mainIconColor,
+                        )
+                      ],
+                    ),
+                  ),
+                  ServicesCard(
+                    size: cardSize,
+                    color: AppColors.mainCardColor,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.access_alarms,
                             color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
@@ -356,6 +311,7 @@ class MainTab extends GetView<MainTabController> {
                       ],
                     ),
                   ),
+
                 ],
               ),
             ],
