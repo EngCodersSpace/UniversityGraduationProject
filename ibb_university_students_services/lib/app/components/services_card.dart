@@ -10,7 +10,7 @@ class ServicesCard extends StatelessWidget {
     this.color,
     this.child,
   }){
-   color??=AppColors.cardColor;
+   color??=AppColors.inverseCardColor;
   }
   Widget? child;
   double size;

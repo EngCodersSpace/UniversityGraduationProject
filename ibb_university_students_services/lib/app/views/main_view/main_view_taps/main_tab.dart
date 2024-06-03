@@ -45,7 +45,7 @@ class MainTab extends GetView<MainTabController> {
                         children: [
                           CircleAvatar(
                             radius: 41.5,
-                            backgroundColor: AppColors.iconColor,
+                            backgroundColor: AppColors.inverseIconColor,
                           ),
                           CircleAvatar(
                             backgroundColor:
@@ -71,7 +71,7 @@ class MainTab extends GetView<MainTabController> {
                         children: [
                           MainText(
                             controller.user.name?.value ?? "",
-                            textColor: AppColors.iconColor,
+                            textColor: AppColors.inverseIconColor,
                           ),
                           SecText(
                             "ID : ${controller.user.id}",
@@ -84,7 +84,7 @@ class MainTab extends GetView<MainTabController> {
                   IconButton(
                     onPressed: () {},
                     icon: const Icon(Icons.notifications),
-                    color: AppColors.iconColor,
+                    color: AppColors.inverseIconColor,
                   )
                 ],
               ),
@@ -113,14 +113,14 @@ class MainTab extends GetView<MainTabController> {
                             Row(
                               children: [
                                 Icon(Icons.contact_mail_sharp,
-                                    color: AppColors.iconColor),
+                                    color: AppColors.inverseIconColor),
                                 const SizedBox(
                                   width: 10,
                                 ),
                                 Flexible(
                                   child: MainText(
                                       controller.user.part?.value ?? "Unknown",
-                                      textColor: AppColors.inverseMainTextColor,
+                                      textColor: AppColors.inverseIconColor,
                                       fontSize: 14,
                                       height: 0),
                                 )
@@ -132,7 +132,7 @@ class MainTab extends GetView<MainTabController> {
                       Container(
                         height: height * 0.06,
                         width: 1,
-                        color: AppColors.cardColor,
+                        color: AppColors.inverseIconColor,
                       ),
                       SizedBox(
                         width: (width - 2) * 0.04,
@@ -147,13 +147,13 @@ class MainTab extends GetView<MainTabController> {
                                 textColor: AppColors.inverseSecTextColor),
                             Row(
                               children: [
-                                Icon(Icons.school, color: AppColors.iconColor),
+                                Icon(Icons.school, color: AppColors.inverseIconColor),
                                 const SizedBox(
                                   width: 10,
                                 ),
                                 MainText(
                                     controller.user.level?.value ?? "Unknown",
-                                    textColor: AppColors.inverseMainTextColor),
+                                    textColor: AppColors.inverseIconColor),
                               ],
                             ),
                           ],
@@ -162,7 +162,7 @@ class MainTab extends GetView<MainTabController> {
                       Container(
                         height: height * 0.06,
                         width: 1,
-                        color: AppColors.cardColor,
+                        color: AppColors.inverseIconColor,
                       ),
                       SizedBox(
                         width: (width - 2) * 0.03,
@@ -177,13 +177,13 @@ class MainTab extends GetView<MainTabController> {
                                 textColor: AppColors.inverseSecTextColor),
                             Row(
                               children: [
-                                Icon(Icons.school, color: AppColors.iconColor),
+                                Icon(Icons.school, color: AppColors.inverseIconColor),
                                 const SizedBox(
                                   width: 10,
                                 ),
                                 MainText(
                                     controller.user.level?.value ?? "Unknown",
-                                    textColor: AppColors.inverseMainTextColor),
+                                    textColor: AppColors.inverseIconColor),
                               ],
                             ),
                           ],
@@ -221,31 +221,31 @@ class MainTab extends GetView<MainTabController> {
                     ),
                   ),
                   ServicesCard(
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     size: cardSize,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.ac_unit,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
@@ -260,45 +260,45 @@ class MainTab extends GetView<MainTabController> {
                 children: [
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
@@ -313,45 +313,45 @@ class MainTab extends GetView<MainTabController> {
                 children: [
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.access_alarms,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
                   ),
                   ServicesCard(
                     size: cardSize,
-                    color: AppColors.inverseCardColor,
+                    color: AppColors.mainCardColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.add_chart,
-                            color: AppColors.iconColor),
+                            color: AppColors.inverseIconColor),
                         SecText(
                           "Service",
-                          textColor: AppColors.iconColor,
+                          textColor: AppColors.inverseIconColor,
                         )
                       ],
                     ),
