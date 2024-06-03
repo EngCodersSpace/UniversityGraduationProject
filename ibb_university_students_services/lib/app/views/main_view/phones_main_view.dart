@@ -23,7 +23,7 @@ class PhoneMainView extends GetView<MainController> {
       () => Scaffold(
         body: controller.screens?[controller.selectedIndex.value],
         floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.iconColor,
+          backgroundColor: AppColors.inverseIconColor,
           shape: const CircleBorder(),
           onPressed: () => controller.changeTabIndex(0),
           child: Column(
@@ -47,8 +47,8 @@ class PhoneMainView extends GetView<MainController> {
         backgroundColor: AppColors.tabBackColor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
-          surfaceTintColor: AppColors.tabBackColor,
-          color: AppColors.tabBackColor,
+          surfaceTintColor: AppColors.backColor,
+          color: AppColors.backColor,
           shadowColor: Colors.black,
           elevation: 32,
           height: 70,
@@ -68,13 +68,13 @@ class PhoneMainView extends GetView<MainController> {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 1)
-                          ? AppColors.iconColor
+                          ? AppColors.inverseIconColor
                           : Color(int.parse("BF000000", radix: 16)),
                     )
                   ],
                 ),
                 color: (controller.selectedIndex.value == 1)
-                    ? AppColors.iconColor
+                    ? AppColors.inverseIconColor
                     : Color(int.parse("BF000000", radix: 16)),
               ),
               IconButton(
@@ -87,13 +87,13 @@ class PhoneMainView extends GetView<MainController> {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 2)
-                          ? AppColors.iconColor
+                          ? AppColors.inverseIconColor
                           : Color(int.parse("BF000000", radix: 16)),
                     )
                   ],
                 ),
                 color: (controller.selectedIndex.value == 2)
-                    ? AppColors.iconColor
+                    ? AppColors.inverseIconColor
                     : Color(int.parse("BF000000", radix: 16)),
               ),
               const SizedBox(),
@@ -107,13 +107,13 @@ class PhoneMainView extends GetView<MainController> {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 3)
-                          ? AppColors.iconColor
+                          ? AppColors.inverseIconColor
                           : Color(int.parse("BF000000", radix: 16)),
                     )
                   ],
                 ),
                 color: (controller.selectedIndex.value == 3)
-                    ? AppColors.iconColor
+                    ? AppColors.inverseIconColor
                     : Color(int.parse("BF000000", radix: 16)),
               ),
               IconButton(
@@ -126,13 +126,13 @@ class PhoneMainView extends GetView<MainController> {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 4)
-                          ? AppColors.iconColor
+                          ? AppColors.inverseIconColor
                           : Color(int.parse("BF000000", radix: 16)),
                     )
                   ],
                 ),
                 color: (controller.selectedIndex.value == 4)
-                    ? AppColors.iconColor
+                    ? AppColors.inverseIconColor
                     : Color(int.parse("BF000000", radix: 16)),
               ),
             ],
