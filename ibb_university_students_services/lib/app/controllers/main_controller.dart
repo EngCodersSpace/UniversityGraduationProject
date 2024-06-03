@@ -9,7 +9,7 @@ class MainController extends GetxController {
   RxInt selectedIndex = 0.obs;
   double? height;
   double? width;
-  List? screens;
+  List<Widget>? screens;
 
   // Define a list of screens
   @override
@@ -53,7 +53,7 @@ class MainController extends GetxController {
 
   }
 
-  void setHeightWidth(double height,double width){
+  setHeightWidth(double height,double width){
     this.height = height;
     this.width = width;
   }
