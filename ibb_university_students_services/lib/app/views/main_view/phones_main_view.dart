@@ -3,47 +3,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
+
 import '../../components/custom_text.dart';
 import '../../globals.dart';
+import '../home_tab_view/mobile_home_tab.dart';
 
 class PhoneMainView extends GetView<MainController> {
-
   PhoneMainView({
     super.key,
-    required this.height,
-    required this.width,
   });
-  double height;
-  double width;
+
+  double height = Get.height;
+  double width = Get.width;
 
   @override
   Widget build(BuildContext context) {
-    controller.setHeightWidth(height, width);
     return Obx(
       () => Scaffold(
-        body: controller.screens?[controller.selectedIndex.value],
+        body: screens[controller.selectedIndex.value],
         floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.inverseIconColor,
-          shape: const CircleBorder(),
-          onPressed: () => controller.changeTabIndex(0),
-          child: Column(
-            mainAxisAlignment:MainAxisAlignment.center ,
-            children: [
-              Icon(
-                Icons.home_outlined,
-                color: AppColors.mainIconColor,
-                size: 30,
-              ),
-              SecText(
-                "Home",
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                textColor:AppColors.mainTextColor,
-              )
-
-            ],
-          )
-        ),
+            backgroundColor: AppColors.inverseIconColor,
+            shape: const CircleBorder(),
+            onPressed: () => controller.changeTabIndex(0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.home_outlined,
+                  color: AppColors.mainIconColor,
+                  size: height * 0.03,
+                ),
+                SecText(
+                  "Home",
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  textColor: AppColors.mainTextColor,
+                )
+              ],
+            )),
         backgroundColor: AppColors.tabBackColor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
@@ -51,8 +48,9 @@ class PhoneMainView extends GetView<MainController> {
           color: AppColors.backColor,
           shadowColor: Colors.black,
           elevation: 32,
-          height: 70,
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+          height: height * 0.08,
+          padding: EdgeInsets.symmetric(
+              vertical: height * 0.007, horizontal: width * 0.03),
           notchMargin: 8,
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -141,4 +139,33 @@ class PhoneMainView extends GetView<MainController> {
       ),
     );
   }
+
+  List screens = [
+    MobileMainTab(),
+    Center(
+      child: MainText(
+        "MainPage 1",
+        textColor: Colors.black,
+      ),
+    ),
+    Center(
+      child: MainText(
+        "MainPage 2",
+        textColor: Colors.black,
+      ),
+    ),
+    Center(
+      child: MainText(
+        "MainPage 3",
+        textColor: Colors.black,
+      ),
+    ),
+    Center(
+      child: MainText(
+        "MainPage 4",
+        textColor: Colors.black,
+      ),
+    ),
+    //Center(child: MainText("MainPage 5",textColor: Colors.black,),),
+  ];
 }

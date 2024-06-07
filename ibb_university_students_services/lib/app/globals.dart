@@ -18,9 +18,10 @@ class AppColors {
   static Color inverseSecTextColor = Color(int.parse("5F0D3976",radix: 16));
 
   static Color linkTextColor = Colors.blueAccent;
+  static Color coverColor =  Color.fromRGBO(0, 191, 255, 0.25);
 
   static Color backColor = Color(int.parse("FFFFFFFF",radix: 16));
-  static Color tabBackColor = Color(int.parse("EFF9FAFF",radix: 16));
+  static Color tabBackColor = Color.fromRGBO(235, 241, 253, 0.6);
 
   static Color mainIconColor = Color(int.parse("FFFFFFFF",radix: 16));
   static Color inverseIconColor = Color(int.parse("FF0D3976",radix: 16));

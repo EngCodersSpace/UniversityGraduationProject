@@ -4,18 +4,10 @@ import 'package:get/get.dart';
 import '../../components/custom_text.dart';
 import '../../controllers/main_controller.dart';
 
-class WebMainView extends StatelessWidget {
-   WebMainView({
+class WebMainView extends GetView<MainController> {
+   const WebMainView({
     super.key,
-    this.height,
-    this.width,
    });
-
-  double? height;
-  double? width;
-  double? fontScale;
-
-  MainController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
