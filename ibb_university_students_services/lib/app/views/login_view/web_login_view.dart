@@ -9,16 +9,13 @@ import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
 import '../../globals.dart';
 
-class WebLoginView extends StatelessWidget {
+class WebLoginView extends GetView<LoginController> {
   WebLoginView({
     super.key,
-    this.height,
-    this.width,
   });
 
-  double? height;
-  double? width;
-  LoginController controller = Get.find();
+  double height = Get.height;
+  double width = Get.width;
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: SecText("En")),
@@ -36,12 +33,12 @@ class WebLoginView extends StatelessWidget {
               Image.asset("assets/images/login_background_1.jpeg", fit: BoxFit.fill),
         ),
         Container(
-          color: const Color.fromRGBO(0, 191, 255, 0.25),
+            color: AppColors.coverColor
         ),
         Column(
           children: [
             SizedBox(
-              height: height! * 0.05,
+              height: height * 0.05,
             ),
             Image.asset("assets/images/ibb_university_logo.png",
                 fit: BoxFit.fitHeight),
@@ -63,19 +60,19 @@ class WebLoginView extends StatelessWidget {
                   MainText(
                     "IBB",
                     fontWeight: FontWeight.bold,
-                    fontSize: height! * 0.15 / 4,
+                    fontSize: height * 0.15 / 4,
                   ),
                   MainText(
                     "UNIVERSITY",
                     fontWeight: FontWeight.bold,
-                    fontSize: height! * 0.15 / 4,
+                    fontSize: height * 0.15 / 4,
                   ),
                 ],
               ),
             ),
 
             Container(
-                width: width! * 0.35,
+                width: width * 0.35,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.backColor,
@@ -90,11 +87,11 @@ class WebLoginView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: width! * 0.35 * 0.2,
+                            width: width * 0.35 * 0.2,
                           ),
                           MainText('login'.tr,
                               fontWeight: FontWeight.bold,
-                              fontSize: height! * 0.15 / 4,
+                              fontSize: height * 0.15 / 4,
                               textColor: Colors.black),
 
                           PopupMenuButton<String>(
@@ -120,7 +117,7 @@ class WebLoginView extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        height: height! * 0.6 * 0.1,
+                        height: height * 0.6 * 0.1,
                       ),
                       CustomTextFormField(
                           controller: controller.id,
@@ -129,7 +126,7 @@ class WebLoginView extends StatelessWidget {
                           icon: Icons.account_circle_outlined,
                           ),
                       SizedBox(
-                        height: height! * 0.6 * 0.05,
+                        height: height * 0.6 * 0.05,
                       ),
                       CustomTextFormField(
                           controller: controller.password,
@@ -148,7 +145,7 @@ class WebLoginView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: height! * 0.6 * 0.1,
+                        height: height * 0.6 * 0.1,
                       ),
                       Obx(() => (controller.logging.value)
                           ? BasicButton(
@@ -157,7 +154,7 @@ class WebLoginView extends StatelessWidget {
                               icon: CircularProgressIndicator(
                                 color: AppColors.backColor,
                               ),
-                              size: Size(width! * 0.8, 40),
+                              size: Size(width * 0.8, 40),
                             )
                           : BasicButton(
                               onPress: controller.onLogin,
@@ -171,7 +168,7 @@ class WebLoginView extends StatelessWidget {
                                       quarterTurns: 2,
                                       child: Icon(Icons.login,
                                           color: AppColors.mainTextColor)),
-                              size: Size(width! * 0.8, 40),
+                              size: Size(width * 0.8, 40),
                             ))
                     ],
                   ),

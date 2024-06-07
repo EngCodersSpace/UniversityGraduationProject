@@ -9,17 +9,15 @@ import 'package:ibb_university_students_services/app/globals.dart';
 
 import '../../controllers/login_controller.dart';
 
-class PhoneLoginView extends StatelessWidget {
-  PhoneLoginView({
+class PhoneLoginView extends GetView<LoginController> {
+   PhoneLoginView({
     super.key,
-    this.height,
-    this.width,
   });
-  double? height;
-  double? width;
+  double height = Get.height;
+  double width = Get.width;
   double? fontScale;
 
-  LoginController controller = Get.find();
+
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: SecText("En")),
     PopupMenuItem<String>(value: "ar", child: SecText("Ar")),
@@ -27,37 +25,37 @@ class PhoneLoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    fontScale = width! / 767;
+    fontScale = width / 767;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Column(
           children: [
             SizedBox(
-              height: (height! * 0.5),
+              height: (height * 0.5),
               width: width,
               child: Image.asset("assets/images/login_background_1.jpeg",
                   fit: BoxFit.fill),
             ),
             SizedBox(
-              height: (height! * 0.5),
+              height: (height * 0.5),
               width: width,
             ),
           ],
         ),
         Container(
-          color: const Color.fromRGBO(0, 191, 255, 0.25),
+          color: AppColors.coverColor
         ),
         SizedBox(
-          height: height!,
+          height: height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                height: height! * 0.02,
+                height: height * 0.02,
               ),
               SizedBox(
-                height: height! * 0.25,
+                height: height * 0.25,
                 child: Image.asset("assets/images/ibb_university_logo.png",
                     fit: BoxFit.fill),
               ),
@@ -74,15 +72,15 @@ class PhoneLoginView extends StatelessWidget {
                     MainText(
                       "IBB",
                       fontWeight: FontWeight.bold,
-                      fontSize: height! * 0.15 / 4,
+                      fontSize: height * 0.15 / 4,
                     ),
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: height! * 0.15 / 4,
+                      fontSize: height * 0.15 / 4,
                     ),
                     SizedBox(
-                      height: height! * 0.05,
+                      height: height * 0.05,
                     )
                   ],
                 ),
@@ -93,7 +91,7 @@ class PhoneLoginView extends StatelessWidget {
         Obx(
           () => Container(
               width: width,
-              height: height! * controller.heightScale.value,
+              height: height * controller.heightScale.value,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppColors.backColor,
@@ -109,11 +107,11 @@ class PhoneLoginView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: width! * 0.35 * 0.2,
+                          width: width * 0.35 * 0.2,
                         ),
                         MainText('login'.tr,
                             fontWeight: FontWeight.bold,
-                            fontSize: height! * 0.15 / 4,
+                            fontSize: height * 0.15 / 4,
                             textColor: Colors.black),
                         PopupMenuButton<String>(
                           initialValue: Get.locale?.languageCode.toString(),
@@ -137,7 +135,7 @@ class PhoneLoginView extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: height! * 0.6 * 0.1,
+                      height: height * 0.6 * 0.1,
                     ),
                     CustomTextFormField(
                       controller: controller.id,
@@ -159,7 +157,7 @@ class PhoneLoginView extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: height! * 0.6 * 0.05,
+                      height: height * 0.6 * 0.05,
                     ),
                     CustomTextFormField(
                       controller: controller.password,
@@ -191,7 +189,7 @@ class PhoneLoginView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: height! * 0.6 * 0.1,
+                      height: height * 0.6 * 0.1,
                     ),
                     Obx(() => (controller.logging.value)
                         ? BasicButton(
@@ -204,7 +202,7 @@ class PhoneLoginView extends StatelessWidget {
                                 color: AppColors.backColor,
                               ),
                             ),
-                            size: Size(width! * 0.8, 40),
+                            size: Size(width * 0.8, 40),
                           )
                         : BasicButton(
                             onPress: controller.onLogin,
@@ -218,7 +216,7 @@ class PhoneLoginView extends StatelessWidget {
                                     quarterTurns: 2,
                                     child: Icon(Icons.login,
                                         color: AppColors.mainTextColor)),
-                            size: Size(width! * 0.8, 40),
+                            size: Size(width * 0.8, 40),
                           ))
                   ],
                 ),
