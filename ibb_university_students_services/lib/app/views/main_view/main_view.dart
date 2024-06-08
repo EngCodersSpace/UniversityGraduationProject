@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -19,7 +18,7 @@ class MainPage extends StatelessWidget {
           if (Get.width <= 767 && Get.height <= 1024) {
             return  PhoneMainView();
           } else {
-            return  WebMainView();
+            return  const WebMainView();
           }
         },
       ),

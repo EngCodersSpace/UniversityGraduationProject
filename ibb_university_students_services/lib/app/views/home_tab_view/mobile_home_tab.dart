@@ -1,12 +1,12 @@
 // ignore_for_file: must_be_immutable
 
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/news_card.dart';
 import 'package:ibb_university_students_services/app/components/services_card.dart';
+
 import '../../controllers/tabs_controller/home_tab_controller.dart';
 import '../../globals.dart';
 
@@ -15,7 +15,7 @@ class MobileMainTab extends GetView<MainTabController> {
     super.key,
   });
 
-  double height = Get.height * (1 - 0.12);
+  double height = Get.height * (1 - 0.16);
   double width = Get.width;
   late double cardSize = height * 0.4 * 1 / 2;
 
@@ -111,22 +111,21 @@ class MobileMainTab extends GetView<MainTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SecText("Partition",
+                                  SecText("Partition".tr,
                                       textColor: AppColors.inverseSecTextColor),
                                   Row(
                                     children: [
-                                      Icon(Icons.contact_mail_sharp,
-                                          color: AppColors.inverseIconColor),
+                                      Icon(Icons.groups_sharp,
+                                          color: AppColors.secTextColor),
                                       SizedBox(
                                         width: width * 0.025,
                                       ),
                                       Flexible(
                                         child: MainText(
                                             controller.user.part?.value ??
-                                                "Unknown",
-                                            textColor:
-                                                AppColors.inverseIconColor,
-                                            fontSize: 14,
+                                                "Unknown".tr,
+                                            textColor: AppColors.secTextColor,
+                                            fontSize: 14*Get.textScaleFactor,
                                             height: 0),
                                       )
                                     ],
@@ -137,7 +136,7 @@ class MobileMainTab extends GetView<MainTabController> {
                             Container(
                               height: height * 0.06,
                               width: 1,
-                              color: AppColors.inverseIconColor,
+                              color: AppColors.inverseSecTextColor,
                             ),
                             SizedBox(
                               width: (width - 2) * 0.04,
@@ -148,20 +147,19 @@ class MobileMainTab extends GetView<MainTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SecText("Level",
+                                  SecText("Level".tr,
                                       textColor: AppColors.inverseSecTextColor),
                                   Row(
                                     children: [
                                       Icon(Icons.school,
-                                          color: AppColors.inverseIconColor),
+                                          color: AppColors.secTextColor),
                                       SizedBox(
                                         width: width * 0.025,
                                       ),
                                       MainText(
                                           controller.user.level?.value ??
-                                              "Unknown",
-                                          textColor:
-                                              AppColors.inverseIconColor),
+                                              "Unknown".tr,
+                                          textColor: AppColors.secTextColor),
                                     ],
                                   ),
                                 ],
@@ -170,7 +168,7 @@ class MobileMainTab extends GetView<MainTabController> {
                             Container(
                               height: height * 0.06,
                               width: 1,
-                              color: AppColors.inverseIconColor,
+                              color: AppColors.inverseSecTextColor,
                             ),
                             SizedBox(
                               width: (width - 2) * 0.03,
@@ -181,20 +179,19 @@ class MobileMainTab extends GetView<MainTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SecText("Level",
+                                  SecText("Level".tr,
                                       textColor: AppColors.inverseSecTextColor),
                                   Row(
                                     children: [
                                       Icon(Icons.school,
-                                          color: AppColors.inverseIconColor),
+                                          color: AppColors.secTextColor),
                                       SizedBox(
                                         width: width * 0.025,
                                       ),
                                       MainText(
                                           controller.user.level?.value ??
-                                              "Unknown",
-                                          textColor:
-                                              AppColors.inverseIconColor),
+                                              "Unknown".tr,
+                                          textColor: AppColors.secTextColor),
                                     ],
                                   ),
                                 ],
@@ -208,7 +205,7 @@ class MobileMainTab extends GetView<MainTabController> {
                       height: height * 0.03,
                     ),
                     SecText(
-                      "News",
+                      "News".tr,
                       textColor: AppColors.inverseSecTextColor,
                     ),
                     SizedBox(
@@ -220,29 +217,29 @@ class MobileMainTab extends GetView<MainTabController> {
               NotificationListener<UserScrollNotification>(
                 onNotification: controller.scrollEvent,
                 child: SingleChildScrollView(
-                controller: controller.scrollController,
-                dragStartBehavior: DragStartBehavior.down,
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: width * 0.05,
-                    ),
-                    NewsCard(height: height * 0.16, width: width * 0.8),
-                    SizedBox(
-                      width: width * 0.05,
-                    ),
-                    NewsCard(height: height * 0.16, width: width * 0.8),
-                    SizedBox(
-                      width: width * 0.05,
-                    ),
-                    NewsCard(height: height * 0.16, width: width * 0.8),
-                    SizedBox(
-                      width: width * 0.1,
-                    ),
-                  ],
+                  controller: controller.scrollController,
+                  dragStartBehavior: DragStartBehavior.down,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      SizedBox(
+                        width: width * 0.05,
+                      ),
+                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      SizedBox(
+                        width: width * 0.1,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
               ),
               Align(
                 child: TabPageSelector(
@@ -261,7 +258,7 @@ class MobileMainTab extends GetView<MainTabController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SecText(
-                      "Services",
+                      "Services".tr,
                       textColor: AppColors.inverseSecTextColor,
                     ),
                     SizedBox(
@@ -271,8 +268,7 @@ class MobileMainTab extends GetView<MainTabController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ServicesCard(
-                          onTap: (){
-                          },
+                          onTap: () {},
                           size: cardSize,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -280,15 +276,14 @@ class MobileMainTab extends GetView<MainTabController> {
                               Icon(Icons.sell_rounded,
                                   color: AppColors.mainIconColor),
                               SecText(
-                                "Service",
+                                "Services".tr,
                                 textColor: AppColors.mainTextColor,
                               )
                             ],
                           ),
                         ),
                         ServicesCard(
-                          onTap: (){
-                          },
+                          onTap: () {},
                           size: cardSize,
                           color: AppColors.mainCardColor,
                           child: Column(
@@ -297,7 +292,7 @@ class MobileMainTab extends GetView<MainTabController> {
                               Icon(Icons.ac_unit,
                                   color: AppColors.inverseIconColor),
                               SecText(
-                                "Service",
+                                "Services".tr,
                                 textColor: AppColors.inverseIconColor,
                               )
                             ],
@@ -312,9 +307,7 @@ class MobileMainTab extends GetView<MainTabController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ServicesCard(
-                          onTap: (){
-
-                          },
+                          onTap: () {},
                           size: cardSize,
                           color: AppColors.mainCardColor,
                           child: Column(
@@ -323,14 +316,14 @@ class MobileMainTab extends GetView<MainTabController> {
                               Icon(Icons.access_alarms,
                                   color: AppColors.inverseIconColor),
                               SecText(
-                                "Service",
+                                "Services".tr,
                                 textColor: AppColors.inverseIconColor,
                               )
                             ],
                           ),
                         ),
                         ServicesCard(
-                          onTap: (){},
+                          onTap: () {},
                           size: cardSize,
                           color: AppColors.mainCardColor,
                           child: Column(
@@ -339,7 +332,7 @@ class MobileMainTab extends GetView<MainTabController> {
                               Icon(Icons.add_chart,
                                   color: AppColors.inverseIconColor),
                               SecText(
-                                "Service",
+                                "Services".tr,
                                 textColor: AppColors.inverseIconColor,
                               )
                             ],
