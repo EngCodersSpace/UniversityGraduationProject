@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'models/user_model.dart';
-
-
 class AppData{
-   static late User user;
 }
 
 

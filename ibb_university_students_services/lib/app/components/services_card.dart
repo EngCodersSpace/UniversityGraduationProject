@@ -7,32 +7,54 @@ import '../globals.dart';
 
 class ServicesCard extends GetView {
   ServicesCard(
-      {super.key, this.size = 50, this.color, this.child, this.onTap}) {
+      {super.key,
+      this.size = 50,
+      this.color,
+      this.child,
+      this.onTap,
+      this.image}) {
     color ??= AppColors.inverseCardColor;
   }
 
   Widget? child;
   double size;
   Color? color;
+  ImageProvider? image;
   void Function()? onTap = () {};
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 24,
-      surfaceTintColor: color,
-      color: color,
-      child: Container(
-        height: size,
-        width: size,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: child,
-        ),
-      ),
-    );
+        elevation: 24,
+        surfaceTintColor: color,
+        color: color,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: size-4,
+              width: size-4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: (image != null)
+                    ? DecorationImage(
+                  image: image!,
+                  fit: BoxFit.fill,
+                )
+                    : null,
+              ),
+            ),SizedBox(
+              height: size,
+              width: size,
+              child: InkWell(
+
+                onTap: onTap,
+                splashColor: AppColors.inverseCardColor,
+                child: child,
+
+              ),
+            )
+          ],
+        ));
   }
 }

@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   FocusNode passwordFocus = FocusNode();
   String logWith = "ID";
   RxBool logging = false.obs;
+  RxBool loggingFiled = false.obs;
   RxDouble heightScale = 0.6.obs;
 
 
@@ -31,7 +32,7 @@ class LoginController extends GetxController {
   }
   @override
   void onReady() {
-    onLogin();
+    //onLogin();
     super.onReady();
   }
 
@@ -68,9 +69,10 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 1));
-      AppData.user = UserModel.fetchUser();
-      if (id.text == "1" && password.text == "12345678") {
+      if (UserModel.userLogin(id.text, password.text)) {
         Get.offNamed("/main");
+      }else{
+       loggingFiled.value = true;
       }
       logging.value = false;
     }

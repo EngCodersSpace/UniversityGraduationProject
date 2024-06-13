@@ -10,13 +10,13 @@ import 'package:ibb_university_students_services/app/globals.dart';
 import '../../controllers/login_controller.dart';
 
 class PhoneLoginView extends GetView<LoginController> {
-   PhoneLoginView({
+  PhoneLoginView({
     super.key,
   });
+
   double height = Get.height;
   double width = Get.width;
   double? fontScale;
-
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: SecText("En")),
@@ -43,9 +43,7 @@ class PhoneLoginView extends GetView<LoginController> {
             ),
           ],
         ),
-        Container(
-          color: AppColors.coverColor
-        ),
+        Container(color: AppColors.coverColor),
         SizedBox(
           height: height,
           child: Column(
@@ -188,36 +186,44 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                       ),
                     ),
+                    if(controller.loggingFiled.value)...[
+                      SecText("Login Filed",textColor: Colors.redAccent,),
+                      SecText("password or id is wrong",textColor: Colors.redAccent,),
+                    ],
                     SizedBox(
-                      height: height * 0.6 * 0.1,
+                      height: height * 0.6 * 0.05,
                     ),
-                    Obx(() => (controller.logging.value)
-                        ? BasicButton(
-                            onPress: controller.onLogin,
-                            text: 'logging'.tr,
-                            icon: SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: CircularProgressIndicator(
-                                color: AppColors.backColor,
-                              ),
-                            ),
-                            size: Size(width * 0.8, 40),
-                          )
-                        : BasicButton(
-                            onPress: controller.onLogin,
-                            text: 'login'.tr,
-                            icon: (Get.locale.toString() == "en_US")
-                                ? Icon(
-                                    Icons.login,
-                                    color: AppColors.mainTextColor,
+                    Obx(() => Column(
+                          children: [
+                            (controller.logging.value)
+                                ? BasicButton(
+                                    onPress: controller.onLogin,
+                                    text: 'logging'.tr,
+                                    icon: SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.backColor,
+                                      ),
+                                    ),
+                                    size: Size(width * 0.8, 50),
                                   )
-                                : RotatedBox(
-                                    quarterTurns: 2,
-                                    child: Icon(Icons.login,
-                                        color: AppColors.mainTextColor)),
-                            size: Size(width * 0.8, 40),
-                          ))
+                                : BasicButton(
+                                    onPress: controller.onLogin,
+                                    text: 'login'.tr,
+                                    icon: (Get.locale.toString() == "en_US")
+                                        ? Icon(
+                                            Icons.login,
+                                            color: AppColors.mainTextColor,
+                                          )
+                                        : RotatedBox(
+                                            quarterTurns: 2,
+                                            child: Icon(Icons.login,
+                                                color:
+                                                    AppColors.mainTextColor)),
+                                    size: Size(width * 0.8, 50)),
+                          ],
+                        ))
                   ],
                 ),
               )),

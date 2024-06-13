@@ -10,20 +10,20 @@ import 'package:ibb_university_students_services/app/components/services_card.da
 import '../../controllers/tabs_controller/home_tab_controller.dart';
 import '../../globals.dart';
 
-class MobileMainTab extends GetView<MainTabController> {
-  MobileMainTab({
+class PhoneMainTab extends GetView<MainTabController> {
+  PhoneMainTab({
     super.key,
   });
 
   double height = Get.height * (1 - 0.16);
   double width = Get.width;
-  late double cardSize = height * 0.4 * 1 / 2;
+  late double cardSize = height * 0.43 * 1 / 3;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => SafeArea(
           minimum: EdgeInsets.only(
-            top: height * 0.07,
+            top: height * 0.08,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,10 +92,10 @@ class MobileMainTab extends GetView<MainTabController> {
                       ],
                     ),
                     SizedBox(
-                      height: height * 0.015,
+                      height: height * 0.018,
                     ),
                     SizedBox(
-                      height: height * 0.12,
+                      height: height * 0.14,
                       child: Card(
                         elevation: 16,
                         surfaceTintColor: AppColors.mainCardColor,
@@ -125,7 +125,7 @@ class MobileMainTab extends GetView<MainTabController> {
                                             controller.user.part?.value ??
                                                 "Unknown".tr,
                                             textColor: AppColors.secTextColor,
-                                            fontSize: 14*Get.textScaleFactor,
+                                            fontSize: 14 * Get.textScaleFactor,
                                             height: 0),
                                       )
                                     ],
@@ -225,15 +225,15 @@ class MobileMainTab extends GetView<MainTabController> {
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      NewsCard(height: height * 0.19, width: width * 0.8),
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      NewsCard(height: height * 0.19, width: width * 0.8),
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.16, width: width * 0.8),
+                      NewsCard(height: height * 0.19, width: width * 0.8),
                       SizedBox(
                         width: width * 0.1,
                       ),
@@ -262,81 +262,103 @@ class MobileMainTab extends GetView<MainTabController> {
                       textColor: AppColors.inverseSecTextColor,
                     ),
                     SizedBox(
-                      height: height * 0.01,
+                      height: height * 0.015,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ServicesCard(
-                          onTap: () {},
-                          size: cardSize,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.sell_rounded,
-                                  color: AppColors.mainIconColor),
-                              SecText(
-                                "Services".tr,
-                                textColor: AppColors.mainTextColor,
-                              )
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/lib_icon2.jpeg"),
+                            ),
+                            SecText(
+                              "Library",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
                         ),
-                        ServicesCard(
-                          onTap: () {},
-                          size: cardSize,
-                          color: AppColors.mainCardColor,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.ac_unit,
-                                  color: AppColors.inverseIconColor),
-                              SecText(
-                                "Services".tr,
-                                textColor: AppColors.inverseIconColor,
-                              )
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/time_table5.jpeg"),
+                            ),
+                            SecText(
+                              "Time Table",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {
+                              },
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/payment_icon2.jpeg"),
+                            ),
+                            SecText(
+                              "Payments",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
                         ),
                       ],
                     ),
                     SizedBox(
-                      height: height * 0.01,
+                      height: height * 0.02,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ServicesCard(
-                          onTap: () {},
-                          size: cardSize,
-                          color: AppColors.mainCardColor,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.access_alarms,
-                                  color: AppColors.inverseIconColor),
-                              SecText(
-                                "Services".tr,
-                                textColor: AppColors.inverseIconColor,
-                              )
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/lib_icon1.jpeg"),
+                            ),
+                            SecText(
+                              "Library",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
                         ),
-                        ServicesCard(
-                          onTap: () {},
-                          size: cardSize,
-                          color: AppColors.mainCardColor,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add_chart,
-                                  color: AppColors.inverseIconColor),
-                              SecText(
-                                "Services".tr,
-                                textColor: AppColors.inverseIconColor,
-                              )
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/time_table3.jpeg"),
+                            ),
+                            SecText(
+                              "Time Table",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/time_table4.jpeg"),
+                            ),
+                            SecText(
+                              "Time Table",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
                         ),
                       ],
                     ),
