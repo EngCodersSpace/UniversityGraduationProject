@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -10,6 +12,7 @@ class LoginController extends GetxController {
   FocusNode passwordFocus = FocusNode();
   String logWith = "ID";
   RxBool logging = false.obs;
+  RxBool loggingFiled = false.obs;
   RxDouble heightScale = 0.6.obs;
 
 
@@ -19,6 +22,18 @@ class LoginController extends GetxController {
     password.dispose();
     idFocus.dispose();
     passwordFocus.dispose();
+  }
+  @override
+  void onInit() {
+    id.text = "1";
+    password.text = "12345678";
+
+    super.onInit();
+  }
+  @override
+  void onReady() {
+    //onLogin();
+    super.onReady();
   }
 
   String? validateID(String? id) {
@@ -46,12 +61,18 @@ class LoginController extends GetxController {
     }
   }
 
+  void forgotPassword(){
+    Get.toNamed("/forgotPassword");
+  }
+
   Future<void> onLogin() async {
     if (formKey.currentState!.validate()) {
       logging.value = true;
-      await Future.delayed(const Duration(seconds: 3));
-      if (id.text == "2070093" && password.text == "123456789") {
+      await Future.delayed(const Duration(seconds: 1));
+      if (UserModel.userLogin(id.text, password.text)) {
         Get.offNamed("/main");
+      }else{
+       loggingFiled.value = true;
       }
       logging.value = false;
     }
