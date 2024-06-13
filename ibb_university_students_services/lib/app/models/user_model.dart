@@ -1,10 +1,34 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:ibb_university_students_services/app/models/structuers/user_structure.dart';
 
 class UserModel {
 
+  static User? _user;
+  static bool userLogin(String id,String password){
+    // simulate make request and get response
+    bool responseStat = false;
+    if(id == "1" && password == "12345678"){
+      responseStat = true;
+      String token = "token";
+      Map<String,dynamic> response = {
+        'id': 2070093,
+        'name': 'Shehab AL-Saidi',
+        'level': '4th',
+        'part': 'Electrical engineering',
+        'department': 'Computer engineering',
+        'profileImage': 'assets/images/login_background_0.jpg',
+      };
+      _user = userResponseToUser(response);
 
+    }
+    return responseStat;
+  }
   static User fetchUser() {
-    Map jsData = {
+    if(_user != null){
+      return _user!;
+    }
+    // simulate make request and get response
+    Map<String,dynamic> response = {
       'id': 2070093,
       'name': 'Shehab AL-Saidi',
       'level': '4th',
@@ -12,14 +36,18 @@ class UserModel {
       'department': 'Computer engineering',
       'profileImage': 'assets/images/login_background_0.jpg',
     };
+    User user = userResponseToUser(response);
+    return user;
+  }
 
+  static User userResponseToUser(Map<String,dynamic> response){
     User user = User(
-      id: RxInt(jsData['id']),
-      name: RxString(jsData['name']),
-      level: RxString(jsData['level']) ,
-      part: RxString(jsData['part']),
-      department: RxString(jsData['department']),
-      profileImage: RxString(jsData['profileImage']),
+      id: RxInt(response['id']),
+      name: RxString(response['name']),
+      level: RxString(response['level']) ,
+      part: RxString(response['part']),
+      department: RxString(response['department']),
+      profileImage: RxString(response['profileImage']),
     );
     return user;
   }
@@ -27,22 +55,5 @@ class UserModel {
   static void write() {}
 }
 
-class User {
-  User({
-    this.id,
-    this.name,
-    this.level,
-    this.part,
-    this.department,
-    this.profileImage,
-  });
-
-  RxInt? id;
-  RxString? name ;
-  RxString? level;
-  RxString? part;
-  RxString? department;
-  RxString? profileImage;
 
 
-}

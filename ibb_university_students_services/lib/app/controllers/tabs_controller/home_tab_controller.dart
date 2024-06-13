@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
+import '../../models/structuers/user_structure.dart';
+
 class MainTabController extends GetxController with GetSingleTickerProviderStateMixin{
-  User user = User();
+  User user = UserModel.fetchUser();
 
   late TabController tabController ;
   ScrollController scrollController = ScrollController();
@@ -22,7 +23,6 @@ class MainTabController extends GetxController with GetSingleTickerProviderState
   @override
   void onInit() {
     tabController = TabController(length: 3,initialIndex: 0, vsync:this);
-    user = AppData.user;
     _startTimer();
 
     super.onInit();
@@ -46,16 +46,12 @@ class MainTabController extends GetxController with GetSingleTickerProviderState
 
   void _startTimer(){
     const duration = Duration(seconds: 5);
-    int dir = 1 ;
     _timer = Timer.periodic(duration, (timer) {
-      if(_newsCurrentPos>=2 ){
-        dir = -1;
-        _newsCurrentPos=2;
-      }else if(_newsCurrentPos <= 0){
-        dir = 1;
-
+      _newsCurrentPos++;
+      if(_newsCurrentPos>2 ){
+        _newsCurrentPos=0;
+        scrollController.jumpTo(0);
       }
-      (dir == 1)?_newsCurrentPos++:_newsCurrentPos--;
       newsAnimate(Get.width*0.8, _newsCurrentPos,const Duration(seconds: 2,milliseconds: 500));
     });
   }

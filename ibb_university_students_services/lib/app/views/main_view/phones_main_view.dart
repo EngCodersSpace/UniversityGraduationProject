@@ -3,11 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
-import 'package:ibb_university_students_services/app/views/profile_tab_view/profile_view.dart';
+import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
+import 'package:ibb_university_students_services/app/views/table_tab_view/phones_table_tab_view.dart';
 
 import '../../components/custom_text.dart';
 import '../../globals.dart';
-import '../home_tab_view/mobile_home_tab.dart';
+import '../home_tab_view/phones_home_tab.dart';
 
 class PhoneMainView extends GetView<MainController> {
   PhoneMainView({
@@ -223,13 +224,8 @@ class PhoneMainView extends GetView<MainController> {
         textColor: Colors.black,
       ),
     ),
-    Center(
-      child: MainText(
-        "MainPage 2",
-        textColor: Colors.black,
-      ),
-    ),
-    MobileMainTab(),
+    PhoneTableTabView(),
+    PhoneMainTab(),
     Center(
       child: MainText(
         "MainPage 3",
@@ -237,6 +233,5 @@ class PhoneMainView extends GetView<MainController> {
       ),
     ),
     PhoneProfileView(),
-    //Center(child: MainText("MainPage 5",textColor: Colors.black,),),
   ];
 }
