@@ -25,33 +25,32 @@ class ServicesCard extends GetView {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 24,
+        elevation: 20,
         surfaceTintColor: color,
         color: color,
         child: Stack(
           alignment: Alignment.center,
           children: [
             Container(
-              height: size-4,
-              width: size-4,
+              height: size - 4,
+              width: size - 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: (image != null)
                     ? DecorationImage(
-                  image: image!,
-                  fit: BoxFit.fill,
-                )
+                        image: image!,
+                        fit: BoxFit.fill,
+                      )
                     : null,
               ),
-            ),SizedBox(
+            ),
+            SizedBox(
               height: size,
               width: size,
               child: InkWell(
-
                 onTap: onTap,
-                splashColor: AppColors.inverseCardColor,
+                splashColor: AppColors.coverColor,
                 child: child,
-
               ),
             )
           ],
