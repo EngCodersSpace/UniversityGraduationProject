@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class LoginController extends GetxController {

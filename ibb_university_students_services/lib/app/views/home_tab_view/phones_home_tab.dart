@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,13 +16,13 @@ class PhoneMainTab extends GetView<MainTabController> {
 
   double height = Get.height * (1 - 0.16);
   double width = Get.width;
-  late double cardSize = height * 0.43 * 1 / 3;
+  late double cardSize = (width-width*0.35) * 1 / 4;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => SafeArea(
           minimum: EdgeInsets.only(
-            top: height * 0.08,
+            top: height * 0.055,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,18 +261,20 @@ class PhoneMainTab extends GetView<MainTabController> {
                       textColor: AppColors.inverseSecTextColor,
                     ),
                     SizedBox(
-                      height: height * 0.015,
+                      height: height * 0.05,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Column(
                           children: [
                             ServicesCard(
                               onTap: () {},
                               size: cardSize,
+                              color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/lib_icon2.jpeg"),
+                                  "assets/images/book.png"),
                             ),
                             SecText(
                               "Library",
@@ -285,12 +286,17 @@ class PhoneMainTab extends GetView<MainTabController> {
                           children: [
                             ServicesCard(
                               onTap: () {},
+                              color: Colors.transparent,
                               size: cardSize,
                               image: const AssetImage(
-                                  "assets/images/time_table5.jpeg"),
+                                  "assets/images/calendar.png"),
                             ),
                             SecText(
-                              "Time Table",
+                              "Lecture",
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SecText(
+                              "Schedule",
                               fontWeight: FontWeight.bold,
                             ),
                           ],
@@ -301,8 +307,9 @@ class PhoneMainTab extends GetView<MainTabController> {
                               onTap: () {
                               },
                               size: cardSize,
+                              color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/payment_icon2.jpeg"),
+                                  "assets/images/payment.png"),
                             ),
                             SecText(
                               "Payments",
@@ -310,21 +317,14 @@ class PhoneMainTab extends GetView<MainTabController> {
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         Column(
                           children: [
                             ServicesCard(
                               onTap: () {},
                               size: cardSize,
+                              color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/lib_icon1.jpeg"),
+                                  "assets/images/book.png"),
                             ),
                             SecText(
                               "Library",
@@ -332,16 +332,30 @@ class PhoneMainTab extends GetView<MainTabController> {
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height * 0.03,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Column(
                           children: [
                             ServicesCard(
                               onTap: () {},
                               size: cardSize,
+                              color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/time_table3.jpeg"),
+                                  "assets/images/a-.png"),
                             ),
                             SecText(
-                              "Time Table",
+                              "Student",
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SecText(
+                              "Degrees",
                               fontWeight: FontWeight.bold,
                             ),
                           ],
@@ -351,11 +365,50 @@ class PhoneMainTab extends GetView<MainTabController> {
                             ServicesCard(
                               onTap: () {},
                               size: cardSize,
+                              color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/time_table4.jpeg"),
+                                  "assets/images/result.png"),
                             ),
                             SecText(
-                              "Time Table",
+                              "Student",
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SecText(
+                              "Degrees",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              color: Colors.transparent,
+                              size: cardSize,
+                              image: const AssetImage(
+                                  "assets/images/exam_11776326.png"),
+                            ),
+                            SecText(
+                              "Exam",
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SecText(
+                              "Schedule",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            ServicesCard(
+                              onTap: () {},
+                              size: cardSize,
+                              color: Colors.transparent,
+                              image: const AssetImage(
+                                  "assets/images/book.png"),
+                            ),
+                            SecText(
+                              "Library",
                               fontWeight: FontWeight.bold,
                             ),
                           ],
