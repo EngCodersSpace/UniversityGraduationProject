@@ -13,9 +13,11 @@ class UserModel {
       Map<String,dynamic> response = {
         'id': 2070093,
         'name': 'Shehab AL-Saidi',
+        'email':'shehab@gmail.com',
+        'phone':'772388461',
         'level': '4th',
-        'part': 'Electrical engineering',
-        'department': 'Computer engineering',
+        'department':'Electrical engineering',
+        'division': 'Computer engineering',
         'profileImage': 'assets/images/login_background_0.jpg',
       };
       _user = userResponseToUser(response);
@@ -44,9 +46,11 @@ class UserModel {
     User user = User(
       id: RxInt(response['id']),
       name: RxString(response['name']),
+      email: RxString(response['email']),
+      phone: RxString(response['phone']),
       level: RxString(response['level']) ,
-      part: RxString(response['part']),
       department: RxString(response['department']),
+      division: RxString(response['division']),
       profileImage: RxString(response['profileImage']),
     );
     return user;

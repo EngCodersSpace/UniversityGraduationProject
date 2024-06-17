@@ -110,7 +110,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SecText("Partition".tr,
+                                  SecText("Department".tr,
                                       textColor: AppColors.inverseSecTextColor),
                                   Row(
                                     children: [
@@ -121,7 +121,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       ),
                                       Flexible(
                                         child: MainText(
-                                            controller.user.part?.value ??
+                                            controller.user.department?.value ??
                                                 "Unknown".tr,
                                             textColor: AppColors.secTextColor,
                                             fontSize: 14 * Get.textScaleFactor,

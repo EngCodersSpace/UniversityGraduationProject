@@ -15,10 +15,11 @@ class Arabic {
     'UserName':'اسم المستخدم',
     'Phone':'الجوال',
     'Language':'اللغة',
-    'Partition':'القسم',
     'Unknown':'غير معروف',
     'Level':'المستوى',
     'News':'الاخبار',
     'Services':'الخدمات',
+    'Division':'الشعبة',
+    'Department':'القسم',
   };
 }
