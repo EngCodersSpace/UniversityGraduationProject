@@ -149,10 +149,9 @@ class PhoneProfileView extends GetView<ProfileController> {
                           DropdownButton(
                             items: dropdownMenuItems,
                             onChanged: (val) {
-                              Get.updateLocale(Locale(val!));
-                              Get.find<MainController>().changeTabIndex(4);
+                              controller.changeLang(val.toString());
                             },
-                            value: Get.locale?.languageCode ?? "en",
+                            value: controller.language.value,
                           ),
                         ],
                       ),
