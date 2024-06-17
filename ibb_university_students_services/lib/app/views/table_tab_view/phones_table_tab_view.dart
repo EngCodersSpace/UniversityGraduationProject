@@ -9,6 +9,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
   Widget build(BuildContext context) {
     return Obx(() => Stack(
       children: [
+        Text(controller.name.value),
         Container(
           color: Colors.black,
         )

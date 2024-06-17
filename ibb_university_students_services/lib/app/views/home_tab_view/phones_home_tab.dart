@@ -9,7 +9,7 @@ import 'package:ibb_university_students_services/app/components/services_card.da
 import '../../controllers/tabs_controller/home_tab_controller.dart';
 import '../../globals.dart';
 
-class PhoneMainTab extends GetView<MainTabController> {
+class PhoneMainTab extends GetView<HomeTabController> {
   PhoneMainTab({
     super.key,
   });

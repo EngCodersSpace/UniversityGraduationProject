@@ -8,7 +8,7 @@ class MainViewBinding implements Bindings{
   @override
   void dependencies() {
     Get.put<MainController>(MainController());
-    Get.lazyPut<MainTabController>(() =>MainTabController());
+    Get.lazyPut<HomeTabController>(() =>HomeTabController());
     Get.lazyPut<ProfileController>(() =>ProfileController());
     Get.lazyPut<TableTabController>(() =>TableTabController());
   }

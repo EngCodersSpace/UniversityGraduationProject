@@ -7,7 +7,7 @@ import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 import '../../models/structuers/user_structure.dart';
 
-class MainTabController extends GetxController with GetSingleTickerProviderStateMixin{
+class HomeTabController extends GetxController with GetSingleTickerProviderStateMixin{
   User user = UserModel.fetchUser();
 
   late TabController tabController ;
