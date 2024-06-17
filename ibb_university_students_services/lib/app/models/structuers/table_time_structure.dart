@@ -1,7 +1,6 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 class TableTime {
   TableTime({
-    this.id,
     this.sun,
     this.mon,
     this.tue,
@@ -10,7 +9,6 @@ class TableTime {
     this.sat,
   });
 
-  RxInt? id;
   List<TableDayContent>? sun;
   List<TableDayContent>? mon;
   List<TableDayContent>? tue;

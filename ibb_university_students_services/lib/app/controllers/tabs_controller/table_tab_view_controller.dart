@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
-import '../../models/structuers/user_structure.dart';
-import '../../models/user_model.dart';
+import 'package:ibb_university_students_services/app/models/structuers/table_time_structure.dart';
+import 'package:ibb_university_students_services/app/models/table_time_model.dart';
+
 
 class TableTabController extends GetxController {
-  RxString name = "Table".obs;
+  TableTime? tableTime = TableTimeModel.fetchTable();
   @override
   void onInit() {
     // TODO: implement onInit

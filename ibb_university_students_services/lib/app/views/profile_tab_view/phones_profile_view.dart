@@ -6,7 +6,6 @@ import 'package:ibb_university_students_services/app/components/custom_text.dart
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/profile_tab_controller.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
 
-import '../../controllers/main_controller.dart';
 
 class PhoneProfileView extends GetView<ProfileController> {
   PhoneProfileView({

@@ -9,10 +9,9 @@ class PhoneTableTabView extends GetView<TableTabController> {
   Widget build(BuildContext context) {
     return Obx(() => Stack(
       children: [
-        Text(controller.name.value),
-        Container(
-          color: Colors.black,
-        )
+        Center(child: TextButton(onPressed: (){
+
+        }, child: Text(controller.tableTime?.sun?.first.time.value??""),),),
       ],
     ));
   }
