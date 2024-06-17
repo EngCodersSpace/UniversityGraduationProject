@@ -224,15 +224,15 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.19, width: width * 0.8),
+                      NewsCard(height: height * 0.25, width: width * 0.8),
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.19, width: width * 0.8),
+                      NewsCard(height: height * 0.25, width: width * 0.8),
                       SizedBox(
                         width: width * 0.05,
                       ),
-                      NewsCard(height: height * 0.19, width: width * 0.8),
+                      NewsCard(height: height * 0.25, width: width * 0.8),
                       SizedBox(
                         width: width * 0.1,
                       ),
@@ -261,7 +261,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       textColor: AppColors.inverseSecTextColor,
                     ),
                     SizedBox(
-                      height: height * 0.05,
+                      height: height * 0.02,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
