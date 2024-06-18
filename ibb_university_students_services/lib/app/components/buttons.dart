@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
 
-class BasicButton extends StatelessWidget {
-  BasicButton({
+class CustomButton extends StatelessWidget {
+  CustomButton({
     super.key,
     required this.onPress,
     this.size ,

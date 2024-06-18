@@ -5,7 +5,7 @@ class AppData{
 
 
 class AppColors {
-  static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("DF0D3976",radix: 16)));
+  static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("FF0D3976",radix: 16)));
 
   static Color mainTextColor = Colors.white;
   static Color inverseMainTextColor = Color(int.parse("DF0D3976",radix: 16));
@@ -37,7 +37,7 @@ class ButtonColors {
     this.disableColor = Colors.grey,
   });
 
-  final Color color;
-  final Color pressedColor;
-  final Color disableColor;
+  Color color;
+  Color pressedColor;
+  Color disableColor;
 }

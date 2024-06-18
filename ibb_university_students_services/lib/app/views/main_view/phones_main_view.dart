@@ -224,7 +224,7 @@ class PhoneMainView extends GetView<MainController> {
         textColor: Colors.black,
       ),
     ),
-    const PhoneTableTabView(),
+    PhoneTableTabView(),
     PhoneMainTab(),
     Center(
       child: MainText(

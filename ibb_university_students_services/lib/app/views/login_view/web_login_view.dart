@@ -148,7 +148,7 @@ class WebLoginView extends GetView<LoginController> {
                         height: height * 0.6 * 0.1,
                       ),
                       Obx(() => (controller.logging.value)
-                          ? BasicButton(
+                          ? CustomButton(
                               onPress: controller.onLogin,
                               text: 'logging',
                               icon: CircularProgressIndicator(
@@ -156,7 +156,7 @@ class WebLoginView extends GetView<LoginController> {
                               ),
                               size: Size(width * 0.8, 40),
                             )
-                          : BasicButton(
+                          : CustomButton(
                               onPress: controller.onLogin,
                               text: 'login'.tr,
                               icon: (Get.locale.toString() == "en_US")

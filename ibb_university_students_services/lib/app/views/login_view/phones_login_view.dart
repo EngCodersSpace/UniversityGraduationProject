@@ -196,7 +196,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     Obx(() => Column(
                           children: [
                             (controller.logging.value)
-                                ? BasicButton(
+                                ? CustomButton(
                                     onPress: controller.onLogin,
                                     text: 'logging'.tr,
                                     icon: SizedBox(
@@ -208,7 +208,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                     ),
                                     size: Size(width * 0.8, 50),
                                   )
-                                : BasicButton(
+                                : CustomButton(
                                     onPress: controller.onLogin,
                                     text: 'login'.tr,
                                     icon: (Get.locale.toString() == "en_US")

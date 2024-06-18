@@ -5,6 +5,7 @@ import 'package:ibb_university_students_services/app/models/table_time_model.dar
 
 class TableTabController extends GetxController {
   TableTime? tableTime = TableTimeModel.fetchTable();
+  RxInt selected = 0.obs;
   @override
   void onInit() {
     // TODO: implement onInit
