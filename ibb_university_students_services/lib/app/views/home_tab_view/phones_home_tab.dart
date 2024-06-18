@@ -274,7 +274,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               size: cardSize,
                               color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/book.png"),
+                                  "assets/images/book_6874557.png"),
                             ),
                             SecText(
                               "Library",
@@ -405,7 +405,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               size: cardSize,
                               color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/book.png"),
+                                  "assets/images/bookshelf_4797659.png"),
                             ),
                             SecText(
                               "Library",
