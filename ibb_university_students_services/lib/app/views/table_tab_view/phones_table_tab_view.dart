@@ -43,7 +43,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                       size: Size(width * 0.4, 60),
                     ),
                     SizedBox(
-                      width: width,
+                      width: width*0.96,
                       height: height * 0.12,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,14 +59,12 @@ class PhoneTableTabView extends GetView<TableTabController> {
                                 color: AppColors.inverseIconColor,
                               )),
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               DayCard(
                                 height: height * 0.09,
                                 text: "sun",
-                                selected:
-                                (controller.selected.value == 0),
+                                selected: (controller.selected.value == 0),
                                 onPress: () {
                                   controller.selected.value = 0;
                                 },
@@ -74,40 +72,35 @@ class PhoneTableTabView extends GetView<TableTabController> {
                               DayCard(
                                   height: height * 0.09,
                                   text: "mon",
-                                  selected:
-                                  (controller.selected.value == 1),
+                                  selected: (controller.selected.value == 1),
                                   onPress: () {
                                     controller.selected.value = 1;
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "tue",
-                                  selected:
-                                  (controller.selected.value == 2),
+                                  selected: (controller.selected.value == 2),
                                   onPress: () {
                                     controller.selected.value = 2;
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "wed",
-                                  selected:
-                                  (controller.selected.value == 3),
+                                  selected: (controller.selected.value == 3),
                                   onPress: () {
                                     controller.selected.value = 3;
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "the",
-                                  selected:
-                                  (controller.selected.value == 4),
+                                  selected: (controller.selected.value == 4),
                                   onPress: () {
                                     controller.selected.value = 4;
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "sat",
-                                  selected:
-                                  (controller.selected.value == 5),
+                                  selected: (controller.selected.value == 5),
                                   onPress: () {
                                     controller.selected.value = 5;
                                   }),
@@ -125,14 +118,14 @@ class PhoneTableTabView extends GetView<TableTabController> {
                       ),
                     ),
                     SizedBox(
-                      height: height*0.03,
+                      height: height * 0.03,
                     )
                   ],
                 )),
             Center(
               child: TextButton(
                 onPressed: () {},
-                child: Text(controller.tableTime?.sun?.first.time.value ?? ""),
+                child: Text(controller.tableTime?.sun?.first.startTime.value ?? ""),
               ),
             ),
           ],

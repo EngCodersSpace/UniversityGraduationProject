@@ -16,7 +16,6 @@ class PhoneLoginView extends GetView<LoginController> {
 
   double height = Get.height;
   double width = Get.width;
-  double? fontScale;
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: SecText("En")),
@@ -25,7 +24,6 @@ class PhoneLoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    fontScale = width / 767;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -70,12 +68,12 @@ class PhoneLoginView extends GetView<LoginController> {
                     MainText(
                       "IBB",
                       fontWeight: FontWeight.bold,
-                      fontSize: height * 0.15 / 4,
+                      fontSize: 32,
                     ),
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: height * 0.15 / 4,
+                      fontSize: 32,
                     ),
                     SizedBox(
                       height: height * 0.05,
@@ -109,7 +107,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                         MainText('login'.tr,
                             fontWeight: FontWeight.bold,
-                            fontSize: height * 0.15 / 4,
+                            fontSize: 32,
                             textColor: Colors.black),
                         PopupMenuButton<String>(
                           initialValue: Get.locale?.languageCode.toString(),

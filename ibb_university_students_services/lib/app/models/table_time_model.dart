@@ -12,15 +12,15 @@ class TableTimeModel {
       'sun': [
         {
           "title": "AI",
-          "time":
-              "From 8:00 to 10:00",
+          "startTime": "8:00",
+          "endTime":"10:00",
           "hall": "h1",
           "description": null
         },
         {
           "title": "Math",
-          "time":
-              "From 10:00 to 12:00",
+          "startTime": "10:00",
+          "endTime":"12:00",
           "hall": "h1",
           "description": null
         }
@@ -28,8 +28,8 @@ class TableTimeModel {
       'mon': [
         {
           "title": "English",
-          "time":
-          "From 8:30 to 10:30",
+          "startTime": "8:30",
+          "endTime":"10:30",
           "hall": "h1",
           "description": null
         }
@@ -50,10 +50,11 @@ class TableTimeModel {
       if (response[key] != null) {
         for (var item in response[key]) {
           days[key]?.add(TableDayContent(
-              title: RxString(item["title"]),
-              time: RxString(item["time"]),
-              hall: RxString(item["hall"]),
-              description: RxString(item["description"] ?? "")));
+              title: RxString(item["title"]??""),
+              startTime: RxString(item["startTime"]??""),
+              endTime: RxString(item["endTime"]??""),
+              hall: RxString(item["hall"]??""),
+              description: RxString(item["description"]??"")));
         }
       }
     }

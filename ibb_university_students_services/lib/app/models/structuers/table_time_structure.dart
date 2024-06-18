@@ -20,13 +20,15 @@ class TableTime {
 class TableDayContent{
 
   TableDayContent({
-    required this.time,
     required this.title,
-    this.hall,
+    required this.startTime,
+    required this.endTime,
+    this.hall ,
     this.description
 });
   RxString title;
-  RxString time;
+  RxString startTime;
+  RxString endTime;
   RxString? hall;
   RxString? description;
 }

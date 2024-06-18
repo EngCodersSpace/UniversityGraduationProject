@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../globals.dart';
 import 'custom_text.dart';
@@ -34,7 +35,7 @@ class DayCard extends StatelessWidget {
             child: SecText(
               text,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 18*Get.textScaleFactor,
               textColor:
               (selected) ? AppColors.mainTextColor : AppColors.secTextColor,
             )),
