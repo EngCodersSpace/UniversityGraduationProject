@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
+import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/day_cards.dart';
+import 'package:ibb_university_students_services/app/components/lecture_card.dart';
 
 import '../../controllers/tabs_controller/table_tab_view_controller.dart';
 import '../../globals.dart';
@@ -11,15 +13,43 @@ import '../../globals.dart';
 class PhoneTableTabView extends GetView<TableTabController> {
   PhoneTableTabView({super.key});
 
-  double height = Get.height;
+  double height = Get.height * (1 - 0.09);
   double width = Get.width;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => Stack(
           children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                width: width,
+                height: height*0.72,
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: width*0.05,vertical: height*0.03),
+                  child:Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SecText("Lectures",textColor: AppColors.inverseSecTextColor),
+                          SecText(controller.selectedDayName,textColor: AppColors.inverseSecTextColor)
+                        ],
+                      ),
+                      SizedBox(height: height*0.03),
+                      for(int i=0; i<(controller.selectedDay?.length??0);i++)...[
+                        LectureCard(content: controller.selectedDay?[i], height: height*0.56*(1/2),),
+                        if(i<((controller.selectedDay?.length??0)-1))
+                          SizedBox(height: height*0.03,)
+                      ]
+
+                    ],
+                  ),
+                )
+              ),
+            ),
             Container(
-                height: height * 0.3,
+                height: height * 0.28,
                 width: width,
                 decoration: BoxDecoration(
                   color: AppColors.mainCardColor,
@@ -32,7 +62,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                     )
                   ],
                   borderRadius:
-                      const BorderRadius.vertical(bottom: Radius.circular(32)),
+                  const BorderRadius.vertical(bottom: Radius.circular(32)),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -66,7 +96,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                                 text: "sun",
                                 selected: (controller.selected.value == 0),
                                 onPress: () {
-                                  controller.selected.value = 0;
+                                  controller.selectedDayChange(0);
                                 },
                               ),
                               DayCard(
@@ -74,35 +104,35 @@ class PhoneTableTabView extends GetView<TableTabController> {
                                   text: "mon",
                                   selected: (controller.selected.value == 1),
                                   onPress: () {
-                                    controller.selected.value = 1;
+                                    controller.selectedDayChange(1);
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "tue",
                                   selected: (controller.selected.value == 2),
                                   onPress: () {
-                                    controller.selected.value = 2;
+                                    controller.selectedDayChange(2);
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "wed",
                                   selected: (controller.selected.value == 3),
                                   onPress: () {
-                                    controller.selected.value = 3;
+                                    controller.selectedDayChange(3);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "the",
+                                  text: "thu",
                                   selected: (controller.selected.value == 4),
                                   onPress: () {
-                                    controller.selected.value = 4;
+                                    controller.selectedDayChange(4);
                                   }),
                               DayCard(
                                   height: height * 0.09,
                                   text: "sat",
                                   selected: (controller.selected.value == 5),
                                   onPress: () {
-                                    controller.selected.value = 5;
+                                    controller.selectedDayChange(5);
                                   }),
                             ],
                           ),
@@ -122,12 +152,6 @@ class PhoneTableTabView extends GetView<TableTabController> {
                     )
                   ],
                 )),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: Text(controller.tableTime?.sun?.first.startTime.value ?? ""),
-              ),
-            ),
           ],
         ));
   }

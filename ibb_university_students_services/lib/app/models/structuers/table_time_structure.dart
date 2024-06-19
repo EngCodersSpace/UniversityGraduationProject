@@ -23,12 +23,16 @@ class TableDayContent{
     required this.title,
     required this.startTime,
     required this.endTime,
+    this.doctor,
     this.hall ,
-    this.description
+    this.description,
+    this.canceled ,
 });
   RxString title;
   RxString startTime;
   RxString endTime;
+  RxString? doctor;
   RxString? hall;
   RxString? description;
+  RxBool? canceled = RxBool(false);
 }
