@@ -11,7 +11,6 @@ async function addUserAndStudent() {
       phone_number: '1234567890',
       permission: 'student',
       password: 'securePassword123',
-      description: 'A brief description about John Doe',
     });
 
     // Create a new student associated withe user
@@ -23,7 +22,6 @@ async function addUserAndStudent() {
       student_level: 'Freshman',
       status: 'Active',
       address: '123 Main St',
-      gender: 'Male',
     });
 
     console.log('User and Student added successfully:', newUser.toJSON(), newStudent.toJSON());

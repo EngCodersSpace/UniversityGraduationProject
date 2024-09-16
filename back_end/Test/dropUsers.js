@@ -27,7 +27,7 @@ async function dropAllUsers() {
 
 //dropAllUsers();
 
-//Drop one Users
+dropAllUsers();
 
 async function deleteUser(userId) {
   try {

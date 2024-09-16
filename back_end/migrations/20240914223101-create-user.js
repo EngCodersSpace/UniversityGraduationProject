@@ -1,4 +1,5 @@
 'use strict';
+const bcrypt = require('bcrypt');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -12,7 +13,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      date_of_pirth: {
+      date_of_birth: {
         type: Sequelize.DATE,
         allowNull: false,
       },
@@ -28,21 +29,17 @@ module.exports = {
         unique:true,
       },
       permission: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('student', 'teacher', 'admin', 'staff'),
         allowNull: false,
         defaultValue:'student',
-        validate:{
-          isIn:[['student','teacher','admin','staff']],},
-        },
+      },
         password: {
           type: Sequelize.STRING,
           allowNull: false,
-          validate:{
-            len: [8,100]},
-        },
-        description: {
-          type: Sequelize.STRING,
-          allowNull: true,
+          set(value){
+            const hasedpassword = bcrypt.hashSync(value,10);
+            this.setDataValue('password',hasedpassword);
+          },
         },
         
       createdAt: {

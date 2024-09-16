@@ -12,33 +12,30 @@ async function insertUsers() {
       {
         user_id: 5,
         user_name: 'John Doe',
-        date_of_pirth: new Date('1990-01-01'),
+        date_of_birth: '1990-01-01',
         email: 'johnmn.doe@example.com',
         phone_number: '123456744890', // Unique phone number
         permission: 'student',
         password: 'securePassword123',
-        description: 'A brief description about John Doe',
       },
       {
         user_id: 6,
         user_name: 'Jane Smith',
-        date_of_pirth: new Date('1992-05-15'),
+        date_of_birth: '1992-05-15',
         email: 'janase.smith@example.com',
         phone_number: '234564478901', // Unique phone number
         permission: 'teacher',
         password: 'securePassword456',
-        description: 'A brief description about Jane Smith',
       },
       {
         user_id: 7,
         user_name: 'Alice Johnson',
-        date_of_pirth: new Date('1985-11-30'),
+        date_of_birth:'1985-11-30',
         email: 'alissace.johnson@example.com',
         phone_number: '345674489012', // Unique phone number
         permission: 'admin',
         password: 'securePassword789',
-        description: 'A brief description about Alice Johnson',
-      },s
+      },
     ];
 
     // Insert multiple users
