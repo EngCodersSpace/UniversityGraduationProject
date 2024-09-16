@@ -3,7 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('students', {
-      
+     
       student_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -11,6 +11,8 @@ module.exports = {
           model:'users',
           key:'user_id',
         },
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',  
         
       },
       student_name: {
@@ -45,7 +47,6 @@ module.exports = {
           isIn:[['Male','Female']],},
         
       },
-
 
 
       createdAt: {
