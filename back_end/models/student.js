@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class student extends Model {
     /**
@@ -11,15 +12,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
-      //(1)Relationship One-to-One between "student table" and  "user table"
-      student.belongsTo(models.user,{foreignKey: 'student_id'});
 
+      //(1)Relationship One-to-One between "student table" and  "user table"
+      student.belongsTo(models.user,{
+        foreignKey: 'student_id',
+        targetKey:'user_id',
+        onUpdate:'CASCADE',
+      });
 
     }
   }
   student.init({
-    
 
     student_id: {
       type: DataTypes.INTEGER,
@@ -28,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
         model:'users',
         key:'user_id',
       },
+      onDelete:'CASCADE',
+      onUpdate:'CASCADE',
       
     },
     student_name: {
@@ -62,6 +67,9 @@ module.exports = (sequelize, DataTypes) => {
         isIn:[['Male','Female']],},
       
     },
+
+
+
 
   }, {
     sequelize,

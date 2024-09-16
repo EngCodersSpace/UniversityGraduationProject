@@ -11,16 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      //(1)Relationship One-to-One between "user table" and  "student tabl
+      user.hasOne(models.student,{
+        foreignKey:'student_id',
+        sourceKey:'user_id',
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
       
-     //(1)Relationship One-to-One between "user table" and  "student table"
-     user.hasOne(models.student,{foreignKey:'student_id'});
-      
+      });
+
     }
   }
   user.init({
 
-
-    
     user_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -31,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  
+
     date_of_pirth: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -39,36 +43,41 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique:true,
-      validate:{isEmail:true,},
+      unique: true,
+      validate: { isEmail: true, },
     },
     phone_number: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
-      unique:true,
+      unique: true,
     },
     permission: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue:'student',
-      validate:{
-        isIn:[['student','teacher','admin','staff']],},
+      defaultValue: 'student',
+      validate: {
+        isIn: [['student', 'teacher', 'admin', 'staff']],
       },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate:{
-          len: [8,100]},
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [8, 100]
       },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
-
+    
   }, {
     sequelize,
     modelName: 'user',
   });
+
   return user;
+
 };
+

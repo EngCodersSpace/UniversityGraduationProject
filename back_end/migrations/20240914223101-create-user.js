@@ -3,9 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
-    
-      
-      
+
       user_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -25,7 +23,7 @@ module.exports = {
         validate:{isEmail:true,},
       },
       phone_number: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
         unique:true,
       },
@@ -46,8 +44,7 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: true,
         },
-
-      
+        
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
