@@ -19,9 +19,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       student_section: {
-        type: Sequelize.STRING,
-        validate:{
-          isIn:[['Computer','Communications','Civil','Architecture']],},
+        type: Sequelize.ENUM('Computer','Communications','Civil','Architecture'),
       },
       enrollment_year: {
         type: Sequelize.STRING,
@@ -40,15 +38,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      gender: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate:{
-          isIn:[['Male','Female']],},
-        
-      },
-
-
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
