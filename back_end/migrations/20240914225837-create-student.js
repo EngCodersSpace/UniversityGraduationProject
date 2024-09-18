@@ -26,7 +26,7 @@ module.exports = {
         allowNull: false,
       },
       student_level: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
         allowNull: false,
       },
       status: {

@@ -46,13 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     student_level: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
       allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-
     },
     address: {
       type: DataTypes.STRING,
