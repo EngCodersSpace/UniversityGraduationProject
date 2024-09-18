@@ -17,17 +17,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique:true,
-        validate:{isEmail:true,},
-      },
-      phone_number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique:true,
-      },
       permission: {
         type: Sequelize.ENUM('student', 'teacher', 'admin', 'staff'),
         allowNull: false,

@@ -13,14 +13,22 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      //(1)Relationship One-to-One between "user table" and  "student tabl
+      //(1)Relationship One-to-One between "user table" and  "student table"
       user.hasOne(models.student,{
         foreignKey:'student_id',
         sourceKey:'user_id',
         onDelete:'CASCADE',
         onUpdate:'CASCADE',
-      
       });
+
+      // //(2)Relationship One-to-Many between "user table" and  "email table"
+      // user.hasMany(models.email,{
+      //   foreignKey:'user_id',
+      //   sourceKey:'user_id',
+      //   onDelete:'CASCADE',
+      //   onUpdate:'CASCADE',
+      // })
+
 
     }
   }
@@ -31,26 +39,13 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
 
     },
-
     user_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     date_of_birth: {
       type: DataTypes.DATE,
       allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: { isEmail: true, },
-    },
-    phone_number: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     permission: {
       type: DataTypes.ENUM('student', 'teacher', 'admin', 'staff'),
