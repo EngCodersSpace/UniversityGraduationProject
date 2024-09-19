@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       //(1)Relationship One-to-One between "student table" and  "user table"
-      student.belongsTo(models.user,{
-        foreignKey: 'student_id',
-        targetKey:'user_id',
-        onUpdate:'CASCADE',
+      student.belongsTo(models.user, {
+        foreignKey: 'student_id',//the foreign Key in the student table refers to user table
+        targetKey: 'user_id',     //the pwimary Key in the user
+        //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate" 
+        // onDelete:'NO ACTION',    //if a student is deleted the user associated with him will not be deleted
+        // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
       });
 
     }
@@ -28,25 +30,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       references: {
-        model: 'users' ,
-        key:'user_id',
+        model: 'users',
+        key: 'user_id',
       },
-      onDelete:'CASCADE',
-      onUpdate:'CASCADE',
-      
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+
     },
     student_name: {
       type: DataTypes.STRING,
     },
     student_section: {
-      type: DataTypes.ENUM('Computer','Communications','Civil','Architecture'),
+      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
     },
     enrollment_year: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     student_level: {
-      type: DataTypes.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
+      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
       allowNull: false,
     },
     status: {
@@ -57,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-  
+
 
   }, {
     sequelize,
