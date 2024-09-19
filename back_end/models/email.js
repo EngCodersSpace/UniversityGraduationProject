@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      //(1)Relationship One-to-Many between "email table" and  "user table"
+      email.belongsTo(models.user, {
+        foreignKey: 'user_id',//the foreign Key in the email table refers to user table
+        targetKey: 'user_id',  //the pwimary Key in the user 
+        //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate"
+        // onDelete:'NO ACTION', //if a email is deleted the user associated with him will not be deleted
+        // onUpdate:'NO ACTION', //if a email is update the user associated with him will not be updated
+      });
     }
   }
   email.init({
@@ -23,19 +32,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       references: {
-        model: 'users' ,
-        key:'user_id',
+        model: 'users',
+        key: 'user_id',
       },
-      onDelete:'CASCADE',
-      onUpdate:'CASCADE',  
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique:true,
-      validate:{isEmail:true,},
+      unique: true,
+      validate: { isEmail: true, },
     },
 
     email: DataTypes.STRING
