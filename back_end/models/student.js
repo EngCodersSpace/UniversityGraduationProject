@@ -22,7 +22,12 @@ module.exports = (sequelize, DataTypes) => {
         // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
       });
 
-    }
+      //(2)Relationship One-to-Many between "student table" and  "study_plan table"
+      student.belongsTo(models.study_plan, {
+        foreignKey: 'study_plan_id',//the foreign Key in the student table refers to study_plan table
+      });
+
+    }//study_plan
   }
   student.init({
 
@@ -33,9 +38,18 @@ module.exports = (sequelize, DataTypes) => {
         model: 'users',
         key: 'user_id',
       },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-
+      onDelete: 'CASCADE',//if a user is delete the student associated with him will be deleted
+      onUpdate: 'CASCADE',//if a user is update the student associated with him will be updated
+    },
+    study_plan_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'study_plans',
+        key: 'study_plan_id',
+      },
+      onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
+      onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
     },
     student_name: {
       type: DataTypes.STRING,

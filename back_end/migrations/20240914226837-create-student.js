@@ -3,30 +3,39 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('students', {
-     
+
       student_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         references: {
-          model: 'users' ,
-          key:'user_id',
+          model: 'users',
+          key: 'user_id',
         },
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',  
-        
+        onDelete: 'CASCADE',//if a user is delete the student associated with him will be deleted
+        onUpdate: 'CASCADE',//if a user is update the student associated with him will be updated
+      },
+      study_plan_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'study_plans',
+          key: 'study_plan_id',
+        },
+        onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
+        onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
       },
       student_name: {
         type: Sequelize.STRING,
       },
       student_section: {
-        type: Sequelize.ENUM('Computer','Communications','Civil','Architecture'),
+        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
       },
       enrollment_year: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       student_level: {
-        type: Sequelize.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
+        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
         allowNull: false,
       },
       status: {
@@ -38,7 +47,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-     
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
