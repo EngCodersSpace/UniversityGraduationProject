@@ -5,12 +5,19 @@ module.exports = {
     await queryInterface.createTable('subjects', {
       subject_id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING,
       },
       subject_name: {
         type: Sequelize.STRING
+      },
+      number_of_units:{
+        type:Sequelize.INTEGER,
+        allowNull:false,
+      },
+      subject_description:{
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
 
       createdAt: {

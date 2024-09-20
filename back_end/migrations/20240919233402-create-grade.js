@@ -9,6 +9,26 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
+      student_id: {
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references: {
+          model: 'students',
+          key: 'student_id',
+        },
+        onDelete: 'CASCADE',//if a student is delete the grade associated with him will be deleted
+        onUpdate: 'CASCADE',//if a student is update the grade associated with him will be updated
+      },
+      subject_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        references: {
+          model: 'subjects',
+          key: 'subject_id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
       the_grade: {
         type: Sequelize.INTEGER,
         allowNull: true,
