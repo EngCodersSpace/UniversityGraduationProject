@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       study_plan.hasMany(models.student, {
         foreignKey: 'study_plan_id', //the foreign Key in the student table refers to study_plan table
       });
+
+       //(2)Relationship One-to-Many between "study_plan table" and  "study_plan_description table"
+       study_plan.hasMany(models.study_plan_description, {
+        foreignKey: 'study_plan_id', //the foreign Key in the study_plan_description table refers to study_plan table
+      });
+
     }
   }
   study_plan.init({

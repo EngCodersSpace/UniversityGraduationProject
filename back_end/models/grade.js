@@ -11,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+       //(1)Relationship One-to-Many between "grade table" and  "subject table"
+       grade.belongsTo(models.subject, {
+        foreignKey: 'subject_id',//the foreign Key in the grade table refers to subject table
+      });
+
+      //(2)Relationship One-to-Many between "grade table" and  "student table"
+      grade.belongsTo(models.student,{
+        foreignKey:'student_id',//the foreign Key in the grade table refers to student table
+      });
+
     }
   }
   grade.init({
@@ -20,6 +31,26 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
+    },
+    student_id: {
+      type: DataTypes.INTEGER,
+      allowNull:false,
+      references: {
+        model: 'students',
+        key: 'student_id',
+      },
+      onDelete: 'CASCADE',//if a student is delete the grade associated with him will be deleted
+      onUpdate: 'CASCADE',//if a student is update the grade associated with him will be updated
+    },
+    subject_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      references: {
+        model: 'subjects',
+        key: 'subject_id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
     },
     the_grade: {
       type: DataTypes.INTEGER,

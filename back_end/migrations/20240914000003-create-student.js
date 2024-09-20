@@ -26,9 +26,11 @@ module.exports = {
       },
       student_name: {
         type: Sequelize.STRING,
+        allowNull:false,
       },
       student_section: {
         type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+        allowNull:false,
       },
       enrollment_year: {
         type: Sequelize.STRING,

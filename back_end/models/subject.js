@@ -11,18 +11,36 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      //(1)Relationship One-to-Many between "subject table" and  "study_plan_description table"
+      subject.hasMany(models.study_plan_description, {
+        foreignKey: 'subject_id', //the foreign Key in the study_plan_description table refers to subject table
+      });
+
+      //(2)Relationship One-to-Many between "subject table" and  "grade table"
+      subject.hasMany(models.grade, {
+        foreignKey: 'subject_id', //the foreign Key in the grade table refers to subject table
+      });
+
     }
   }
   subject.init({
 
     subject_id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING,
     },
     subject_name: {
       type: DataTypes.STRING
+    },
+    number_of_units:{
+      type:DataTypes.INTEGER,
+      allowNull:false,
+    },
+    subject_description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   }, {
     sequelize,
