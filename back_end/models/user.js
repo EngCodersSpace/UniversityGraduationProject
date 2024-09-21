@@ -21,23 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         //onUpdate:'CASCADE',      //if a user is update the student associated with him will be updated
       });
 
-      //(2)Relationship One-to-Many between "user table" and  "email table"
-      user.hasMany(models.email,{
-        foreignKey:'user_id',
-        sourceKey:'user_id',
-        // onDelete:'CASCADE',
-        // onUpdate:'CASCADE',
-      })
-
-      //(3)Relationship One-to-Many between "user table" and  "phone_number table"
+      //(2)Relationship One-to-Many between "user table" and  "phone_number table"
       user.hasMany(models.phone_number,{
         foreignKey:'user_id',
         sourceKey:'user_id',
         // onDelete:'CASCADE',
         // onUpdate:'CASCADE',
-      })
+      });
 
-      //(4)Relationship One-to-One between "user table" and  "doctor table"
+      //(3)Relationship One-to-One between "user table" and  "doctor table"
       user.hasOne(models.doctor,{
         foreignKey:'doctor_id', //the foreign Key in the doctor table refers to user table
         sourceKey:'user_id',     //the primary key in the user table
@@ -61,7 +53,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     date_of_birth: {
       type: DataTypes.DATE,
+      allowNull: true,
+    },
+    email: {
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      validate: { isEmail: true, },
     },
     permission: {
       type: DataTypes.ENUM('student', 'teacher', 'admin', 'staff'),

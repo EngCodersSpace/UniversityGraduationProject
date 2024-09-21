@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: 'user_id',     //the pwimary Key in the user
       });
 
+      //(2)Relationship One-to-Many between "doctor table" and  "study_plan_elment table"
+      doctor.hasMany(models.study_plan_elment,{
+        foreignKey:'doctor_id',
+      });
+
+
     }
   }
   doctor.init({
@@ -52,14 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
       defaultValue: 'None',
     },
-    teaching_courses: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
+
 
 
   }, {
