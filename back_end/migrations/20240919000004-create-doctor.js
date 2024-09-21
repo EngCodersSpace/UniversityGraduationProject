@@ -33,15 +33,6 @@ module.exports = {
         type: Sequelize.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
         defaultValue: 'None',
       },
-      teaching_courses: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-
 
 
       createdAt: {

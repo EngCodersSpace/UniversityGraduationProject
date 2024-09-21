@@ -15,7 +15,13 @@ module.exports = {
       },
       date_of_birth: {
         type: Sequelize.DATE,
+        allowNull: true,
+      },
+      email: {
+        type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
+        validate: { isEmail: true, },
       },
       permission: {
         type: Sequelize.ENUM('student', 'teacher', 'admin', 'staff'),

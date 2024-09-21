@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('study_plan_descriptions', {
-      study_plan_description_id: {
+    await queryInterface.createTable('study_plan_elments', {
+      study_plan_elment_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -20,7 +20,7 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       subject_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(10),
         allowNull: false,
         references: {
           model: 'subjects',
@@ -28,6 +28,16 @@ module.exports = {
         },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
+      },
+      doctor_id: {
+        type: Sequelize.INTEGER,
+        allowNull:true,
+        references: {
+          model: 'doctors' ,
+          key:'doctor_id',
+        },
+        onDelete:'SET NULL',
+        onUpdate:'CASCADE',  
       },
       section: {
         type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
@@ -62,6 +72,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('study_plan_descriptions');
+    await queryInterface.dropTable('study_plan_elments');
   }
 };

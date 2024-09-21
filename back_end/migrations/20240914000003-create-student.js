@@ -45,9 +45,9 @@ module.exports = {
         allowNull: false,
 
       },
-      address: {
-        type: Sequelize.STRING,
-        allowNull: true,
+      profile_picture:{
+        type:Sequelize.STRING,
+        allowNull:true,
       },
 
       createdAt: {

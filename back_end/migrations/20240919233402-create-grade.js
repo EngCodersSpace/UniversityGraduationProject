@@ -20,7 +20,7 @@ module.exports = {
         onUpdate: 'CASCADE',//if a student is update the grade associated with him will be updated
       },
       subject_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(10),
         allowNull: false,
         references: {
           model: 'subjects',
@@ -29,8 +29,12 @@ module.exports = {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
-      the_grade: {
-        type: Sequelize.INTEGER,
+      exam_grade: {
+        type: Sequelize.TINYINT,
+        allowNull: true,
+      },
+      work_grade: {
+        type: Sequelize.TINYINT,
         allowNull: true,
       },
       term: {
@@ -46,7 +50,7 @@ module.exports = {
         allowNull: false,
       },
        //Year the grade was issued
-      year: {
+       year_of_issue: {
         type: Sequelize.STRING,
         allowNull: false,
       },
