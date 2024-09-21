@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
     },
     enrollment_year: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     student_level: {

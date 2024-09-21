@@ -33,7 +33,7 @@ module.exports = {
         allowNull:false,
       },
       enrollment_year: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       student_level: {

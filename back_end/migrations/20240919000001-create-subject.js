@@ -12,11 +12,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       number_of_units:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.TINYINT,
         allowNull:false,
       },
       subject_description:{
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING,
         allowNull: true,
       },
 

@@ -18,7 +18,7 @@ module.exports = {
         allowNull: true,
       },
       email: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
         unique: true,
         validate: { isEmail: true, },
@@ -29,7 +29,7 @@ module.exports = {
         defaultValue:'student',
       },
         password: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(100),
           allowNull: false,
           set(value){
             const hasedpassword = bcrypt.hashSync(value,10);
