@@ -35,11 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     number_of_units:{
-      type:DataTypes.INTEGER,
+      type:DataTypes.TINYINT,
       allowNull:false,
     },
     subject_description: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: true,
     },
   }, {

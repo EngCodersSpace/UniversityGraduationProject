@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     //Year the grade was issued
     year_of_issue: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     //Determine if the student is absent or not .[if "true '1' " =>(he is absent) , if "false '0' " =>(he is not absent)]
