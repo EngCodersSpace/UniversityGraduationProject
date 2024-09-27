@@ -27,6 +27,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'doctor_id',//the foreign Key in the study_plan_elment table refers to doctor table
       });
 
+      //(4)Relationship One-to-Many between "study_plan_elment table" and  "prerequisite table"
+      study_plan_elment.hasMany(models.prerequisite,{
+        foreignKey:'study_plan_elment_id',
+      });
+
+
     }
   }
   study_plan_elment.init({

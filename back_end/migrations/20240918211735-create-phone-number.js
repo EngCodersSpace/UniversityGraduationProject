@@ -3,27 +3,23 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('phone_numbers', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+
       user_id: {
         type: Sequelize.INTEGER,
+        primaryKey: true,
         references: {
-          model: 'users' ,
-          key:'user_id',
+          model: 'users',
+          key: 'user_id',
         },
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',  
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       phone_number: {
         type: Sequelize.STRING,
+        primaryKey: true,
         allowNull: false,
-        unique:true,
       },
-      
+
     });
   },
   async down(queryInterface, Sequelize) {
