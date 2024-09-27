@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id', //the foreign Key in the grade table refers to subject table
       });
 
+       //(3)Relationship One-to-Many between "subject table" and  "prerequisite table"
+       subject.hasMany(models.prerequisite, {
+        foreignKey: 'subject_id', //the foreign Key in the prerequisite table refers to subject table
+      });
+
     }
   }
   subject.init({

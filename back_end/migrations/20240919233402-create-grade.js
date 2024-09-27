@@ -11,7 +11,7 @@ module.exports = {
       },
       student_id: {
         type: Sequelize.INTEGER,
-        allowNull:false,
+        allowNull: false,
         references: {
           model: 'students',
           key: 'student_id',
@@ -38,19 +38,19 @@ module.exports = {
         allowNull: true,
       },
       term: {
-        type: Sequelize.ENUM('Term 1','Term 2'),
+        type: Sequelize.ENUM('Term 1', 'Term 2'),
         allowNull: false,
       },
       section: {
-        type: Sequelize.ENUM('Computer','Communications','Civil','Architecture'),
+        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
         allowNull: false,
       },
       level: {
-        type: Sequelize.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
+        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
         allowNull: false,
       },
-       //Year the grade was issued
-       year_of_issue: {
+      //Year the grade was issued
+      year_of_issue: {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
@@ -58,21 +58,21 @@ module.exports = {
       is_absent: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue:false,
+        defaultValue: false,
       },
       //Determine if the student has tested the subject before or not .[if "Repeater" =>(he is tested before) , if "Freshman" =>(he has never tested it before)]
       status: {
-        type: Sequelize.ENUM('Freshman','Repeater'),
+        type: Sequelize.ENUM('Freshman', 'Repeater'),
         allowNull: false,
         defaultValue: 'Freshman',
       },
       // //How many times did he retest the subject 
-    // //Write a function to increase the value by +1  in every each time he retake the subject test
-    // retake_count: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    //   defaultValue: 0,
-    // },
+      // //Write a function to increase the value by +1  in every each time he retake the subject test
+      // retake_count: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: false,
+      //   defaultValue: 0,
+      // },
 
 
 
