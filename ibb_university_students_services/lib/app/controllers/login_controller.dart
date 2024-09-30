@@ -70,7 +70,7 @@ class LoginController extends GetxController {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 1));
       Result res = await UserServices.userLogin(id.text, password.text);
-      if (res.data || true) {
+      if (res.data) {
         Get.offNamed("/main");
       }else{
         if(res.statusCode == 401) loggingFiledMessage.value = "id or password is wrong";

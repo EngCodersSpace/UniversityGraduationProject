@@ -34,13 +34,64 @@ class UserServices {
             data: false
         );
       }
+      if(id == "1" && password =="12345678" ){
+
+        // virtual response for test
+        Map<String,dynamic> response = {
+          'message':'login successfully',
+          'user':{
+            'id': 2070093,
+            'name': 'Shehab AL-Saidi',
+            'level': '4th',
+            'part': 'Electrical engineering',
+            'department': 'Computer engineering',
+            'profile_image': 'assets/images/login_background_0.jpg',
+          },
+          'user_type':'student',
+          'token':'token_val'
+
+        };
+
+        if (response["user_type"] == "student") {
+          _user = Student.fromJson(response["user"]);
+        }else{
+          _user = Doctor.fromJson(response["user"]);
+        }
+        return Result(
+            hasError: false, statusCode: 200, data: true);
+      }
+      else if(id == "2" && password =="12345678" ){
+
+        // virtual response for test
+        Map<String,dynamic> response = {
+          'message':'login successfully',
+          'user':{
+            'id': 2070093,
+            'name': 'Shehab AL-Saidi',
+            'mmm':'something',
+            'profile_image': 'assets/images/login_background_0.jpg',
+          },
+          'user_type':'doctor',
+          'token':'token_val'
+
+        };
+
+        if (response["user_type"] == "student") {
+          _user = Student.fromJson(response["user"]);
+        }else{
+          _user = Doctor.fromJson(response["user"]);
+        }
+        return Result(
+            hasError: false, statusCode: 200, data: true);
+      }
+
       return Result(hasError: true, statusCode: 600,message: "please check your connection", data: false);
     }
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
     if (_user != null && !hardFetch) {
-      return Result(data: _user, hasError: false, message: "successful");
+      return Result(data: _user,statusCode: 200 ,hasError: false, message: "successful");
     }
 
     late Response response;
