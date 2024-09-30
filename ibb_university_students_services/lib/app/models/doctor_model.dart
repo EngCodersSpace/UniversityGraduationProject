@@ -3,7 +3,8 @@ import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class Doctor extends User {
 
-  RxString? mmmm;
+  RxString? academicDegree;
+  RxString? administrativePosition;
 
 
   Doctor({
@@ -12,7 +13,9 @@ class Doctor extends User {
     super.email,
     super.phone,
     super.profileImage,
-    this.mmmm,
+    super.department,
+    this.academicDegree,
+    this.administrativePosition,
     super.createdAt,
     super.updatedAt,
   });
@@ -24,7 +27,9 @@ class Doctor extends User {
       email: RxString(json['email'] ?? ""),
       phone: RxString(json['phone'] ?? ""),
       profileImage: RxString(json['profile_image'] ?? ""),
-      mmmm: RxString(json['level'] ?? ""),
+      department: RxString(json['department'] ?? ""),
+      academicDegree: RxString(json['academic_degree'] ?? ""),
+      administrativePosition: RxString(json['administrative_position'] ?? ""),
       createdAt: RxString(json['created_at'] ?? ""),
       updatedAt: RxString(json['updated_at'] ?? ""),
     );
@@ -37,7 +42,9 @@ class Doctor extends User {
       "name": name?.value,
       "email": email?.value,
       "phone": phone?.value,
-      "mmmm": mmmm?.value,
+      "department": department?.value,
+      "academic_degree": academicDegree?.value,
+      "administrative_position": administrativePosition?.value,
       "profile_image": profileImage?.value,
       "created_at": createdAt?.value,
       "updated_at": updatedAt?.value,

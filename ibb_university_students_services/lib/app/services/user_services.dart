@@ -42,6 +42,8 @@ class UserServices {
           'user':{
             'id': 2070093,
             'name': 'Shehab AL-Saidi',
+            'email':'shehab@gmail.com',
+            'phone':'772388461',
             'level': '4th',
             'part': 'Electrical engineering',
             'department': 'Computer engineering',
@@ -68,7 +70,11 @@ class UserServices {
           'user':{
             'id': 2070093,
             'name': 'Shehab AL-Saidi',
-            'mmm':'something',
+            'email':'shehab@gmail.com',
+            'phone':'772388461',
+            'department':'Computer Eng',
+            'academic_degree':'Doctor',
+            'administrative_position':'Lecturer',
             'profile_image': 'assets/images/login_background_0.jpg',
           },
           'user_type':'doctor',

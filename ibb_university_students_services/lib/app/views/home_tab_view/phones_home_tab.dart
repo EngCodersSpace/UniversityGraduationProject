@@ -33,8 +33,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      left: width * 0.05,
-                      right: width * 0.05,
+                      left: width * 0.02,
+                      right: width * 0.02,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,12 +236,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   surfaceTintColor: AppColors.mainCardColor,
                                   color: AppColors.mainCardColor,
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: (width - 2) * 0.05,
+                                        width: (width - 2) * 0.03,
                                       ),
                                       SizedBox(
-                                        width: (width - 2) * 0.3,
+                                        width: (width - 2) * 0.25,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -263,7 +264,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   child: MainText(
                                                       (controller.user
                                                                   as Doctor)
-                                                              .mmmm
+                                                              .department
                                                               ?.value ??
                                                           "Unknown".tr,
                                                       textColor: AppColors
@@ -283,22 +284,22 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                         color: AppColors.inverseSecTextColor,
                                       ),
                                       SizedBox(
-                                        width: (width - 2) * 0.04,
+                                        width: (width - 2) * 0.03,
                                       ),
                                       SizedBox(
-                                        width: (width - 2) * 0.25,
+                                        width: (width - 2) * 0.3,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            SecText("Level".tr,
+                                            SecText("Academic Degree".tr,
                                                 textColor: AppColors
                                                     .inverseSecTextColor),
                                             Row(
                                               children: [
-                                                Icon(Icons.school,
+                                                Icon(Icons.card_membership,
                                                     color:
                                                         AppColors.secTextColor),
                                                 SizedBox(
@@ -306,11 +307,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .mmmm
+                                                            .academicDegree
                                                             ?.value ??
                                                         "Unknown".tr,
                                                     textColor:
-                                                        AppColors.secTextColor),
+                                                        AppColors.secTextColor,
+                                                    fontSize: 14 *
+                                                        Get.textScaleFactor,
+                                                    height: 0),
                                               ],
                                             ),
                                           ],
@@ -325,31 +329,38 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                         width: (width - 2) * 0.03,
                                       ),
                                       SizedBox(
-                                        width: (width - 2) * 0.2,
+                                        width: (width - 2) * 0.3,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            SecText("Level".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
+                                            SecText(
+                                              "Academic Position".tr,
+                                              textColor:
+                                                  AppColors.inverseSecTextColor,
+                                              fontSize:
+                                                  14 * Get.textScaleFactor,
+                                            ),
                                             Row(
                                               children: [
-                                                Icon(Icons.school,
+                                                Icon(Icons.manage_accounts,
                                                     color:
                                                         AppColors.secTextColor),
                                                 SizedBox(
-                                                  width: width * 0.025,
+                                                  width: width * 0.02,
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .mmmm
+                                                            .administrativePosition
                                                             ?.value ??
                                                         "Unknown".tr,
                                                     textColor:
-                                                        AppColors.secTextColor),
+                                                        AppColors.secTextColor,
+                                                    fontSize: 14 *
+                                                        Get.textScaleFactor,
+                                                    height: 0),
                                               ],
                                             ),
                                           ],

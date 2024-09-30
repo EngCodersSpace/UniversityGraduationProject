@@ -5,6 +5,7 @@ class User {
   RxString? name;
   RxString? email;
   RxString? phone;
+  RxString? department;
   RxString? profileImage;
   RxString? createdAt;
   RxString? updatedAt;
@@ -14,6 +15,7 @@ class User {
     this.name,
     this.email,
     this.phone,
+    this.department,
     this.profileImage,
     this.createdAt,
     this.updatedAt,
@@ -25,6 +27,7 @@ class User {
       name: RxString(json['name'] ?? ""),
       email: RxString(json['email'] ?? ""),
       phone: RxString(json['phone'] ?? ""),
+      department: RxString(json['department'] ?? ""),
       profileImage: RxString(json['profileImage'] ?? ""),
       createdAt: RxString(json['created_at'] ?? ""),
       updatedAt: RxString(json['updated_at'] ?? ""),

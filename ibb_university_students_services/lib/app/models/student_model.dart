@@ -4,7 +4,6 @@ import 'package:ibb_university_students_services/app/models/user_model.dart';
 class Student extends User {
 
   RxString? level;
-  RxString? department;
   RxString? division;
 
   Student({
@@ -13,8 +12,8 @@ class Student extends User {
     super.email,
     super.phone,
     super.profileImage,
+    super.department,
     this.level,
-    this.department,
     this.division,
     super.createdAt,
     super.updatedAt,
