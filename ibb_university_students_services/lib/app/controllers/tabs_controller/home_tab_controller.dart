@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/user_model.dart';
+import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
 
-import '../../models/structuers/user_structure.dart';
+import '../../models/user_model.dart';
 
 class HomeTabController extends GetxController with GetSingleTickerProviderStateMixin{
-  User user = UserModel.fetchUser();
+  User? user;
 
   late TabController tabController ;
   ScrollController scrollController = ScrollController();
@@ -21,10 +22,14 @@ class HomeTabController extends GetxController with GetSingleTickerProviderState
     tabController.dispose();
   }
   @override
-  void onInit() {
+  void onInit() async{
+    Result res = await UserServices.fetchUser();
+    if(res.statusCode == 200){
+      user = res.data;
+    }
+
     tabController = TabController(length: 3,initialIndex: 0, vsync:this);
     _startTimer();
-
     super.onInit();
   }
 

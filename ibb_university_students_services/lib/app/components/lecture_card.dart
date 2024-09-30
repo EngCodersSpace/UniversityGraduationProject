@@ -5,9 +5,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/models/structuers/table_time_structure.dart';
 
 import '../globals.dart';
+import '../models/table_time_model.dart';
 
 class LectureCard extends StatelessWidget {
 

@@ -38,13 +38,12 @@ class MainText extends StatelessWidget {
 
 class SecText extends MainText {
   SecText(
-    String text, {
+    super.text, {
     super.key,
     Color? textColor,
     double? fontSize,
     FontWeight? fontWeight,
-  }) : super(text,
-            textColor: textColor ?? AppColors.secTextColor,
+  }) : super(textColor: textColor ?? AppColors.secTextColor,
             fontSize: fontSize ?? 14,
             fontWeight: fontWeight ?? FontWeight.normal);
 }

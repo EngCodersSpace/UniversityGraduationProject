@@ -1,7 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/user_model.dart';
+import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -68,7 +68,8 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 1));
-      if (UserModel.userLogin(id.text, password.text)) {
+      Result res = await UserServices.userLogin(id.text, password.text);
+      if (res.data) {
         Get.offNamed("/main");
       }else{
        loggingFiled.value = true;

@@ -1,17 +1,23 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/structuers/table_time_structure.dart';
 import 'package:ibb_university_students_services/app/models/table_time_model.dart';
+import 'package:ibb_university_students_services/app/services/table_time_services.dart';
+
+import '../../models/result.dart';
 
 
 class TableTabController extends GetxController {
-  TableTime? tableTime = TableTimeModel.fetchTable();
+  TableTime? tableTime;
   List<TableDayContent>? selectedDay;
   RxInt selected = 0.obs;
   String selectedDayName = "Sunday";
 
   @override
-  void onInit() {
+  void onInit() async{
     // TODO: implement onInit
+    Result res = await TableTimeServices.fetchTableTime();
+    if(res.statusCode == 200){
+      tableTime = res.data;
+    }
     selectedDay = tableTime?.sun;
     super.onInit();
   }
