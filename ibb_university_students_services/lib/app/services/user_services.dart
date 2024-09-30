@@ -30,9 +30,11 @@ class UserServices {
         return Result(
             hasError: true,
             statusCode: error.response?.statusCode,
-            data: error.response?.data);
+            message: error.response?.statusMessage,
+            data: false
+        );
       }
-      return Result(hasError: true, message: error.message, data: false);
+      return Result(hasError: true, statusCode: 600,message: "please check your connection", data: false);
     }
   }
 

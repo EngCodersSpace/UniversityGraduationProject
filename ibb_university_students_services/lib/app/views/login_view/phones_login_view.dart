@@ -186,7 +186,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     ),
                     if(controller.loggingFiled.value)...[
                       SecText("Login Filed",textColor: Colors.redAccent,),
-                      SecText("password or id is wrong",textColor: Colors.redAccent,),
+                      SecText(controller.loggingFiledMessage.value,textColor: Colors.redAccent,),
                     ],
                     SizedBox(
                       height: height * 0.6 * 0.05,

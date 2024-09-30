@@ -12,6 +12,7 @@ class LoginController extends GetxController {
   String logWith = "ID";
   RxBool logging = false.obs;
   RxBool loggingFiled = false.obs;
+  RxString loggingFiledMessage = "".obs;
   RxDouble heightScale = 0.6.obs;
 
 
@@ -69,11 +70,14 @@ class LoginController extends GetxController {
       logging.value = true;
       await Future.delayed(const Duration(seconds: 1));
       Result res = await UserServices.userLogin(id.text, password.text);
-      if (res.data) {
+      if (res.data || true) {
         Get.offNamed("/main");
       }else{
-       loggingFiled.value = true;
+        if(res.statusCode == 401) loggingFiledMessage.value = "id or password is wrong";
+        loggingFiledMessage.value = res.message??"some thing go wrong";
+        loggingFiled.value = true;
       }
+
       logging.value = false;
     }
   }
