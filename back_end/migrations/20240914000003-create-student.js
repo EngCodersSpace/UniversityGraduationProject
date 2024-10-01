@@ -40,10 +40,9 @@ module.exports = {
         type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
         allowNull: false,
       },
-      status: {
-        type: Sequelize.STRING,
+      student_system: {
+        type: Sequelize.ENUM('General','Free Seat','Paid'),
         allowNull: false,
-
       },
       profile_picture:{
         type:Sequelize.STRING,
