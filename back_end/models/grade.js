@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-       //(1)Relationship One-to-Many between "grade table" and  "subject table"
-       grade.belongsTo(models.subject, {
+      //(1)Relationship One-to-Many between "grade table" and  "subject table"
+      grade.belongsTo(models.subject, {
         foreignKey: 'subject_id',//the foreign Key in the grade table refers to subject table
       });
 
       //(2)Relationship One-to-Many between "grade table" and  "student table"
-      grade.belongsTo(models.student,{
-        foreignKey:'student_id',//the foreign Key in the grade table refers to student table
+      grade.belongsTo(models.student, {
+        foreignKey: 'student_id',//the foreign Key in the grade table refers to student table
       });
 
     }
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     student_id: {
       type: DataTypes.INTEGER,
-      allowNull:false,
+      allowNull: false,
       references: {
         model: 'students',
         key: 'student_id',
@@ -61,15 +61,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     term: {
-      type: DataTypes.ENUM('Term 1','Term 2'),
+      type: DataTypes.ENUM('Term 1', 'Term 2'),
       allowNull: false,
     },
     section: {
-      type: DataTypes.ENUM('Computer','Communications','Civil','Architecture'),
+      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
       allowNull: false,
     },
     level: {
-      type: DataTypes.ENUM('Level 1','Level 2','Level 3','Level 4','Level 5',),
+      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
       allowNull: false,
     },
     //Year the grade was issued
@@ -81,11 +81,11 @@ module.exports = (sequelize, DataTypes) => {
     is_absent: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue:false,
+      defaultValue: false,
     },
     //Determine if the student has tested the subject before or not .[if "Repeater" =>(he is tested before) , if "Freshman" =>(he has never tested it before)]
     status: {
-      type: DataTypes.ENUM('Freshman','Repeater'),
+      type: DataTypes.ENUM('Freshman', 'Repeater'),
       allowNull: false,
       defaultValue: 'Freshman',
     },
