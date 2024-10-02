@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 class AppData{
+  static String role = "";
 }
 
 class Utils {

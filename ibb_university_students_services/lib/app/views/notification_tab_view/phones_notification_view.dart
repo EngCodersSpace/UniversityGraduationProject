@@ -3,30 +3,65 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/components/notification_card.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
+
+import '../../components/notification_card.dart';
 import '../../controllers/tabs_controller/notification_tab_controller.dart';
 
 class PhoneNotificationView extends GetView<NotificationTabController> {
-   PhoneNotificationView({super.key});
+  PhoneNotificationView({super.key});
+
   double height = Get.height;
   double width = Get.width;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding:  const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MainText("Notifications",textColor: AppColors.inverseMainTextColor,),
-            SizedBox(height: height*0.04,),
-            SecText("Today", textColor: AppColors.inverseSecTextColor,),
-            NotificationCard(message:"Notifictaion message ajcajsncjkncjnjancjnknjcsdjkncnsjancn",author:"Shehab", time:"10:00 PM"),
-            SecText("Today", textColor: AppColors.inverseSecTextColor,),
-          ],
-        ),
-      )
-    );
+        child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Obx(() => (!controller.loadingState.value)
+                ? SingleChildScrollView(
+                    child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MainText(
+                        "Notifications",
+                        textColor: AppColors.inverseMainTextColor,
+                      ),
+                      SizedBox(
+                        height: height * 0.04,
+                      ),
+                      for (String key
+                          in controller.notificationGroups.keys) ...[
+                        SecText(
+                          (key == controller.today)?"Today":key,
+                          textColor: AppColors.inverseSecTextColor,
+                        ),
+                        for (int i = 0;
+                            i <
+                                (controller.notificationGroups[key]?.length ??
+                                    0);
+                            i++)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              NotificationCard(
+                                  message: controller
+                                          .notificationGroups[key]?[i]
+                                          .message
+                                          ?.value ??
+                                      "",
+                                  author: controller.notificationGroups[key]?[i]
+                                          .author?.value ??
+                                      "",
+                                  time: controller.notificationGroups[key]?[i]
+                                          .time?.value ??
+                                      ""),
+                            ],
+                          )
+                      ]
+                    ],
+                  ))
+                : const Center(child: CircularProgressIndicator()))));
   }
 }
