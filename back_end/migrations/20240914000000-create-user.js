@@ -26,17 +26,17 @@ module.exports = {
       permission: {
         type: Sequelize.ENUM('student', 'teacher', 'admin', 'staff'),
         allowNull: false,
-        defaultValue:'student',
+        defaultValue: 'student',
       },
-        password: {
-          type: Sequelize.STRING(100),
-          allowNull: false,
-          set(value){
-            const hasedpassword = bcrypt.hashSync(value,10);
-            this.setDataValue('password',hasedpassword);
-          },
+      password: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+        set(value) {
+          const hasedpassword = bcrypt.hashSync(value, 10);
+          this.setDataValue('password', hasedpassword);
         },
-        
+      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
