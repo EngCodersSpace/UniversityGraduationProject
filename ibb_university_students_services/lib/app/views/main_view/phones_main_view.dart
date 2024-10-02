@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
+import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
 import 'package:ibb_university_students_services/app/views/table_tab_view/phones_table_tab_view.dart';
 
@@ -218,12 +219,7 @@ class PhoneMainView extends GetView<MainController> {
   }
 
   List screens = [
-    Center(
-      child: MainText(
-        "MainPage 1",
-        textColor: Colors.black,
-      ),
-    ),
+    PhoneNotificationView(),
     PhoneTableTabView(),
     PhoneMainTab(),
     Center(
