@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/notification_model.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/notifictaion_services.dart';
@@ -17,6 +18,7 @@ class NotificationTabController extends GetxController {
     today = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     print(today);
     loadingState.value = false;
+    print(AppData.role);
     super.onInit();
   }
 
