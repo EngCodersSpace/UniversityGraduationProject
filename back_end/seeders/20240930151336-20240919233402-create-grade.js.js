@@ -18,12 +18,12 @@ module.exports = {
     const { studentIds, subjectIds } = await getExistingIds(queryInterface);
 
     const grades = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       grades.push({
         student_id: faker.helpers.arrayElement(studentIds),
         subject_id: faker.helpers.arrayElement(subjectIds),
-        exam_grade: faker.number.int({ min: 0, max: 100 }), // Updated method
-        work_grade: faker.number.int({ min: 0, max: 100 }), // Updated method
+        exam_grade: faker.number.int({ min: 0, max: 100 }), 
+        work_grade: faker.number.int({ min: 0, max: 100 }), 
         term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
         section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']),
         level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),

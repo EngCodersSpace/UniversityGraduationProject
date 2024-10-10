@@ -16,8 +16,8 @@ module.exports = {
     const { studentIds } = await getExistingIds(queryInterface);
 
     const studentFees = [];
-    for (let i = 0; i < 100; i++) {
-      const randomStudentId = faker.helpers.arrayElement(studentIds); // Randomly select a student ID
+    for (let i = 0; i < 10; i++) {
+      const randomStudentId = faker.helpers.arrayElement(studentIds); 
       studentFees.push({
         student_id: randomStudentId,
         level_fees: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),
@@ -28,7 +28,7 @@ module.exports = {
         remaining_amount: faker.finance.amount(0, 5000, 2),
         payment_status: faker.helpers.arrayElement(['Paid', 'Unpaid', 'Remaining']),
         payment_date: faker.datatype.boolean() ? faker.date.past() : null,
-        receipt_number: faker.string.uuid(), // Use string.uuid instead
+        receipt_number: faker.string.uuid(), 
         createdAt: new Date(),
         updatedAt: new Date(),
       });

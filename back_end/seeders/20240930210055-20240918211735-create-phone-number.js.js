@@ -16,9 +16,8 @@ module.exports = {
     for (let i = 0; i < 10; i++) {
       phoneNumbers.push({
         phone_number: faker.phone.number(),
-        user_id: existingIds.userIds[i % existingIds.userIds.length], // Use existing user ID
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        user_id: existingIds.userIds[i % existingIds.userIds.length], 
+        
       });
     }
     await queryInterface.bulkInsert('phone_numbers', phoneNumbers);
