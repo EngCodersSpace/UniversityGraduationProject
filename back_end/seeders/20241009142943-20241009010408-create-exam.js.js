@@ -16,13 +16,13 @@ module.exports = {
     for (let i = 0; i < 10; i++) { 
       exams.push({
         subject_id: faker.helpers.arrayElement(subjectIds), 
-        exam_section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']), // Select random section
-        exam_level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']), // Select random level
+        exam_section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']), 
+        exam_level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']), 
         exam_term: faker.helpers.arrayElement(['Term 1', 'Term 2']), 
         exam_year: faker.date.past(3).getFullYear().toString(), 
         exam_date: faker.date.future(1, new Date()).toISOString().split('T')[0], 
         exam_time: faker.date.recent().toTimeString().split(' ')[0], 
-        exam_day: faker.helpers.arrayElement(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']), // Select random day
+        exam_day: faker.helpers.arrayElement(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']), 
         exam_room: faker.location.streetAddress(), 
         createdAt: new Date(),
         updatedAt: new Date(),
