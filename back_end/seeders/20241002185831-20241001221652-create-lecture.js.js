@@ -13,7 +13,7 @@ module.exports = {
 
     for (let i = 0; i < 10; i++) {
       const lectureDate = faker.date.future(); 
-      const lectureTime = `${lectureDate.getHours().toString().padStart(2, '0')}:${lectureDate.getMinutes().toString().padStart(2, '0')}`; // Format time
+      const lectureTime = `${lectureDate.getHours().toString().padStart(2, '0')}:${lectureDate.getMinutes().toString().padStart(2, '0')}`; 
 
       
       const formattedDate = lectureDate.toLocaleDateString('en-CA'); 
