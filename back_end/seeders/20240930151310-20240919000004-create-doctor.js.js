@@ -7,7 +7,7 @@ module.exports = {
 
     for (const userId of userIds) {
       doctors.push({
-        doctor_id: userId, // Make sure this is a valid ID
+        doctor_id: userId, 
         doctor_name: faker.person.fullName(),
         department: faker.commerce.department(),
         status: faker.helpers.arrayElement(['Active', 'Inactive']),

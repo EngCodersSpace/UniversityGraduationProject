@@ -26,7 +26,7 @@ module.exports = {
         doctor_id: existingIds.doctorIds[i % existingIds.doctorIds.length],
         section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']),
         level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),
-        number_of_units: faker.number.int({ min: 1, max: 5 }), // Use faker.number.int for random number
+        number_of_units: faker.number.int({ min: 1, max: 5 }), 
         term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
         createdAt: new Date(),
         updatedAt: new Date(),

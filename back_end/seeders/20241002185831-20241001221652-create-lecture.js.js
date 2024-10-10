@@ -11,12 +11,12 @@ module.exports = {
     const terms = ['Term 1', 'Term 2'];
     const days = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
 
-    for (let i = 0; i < 50; i++) {
-      const lectureDate = faker.date.future(); // Use a future date for the lecture
+    for (let i = 0; i < 10; i++) {
+      const lectureDate = faker.date.future(); 
       const lectureTime = `${lectureDate.getHours().toString().padStart(2, '0')}:${lectureDate.getMinutes().toString().padStart(2, '0')}`; // Format time
 
-      // Format year as "YYYY-MM-DD"
-      const formattedDate = lectureDate.toLocaleDateString('en-CA'); // ISO format YYYY-MM-DD
+      
+      const formattedDate = lectureDate.toLocaleDateString('en-CA'); 
 
       lectures.push({
         subject_id: faker.helpers.arrayElement(subjectIds),
@@ -24,11 +24,11 @@ module.exports = {
         lecture_section: faker.helpers.arrayElement(sections),
         lecture_level: faker.helpers.arrayElement(levels),
         term: faker.helpers.arrayElement(terms),
-        year: formattedDate, // Use formatted date
-        lecture_time: lectureTime, // Use formatted time
-        lecture_duration: `${faker.number.int({ min: 1, max: 3 })} hours`, // Updated number generation
+        year: formattedDate, 
+        lecture_time: lectureTime, 
+        lecture_duration: `${faker.number.int({ min: 1, max: 3 })} hours`, 
         lecture_day: faker.helpers.arrayElement(days),
-        lecture_room: `${faker.location.street()} ${faker.number.int({ min: 100, max: 999 })}`, // Updated to use location
+        lecture_room: `${faker.location.street()} ${faker.number.int({ min: 100, max: 999 })}`, 
         createdAt: new Date(),
         updatedAt: new Date(),
       });
