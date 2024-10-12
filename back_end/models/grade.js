@@ -105,3 +105,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   return grade;
 };
+
+
+
+
