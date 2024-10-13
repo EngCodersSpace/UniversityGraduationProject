@@ -11,8 +11,8 @@ const { sequelize, user } = require('../models');
             user_name: 'hameed',
             date_of_pirth: '2001-1-18',
             email: 'hameed@gmail.com',
-            phone_number: '771899226',
             password: '77hs3ddsdc',
+            permission:'student',
         });
       
           console.log('User created successfully:', user1.toJSON());
