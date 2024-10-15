@@ -1,20 +1,24 @@
+'use strict';
+
 const { faker } = require('@faker-js/faker');
+const { study_plan } = require('../models'); 
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const studyPlans = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       studyPlans.push({
-        study_plan_id: i + 1,
-        study_plan_name: faker.lorem.words(3),
+        study_plan_name: faker.commerce.department(), 
         createdAt: new Date(),
         updatedAt: new Date(),
       });
     }
-    await queryInterface.bulkInsert('study_plans', studyPlans);
+
+    
+    await study_plan.bulkCreate(studyPlans);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('study_plans', null, {});
-  },
+    await study_plan.destroy({ where: {}, truncate: true });
+  }
 };
