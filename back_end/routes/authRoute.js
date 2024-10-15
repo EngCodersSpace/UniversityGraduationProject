@@ -2,20 +2,35 @@
 
 const express = require('express');
 const router = express.Router();
-const authenticate = require('../middleware/authMiddleware'); 
-const  {login } = require('../controllers/authController'); 
 
 
-router.post('/login', login.login);
+const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
+
+// Route for user login
+router.post('/login2', authController.login);
+
+// Route for token verification
+router.post('/login/authToken', authMiddleware.verifyToken, authController.verifyToken);
+
+router.post('/register', authController.registerUser)
 
 
-router.get('/dashboard', authenticate, (req, res) => {
-    res.json({ message: `Welcome, ${req.user.user_name}` }); 
-});
+// Route لطلب استعادة كلمة المرور
+router.post('/request-password-reset', authController.requestPasswordReset);
+
+// Route لإعادة تعيين كلمة المرور
+router.post('/reset-password', authController.resetPassword);
+
+
+// إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
+router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
+
+//To refresh Token
+router.post('refresh', authController.refreshToken);
+
 
 module.exports = router;
-
-
 
 
 

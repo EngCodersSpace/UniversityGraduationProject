@@ -14,22 +14,22 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       //(1)Relationship One-to-One between "student table" and  "user table"
-      student.belongsTo(models.user, {
-        foreignKey: 'student_id',//the foreign Key in the student table refers to user table
-        targetKey: 'user_id',     //the pwimary Key in the user
-        //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate" 
-        // onDelete:'NO ACTION',    //if a student is deleted the user associated with him will not be deleted
-        // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
-      });
+      // student.belongsTo(models.user, {
+      //   foreignKey: 'student_id',//the foreign Key in the student table refers to user table
+      //   targetKey: 'user_id',     //the pwimary Key in the user
+      //   //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate" 
+      //   // onDelete:'NO ACTION',    //if a student is deleted the user associated with him will not be deleted
+      //   // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
+      // });
 
-      //(2)Relationship One-to-Many between "student table" and  "study_plan table"
-      student.belongsTo(models.study_plan, {
-        foreignKey: 'study_plan_id',//the foreign Key in the student table refers to study_plan table
-      });
-      //(3)Relationship One-to-Many between "student table" and  "grade table"
-      student.hasMany(models.grade,{
-        foreignKey:'student_id',//the foreign Key in the grade table refers to student table
-      });
+      // //(2)Relationship One-to-Many between "student table" and  "study_plan table"
+      // student.belongsTo(models.study_plan, {
+      //   foreignKey: 'study_plan_id',//the foreign Key in the student table refers to study_plan table
+      // });
+      // //(3)Relationship One-to-Many between "student table" and  "grade table"
+      // student.hasMany(models.grade,{
+      //   foreignKey:'student_id',//the foreign Key in the grade table refers to student table
+      // });
 
     }//study_plan
   }
