@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       //(1)Relationship One-to-Many between "study_plan table" and  "student table"
-      study_plan.hasMany(models.student, {
-        foreignKey: 'study_plan_id', //the foreign Key in the student table refers to study_plan table
-      });
+      // study_plan.hasMany(models.student, {
+      //   foreignKey: 'study_plan_id', //the foreign Key in the student table refers to study_plan table
+      // });
 
-       //(2)Relationship One-to-Many between "study_plan table" and  "study_plan_elment table"
-       study_plan.hasMany(models.study_plan_elment, {
-        foreignKey: 'study_plan_id', //the foreign Key in the study_plan_elment table refers to study_plan table
-      });
+      //  //(2)Relationship One-to-Many between "study_plan table" and  "study_plan_elment table"
+      //  study_plan.hasMany(models.study_plan_elment, {
+      //   foreignKey: 'study_plan_id', //the foreign Key in the study_plan_elment table refers to study_plan table
+      // });
 
     }
   }

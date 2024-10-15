@@ -13,15 +13,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-       //(1)Relationship One-to-Many between "grade table" and  "subject table"
-       grade.belongsTo(models.subject, {
-        foreignKey: 'subject_id',//the foreign Key in the grade table refers to subject table
-      });
+      //  //(1)Relationship One-to-Many between "grade table" and  "subject table"
+      //  grade.belongsTo(models.subject, {
+      //   foreignKey: 'subject_id',//the foreign Key in the grade table refers to subject table
+      // });
 
-      //(2)Relationship One-to-Many between "grade table" and  "student table"
-      grade.belongsTo(models.student,{
-        foreignKey:'student_id',//the foreign Key in the grade table refers to student table
-      });
+      // //(2)Relationship One-to-Many between "grade table" and  "student table"
+      // grade.belongsTo(models.student,{
+      //   foreignKey:'student_id',//the foreign Key in the grade table refers to student table
+      // });
 
     }
   }

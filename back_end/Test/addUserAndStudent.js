@@ -4,7 +4,7 @@ async function addUserAndStudent() {
   try {
     // Create a  new user
     const newUser = await user.create({
-      user_id: 1,
+      user_id: 10000,
       user_name: 'John Doe',
       date_of_pirth: new Date('1990-01-01'),
       email: 'john.doe@example.com',

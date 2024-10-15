@@ -13,19 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
        //(1)Relationship One-to-Many between "study_plan_elment table" and  "study_plan table"
-       study_plan_elment.belongsTo(models.study_plan, {
-        foreignKey: 'study_plan_id',//the foreign Key in the study_plan_elment table refers to study_plan table
-      });
+      //  study_plan_elment.belongsTo(models.study_plan, {
+      //   foreignKey: 'study_plan_id',//the foreign Key in the study_plan_elment table refers to study_plan table
+      // });
 
-       //(2)Relationship One-to-Many between "study_plan_elment table" and  "subject table"
-       study_plan_elment.belongsTo(models.subject, {
-        foreignKey: 'subject_id',//the foreign Key in the study_plan_elment table refers to subject table
-      });
+      //  //(2)Relationship One-to-Many between "study_plan_elment table" and  "subject table"
+      //  study_plan_elment.belongsTo(models.subject, {
+      //   foreignKey: 'subject_id',//the foreign Key in the study_plan_elment table refers to subject table
+      // });
 
-       //(3)Relationship One-to-Many between "study_plan_elment table" and  "doctor table"
-       study_plan_elment.belongsTo(models.doctor, {
-        foreignKey: 'doctor_id',//the foreign Key in the study_plan_elment table refers to doctor table
-      });
+      //  //(3)Relationship One-to-Many between "study_plan_elment table" and  "doctor table"
+      //  study_plan_elment.belongsTo(models.doctor, {
+      //   foreignKey: 'doctor_id',//the foreign Key in the study_plan_elment table refers to doctor table
+      // });
 
     }
   }

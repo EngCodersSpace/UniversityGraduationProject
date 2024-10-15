@@ -1,40 +1,51 @@
 // middleware/authMiddleware.js
-const jwt = require('jsonwebtoken');
-// const { user } = require('../models'); 
-const SECRET_KEY = process.env.SECRET_KEY || "mySuperSecretKey1234567890123456";  
+// const jwt = require('jsonwebtoken');
+// // const { user } = require('../models'); 
+// const SECRET_KEY = process.env.SECRET_KEY || "mySuperSecretKey1234567890123456";  
+
+// module.exports = (req, res, next) => {
+//     const authHeader = req.headers.authorization;
+
+//     if (!authHeader) {
+//         return res.status(401).send({ error: 'No token provider' });
+//     }
+//     const parts = authHeader.split(' ');
+
+//     if (!parts.length == 2) {
+//         return res.status(401).send({ error: 'Token error!' });
+//     }
+
+//     const [scheme, token] = parts;
+
+//     if (!/^Bearer$/i.test(scheme)) {
+//         return res.status(401).send({ error: 'Token malFormatted' });
+//     }
+
+//     jwt.verify(token, SECRET_KEY, (err, decoded) => {
+//         if (err) return res.status(401).send({ error: 'Token invalid' });
+
+//         req.userId = decoded.id;
+//         console.log(decoded.id)
+
+//         return next();
+//     });
+
+// };
 
 
-module.exports = (req, res, next) => {
-    const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-        return res.status(401).send({ error: 'No token provider' });
+// Middleware to verify the JWT token
+exports.verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers['authorization'];
+    if (typeof bearerHeader !== 'undefined') {
+        const bearer = bearerHeader.split(' ');
+        const token = bearer[1];
+        req.token = token;
+        next();
+    } else {
+        res.sendStatus(403);
     }
-    const parts = authHeader.split(' ');
-
-    if (!parts.length == 2) {
-        return res.status(401).send({ error: 'Token error!' });
-    }
-
-    const [scheme, token] = parts;
-
-    if (!/^Bearer$/i.test(scheme)) {
-        return res.status(401).send({ error: 'Token malFormatted' });
-    }
-
-    jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err) return res.status(401).send({ error: 'Token invalid' });
-
-        req.userId = decoded.id;
-        console.log(decoded.id)
-
-        return next();
-    });
-
 };
-
-
-
 
 
 
