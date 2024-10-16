@@ -42,5 +42,3 @@ async function deleteUser(userId) {
 
 
 deleteUser(1); //User ID you want to delets
-
-
