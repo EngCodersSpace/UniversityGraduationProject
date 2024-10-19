@@ -6,44 +6,24 @@ const { user } = require('../models');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
+const { validationResult } = require('express-validator');
+
 
 const SECRET_KEY = process.env.SECRET_KEY ;
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY ;
 
-// Function to handle user login
-// exports.login = async (req, res) => {
-//     const { user_id, password } = req.body; 
-//     try {
-//         const foundUser = await user.findOne({ where: { user_id } });
-//         if (!foundUser) {
-//             return res.status(401).json({ message: "User ID is not correct" });
-//         }
-
-//         const isMatch = await bcrypt.compare(password, foundUser.password);
-//         if (!isMatch) {
-//             return res.status(401).json({ message: "Password is not correct" });
-//         }
-
-//         const token = jwt.sign({ 
-//             user_id: foundUser.user_id, 
-//             permission: foundUser.permission 
-//         }, SECRET_KEY, { expiresIn: '1h' });
-
-//         res.json({ 
-//             token,
-//             user: {
-//                 user_id: foundUser.user_id,
-//                 permission: foundUser.permission
-//             }
-//         });
-//     } catch (error) {
-//         console.error("Error during login:", error.message);
-//         res.status(500).json({ message: "Internal server error", error: error.message });
-//     }
-// };
-
 exports.login = async (req, res) => {
     const { user_id, password } = req.body;
+
+    if (!user_id) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    
+    if (!password) {
+        return res.status(400).json({ message: 'Password is required' });
+    }
+
     try {
         const foundUser = await user.findOne({ where: { user_id } });
         if (!foundUser) {
@@ -87,34 +67,39 @@ exports.login = async (req, res) => {
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
 
+    // التحقق من أن التوكن موجود في الطلب
     if (!refreshToken) {
-        return res.status(401).json({ message: "Refresh token is missing" });
+        return res.status(401).json({ message: "Refresh token is required" });
     }
 
-    try {
-        // التحقق من refreshToken وفك شفرته
-        const decoded = jwt.verify(refreshToken, REFRESH_SECRET_KEY);
-
-        // البحث عن المستخدم بناءً على user_id الموجود في refreshToken
-        const foundUser = await user.findOne({ where: { user_id: decoded.user_id, refreshToken } });
-        if (!foundUser) {
+    // التحقق من صحة التوكن
+    jwt.verify(refreshToken, REFRESH_SECRET_KEY, async (err, decoded) => {
+        if (err) {
+            console.log("Token verification error:", err.message);
             return res.status(403).json({ message: "Invalid refresh token" });
         }
 
-        // إصدار accessToken جديد
-        const newAccessToken = jwt.sign({
-            user_id: foundUser.user_id,
-            permission: foundUser.permission
-        }, SECRET_KEY, { expiresIn: '1h' });
+        try {
+            // البحث عن المستخدم بناءً على user_id في التوكن
+            const foundUser = await user.findOne({ where: { user_id: decoded.user_id } });
 
-        res.json({
-            accessToken: newAccessToken
-        });
+            if (!foundUser) {
+                return res.status(404).json({ message: "User not found" });
+            }
 
-    } catch (error) {
-        console.error("Error during refresh token:", error.message);
-        res.status(403).json({ message: "Invalid or expired refresh token", error: error.message });
-    }
+            // إنشاء accessToken جديد
+            const accessToken = jwt.sign(
+                { user_id: foundUser.user_id },
+                SECRET_KEY,
+                { expiresIn: '15m' } // صلاحية لمدة 15 دقيقة
+            );
+
+            res.json({ accessToken });
+        } catch (error) {
+            console.error("Error during token refresh:", error.message);
+            res.status(500).json({ message: "Internal server error", error: error.message });
+        }
+    });
 };
 
 // Function to verify the token
@@ -187,6 +172,10 @@ const sendPasswordResetEmail = async (email, resetToken) => {
 };
 
 exports.requestPasswordReset = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const { email } = req.body;
     try {
         const foundUser = await user.findOne({ where: { email } });
@@ -210,6 +199,10 @@ exports.requestPasswordReset = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const { token, newPassword } = req.body;
     try {
         const foundUser = await user.findOne({
@@ -235,7 +228,6 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
 
 // Function to get the currently logged-in user based on JWT token
 exports.getCurrentUser = (req, res) => {
@@ -274,6 +266,8 @@ exports.getCurrentUser = (req, res) => {
         }
     });
 };
+
+
 
 
 
