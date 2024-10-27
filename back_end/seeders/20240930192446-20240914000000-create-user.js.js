@@ -9,10 +9,12 @@ module.exports = {
       users.push({
         user_id: i + 1,
         user_name: faker.person.fullName(), 
-        date_of_birth: faker.date.past(30),
+        date_of_birth: faker.date.past(20),
         email: faker.internet.email(),
         password: faker.internet.password(), 
         permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']), 
+        reset_token: null, 
+        reset_token_expiry: null, 
         createdAt: new Date(),
         updatedAt: new Date(),
       });

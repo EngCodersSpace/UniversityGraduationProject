@@ -21,7 +21,7 @@ module.exports = {
         term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
         section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']),
         level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),
-        year_of_issue: faker.date.past(2).getFullYear(), 
+        year_of_issue: faker.date.past(3).getFullYear(), 
         is_absent: faker.datatype.boolean(), 
         status: faker.helpers.arrayElement(['Freshman', 'Repeater']),
         createdAt: new Date(),
