@@ -21,7 +21,7 @@ module.exports = {
         lecture_section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']),
         lecture_level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),
         term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
-        year: faker.date.past(5).getFullYear(), 
+        year: faker.date.past().getFullYear(), 
         lecture_time: lectureTime, 
         lecture_duration: `${faker.number.int({ min: 1, max: 3 })} hours`, 
         lecture_day: faker.helpers.arrayElement(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']),
