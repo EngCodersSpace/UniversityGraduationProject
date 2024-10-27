@@ -36,6 +36,15 @@ module.exports = {
           this.setDataValue('password', hasedpassword);
         },
       },
+      reset_token:{
+        type:Sequelize.STRING(100),
+        allowNull:true,
+      },
+      reset_token_expiry:{
+        type:Sequelize.DATE,
+        allowNull:true,
+      },
+      
 
       createdAt: {
         allowNull: false,
