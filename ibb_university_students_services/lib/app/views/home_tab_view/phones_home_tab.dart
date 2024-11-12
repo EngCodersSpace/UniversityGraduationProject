@@ -63,7 +63,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   .user?.profileImage?.value) !=
                                               ""
                                           ? AssetImage(controller
-                                              .user!.profileImage!.value)
+                                              .user?.profileImage?.value??"")
                                           : null,
                                       child: (controller
                                                   .user?.profileImage?.value) !=

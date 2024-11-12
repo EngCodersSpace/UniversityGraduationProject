@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -36,3 +37,10 @@ class MyApp extends StatelessWidget {
 
   }
 }
+
+
+
+
+
+
+

@@ -72,5 +72,4 @@ class TableTimeServices {
     return Result(hasError: true, message: "error");
   }
 
-  static void write() {}
 }
