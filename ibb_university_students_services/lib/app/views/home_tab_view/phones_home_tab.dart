@@ -22,6 +22,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.startTimer();
     return Obx(() => (controller.initState.value)
         ? SafeArea(
             minimum: EdgeInsets.only(
@@ -383,9 +384,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  NotificationListener<UserScrollNotification>(
-                    onNotification: controller.scrollEvent,
-                    child: SingleChildScrollView(
+                  SingleChildScrollView(
                       controller: controller.scrollController,
                       dragStartBehavior: DragStartBehavior.down,
                       scrollDirection: Axis.horizontal,
@@ -409,7 +408,6 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         ],
                       ),
                     ),
-                  ),
                   Align(
                     child: TabPageSelector(
                       controller: controller.tabController,

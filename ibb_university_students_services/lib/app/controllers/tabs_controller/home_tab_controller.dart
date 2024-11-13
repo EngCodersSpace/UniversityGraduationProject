@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class HomeTabController extends GetxController
       user = res.data;
     }
     tabController = TabController(length: 3, initialIndex: 0, vsync: this);
-    _startTimer();
+    _setUpTimer();
     initState.value = true;
     super.onInit();
   }
@@ -32,32 +33,9 @@ class HomeTabController extends GetxController
   @override
   void onClose() {
     tabController.dispose();
-    scrollController.dispose();
   }
 
-  bool scrollEvent(UserScrollNotification s) {
-    try {
-      Duration d = const Duration(seconds: 0, milliseconds: 500);
-      _timer.cancel();
-      if (scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        _newsCurrentPos++;
-        _newsCurrentPos == 3 ? _newsCurrentPos = 2 : null;
-        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
-      } else if (scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        _newsCurrentPos--;
-        _newsCurrentPos == -1 ? _newsCurrentPos = 0 : null;
-        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
-      }
-      _startTimer();
-    } catch (e) {
-      print("e");
-    }
-    return false;
-  }
-
-  void _startTimer() {
+  void _setUpTimer() {
     try {
       const duration = Duration(seconds: 5);
       _timer = Timer.periodic(duration, (timer) {
@@ -69,7 +47,24 @@ class HomeTabController extends GetxController
         newsAnimate(Get.width * 0.8, _newsCurrentPos,
             const Duration(seconds: 2, milliseconds: 500));
       });
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print("${e.toString()}\n_____________________________________________");
+      }
+    }
+  }
+
+  void startTimer() {
+    try {
+      _timer.cancel();
+      _newsCurrentPos = 0;
+      tabController.animateTo(0);
+      _setUpTimer();
+    } catch (e) {
+      if (kDebugMode) {
+        print("${e.toString()}\n_____________________________________________");
+      }
+    }
   }
 
   void newsAnimate(double width, int i, Duration duration) {
@@ -77,6 +72,10 @@ class HomeTabController extends GetxController
       scrollController.animateTo(width * i,
           duration: duration, curve: Curves.easeInOutQuart);
       tabController.animateTo(i, duration: duration);
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print("${e.toString()}\n_____________________________________________");
+      }
+    }
   }
 }
