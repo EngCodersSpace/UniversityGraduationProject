@@ -6,6 +6,7 @@ class Notification {
   RxString? time;
   RxString? message;
   RxString? date;
+  RxBool? readState;
   RxString? createdAt;
   RxString? updatedAt;
 
@@ -15,6 +16,7 @@ class Notification {
     this.time,
     this.message,
     this.date,
+    this.readState,
     this.createdAt,
     this.updatedAt,
   });
@@ -26,6 +28,7 @@ class Notification {
       time: RxString(json['time'] ?? ""),
       message: RxString(json['message'] ?? ""),
       date: RxString(json['date'] ?? ""),
+      readState: RxBool(json['readState']),
       createdAt: RxString(json['created_at'] ?? ""),
       updatedAt: RxString(json['updated_at'] ?? ""),
     );
@@ -38,6 +41,7 @@ class Notification {
       "time": time?.value,
       "message": message?.value,
       "date": date?.value,
+      "readState": readState?.value,
       "created_at": createdAt?.value,
       "updated_at": updatedAt?.value,
     };

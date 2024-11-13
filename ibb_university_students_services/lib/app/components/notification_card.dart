@@ -6,37 +6,58 @@ import 'package:ibb_university_students_services/app/globals.dart';
 
 class NotificationCard extends StatelessWidget {
   NotificationCard(
-      {
-        required this.message,
-        required this.author,
-        required this.time,
-        super.key});
+      {required this.message,
+      required this.author,
+      required this.time,
+      this.readState = true,
+      super.key});
 
   String message;
   String author;
   String time;
+  bool readState;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.inverseCardColor,
-      elevation: 6,
-      child: Container(
-        width: double.maxFinite,
-        padding: const EdgeInsets.all(12),
-        child: Column(
-            children: [
-            MainText(message, fontSize: Utils.fontSizeScale(18)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SecText("by: $author", textColor: AppColors.mainTextColor),
-            const SizedBox(),
-            SecText(time, textColor: AppColors.mainTextColor),
-          ],
-        ),
-        ],
-      ),
-    ));
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Card(
+            color: AppColors.inverseCardColor.withOpacity(0.95),
+            elevation: 6,
+            child: Container(
+              width: double.maxFinite,
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  MainText(message,
+                      fontSize: Utils.fontSizeScale(18),
+                      textColor: AppColors.mainCardColor),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SecText("By: $author",
+                          textColor: AppColors.mainTextColor),
+                      const SizedBox(),
+                      SecText("At: $time", textColor: AppColors.mainTextColor),
+                    ],
+                  ),
+                ],
+              ),
+            )),
+        if(!readState)
+        Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        )
+      ],
+    );
   }
 }

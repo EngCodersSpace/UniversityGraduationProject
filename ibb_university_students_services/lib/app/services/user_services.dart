@@ -16,7 +16,6 @@ class UserServices {
   // static Student? _student;
 
   static Future<Result<bool>> _userFakeLogin(String id, String password) async {
-    late Response? response;
     if (id == "1" && password == "12345678") {
       // virtual response for test
       Map<String, dynamic> response = {
