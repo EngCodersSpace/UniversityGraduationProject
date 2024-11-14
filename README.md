@@ -1,3 +1,0 @@
-# UniversityGraduationProject
-  University Studante Services
-  

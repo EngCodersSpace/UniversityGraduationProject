@@ -177,7 +177,7 @@ class PhoneMainView extends GetView<MainController> {
                 },
                 icon: Column(
                   children: [
-                    Icon(Icons.repartition,
+                    Icon(Icons.description_outlined,
                         color: (controller.selectedIndex.value == 3)
                             ? Colors.transparent
                             : null),

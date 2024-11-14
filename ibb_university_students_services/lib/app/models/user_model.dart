@@ -23,7 +23,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: RxInt(json['id'] ?? 0),
+      id: RxInt(json['id']),
       name: RxString(json['name'] ?? ""),
       email: RxString(json['email'] ?? ""),
       phone: RxString(json['phone'] ?? ""),
@@ -45,4 +45,9 @@ class User {
       "updated_at": updatedAt?.value,
     };
   }
+
 }
+
+
+
+

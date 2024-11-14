@@ -64,7 +64,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                                       "",
                                   time: controller.notificationGroups[key]?[i]
                                           .time?.value ??
-                                      ""),
+                                      "",readState: controller.notificationGroups[key]?[i].readState?.value??true,),
                             ],
                           )
                       ]
