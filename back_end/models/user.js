@@ -37,6 +37,12 @@ module.exports = (sequelize, DataTypes) => {
         // onUpdate:'CASCADE',      //if a user is update the doctor associated with him will be updated
       });
 
+       //(4)Relationship One-to-Many between "user table" and  "notification table"
+       user.hasMany(models.notification,{
+        foreignKey:'sender_id',
+        sourceKey:'user_id',
+      });
+
 
     }
   }
