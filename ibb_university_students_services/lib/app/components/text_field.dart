@@ -29,69 +29,66 @@ class CustomTextFormField extends StatelessWidget {
   String? Function(String?)? validator;
   void Function()? onTap;
   void Function(PointerDownEvent)? onTapOutside;
-  FocusNode? focusNode ;
+  FocusNode? focusNode;
   void Function(String?)? onSaved;
   void Function(String?)? onFieldSubmitted;
   bool readOnly;
-
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: (isPassword)?Obx(()=>TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        onSaved: onSaved,
-        onFieldSubmitted: onFieldSubmitted,
-        readOnly: readOnly,
-        onTap: onTap,
-        onTapOutside: onTapOutside,
-        obscureText:  hide.value,
-        validator: validator,
-        decoration: InputDecoration(
-            isDense: true,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            icon: Icon(
-              icon,
-              size: 40,
+      child: (isPassword)
+          ? Obx(() => TextFormField(
+                controller: controller,
+                focusNode: focusNode,
+                onSaved: onSaved,
+                onFieldSubmitted: onFieldSubmitted,
+                readOnly: readOnly,
+                onTap: onTap,
+                onTapOutside: onTapOutside,
+                obscureText: hide.value,
+                validator: validator,
+                decoration: InputDecoration(
+                    isDense: true,
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    icon: Icon(
+                      icon,
+                      size: 0,
+                    ),
+                    labelText: labelText,
+                    suffixIcon: Obx(() {
+                      return GestureDetector(
+                        child: Icon((hide.value)
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        onTap: () {
+                          hide.value = !hide.value;
+                        },
+                      );
+                    })),
+              ))
+          : TextFormField(
+              controller: controller,
+              focusNode: focusNode,
+              onSaved: onSaved,
+              onFieldSubmitted: onFieldSubmitted,
+              readOnly: readOnly,
+              onTap: onTap,
+              onTapOutside: onTapOutside,
+              validator: validator,
+              decoration: InputDecoration(
+                isDense: true,
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                icon: Icon(
+                  icon,
+                  size: 0,
+                ),
+                labelText: labelText,
+              ),
             ),
-
-            labelText: labelText,
-            suffixIcon:Obx((){
-              return GestureDetector(
-                child: Icon((hide.value)
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined),
-                onTap: () {
-                  hide.value = !hide.value;
-                },
-              );
-            })
-        ),
-      )):
-      TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        onSaved: onSaved,
-        onFieldSubmitted: onFieldSubmitted,
-        readOnly: readOnly,
-        onTap: onTap,
-        onTapOutside: onTapOutside,
-        validator: validator,
-        decoration: InputDecoration(
-            isDense: true,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            icon: Icon(
-              icon,
-              size: 40,
-            ),
-            labelText: labelText,
-
-        ),
-      ),
     );
   }
 }

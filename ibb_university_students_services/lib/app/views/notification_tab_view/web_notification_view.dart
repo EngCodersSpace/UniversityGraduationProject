@@ -5,7 +5,6 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 class WebNotificationView extends GetView<NotificationTabController> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Placeholder();
   }
 }

@@ -64,7 +64,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   .user?.profileImage?.value) !=
                                               ""
                                           ? AssetImage(controller
-                                              .user?.profileImage?.value??"")
+                                                  .user?.profileImage?.value ??
+                                              "")
                                           : null,
                                       child: (controller
                                                   .user?.profileImage?.value) !=
@@ -385,29 +386,29 @@ class PhoneMainTab extends GetView<HomeTabController> {
                     ),
                   ),
                   SingleChildScrollView(
-                      controller: controller.scrollController,
-                      dragStartBehavior: DragStartBehavior.down,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.1,
-                          ),
-                        ],
-                      ),
+                    controller: controller.scrollController,
+                    dragStartBehavior: DragStartBehavior.down,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.1,
+                        ),
+                      ],
                     ),
+                  ),
                   Align(
                     child: TabPageSelector(
                       controller: controller.tabController,

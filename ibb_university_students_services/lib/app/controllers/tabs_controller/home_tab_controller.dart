@@ -20,6 +20,7 @@ class HomeTabController extends GetxController
 
   @override
   void onInit() async {
+    print("here");
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;

@@ -1,16 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
+import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/models/user_model.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
+  RxInt iconindex = 2.obs;
   late CustomFloatActionButtonLocation currentPos;
+  User? user;
 
   @override
-  void onInit() {
-    // TODO: implement onInit
+  void onInit() async {
     currentPos = CustomFloatActionButtonLocation(
         x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
     super.onInit();
+    Result res = await UserServices.fetchUser();
+    if (res.statusCode == 200) {
+      user = res.data;
+    }
   }
 
   // Method to change the selected index
@@ -23,39 +34,34 @@ class MainController extends GetxController {
               x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 1) {
       (Get.locale?.languageCode == 'en')
-          ? currentPos =
-          CustomFloatActionButtonLocation(
-              x: (Get.width * 0.32) - 23,
-              y: Get.height - (Get.height * 0.1))
-          : currentPos =
-          CustomFloatActionButtonLocation(
-              x: (Get.width * 0.71) - 28,
-              y: Get.height - (Get.height * 0.1));
+          ? currentPos = CustomFloatActionButtonLocation(
+              x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1))
+          : currentPos = CustomFloatActionButtonLocation(
+              x: (Get.width * 0.71) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 2) {
       currentPos = CustomFloatActionButtonLocation(
           x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
     } else if (index == 3) {
       (Get.locale?.languageCode == 'en')
-          ? currentPos =
-          CustomFloatActionButtonLocation(
-              x: (Get.width * 0.71) - 28,
-              y: Get.height - (Get.height * 0.1))
-          : currentPos =
-          CustomFloatActionButtonLocation(
-              x: (Get.width * 0.32) - 23,
-              y: Get.height - (Get.height * 0.1));
+          ? currentPos = CustomFloatActionButtonLocation(
+              x: (Get.width * 0.71) - 28, y: Get.height - (Get.height * 0.1))
+          : currentPos = CustomFloatActionButtonLocation(
+              x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1));
     } else if (index == 4) {
       (Get.locale?.languageCode == 'en')
-          ? currentPos =
-          CustomFloatActionButtonLocation(
-              x: (Get.width * 0.9) - 28,
-              y: Get.height - (Get.height * 0.1))
-          :currentPos =
-          CustomFloatActionButtonLocation(
+          ? currentPos = CustomFloatActionButtonLocation(
+              x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1))
+          : currentPos = CustomFloatActionButtonLocation(
               x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
     }
 
     selectedIndex.value = index;
+  }
+
+  Color geticonindex(int index) {
+    return iconindex.value == index
+        ? AppColors.backColor
+        : AppColors.inverseCardColor;
   }
 
   @override

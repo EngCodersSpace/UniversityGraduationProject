@@ -5,7 +5,6 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 class WebTableTabView extends GetView<TableTabController> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Placeholder();
   }
 }
