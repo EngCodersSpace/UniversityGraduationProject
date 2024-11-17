@@ -16,6 +16,12 @@ const userRoutes = require('./routes/userRoute')
 app.use(authRoutes);
 app.use(userRoutes)
 
+
+const doctorRoutes = require('./routes/doctorRoute');
+app.use(doctorRoutes);
+
+
+
 const PORT = process.env.PORT ;
 // Start server
 app.listen(PORT, () => {
