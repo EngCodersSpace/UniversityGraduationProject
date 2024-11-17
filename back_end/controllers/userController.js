@@ -6,12 +6,11 @@ const { user } = require('../models');
 exports.createUser = async (req, res) => {
     const { user_id,user_name, email, password, date_of_birth, permission } = req.body;
     try {
-        // إنشاء مستخدم جديد
         const newUser = await user.create({
             user_id,
             user_name,
             email,
-            password, // سيتم تشفير كلمة المرور تلقائيًا بناءً على الموديل
+            password, 
             date_of_birth,
             permission,
         });

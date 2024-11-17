@@ -14,39 +14,30 @@ const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY ;
 
 exports.login = async (req, res) => {
     const { user_id, password } = req.body;
-
     if (!user_id) {
         return res.status(400).json({ message: 'User ID is required' });
     }
-
-    
     if (!password) {
         return res.status(400).json({ message: 'Password is required' });
     }
-
     try {
         const foundUser = await user.findOne({ where: { user_id } });
         if (!foundUser) {
             return res.status(401).json({ message: "User ID is not correct" });
         }
-
         const isMatch = await bcrypt.compare(password, foundUser.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Password is not correct" });
         }
-
-        // إصدار accessToken
         const accessToken = jwt.sign({
             user_id: foundUser.user_id,
             permission: foundUser.permission
         }, SECRET_KEY, { expiresIn: '1h' });
 
-        // إصدار refreshToken
         const refreshToken = jwt.sign({
             user_id: foundUser.user_id
-        }, REFRESH_SECRET_KEY, { expiresIn: '7d' }); // صالح لمدة 7 أيام
+        }, REFRESH_SECRET_KEY, { expiresIn: '7d' }); 
 
-        // حفظ refreshToken في قاعدة البيانات أو ذاكرة (اختياري)
         foundUser.refreshToken = refreshToken;
         await foundUser.save();
 
@@ -67,18 +58,15 @@ exports.login = async (req, res) => {
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
 
-    // التحقق من أن التوكن موجود في الطلب
     if (!refreshToken) {
         return res.status(401).json({ message: "Refresh token is required" });
     }
 
-    // التحقق من صحة التوكن
     jwt.verify(refreshToken, REFRESH_SECRET_KEY, async (err, decoded) => {
         if (err) {
             console.log("Token verification error:", err.message);
             return res.status(403).json({ message: "Invalid refresh token" });
         }
-
         try {
             // البحث عن المستخدم بناءً على user_id في التوكن
             const foundUser = await user.findOne({ where: { user_id: decoded.user_id } });
@@ -99,16 +87,6 @@ exports.refreshToken = async (req, res) => {
             console.error("Error during token refresh:", error.message);
             res.status(500).json({ message: "Internal server error", error: error.message });
         }
-    });
-};
-
-// Function to verify the token
-exports.verifyToken = (req, res) => {
-    jwt.verify(req.token, SECRET_KEY, (err, data) => {
-        if (err) {
-            return res.sendStatus(403);
-        }
-        res.json({ message: "verifyOk", data });
     });
 };
 
@@ -138,13 +116,7 @@ exports.registerUser = async (req, res) => {
 
         res.status(201).json({ 
             message: "User registered successfully", 
-            user: {
-                user_id: newUser.user_id,
-                user_name: newUser.user_name,
-                email: newUser.email,
-                date_of_birth: newUser.date_of_birth,
-                permission: newUser.permission
-            }
+            user:newUser
         });
 
     } catch (error) {
@@ -182,9 +154,8 @@ exports.requestPasswordReset = async (req, res) => {
         if (!foundUser) {
             return res.status(404).json({ message: "Email not found" });
         }
-
         const resetToken = crypto.randomBytes(32).toString('hex');
-        const resetTokenExpiry = Date.now() + 3600000; // صالح لمدة ساعة
+        const resetTokenExpiry = Date.now() + 3600000; 
 
         foundUser.resetToken = resetToken;
         foundUser.resetTokenExpiry = resetTokenExpiry;
