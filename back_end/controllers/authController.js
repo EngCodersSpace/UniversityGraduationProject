@@ -2,7 +2,7 @@
 // controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { user } = require('../models');
+const { doctor,user,student } = require('../models');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
@@ -90,8 +90,15 @@ exports.refreshToken = async (req, res) => {
     });
 };
 
-exports.registerUser = async (req, res) => {
-    const { user_id, user_name, date_of_birth, email, password, permission } = req.body;
+
+exports.registerDoctor = async (req, res) => {
+    // Handle validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { user_id, user_name, date_of_birth, email, password, permission, doctor: doctorData } = req.body;
 
     try {
         const existingUser = await user.findOne({ where: { user_id } });
@@ -105,25 +112,92 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: "Email already registered" });
         }
 
-        const newUser = await user.create({
-            user_id,
-            user_name,
-            date_of_birth, 
-            email,
-            password, 
-            permission, 
-        });
+        const newUser = await user.create(
+            {
+                user_id,
+                user_name,
+                date_of_birth,
+                email,
+                password,
+                permission,
+                doctor: doctorData ? {
+                    doctor_name: doctorData.doctor_name,
+                    department: doctorData.department,
+                    academic_degree: doctorData.academic_degree,
+                    administrative_position: doctorData.administrative_position,
+                } : null,
+            },
+            {
+                include: [{ model: doctor, as: 'doctor' }],
+            }
+        );
 
-        res.status(201).json({ 
-            message: "User registered successfully", 
-            user:newUser
+        res.status(201).json({
+            message: "Doctor registered successfully",
+            user: newUser,
         });
-
     } catch (error) {
         console.error("Error during user registration:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+
+exports.registerStudent = async (req, res) => {
+    // Handle validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { user_id, user_name, date_of_birth, email, password, permission, student: studentData } = req.body;
+
+    try {
+        const existingUser = await user.findOne({ where: { user_id } });
+        const existingEmail = await user.findOne({ where: { email } });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "User ID already exists" });
+        }
+
+        if (existingEmail) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        const newUser = await user.create(
+            {
+                user_id,
+                user_name,
+                date_of_birth,
+                email,
+                password,
+                permission,
+                student: studentData ? {
+                    student_name: studentData.student_name,
+                    student_section: studentData.student_section,
+                    enrollment_year: studentData.enrollment_year,
+                    student_level: studentData.student_level,
+                    student_system: studentData.student_system,
+                    profile_picture: studentData.profile_picture,
+                    study_plan_id: studentData.study_plan_id,
+                } : null,
+            },
+            {
+                include: [{ model: student, as: 'student' }],
+            }
+        );
+
+        res.status(201).json({
+            message: "Student registered successfully",
+            user: newUser,
+        });
+    } catch (error) {
+        console.error("Error during user registration:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+
+
 
 const sendPasswordResetEmail = async (email, resetToken) => {
     const transporter = nodemailer.createTransport({
