@@ -14,11 +14,11 @@ const authRoutes = require('./routes/authRoute')
 const userRoutes = require('./routes/userRoute')
 
 app.use(authRoutes);
-app.use(userRoutes)
+app.use(userRoutes);
 
 
-const doctorRoutes = require('./routes/doctorRoute');
-app.use(doctorRoutes);
+// const doctorRoutes = require('./routes/doctorRoute');
+// app.use(doctorRoutes);
 
 
 

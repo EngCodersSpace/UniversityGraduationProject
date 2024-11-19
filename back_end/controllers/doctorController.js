@@ -1,102 +1,60 @@
 // doctorcontroller.js
 
-const { doctor, user } = require('../models');
-const { doctorSchema, updateDoctorSchema } = require('../validations/doctorvalidation');
+const { doctor, user,study_plan_element } = require('../models');
 
 
-
-exports.getAllDoctors = async (req, res) => {
-
-    try {
-        const doctors = await doctor.findAll({
-            include: [{ model: user, attributes: ['user_name', 'email'] }],
-        });
-        res.status(200).json(doctors);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
 
 exports.getDoctorById = async (req, res) => {
+    const { id } = req.params;
 
     try {
-        const singleDoctor = await doctor.findOne({
-            where: { doctor_id: req.params.id },
-            include: [{ model: user, attributes: ['user_name', 'email'] }],
+        const foundDoctor = await doctor.findOne({
+            where: { doctor_id: id },
+            include: [
+                {
+                    model: user,
+                    attributes: ['user_name', 'email', 'date_of_birth'],
+                },
+            ],
         });
 
-        if (!singleDoctor) return res.status(404).json({ message: 'Doctor not found' });
-
-        res.status(200).json(singleDoctor);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-exports.createDoctor = async (req, res) => {
-
-    // Validate request body
-    const { error, value } = doctorSchema.validate(req.body);
-
-    if (error) {
-        return res.status(400).json({
-            message: 'Validation Error',
-            details: error.details[0].message,
-        });
-    }
-
-    const { doctor_id } = value;
-
-    try {
-        const userExists = await user.findOne({ where: { user_id: doctor_id } });
-
-        if (!userExists) {
-            return res.status(404).json({ message: 'User not found for the given doctor ID' });
-        }
-
-        const newDoctor = await doctor.create(value); // Use validated data
-        res.status(201).json(newDoctor);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-exports.updateDoctor = async (req, res) => {
-    // Validate request body
-    const { error, value } = updateDoctorSchema.validate(req.body);
-
-    if (error) {
-        return res.status(400).json({
-            message: 'Validation Error',
-            details: error.details[0].message,
-        });
-    }
-
-    try {
-        const doctorToUpdate = await doctor.findOne({ where: { doctor_id: req.params.id } });
-
-        if (!doctorToUpdate) {
+        if (!foundDoctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
-        const updatedDoctor = await doctorToUpdate.update(value);
-        res.status(200).json(updatedDoctor);
+        res.status(200).json(foundDoctor);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching doctor:', error.message);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
 
-exports.deleteDoctor = async (req, res) => {
+
+exports.getAllDoctors = async (req, res) => {
     try {
-        const deleted = await doctor.destroy({ where: { doctor_id: req.params.id } });
+        const doctors = await doctor.findAll({
+            include: [
+                {
+                    model: user,
+                    attributes: ['user_name', 'email', 'date_of_birth'], // Include associated user details
+                },
+                {
+                    model: study_plan_element, // Include associated study plan elements
+                },
+            ],
+        });
 
-        if (!deleted) return res.status(404).json({ message: 'Doctor not found' });
-
-        res.status(204).send();
+        res.status(200).json(doctors);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching doctors:', error.message);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+
+
+
+
 
 
 

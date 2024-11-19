@@ -1,7 +1,7 @@
 // routes/authRoute.js
 const express = require('express');
 const router = express.Router();
-const vali = require('../validations/uservalidation');
+const vali = require('../validations/authvalidation');
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -12,15 +12,17 @@ router.post('/login', authController.login);
 // Route for token verification
 router.post('/login/authToken', authMiddleware.verifyToken);
 
-router.post('/register', authController.registerUser)
+// register Doctor
+router.post('/registerDoctor',vali.validateDoctorRegistration, authController.registerDoctor)
+
+// register Student
+router.post('/registerStudent',vali.validateStudentRegistration, authController.registerStudent)
 
 // Route لطلب استعادة كلمة المرور
 router.post('/request-password-reset', authController.requestPasswordReset, vali.validateRequestPasswordReset , vali.validateResetPassword);
-// router.post('/request-password-reset', authController.requestPasswordReset);
 
 // Route لإعادة تعيين كلمة المرور
 router.post('/reset-password', authController.resetPassword, vali.validateResetPassword);
-// router.post('/reset-password', authController.resetPassword);
 
 
 // إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
