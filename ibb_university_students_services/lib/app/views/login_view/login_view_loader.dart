@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:ibb_university_students_services/app/views/login_view/phones_login_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/web_login_view.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginViewLoader extends StatelessWidget {
+  const LoginViewLoader({super.key});
 
   @override
   Widget build(BuildContext context) {
