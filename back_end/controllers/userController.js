@@ -69,7 +69,7 @@ exports.getAllUsers = async (req, res) => {
 
 
 exports.getDoctorById = async (req, res) => {
-    const { user_id } = req.params;
+    const { id: user_id } = req.params;
 
     try {
         const foundUser = await user.findOne({
@@ -90,7 +90,7 @@ exports.getDoctorById = async (req, res) => {
 
 
 exports.updateDoctor = async (req, res) => {
-    const { user_id } = req.params;
+    const {  id: user_id  } = req.params;
     const { user_name, date_of_birth, email, doctor: doctorData } = req.body;
 
     try {
@@ -129,7 +129,7 @@ exports.updateDoctor = async (req, res) => {
 
 
 exports.deleteDoctor = async (req, res) => {
-    const { user_id } = req.params;
+    const { id: user_id } = req.params;
 
     try {
         const foundUser = await user.findOne({
@@ -141,10 +141,8 @@ exports.deleteDoctor = async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        // حذف بيانات الدكتور
         await foundUser.doctor.destroy();
 
-        // حذف المستخدم
         await foundUser.destroy();
 
         res.status(200).json({ message: "Doctor deleted successfully" });
@@ -159,7 +157,7 @@ exports.getAllDoctors = async (req, res) => {
     try {
         const doctors = await user.findAll({
             include: [{ model: doctor, as: 'doctor' }],
-            where: { permission: 'doctor' }, // إذا كان لديك تصنيف خاص بالدكتور
+            where: { permission: 'teacher' }, 
         });
 
         res.status(200).json(doctors);
@@ -172,7 +170,7 @@ exports.getAllDoctors = async (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 exports.getStudentById = async (req, res) => {
-    const { user_id } = req.params;
+    const { id: user_id } = req.params;
 
     try {
         const foundUser = await user.findOne({
@@ -192,7 +190,7 @@ exports.getStudentById = async (req, res) => {
 };
 
 exports.updateStudent = async (req, res) => {
-    const { user_id } = req.params;
+    const { id: user_id } = req.params;
     const { user_name, date_of_birth, email, student: studentData } = req.body;
 
     try {
@@ -233,7 +231,7 @@ exports.updateStudent = async (req, res) => {
 };
 
 exports.deleteStudent = async (req, res) => {
-    const { user_id } = req.params;
+    const { id: user_id } = req.params;
 
     try {
         const foundUser = await user.findOne({
@@ -262,7 +260,7 @@ exports.getAllStudents = async (req, res) => {
     try {
         const students = await user.findAll({
             include: [{ model: student, as: 'student' }],
-            where: { permission: 'student' }, // تصنيف خاص بالطالب
+            where: { permission: 'student' }, 
         });
 
         res.status(200).json(students);
