@@ -61,11 +61,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
       onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
     },
-
-    student_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     student_section: {
       type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
       allowNull: false,
