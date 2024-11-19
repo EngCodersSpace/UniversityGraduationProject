@@ -16,7 +16,7 @@ class WebMainView extends GetView<MainController> {
 
   double hight = Get.height;
   double width = Get.width;
-  late FloatingActionButtonLocation floatingActionButtonLocation;
+  late ListTile listTile;
 
   @override
   Widget build(BuildContext context) {
@@ -157,96 +157,124 @@ class WebMainView extends GetView<MainController> {
                       ),
                       Container(
                         color: AppColors.backColor,
-                        child: Column(
-                          children: [
-                            screens[controller.iconindex.value],
-                            ListTile(
-                              onTap: controller.iconindex.call,
-                              leading: Icon(
-                                Icons.person_outline_rounded,
-                                color: controller.geticonindex(0),
+                        child: ListView(children: [
+                          Column(
+                            children: <Widget>[
+                              screens[controller.iconindex.value],
+                              ListTile(
+                                selectedTileColor: AppColors.backColor,
+                                iconColor: AppColors.inverseCardColor,
+                                textColor: AppColors.inverseCardColor,
+                                leading: icona(controller.iconindex.value),
                               ),
-                              title: Text(
-                                "Profile".tr,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                              ListTile(
+                                onTap: () {
+                                  controller.changewebtabindex(0);
+                                },
+                                leading: Icon(
+                                  Icons.person_outline_rounded,
                                   color: (controller.iconindex.value == 0)
                                       ? Colors.transparent
                                       : null,
                                 ),
+                                title: Text(
+                                  "Profile".tr,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: (controller.iconindex.value == 0)
+                                        ? Colors.transparent
+                                        : null,
+                                  ),
+                                ),
                               ),
-                            ),
-                            ListTile(
-                              onTap: controller.iconindex.call,
-                              leading: Icon(
-                                Icons.notifications_none_outlined,
-                                color: controller.geticonindex(1),
-                              ),
-                              title: Text(
-                                "Notification".tr,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
+                              ListTile(
+                                onTap: () {
+                                  controller.changewebtabindex(1);
+                                },
+                                leading: Icon(
+                                  Icons.notifications_none_outlined,
                                   color: (controller.iconindex.value == 1)
                                       ? Colors.transparent
                                       : null,
                                 ),
+                                title: Text(
+                                  "Notification".tr,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: (controller.iconindex.value == 1)
+                                        ? Colors.transparent
+                                        : null,
+                                  ),
+                                ),
                               ),
-                            ),
-                            ListTile(
-                              onTap: controller.iconindex.call,
-                              leading: Icon(
-                                Icons.home,
-                                color: controller.geticonindex(2),
-                              ),
-                              title: Text(
-                                "Home".tr,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                              ListTile(
+                                onTap: () {
+                                  controller.changewebtabindex(2);
+                                },
+                                leading: Icon(
+                                  Icons.home,
                                   color: (controller.iconindex.value == 2)
                                       ? Colors.transparent
                                       : null,
                                 ),
+                                title: Text(
+                                  "Home".tr,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: (controller.iconindex.value == 2)
+                                        ? Colors.transparent
+                                        : null,
+                                  ),
+                                ),
                               ),
-                            ),
-                            ListTile(
-                              onTap: controller.iconindex.call,
-                              leading: Icon(
-                                Icons.calendar_month,
-                                color: controller.geticonindex(3),
-                              ),
-                              title: Text(
-                                "Table".tr,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                              ListTile(
+                                onTap: () {
+                                  controller.changewebtabindex(3);
+                                },
+                                leading: Icon(
+                                  Icons.calendar_month,
                                   color: (controller.iconindex.value == 3)
                                       ? Colors.transparent
                                       : null,
                                 ),
+                                title: Text(
+                                  "Table".tr,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: (controller.iconindex.value == 3)
+                                        ? Colors.transparent
+                                        : null,
+                                  ),
+                                ),
                               ),
-                            ),
-                            ListTile(
-                              onTap: controller.iconindex.call,
-                              leading: Icon(
-                                Icons.description,
-                                color: controller.geticonindex(4),
-                              ),
-                              title: Text(
-                                "Reports".tr,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
+                              ListTile(
+                                onTap: () {
+                                  controller.changewebtabindex(4);
+                                },
+                                leading: Icon(
+                                  Icons.description,
                                   color: (controller.iconindex.value == 4)
                                       ? Colors.transparent
                                       : null,
                                 ),
+                                title: Text(
+                                  "Reports".tr,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: (controller.iconindex.value == 4)
+                                        ? Colors.transparent
+                                        : null,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                        ]),
                       ),
                     ],
                   ),
