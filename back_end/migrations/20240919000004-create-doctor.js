@@ -13,10 +13,6 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',  
       },
-      doctor_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       department: {
         type: Sequelize.STRING,
         allowNull: false,
