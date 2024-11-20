@@ -12,105 +12,94 @@ class LibraryPhonesView extends GetView<LibraryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          foregroundColor: AppColors.mainCardColor,
-          title: MainText(
-            "Library",
-            // textColor: AppColors.secTextColor,
-          ),
-          actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.search_rounded)),
-          ],
-          backgroundColor: AppColors.inverseCardColor,
-        ),
         body: Container(
-          color: AppColors.inverseCardColor,
-          child: Column(children: [
-            Expanded(
-              child: Column(
-                children: [
-                  TabBar(
-                      controller: controller.tapController,
-                      labelColor: AppColors.mainCardColor,
-                      indicatorColor: AppColors.mainCardColor,
-                      tabs: const [
-                        Column(
-                          children: [
-                            Icon(Icons.library_books_outlined),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text("Books"),
-                            SizedBox(
-                              height: 2,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-
-                            Icon(Icons.library_books_outlined),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text("Notes"),
-                          ],
-                        ),
-                        Column(
-                          children: [
-
-                            Icon(Icons.library_books_outlined),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text("Ref"),
-                          ],
-                        )
-                      ]),
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(
-                              "assets/images/library/5977d4803f1c826accafa7a49658ba81.jpg"),
-                          fit: BoxFit.fill),
-                    ),
-                    height: Get.height * 0.68,
-                    child: Obx(() => TabBarView(
-                        controller: controller.tapController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: controller.myTabs.value)),
+      color: AppColors.inverseCardColor,
+      child: Column(children: [
+        Expanded(
+          child: Column(
+            children: [
+              Container(
+                  height: Get.height * 0.16,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage(
+                            "assets/images/library/istockphoto-867895848-612x612_bottom.jpg"),
+                        fit: BoxFit.fill),
                   ),
-                  Expanded(
-                    child: Container(
-                      decoration:  BoxDecoration(
-                        color: AppColors.inverseCardColor
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.arrow_back_rounded),
-                            color: Colors.white70,
-                            iconSize: 40,
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 24,right: 24,top: 32 ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            MainText("Library"),
+                            const SizedBox(width: 16,),
+                            Expanded(
+                              child: CustomTextFormField(
+                                icon: Icons.search_rounded,
+                                onChange: controller.searching,
+                                labelText: "Search",
+                                iconColor: AppColors.mainCardColor,
+                              ),
+                            ),
+                            IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,))
+                          ],
 
-                          // MainText("${pageIndex+1}/${pagesLen![tabIndex]+1}"),
 
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.arrow_forward_rounded),
-                              color: Colors.white70,
-                              iconSize: 40)
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 8,),
+                        TabBar(
+                            controller: controller.tapController,
+                            labelColor: AppColors.mainCardColor,
+                            indicatorColor: AppColors.mainCardColor,
+                            dividerHeight: 0,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            unselectedLabelColor: AppColors.mainCardColor,
+                            tabs: const [
+                              Column(
+                                children: [
+                                  Icon(Icons.library_books_outlined),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text("Books"),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(Icons.library_books_outlined),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text("Notes"),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(Icons.library_books_outlined),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text("Ref"),
+                                ],
+                              )
+                            ]),
+                      ],
                     ),
-                  ),
-                ],
+                  )),
+              Expanded(
+                child: Obx(() => TabBarView(
+                    controller: controller.tapController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: controller.myTabs.value)),
               ),
-            ),
-          ]),
-        ));
+            ],
+          ),
+        ),
+      ]),
+    ));
   }
 }

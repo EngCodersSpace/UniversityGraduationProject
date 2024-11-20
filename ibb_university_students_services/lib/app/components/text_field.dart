@@ -29,15 +29,19 @@ class CustomTextFormField extends StatelessWidget {
   bool isPassword;
   bool readOnly;
   RxBool hide = true.obs;
-  bool? enable ;
-  int? minLines ;
-  int? maxLines ;
+  bool? enable;
+
+  int? minLines;
+
+  int? maxLines;
+
   double? width;
   TextEditingController? controller;
   IconData? icon;
   String? labelText;
   String? Function(String?)? validator;
-  FocusNode? focusNode ;
+  FocusNode? focusNode;
+
   void Function()? onTap;
   void Function(PointerDownEvent)? onTapOutside;
   void Function(String?)? onSaved;
@@ -46,77 +50,80 @@ class CustomTextFormField extends StatelessWidget {
   TextInputType? keyboardType;
   Color iconColor;
 
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: (isPassword)?Obx(()=>TextFormField(
-        controller: controller,
-        enabled: enable,
-        readOnly: readOnly,
-        keyboardType: keyboardType,
-        focusNode: focusNode,
-        onSaved: onSaved,
-        onChanged: onChange,
-        onFieldSubmitted: onFieldSubmitted,
-        onTap: onTap,
-        onTapOutside: onTapOutside,
-        obscureText:  hide.value,
-        validator: validator,
-        decoration: InputDecoration(
-            isDense: true,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            icon: (icon!=null)?Icon(
-              icon,
-              size: 40,
-              color: iconColor,
-            ):null,
+      child: (isPassword)
+          ? Obx(() => TextFormField(
+                controller: controller,
+                enabled: enable,
+                readOnly: readOnly,
+                keyboardType: keyboardType,
+                focusNode: focusNode,
+                onSaved: onSaved,
+                onChanged: onChange,
+                onFieldSubmitted: onFieldSubmitted,
+                onTap: onTap,
+                onTapOutside: onTapOutside,
+                obscureText: hide.value,
+                validator: validator,
+                decoration: InputDecoration(
+                    isDense: true,
+                    border:  OutlineInputBorder(
+                      borderSide: BorderSide(color: iconColor),
+                        borderRadius: const BorderRadius.all(Radius.circular(30)),
 
-            labelText: labelText,
-            suffixIcon:Obx((){
-              return GestureDetector(
-                child: Icon((hide.value)
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined),
-                onTap: () {
-                  hide.value = !hide.value;
-                },
-              );
-            })
-        ),
-      )):
-      TextFormField(
-        controller: controller,
-        readOnly: readOnly,
-        keyboardType: keyboardType,
-        focusNode: focusNode,
-        enabled: enable,
-        minLines: minLines,
-        maxLines: minLines??1,
-        onSaved: onSaved,
-        onChanged: onChange,
-        onFieldSubmitted: onFieldSubmitted,
-        onTap: onTap,
-        onTapOutside: onTapOutside,
-        validator: validator,
-        decoration: InputDecoration(
-          isDense: true,
-          border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-          icon: (icon!=null)?Icon(
-            icon,
-            size: 40,
-            color: iconColor,
-          ):null,
-          labelText: labelText,
-
-        ),
-      ),
+                    ),
+                    icon: (icon != null)
+                        ? Icon(
+                            icon,
+                            size: 40,
+                            color: iconColor,
+                          )
+                        : null,
+                    labelText: labelText,
+                    suffixIcon: Obx(() {
+                      return GestureDetector(
+                        child: Icon((hide.value)
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        onTap: () {
+                          hide.value = !hide.value;
+                        },
+                      );
+                    })),
+              ))
+          : TextFormField(
+              controller: controller,
+              readOnly: readOnly,
+              keyboardType: keyboardType,
+              focusNode: focusNode,
+              enabled: enable,
+              minLines: minLines,
+              maxLines: minLines ?? 1,
+              onSaved: onSaved,
+              onChanged: onChange,
+              onFieldSubmitted: onFieldSubmitted,
+              onTap: onTap,
+              onTapOutside: onTapOutside,
+              validator: validator,
+              decoration: InputDecoration(
+                isDense: true,
+                border:  OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor),
+                    borderRadius: const BorderRadius.all(Radius.circular(25))),
+                icon: (icon != null)
+                    ? Icon(
+                        icon,
+                        size: 40,
+                        color: iconColor,
+                      )
+                    : null,
+                labelText: labelText,
+                labelStyle: TextStyle(color: iconColor)
+              ),
+            ),
     );
   }
-
-
 }
-
