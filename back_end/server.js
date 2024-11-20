@@ -12,10 +12,11 @@ app.use(express.json());
 
 const authRoutes = require('./routes/authRoute')
 const userRoutes = require('./routes/userRoute')
+const studyPlanElement=require('./routes/studyPlaneElementRoute')
 
 app.use(authRoutes);
 app.use(userRoutes);
-
+app.use(studyPlanElement);
 
 // const doctorRoutes = require('./routes/doctorRoute');
 // app.use(doctorRoutes);
