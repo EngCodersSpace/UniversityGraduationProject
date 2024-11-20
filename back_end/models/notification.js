@@ -61,3 +61,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   return notification;
 };
+
+
+
+
+
