@@ -75,4 +75,8 @@ class HomeTabController extends GetxController
       }
     }
   }
+
+  void libraryRoute(){
+    Get.toNamed("/library");
+  }
 }

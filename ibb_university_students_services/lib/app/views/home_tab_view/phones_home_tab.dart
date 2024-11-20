@@ -438,11 +438,11 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.libraryRoute,
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/book_6874557.png"),
+                                      "assets/images/services_cards/book_6874557.png"),
                                 ),
                                 SecText(
                                   "Library",
@@ -457,7 +457,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(
-                                      "assets/images/calendar.png"),
+                                      "assets/images/services_cards/calendar.png"),
                                 ),
                                 SecText(
                                   "Lecture",
@@ -476,7 +476,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/payment.png"),
+                                      "assets/images/services_cards/payment.png"),
                                 ),
                                 SecText(
                                   "Payments",
@@ -491,7 +491,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/book.png"),
+                                      "assets/images/services_cards/book.png"),
                                 ),
                                 SecText(
                                   "Library",
@@ -515,7 +515,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image:
-                                      const AssetImage("assets/images/a-.png"),
+                                      const AssetImage("assets/images/services_cards/a-.png"),
                                 ),
                                 SecText(
                                   "Student",
@@ -534,7 +534,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/result.png"),
+                                      "assets/images/services_cards/result.png"),
                                 ),
                                 SecText(
                                   "Student",
@@ -553,7 +553,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(
-                                      "assets/images/exam_11776326.png"),
+                                      "assets/images/services_cards/exam_11776326.png"),
                                 ),
                                 SecText(
                                   "Exam",
@@ -572,7 +572,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/bookshelf_4797659.png"),
+                                      "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
                                 SecText(
                                   "Library",
