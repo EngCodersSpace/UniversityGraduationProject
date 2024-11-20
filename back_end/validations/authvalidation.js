@@ -8,14 +8,21 @@ const validateRequestPasswordReset = [
 ];
 
 const validateResetPassword = [
-    body('token')
-        .notEmpty().withMessage('Token is required'),
+    // body('code').isNumeric().isLength({ min: 6, max: 6 }).withMessage('Enter a valid 6-digit code'),
+    body('code').isNumeric(),
     body('newPassword')
         .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+        .bail() // Stops further checks if the password length is invalid
         .matches(/[a-zA-Z]/).withMessage('Password must include at least one letter')
         .matches(/\d/).withMessage('Password must include at least one number')
-        .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
+        .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)') 
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
+    body('confirmPassword').custom((value, { req }) => {
+        if (value !== req.body.newPassword) {
+            throw new Error('Passwords do not match');
+        }
+        return true;
+    }),
 ];
 
 const validateUserLogin = [
