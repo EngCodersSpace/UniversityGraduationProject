@@ -12,16 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      // //(1)Relationship One-to-One between "doctor table" and  "user table"
-      // doctor.belongsTo(models.user, {
-      //   foreignKey: 'doctor_id',//the foreign Key in the doctor table refers to user table
-      //   targetKey: 'user_id',     //the pwimary Key in the user
-      // });
-
-      // //(2)Relationship One-to-Many between "doctor table" and  "study_plan_elment table"
-      // doctor.hasMany(models.study_plan_elment,{
-      //   foreignKey:'doctor_id',
-      // });
       //(1)Relationship One-to-One between "doctor table" and  "user table"
       doctor.belongsTo(models.user, {
         foreignKey: 'doctor_id',//the foreign Key in the doctor table refers to user table
@@ -47,10 +37,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete:'CASCADE',
       onUpdate:'CASCADE',  
-    },
-    doctor_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
     department: {
       type: DataTypes.STRING,

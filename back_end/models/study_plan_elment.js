@@ -90,6 +90,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Term 1', 'Term 2'),
       allowNull: false,
     },
+
   }, {
     sequelize,
     modelName: 'study_plan_elment',
