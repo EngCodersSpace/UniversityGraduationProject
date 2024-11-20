@@ -19,10 +19,10 @@ router.post('/registerDoctor',vali.validateDoctorRegistration, authController.re
 router.post('/registerStudent',vali.validateStudentRegistration, authController.registerStudent)
 
 // Route لطلب استعادة كلمة المرور
-router.post('/request-password-reset', authController.requestPasswordReset, vali.validateRequestPasswordReset , vali.validateResetPassword);
+router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
 
 // Route لإعادة تعيين كلمة المرور
-router.post('/reset-password', authController.resetPassword, vali.validateResetPassword);
+router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
 
 
 // إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
