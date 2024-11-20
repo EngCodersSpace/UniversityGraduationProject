@@ -96,8 +96,10 @@ exports.updateDoctor = async (req, res) => {
     try {
         const foundUser = await user.findOne({
             where: { user_id },
-            include: [{ model: doctor, as: 'doctor' }],
+            include: [{model: doctor,as: 'doctor',}],
+            attributes: { exclude: ['resetToken', 'resetTokenExpiry', 'updatedAt'] }, 
         });
+        
 
         if (!foundUser || !foundUser.doctor) {
             return res.status(404).json({ message: "Doctor not found" });
@@ -113,7 +115,6 @@ exports.updateDoctor = async (req, res) => {
         // تحديث بيانات الدكتور
         if (doctorData) {
             await foundUser.doctor.update({
-                doctor_name: doctorData.doctor_name,
                 department: doctorData.department,
                 academic_degree: doctorData.academic_degree,
                 administrative_position: doctorData.administrative_position,
@@ -197,23 +198,21 @@ exports.updateStudent = async (req, res) => {
         const foundUser = await user.findOne({
             where: { user_id },
             include: [{ model: student, as: 'student' }],
+            attributes: { exclude: ['resetToken', 'resetTokenExpiry', 'updatedAt'] }, 
         });
 
         if (!foundUser || !foundUser.student) {
             return res.status(404).json({ message: "Student not found" });
         }
 
-        // تحديث بيانات المستخدم
         await foundUser.update({
             user_name,
             date_of_birth,
             email,
         });
 
-        // تحديث بيانات الطالب
         if (studentData) {
             await foundUser.student.update({
-                student_name: studentData.student_name,
                 student_section: studentData.student_section,
                 enrollment_year: studentData.enrollment_year,
                 student_level: studentData.student_level,
@@ -243,10 +242,7 @@ exports.deleteStudent = async (req, res) => {
             return res.status(404).json({ message: "Student not found" });
         }
 
-        // حذف بيانات الطالب
         await foundUser.student.destroy();
-
-        // حذف المستخدم
         await foundUser.destroy();
 
         res.status(200).json({ message: "Student deleted successfully" });
@@ -259,8 +255,12 @@ exports.deleteStudent = async (req, res) => {
 exports.getAllStudents = async (req, res) => {
     try {
         const students = await user.findAll({
-            include: [{ model: student, as: 'student' }],
-            where: { permission: 'student' }, 
+            include: [{
+                model: student,
+                as: 'student',
+                attributes: ['student_section', 'enrollment_year', 'student_level', 'student_system', 'profile_picture', 'study_plan_id'],
+            }],
+            where: { permission: 'student' },
         });
 
         res.status(200).json(students);

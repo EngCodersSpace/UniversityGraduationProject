@@ -11,8 +11,11 @@ const validateResetPassword = [
     body('token')
         .notEmpty().withMessage('Token is required'),
     body('newPassword')
-        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-        .notEmpty().withMessage('New password is required'),
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+        .matches(/[a-zA-Z]/).withMessage('Password must include at least one letter')
+        .matches(/\d/).withMessage('Password must include at least one number')
+        .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
+        .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 ];
 
 const validateUserLogin = [
@@ -41,9 +44,6 @@ const validateDoctorRegistration = [
     body('user_name')
         .notEmpty().withMessage('User name is required'),
 
-    body('doctor.doctor_name')
-        .notEmpty().withMessage('Doctor name is required'),
-
     body('doctor.department')
         .notEmpty().withMessage('Department is required'),
 
@@ -66,7 +66,7 @@ const validateStudentRegistration = [
     body('email')
         .isEmail().withMessage('Invalid email format'),
 
-        body('password')
+    body('password')
         .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
         .matches(/[a-zA-Z]/).withMessage('Password must include at least one letter')
         .matches(/\d/).withMessage('Password must include at least one number')
@@ -77,8 +77,6 @@ const validateStudentRegistration = [
         .notEmpty().withMessage('User name is required'),
 
     // Validate student-specific fields
-    body('student.student_name')
-        .notEmpty().withMessage('Student name is required'),
 
     body('student.student_section')
         .isIn(['Computer', 'Communications', 'Civil', 'Architecture'])

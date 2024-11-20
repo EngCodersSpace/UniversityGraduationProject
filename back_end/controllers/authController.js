@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
         return res.status(400).json({ message: 'Password is required' });
     }
     try {
-        const foundUser = await user.findOne({ where: { user_id } });
+        const foundUser = await user.scope('with_hidden_data').findOne({ where: { user_id } });
         if (!foundUser) {
             return res.status(401).json({ message: "User ID is not correct" });
         }
@@ -53,6 +53,7 @@ exports.login = async (req, res) => {
         console.error("Error during login:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
+    
 };
 
 exports.refreshToken = async (req, res) => {
@@ -121,7 +122,6 @@ exports.registerDoctor = async (req, res) => {
                 password,
                 permission,
                 doctor: doctorData ? {
-                    doctor_name: doctorData.doctor_name,
                     department: doctorData.department,
                     academic_degree: doctorData.academic_degree,
                     administrative_position: doctorData.administrative_position,
@@ -131,11 +131,26 @@ exports.registerDoctor = async (req, res) => {
                 include: [{ model: doctor, as: 'doctor' }],
             }
         );
-
+        const responseUser = {
+            user_id: newUser.user_id,
+            user_name: newUser.user_name,
+            date_of_birth: newUser.date_of_birth,
+            email: newUser.email,
+            permission: newUser.permission,
+            doctor: newUser.doctor
+                ? {
+                    department: newUser.doctor.department,
+                    academic_degree: newUser.doctor.academic_degree,
+                    administrative_position: newUser.doctor.administrative_position,
+                }
+                : null,
+        };
+        
         res.status(201).json({
             message: "Doctor registered successfully",
-            user: newUser,
+            user: responseUser,
         });
+        
     } catch (error) {
         console.error("Error during user registration:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -173,7 +188,6 @@ exports.registerStudent = async (req, res) => {
                 password,
                 permission,
                 student: studentData ? {
-                    student_name: studentData.student_name,
                     student_section: studentData.student_section,
                     enrollment_year: studentData.enrollment_year,
                     student_level: studentData.student_level,
@@ -186,10 +200,28 @@ exports.registerStudent = async (req, res) => {
                 include: [{ model: student, as: 'student' }],
             }
         );
+        const responseUser = {
+            user_id: newUser.user_id,
+            user_name: newUser.user_name,
+            date_of_birth: newUser.date_of_birth,
+            email: newUser.email,
+            permission: newUser.permission,
+            student: newUser.student
+                ? {
+                    student_section: newUser.student.student_section,
+                    enrollment_year: newUser.student.enrollment_year,
+                    student_level: newUser.student.student_level,
+                    student_system: newUser.student.student_system,
+                    profile_picture: newUser.student.profile_picture,
+                    study_plan_id: newUser.student.study_plan_id,
+                }
+                : null,
+        };
 
+        // Send the response
         res.status(201).json({
             message: "Student registered successfully",
-            user: newUser,
+            user: responseUser,
         });
     } catch (error) {
         console.error("Error during user registration:", error.message);
@@ -274,7 +306,8 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
-// Function to get the currently logged-in user based on JWT token
+
+// Function to get the currently logged-in user based on JWT token  me
 exports.getCurrentUser = (req, res) => {
     // الحصول على التوكن من الهيدر (الطلب)
     const authHeader = req.headers['authorization'];
