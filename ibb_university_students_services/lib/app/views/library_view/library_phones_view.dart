@@ -12,10 +12,8 @@ class LibraryPhonesView extends GetView<LibraryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      color: AppColors.inverseCardColor,
-      child: Column(children: [
-        Expanded(
+      resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
@@ -32,7 +30,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                       children: [
                         Row(
                           children: [
-                            MainText("Library"),
+                            IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
                             const SizedBox(width: 16,),
                             Expanded(
                               child: CustomTextFormField(
@@ -42,7 +40,6 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                 iconColor: AppColors.mainCardColor,
                               ),
                             ),
-                            IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,))
                           ],
 
 
@@ -74,7 +71,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                   SizedBox(
                                     height: 2,
                                   ),
-                                  Text("Notes"),
+                                  Text("References"),
                                 ],
                               ),
                               Column(
@@ -83,23 +80,22 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                   SizedBox(
                                     height: 2,
                                   ),
-                                  Text("Ref"),
+                                  Text("MyBooks"),
                                 ],
                               )
                             ]),
                       ],
                     ),
                   )),
-              Expanded(
-                child: Obx(() => TabBarView(
+              SizedBox(
+                height: Get.height*0.84,
+                child: TabBarView(
                     controller: controller.tapController,
                     physics: const NeverScrollableScrollPhysics(),
-                    children: controller.myTabs.value)),
+                    children: controller.myTabs),
               ),
             ],
           ),
-        ),
-      ]),
-    ));
+        ));
   }
 }

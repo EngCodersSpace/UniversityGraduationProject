@@ -13,13 +13,54 @@ class LibraryController extends GetxController
   PageController booksPagesController = PageController();
   PageController notesPagesController = PageController();
   PageController refPagesController = PageController();
-
+  RxList books = [
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "book", "image": "assets/images/services_cards/result.png"},
+  ].obs;
   RxList<Widget> myTabs = RxList([
     const BooksTab(),
     const NotesTab(),
     const RefTab(),
   ]);
-
+  Map<String,dynamic> selectedBook = {};
   @override
   void onInit() {
     // TODO: implement onInit
@@ -30,11 +71,13 @@ class LibraryController extends GetxController
     super.onInit();
   }
 
-  void showBookInfo() {
+  void showBookInfo(Map<String,dynamic> book) {
+    selectedBook = book;
     Get.dialog(PopUpBookInfoCard());
   }
 
-  void searching(String? val){}
+  void searching(String? val) {}
+
   @override
   void onClose() {
     tapController?.dispose();

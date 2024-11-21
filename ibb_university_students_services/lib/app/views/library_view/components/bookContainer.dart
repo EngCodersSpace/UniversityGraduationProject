@@ -8,15 +8,13 @@ import 'package:ibb_university_students_services/app/globals.dart';
 import '../../../components/custom_text.dart';
 
 class BookContainer extends GetView<LibraryController> {
-  BookContainer({required this.bookName, required this.bookImgSrc, super.key});
-
-  String bookImgSrc;
-  String bookName;
+  BookContainer({required this.book, super.key});
+  Map<String,dynamic> book = {};
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: controller.showBookInfo,
+      onTap: ()=>controller.showBookInfo(book),
       child: SizedBox(
         width: Get.width / 5,
         child: Column(
@@ -29,7 +27,7 @@ class BookContainer extends GetView<LibraryController> {
               height: 60,
               child: Image(
                 image: AssetImage(
-                  bookImgSrc ?? "",
+                  book["image"] ?? "",
                 ),
                 fit: BoxFit.cover,
               ),
@@ -39,7 +37,7 @@ class BookContainer extends GetView<LibraryController> {
             ),
             Flexible(
                 child: SecText(
-              bookName ?? "Unknown",
+              book["name"] ?? "Unknown",
               textColor: AppColors.mainTextColor,
             ))
           ],

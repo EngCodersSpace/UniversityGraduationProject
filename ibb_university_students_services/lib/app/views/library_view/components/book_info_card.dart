@@ -8,8 +8,6 @@ import '../../../globals.dart';
 
 // ignore: must_be_immutable
 class PopUpBookInfoCard extends GetView<LibraryController> {
-  String massage = "";
-  IconData icon = Icons.info_outline;
 
   PopUpBookInfoCard({super.key});
 
@@ -26,40 +24,54 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                 elevation: 2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
                 child: SizedBox(
-                  height: 350,
-                  width: 500,
+                  height: Get.height*0.4,
+                  width: Get.width - 32,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.info_outline,color: AppColors.secTextColor,),
-                            SecText("Book Information"),
+                            Row(
+                              children: [
+                              Icon(Icons.info_outline,color: AppColors.secTextColor,),
+                              const SizedBox(width: 6,),
+                              SecText("Book Information"),
+                            ],),
                             IconButton(onPressed: (){Get.back();}, icon: Icon(Icons.close,color: AppColors.secTextColor,))
                           ],
                         ),
                         Expanded(
-                          child: Row(
-                            children: [
-                              Image(image: AssetImage("assets/images/library/istockphoto-867895848-612x612.jpg"),),
-                              Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SecText("Name :"),
-                                    SecText("Authors :"),
-                                    SecText("Pages : "),
-                                    SecText("Size :"),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.inverseCardColor,
+                                width: 2
+                              ),
+                              borderRadius: BorderRadius.circular(24)
+                            ),
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Image(image: AssetImage(controller.selectedBook["image"]??""),width: 160,),
+                                Padding(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SecText("Name :${controller.selectedBook["name"]}"),
+                                      SecText("Authors :"),
+                                      SecText("Pages : "),
+                                      SecText("Size :"),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
                         ),
                         Column(
                           children: [

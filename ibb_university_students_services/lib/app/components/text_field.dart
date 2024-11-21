@@ -70,6 +70,9 @@ class CustomTextFormField extends StatelessWidget {
                 validator: validator,
                 decoration: InputDecoration(
                     isDense: true,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: iconColor,),
+                        borderRadius: const BorderRadius.all(Radius.circular(25))),
                     border:  OutlineInputBorder(
                       borderSide: BorderSide(color: iconColor),
                         borderRadius: const BorderRadius.all(Radius.circular(30)),
@@ -110,14 +113,17 @@ class CustomTextFormField extends StatelessWidget {
               validator: validator,
               decoration: InputDecoration(
                 isDense: true,
-                border:  OutlineInputBorder(
-                    borderSide: BorderSide(color: iconColor),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor,),
                     borderRadius: const BorderRadius.all(Radius.circular(25))),
+                border:  OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor,),
+                    borderRadius: const BorderRadius.all(Radius.circular(25))),
+                iconColor: iconColor,
                 icon: (icon != null)
                     ? Icon(
                         icon,
                         size: 40,
-                        color: iconColor,
                       )
                     : null,
                 labelText: labelText,
