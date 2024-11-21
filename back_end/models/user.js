@@ -40,7 +40,6 @@ module.exports = (sequelize, DataTypes) => {
 
     }
   }
- 
   user.init({
     user_id: {
       type: DataTypes.INTEGER,

@@ -1,14 +1,17 @@
 // gradeRoute.js
 const express = require('express');
 const router = express.Router();
-const gradeController = require('../controllers/gradeController');
-const auth = require('../middleware/authMiddleware');
-const authorize = require('../middleware/authorizeMiddleware');
-const validateGrade = require('../middleware/validateGradeMiddleware');
+const gC = require('../controllers/gradeController');
+const vali = require('../validations/gradevalidation');
 
-
-router.post('/grades', auth, authorize(['admin', 'teacher']), gradeController.createGrade);
-router.delete('/grades/:id', auth, authorize(['admin']), gradeController.deleteGrade);
-router.post('/grades', auth, validateGrade, gradeController.createGrade);
+router.post('/creat-grade', vali.createGrade,   gC.createGrade);
+router.get('/get-all-grades',   gC.getAllGrades);
+router.get('/get-grade/:id',    gC.getGradeById);
+router.put('/update-grade/:id',vali.updateGrade, gC.updateGrade);
+router.delete('/delete-grade/:id',     gC.deleteGrade);
 
 module.exports = router;
+
+
+
+
