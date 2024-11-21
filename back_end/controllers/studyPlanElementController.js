@@ -2,7 +2,7 @@ const { study_plan_elment, study_plan, subject, doctor, prerequisite } = require
 const { validationResult } = require('express-validator');
 
 
-// Create a new study plan element
+// when you Create a new study plan element befor see the (study plan id,subject id , doctor id )
 exports.createStudyPlanElement = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -1,25 +1,21 @@
 //  server.js
 const express = require('express');
-// const  { user }  = require('./models'); 
-// const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcrypt');
-// const SECRET_KEY = process.env.SECRET_KEY || "mySuperSecretKey1234567890123456" ;
 const dotenv = require("dotenv");
 dotenv.config({ path: './.env' });
 const app = express();
 app.use(express.json());
 
-
 const authRoutes = require('./routes/authRoute')
 const userRoutes = require('./routes/userRoute')
-const studyPlanElement=require('./routes/studyPlaneElementRoute')
+const studyPlanElementRoute=require('./routes/studyPlaneElementRoute')
+const examRoute=require('./routes/examRoute')
+const gradeRoute=require('./routes/gradeRoute')
 
 app.use(authRoutes);
 app.use(userRoutes);
-app.use(studyPlanElement);
-
-// const doctorRoutes = require('./routes/doctorRoute');
-// app.use(doctorRoutes);
+app.use(studyPlanElementRoute);
+app.use(examRoute);
+app.use(gradeRoute);
 
 
 
