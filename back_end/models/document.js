@@ -11,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+       //(1)Relationship One-to-Many between "document table" and  "user table"
+       document.belongsTo(models.user, {
+        foreignKey: 'added_by',
+      });
+
+      //(2)Relationship One-to-Many between "document table" and  "subject table"
+      document.belongsTo(models.subject, {
+        foreignKey: 'subject_id',
+      });
+
     }
   }
   document.init({
