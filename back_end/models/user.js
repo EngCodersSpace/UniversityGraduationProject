@@ -80,11 +80,11 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('password', hasedpassword);
       },
     },
-    reset_token: {
+    resetToken: {
       type: DataTypes.STRING(100),
       allowNull: true,
     },
-    reset_token_expiry: {
+    resetTokenExpiry: {
       type: DataTypes.DATE,
       allowNull: true,
     },
