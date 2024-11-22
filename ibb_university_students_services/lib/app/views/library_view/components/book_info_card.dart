@@ -23,11 +23,18 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                 color: AppColors.mainCardColor,
                 elevation: 2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                child: SizedBox(
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColors.inverseCardColor,
+                          width: 4
+                      ),
+                      borderRadius: BorderRadius.circular(32)
+                  ),
                   height: Get.height*0.4,
                   width: Get.width - 32,
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.symmetric(vertical:12.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -43,15 +50,12 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                             IconButton(onPressed: (){Get.back();}, icon: Icon(Icons.close,color: AppColors.secTextColor,))
                           ],
                         ),
+                        Divider(
+                          color: AppColors.inverseCardColor,
+                          thickness: 2,
+                        ),
                         Expanded(
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.inverseCardColor,
-                                width: 2
-                              ),
-                              borderRadius: BorderRadius.circular(24)
-                            ),
                             padding: const EdgeInsets.all(8),
                             child: Row(
                               children: [
@@ -72,6 +76,10 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                               ],
                             ),
                           )
+                        ),
+                        Divider(
+                          color: AppColors.inverseCardColor,
+                          thickness: 2,
                         ),
                         Column(
                           children: [

@@ -14,7 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.controller,
     this.validator,
     this.icon,
-    this.iconColor = Colors.white,
+    this.color = Colors.black,
     this.labelText,
     this.width,
     this.onTap,
@@ -24,31 +24,31 @@ class CustomTextFormField extends StatelessWidget {
     this.onSaved,
     this.onChange,
     this.keyboardType,
+    this.prefixIcon,
   });
 
   bool isPassword;
   bool readOnly;
   RxBool hide = true.obs;
   bool? enable;
-
   int? minLines;
-
   int? maxLines;
-
   double? width;
   TextEditingController? controller;
   IconData? icon;
   String? labelText;
-  String? Function(String?)? validator;
   FocusNode? focusNode;
+  IconData? prefixIcon;
+  Color color;
+  TextInputType? keyboardType;
 
+  String? Function(String?)? validator;
   void Function()? onTap;
   void Function(PointerDownEvent)? onTapOutside;
   void Function(String?)? onSaved;
   void Function(String?)? onFieldSubmitted;
   void Function(String?)? onChange;
-  TextInputType? keyboardType;
-  Color iconColor;
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,18 +71,21 @@ class CustomTextFormField extends StatelessWidget {
                 decoration: InputDecoration(
                     isDense: true,
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: iconColor,),
+                        borderSide: BorderSide(color: color,),
                         borderRadius: const BorderRadius.all(Radius.circular(25))),
                     border:  OutlineInputBorder(
-                      borderSide: BorderSide(color: iconColor),
+                      borderSide: BorderSide(color: color),
                         borderRadius: const BorderRadius.all(Radius.circular(30)),
 
                     ),
+                    prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                    prefixIconColor: color,
+                    iconColor: color,
                     icon: (icon != null)
                         ? Icon(
                             icon,
                             size: 40,
-                            color: iconColor,
+                            color: color,
                           )
                         : null,
                     labelText: labelText,
@@ -114,12 +117,14 @@ class CustomTextFormField extends StatelessWidget {
               decoration: InputDecoration(
                 isDense: true,
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: iconColor,),
+                    borderSide: BorderSide(color: color,),
                     borderRadius: const BorderRadius.all(Radius.circular(25))),
                 border:  OutlineInputBorder(
-                    borderSide: BorderSide(color: iconColor,),
+                    borderSide: BorderSide(color: color,),
                     borderRadius: const BorderRadius.all(Radius.circular(25))),
-                iconColor: iconColor,
+                  prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                prefixIconColor: color,
+                iconColor: color,
                 icon: (icon != null)
                     ? Icon(
                         icon,
@@ -127,7 +132,7 @@ class CustomTextFormField extends StatelessWidget {
                       )
                     : null,
                 labelText: labelText,
-                labelStyle: TextStyle(color: iconColor)
+                labelStyle: TextStyle(color: color)
               ),
             ),
     );

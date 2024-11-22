@@ -6,8 +6,8 @@ import '../../../components/custom_text.dart';
 import '../../../globals.dart';
 import '../components/bookContainer.dart';
 
-class BooksTab extends GetView<LibraryController> {
-  const BooksTab({super.key});
+class LecturesTab extends GetView<LibraryController> {
+  const LecturesTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,7 @@ class BooksTab extends GetView<LibraryController> {
                       ),
                       height: Get.height * 0.74,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           SizedBox(
                             height: (Get.height * 0.74) * 0.04,
@@ -38,6 +39,7 @@ class BooksTab extends GetView<LibraryController> {
                               child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     for (int j = i;
                                         (j < controller.books.length) &&

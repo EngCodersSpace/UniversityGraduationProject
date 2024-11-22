@@ -18,7 +18,7 @@ class MainViewLoader extends StatelessWidget {
           if (Get.width <= 768 && Get.height <= 1025) {
             return  PhoneMainView();
           } else {
-            return  const WebMainView();
+            return   WebMainView();
           }
         },
       ),

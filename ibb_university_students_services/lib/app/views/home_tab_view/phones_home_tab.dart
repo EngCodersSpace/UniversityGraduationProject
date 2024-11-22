@@ -453,7 +453,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.lectureScheduleRoute,
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(
@@ -487,14 +487,18 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.academicCardRoute,
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
                                       "assets/images/services_cards/book.png"),
                                 ),
                                 SecText(
-                                  "Library",
+                                  "Academic",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                SecText(
+                                  "Card",
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],

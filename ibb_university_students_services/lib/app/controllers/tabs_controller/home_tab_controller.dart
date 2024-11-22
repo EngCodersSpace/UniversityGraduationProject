@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../models/result.dart';
 import '../../services/user_services.dart';
 import '../../models/user_model.dart';
+import '../main_controller.dart';
 
 class HomeTabController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -79,4 +80,11 @@ class HomeTabController extends GetxController
   void libraryRoute(){
     Get.toNamed("/library");
   }
+  void lectureScheduleRoute(){
+    Get.find<MainController>().changeTabIndex(1);
+  }
+  void academicCardRoute(){
+    Get.toNamed("/academic_card");
+  }
+  
 }

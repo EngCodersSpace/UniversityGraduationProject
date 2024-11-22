@@ -20,11 +20,11 @@ class BookContainer extends GetView<LibraryController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             SizedBox(
-              height: 60,
+              height: Get.width/5,
               child: Image(
                 image: AssetImage(
                   book["image"] ?? "",
@@ -32,7 +32,7 @@ class BookContainer extends GetView<LibraryController> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 3,
             ),
             Flexible(

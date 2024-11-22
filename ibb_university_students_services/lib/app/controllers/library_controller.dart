@@ -18,7 +18,7 @@ class LibraryController extends GetxController
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
-    {"name": "book", "image": "assets/images/services_cards/result.png"},
+    {"name": "bookknc zxnnznxlknnn", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
@@ -56,7 +56,7 @@ class LibraryController extends GetxController
     {"name": "book", "image": "assets/images/services_cards/result.png"},
   ].obs;
   RxList<Widget> myTabs = RxList([
-    const BooksTab(),
+    const LecturesTab(),
     const NotesTab(),
     const RefTab(),
   ]);

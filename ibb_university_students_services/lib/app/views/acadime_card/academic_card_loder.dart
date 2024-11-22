@@ -2,13 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ibb_university_students_services/app/views/login_view/web_login_view.dart';
+import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_phone_view.dart';
+import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_web_view.dart';
 
-import 'library_phones_view.dart';
-import 'library_web_view.dart';
-
-class LibraryViewLoader extends StatelessWidget {
-  const LibraryViewLoader({super.key});
+class AcademicCardViewLoader extends StatelessWidget {
+  const AcademicCardViewLoader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +17,9 @@ class LibraryViewLoader extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
-            return   LibraryPhonesView();
+            return   AcademicCardPhoneView();
           } else {
-            return   LibraryWebView();
+            return   AcademicCardWebView();
           }
         },
       ),
