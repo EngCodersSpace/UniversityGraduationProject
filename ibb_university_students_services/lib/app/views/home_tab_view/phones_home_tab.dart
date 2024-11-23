@@ -22,7 +22,6 @@ class PhoneMainTab extends GetView<HomeTabController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.startTimer();
     return Obx(() => (controller.initState.value)
         ? SafeArea(
             minimum: EdgeInsets.only(
@@ -438,11 +437,11 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: controller.libraryRoute,
+                                  onTap: () {},
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/book_6874557.png"),
+                                      "assets/images/book_6874557.png"),
                                 ),
                                 SecText(
                                   "Library",
@@ -453,11 +452,11 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: controller.lectureScheduleRoute,
+                                  onTap: () {},
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/calendar.png"),
+                                      "assets/images/calendar.png"),
                                 ),
                                 SecText(
                                   "Lecture",
@@ -476,7 +475,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/payment.png"),
+                                      "assets/images/payment.png"),
                                 ),
                                 SecText(
                                   "Payments",
@@ -487,18 +486,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: controller.academicCardRoute,
+                                  onTap: () {},
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/book.png"),
+                                      "assets/images/book.png"),
                                 ),
                                 SecText(
-                                  "Academic",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Card",
+                                  "Library",
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
@@ -519,7 +514,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image:
-                                      const AssetImage("assets/images/services_cards/a-.png"),
+                                      const AssetImage("assets/images/a-.png"),
                                 ),
                                 SecText(
                                   "Student",
@@ -538,7 +533,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/result.png"),
+                                      "assets/images/result.png"),
                                 ),
                                 SecText(
                                   "Student",
@@ -557,7 +552,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/exam_11776326.png"),
+                                      "assets/images/exam_11776326.png"),
                                 ),
                                 SecText(
                                   "Exam",
@@ -576,7 +571,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/bookshelf_4797659.png"),
+                                      "assets/images/bookshelf_4797659.png"),
                                 ),
                                 SecText(
                                   "Library",
