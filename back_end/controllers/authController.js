@@ -8,18 +8,13 @@ const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 
-
 const SECRET_KEY = process.env.SECRET_KEY ;
+const JWT_EXPIRY = '10m';
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY ;
 
+///////////////////////////
 exports.login = async (req, res) => {
     const { user_id, password } = req.body;
-    if (!user_id) {
-        return res.status(400).json({ message: 'User ID is required' });
-    }
-    if (!password) {
-        return res.status(400).json({ message: 'Password is required' });
-    }
     try {
         const foundUser = await user.scope('with_hidden_data').findOne({ where: { user_id } });
         if (!foundUser) {
@@ -53,9 +48,7 @@ exports.login = async (req, res) => {
         console.error("Error during login:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
-    
 };
-
 exports.refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
 
@@ -69,18 +62,21 @@ exports.refreshToken = async (req, res) => {
             return res.status(403).json({ message: "Invalid refresh token" });
         }
         try {
-            // البحث عن المستخدم بناءً على user_id في التوكن
             const foundUser = await user.findOne({ where: { user_id: decoded.user_id } });
 
             if (!foundUser) {
                 return res.status(404).json({ message: "User not found" });
             }
 
-            // إنشاء accessToken جديد
+            if (foundUser.refreshToken !== refreshToken) {
+                return res.status(403).json({ message: "Refresh token does not match" });
+            }
+
+
             const accessToken = jwt.sign(
                 { user_id: foundUser.user_id },
                 SECRET_KEY,
-                { expiresIn: '15m' } // صلاحية لمدة 15 دقيقة
+                { expiresIn: '15m' } 
             );
 
             res.json({ accessToken });
@@ -90,8 +86,7 @@ exports.refreshToken = async (req, res) => {
         }
     });
 };
-
-
+///////////////////////////
 exports.registerDoctor = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -155,8 +150,6 @@ exports.registerDoctor = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
-
 exports.registerStudent = async (req, res) => {
     // Handle validation errors
     const errors = validationResult(req);
@@ -227,31 +220,30 @@ exports.registerStudent = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
-
-const sendPasswordResetEmail = async (email, resetCode) => {
+///////////////////////////
+const sendPasswordResetEmail = async (email, resetToken) => {
     const transporter = nodemailer.createTransport({
         host: 'localhost', // MailHog or other SMTP server
         port: 1025,
         secure: false,
     });
 
+    const resetLink = `http://yourapp.com/reset-password?token=${resetToken}`;
     const mailOptions = {
         from: 'test@example.com',
         to: email,
-        subject: 'Password Reset Code',
-        text: `Your password reset code is: ${resetCode}. It will expire in 10 minutes.`
+        subject: 'Password Reset Link',
+        text: `Click the following link to reset your password. This link will expire in 10 minutes: ${resetLink}`,
     };
 
     await transporter.sendMail(mailOptions);
 };
-
-
 exports.requestPasswordReset = async (req, res) => {
     const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { email } = req.body;
 
     try {
@@ -260,47 +252,83 @@ exports.requestPasswordReset = async (req, res) => {
             return res.status(404).json({ message: "Email not found" });
         }
 
-        const resetCode = Math.floor(100000 + Math.random() * 900000); // 6-digit numeric code
-        const resetCodeExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+        const payload = {user_id: foundUser.user_id };
+        const resetToken = jwt.sign(payload, SECRET_KEY, { expiresIn: JWT_EXPIRY });
+    
+        foundUser.resetToken = resetToken;
+        console.log(" reset token:", resetToken);  
 
-        foundUser.resetToken = resetCode.toString();
-        foundUser.resetTokenExpiry = resetCodeExpiry;
-        await foundUser.save();
+        foundUser.resetTokenExpiry = Date.now() + 10 * 60 * 1000;  
+        const result = await foundUser.save();
+        console.log("Save result:", result);  
 
-        await sendPasswordResetEmail(foundUser.email, resetCode);
-        res.status(200).json({ message: 'Password reset code sent to your email.' });
+        console.log("Generated reset token:", resetToken); 
+
+        await sendPasswordResetEmail(foundUser.email, resetToken);
+
+        res.status(200).json({ message: 'Password reset link sent to your email.' });
+
+
     } catch (error) {
         console.error("Error during password reset request:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
-
-exports.resetPassword = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    const { code, newPassword, confirmPassword } = req.body;
-
-    if (newPassword !== confirmPassword) {
-        return res.status(400).json({ message: "Passwords do not match" });
-    }
+exports.verifyResetToken = async (req, res) => {
+    const { token } = req.query;    // token come to you on your email put it in the query param to compaire
 
     try {
         const foundUser = await user.findOne({
             where: {
-                resetToken: code,
+                resetToken: token,
                 resetTokenExpiry: { [Op.gt]: Date.now() },
-            }
+            },
         });
 
         if (!foundUser) {
-            return res.status(400).json({ message: "Invalid or expired code" });
+            return res.status(400).json({ message: 'Invalid or expired reset token' });
         }
 
+        // Generate a JWT for subsequent requests
+        const jwtToken = jwt.sign(
+            { user_id: foundUser.user_id },SECRET_KEY,{ expiresIn: '15m' }
+        );
+
+        res.status(200).json({ token: jwtToken, message: 'Token verified successfully.' });
+    } catch (error) {
+        console.error("Error verifying reset token:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
+exports.resetPassword = async (req, res) => {
+    try {
+        // Get the JWT token from headers
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token is required.' });
+        }
+
+        // Verify the JWT token
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const userId = decoded.user_id;
+
+        // Validate passwords
+        const { newPassword, confirmPassword } = req.body;
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: "Passwords do not match" });
+        }
+
+        // Find the user in the database
+        const foundUser = await user.findOne({ where: { user_id: userId } });
+        
+        if (!foundUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Update the user's password
         foundUser.password = bcrypt.hashSync(newPassword, 10);
         foundUser.resetToken = null;
-        foundUser.resetTokenExpiry = null;
+        foundUser.resetTokenExpiry = null; // Invalidate the token
         await foundUser.save();
 
         res.status(200).json({ message: "Password has been reset successfully." });
@@ -309,8 +337,9 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+///////////////////////////
 
-// Function to get the currently logged-in user based on JWT token  me
+// Function to get the currently logged-in user based on JWT token (me) 
 exports.getCurrentUser = (req, res) => {
     // الحصول على التوكن من الهيدر (الطلب)
     const authHeader = req.headers['authorization'];
@@ -347,12 +376,5 @@ exports.getCurrentUser = (req, res) => {
         }
     });
 };
-
-
-
-
-
-
-
 
 

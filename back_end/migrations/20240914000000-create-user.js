@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
-
       user_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -37,15 +36,17 @@ module.exports = {
         },
       },
       resetToken:{
-        type:Sequelize.STRING(100),
+        type:Sequelize.TEXT,
         allowNull:true,
       },
       resetTokenExpiry:{
         type:Sequelize.DATE,
         allowNull:true,
       },
-      
-
+      refreshToken: {
+        type:Sequelize.TEXT,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
