@@ -64,69 +64,6 @@ class MainController extends GetxController {
     selectedIndex.value = index;
   }
 
-  void changewebtabindex(int index) {
-    if (index == 0) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
-    } else if (index == 1) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
-    } else if (index == 2) {
-      poslisttile = ListTile(
-        selectedTileColor: AppColors.backColor,
-        iconColor: AppColors.inverseCardColor,
-        textColor: AppColors.inverseCardColor,
-      );
-    } else if (index == 3) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
-    } else if (index == 4) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
-    }
-    iconindex.value = index;
-  }
-  // Color geticonindex(int index) {
-  //   return selectedIndex.value == index
-  //       ? AppColors.backColor
-  //       : AppColors.inverseCardColor;
-  // }
 
   @override
   void onClose() {}

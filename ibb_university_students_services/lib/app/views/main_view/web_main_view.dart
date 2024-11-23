@@ -16,12 +16,12 @@ class WebMainView extends GetView<MainController> {
 
   double hight = Get.height;
   double width = Get.width;
-  late ListTile listTile;
 
   @override
   Widget build(BuildContext context) {
-    List icona = [
+    List icons = [
       Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
@@ -157,126 +157,17 @@ class WebMainView extends GetView<MainController> {
                       ),
                       Container(
                         color: AppColors.backColor,
-                        child: ListView(children: [
-                          Column(
-                            children: <Widget>[
-                              screens[controller.iconindex.value],
-                              ListTile(
-                                onTap: () {},
-                                selectedTileColor: AppColors.backColor,
-                                iconColor: AppColors.inverseIconColor,
-                                textColor: AppColors.inverseIconColor,
-                                leading: icona[controller.iconindex.value],
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: ()=>controller.changeTabIndex(0),
+                              child: Container(
+                                color: (controller.selectedIndex.value == 0)?AppColors.tabBackColor:AppColors.inverseCardColor,
+                                child: icons[controller.selectedIndex.value],
                               ),
-                              listTile,
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(0);
-                                },
-                                leading: Icon(
-                                  Icons.person_outline_rounded,
-                                  color: (controller.iconindex.value == 0)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Profile".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 0)
-                                        ? Colors.transparent
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(1);
-                                },
-                                leading: Icon(
-                                  Icons.notifications_none_outlined,
-                                  color: (controller.iconindex.value == 1)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Notification".tr,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 1)
-                                        ? Colors.transparent
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(2);
-                                },
-                                leading: Icon(
-                                  Icons.home,
-                                  color: (controller.iconindex.value == 2)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Home".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 2)
-                                        ? Colors.transparent
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(3);
-                                },
-                                leading: Icon(
-                                  Icons.calendar_month,
-                                  color: (controller.iconindex.value == 3)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Table".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 3)
-                                        ? Colors.transparent
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(4);
-                                },
-                                leading: Icon(
-                                  Icons.description,
-                                  color: (controller.iconindex.value == 4)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Reports".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 4)
-                                        ? Colors.transparent
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ]),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),
