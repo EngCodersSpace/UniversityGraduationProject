@@ -162,11 +162,13 @@ class WebMainView extends GetView<MainController> {
                             children: <Widget>[
                               screens[controller.iconindex.value],
                               ListTile(
+                                onTap: () {},
                                 selectedTileColor: AppColors.backColor,
-                                iconColor: AppColors.inverseCardColor,
-                                textColor: AppColors.inverseCardColor,
-                                leading: icona(controller.iconindex.value),
+                                iconColor: AppColors.inverseIconColor,
+                                textColor: AppColors.inverseIconColor,
+                                leading: icona[controller.iconindex.value],
                               ),
+                              listTile,
                               ListTile(
                                 onTap: () {
                                   controller.changewebtabindex(0);
