@@ -21,33 +21,11 @@ app.use(lectureRoute);
 
 
 const PORT = process.env.PORT ;
-// Start server
 app.listen(PORT, () => {
     console.log(`Server is running o port ${PORT}`);
 });
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const authRoutes = require('./routes/authRoute')
-// app.use(authRoutes);
-
-// const easyRoute = require('./routes/esayRoute')
-// app.use('/api', easyRoute);
-// const userRoutes = require('./routes/userRoute');
 
 

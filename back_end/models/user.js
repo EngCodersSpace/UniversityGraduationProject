@@ -73,13 +73,18 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     resetToken: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     resetTokenExpiry: {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    refreshToken: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
   }, {
     sequelize,
     modelName: 'user',

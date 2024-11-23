@@ -9,7 +9,7 @@ const validateRequestPasswordReset = [
 
 const validateResetPassword = [
     // body('code').isNumeric().isLength({ min: 6, max: 6 }).withMessage('Enter a valid 6-digit code'),
-    body('code').isNumeric(),
+    // body('token').isString(),
     body('newPassword')
         .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
         .bail() // Stops further checks if the password length is invalid
@@ -24,6 +24,10 @@ const validateResetPassword = [
         return true;
     }),
 ];
+
+
+
+
 
 const validateUserLogin = [
     body('user_id').notEmpty().withMessage('User ID is required'),

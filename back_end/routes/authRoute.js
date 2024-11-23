@@ -12,6 +12,13 @@ router.post('/login', authController.login);
 // Route for token verification
 router.post('/login/authToken', authMiddleware.verifyToken);
 
+// إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
+router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
+
+//To refresh Token
+router.post('/refresh', authController.refreshToken);
+
+
 // register Doctor
 router.post('/registerDoctor',vali.validateDoctorRegistration, authController.registerDoctor)
 
@@ -21,15 +28,11 @@ router.post('/registerStudent',vali.validateStudentRegistration, authController.
 // Route لطلب استعادة كلمة المرور
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
 
+router.get('/verify-reset-token',authController.verifyResetToken)
+
 // Route لإعادة تعيين كلمة المرور
 router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
 
-
-// إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
-router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
-
-//To refresh Token
-router.post('/refresh', authController.refreshToken);
 
 
 module.exports = router;
