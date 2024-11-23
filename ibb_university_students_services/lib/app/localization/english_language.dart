@@ -1,0 +1,25 @@
+class Engilsh {
+  Map<String, String> dictionary = {
+    'title': 'hello',
+    'studentid': 'Student ID',
+    'password': 'Password',
+    'login': 'Login',
+    'logging': 'logging',
+    'forgotPassword?':'Forgot Password?',
+    'Notification':'Notification',
+    'Table':'Table',
+    'Home':'Home',
+    'Reports':'Reports',
+    'Profile':'Profile',
+    'Email':'Email',
+    'UserName':'UserName',
+    'Phone':'Phone',
+    'Language':'Language',
+    'Unknown':'Unknown',
+    'Level':'Level',
+    'News':'News',
+    'Services':'Services',
+    'Division':'Division',
+    'Department':'Department',
+  };
+}
