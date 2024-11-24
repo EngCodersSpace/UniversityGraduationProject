@@ -39,9 +39,15 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      lecture_level: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+      lecture_level_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       term: {
         type: Sequelize.ENUM('Term 1', 'Term 2'),
