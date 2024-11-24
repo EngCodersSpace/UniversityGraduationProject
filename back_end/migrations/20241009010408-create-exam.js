@@ -19,9 +19,15 @@ module.exports = {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
-      exam_section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      exam_section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       exam_level: {
         type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
@@ -64,7 +70,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('exams', {
-      fields: ['exam_section', 'exam_level', 'exam_term', 'exam_year', 'exam_date', 'exam_time', 'exam_day'],
+      fields: ['exam_section_id', 'exam_level', 'exam_term', 'exam_year', 'exam_date', 'exam_time', 'exam_day'],
       type: 'unique',
       name: 'unique_constraint_in_exam',
 

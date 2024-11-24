@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'lecture_section_id',
       });
 
+      //(4) Relationship One-to-Many between "exam" and  "section table"
+      section.hasMany(models.exam, {
+        foreignKey: 'exam_section_id',
+      });
+
+
 
     }
   }
