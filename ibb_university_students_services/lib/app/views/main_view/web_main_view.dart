@@ -176,7 +176,7 @@ class WebMainView extends GetView<MainController> {
                   color: AppColors.backColor,
                   width: Get.width * 0.7,
                   height: Get.height,
-                  child: screens[controller.iconindex.value],
+                  child: screens[controller.selectedIndex.value],
                 ),
               ],
             ),

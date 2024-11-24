@@ -14,9 +14,8 @@ class UserServices {
   static User? _user;
 
   // static Student? _student;
-
-  static Future<Result<bool>> _userFakeLogin(String id, String password) async {
-    if (id == "1" && password == "12345678") {
+  static void _fakeUser(String type){
+    if (type == "student") {
       // virtual response for test
       Map<String, dynamic> response = {
         'message': 'login successfully',
@@ -38,7 +37,7 @@ class UserServices {
       } else {
         _user = Doctor.fromJson(response["user"]);
       }
-    } else if (id == "2" && password == "12345678") {
+    } else if (type =="doctor") {
       // virtual response for test
       Map<String, dynamic> response = {
         'message': 'login successfully',
@@ -62,6 +61,14 @@ class UserServices {
         _user = Doctor.fromJson(response["user"]);
         AppData.role = "doctor";
       }
+    }
+
+  }
+  static Future<Result<bool>> _userFakeLogin(String id, String password) async {
+    if (id == "1" && password == "12345678") {
+      _fakeUser("student");
+    } else if (id == "2" && password == "12345678") {
+      _fakeUser("doctor");
     }
     return Result(hasError: false, statusCode: 200, data: true);
   }
@@ -171,6 +178,7 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
+     _fakeUser("student");
     if (_user != null && !hardFetch) {
       return Result(
         data: _user,

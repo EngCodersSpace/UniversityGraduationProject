@@ -8,25 +8,18 @@ import 'package:ibb_university_students_services/app/services/user_services.dart
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
-  RxInt iconindex = 2.obs;
   late CustomFloatActionButtonLocation currentPos;
-  late ListTile poslisttile;
   User? user;
 
   @override
   void onInit() async {
-    currentPos = CustomFloatActionButtonLocation(
-        x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
-
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }
-    poslisttile = ListTile(
-      selectedTileColor: AppColors.backColor,
-      iconColor: AppColors.inverseIconColor,
-      textColor: AppColors.inverseIconColor,
-    );
+    currentPos = CustomFloatActionButtonLocation(
+        x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
+
     super.onInit();
   }
 
