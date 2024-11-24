@@ -41,13 +41,25 @@ module.exports = {
         type: Sequelize.ENUM('Term 1', 'Term 2'),
         allowNull: false,
       },
-      section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
-      level: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+      level_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       //Year the grade was issued
       year_of_issue: {
