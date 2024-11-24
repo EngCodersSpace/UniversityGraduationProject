@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id',//the foreign Key in the exam table refers to subject table
       });
 
+       //(2)Relationship One-to-Many between "exam table" and  "section table"
+       exam.belongsTo(models.section, {
+        foreignKey: 'exam_section_id',//the foreign Key in the exam table refers to section table
+      });
+
+
     }
   }
   exam.init({
@@ -37,9 +43,15 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
-    exam_section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+    exam_section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     exam_level: {
       type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
@@ -76,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['exam_section', 'exam_level', 'exam_term', 'exam_year', 'exam_date', 'exam_time', 'exam_day'],
+        fields: ['exam_section_id', 'exam_level', 'exam_term', 'exam_year', 'exam_date', 'exam_time', 'exam_day'],
         name: 'unique_constraint_in_exam',
       },
     ],
