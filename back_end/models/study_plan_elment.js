@@ -12,24 +12,29 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-       //(1)Relationship One-to-Many between "study_plan_elment table" and  "study_plan table"
-       study_plan_elment.belongsTo(models.study_plan, {
+      //(1)Relationship One-to-Many between "study_plan_elment table" and  "study_plan table"
+      study_plan_elment.belongsTo(models.study_plan, {
         foreignKey: 'study_plan_id',//the foreign Key in the study_plan_elment table refers to study_plan table
       });
 
-       //(2)Relationship One-to-Many between "study_plan_elment table" and  "subject table"
-       study_plan_elment.belongsTo(models.subject, {
+      //(2)Relationship One-to-Many between "study_plan_elment table" and  "subject table"
+      study_plan_elment.belongsTo(models.subject, {
         foreignKey: 'subject_id',//the foreign Key in the study_plan_elment table refers to subject table
       });
 
-       //(3)Relationship One-to-Many between "study_plan_elment table" and  "doctor table"
-       study_plan_elment.belongsTo(models.doctor, {
+      //(3)Relationship One-to-Many between "study_plan_elment table" and  "doctor table"
+      study_plan_elment.belongsTo(models.doctor, {
         foreignKey: 'doctor_id',//the foreign Key in the study_plan_elment table refers to doctor table
       });
 
       //(4)Relationship One-to-Many between "study_plan_elment table" and  "prerequisite table"
-      study_plan_elment.hasMany(models.prerequisite,{
-        foreignKey:'study_plan_elment_id',
+      study_plan_elment.hasMany(models.prerequisite, {
+        foreignKey: 'study_plan_elment_id',
+      });
+
+      //(5)Relationship One-to-Many between "study_plan_elment table" and  "section table"
+      study_plan_elment.belongsTo(models.section, {
+        foreignKey: 'section_id',//the foreign Key in the study_plan_elment table refers to section table
       });
 
 
@@ -66,17 +71,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     doctor_id: {
       type: DataTypes.INTEGER,
-      allowNull:true,
+      allowNull: true,
       references: {
-        model: 'doctors' ,
-        key:'doctor_id',
+        model: 'doctors',
+        key: 'doctor_id',
       },
-      onDelete:'SET NULL',
-      onUpdate:'CASCADE',  
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
     },
-    section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+    section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     level: {
       type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
