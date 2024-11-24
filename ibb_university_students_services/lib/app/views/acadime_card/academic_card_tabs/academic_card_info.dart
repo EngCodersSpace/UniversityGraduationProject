@@ -9,12 +9,12 @@ class AcademicCardInfo extends GetView {
 
   @override
   Widget build(BuildContext context) {
+    print(Get.height*0.65/2.6);
     return SizedBox(
-      height: Get.height * 0.6,
-      width: Get.width * 0.85,
+      width: Get.width* 0.88,
       child: Card(
         color: Colors.white,
-        elevation: 10,
+        elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Column(
           children: [
@@ -42,7 +42,7 @@ class AcademicCardInfo extends GetView {
                               data: '2070093',
                               barcode: Barcode.code128(),
                               height: 50,
-                              width:220,
+                              width:Get.height*0.65/2.6,
                             ),
                           ],
                         ),
