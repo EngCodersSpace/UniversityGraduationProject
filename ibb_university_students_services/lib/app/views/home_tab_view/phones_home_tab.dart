@@ -106,7 +106,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       height: height * 0.14,
                       child: (controller.user is Student)
                           ? Card(
-                        elevation: 16,
+                        elevation: 5,
                         surfaceTintColor: AppColors.mainCardColor,
                         color: AppColors.mainCardColor,
                         child: Row(
