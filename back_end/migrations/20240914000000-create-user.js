@@ -17,9 +17,9 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      universityName:{
-        type:Sequelize.STRING(70),
-        allowNull:false,
+      profile_picture: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       collegeName:{
         type:Sequelize.STRING(50),

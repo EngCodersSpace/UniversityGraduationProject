@@ -100,10 +100,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
       allowNull: false,
     },
-    profile_picture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+
 
 
   }, {
