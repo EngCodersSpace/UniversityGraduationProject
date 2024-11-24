@@ -11,6 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      //(1) Relationship One-to-Many between "student table" and  "level table"
+      level.hasMany(models.student,{
+        foreignKey:'student_level_id',
+      });
+
+      
     }
   }
   level.init({

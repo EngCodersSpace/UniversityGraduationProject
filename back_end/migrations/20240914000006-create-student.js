@@ -26,23 +26,30 @@ module.exports = {
       },
       student_section: {
         type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
-        allowNull:false,
+        allowNull: false,
+      },
+      student_level_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       enrollment_year: {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
-      student_level: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
-        allowNull: false,
-      },
+
       student_system: {
-        type: Sequelize.ENUM('General','Free Seat','Paid'),
+        type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
         allowNull: false,
       },
-      profile_picture:{
-        type:Sequelize.STRING,
-        allowNull:true,
+      profile_picture: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
 
       createdAt: {
