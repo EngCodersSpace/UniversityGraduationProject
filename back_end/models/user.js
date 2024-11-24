@@ -65,13 +65,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    universityName:{
-      type:DataTypes.STRING(70),
-      allowNull:false,
+    profile_picture: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    collegeName:{
-      type:DataTypes.STRING(50),
-      allowNull:false,
+    collegeName: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(100),
@@ -100,9 +100,29 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    refreshToken:{
-      type:DataTypes.TEXT,
-      allowNull:true,
+    refreshToken: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    fullDataDoctor: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const user = this.toJSON();
+        if (this.doctor) {
+          return { ...user, ...this.doctor };
+        }
+        return user;
+      }
+    },
+    fullDataStudent: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const user = this.toJSON();
+        if (this.student) {
+          return { ...user, ...this.student };
+        }
+        return user;
+      }
     },
 
 

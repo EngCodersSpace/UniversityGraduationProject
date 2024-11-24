@@ -53,10 +53,7 @@ module.exports = {
         type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
         allowNull: false,
       },
-      profile_picture: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
+
 
       createdAt: {
         allowNull: false,
