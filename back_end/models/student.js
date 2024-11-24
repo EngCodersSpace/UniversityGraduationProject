@@ -36,6 +36,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the student_fee table refers to student table
       });
 
+      //(5)Relationship One-to-Many between "student table" and  "level table"
+      student.belongsTo(models.level, {
+        foreignKey: 'student_level_id',//the foreign Key in the student table refers to leveltable
+      });
+
 
     }//study_plan
   }
@@ -65,14 +70,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
       allowNull: false,
     },
+    student_level_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
     enrollment_year: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    student_level: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
-      allowNull: false,
-    },
+
     student_system: {
       type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
       allowNull: false,
