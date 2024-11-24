@@ -3,6 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('study_plan_elments', {
+     
       study_plan_elment_id: {
         allowNull: false,
         autoIncrement: true,
@@ -39,9 +40,15 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',  
       },
-      section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references:{
+          model:'sections',
+          key:'id',
+        },
+        onDelete:'CASCADE',
+        onUpdate:'CASCADE',
       },
       level: {
         type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
