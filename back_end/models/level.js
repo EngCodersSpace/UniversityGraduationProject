@@ -17,7 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'student_level_id',
       });
 
-      
+      //(2) Relationship One-to-Many between "study_plan_elment table" and  "level table"
+      level.hasMany(models.study_plan_elment,{
+        foreignKey:'level_id',
+      });      
+
+
     }
   }
   level.init({

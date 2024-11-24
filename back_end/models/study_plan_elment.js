@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'section_id',//the foreign Key in the study_plan_elment table refers to section table
       });
 
+      //(6)Relationship One-to-Many between "study_plan_elment table" and  "level table"
+      study_plan_elment.belongsTo(models.level, {
+        foreignKey: 'level_id',//the foreign Key in the study_plan_elment table refers to level table
+      });      
+
 
     }
   }
@@ -89,9 +94,15 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    level: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+    level_id: {
+      type:DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     number_of_units: {
       type: DataTypes.INTEGER,
