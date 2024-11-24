@@ -5,7 +5,6 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 class WebProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return const Placeholder();
   }
 }
