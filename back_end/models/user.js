@@ -65,6 +65,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    universityName:{
+      type:DataTypes.STRING(70),
+      allowNull:false,
+    },
+    collegeName:{
+      type:DataTypes.STRING(50),
+      allowNull:false,
+    },
     email: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -85,12 +93,16 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     resetToken: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     resetTokenExpiry: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+    refreshToken:{
+      type:DataTypes.TEXT,
+      allowNull:true,
     },
 
 

@@ -17,6 +17,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      universityName:{
+        type:Sequelize.STRING(70),
+        allowNull:false,
+      },
+      collegeName:{
+        type:Sequelize.STRING(50),
+        allowNull:false,
+      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,
@@ -37,11 +45,15 @@ module.exports = {
         },
       },
       resetToken:{
-        type:Sequelize.STRING(100),
+        type:Sequelize.TEXT,
         allowNull:true,
       },
       resetTokenExpiry:{
         type:Sequelize.DATE,
+        allowNull:true,
+      },
+      refreshToken:{
+        type:Sequelize.TEXT,
         allowNull:true,
       },
       
