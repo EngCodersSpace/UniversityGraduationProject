@@ -24,9 +24,15 @@ module.exports = {
         onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
         onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
       },
-      student_section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      student_section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       student_level_id: {
         type: Sequelize.INTEGER,
