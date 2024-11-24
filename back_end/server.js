@@ -11,6 +11,8 @@ const studyPlanElementRoute=require('./routes/studyPlaneElementRoute')
 const examRoute=require('./routes/examRoute')
 const gradeRoute=require('./routes/gradeRoute')
 const lectureRoute=require('./routes/lectureRoute')
+const phoneNumber=require('./routes/phoneNumberRoute')
+
 
 app.use(authRoutes);
 app.use(userRoutes);
@@ -18,6 +20,7 @@ app.use(studyPlanElementRoute);
 app.use(examRoute);
 app.use(gradeRoute);
 app.use(lectureRoute);
+app.use(phoneNumber);
 
 
 const PORT = process.env.PORT ;
