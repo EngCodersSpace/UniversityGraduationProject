@@ -10,22 +10,22 @@ class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
   late CustomFloatActionButtonLocation currentPos;
   User? user;
-
+  RxBool loading = true.obs;
   @override
+
   void onInit() async {
+    currentPos = CustomFloatActionButtonLocation(
+        x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }
-    currentPos = CustomFloatActionButtonLocation(
-        x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
-
     super.onInit();
+    loading.value = false;
   }
 
   // Method to change the selected index
   void changeTabIndex(int index) {
-    selectedIndex.value = index;
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
@@ -54,6 +54,7 @@ class MainController extends GetxController {
           : currentPos = CustomFloatActionButtonLocation(
               x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
     }
+    selectedIndex.value = index;
   }
 
 

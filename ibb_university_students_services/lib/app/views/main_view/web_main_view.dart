@@ -17,7 +17,7 @@ class WebMainView extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
 
-    return Obx(() => Scaffold(
+    return Obx(() =>(!controller.loading.value)?Scaffold(
           body: Container(
             color: AppColors.backColor,
             child: Row(
@@ -208,7 +208,7 @@ class WebMainView extends GetView<MainController> {
               ],
             ),
           ),
-        ));
+        ):const Center(child: CircularProgressIndicator(),));
   }
 
   List screens = [

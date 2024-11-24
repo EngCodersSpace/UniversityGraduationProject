@@ -85,7 +85,7 @@ class PhoneMainView extends GetView<MainController> {
       ),
     ];
     return Obx(
-      () => Scaffold(
+      () => (!controller.loading.value)?Scaffold(
         body: screens[controller.selectedIndex.value],
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.inverseIconColor,
@@ -214,7 +214,7 @@ class PhoneMainView extends GetView<MainController> {
             ],
           ),
         ),
-      ),
+      ):const Center(child: CircularProgressIndicator(),),
     );
   }
 
