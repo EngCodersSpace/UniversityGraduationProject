@@ -491,7 +491,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               size: cardSize,
                               color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/services_cards/book.png"),
+                                  "assets/images/services_cards/credit-card.png"),
                             ),
                             SecText(
                               "Academic",
