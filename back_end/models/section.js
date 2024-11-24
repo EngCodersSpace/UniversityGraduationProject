@@ -11,19 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      //(1) Relationship One-to-Many between "student table" and  "section table"
+      section.hasMany(models.student, {
+        foreignKey: 'student_section_id',
+      });
+
+
     }
   }
   section.init({
-    
+
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type:DataTypes.INTEGER
+      type: DataTypes.INTEGER
     },
     section_name: {
       type: DataTypes.STRING(100),
-      allowNull:false,
+      allowNull: false,
     },
 
 
