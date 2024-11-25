@@ -36,6 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the student_fee table refers to student table
       });
 
+      //(5)Relationship One-to-Many between "student table" and  "level table"
+      student.belongsTo(models.level, {
+        foreignKey: 'student_level_id',//the foreign Key in the student table refers to level table
+      });
+
+      //(6)Relationship One-to-Many between "student table" and  "section table"
+      student.belongsTo(models.section, {
+        foreignKey: 'student_section_id',//the foreign Key in the student table refers to section table
+      });
+
 
     }//study_plan
   }
@@ -61,26 +71,36 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
       onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
     },
-    student_section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+    student_section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    student_level_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     enrollment_year: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    student_level: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
-      allowNull: false,
-    },
+
     student_system: {
       type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
       allowNull: false,
     },
-    profile_picture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+
 
 
   }, {
