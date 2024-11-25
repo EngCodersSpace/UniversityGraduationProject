@@ -2,13 +2,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('study_plan_elments', {
+    await queryInterface.createTable('students', {
 
-      study_plan_elment_id: {
-        allowNull: false,
-        autoIncrement: true,
+      student_id: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        references: {
+          model: 'users',
+          key: 'user_id',
+        },
+        onDelete: 'CASCADE',//if a user is delete the student associated with him will be deleted
+        onUpdate: 'CASCADE',//if a user is update the student associated with him will be updated
       },
       study_plan_id: {
         type: Sequelize.INTEGER,
@@ -17,30 +21,10 @@ module.exports = {
           model: 'study_plans',
           key: 'study_plan_id',
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
+        onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
       },
-      subject_id: {
-        type: Sequelize.STRING(10),
-        allowNull: false,
-        references: {
-          model: 'subjects',
-          key: 'subject_id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      doctor_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'doctors',
-          key: 'doctor_id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      section_id: {
+      student_section_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -50,7 +34,7 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      level_id: {
+      student_level_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -60,12 +44,13 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      number_of_units: {
-        type: Sequelize.INTEGER,
+      enrollment_year: {
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
-      term: {
-        type: Sequelize.ENUM('Term 1', 'Term 2'),
+
+      student_system: {
+        type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
         allowNull: false,
       },
 
@@ -81,6 +66,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('study_plan_elments');
+    await queryInterface.dropTable('students');
   }
 };
