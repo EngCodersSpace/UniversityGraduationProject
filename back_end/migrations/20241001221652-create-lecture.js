@@ -29,13 +29,25 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      lecture_section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      lecture_section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
-      lecture_level: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+      lecture_level_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       term: {
         type: Sequelize.ENUM('Term 1', 'Term 2'),
@@ -74,7 +86,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('lectures', {
-      fields: ['lecture_time', 'lecture_day', 'lecture_section', 'lecture_room'],
+      fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room'],
       type: 'unique',
       name: 'unique_constraint_in_lecture',
 
