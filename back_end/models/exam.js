@@ -83,6 +83,3 @@ module.exports = (sequelize, DataTypes) => {
   });
   return exam;
 };
-
-
-
