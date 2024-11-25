@@ -99,7 +99,7 @@ class PhoneMainView extends GetView<MainController> {
           color: AppColors.backColor,
           shadowColor: Colors.black,
           elevation: 32,
-          height:(Get.locale?.languageCode == 'en')?height * 0.09:height * 0.09,
+          height:(Get.locale?.languageCode == 'en')?height * 0.08:height * 0.09,
           padding: EdgeInsets.symmetric(
               vertical: height * 0.007, horizontal: width * 0.03),
           notchMargin: 8,
@@ -224,7 +224,7 @@ class PhoneMainView extends GetView<MainController> {
         textColor: Colors.black,
       ),
     ),
-    PhoneTableTabView(),
+    const PhoneTableTabView(),
     PhoneMainTab(),
     Center(
       child: MainText(

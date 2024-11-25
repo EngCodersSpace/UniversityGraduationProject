@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 class AppData{
 }
 
-class Utils {
-  static double fontSizeScale(double fontSize) {
-    // double screenRatio = Get.width / Get.height;
-    // double designRatio = 411 / 891;
-    // double ratio = (screenRatio>designRatio)?designRatio/screenRatio:screenRatio / designRatio;
-    double ratio = Get.width/411;
-    (ratio>1.2)?ratio=1.2:(ratio<0.8)?ratio=0.8:null;
-    return fontSize * ratio;
-  }
-}
 
 class AppColors {
-  static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("FF0D3976",radix: 16)));
+  static ButtonColors buttonColors = ButtonColors(color:Color(int.parse("DF0D3976",radix: 16)));
 
   static Color mainTextColor = Colors.white;
   static Color inverseMainTextColor = Color(int.parse("DF0D3976",radix: 16));
@@ -47,7 +37,7 @@ class ButtonColors {
     this.disableColor = Colors.grey,
   });
 
-  Color color;
-  Color pressedColor;
-  Color disableColor;
+  final Color color;
+  final Color pressedColor;
+  final Color disableColor;
 }
