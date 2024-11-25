@@ -1,6 +1,6 @@
 // controllers/userController.js
 const bcrypt = require('bcrypt');
-const { user, doctor , student } = require('../models'); 
+const { user, doctor , student ,study_plan,level,section} = require('../models'); 
 
 
 exports.getUserById = async (req, res) => {
@@ -258,17 +258,45 @@ exports.getAllStudents = async (req, res) => {
             include: [{
                 model: student,
                 as: 'student',
-                attributes: ['student_section', 'enrollment_year', 'student_level', 'student_system', 'profile_picture', 'study_plan_id'],
+                attributes: [
+                    'student_id',
+                    'study_plan_id',
+                    'student_section_id',
+                    'student_level_id',
+                    'enrollment_year',
+                    'student_system'
+                ],
+                include: [
+                    {
+                        model: study_plan,
+                        as: 'study_plan', // Make sure the alias matches the association in your model
+                        attributes: ['study_plan_name'], // Get the name of the study plan
+                    },
+                    {
+                        model: section,
+                        as: 'section', // Make sure the alias matches the association in your model
+                        attributes: ['section_name'], // Get the name of the section
+                    },
+                    {
+                        model: level,
+                        as: 'level', // Make sure the alias matches the association in your model
+                        attributes: ['level_name'], // Get the name of the level
+                    }
+                ],
             }],
             where: { permission: 'student' },
+            logging: console.log, // Optional, logs the SQL query
         });
 
         res.status(200).json(students);
     } catch (error) {
-        console.error("Error fetching students:", error.message);
+        console.error("Error fetching students:", error);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+
+
 
 
 

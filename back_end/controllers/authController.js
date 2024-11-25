@@ -2,7 +2,7 @@
 // controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { doctor,user,student } = require('../models');
+const { doctor,user,student,section,level,study_plan } = require('../models');
 // const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { Op } = require('sequelize');
@@ -16,7 +16,13 @@ const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY ;
 exports.login = async (req, res) => {
     const { user_id, password } = req.body;
     try {
-        const foundUser = await user.scope('with_hidden_data').findOne({ where: { user_id } });
+        const foundUser = await user.scope('with_hidden_data').findOne({
+            where: { user_id },
+            include: [
+                { model: doctor, as: 'doctor' }, 
+            ],
+        });
+        
         if (!foundUser) {
             return res.status(401).json({ message: "User ID is not correct" });
         }
@@ -36,13 +42,25 @@ exports.login = async (req, res) => {
         foundUser.refreshToken = refreshToken;
         await foundUser.save();
 
+        const responseUser = {
+            user_id: foundUser.user_id,
+            user_name: foundUser.user_name,
+            date_of_birth: foundUser.date_of_birth,
+            profile_picture: foundUser.profile_picture,
+            collegeName: foundUser.collegeName,
+            email: foundUser.email,
+            permission: foundUser.permission,
+            department: foundUser.doctor?.department || null,
+            academic_degree: foundUser.doctor?.academic_degree || null,
+            administrative_position: foundUser.doctor?.administrative_position || null,
+        };
+
+        // Send response
         res.json({
+            message: "Login successful",
             accessToken,
             refreshToken,
-            user: {
-                user_id: foundUser.user_id,
-                permission: foundUser.permission
-            }
+            user: responseUser,
         });
     } catch (error) {
         console.error("Error during login:", error.message);
@@ -93,128 +111,163 @@ exports.registerDoctor = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { user_id, user_name, date_of_birth, email, password, permission, doctor: doctorData } = req.body;
+    const {
+        user_id,
+        user_name,
+        date_of_birth,
+        profile_picture,
+        collegeName,
+        email,
+        permission,
+        password,
+        doctor: doctorData
+    } = req.body;
 
     try {
-        const existingUser = await user.findOne({ where: { user_id } });
-        const existingEmail = await user.findOne({ where: { email } });
-
+        const existingUser = await user.findOne({ where: { [Op.or]: [{ user_id }, { email }] } });
         if (existingUser) {
-            return res.status(400).json({ message: "User ID already exists" });
+            if (existingUser.user_id === user_id) {
+                return res.status(400).json({ message: "User ID already exists" });
+            }
+            if (existingUser.email === email) {
+                return res.status(400).json({ message: "Email already registered" });
+            }
         }
 
-        if (existingEmail) {
-            return res.status(400).json({ message: "Email already registered" });
-        }
-
+        // Create the new user along with doctor data
         const newUser = await user.create(
             {
                 user_id,
                 user_name,
                 date_of_birth,
+                profile_picture,
+                collegeName,
                 email,
-                password,
                 permission,
-                doctor: doctorData ? {
-                    department: doctorData.department,
-                    academic_degree: doctorData.academic_degree,
-                    administrative_position: doctorData.administrative_position,
-                } : null,
+                password,
+                doctor: doctorData
+                    ? {
+                        department: doctorData.department,
+                        academic_degree: doctorData.academic_degree,
+                        administrative_position: doctorData.administrative_position,
+                    }
+                    : null,
             },
             {
                 include: [{ model: doctor, as: 'doctor' }],
             }
         );
+
+        // Construct a flattened response
         const responseUser = {
             user_id: newUser.user_id,
             user_name: newUser.user_name,
             date_of_birth: newUser.date_of_birth,
+            profile_picture: newUser.profile_picture,
+            collegeName: newUser.collegeName,
             email: newUser.email,
             permission: newUser.permission,
-            doctor: newUser.doctor
-                ? {
-                    department: newUser.doctor.department,
-                    academic_degree: newUser.doctor.academic_degree,
-                    administrative_position: newUser.doctor.administrative_position,
-                }
-                : null,
+            department: newUser.doctor?.department || null,
+            academic_degree: newUser.doctor?.academic_degree || null,
+            administrative_position: newUser.doctor?.administrative_position || null,
         };
-        
+
+        // Send the response
         res.status(201).json({
             message: "Doctor registered successfully",
             user: responseUser,
         });
-        
     } catch (error) {
         console.error("Error during user registration:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
 exports.registerStudent = async (req, res) => {
-    // Handle validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { user_id, user_name, date_of_birth, email, password, permission, student: studentData } = req.body;
+    const {
+        user_id,
+        user_name,
+        date_of_birth,
+        profile_picture,
+        collegeName,
+        email,
+        permission,
+        password,
+        student: studentData
+    } = req.body;
 
     try {
-        const existingUser = await user.findOne({ where: { user_id } });
-        const existingEmail = await user.findOne({ where: { email } });
-
+        const existingUser = await user.findOne({ where: { [Op.or]: [{ user_id }, { email }] } });
         if (existingUser) {
-            return res.status(400).json({ message: "User ID already exists" });
-        }
-
-        if (existingEmail) {
-            return res.status(400).json({ message: "Email already registered" });
-        }
-
-        const newUser = await user.create(
-            {
-                user_id,
-                user_name,
-                date_of_birth,
-                email,
-                password,
-                permission,
-                student: studentData ? {
-                    student_section: studentData.student_section,
-                    enrollment_year: studentData.enrollment_year,
-                    student_level: studentData.student_level,
-                    student_system: studentData.student_system,
-                    profile_picture: studentData.profile_picture,
-                    study_plan_id: studentData.study_plan_id,
-                } : null,
-            },
-            {
-                include: [{ model: student, as: 'student' }],
+            if (existingUser.user_id === user_id) {
+                return res.status(400).json({ message: "User ID already exists" });
             }
-        );
+            if (existingUser.email === email) {
+                return res.status(400).json({ message: "Email already registered" });
+            }
+        }
+
+        const [sectionFound, levelFound, study_planFound] = await Promise.all([
+            section.findOne({ where: { section_name: studentData.student_section_id } }),
+            level.findOne({ where: { level_name: studentData.student_level_id } }),
+            study_plan.findOne({ where: { study_plan_name: studentData.study_plan_id } })
+        ]);
+        
+        if (!sectionFound) {
+            return res.status(400).json({ message: `Section '${studentData.student_section_id}' not found` });
+        }
+        if (!levelFound) {
+            return res.status(400).json({ message: `Level '${studentData.student_level_id}' not found` });
+        }
+        if (!study_planFound) {
+            return res.status(400).json({ message: `Study plan '${studentData.study_plan_id}' not found` });
+        }
+        const newUser = await user.create({
+            user_id,
+            user_name,
+            date_of_birth,
+            profile_picture,
+            collegeName,
+            email,
+            password,
+            permission,
+            student: {
+                student_section_id: sectionFound.id,
+                enrollment_year: studentData.enrollment_year,
+                student_level_id: levelFound.id,
+                student_system: studentData.student_system,
+                study_plan_id: study_planFound.study_plan_id,
+            }
+        }, {
+            include: [
+                { model: student, as: 'student' }
+            ]
+        });
+        
+
         const responseUser = {
             user_id: newUser.user_id,
             user_name: newUser.user_name,
             date_of_birth: newUser.date_of_birth,
             email: newUser.email,
             permission: newUser.permission,
-            student: newUser.student
-                ? {
-                    student_section: newUser.student.student_section,
-                    enrollment_year: newUser.student.enrollment_year,
-                    student_level: newUser.student.student_level,
-                    student_system: newUser.student.student_system,
-                    profile_picture: newUser.student.profile_picture,
-                    study_plan_id: newUser.student.study_plan_id,
-                }
-                : null,
+            student_section_id: sectionFound.section_name, 
+            enrollment_year: newUser.student?.enrollment_year || null,
+            student_level_id: levelFound.level_name, 
+            student_system: newUser.student?.student_system || null,
+            study_plan_id: study_planFound.study_plan_name ,
         };
 
-        // Send the response
         res.status(201).json({
             message: "Student registered successfully",
             user: responseUser,
         });
+
     } catch (error) {
         console.error("Error during user registration:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -376,5 +429,84 @@ exports.getCurrentUser = (req, res) => {
         }
     });
 };
+
+
+
+
+
+
+
+
+// exports.registerStudent = async (req, res) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         return res.status(400).json({ errors: errors.array() });
+//     }
+//     const {
+//         user_id,
+//         user_name,
+//         date_of_birth,
+//         profile_picture,
+//         collegeName,
+//         email,
+//         permission,
+//         password,
+//         student: studentData
+//     } = req.body;
+//     try {
+//         const existingUser = await user.findOne({ where: { user_id } });
+//         const existingEmail = await user.findOne({ where: { email } });
+//         if (existingUser) {
+//             return res.status(400).json({ message: "User ID already exists" });
+//         }
+//         if (existingEmail) {
+//             return res.status(400).json({ message: "Email already registered" });
+//         }
+//         const newUser = await user.create(
+//             {
+//                 user_id,
+//                 user_name,
+//                 date_of_birth,
+//                 profile_picture,
+//                 collegeName,
+//                 email,
+//                 password,
+//                 permission,
+//                 student: studentData ? {
+//                     student_section_id: studentData.student_section_id,
+//                     enrollment_year: studentData.enrollment_year,
+//                     student_level_id: studentData.student_level_id,
+//                     student_system: studentData.student_system,
+//                     study_plan_id: studentData.study_plan_id,
+//                 } : null,
+//             },
+//             {
+//                 include: [{ model: student, as: 'student' }],
+//             }
+//         );
+//         const responseUser = {
+//             user_id: newUser.user_id,
+//             user_name: newUser.user_name,
+//             date_of_birth: newUser.date_of_birth,
+//             email: newUser.email,
+//             permission: newUser.permission,
+//             student_section_id: newUser.student?.student_section_id || null,
+//             enrollment_year: newUser.student?.enrollment_year || null,
+//             student_level_id: newUser.student.student_level_id || null,
+//             student_system: newUser.student.student_system || null,
+//             study_plan_id: newUser.student.study_plan_id || null,   
+//         };
+//         res.status(201).json({
+//             message: "Student registered successfully",
+//             user: responseUser,
+//         });
+
+//     } catch (error) {
+//         console.error("Error during user registration:", error.message);
+//         res.status(500).json({ message: "Internal server error", error: error.message });
+//     }
+// };
+
+
 
 
