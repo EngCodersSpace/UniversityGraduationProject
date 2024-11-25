@@ -23,7 +23,7 @@ router.post('/refresh', authController.refreshToken);
 router.post('/registerDoctor',vali.validateDoctorRegistration, authController.registerDoctor)
 
 // register Student
-router.post('/registerStudent',vali.validateStudentRegistration, authController.registerStudent)
+router.post('/registerStudent', authController.registerStudent)
 
 // Route لطلب استعادة كلمة المرور
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);

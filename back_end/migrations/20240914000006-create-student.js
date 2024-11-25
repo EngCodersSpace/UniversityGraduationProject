@@ -3,7 +3,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('students', {
-
       student_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -11,8 +10,8 @@ module.exports = {
           model: 'users',
           key: 'user_id',
         },
-        onDelete: 'CASCADE',//if a user is delete the student associated with him will be deleted
-        onUpdate: 'CASCADE',//if a user is update the student associated with him will be updated
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       study_plan_id: {
         type: Sequelize.INTEGER,
@@ -21,8 +20,8 @@ module.exports = {
           model: 'study_plans',
           key: 'study_plan_id',
         },
-        onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
-        onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       student_section_id: {
         type: Sequelize.INTEGER,
@@ -48,24 +47,21 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
-
       student_system: {
         type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
         allowNull: false,
       },
-
-
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('students');
-  }
+  },
 };

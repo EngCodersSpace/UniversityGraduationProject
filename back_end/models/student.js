@@ -5,21 +5,12 @@ const {
 const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class student extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+   
     static associate(models) {
-      // define association here
-
-      //(1)Relationship One-to-One between "student table" and  "user table"
+      
       student.belongsTo(models.user, {
         foreignKey: 'student_id',//the foreign Key in the student table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
-        //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate" 
-        // onDelete:'NO ACTION',    //if a student is deleted the user associated with him will not be deleted
-        // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
       });
 
       //(2)Relationship One-to-Many between "student table" and  "study_plan table"
@@ -47,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
 
-    }//study_plan
+    }
   }
   student.init({
 
@@ -95,14 +86,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-
     student_system: {
       type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
       allowNull: false,
     },
-
-
-
   }, {
     sequelize,
     modelName: 'student',
