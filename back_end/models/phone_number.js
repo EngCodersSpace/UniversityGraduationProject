@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     phone_number: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(25),
       primaryKey: true,
       allowNull: false,
     },

@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'user_id',
       });
 
+      //(5)Relationship One-to-Many between "user table" and  "document"
+      user.hasMany(models.document, {
+        foreignKey: 'added_by',
+      });
 
     }
   }
@@ -60,6 +64,14 @@ module.exports = (sequelize, DataTypes) => {
     date_of_birth: {
       type: DataTypes.DATE,
       allowNull: true,
+    },
+    profile_picture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    collegeName: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(100),
@@ -80,15 +92,39 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('password', hasedpassword);
       },
     },
-    reset_token: {
-      type: DataTypes.STRING(100),
+    resetToken: {
+      type: DataTypes.TEXT,
       allowNull: true,
     },
-    reset_token_expiry: {
+    resetTokenExpiry: {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    
+    refreshToken: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    fullDataDoctor: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const user = this.toJSON();
+        if (this.doctor) {
+          return { ...user, ...this.doctor };
+        }
+        return user;
+      }
+    },
+    fullDataStudent: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const user = this.toJSON();
+        if (this.student) {
+          return { ...user, ...this.student };
+        }
+        return user;
+      }
+    },
+
 
 
   }, {

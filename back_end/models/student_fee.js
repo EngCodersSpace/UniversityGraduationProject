@@ -17,6 +17,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the student_fee table refers to student table
       });
 
+      //(2)Relationship One-to-Many between "student_fee table" and  "section table"
+      student_fee.belongsTo(models.section, {
+        foreignKey: 'section_id',//the foreign Key in the student_fee table refers to section table
+      });
+
+      //(3)Relationship One-to-Many between "student_fee table" and  "level table"
+      student_fee.belongsTo(models.section, {
+        foreignKey: 'level_fees_id',//the foreign Key in the student_fee table refers to level table
+      });
+
 
     }
   }
@@ -38,16 +48,29 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    level_fees: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+    section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+
+    level_fees_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     term: {
       type: DataTypes.ENUM('Term 1', 'Term 2'),
-      allowNull: false,
-    },
-    section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
       allowNull: false,
     },
     total_amount: {
