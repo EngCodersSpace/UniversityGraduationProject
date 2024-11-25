@@ -15,11 +15,10 @@ class Engilsh {
     'UserName':'UserName',
     'Phone':'Phone',
     'Language':'Language',
+    'Partition':'Partition',
     'Unknown':'Unknown',
     'Level':'Level',
     'News':'News',
     'Services':'Services',
-    'Division':'Division',
-    'Department':'Department',
   };
 }

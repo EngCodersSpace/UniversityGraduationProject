@@ -28,22 +28,13 @@ class NewsCard extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            height: height -30,
             decoration: BoxDecoration(
               color: AppColors.inverseCardColor,
               borderRadius: BorderRadius.circular(24),
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.black38,
-                  spreadRadius: 2.5,
-                  blurRadius: 7,
-                  offset: Offset(0, 5)
-                )
-              ]
             ),
           ),
           Container(
-            height: height -33,
+            height: height -3,
             width: width -3,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
@@ -53,7 +44,8 @@ class NewsCard extends StatelessWidget {
             ),
           ),
           Container(
-            height: height -30,
+            height: height ,
+            width: width ,
             decoration: BoxDecoration(
               color: AppColors.coverColor,
               borderRadius: BorderRadius.circular(24),

@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (Get.width <= 768 && Get.height <= 1025) {
+          if (Get.width <= 767 && Get.height <= 1024) {
             return  PhoneMainView();
           } else {
             return  const WebMainView();

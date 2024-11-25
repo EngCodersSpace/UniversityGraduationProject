@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
+          if (constraints.maxWidth <= 767 && constraints.maxHeight <= 1024) {
             return  PhoneLoginView();
           } else {
             return  WebLoginView();

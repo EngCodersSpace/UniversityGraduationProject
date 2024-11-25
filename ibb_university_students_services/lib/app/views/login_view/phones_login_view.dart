@@ -16,6 +16,7 @@ class PhoneLoginView extends GetView<LoginController> {
 
   double height = Get.height;
   double width = Get.width;
+  double? fontScale;
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: SecText("En")),
@@ -24,6 +25,7 @@ class PhoneLoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    fontScale = width / 767;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -68,12 +70,12 @@ class PhoneLoginView extends GetView<LoginController> {
                     MainText(
                       "IBB",
                       fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      fontSize: height * 0.15 / 4,
                     ),
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      fontSize: height * 0.15 / 4,
                     ),
                     SizedBox(
                       height: height * 0.05,
@@ -107,7 +109,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                         MainText('login'.tr,
                             fontWeight: FontWeight.bold,
-                            fontSize: 32,
+                            fontSize: height * 0.15 / 4,
                             textColor: Colors.black),
                         PopupMenuButton<String>(
                           initialValue: Get.locale?.languageCode.toString(),
@@ -194,7 +196,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     Obx(() => Column(
                           children: [
                             (controller.logging.value)
-                                ? CustomButton(
+                                ? BasicButton(
                                     onPress: controller.onLogin,
                                     text: 'logging'.tr,
                                     icon: SizedBox(
@@ -206,7 +208,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                     ),
                                     size: Size(width * 0.8, 50),
                                   )
-                                : CustomButton(
+                                : BasicButton(
                                     onPress: controller.onLogin,
                                     text: 'login'.tr,
                                     icon: (Get.locale.toString() == "en_US")

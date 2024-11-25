@@ -36,14 +36,6 @@ class ServicesCard extends GetView {
               width: size - 4,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                        spreadRadius: -3,
-                        blurRadius: 3,
-                        offset: Offset(0, 12)
-                    )
-                  ],
                 image: (image != null)
                     ? DecorationImage(
                         image: image!,
