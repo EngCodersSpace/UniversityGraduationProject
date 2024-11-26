@@ -1,3 +1,5 @@
+'use strict';
+const { user } = require('../models');
 const { faker } = require('@faker-js/faker');
 
 module.exports = {
@@ -7,11 +9,11 @@ module.exports = {
       users.push({
         user_id: i + 1,
         user_name: faker.person.fullName(),
-        date_of_birth: faker.date.past(30),
+        date_of_birth: faker.date.past(20),
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
-        permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']),
         password: faker.internet.password(),
+        permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']),
         resetToken: faker.internet.url(),
         resetTokenExpiry: faker.date.future(),
         refreshToken: faker.internet.url(),
@@ -19,10 +21,10 @@ module.exports = {
         updatedAt: new Date(),
       });
     }
-    await queryInterface.bulkInsert('users', users);
+    await user.bulkCreate(users);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('users', null, {});
-  },
+    await user.destroy({ where: {}, truncate: true });
+  }
 };

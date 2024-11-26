@@ -1,29 +1,29 @@
+'use strict';
+
 const { faker } = require('@faker-js/faker');
-
-async function getExistingIds(queryInterface) {
-  const [users] = await queryInterface.sequelize.query('SELECT user_id FROM users');
-
-  return {
-    userIds: users.map(user => user.user_id),
-  };
-}
+const { phone_number, user } = require('../models'); 
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const existingIds = await getExistingIds(queryInterface);
-    const phoneNumbers = [];
+  
+    const users = await user.findAll();
 
-    for (let i = 0; i < 10; i++) {
+    const phoneNumbers = [];
+    const numEntries = Math.min(users.length, 10); 
+
+    for (let i = 0; i < numEntries; i++) {
       phoneNumbers.push({
-        phone_number: faker.phone.number(),
-        user_id: existingIds.userIds[i % existingIds.userIds.length], 
-        
+        user_id: users[i].user_id, 
+        phone_number: faker.phone.number(), 
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
     }
-    await queryInterface.bulkInsert('phone_numbers', phoneNumbers);
+
+    await phone_number.bulkCreate(phoneNumbers);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('phone_numbers', null, {});
-  },
+    await phone_number.destroy({ where: {}, truncate: true });
+  }
 };
