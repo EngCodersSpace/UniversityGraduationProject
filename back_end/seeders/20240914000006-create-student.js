@@ -1,13 +1,17 @@
 'use strict';
 const { faker } = require('@faker-js/faker');
+const { types } = require('joi');
 
 async function getExistingIds(queryInterface) {
   const [users] = await queryInterface.sequelize.query('SELECT user_id FROM users');
   const [studyPlans] = await queryInterface.sequelize.query('SELECT study_plan_id FROM study_plans');
-
+  const [sections] = await queryInterface.sequelize.query ('SELECT id FROM sections');
+  const [levels] = await queryInterface.sequelize.query ('SELECT id FROM levels');
   return {
     userIds: users.map(user => user.user_id),
     studyPlanIds: studyPlans.map(plan => plan.study_plan_id),
+    ssectionIds:sections.map(section=>section.id),
+    levelIds:levels.map(level=>level.id),
   };
 }
 
@@ -25,12 +29,10 @@ module.exports = {
       students.push({
         student_id: existingIds.userIds[i % existingIds.userIds.length],
         study_plan_id: existingIds.studyPlanIds[i % existingIds.studyPlanIds.length],
-        student_name: faker.person.fullName(),
-        student_section: faker.helpers.arrayElement(['Computer', 'Communications', 'Civil', 'Architecture']),
+        student_section_id:faker.helpers.arrayElement(sectionIds),
         enrollment_year: faker.date.past(5).toISOString().split('T')[0],
-        student_level: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']),
+        student_level_id:faker.helpers.arrayElement(levelIds),
         student_system: faker.helpers.arrayElement(['General', 'Free Seat', 'Paid']), 
-        profile_picture: faker.image.avatar(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });

@@ -7,7 +7,11 @@ npx sequelize-cli db:migrate --config config\database.json
 
 npx sequelize-cli model:generate --name grade --attributes grad_id:integer,the_grade:integer
 
+npx sequelize-cli db:seed:all --config config\database.json
 
+npx sequelize-cli db:seed:undo:all --config config\database.json
+
+npx sequelize-cli seed:generate --name section
 
                     GIT
 
