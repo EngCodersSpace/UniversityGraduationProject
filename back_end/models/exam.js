@@ -55,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         model: 'sections',
         key: 'id',
       },
-      onDelete: 'CASCADE',
+      onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
     exam_level_id: {
@@ -65,7 +65,7 @@ module.exports = (sequelize, DataTypes) => {
         model: 'levels',
         key: 'id',
       },
-      onDelete: 'CASCADE',
+      onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
     exam_term: {

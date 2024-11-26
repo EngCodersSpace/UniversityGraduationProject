@@ -1,32 +1,28 @@
+'use strict';
+
 const { faker } = require('@faker-js/faker');
+const { user, doctor } = require('../models'); 
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const doctors = [];
-    const userIds = await getExistingIds(queryInterface);
+    
+    const users = await user.findAll();
 
-    for (const userId of userIds) {
-      doctors.push({
-        doctor_id: userId, 
-        doctor_name: faker.person.fullName(),
-        department: faker.commerce.department(),
-        status: faker.helpers.arrayElement(['Active', 'Inactive']),
-        academic_degree: faker.helpers.arrayElement(['Doctor', 'Professor', 'Master', 'Bachelor']),
-        administrative_position: faker.helpers.arrayElement(['Dean', 'Vice Dean', 'Lecturer', 'Department Chair', 'None']),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
+    
+    const doctors = users.map(usr => ({
+      doctor_id: usr.user_id, 
+      department: faker.commerce.department(),
+      status: faker.helpers.arrayElement(['Active', 'Inactive']),
+      academic_degree: faker.helpers.arrayElement(['Doctor', 'Professor', 'Master', 'Bachelor']),
+      administrative_position: faker.helpers.arrayElement(['Dean', 'Vice Dean', 'Lecturer', 'Department Chair', 'None']),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }));
 
-    await queryInterface.bulkInsert('doctors', doctors);
+    await doctor.bulkCreate(doctors);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('doctors', null, {});
-  },
+    await doctor.destroy({ where: {}, truncate: true });
+  }
 };
-
-async function getExistingIds(queryInterface) {
-  const [results] = await queryInterface.sequelize.query('SELECT user_id FROM users');
-  return results.map(user => user.user_id);
-}
