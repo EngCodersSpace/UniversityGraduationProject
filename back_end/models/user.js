@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       user.hasOne(models.doctor, {
         foreignKey: 'doctor_id', //the foreign Key in the doctor table refers to user table
         sourceKey: 'user_id',     //the primary key in the user table
+        as: 'doctor',
         // onDelete:'CASCADE',      //if a user is delete the doctor associated with him will be deleted 
         // onUpdate:'CASCADE',      //if a user is update the doctor associated with him will be updated
       });
@@ -104,29 +105,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    fullDataDoctor: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const user = this.toJSON();
-        if (this.doctor) {
-          return { ...user, ...this.doctor };
-        }
-        return user;
-      }
-    },
-    fullDataStudent: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const user = this.toJSON();
-        if (this.student) {
-          return { ...user, ...this.student };
-        }
-        return user;
-      }
-    },
-
-
-
+    
   }, {
     sequelize,
     modelName: 'user',
