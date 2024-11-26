@@ -93,6 +93,35 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'student',
+
+    defaultScope: {
+      attributes: { exclude: ['study_plan_id', 'student_section_id', 'student_level_id'] },
+      include: [
+        // {
+        //   model: sequelize.models.study_plan,
+        //   as: 'study_plan',
+        // },
+        {
+          model: sequelize.models.section,
+          as: 'section',
+        },
+        {
+          model: sequelize.models.level,
+          as: 'level',
+        }
+      ],
+    },
+
+
   });
+
+
+  student.prototype.getFullData = function () {
+    const student = this.toJSON();
+        if (this.user) {
+          return { ...this.user, ...student };
+        }
+        return student;
+  };
   return student;
 };
