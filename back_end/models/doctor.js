@@ -62,5 +62,13 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'doctor',
   });
+  doctor.prototype.getFullData = function () {
+    const doctor = this.toJSON();
+    if (this.user) {
+      delete doctor.user;
+      return { ...this.user.toJSON(), ...doctor };
+    }
+    return doctor;
+  };
   return doctor;
 };
