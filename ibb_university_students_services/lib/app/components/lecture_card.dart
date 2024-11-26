@@ -15,9 +15,9 @@ class LectureCard extends StatelessWidget {
   double height;
 
   LectureCard({
-    super.key,
     required this.content,
     required this.height,
+    super.key,
   });
 
   @override

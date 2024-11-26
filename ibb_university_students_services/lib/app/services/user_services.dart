@@ -75,7 +75,6 @@ class UserServices {
 
   static Future<Result<bool>> userLogin(String id, String password,
       {bool rememberMe = false}) async {
-    return await _userFakeLogin(id, password);
     late Response? response;
     try {
       response = await HttpProvider.post("auth/login",
@@ -89,11 +88,19 @@ class UserServices {
           AppData.role = "doctor";
         }
         HttpProvider.addAuthTokenInterceptor(response?.data["token"]);
+        if (rememberMe) {
+          _prefs ??= await SharedPreferences.getInstance();
+          await _prefs?.setStringList("credentials", <String>[id, password]);
+          return await _userFakeLogin(id, password);
+        }
         return Result(
           hasError: false,
           statusCode: response?.statusCode,
           data: true,
         );
+      }
+      if(rememberMe){
+        return await _userFakeLogin(id, password);
       }
       return Result(
         hasError: true,
@@ -103,7 +110,9 @@ class UserServices {
       );
     } catch (error) {
       if (kDebugMode) {
+        print("____________________________________________");
         print("internalException\n");
+        print(error);
       }
       return Result(
         hasError: true,

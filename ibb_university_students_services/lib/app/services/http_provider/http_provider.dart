@@ -11,10 +11,18 @@ import '../user_services.dart';
 class HttpProvider {
   static final Dio _dio = Dio();
 
-  static init({String baseUrl = "", String contentType = 'application/json'}) {
+  static init({
+    String baseUrl = "",
+    String accept = 'application/json',
+    Duration connectTimeout = const Duration(seconds: 3),
+    Duration sendTimeout = const Duration(seconds: 3),
+    Duration receiveTimeout = const Duration(seconds: 3),
+  }) {
     _dio.options.baseUrl = baseUrl;
-    _dio.options.headers["Accept"] = contentType;
-    _dio.options.connectTimeout = const Duration(seconds: 15);
+    _dio.options.headers["Accept"] = accept;
+    _dio.options.connectTimeout = connectTimeout;
+    _dio.options.sendTimeout = sendTimeout;
+    _dio.options.receiveTimeout = receiveTimeout;
     _dio.interceptors.add(InterceptorsWrapper(
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =

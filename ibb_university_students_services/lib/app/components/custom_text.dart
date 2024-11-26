@@ -1,17 +1,18 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
+
+import '../globals.dart';
 
 class MainText extends StatelessWidget {
   MainText(
-    this.text, {
-    super.key,
-    this.textColor,
-    this.fontSize = 24,
-    this.fontWeight = FontWeight.bold,
-    this.height,
-  }) {
+      this.text, {
+        super.key,
+        this.textColor,
+        this.fontSize = 24,
+        this.fontWeight = FontWeight.bold,
+        this.textAlign = TextAlign.center,
+        this.height,
+      }) {
     textColor ??= AppColors.mainTextColor;
     fontSize = Utils.fontSizeScale(fontSize);
   }
@@ -21,6 +22,7 @@ class MainText extends StatelessWidget {
   double fontSize;
   double? height;
   FontWeight fontWeight;
+  TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +34,22 @@ class MainText extends StatelessWidget {
         fontWeight: fontWeight,
         height: height,
       ),
+      textAlign: textAlign,
     );
   }
 }
 
 class SecText extends MainText {
   SecText(
-    super.text, {
-    super.key,
-    Color? textColor,
-    double? fontSize,
-    FontWeight? fontWeight,
-  }) : super(textColor: textColor ?? AppColors.secTextColor,
-            fontSize: fontSize ?? 14,
-            fontWeight: fontWeight ?? FontWeight.normal);
+      super.text, {
+        super.key,
+        Color? textColor,
+        super.height,
+        super.fontSize = 14,
+        super.fontWeight = FontWeight.normal,
+        super.textAlign,
+      }) : super(
+    textColor: textColor ?? AppColors.secTextColor,
+  );
+
 }
