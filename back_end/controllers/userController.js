@@ -258,31 +258,6 @@ exports.getAllStudents = async (req, res) => {
             include: [{
                 model: student,
                 as: 'student',
-                attributes: [
-                    'student_id',
-                    'study_plan_id',
-                    'student_section_id',
-                    'student_level_id',
-                    'enrollment_year',
-                    'student_system'
-                ],
-                include: [
-                    {
-                        model: study_plan,
-                        as: 'study_plan', // Make sure the alias matches the association in your model
-                        attributes: ['study_plan_name'], // Get the name of the study plan
-                    },
-                    {
-                        model: section,
-                        as: 'section', // Make sure the alias matches the association in your model
-                        attributes: ['section_name'], // Get the name of the section
-                    },
-                    {
-                        model: level,
-                        as: 'level', // Make sure the alias matches the association in your model
-                        attributes: ['level_name'], // Get the name of the level
-                    }
-                ],
             }],
             where: { permission: 'student' },
             logging: console.log, // Optional, logs the SQL query
