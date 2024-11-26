@@ -20,6 +20,7 @@ module.exports = {
         type: Sequelize.STRING(25),
         allowNull: false,
       },
+      
 
     });
     await queryInterface.addConstraint('phone_numbers',{
