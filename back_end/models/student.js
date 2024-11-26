@@ -5,21 +5,12 @@ const {
 const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class student extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
 
-      //(1)Relationship One-to-One between "student table" and  "user table"
+    static associate(models) {
+
       student.belongsTo(models.user, {
         foreignKey: 'student_id',//the foreign Key in the student table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
-        //the child table does not make changes to the parent , so we don't need the instructions => "onDelete"&"onUpdate" 
-        // onDelete:'NO ACTION',    //if a student is deleted the user associated with him will not be deleted
-        // onUpdate:'NO ACTION',    //if a student is update the user associated with him will not be updated
       });
 
       //(2)Relationship One-to-Many between "student table" and  "study_plan table"
@@ -36,8 +27,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the student_fee table refers to student table
       });
 
+      //(5)Relationship One-to-Many between "student table" and  "level table"
+      student.belongsTo(models.level, {
+        foreignKey: 'student_level_id',//the foreign Key in the student table refers to level table
+      });
 
-    }//study_plan
+      //(6)Relationship One-to-Many between "student table" and  "section table"
+      student.belongsTo(models.section, {
+        foreignKey: 'student_section_id',//the foreign Key in the student table refers to section table
+      });
+
+
+    }
   }
   student.init({
 
@@ -61,36 +62,67 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
       onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
     },
-
-    student_name: {
-      type: DataTypes.STRING,
+    student_section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
-    student_section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+    student_level_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     enrollment_year: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
-    },
-    student_level: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
       allowNull: false,
     },
     student_system: {
       type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
       allowNull: false,
     },
-    profile_picture: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-
-
   }, {
     sequelize,
     modelName: 'student',
+
+    defaultScope: {
+      attributes: { exclude: ['study_plan_id', 'student_section_id', 'student_level_id'] },
+      include: [
+        {
+          association: 'study_plan',
+
+        },
+        {
+          association: 'section',
+
+        },
+        {
+          association: 'level',
+
+        }
+      ],
+    },
+
+
   });
+
+
+  student.prototype.getFullData = function () {
+    const student = this.toJSON();
+    if (this.user) {
+      delete student.user;
+      return { ...this.user.toJSON(), ...student };
+    }
+    return student;
+  };
   return student;
 };

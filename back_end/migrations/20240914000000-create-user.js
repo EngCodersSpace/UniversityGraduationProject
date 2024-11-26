@@ -17,6 +17,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      profile_picture: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      collegeName:{
+        type:Sequelize.STRING(50),
+        allowNull:false,
+      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,
@@ -36,12 +44,16 @@ module.exports = {
           this.setDataValue('password', hasedpassword);
         },
       },
-      reset_token:{
-        type:Sequelize.STRING(100),
+      resetToken:{
+        type:Sequelize.TEXT,
         allowNull:true,
       },
-      reset_token_expiry:{
+      resetTokenExpiry:{
         type:Sequelize.DATE,
+        allowNull:true,
+      },
+      refreshToken:{
+        type:Sequelize.TEXT,
         allowNull:true,
       },
       

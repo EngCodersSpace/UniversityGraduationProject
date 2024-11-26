@@ -1,4 +1,7 @@
 'use strict';
+
+const phone_number = require('../models/phone_number');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -6,7 +9,6 @@ module.exports = {
 
       user_id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
         references: {
           model: 'users',
           key: 'user_id',
@@ -15,13 +17,19 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       phone_number: {
-        type: Sequelize.STRING,
-        primaryKey: true,
+        type: Sequelize.STRING(25),
         allowNull: false,
       },
       
 
     });
+    await queryInterface.addConstraint('phone_numbers',{
+      fields:['user_id','phone_number'],
+      type:'primary key',
+      name:'phone_number_pkey',
+    });
+
+
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('phone_numbers');
