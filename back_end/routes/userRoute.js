@@ -16,8 +16,6 @@ router.get('/users', checkRole('teacher'), userController.getAllUsers);
 
 router.get('/users/:id', userController.getUserById);
 
-router.put('/users/:id', userController.updateUser);
-
 router.delete('/users/:id', userController.deleteUser);
 
 
