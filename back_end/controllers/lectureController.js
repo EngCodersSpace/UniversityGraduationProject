@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { lecture, subject, doctor } = require('../models'); // Adjust path as needed
+const { lecture, subject, doctor } = require('../models'); 
 
 const createLecture = async (req, res) => {
   try {

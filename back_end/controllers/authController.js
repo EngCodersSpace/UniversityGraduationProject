@@ -13,6 +13,14 @@ const JWT_EXPIRY = '10m';
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY ;
 
 ///////////////////////////
+exports.welcome = (req, res) => {
+    res.status(200).json({
+        message: "Welcome to our website!",
+        success: true,
+    });
+};
+
+///////////////////////////
 exports.login = async (req, res) => {
     const { user_id, password } = req.body;
     try {
@@ -68,6 +76,7 @@ exports.login = async (req, res) => {
     }
 };
 exports.refreshToken = async (req, res) => {
+    
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
@@ -111,72 +120,21 @@ exports.registerDoctor = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-        user_id,
-        user_name,
-        date_of_birth,
-        profile_picture,
-        collegeName,
-        email,
-        permission,
-        password,
-        doctor: doctorData
-    } = req.body;
+    const {} = req.body;
 
     try {
-        const existingUser = await user.findOne({ where: { [Op.or]: [{ user_id }, { email }] } });
-        if (existingUser) {
-            if (existingUser.user_id === user_id) {
-                return res.status(400).json({ message: "User ID already exists" });
-            }
-            if (existingUser.email === email) {
-                return res.status(400).json({ message: "Email already registered" });
-            }
-        }
-
-        // Create the new user along with doctor data
-        const newUser = await user.create(
-            {
-                user_id,
-                user_name,
-                date_of_birth,
-                profile_picture,
-                collegeName,
-                email,
-                permission,
-                password,
-                doctor: doctorData
-                    ? {
-                        department: doctorData.department,
-                        academic_degree: doctorData.academic_degree,
-                        administrative_position: doctorData.administrative_position,
-                    }
-                    : null,
-            },
-            {
-                include: [{ model: doctor, as: 'doctor' }],
-            }
-        );
-
-        // Construct a flattened response
-        const responseUser = {
-            user_id: newUser.user_id,
-            user_name: newUser.user_name,
-            date_of_birth: newUser.date_of_birth,
-            profile_picture: newUser.profile_picture,
-            collegeName: newUser.collegeName,
-            email: newUser.email,
-            permission: newUser.permission,
-            department: newUser.doctor?.department || null,
-            academic_degree: newUser.doctor?.academic_degree || null,
-            administrative_position: newUser.doctor?.administrative_position || null,
-        };
-
-        // Send the response
-        res.status(201).json({
-            message: "Doctor registered successfully",
-            user: responseUser,
+       
+        const newDoctor = await user.create(req.body, {
+            include: [
+                { model: doctor, as: 'doctor' }
+            ]
         });
+        
+        res.status(201).json({
+            message: "Student registered successfully",
+            user: newDoctor,
+        });
+
     } catch (error) {
         console.error("Error during user registration:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -189,83 +147,19 @@ exports.registerStudent = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-        user_id,
-        user_name,
-        date_of_birth,
-        profile_picture,
-        collegeName,
-        email,
-        permission,
-        password,
-        student: studentData
-    } = req.body;
+    const {} = req.body;
 
     try {
-        const existingUser = await user.findOne({ where: { [Op.or]: [{ user_id }, { email }] } });
-        if (existingUser) {
-            if (existingUser.user_id === user_id) {
-                return res.status(400).json({ message: "User ID already exists" });
-            }
-            if (existingUser.email === email) {
-                return res.status(400).json({ message: "Email already registered" });
-            }
-        }
-
-        const [sectionFound, levelFound, study_planFound] = await Promise.all([
-            section.findOne({ where: { section_name: studentData.student_section_id } }),
-            level.findOne({ where: { level_name: studentData.student_level_id } }),
-            study_plan.findOne({ where: { study_plan_name: studentData.study_plan_id } })
-        ]);
-        
-        if (!sectionFound) {
-            return res.status(400).json({ message: `Section '${studentData.student_section_id}' not found` });
-        }
-        if (!levelFound) {
-            return res.status(400).json({ message: `Level '${studentData.student_level_id}' not found` });
-        }
-        if (!study_planFound) {
-            return res.status(400).json({ message: `Study plan '${studentData.study_plan_id}' not found` });
-        }
-        const newUser = await user.create({
-            user_id,
-            user_name,
-            date_of_birth,
-            profile_picture,
-            collegeName,
-            email,
-            password,
-            permission,
-            student: {
-                student_section_id: sectionFound.id,
-                enrollment_year: studentData.enrollment_year,
-                student_level_id: levelFound.id,
-                student_system: studentData.student_system,
-                study_plan_id: study_planFound.study_plan_id,
-            }
-        }, {
+       
+        const newStudent = await user.create(req.body, {
             include: [
                 { model: student, as: 'student' }
             ]
         });
         
-
-        const responseUser = {
-            user_id: newUser.user_id,
-            user_name: newUser.user_name,
-            date_of_birth: newUser.date_of_birth,
-            email: newUser.email,
-            permission: newUser.permission,
-            student_section_id: sectionFound.section_name, 
-            enrollment_year: newUser.student?.enrollment_year || null,
-            student_level_id: levelFound.level_name, 
-            student_system: newUser.student?.student_system || null,
-            study_plan_id: study_planFound.study_plan_name ,
-        };
-
         res.status(201).json({
             message: "Student registered successfully",
-            user: responseUser,
+            user: newStudent,
         });
 
     } catch (error) {
@@ -273,6 +167,8 @@ exports.registerStudent = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
     const transporter = nodemailer.createTransport({

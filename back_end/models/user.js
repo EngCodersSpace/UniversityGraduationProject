@@ -105,29 +105,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    fullDataDoctor: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const user = this.toJSON();
-        if (this.doctor) {
-          return { ...user, ...this.doctor };
-        }
-        return user;
-      }
-    },
-    fullDataStudent: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const user = this.toJSON();
-        if (this.student) {
-          return { ...user, ...this.student };
-        }
-        return user;
-      }
-    },
-
-
-
+    
   }, {
     sequelize,
     modelName: 'user',

@@ -6,31 +6,22 @@ const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 
-// Route for user login
 router.post('/login', authController.login);
 
-// Route for token verification
 router.post('/login/authToken', authMiddleware.verifyToken);
 
-// إضافة المسار لعرض بيانات المستخدم المسجل دخوله حالياً
 router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
 
-//To refresh Token
 router.post('/refresh', authController.refreshToken);
 
+router.post('/registerDoctor',vali.validateDoctorRegistration, authController.registerDoctor);
 
-// register Doctor
-router.post('/registerDoctor',vali.validateDoctorRegistration, authController.registerDoctor)
+router.post('/registerStudent',vali.validateStudentRegistration, authController.registerStudent);
 
-// register Student
-router.post('/registerStudent', authController.registerStudent)
-
-// Route لطلب استعادة كلمة المرور
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
 
-router.get('/verify-reset-token',authController.verifyResetToken)
+router.get('/verify-reset-token',authController.verifyResetToken);
 
-// Route لإعادة تعيين كلمة المرور
 router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
 
 

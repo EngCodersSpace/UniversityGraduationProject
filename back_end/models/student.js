@@ -5,9 +5,9 @@ const {
 const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class student extends Model {
-   
+
     static associate(models) {
-      
+
       student.belongsTo(models.user, {
         foreignKey: 'student_id',//the foreign Key in the student table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
@@ -93,6 +93,87 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'student',
+
+    defaultScope: {
+      attributes: { exclude: ['study_plan_id', 'student_section_id', 'student_level_id'] },
+      include: [
+        {
+          association: 'study_plan',
+
+        },
+        {
+          association: 'section',
+
+        },
+        {
+          association: 'level',
+
+        }
+      ],
+    },
+
+
   });
+
+
+  student.prototype.getFullData = function () {
+    const student = this.toJSON();
+    if (this.user) {
+      delete student.user;
+      return { ...this.user.toJSON(), ...student };
+    }
+    return student;
+  };
+
+  //   this returns ..........
+  //   {
+  //     "student_id": 100,
+  //     "enrollment_year": "2020-09-01",
+  //     "student_system": "General",
+  //     "createdAt": "2024-11-25T20:53:27.000Z",
+  //     "updatedAt": "2024-11-25T20:53:27.000Z",
+  //     "study_plan": {
+  //         "study_plan_id": 1,
+  //         "study_plan_name": "plan1",
+  //         "createdAt": "2024-11-25T18:02:49.000Z",
+  //         "updatedAt": "2024-11-25T18:02:49.000Z"
+  //     },
+  //     "section": {
+  //         "id": 1,
+  //         "section_name": "Computer",
+  //         "createdAt": "2024-11-25T17:52:37.000Z",
+  //         "updatedAt": "2024-11-25T17:52:37.000Z"
+  //     },
+  //     "level": {
+  //         "id": 2,
+  //         "level_name": "Level 2",
+  //         "createdAt": "2024-11-25T17:51:33.000Z",
+  //         "updatedAt": "2024-11-25T17:51:33.000Z"
+  //     }
+  //    }
+
+
+  // student.prototype.getFullData = function () {
+  //   const student = this.toJSON();
+  //   student.study_plan = student.study_plan?.study_plan_name || null;
+  //   student.section = student.section?.section_name || null;
+  //   student.level = student.level?.level_name || null;
+
+  //   delete student.user;
+  //   return student;
+  // };
+
+  //  this returns ..........
+  // {
+  //   "student_id": 100,
+  //   "enrollment_year": "2020-09-01",
+  //   "student_system": "General",
+  //   "createdAt": "2024-11-25T20:53:27.000Z",
+  //   "updatedAt": "2024-11-25T20:53:27.000Z",
+  //   "study_plan": "plan1",
+  //   "section": "Computer",
+  //   "level": "Level 2"
+  // }
+
   return student;
 };
