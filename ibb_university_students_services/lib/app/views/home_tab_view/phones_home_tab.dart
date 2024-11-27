@@ -385,28 +385,31 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    controller: controller.scrollController,
-                    dragStartBehavior: DragStartBehavior.down,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.1,
-                        ),
-                      ],
+                  NotificationListener(
+                    onNotification: controller.scrollEvent,
+                    child: SingleChildScrollView(
+                      controller: controller.scrollController,
+                      dragStartBehavior: DragStartBehavior.down,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.1,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Align(
