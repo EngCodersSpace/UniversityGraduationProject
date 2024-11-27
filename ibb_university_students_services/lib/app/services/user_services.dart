@@ -187,7 +187,7 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-     _fakeUser("student");
+
     if (_user != null && !hardFetch) {
       return Result(
         data: _user,
@@ -196,7 +196,7 @@ class UserServices {
         message: "successful",
       );
     }
-
+    _fakeUser("student");
     late Response? response;
     try {
       response = await HttpProvider.post("auth/me");

@@ -179,7 +179,6 @@ class PhoneProfileView extends GetView<ProfileController> {
                         ],
                       ),
                       if (controller.user is Student) ...[
-
                         Row(
                           children: [
                             SizedBox(
@@ -230,8 +229,8 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     SizedBox(
                                       width: width * 0.02,
                                     ),
-                                    SecText("Academic Degree".tr,
-                                        fontWeight: FontWeight.bold),
+                                    Flexible(child: SecText("administrative Position".tr,
+                                        fontWeight: FontWeight.bold),)
                                   ],
                                 ),
                               ),
