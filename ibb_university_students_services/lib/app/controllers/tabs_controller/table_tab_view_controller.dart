@@ -9,7 +9,7 @@ class TableTabController extends GetxController {
   TableTime? tableTime;
   List<TableDayContent>? selectedDay;
   RxInt selected = 0.obs;
-  String selectedDayName = "Sunday";
+  String selectedDayName = "Sunday".tr;
 
   @override
   void onInit() async{
@@ -26,27 +26,27 @@ class TableTabController extends GetxController {
     switch(index){
       case 0:
         selectedDay = tableTime?.sun;
-        selectedDayName = "Sunday";
+        selectedDayName = "Sunday".tr;
         break;
       case 1:
         selectedDay = tableTime?.mon;
-        selectedDayName = "Monday";
+        selectedDayName = "Monday".tr;
         break;
       case 2:
         selectedDay = tableTime?.tue;
-        selectedDayName = "Tuesday";
+        selectedDayName = "Tuesday".tr;
         break;
       case 3:
         selectedDay = tableTime?.wed;
-        selectedDayName = "Wednesday";
+        selectedDayName = "Wednesday".tr;
         break;
       case 4:
         selectedDay = tableTime?.the;
-        selectedDayName = "Thursday";
+        selectedDayName = "Thursday".tr;
         break;
       case 5:
         selectedDay = tableTime?.sat;
-        selectedDayName = "Saturday";
+        selectedDayName = "Saturday".tr;
         break;
     }
   }
