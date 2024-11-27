@@ -26,7 +26,7 @@ module.exports = {
           model: 'sections',
           key: 'id',
         },
-        onDelete: 'CASCADE',
+        onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
       level_fees_id: {
@@ -36,7 +36,7 @@ module.exports = {
           model: 'levels',
           key: 'id',
         },
-        onDelete: 'CASCADE',
+        onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
       term: {
