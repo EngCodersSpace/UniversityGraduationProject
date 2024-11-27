@@ -5,9 +5,9 @@ const {
 const { default: ModelManager } = require('sequelize/lib/model-manager');
 module.exports = (sequelize, DataTypes) => {
   class student extends Model {
-   
+
     static associate(models) {
-      
+
       student.belongsTo(models.user, {
         foreignKey: 'student_id',//the foreign Key in the student table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
         model: 'sections',
         key: 'id',
       },
-      onDelete: 'CASCADE',
+      onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
     student_level_id: {
@@ -79,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
         model: 'levels',
         key: 'id',
       },
-      onDelete: 'CASCADE',
+      onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
     enrollment_year: {
@@ -97,17 +97,17 @@ module.exports = (sequelize, DataTypes) => {
     defaultScope: {
       attributes: { exclude: ['study_plan_id', 'student_section_id', 'student_level_id'] },
       include: [
-        // {
-        //   model: sequelize.models.study_plan,
-        //   as: 'study_plan',
-        // },
         {
-          model: sequelize.models.section,
-          as: 'section',
+          association: 'study_plan',
+
         },
         {
-          model: sequelize.models.level,
-          as: 'level',
+          association: 'section',
+
+        },
+        {
+          association: 'level',
+
         }
       ],
     },
@@ -118,10 +118,11 @@ module.exports = (sequelize, DataTypes) => {
 
   student.prototype.getFullData = function () {
     const student = this.toJSON();
-        if (this.user) {
-          return { ...this.user, ...student };
-        }
-        return student;
+    if (this.user) {
+      delete student.user;
+      return { ...this.user.toJSON(), ...student };
+    }
+    return student;
   };
   return student;
 };
