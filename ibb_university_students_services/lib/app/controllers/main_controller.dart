@@ -1,16 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
-  RxInt iconindex = 2.obs;
+
   late CustomFloatActionButtonLocation currentPos;
-  late ListTile poslisttile;
+
   User? user;
 
   @override
@@ -22,11 +20,7 @@ class MainController extends GetxController {
     if (res.statusCode == 200) {
       user = res.data;
     }
-    poslisttile = ListTile(
-      selectedTileColor: AppColors.backColor,
-      iconColor: AppColors.inverseIconColor,
-      textColor: AppColors.inverseIconColor,
-    );
+
     super.onInit();
   }
 
@@ -66,67 +60,17 @@ class MainController extends GetxController {
 
   void changewebtabindex(int index) {
     if (index == 0) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
+      selectedIndex(0);
     } else if (index == 1) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
+      selectedIndex(1);
     } else if (index == 2) {
-      poslisttile = ListTile(
-        selectedTileColor: AppColors.backColor,
-        iconColor: AppColors.inverseCardColor,
-        textColor: AppColors.inverseCardColor,
-      );
+      selectedIndex(2);
     } else if (index == 3) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
+      selectedIndex(3);
     } else if (index == 4) {
-      (Get.locale?.languageCode == 'en')
-          ? poslisttile = ListTile(
-              selectedTileColor: AppColors.backColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            )
-          : poslisttile = ListTile(
-              selectedTileColor: AppColors.inverseCardColor,
-              iconColor: AppColors.inverseCardColor,
-              textColor: AppColors.inverseCardColor,
-            );
+      selectedIndex(4);
     }
-    iconindex.value = index;
   }
-  // Color geticonindex(int index) {
-  //   return selectedIndex.value == index
-  //       ? AppColors.backColor
-  //       : AppColors.inverseCardColor;
-  // }
 
   @override
   void onClose() {}

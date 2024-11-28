@@ -14,90 +14,8 @@ class WebMainView extends GetView<MainController> {
     super.key,
   });
 
-  double hight = Get.height;
-  double width = Get.width;
-  late ListTile listTile;
-
   @override
   Widget build(BuildContext context) {
-    List icona = [
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.notifications_none,
-            color: AppColors.mainIconColor,
-          ),
-          SecText(
-            "Notification".tr,
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-            textColor: AppColors.mainTextColor,
-          ),
-        ],
-      ),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.calendar_month,
-            color: AppColors.mainIconColor,
-          ),
-          SecText(
-            "Table".tr,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            textColor: AppColors.mainTextColor,
-          ),
-        ],
-      ),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.home_outlined,
-            color: AppColors.mainIconColor,
-          ),
-          SecText(
-            "Home".tr,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            textColor: AppColors.mainTextColor,
-          ),
-        ],
-      ),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.repartition,
-            color: AppColors.mainIconColor,
-          ),
-          SecText(
-            "Reports".tr,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            textColor: AppColors.mainTextColor,
-          ),
-        ],
-      ),
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.person_outline_sharp,
-            color: AppColors.mainIconColor,
-          ),
-          SecText(
-            "Profile".tr,
-            fontSize: (Get.locale?.languageCode == "en") ? 10 : 8,
-            fontWeight: FontWeight.bold,
-            textColor: AppColors.mainTextColor,
-          ),
-        ],
-      ),
-    ];
-
     return Obx(() => Scaffold(
           body: Container(
             color: AppColors.backColor,
@@ -106,9 +24,9 @@ class WebMainView extends GetView<MainController> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 8),
                   color: AppColors.inverseCardColor,
-                  width: Get.width * 0.15,
+                  width: Get.width * 0.2,
                   height: Get.height,
                   child: Column(
                     children: [
@@ -116,18 +34,18 @@ class WebMainView extends GetView<MainController> {
                         alignment: Alignment.center,
                         children: [
                           CircleAvatar(
-                            radius: width * 0.05,
-                            backgroundColor: AppColors.inverseIconColor,
+                            radius: Get.width * 0.05,
+                            backgroundColor: AppColors.mainCardColor,
                           ),
                           CircleAvatar(
                             backgroundColor:
-                                (controller.user?.profileImage?.value) != ""
+                                (controller.user?.profileImage?.value) != null
                                     ? AppColors.tabBackColor
                                     : AppColors.inverseMainTextColor,
-                            maxRadius: width * 0.056 - 2,
+                            maxRadius: Get.width * 0.05 - 2,
                             backgroundImage: (controller
                                         .user?.profileImage?.value) !=
-                                    ""
+                                    null
                                 ? AssetImage(
                                     controller.user?.profileImage?.value ?? "")
                                 : null,
@@ -139,153 +57,213 @@ class WebMainView extends GetView<MainController> {
                         ],
                       ),
                       SizedBox(
-                        height: hight * 0.03,
+                        height: Get.height * 0.03,
+                      ),
+                      Divider(
+                        thickness: 0.1,
+                        color: AppColors.coverColor,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          MainText(
-                            "NAME : ${controller.user?.name?.value ?? ""}",
-                            fontSize: 24,
-                            textColor: AppColors.backColor,
+                          SecText(
+                            "NAME :${controller.user?.name?.value ?? " "}",
+                            textColor: AppColors.mainTextColor,
                           ),
                           SecText(
                             "ID : ${controller.user?.id}",
-                            textColor: AppColors.backColor,
+                            textColor: AppColors.mainTextColor,
                           ),
                         ],
                       ),
-                      Container(
-                        color: AppColors.backColor,
-                        child: ListView(children: [
-                          Column(
-                            children: <Widget>[
-                              screens[controller.iconindex.value],
-                              ListTile(
-                                onTap: () {},
-                                selectedTileColor: AppColors.backColor,
-                                iconColor: AppColors.inverseIconColor,
-                                textColor: AppColors.inverseIconColor,
-                                leading: icona[controller.iconindex.value],
-                              ),
-                              listTile,
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(0);
-                                },
-                                leading: Icon(
-                                  Icons.person_outline_rounded,
-                                  color: (controller.iconindex.value == 0)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Profile".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 0)
-                                        ? Colors.transparent
-                                        : null,
+                      SizedBox(
+                        height: Get.height * 0.03,
+                      ),
+                      Obx(() => Column(
+                            children: [
+                              InkWell(
+                                onTap: () => controller.selectedIndex.value = 0,
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 0)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.person_outline_sharp,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Profile".tr,
+                                        fontSize:
+                                            (Get.locale?.languageCode == "en")
+                                                ? 10
+                                                : 8,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(1);
-                                },
-                                leading: Icon(
-                                  Icons.notifications_none_outlined,
-                                  color: (controller.iconindex.value == 1)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Notification".tr,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 1)
-                                        ? Colors.transparent
-                                        : null,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(1),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 1)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.notifications_none,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Notification".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(2);
-                                },
-                                leading: Icon(
-                                  Icons.home,
-                                  color: (controller.iconindex.value == 2)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Home".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 2)
-                                        ? Colors.transparent
-                                        : null,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(2),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 2)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.home_outlined,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    2)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Home".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    2)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(3);
-                                },
-                                leading: Icon(
-                                  Icons.calendar_month,
-                                  color: (controller.iconindex.value == 3)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Table".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 3)
-                                        ? Colors.transparent
-                                        : null,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(3),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 3)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    3)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Table".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    3)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              ListTile(
-                                onTap: () {
-                                  controller.changewebtabindex(4);
-                                },
-                                leading: Icon(
-                                  Icons.description,
-                                  color: (controller.iconindex.value == 4)
-                                      ? Colors.transparent
-                                      : null,
-                                ),
-                                title: Text(
-                                  "Reports".tr,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: (controller.iconindex.value == 4)
-                                        ? Colors.transparent
-                                        : null,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(4),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 4)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.repartition,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    4)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Reports".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    4)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ],
-                          ),
-                        ]),
-                      ),
+                          )),
                     ],
                   ),
                 ),
                 Container(
-                  color: AppColors.backColor,
-                  width: Get.width * 0.7,
+                  color: AppColors.mainTextColor,
+                  width: Get.width * 0.8,
                   height: Get.height,
-                  child: screens[controller.iconindex.value],
+                  child: screens[controller.selectedIndex.value],
                 ),
               ],
             ),
@@ -319,7 +297,7 @@ class WebMainView extends GetView<MainController> {
         //   backgroundColor: AppColors.backColor,
         //   elevation: 32,
         //   width:
-        //       (Get.locale?.languageCode == "en") ? hight * 0.09 : hight * 0.09,
+        //       (Get.locale?.languageCode == "en") ? Get.height * 0.09 : Get.height * 0.09,
         //   shape: const CircleBorder(),
         //   child: Row(
         //     mainAxisAlignment: MainAxisAlignment.center,
