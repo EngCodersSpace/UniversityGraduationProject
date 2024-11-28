@@ -8,15 +8,18 @@ const createLectureValidator = [
 
   body('doctor_id')
     .isInt()
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('Doctor ID is required and should be a valid integer'),
 
-  body('lecture_section')
-    .isIn(['Computer', 'Communications', 'Civil', 'Architecture'])
-    .withMessage('Lecture section must be one of the following: Computer, Communications, Civil, Architecture'),
+  body('lecture_section_id')
+    .isIn()
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .withMessage('lecture-section-ID is required and should be a valid integer'),
 
-  body('lecture_level')
-    .isIn(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'])
-    .withMessage('Lecture level must be one of the following: Level 1, Level 2, Level 3, Level 4, Level 5'),
+  body('lecture_level_id')
+    .isIn()
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .withMessage('lecture-level-ID is required and should be a valid integer'),
 
   body('term')
     .isIn(['Term 1', 'Term 2'])
@@ -57,17 +60,18 @@ const updateLectureValidator = [
   body('doctor_id')
     .optional()
     .isInt()
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('Doctor ID should be a valid integer'),
 
-  body('lecture_section')
+  body('lecture_section_id')
     .optional()
-    .isIn(['Computer', 'Communications', 'Civil', 'Architecture'])
-    .withMessage('Lecture section must be one of the following: Computer, Communications, Civil, Architecture'),
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .withMessage('lecture-level-ID is required and should be a valid integer'),
 
-  body('lecture_level')
+  body('lecture_level_id')
     .optional()
-    .isIn(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'])
-    .withMessage('Lecture level must be one of the following: Level 1, Level 2, Level 3, Level 4, Level 5'),
+    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .withMessage('lecture-level-ID is required and should be a valid integer'),
 
   body('term')
     .optional()

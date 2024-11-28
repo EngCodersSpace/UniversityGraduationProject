@@ -3,7 +3,7 @@ const router = express.Router();
 const { createLecture, getLectures, getLectureById, updateLecture, deleteLecture } = require('../controllers/lectureController');
 const vali=require('../validations/lecturevalidation')
 
-router.post('/create-lecture', vali.createLectureValidator,createLecture);
+router.post('/create-lecture', vali.createLectureValidator ,createLecture);
 
 router.get('/get-all-lecture', getLectures);
 
