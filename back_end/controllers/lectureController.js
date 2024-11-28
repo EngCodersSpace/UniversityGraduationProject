@@ -3,27 +3,13 @@ const { lecture, subject, doctor } = require('../models');
 
 const createLecture = async (req, res) => {
   try {
-    // Validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const {} = req.body;
 
-    const { subject_id, doctor_id, lecture_section, lecture_level, term, year, lecture_time, lecture_duration, lecture_day, lecture_room } = req.body;
-
-    // Create new lecture
-    const newLecture = await lecture.create({
-      subject_id,
-      doctor_id,
-      lecture_section,
-      lecture_level,
-      term,
-      year,
-      lecture_time,
-      lecture_duration,
-      lecture_day,
-      lecture_room,
-    });
+    const newLecture = await lecture.create(req.body);
 
     res.status(201).json({
       message: 'Lecture created successfully',
@@ -41,17 +27,23 @@ const getLectures = async (req, res) => {
       include: [
         {
           model: subject,
-          as: 'subject', // the alias set in associations
-          attributes: ['subject_name'], // adjust the fields as needed
+          as: 'subject'
         },
         {
           model: doctor,
-          as: 'doctor', // alias for doctor association
-          attributes: ['doctor_id'], // adjust the fields as needed
+          as: 'doctor'
+        },
+        {
+          model:section,
+          as:'section'
+        },
+        {
+          model:level,
+          as:'level'
         },
       ],
     });
-    res.status(200).json({ data: lectures });
+    res.status(200).json({message:'getAllLectures', data: lectures });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error retrieving lectures', error: error.message });
@@ -67,11 +59,19 @@ const getLectureById = async (req, res) => {
       include: [
         {
           model: subject,
-          as: 'subject',
+          as: 'subject'
         },
         {
           model: doctor,
-          as: 'doctor',
+          as: 'doctor'
+        },
+        // {
+        //   model: section,
+        //   as: 'section'
+        // },
+        {
+          model: level,
+          as: 'level'
         },
       ],
     });
