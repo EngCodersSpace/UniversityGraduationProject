@@ -29,10 +29,12 @@ class WebLoginView extends GetView<LoginController> {
       alignment: Alignment.bottomCenter,
       children: [
         SizedBox(
-          child: Image.asset("assets/images/login_background_1.jpeg",
+          child: Image.asset("assets/images/ibb_background_6.jpeg",
               fit: BoxFit.fill),
         ),
-        Container(color: AppColors.coverColor),
+        Container(
+          color: AppColors.coverColor.withOpacity(0.0),
+        ),
         SingleChildScrollView(
           child: Column(
             children: [
@@ -71,7 +73,7 @@ class WebLoginView extends GetView<LoginController> {
               ),
 
               Container(
-                  width: width * 0.35,
+                  width: width * 0.26,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.backColor,
@@ -85,31 +87,45 @@ class WebLoginView extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // SizedBox(
+                            //   width: ((width * 0.35) - 194) * (1 / 3),
+                            // ),
                             SizedBox(
-                              width: width * 0.35 * 0.2,
-                            ),
-                            MainText('login'.tr,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 32,
-                                textColor: Colors.black),
-                            PopupMenuButton<String>(
-                              initialValue: Get.locale?.languageCode.toString(),
-                              itemBuilder: (BuildContext context) => menuItems,
-                              onSelected: (lang) {
-                                controller.changeLang(lang);
-                              },
+                              width: ((width * 0.35) - 194) * (2 / 3),
                               child: Row(
-                                children:
-                                    (Get.locale?.languageCode.toString() ==
-                                            "en")
-                                        ? [
-                                            const Icon(Icons.language),
-                                            SecText("En"),
-                                          ]
-                                        : [
-                                            SecText("Ar"),
-                                            const Icon(Icons.language),
-                                          ],
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SecText(
+                                      'login'.tr,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                    ),
+                                  ]),
+                            ),
+                            SizedBox(
+                              width: ((width * 0.35) - 194) * (1 / 3),
+                              child: PopupMenuButton<String>(
+                                initialValue:
+                                    Get.locale?.languageCode.toString(),
+                                itemBuilder: (BuildContext context) =>
+                                    menuItems,
+                                onSelected: (lang) {
+                                  controller.changeLang(lang);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children:
+                                      (Get.locale?.languageCode.toString() ==
+                                              "en")
+                                          ? [
+                                              const Icon(Icons.language),
+                                              SecText("En"),
+                                            ]
+                                          : [
+                                              SecText("Ar"),
+                                              const Icon(Icons.language),
+                                            ],
+                                ),
                               ),
                             ),
                           ],
@@ -118,10 +134,11 @@ class WebLoginView extends GetView<LoginController> {
                           height: height * 0.6 * 0.1,
                         ),
                         CustomTextFormField(
+                          width: width,
                           controller: controller.id,
                           validator: (id) => controller.validateID(id),
                           labelText: 'studentid'.tr,
-                          icon: Icons.account_circle_outlined,
+                          //icon: Icons.account_circle_outlined,
                         ),
                         SizedBox(
                           height: height * 0.6 * 0.05,
@@ -131,7 +148,7 @@ class WebLoginView extends GetView<LoginController> {
                             validator: (pwd) =>
                                 controller.validatePassword(pwd),
                             labelText: 'password'.tr,
-                            icon: Icons.key_sharp,
+                            //icon: Icons.key_sharp,
                             isPassword: true,
                             onFieldSubmitted: (e) {
                               controller.onLogin();
@@ -142,6 +159,7 @@ class WebLoginView extends GetView<LoginController> {
                             onPressed: () => controller.forgotPassword,
                             child: SecText(
                               "forgotPassword?".tr,
+                              fontSize: 10.0,
                               textColor: AppColors.linkTextColor,
                             ),
                           ),
@@ -170,7 +188,7 @@ class WebLoginView extends GetView<LoginController> {
                                         quarterTurns: 2,
                                         child: Icon(Icons.login,
                                             color: AppColors.mainTextColor)),
-                                size: Size(width * 0.8, 40),
+                                size: Size(width * 0.12, 40),
                               ))
                       ],
                     ),

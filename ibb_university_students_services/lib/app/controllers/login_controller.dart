@@ -14,6 +14,7 @@ class LoginController extends GetxController {
   RxBool loggingFiled = false.obs;
   RxString loggingFiledMessage = "".obs;
   RxDouble heightScale = 0.6.obs;
+  RxBool rememberMe = false.obs;
 
 
   @override
@@ -66,21 +67,34 @@ class LoginController extends GetxController {
   }
 
   Future<void> onLogin() async {
+    logging.value = true;
     if (formKey.currentState!.validate()) {
-      logging.value = true;
-      await Future.delayed(const Duration(seconds: 1));
-      Result res = await UserServices.userLogin(id.text, password.text);
-      if (res.data) {
+      Result res = await UserServices.userLogin(id.text, password.text,rememberMe: rememberMe.value);
+      if (res.statusCode == 200) {
         Get.offNamed("/main");
-      }else{
-        if(res.statusCode == 401) loggingFiledMessage.value = "id or password is wrong";
-        loggingFiledMessage.value = res.message??"some thing go wrong";
+      } else if (res.statusCode == 900) {
+        loggingFiledMessage.value =
+        "no internet connection \n please check your connection ";
+        loggingFiled.value = true;
+      } else if (res.statusCode == 401) {
+        loggingFiledMessage.value = "password or id is wrong";
+        loggingFiled.value = true;
+      } else if (res.statusCode == 404) {
+        loggingFiledMessage.value = "no such user exist";
+        loggingFiled.value = true;
+      } else {
+        loggingFiledMessage.value =
+        "something get wrong \n please check your connection ";
         loggingFiled.value = true;
       }
-
-      logging.value = false;
     }
+    logging.value = false;
   }
+
+  void toggleRememberMe(bool? val) {
+    rememberMe.value = val ?? false;
+  }
+
   void changeLang(String lang){
     Get.updateLocale(Locale(lang));
   }

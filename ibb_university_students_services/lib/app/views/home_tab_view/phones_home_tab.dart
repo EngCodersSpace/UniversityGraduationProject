@@ -55,23 +55,24 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                     ),
                                     CircleAvatar(
                                       backgroundColor: (controller
-                                                  .user?.profileImage?.value) !=
+                                                  .user?.profileImage) !=
                                               ""
                                           ? AppColors.tabBackColor
                                           : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
                                       backgroundImage: (controller
-                                                  .user?.profileImage?.value) !=
+                                                  .user?.profileImage) !=
                                               ""
                                           ? AssetImage(controller
-                                              .user?.profileImage?.value??"")
+                                                  .user?.profileImage ??
+                                              "")
                                           : null,
                                       child: (controller
-                                                  .user?.profileImage?.value) !=
+                                                  .user?.profileImage) !=
                                               ""
                                           ? null
                                           : MainText(
-                                              controller.user?.name?.value[0] ??
+                                              controller.user?.name?[0] ??
                                                   "".toUpperCase()),
                                     )
                                   ],
@@ -81,7 +82,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MainText(
-                                      controller.user?.name?.value ?? "",
+                                      controller.user?.name ?? "",
                                       textColor: AppColors.inverseIconColor,
                                     ),
                                     SecText(
@@ -106,7 +107,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                           height: height * 0.14,
                           child: (controller.user is Student)
                               ? Card(
-                                  elevation: 16,
+                                  elevation: 5,
                                   surfaceTintColor: AppColors.mainCardColor,
                                   color: AppColors.mainCardColor,
                                   child: Row(
@@ -133,19 +134,18 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 SizedBox(
                                                   width: width * 0.025,
                                                 ),
-                                                Flexible(
-                                                  child: MainText(
-                                                      (controller.user
-                                                                  as Student)
-                                                              .department
-                                                              ?.value ??
-                                                          "Unknown".tr,
-                                                      textColor: AppColors
-                                                          .secTextColor,
-                                                      fontSize: 14 *
-                                                          Get.textScaleFactor,
-                                                      height: 0),
-                                                )
+                                                // Flexible(
+                                                //   child: MainText(
+                                                //       (controller.user
+                                                //                   as Student)
+                                                //               .department??
+                                                //           "Unknown".tr,
+                                                //       textColor: AppColors
+                                                //           .secTextColor,
+                                                //       fontSize: 14 *
+                                                //           Get.textScaleFactor,
+                                                //       height: 0),
+                                                // )
                                               ],
                                             ),
                                           ],
@@ -181,7 +181,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 MainText(
                                                     (controller.user as Student)
                                                             .level
-                                                            ?.value ??
+                                                            ?.name ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor),
@@ -220,7 +220,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 MainText(
                                                     (controller.user as Student)
                                                             .level
-                                                            ?.value ??
+                                                            ?.name ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor),
@@ -265,8 +265,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   child: MainText(
                                                       (controller.user
                                                                   as Doctor)
-                                                              .department
-                                                              ?.value ??
+                                                              .section
+                                                              ?.name ??
                                                           "Unknown".tr,
                                                       textColor: AppColors
                                                           .secTextColor,
@@ -309,7 +309,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 MainText(
                                                     (controller.user as Doctor)
                                                             .academicDegree
-                                                            ?.value ??
+                                                             ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,
@@ -355,7 +355,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 MainText(
                                                     (controller.user as Doctor)
                                                             .administrativePosition
-                                                            ?.value ??
+                                                             ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,
@@ -384,7 +384,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
+                  NotificationListener(
+                    onNotification: controller.scrollEvent,
+                    child: SingleChildScrollView(
                       controller: controller.scrollController,
                       dragStartBehavior: DragStartBehavior.down,
                       scrollDirection: Axis.horizontal,
@@ -408,6 +410,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         ],
                       ),
                     ),
+                  ),
                   Align(
                     child: TabPageSelector(
                       controller: controller.tabController,
@@ -445,7 +448,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/book_6874557.png"),
                                 ),
                                 SecText(
-                                  "Library",
+                                  "Library".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
@@ -459,14 +462,17 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/calendar.png"),
                                 ),
-                                SecText(
-                                  "Lecture",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Schedule",
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                if (Get.locale?.languageCode == "ar") ...[
+                                  SecText(
+                                    "${"Schedule".tr}\n${"Lectures".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ] else ...[
+                                  SecText(
+                                    "${"Lectures".tr}\n${"Schedule".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ]
                               ],
                             ),
                             Column(
@@ -479,7 +485,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/payment.png"),
                                 ),
                                 SecText(
-                                  "Payments",
+                                  "Payments".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
@@ -491,16 +497,19 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
-                                      "assets/images/services_cards/book.png"),
+                                      "assets/images/services_cards/credit-card.png"),
                                 ),
-                                SecText(
-                                  "Academic",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Card",
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                if (Get.locale?.languageCode == "ar") ...[
+                                  SecText(
+                                    "${"Card".tr}\n${"Academic".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ] else ...[
+                                  SecText(
+                                    "${"Academic".tr}\n${"Card".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ]
                               ],
                             ),
                           ],
@@ -518,17 +527,20 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   onTap: () {},
                                   size: cardSize,
                                   color: Colors.transparent,
-                                  image:
-                                      const AssetImage("assets/images/services_cards/a-.png"),
+                                  image: const AssetImage(
+                                      "assets/images/services_cards/a-.png"),
                                 ),
-                                SecText(
-                                  "Student",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Degrees",
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                if (Get.locale?.languageCode == "ar") ...[
+                                  SecText(
+                                    "${"Student".tr}\n${"Degrees".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ] else ...[
+                                  SecText(
+                                    "${"Degrees".tr}\n${"Student".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ]
                               ],
                             ),
                             Column(
@@ -540,14 +552,17 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/result.png"),
                                 ),
-                                SecText(
-                                  "Student",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Degrees",
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                if (Get.locale?.languageCode == "ar") ...[
+                                  SecText(
+                                    "${"Student".tr}\n${"Degrees".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ] else ...[
+                                  SecText(
+                                    "${"Degrees".tr}\n${"Student".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ]
                               ],
                             ),
                             Column(
@@ -559,14 +574,17 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/exam_11776326.png"),
                                 ),
-                                SecText(
-                                  "Exam",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SecText(
-                                  "Schedule",
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                if (Get.locale?.languageCode == "ar") ...[
+                                  SecText(
+                                    "${"Schedule".tr}\n${"Exam".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ] else ...[
+                                  SecText(
+                                    "${"Exam".tr}\n${"Schedule".tr}",
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ]
                               ],
                             ),
                             Column(
@@ -579,7 +597,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
                                 SecText(
-                                  "Library",
+                                  "Library".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
