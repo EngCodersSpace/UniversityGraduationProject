@@ -237,7 +237,41 @@ const getLectureBySubject = async (req, res) =>{
 };
 
 
+const getSpecificLecture = async (req, res) => {
+  const { lecture_day, lecture_time, lecture_room, lecture_section_id } = req.query;
 
+  const whereConditions = {};
+
+  if (lecture_day) {
+    whereConditions.lecture_day = lecture_day; 
+  }
+
+  if (lecture_time) {
+    whereConditions.lecture_time = lecture_time;
+  }
+
+  if (lecture_room) {
+    whereConditions.lecture_room = lecture_room;
+  }
+
+  if (lecture_section_id) {
+    whereConditions.lecture_section_id = lecture_section_id;
+  }
+
+  try {
+    const lectures = await lecture.findAll({
+      where: whereConditions ,
+    });
+
+    if (!lectures.length) {
+      return res.status(404).json({ message: 'No lectures found for this subject' });
+    }
+    return res.status(200).json(lectures); 
+  } catch (error) {
+    console.error('Error fetching lectures:', error);
+    return res.status(500).json({ error: 'An error occurred while fetching lectures.' });
+  }
+};
 
 
 
@@ -253,5 +287,6 @@ module.exports = {
   getLecturesBySection,
   getLecturesByLevel,
   getLecturesByDoctor,
-  getLectureBySubject
+  getLectureBySubject,
+  getSpecificLecture
 };
