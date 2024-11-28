@@ -40,19 +40,19 @@ class WebMainView extends GetView<MainController> {
                           ),
                           CircleAvatar(
                             backgroundColor:
-                                (controller.user?.profileImage?.value) != null
+                                (controller.user?.profileImage) != null
                                     ? AppColors.tabBackColor
                                     : AppColors.inverseMainTextColor,
                             maxRadius: Get.width * 0.05 - 2,
                             backgroundImage: (controller
-                                        .user?.profileImage?.value) !=
+                                        .user?.profileImage) !=
                                     null
                                 ? AssetImage(
-                                    controller.user?.profileImage?.value ?? "")
+                                    controller.user?.profileImage ?? "")
                                 : null,
-                            child: (controller.user?.profileImage?.value) != ""
+                            child: (controller.user?.profileImage) != ""
                                 ? null
-                                : MainText(controller.user?.name?.value[0] ??
+                                : MainText(controller.user?.name?[0] ??
                                     "".toUpperCase()),
                           ),
                         ],
@@ -64,7 +64,7 @@ class WebMainView extends GetView<MainController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SecText(
-                            "Name : ${controller.user?.name?.value ?? ""}",
+                            "Name : ${controller.user?.name ?? ""}",
                             textColor: AppColors.mainTextColor,
                           ),
                           SecText(

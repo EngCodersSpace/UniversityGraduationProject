@@ -7,7 +7,7 @@ class Languages implements Translations{
   // TODO: implement keys
   Map<String, Map<String, String>> get keys =>{
     'ar':Arabic().dictionary,
-    'en':Engilsh().dictionary
+    'en':English().dictionary
   };
 
 

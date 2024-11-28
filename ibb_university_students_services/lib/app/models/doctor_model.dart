@@ -1,54 +1,65 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:ibb_university_students_services/app/models/lavel_model.dart';
+import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class Doctor extends User {
-
-  RxString? academicDegree;
-  RxString? administrativePosition;
-
+  Section? section;
+  String? status;
+  String? academicDegree;
+  String? administrativePosition;
 
   Doctor({
     required super.id,
     super.name,
+    super.dateOfBrith,
     super.email,
-    super.phone,
+    super.phones,
     super.profileImage,
-    super.department,
-    this.academicDegree,
+    super.permission,
+    this.section,
+    this.status,
     this.administrativePosition,
+    this.academicDegree,
     super.createdAt,
     super.updatedAt,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      id: RxInt(json['id'] ?? 0),
-      name: RxString(json['name'] ?? ""),
-      email: RxString(json['email'] ?? ""),
-      phone: RxString(json['phone'] ?? ""),
-      profileImage: RxString(json['profile_image'] ?? ""),
-      department: RxString(json['department'] ?? ""),
-      academicDegree: RxString(json['academic_degree'] ?? ""),
-      administrativePosition: RxString(json['administrative_position'] ?? ""),
-      createdAt: RxString(json['created_at'] ?? ""),
-      updatedAt: RxString(json['updated_at'] ?? ""),
+      id: json['id'],
+      name: json['name'],
+      dateOfBrith: json['date_of_brith'],
+      email: json['email'],
+      permission: json['permission'],
+      phones: json['phones'],
+      profileImage: json['profile_image'],
+      section: json['section'],
+      academicDegree: json['academic_degree'],
+      administrativePosition: json['administrative_position'],
+      status: json['status'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "id": id.value,
-      "name": name?.value,
-      "email": email?.value,
-      "phone": phone?.value,
-      "department": department?.value,
-      "academic_degree": academicDegree?.value,
-      "administrative_position": administrativePosition?.value,
-      "profile_image": profileImage?.value,
-      "created_at": createdAt?.value,
-      "updated_at": updatedAt?.value,
+      "id": id,
+      "name": name,
+      "date_of_brith": dateOfBrith,
+      "email": email,
+      "permission": permission,
+      "profile_image": profileImage,
+      "phones": phones,
+      "student_section": section,
+      "status": status,
+      "section": section,
+      "academic_degree":academicDegree,
+      "administrative_position":administrativePosition,
+      "created_at": createdAt,
+      "updated_at": updatedAt,
     };
   }
-
 }

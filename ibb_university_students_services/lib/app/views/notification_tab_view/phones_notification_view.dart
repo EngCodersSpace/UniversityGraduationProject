@@ -27,7 +27,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           MainText(
-                            "Notifications",
+                            "Notifications".tr,
                             textColor: AppColors.inverseMainTextColor,
                           ),
                           if(AppData.role == "doctor")...[
@@ -42,7 +42,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                       for (String key
                           in controller.notificationGroups.keys) ...[
                         SecText(
-                          (key == controller.today)?"Today":key,
+                          (key == controller.today)?"Today".tr:key,
                           textColor: AppColors.inverseSecTextColor,
                         ),
                         for (int i = 0;

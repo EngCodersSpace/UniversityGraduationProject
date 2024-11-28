@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/student_model.dart';
 import '../../models/result.dart';
 import '../../services/user_services.dart';
 import '../../models/user_model.dart';
@@ -21,6 +23,7 @@ class HomeTabController extends GetxController
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
+      print(user is Student);
     }
     tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     _setUpTimer();
@@ -33,6 +36,30 @@ class HomeTabController extends GetxController
     tabController.dispose();
   }
 
+  bool scrollEvent(UserScrollNotification s) {
+    try {
+      Duration d = const Duration(seconds: 0, milliseconds: 500);
+      _timer.cancel();
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        _newsCurrentPos++;
+        _newsCurrentPos == 3 ? _newsCurrentPos = 2 : null;
+        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
+      } else if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        _newsCurrentPos--;
+        _newsCurrentPos == -1 ? _newsCurrentPos = 0 : null;
+        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
+      }
+      _setUpTimer();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return false;
+  }
+
   void _setUpTimer() {
     try {
       const duration = Duration(seconds: 5);
@@ -40,7 +67,9 @@ class HomeTabController extends GetxController
         _newsCurrentPos++;
         if (_newsCurrentPos > 2) {
           _newsCurrentPos = 0;
-          scrollController.jumpTo(0);
+          if (scrollController.hasClients) {
+            scrollController.jumpTo(0);
+          }
         }
         newsAnimate(Get.width * 0.8, _newsCurrentPos,
             const Duration(seconds: 2, milliseconds: 500));
@@ -56,7 +85,7 @@ class HomeTabController extends GetxController
     try {
       _timer.cancel();
       _newsCurrentPos = 0;
-      tabController.animateTo(0);
+      tabController.index = (0);
       _setUpTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -67,9 +96,11 @@ class HomeTabController extends GetxController
 
   void newsAnimate(double width, int i, Duration duration) {
     try {
-      scrollController.animateTo(width * i,
-          duration: duration, curve: Curves.easeInOutQuart);
-      tabController.animateTo(i, duration: duration);
+      if (scrollController.hasClients) {
+        scrollController.animateTo(width * i,
+            duration: duration, curve: Curves.easeInOutQuart);
+        tabController.animateTo(i, duration: duration);
+      }
     } catch (e) {
       if (kDebugMode) {
         print("${e.toString()}\n_____________________________________________");
@@ -77,14 +108,15 @@ class HomeTabController extends GetxController
     }
   }
 
-  void libraryRoute(){
+  void libraryRoute() {
     Get.toNamed("/library");
   }
-  void lectureScheduleRoute(){
+
+  void lectureScheduleRoute() {
     Get.find<MainController>().changeTabIndex(1);
   }
-  void academicCardRoute(){
+
+  void academicCardRoute() {
     Get.toNamed("/academic_card");
   }
-  
 }

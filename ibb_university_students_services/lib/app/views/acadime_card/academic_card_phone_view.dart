@@ -37,12 +37,13 @@ class AcademicCardPhoneView extends GetView {
                               child: AcademicCardLastPayment()
                             )
                           ])),
+                      SizedBox(
+                        height: Get.height*0.03,
+                      ),
                       TabPageSelector(
                         selectedColor: AppColors.inverseCardColor,
                       ),
-                      SizedBox(
-                        height: Get.height*0.1,
-                      )
+
                     ],
                   ),
             )),
