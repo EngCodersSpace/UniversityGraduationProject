@@ -1,53 +1,67 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:ibb_university_students_services/app/models/lavel_model.dart';
+import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class Student extends User {
-
-  RxString? level;
-  RxString? division;
+  int? studyPlaneId;
+  Level? level;
+  Section? section;
+  String? system;
+  String? enrollmentYear;
 
   Student({
     required super.id,
     super.name,
+    super.dateOfBrith,
     super.email,
-    super.phone,
+    super.phones,
     super.profileImage,
-    super.department,
+    super.permission,
+    this.studyPlaneId,
     this.level,
-    this.division,
+    this.section,
+    this.system,
+    this.enrollmentYear,
     super.createdAt,
     super.updatedAt,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      id: RxInt(json['id'] ?? 0),
-      name: RxString(json['name'] ?? ""),
-      email: RxString(json['email'] ?? ""),
-      phone: RxString(json['phone'] ?? ""),
-      profileImage: RxString(json['profile_image'] ?? ""),
-      level: RxString(json['level'] ?? ""),
-      department: RxString(json['department'] ?? ""),
-      division: RxString(json['division'] ?? ""),
-      createdAt: RxString(json['created_at'] ?? ""),
-      updatedAt: RxString(json['updated_at'] ?? ""),
+      id: json['id'],
+      name: json['name'],
+      dateOfBrith: json['date_of_brith'],
+      email: json['email'],
+      permission: json['permission'],
+      phones: json['phones'],
+      profileImage: json['profile_image'],
+      studyPlaneId: json['study_plan_id'],
+      level: json['student_level'],
+      section: json['student_section'],
+      system: json['student_system'],
+      enrollmentYear: json['enrollment_year'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {
-      "id": id.value,
-      "name": name?.value,
-      "email": email?.value,
-      "phone": phone?.value,
-      "level": level?.value,
-      "department": department?.value,
-      "division": division?.value,
-      "profile_image": profileImage?.value,
-      "created_at": createdAt?.value,
-      "updated_at": updatedAt?.value,
+      "id": id,
+      "name": name,
+      "date_of_brith": dateOfBrith,
+      "email": email,
+      "permission": permission,
+      "profile_image": profileImage,
+      "phones": phones,
+      "study_plan_id": studyPlaneId,
+      "student_level": level,
+      "student_section": section,
+      "student_system": system,
+      "enrollment_year": enrollmentYear,
+      "created_at": createdAt,
+      "updated_at": updatedAt,
     };
   }
-
 }
