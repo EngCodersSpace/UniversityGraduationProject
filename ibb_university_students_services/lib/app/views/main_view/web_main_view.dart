@@ -212,10 +212,10 @@ class WebMainView extends GetView<MainController> {
   }
 
   List screens = [
-    WebProfileView(),
-    WebNotificationView(),
+    const WebProfileView(),
+    const WebNotificationView(),
     WebHomeTab(),
-    WebTableTabView(),
+    const WebTableTabView(),
     Center(
       child: MainText(
         "Main page 3",

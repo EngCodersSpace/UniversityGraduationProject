@@ -1,4 +1,4 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 
 class Level {
   int id;
@@ -16,7 +16,7 @@ class Level {
   factory Level.fromJson(Map<String, dynamic> json) {
     return Level(
       id: json['id'],
-      name: json['name'],
+      name: json['level_name'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

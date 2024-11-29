@@ -35,7 +35,7 @@ class DayCard extends StatelessWidget {
             child: SecText(
               text,
               fontWeight: FontWeight.bold,
-              fontSize: (Get.locale?.languageCode == "ar")?12:18,
+              fontSize: (Get.locale?.languageCode == "ar")?12:16,
               textColor:
               (selected) ? AppColors.mainTextColor : AppColors.secTextColor,
             )),

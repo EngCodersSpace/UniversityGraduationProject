@@ -6,7 +6,7 @@ import 'package:ibb_university_students_services/app/services/http_provider/http
 
 
 void main() {
-  HttpProvider.init(baseUrl: "");
+  HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
   runApp(const MyApp());
 }
 

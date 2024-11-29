@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';

@@ -116,9 +116,9 @@ module.exports = (sequelize, DataTypes) => {
   });
 
 
-  student.prototype.getFullData = function () {
+  student.prototype.getFullData = function (user = this.user) {
     const student = this.toJSON();
-    if (this.user) {
+    if (user) {
       delete student.user;
       return { ...this.user.toJSON(), ...student };
     }

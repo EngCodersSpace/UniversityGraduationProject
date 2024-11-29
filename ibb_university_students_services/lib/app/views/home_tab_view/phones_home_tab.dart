@@ -54,22 +54,24 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                           AppColors.inverseIconColor,
                                     ),
                                     CircleAvatar(
-                                      backgroundColor: (controller
-                                                  .user?.profileImage) !=
-                                              ""
-                                          ? AppColors.tabBackColor
-                                          : AppColors.inverseMainTextColor,
+                                      backgroundColor:
+                                          (controller.user?.profileImage) != ""
+                                              ? AppColors.tabBackColor
+                                              : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage: (controller
-                                                  .user?.profileImage) !=
-                                              ""
-                                          ? AssetImage(controller
-                                                  .user?.profileImage ??
-                                              "")
+                                      backgroundImage: ((controller
+                                                      .user?.profileImage !=
+                                                  null) &&
+                                              (controller.user?.profileImage !=
+                                                  ""))
+                                          ? AssetImage(
+                                              controller.user?.profileImage ??
+                                                  "")
                                           : null,
-                                      child: (controller
-                                                  .user?.profileImage) !=
-                                              ""
+                                      child: ((controller.user?.profileImage !=
+                                                  null) ||
+                                              (controller.user?.profileImage !=
+                                                  ""))
                                           ? null
                                           : MainText(
                                               controller.user?.name?[0] ??
@@ -134,18 +136,18 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 SizedBox(
                                                   width: width * 0.025,
                                                 ),
-                                                // Flexible(
-                                                //   child: MainText(
-                                                //       (controller.user
-                                                //                   as Student)
-                                                //               .department??
-                                                //           "Unknown".tr,
-                                                //       textColor: AppColors
-                                                //           .secTextColor,
-                                                //       fontSize: 14 *
-                                                //           Get.textScaleFactor,
-                                                //       height: 0),
-                                                // )
+                                                Flexible(
+                                                  child: MainText(
+                                                      (controller.user
+                                                                  as Student)
+                                                              .section
+                                                              ?.name ??
+                                                          "Unknown".tr,
+                                                      textColor: AppColors
+                                                          .secTextColor,
+                                                      fontSize: 14,
+                                                      height: 0),
+                                                )
                                               ],
                                             ),
                                           ],
@@ -179,12 +181,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   width: width * 0.025,
                                                 ),
                                                 MainText(
-                                                    (controller.user as Student)
-                                                            .level
-                                                            ?.name ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor),
+                                                  (controller.user as Student)
+                                                          .level
+                                                          ?.name ??
+                                                      "??".tr,
+                                                  textColor:
+                                                      AppColors.secTextColor,
+                                                  fontSize: 14,
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -218,12 +222,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   width: width * 0.025,
                                                 ),
                                                 MainText(
-                                                    (controller.user as Student)
-                                                            .level
-                                                            ?.name ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor),
+                                                  (controller.user as Student)
+                                                          .level
+                                                          ?.name ??
+                                                      "??".tr,
+                                                  textColor:
+                                                      AppColors.secTextColor,
+                                                  fontSize: 14,
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -308,8 +314,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .academicDegree
-                                                             ??
+                                                            .academicDegree ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,
@@ -354,8 +359,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .administrativePosition
-                                                             ??
+                                                            .administrativePosition ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,

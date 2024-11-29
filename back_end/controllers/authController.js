@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
         const foundUser = await user.scope('with_hidden_data').findOne({
             where: { user_id },
             include: [
-                { model: doctor, as: 'doctor' }, 
+                { model: doctor, as: 'doctor', },{ model: student, as: 'student' } 
             ],
         });
         
@@ -47,21 +47,30 @@ exports.login = async (req, res) => {
             user_id: foundUser.user_id
         }, REFRESH_SECRET_KEY, { expiresIn: '7d' }); 
 
+        if (foundUser.doctor == null) {
+            delete foundUser.doctor;
+        } else if (foundUser.student === null) {
+            delete foundUser.student;
+        }
+
         foundUser.refreshToken = refreshToken;
         await foundUser.save();
 
-        const responseUser = {
-            user_id: foundUser.user_id,
-            user_name: foundUser.user_name,
-            date_of_birth: foundUser.date_of_birth,
-            profile_picture: foundUser.profile_picture,
-            collegeName: foundUser.collegeName,
-            email: foundUser.email,
-            permission: foundUser.permission,
-            department: foundUser.doctor?.department || null,
-            academic_degree: foundUser.doctor?.academic_degree || null,
-            administrative_position: foundUser.doctor?.administrative_position || null,
-        };
+        if(foundUser.doctor == null ){
+            responseUser = foundUser.toJSON();
+            user_type = "student";
+            tempStudent = responseUser.student;
+            delete responseUser.student;
+            delete responseUser.doctor;
+            responseUser = { ...responseUser, ...tempStudent };
+        }else if (foundUser.student == null){
+            responseUser = foundUser.toJSON();
+            user_type = "doctor";
+            tempDoctor = responseUser.doctor;
+            delete responseUser.student;
+            delete responseUser.doctor;
+            responseUser = { ...responseUser, ...tempDoctor };
+        }
 
         // Send response
         res.json({
@@ -69,6 +78,7 @@ exports.login = async (req, res) => {
             accessToken,
             refreshToken,
             user: responseUser,
+            user_type:user_type,
         });
     } catch (error) {
         console.error("Error during login:", error.message);

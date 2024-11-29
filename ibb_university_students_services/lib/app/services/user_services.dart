@@ -77,17 +77,18 @@ class UserServices {
       {bool rememberMe = false}) async {
     late Response? response;
     try {
-      response = await HttpProvider.post("auth/login",
-          data: {"id": id, "password": password});
+      response = await HttpProvider.post("login",
+          data: {"user_id": id, "password": password});
       if (response?.statusCode == 200) {
+        response?.data["user_type"] = response.data["user"]["permission"];
         if (response?.data["user_type"] == "student") {
           _user = Student.fromJson(response?.data["user"]);
-          AppData.role = "student";
+          AppData.role = response?.data["user"]["permission"];
         } else {
           _user = Doctor.fromJson(response?.data["user"]);
           AppData.role = "doctor";
         }
-        HttpProvider.addAuthTokenInterceptor(response?.data["token"]);
+        HttpProvider.addAuthTokenInterceptor(response?.data["accessToken"]);
         if (rememberMe) {
           _prefs ??= await SharedPreferences.getInstance();
           await _prefs?.setStringList("credentials", <String>[id, password]);
@@ -187,7 +188,6 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    print(_user.runtimeType);
     if (_user != null && !hardFetch) {
       return Result(
         data: _user,

@@ -10,6 +10,7 @@ import '../user_services.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
+  static  String? refreshToken;
 
   static init({
     String baseUrl = "",
@@ -133,6 +134,7 @@ class HttpProvider {
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
+      addAuthTokenInterceptor(refreshToken??"");
       Response response = await _dio.post("auth/refresh");
       if (response.statusCode == 401) {
         // re login if remember me data available
@@ -144,9 +146,8 @@ class HttpProvider {
           get_x.Get.offAllNamed("/login");
         }
       } else if (response.statusCode == 200) {
-        removeAuthTokenInterceptor();
         addAuthTokenInterceptor(
-          response.data["token"]["original"]["access_token"],
+          response.data["accessToken"],
         );
         return await _dio.request(
           requestOptions.path,

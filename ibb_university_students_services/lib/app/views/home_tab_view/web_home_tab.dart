@@ -38,7 +38,7 @@ class WebHomeTab extends GetView<HomeTabController> {
             )),
           )
         : const Center(
-            child: const CircularProgressIndicator(),
+            child:  CircularProgressIndicator(),
           ));
   }
 }
