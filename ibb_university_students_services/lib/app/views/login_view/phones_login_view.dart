@@ -73,7 +73,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      fontSize: 24,
                     ),
                     SizedBox(
                       height: height * 0.05,

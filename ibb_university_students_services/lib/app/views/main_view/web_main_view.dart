@@ -16,8 +16,7 @@ class WebMainView extends GetView<MainController> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Obx(() =>(!controller.loading.value)?Scaffold(
+    return Obx(() => Scaffold(
           body: Container(
             color: AppColors.backColor,
             child: Row(
@@ -31,176 +30,212 @@ class WebMainView extends GetView<MainController> {
                   height: Get.height,
                   child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: Get.width * 0.05,
-                            backgroundColor: AppColors.mainCardColor,
-                          ),
-                          CircleAvatar(
-                            backgroundColor:
-                                (controller.user?.profileImage) != null
-                                    ? AppColors.tabBackColor
-                                    : AppColors.inverseMainTextColor,
-                            maxRadius: Get.width * 0.05 - 2,
-                            backgroundImage: (controller
-                                        .user?.profileImage) !=
-                                    null
-                                ? AssetImage(
-                                    controller.user?.profileImage ?? "")
-                                : null,
-                            child: (controller.user?.profileImage) != ""
-                                ? null
-                                : MainText(controller.user?.name?[0] ??
-                                    "".toUpperCase()),
-                          ),
-                        ],
-                      ),
+                      Image.asset("assets/images/ibb_university_logo.png"),
                       SizedBox(
-                        height: Get.height * 0.03,
+                        height: Get.height * 0.005,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SecText(
-                            "Name : ${controller.user?.name ?? ""}",
+                          MainText(
+                            "IBB",
                             textColor: AppColors.mainTextColor,
                           ),
-                          SecText(
-                            "ID : ${controller.user?.id}",
+                          MainText(
+                            "UNIVERCITY",
                             textColor: AppColors.mainTextColor,
+                          ),
+                          Divider(
+                            thickness: 0.2,
+                            color: AppColors.tabBackColor,
                           ),
                         ],
                       ),
                       SizedBox(
                         height: Get.height * 0.03,
                       ),
-                      Obx(()=>Column(
-                        children: [
-
-                          InkWell(
-                            onTap: ()=>controller.selectedIndex.value = 0,
-                            child: Container(
-                              height: Get.height *0.08,
-                              color: (controller.selectedIndex.value == 0)?AppColors.tabBackColor:AppColors.inverseCardColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.person_outline_sharp,
-                                    color: (controller.selectedIndex.value == 0)?AppColors.secTextColor:AppColors.mainTextColor,
+                      Obx(() => Column(
+                            children: [
+                              InkWell(
+                                onTap: () => controller.selectedIndex.value = 0,
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 0)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.person_outline_sharp,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Profile".tr,
+                                        fontSize:
+                                            (Get.locale?.languageCode == "en")
+                                                ? 10
+                                                : 8,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
-                                  SecText(
-                                    "Profile".tr,
-                                    fontSize: (Get.locale?.languageCode == "en") ? 10 : 8,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: (controller.selectedIndex.value == 0)?AppColors.secTextColor:AppColors.mainTextColor,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: ()=>controller.changeTabIndex(1),
-                            child: Container(
-                                height: Get.height *0.08,
-                              color: (controller.selectedIndex.value == 1)?AppColors.tabBackColor:AppColors.inverseCardColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.notifications_none,
-                                    color: (controller.selectedIndex.value == 1)?AppColors.secTextColor:AppColors.mainTextColor,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(1),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 1)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.notifications_none,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Notification".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
-                                  SecText(
-                                    "Notification".tr,
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: (controller.selectedIndex.value == 1)?AppColors.secTextColor:AppColors.mainTextColor,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: ()=>controller.changeTabIndex(2),
-                            child: Container(
-                              height: Get.height *0.08,
-                              color: (controller.selectedIndex.value == 2)?AppColors.tabBackColor:AppColors.inverseCardColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.home_outlined,
-                                    color: (controller.selectedIndex.value == 2)?AppColors.secTextColor:AppColors.mainTextColor,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(2),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 2)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.home_outlined,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    2)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Home".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    2)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
-                                  SecText(
-                                    "Home".tr,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: (controller.selectedIndex.value == 2)?AppColors.secTextColor:AppColors.mainTextColor,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: ()=>controller.changeTabIndex(3),
-                            child: Container(
-                              height: Get.height *0.08,
-                              color: (controller.selectedIndex.value == 3)?AppColors.tabBackColor:AppColors.inverseCardColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.calendar_month,
-                                    color: (controller.selectedIndex.value == 3)?AppColors.secTextColor:AppColors.mainTextColor,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(3),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 3)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    3)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Table".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    3)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
-                                  SecText(
-                                    "Table".tr,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: (controller.selectedIndex.value == 3)?AppColors.secTextColor:AppColors.mainTextColor,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: ()=>controller.changeTabIndex(4),
-                            child: Container(
-                              height: Get.height *0.08,
-                              color: (controller.selectedIndex.value == 4)?AppColors.tabBackColor:AppColors.inverseCardColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.repartition,
-                                    color: (controller.selectedIndex.value == 4)?AppColors.secTextColor:AppColors.mainTextColor,
+                              InkWell(
+                                onTap: () => controller.changeTabIndex(4),
+                                child: Container(
+                                  height: Get.height * 0.08,
+                                  color: (controller.selectedIndex.value == 4)
+                                      ? AppColors.tabBackColor
+                                      : AppColors.inverseCardColor,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.repartition,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    4)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SecText(
+                                        "Reports".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    4)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
                                   ),
-                                  SecText(
-                                    "Reports".tr,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: (controller.selectedIndex.value == 4)?AppColors.secTextColor:AppColors.mainTextColor,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      )),
+                            ],
+                          )),
                     ],
                   ),
                 ),
                 Container(
-                  color: AppColors.backColor,
+                  color: AppColors.mainTextColor,
                   width: Get.width * 0.8,
                   height: Get.height,
                   child: screens[controller.selectedIndex.value],
