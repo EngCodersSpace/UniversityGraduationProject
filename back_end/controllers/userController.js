@@ -6,7 +6,13 @@ const { user, doctor , student ,study_plan,level,section} = require('../models')
 exports.getUserById = async (req, res) => {
     const { id } = req.params;
     try {
-        const foundUser = await user.findByPk(id);
+        const foundUser = await user.findOne({
+            where:{user_id:id},
+            include: [
+                {model: student, as : 'student'},
+                {model: doctor , as : 'doctor' }
+            ],
+        });
         if (!foundUser) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -16,6 +22,14 @@ exports.getUserById = async (req, res) => {
     }
 };
 
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await user.findAll();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
 
 exports.deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -32,61 +46,29 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await user.findAll();
-        res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-};
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-exports.getDoctorById = async (req, res) => {
-    const { id: user_id } = req.params;
-
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{ model: doctor, as: 'doctor' }],
-        });
-
-        if (!foundUser || !foundUser.doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-
-        const doctorData=foundUser.doctor.getFullData();
-        res.status(200).json(doctorData);
-    } catch (error) {
-        console.error("Error fetching doctor:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-};
 
 exports.getDoctorById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const doctor = await doctor.findOne({
+        const Doctor = await doctor.findOne({
             where: { doctor_id: id }, 
             include: [
                 {
                     model: user,
-                    as: 'user', 
-                    attributes: ['user_id', 'user_name', 'email', 'permission'], 
+                    as: 'user' 
                 },
             ],
         });
 
-        if (!doctor) {
+        if (!Doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
         res.status(200).json({
             message: 'Doctor found',
-            doctor,
+            data: Doctor,
         });
     } catch (error) {
         console.error('Error fetching doctor by ID:', error.message);

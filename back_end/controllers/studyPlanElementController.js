@@ -1,4 +1,4 @@
-const { study_plan_elment, study_plan, subject, doctor, prerequisite } = require('../models'); 
+const { study_plan_elment, study_plan, subject, doctor,section,level } = require('../models'); 
 const { validationResult } = require('express-validator');
 
 
@@ -9,21 +9,21 @@ exports.createStudyPlanElement = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-    const { study_plan_id, subject_id, doctor_id, section, level, number_of_units, term } = req.body;
+    const {} = req.body;
 
-    const newStudyPlanElement = await study_plan_elment.create({
-      study_plan_id,
-      subject_id,
-      doctor_id,
-      section,
-      level,
-      number_of_units,
-      term
+    const newStudyPlanElement = await study_plan_elment.create(req.body,{
+      include: [
+        { model: study_plan, as: 'study_plan' },
+        { model: subject, as: 'subject' },
+        { model: doctor, as: 'doctor' },
+        { model: section, as: 'section' },
+        { model: level, as: 'level' },
+      ]
     });
-
+    
     res.status(201).json({
       message: 'Study Plan Element created successfully',
-      study_plan_elment: newStudyPlanElement
+      data: newStudyPlanElement
     });
   } catch (err) {
     res.status(500).json({ message: 'Error creating study plan element', error: err.message });
