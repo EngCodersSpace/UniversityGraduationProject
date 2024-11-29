@@ -243,7 +243,7 @@ class WebMainView extends GetView<MainController> {
               ],
             ),
           ),
-        ));
+        ):const Center(child: CircularProgressIndicator(),));
   }
 
   List screens = [

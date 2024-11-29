@@ -8,9 +8,13 @@ class CustomTextFormField extends StatelessWidget {
     super.key,
     this.isPassword = false,
     this.readOnly = false,
+    this.enable,
+    this.minLines,
+    this.maxLines,
     this.controller,
     this.validator,
     this.icon,
+    this.color = Colors.black,
     this.labelText,
     this.width,
     this.onTap,
@@ -18,21 +22,33 @@ class CustomTextFormField extends StatelessWidget {
     this.focusNode,
     this.onFieldSubmitted,
     this.onSaved,
+    this.onChange,
+    this.keyboardType,
+    this.prefixIcon,
   });
 
   bool isPassword;
+  bool readOnly;
   RxBool hide = true.obs;
+  bool? enable;
+  int? minLines;
+  int? maxLines;
+  double? width;
   TextEditingController? controller;
   IconData? icon;
   String? labelText;
-  double? width;
+  FocusNode? focusNode;
+  IconData? prefixIcon;
+  Color color;
+  TextInputType? keyboardType;
+
   String? Function(String?)? validator;
   void Function()? onTap;
   void Function(PointerDownEvent)? onTapOutside;
-  FocusNode? focusNode;
   void Function(String?)? onSaved;
   void Function(String?)? onFieldSubmitted;
-  bool readOnly;
+  void Function(String?)? onChange;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,22 +57,37 @@ class CustomTextFormField extends StatelessWidget {
       child: (isPassword)
           ? Obx(() => TextFormField(
                 controller: controller,
+                enabled: enable,
+                readOnly: readOnly,
+                keyboardType: keyboardType,
                 focusNode: focusNode,
                 onSaved: onSaved,
+                onChanged: onChange,
                 onFieldSubmitted: onFieldSubmitted,
-                readOnly: readOnly,
                 onTap: onTap,
                 onTapOutside: onTapOutside,
                 obscureText: hide.value,
                 validator: validator,
                 decoration: InputDecoration(
                     isDense: true,
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    icon: Icon(
-                      icon,
-                      size: 0,
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: color,),
+                        borderRadius: const BorderRadius.all(Radius.circular(25))),
+                    border:  OutlineInputBorder(
+                      borderSide: BorderSide(color: color),
+                        borderRadius: const BorderRadius.all(Radius.circular(30)),
+
                     ),
+                    prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                    prefixIconColor: color,
+                    iconColor: color,
+                    icon: (icon != null)
+                        ? Icon(
+                            icon,
+                            size: 40,
+                            color: color,
+                          )
+                        : null,
                     labelText: labelText,
                     suffixIcon: Obx(() {
                       return GestureDetector(
@@ -71,22 +102,37 @@ class CustomTextFormField extends StatelessWidget {
               ))
           : TextFormField(
               controller: controller,
-              focusNode: focusNode,
-              onSaved: onSaved,
-              onFieldSubmitted: onFieldSubmitted,
               readOnly: readOnly,
+              keyboardType: keyboardType,
+              focusNode: focusNode,
+              enabled: enable,
+              minLines: minLines,
+              maxLines: minLines ?? 1,
+              onSaved: onSaved,
+              onChanged: onChange,
+              onFieldSubmitted: onFieldSubmitted,
               onTap: onTap,
               onTapOutside: onTapOutside,
               validator: validator,
               decoration: InputDecoration(
                 isDense: true,
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                icon: Icon(
-                  icon,
-                  size: 0,
-                ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: color,),
+                    borderRadius: const BorderRadius.all(Radius.circular(25))),
+                border:  OutlineInputBorder(
+                    borderSide: BorderSide(color: color,),
+                    borderRadius: const BorderRadius.all(Radius.circular(25))),
+                  prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                prefixIconColor: color,
+                iconColor: color,
+                icon: (icon != null)
+                    ? Icon(
+                        icon,
+                        size: 40,
+                      )
+                    : null,
                 labelText: labelText,
+                labelStyle: TextStyle(color: color)
               ),
             ),
     );

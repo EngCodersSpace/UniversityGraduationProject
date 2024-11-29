@@ -32,7 +32,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SecText("Lectures",textColor: AppColors.inverseSecTextColor),
+                          SecText("Lectures".tr,textColor: AppColors.inverseSecTextColor),
                           SecText(controller.selectedDayName,textColor: AppColors.inverseSecTextColor)
                         ],
                       ),
@@ -81,7 +81,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                           IconButton(
                               onPressed: () {
                                 (controller.selected.value > 0)
-                                    ? controller.selected.value--
+                                    ? controller.selectedDayChange(controller.selected.value-1)
                                     : null;
                               },
                               icon: Icon(
@@ -93,7 +93,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                             children: [
                               DayCard(
                                 height: height * 0.09,
-                                text: "sun",
+                                text: "sun".tr,
                                 selected: (controller.selected.value == 0),
                                 onPress: () {
                                   controller.selectedDayChange(0);
@@ -101,35 +101,35 @@ class PhoneTableTabView extends GetView<TableTabController> {
                               ),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "mon",
+                                  text: "mon".tr,
                                   selected: (controller.selected.value == 1),
                                   onPress: () {
                                     controller.selectedDayChange(1);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "tue",
+                                  text: "tue".tr,
                                   selected: (controller.selected.value == 2),
                                   onPress: () {
                                     controller.selectedDayChange(2);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "wed",
+                                  text: "wed".tr,
                                   selected: (controller.selected.value == 3),
                                   onPress: () {
                                     controller.selectedDayChange(3);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "thu",
+                                  text: "thu".tr,
                                   selected: (controller.selected.value == 4),
                                   onPress: () {
                                     controller.selectedDayChange(4);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "sat",
+                                  text: "sat".tr,
                                   selected: (controller.selected.value == 5),
                                   onPress: () {
                                     controller.selectedDayChange(5);
@@ -139,7 +139,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                           IconButton(
                               onPressed: () {
                                 (controller.selected.value < 5)
-                                    ? controller.selected.value++
+                                    ?controller.selectedDayChange(controller.selected.value+1)
                                     : null;
                               },
                               icon: Icon(Icons.arrow_forward_ios,

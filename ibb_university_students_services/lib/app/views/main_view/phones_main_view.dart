@@ -85,7 +85,7 @@ class PhoneMainView extends GetView<MainController> {
       ),
     ];
     return Obx(
-      () => Scaffold(
+      () => (!controller.loading.value)?Scaffold(
         body: screens[controller.selectedIndex.value],
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.inverseIconColor,
@@ -100,9 +100,9 @@ class PhoneMainView extends GetView<MainController> {
           color: AppColors.backColor,
           shadowColor: Colors.black,
           elevation: 32,
-          height:(Get.locale?.languageCode == 'en')?height * 0.09:height * 0.09,
+          height:height * 0.096,
           padding: EdgeInsets.symmetric(
-              vertical: height * 0.007, horizontal: width * 0.03),
+              vertical: height * 0.004, horizontal: width * 0.03),
           notchMargin: 8,
           shape: const CircularNotchedRectangle(),
           child: Row(
@@ -214,7 +214,7 @@ class PhoneMainView extends GetView<MainController> {
             ],
           ),
         ),
-      ),
+      ):const Center(child: CircularProgressIndicator(),),
     );
   }
 

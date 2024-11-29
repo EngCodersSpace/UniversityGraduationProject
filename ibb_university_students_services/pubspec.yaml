@@ -40,6 +40,7 @@ dependencies:
   dio: ^5.7.0
   connectivity_plus: ^6.1.0
   shared_preferences: ^2.3.3
+  barcode_widget: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,6 +69,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
      - assets/images/
+     - assets/images/services_cards/
+     - assets/images/library/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

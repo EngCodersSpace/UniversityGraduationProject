@@ -6,22 +6,20 @@ import 'package:ibb_university_students_services/app/services/user_services.dart
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
-
   late CustomFloatActionButtonLocation currentPos;
-
   User? user;
-
+  RxBool loading = true.obs;
   @override
+
   void onInit() async {
     currentPos = CustomFloatActionButtonLocation(
         x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
-
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }
-
     super.onInit();
+    loading.value = false;
   }
 
   // Method to change the selected index
@@ -54,23 +52,9 @@ class MainController extends GetxController {
           : currentPos = CustomFloatActionButtonLocation(
               x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
     }
-
     selectedIndex.value = index;
   }
 
-  void changewebtabindex(int index) {
-    if (index == 0) {
-      selectedIndex(0);
-    } else if (index == 1) {
-      selectedIndex(1);
-    } else if (index == 2) {
-      selectedIndex(2);
-    } else if (index == 3) {
-      selectedIndex(3);
-    } else if (index == 4) {
-      selectedIndex(4);
-    }
-  }
 
   @override
   void onClose() {}

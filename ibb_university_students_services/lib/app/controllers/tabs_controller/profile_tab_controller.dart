@@ -23,6 +23,7 @@ class ProfileController extends GetxController {
 
   void changeLang(String lang) {
   Get.updateLocale(Locale(lang));
+  language.value = lang;
   Get.find<MainController>().changeTabIndex(4);
   }
 
