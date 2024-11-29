@@ -73,7 +73,7 @@ class LibraryController extends GetxController
 
   void showBookInfo(Map<String,dynamic> book) {
     selectedBook = book;
-    Get.dialog(PopUpBookInfoCard());
+    Get.dialog(const PopUpBookInfoCard());
   }
 
   void searching(String? val) {}

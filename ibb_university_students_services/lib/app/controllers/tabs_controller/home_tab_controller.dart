@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
 import '../../models/result.dart';
@@ -22,7 +23,6 @@ class HomeTabController extends GetxController
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
-      print(user is Student);
     }
     tabController = TabController(length: 3, initialIndex: 0, vsync: this);
     _setUpTimer();

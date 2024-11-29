@@ -4,7 +4,7 @@ import 'package:ibb_university_students_services/app/controllers/library_control
 
 import '../../../components/custom_text.dart';
 import '../../../globals.dart';
-import '../components/bookContainer.dart';
+import '../components/book_container.dart';
 
 class LecturesTab extends GetView<LibraryController> {
   const LecturesTab({super.key});

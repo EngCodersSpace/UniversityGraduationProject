@@ -243,14 +243,14 @@ class WebMainView extends GetView<MainController> {
               ],
             ),
           ),
-        ):const Center(child: CircularProgressIndicator(),));
+        ));
   }
 
   List screens = [
-    WebProfileView(),
-    WebNotificationView(),
+    const WebProfileView(),
+    const WebNotificationView(),
     WebHomeTab(),
-    WebTableTabView(),
+    const WebTableTabView(),
     Center(
       child: MainText(
         "Main page 3",

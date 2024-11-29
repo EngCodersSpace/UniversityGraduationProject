@@ -9,7 +9,7 @@ import '../../../globals.dart';
 // ignore: must_be_immutable
 class PopUpBookInfoCard extends GetView<LibraryController> {
 
-  PopUpBookInfoCard({super.key});
+  const PopUpBookInfoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +87,8 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                CustomButton(text:"Download",onPress: (){},size: Size(120, 40),),
-                                CustomButton(text:"View",onPress: (){},size: Size(120, 40),),
+                                CustomButton(text:"Download",onPress: (){},size: const Size(120, 40),),
+                                CustomButton(text:"View",onPress: (){},size: const Size(120, 40),),
                               ],
                             ),
                           ],

@@ -22,8 +22,8 @@ class WebHomeTab extends GetView<HomeTabController> {
       child: SafeArea(
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-            child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+            child: SizedBox(
               height: hight,
               width: width,
               child: Column(
@@ -38,19 +38,19 @@ class WebHomeTab extends GetView<HomeTabController> {
                             backgroundColor: AppColors.mainCardColor),
                         CircleAvatar(
                           backgroundColor:
-                              (controller.user?.profileImage?.value) != null
+                              (controller.user?.profileImage) != null
                                   ? AppColors.inverseCardColor
                                   : AppColors.inverseMainTextColor,
                           maxRadius: Get.width * 0.05 - 2,
                           backgroundImage: (controller
-                                      .user?.profileImage?.value) !=
+                                      .user?.profileImage) !=
                                   null
                               ? AssetImage(
-                                  controller.user?.profileImage?.value ?? "")
+                                  controller.user?.profileImage ?? "")
                               : null,
-                          child: (controller.user?.profileImage?.value) != ""
+                          child: (controller.user?.profileImage) != ""
                               ? null
-                              : MainText(controller.user?.name?.value[0] ??
+                              : MainText(controller.user?.name?[0] ??
                                   "".toUpperCase()),
                         ),
                       ],
@@ -62,7 +62,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SecText(
-                          "NAME :${controller.user?.name?.value ?? " "}",
+                          "NAME :${controller.user?.name ?? " "}",
                           textColor: AppColors.inverseCardColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -122,7 +122,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/bookshelf_4797659.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
-                                        alignment: Alignment(-0.55, 0.0),
+                                        alignment: const Alignment(-0.55, 0.0),
                                       ),
                                       MainText(
                                         "Library",
@@ -170,7 +170,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/calendar.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
-                                        alignment: Alignment(-0.3, 0.0),
+                                        alignment: const Alignment(-0.3, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -228,7 +228,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/payment.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
-                                        alignment: Alignment(-0.55, 0.0),
+                                        alignment: const Alignment(-0.55, 0.0),
                                       ),
                                       MainText(
                                         "Payment",
@@ -281,7 +281,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/bookshelf_4797659.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
-                                        alignment: Alignment(-0.55, 0.0),
+                                        alignment: const Alignment(-0.55, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -339,7 +339,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/a-.png",
                                         width: width * 1 / 7,
                                         height: hight * 1 / 7,
-                                        alignment: Alignment(-0.6, 0.0),
+                                        alignment: const Alignment(-0.6, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -397,7 +397,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         "assets/images/exam_11776326.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
-                                        alignment: Alignment(-0.35, 0.0),
+                                        alignment: const Alignment(-0.35, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:

@@ -187,7 +187,6 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    print(_user.runtimeType);
     if (_user != null && !hardFetch) {
       return Result(
         data: _user,

@@ -1,5 +1,3 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:ibb_university_students_services/app/models/lavel_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
@@ -43,7 +41,6 @@ class Doctor extends User {
     );
   }
 
-  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
