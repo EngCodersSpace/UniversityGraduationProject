@@ -73,7 +73,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      fontSize: 24,
                     ),
                     SizedBox(
                       height: height * 0.05,
@@ -184,9 +184,15 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                       ),
                     ),
-                    if(controller.loggingFiled.value)...[
-                      SecText("Login Filed",textColor: Colors.redAccent,),
-                      SecText(controller.loggingFiledMessage.value,textColor: Colors.redAccent,),
+                    if (controller.loggingFiled.value) ...[
+                      SecText(
+                        "Login Filed",
+                        textColor: Colors.redAccent,
+                      ),
+                      SecText(
+                        controller.loggingFiledMessage.value,
+                        textColor: Colors.redAccent,
+                      ),
                     ],
                     SizedBox(
                       height: height * 0.6 * 0.05,

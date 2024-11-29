@@ -30,49 +30,24 @@ class WebMainView extends GetView<MainController> {
                   height: Get.height,
                   child: Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: Get.width * 0.05,
-                            backgroundColor: AppColors.mainCardColor,
-                          ),
-                          CircleAvatar(
-                            backgroundColor:
-                                (controller.user?.profileImage?.value) != null
-                                    ? AppColors.tabBackColor
-                                    : AppColors.inverseMainTextColor,
-                            maxRadius: Get.width * 0.05 - 2,
-                            backgroundImage: (controller
-                                        .user?.profileImage?.value) !=
-                                    null
-                                ? AssetImage(
-                                    controller.user?.profileImage?.value ?? "")
-                                : null,
-                            child: (controller.user?.profileImage?.value) != ""
-                                ? null
-                                : MainText(controller.user?.name?.value[0] ??
-                                    "".toUpperCase()),
-                          ),
-                        ],
-                      ),
+                      Image.asset("assets/images/ibb_university_logo.png"),
                       SizedBox(
-                        height: Get.height * 0.03,
-                      ),
-                      Divider(
-                        thickness: 0.1,
-                        color: AppColors.coverColor,
+                        height: Get.height * 0.005,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SecText(
-                            "NAME :${controller.user?.name?.value ?? " "}",
+                          MainText(
+                            "IBB",
                             textColor: AppColors.mainTextColor,
                           ),
-                          SecText(
-                            "ID : ${controller.user?.id}",
+                          MainText(
+                            "UNIVERCITY",
                             textColor: AppColors.mainTextColor,
+                          ),
+                          Divider(
+                            thickness: 0.2,
+                            color: AppColors.tabBackColor,
                           ),
                         ],
                       ),
