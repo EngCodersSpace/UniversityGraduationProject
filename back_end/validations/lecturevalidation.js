@@ -12,12 +12,12 @@ const createLectureValidator = [
     .withMessage('Doctor ID is required and should be a valid integer'),
 
   body('lecture_section_id')
-    .isIn()
+    .isInt()
     .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('lecture-section-ID is required and should be a valid integer'),
 
   body('lecture_level_id')
-    .isIn()
+    .isInt()
     .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('lecture-level-ID is required and should be a valid integer'),
 
