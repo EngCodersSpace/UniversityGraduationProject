@@ -6,7 +6,15 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 
+const corsOptions = {
+  origin: '*', // Replace with your Flutter Web app's URL (use IP or domain)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only necessary methods
+  allowedHeaders: ['Accept', 'Content-Type', 'Authorization'], // Headers Flutter Web might send
+  credentials: true, // Allow cookies or Authorization headers
+};
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); 
 
 const mainRouter = require('./routes/mainRoute')
 const authRoutes = require('./routes/authRoute')
