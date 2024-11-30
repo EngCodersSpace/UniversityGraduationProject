@@ -12,12 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      //(1) Relationship One-to-Many between "student table" and  "section table"
-      section.hasMany(models.student, {
-        foreignKey: 'student_section_id',
-      });
 
-      //(2) Relationship One-to-Many between "student table" and  "section table"
+
+      //(1) Relationship One-to-Many between "student table" and  "section table"
       section.hasMany(models.study_plan_elment, {
         foreignKey: 'section_id',
       });
@@ -37,11 +34,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'exam_section_id',
       });
 
-            //(5) Relationship One-to-Many between "grade" and  "section table"
-            section.hasMany(models.grade, {
-              foreignKey: 'section_id',
-            });
+      //(5) Relationship One-to-Many between "grade" and  "section table"
+      section.hasMany(models.grade, {
+        foreignKey: 'section_id',
+      });
 
+
+      //(6) Relationship One-to-Many between "user" and  "section table"
+      section.hasMany(models.user, {
+        foreignKey: 'user_section_id',
+      });
 
     }
   }

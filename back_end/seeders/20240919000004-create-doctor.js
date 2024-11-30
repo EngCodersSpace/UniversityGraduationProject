@@ -11,7 +11,6 @@ module.exports = {
     
     const doctors = users.map(usr => ({
       doctor_id: usr.user_id, 
-      department: faker.commerce.department(),
       status: faker.helpers.arrayElement(['Active', 'Inactive']),
       academic_degree: faker.helpers.arrayElement(['Doctor', 'Professor', 'Master', 'Bachelor']),
       administrative_position: faker.helpers.arrayElement(['Dean', 'Vice Dean', 'Lecturer', 'Department Chair', 'None']),

@@ -32,10 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_level_id',//the foreign Key in the student table refers to level table
       });
 
-      //(6)Relationship One-to-Many between "student table" and  "section table"
-      student.belongsTo(models.section, {
-        foreignKey: 'student_section_id',//the foreign Key in the student table refers to section table
-      });
+
 
 
     }
@@ -61,16 +58,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'SET NULL',//if a study_plan is delete the student associated with him will be set null in the study_plan_id
       onUpdate: 'CASCADE',//if a study_plan is update the student associated with him will be updated
-    },
-    student_section_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'sections',
-        key: 'id',
-      },
-      onDelete: 'NO ACTION',
-      onUpdate: 'CASCADE',
     },
     student_level_id: {
       type: DataTypes.INTEGER,
