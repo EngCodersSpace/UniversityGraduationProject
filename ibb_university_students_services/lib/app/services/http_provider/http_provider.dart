@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../components/pop_up_cards/alert_message_card.dart';
 import '../user_services.dart';
 
@@ -15,12 +14,14 @@ class HttpProvider {
   static init({
     String baseUrl = "",
     String accept = 'application/json',
+    String contentType = 'application/json',
     Duration connectTimeout = const Duration(seconds: 3),
     Duration sendTimeout = const Duration(seconds: 3),
     Duration receiveTimeout = const Duration(seconds: 3),
   }) {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
+    _dio.options.headers["Content-Type"] = contentType;
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
@@ -34,6 +35,7 @@ class HttpProvider {
           print("error: ${error.message}");
           print("status code: ${error.response?.statusCode}");
           print("status headers: ${error.response?.isRedirect}");
+          print("request headers: ${error.requestOptions.headers}");
           print(connectivityResult);
         }
         if (connectivityResult.contains(ConnectivityResult.none)) {

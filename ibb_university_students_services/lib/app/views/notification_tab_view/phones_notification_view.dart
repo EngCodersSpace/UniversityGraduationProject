@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
 import '../../components/notification_card.dart';
 import '../../controllers/tabs_controller/notification_tab_controller.dart';
 
@@ -30,7 +31,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             "Notifications".tr,
                             textColor: AppColors.inverseMainTextColor,
                           ),
-                          if(AppData.role == "doctor")...[
+                          if(["teacher","doctor"].contains(UserServices.permission))...[
                             IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
                           ]
 

@@ -25,13 +25,13 @@ class Doctor extends User {
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      id: json['id'],
-      name: json['name'],
+      id: json['user_id'],
+      name: json['user_name'],
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],
       phones: json['phones'],
-      profileImage: json['profile_image'],
+      // profileImage: json['profile_picture'],
       section: json['section'],
       academicDegree: json['academic_degree'],
       administrativePosition: json['administrative_position'],
