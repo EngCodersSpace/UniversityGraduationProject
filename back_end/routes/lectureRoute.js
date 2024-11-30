@@ -10,7 +10,8 @@ const {
     getLecturesByLevel,
     getLecturesByDoctor,
     getLectureBySubject,
-    getSpecificLecture
+    getSpecificLecture,
+    getLecturesGroupedByCriteria
  } = require('../controllers/lectureController');
 const vali=require('../validations/lecturevalidation')
 
@@ -29,6 +30,8 @@ router.get('/lectures/level/:levelId', getLecturesByLevel);
 router.get('/lectures/doctor/:doctorId', getLecturesByDoctor);
 router.get('/lectures/subject/:subjectId', getLectureBySubject);
 router.get('/lectures/Specific', getSpecificLecture);
+// router.get('/lectures/lectures/:section_id?/:level_id?', getLecturesGroupedByCriteria);
+router.get('/lectures/lectures/:section_id?/:level_id?/:year?/:term?/:day?', getLecturesGroupedByCriteria);
 
 
 module.exports = router;

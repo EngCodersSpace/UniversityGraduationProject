@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { lecture, subject, doctor ,section , level } = require('../models'); 
+const { lecture, subject, doctor ,section , level , user } = require('../models'); 
 const { Sequelize} = require('sequelize');
 
 const createLecture = async (req, res) => {
@@ -277,6 +277,87 @@ const getSpecificLecture = async (req, res) => {
 
 
 
+const getLecturesGroupedByCriteria = async (req, res) => {
+    try {
+        const { section_id, level_id, year , term , day } = req.params; 
+
+        const whereClause = {};
+        if (section_id) whereClause.lecture_section_id = section_id;
+        if (level_id) whereClause.lecture_level_id = level_id;
+        if (year) whereClause.year = year;
+        if (term) whereClause.term = term;
+        if (day) whereClause.lecture_day = day;
+
+
+        const lectures = await lecture.findAll({
+            where: whereClause,
+            include: [
+                { model: subject, as: 'subject' },
+                { model: doctor,as: 'doctor',
+                  include: [
+                      {
+                          model: user, 
+                          as: 'user', 
+                          attributes: ['user_name'], 
+                      },
+                  ],
+                },
+                { model: section, as: 'section' },
+                { model: level, as: 'level' },
+            ],
+        });
+
+        if (!lectures.length) {
+            return res.status(404).json({ message: 'No lectures found for the specified criteria' });
+        }
+
+        const organizedLectures = { lectures: { sections: {} }};
+        
+        lectures.forEach(lec => {
+            const sectionName = lec.section.section_name; 
+            const levelName = lec.level.level_name;
+            const year = lec.year; 
+            const term = lec.term; 
+            const day = lec.lecture_day; 
+            const time = lec.lecture_time; 
+
+            if (!organizedLectures.lectures.sections[sectionName]) {
+                organizedLectures.lectures.sections[sectionName] = {};
+            }
+
+            if (!organizedLectures.lectures.sections[sectionName][levelName]) {
+                organizedLectures.lectures.sections[sectionName][levelName] = {};
+            }
+
+            if (!organizedLectures.lectures.sections[sectionName][levelName][year]) {
+                organizedLectures.lectures.sections[sectionName][levelName][year] = {};
+            }
+
+            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term]) {
+                organizedLectures.lectures.sections[sectionName][levelName][year][term] = {};
+            }
+
+            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term][day]) {
+                organizedLectures.lectures.sections[sectionName][levelName][year][term][day] = [];
+            }
+
+            organizedLectures.lectures.sections[sectionName][levelName][year][term][day].push({
+                id: lec.id,
+                title: lec.subject.name, 
+                startTime: time, 
+                duration: lec.lecture_duration, 
+                lecturer: lec.doctor.user.user_name, 
+                location: lec.lecture_room, 
+            });
+        });
+
+        res.status(200).json({ message: 'Lectures retrieved successfully', data: organizedLectures });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving lectures', error: error.message });
+    }
+};
+
 
 module.exports = {
   createLecture,
@@ -288,5 +369,6 @@ module.exports = {
   getLecturesByLevel,
   getLecturesByDoctor,
   getLectureBySubject,
-  getSpecificLecture
+  getSpecificLecture,
+  getLecturesGroupedByCriteria
 };
