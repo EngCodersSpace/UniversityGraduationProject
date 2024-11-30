@@ -42,11 +42,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                   ? AppColors.inverseCardColor
                                   : AppColors.inverseMainTextColor,
                           maxRadius: Get.width * 0.05 - 2,
-                          backgroundImage: (controller
-                                      .user?.profileImage) !=
+                          backgroundImage: (controller.user?.profileImage) !=
                                   null
-                              ? AssetImage(
-                                  controller.user?.profileImage ?? "")
+                              ? AssetImage(controller.user?.profileImage ?? "")
                               : null,
                           child: (controller.user?.profileImage) != ""
                               ? null
@@ -119,7 +117,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/bookshelf_4797659.png",
+                                        "assets/images/services_cards/bookshelf_4797659.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
                                         alignment: const Alignment(-0.55, 0.0),
@@ -167,7 +165,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/calendar.png",
+                                        "assets/images/services_cards/calendar.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
                                         alignment: const Alignment(-0.3, 0.0),
@@ -225,7 +223,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/payment.png",
+                                        "assets/images/services_cards/payment.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
                                         alignment: const Alignment(-0.55, 0.0),
@@ -278,7 +276,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/bookshelf_4797659.png",
+                                        "assets/images/services_cards/credit-card.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
                                         alignment: const Alignment(-0.55, 0.0),
@@ -336,7 +334,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/a-.png",
+                                        "assets/images/services_cards/a-.png",
                                         width: width * 1 / 7,
                                         height: hight * 1 / 7,
                                         alignment: const Alignment(-0.6, 0.0),
@@ -394,7 +392,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Image.asset(
-                                        "assets/images/exam_11776326.png",
+                                        "assets/images/services_cards/exam_11776326.png",
                                         width: width * 1 / 8,
                                         height: hight * 1 / 8,
                                         alignment: const Alignment(-0.35, 0.0),

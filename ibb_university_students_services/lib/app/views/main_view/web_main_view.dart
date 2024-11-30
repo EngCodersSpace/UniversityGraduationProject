@@ -59,10 +59,19 @@ class WebMainView extends GetView<MainController> {
                               InkWell(
                                 onTap: () => controller.selectedIndex.value = 0,
                                 child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 2)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
-                                  color: (controller.selectedIndex.value == 0)
-                                      ? AppColors.tabBackColor
-                                      : AppColors.inverseCardColor,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -96,10 +105,19 @@ class WebMainView extends GetView<MainController> {
                               InkWell(
                                 onTap: () => controller.changeTabIndex(1),
                                 child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 2)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
-                                  color: (controller.selectedIndex.value == 1)
-                                      ? AppColors.tabBackColor
-                                      : AppColors.inverseCardColor,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -130,10 +148,19 @@ class WebMainView extends GetView<MainController> {
                               InkWell(
                                 onTap: () => controller.changeTabIndex(2),
                                 child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 2)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
-                                  color: (controller.selectedIndex.value == 2)
-                                      ? AppColors.tabBackColor
-                                      : AppColors.inverseCardColor,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -164,10 +191,19 @@ class WebMainView extends GetView<MainController> {
                               InkWell(
                                 onTap: () => controller.changeTabIndex(3),
                                 child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 2)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
-                                  color: (controller.selectedIndex.value == 3)
-                                      ? AppColors.tabBackColor
-                                      : AppColors.inverseCardColor,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -198,10 +234,19 @@ class WebMainView extends GetView<MainController> {
                               InkWell(
                                 onTap: () => controller.changeTabIndex(4),
                                 child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 2)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
-                                  color: (controller.selectedIndex.value == 4)
-                                      ? AppColors.tabBackColor
-                                      : AppColors.inverseCardColor,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:

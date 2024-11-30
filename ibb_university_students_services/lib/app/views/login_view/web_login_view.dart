@@ -73,7 +73,7 @@ class WebLoginView extends GetView<LoginController> {
               ),
 
               Container(
-                  width: width * 0.26,
+                  width: width * 0.28,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.backColor,
@@ -98,7 +98,7 @@ class WebLoginView extends GetView<LoginController> {
                                     SecText(
                                       'login'.tr,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 30,
+                                      fontSize: 27,
                                     ),
                                   ]),
                             ),
@@ -188,8 +188,24 @@ class WebLoginView extends GetView<LoginController> {
                                         quarterTurns: 2,
                                         child: Icon(Icons.login,
                                             color: AppColors.mainTextColor)),
-                                size: Size(width * 0.12, 40),
-                              ))
+                                size: Size(width * 0.15, 40),
+                              )),
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SecText("Remember me",
+                                textColor: AppColors.linkTextColor),
+                            Checkbox(
+                                value: controller.rememberMe.value,
+                                onChanged: controller.toggleRememberMe),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
                       ],
                     ),
                   )),
