@@ -82,16 +82,13 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'student',
 
     defaultScope: {
-      attributes: { exclude: ['study_plan_id', 'student_section_id', 'student_level_id'] },
+      attributes: { exclude: ['study_plan_id',  'student_level_id'] },
       include: [
         {
           association: 'study_plan',
 
         },
-        {
-          association: 'section',
-
-        },
+     
         {
           association: 'level',
 
