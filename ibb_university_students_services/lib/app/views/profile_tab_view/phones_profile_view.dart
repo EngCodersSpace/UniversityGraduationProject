@@ -64,8 +64,10 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     (controller.user.profileImage != ""))
                                     ? null
                                     : Center(child: MainText(
-                                    controller.user.name?[0] ??
-                                        "".toUpperCase()),),
+                                  controller.user.name?[0] ??
+                                      "".toUpperCase(),
+                                  fontSize: 50,
+                                ),),
                               ),
                             ],
                           ),

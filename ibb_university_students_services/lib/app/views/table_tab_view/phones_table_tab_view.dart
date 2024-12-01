@@ -23,33 +23,41 @@ class PhoneTableTabView extends GetView<TableTabController> {
             Align(
               alignment: Alignment.bottomCenter,
               child: SizedBox(
-                width: width,
-                height: height*0.72,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: width*0.05,vertical: height*0.03),
-                  child:Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SecText("Lectures".tr,textColor: AppColors.inverseSecTextColor),
-                          SecText(controller.selectedDayName,textColor: AppColors.inverseSecTextColor)
-                        ],
-                      ),
-                      SizedBox(height: height*0.03),
-                      for(int i=0; i<(controller.selectedDay?.length??0);i++)...[
-                        LectureCard(content: controller.selectedDay?[i], height: height*0.56*(1/2),),
-                        if(i<((controller.selectedDay?.length??0)-1))
-                          SizedBox(height: height*0.03,)
-                      ]
-
-                    ],
-                  ),
-                )
-              ),
+                  width: width,
+                  height: height * 0.68,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width * 0.05, vertical: height * 0.03),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SecText("Lectures".tr,
+                                textColor: AppColors.inverseSecTextColor),
+                            SecText(controller.selectedDayName,
+                                textColor: AppColors.inverseSecTextColor)
+                          ],
+                        ),
+                        SizedBox(height: height * 0.03),
+                        for (int i = 0;
+                            i < (controller.selectedDay?.length ?? 0);
+                            i++) ...[
+                          LectureCard(
+                            content: controller.selectedDay?[i],
+                            height: height * 0.56 * (1 / 2),
+                          ),
+                          if (i < ((controller.selectedDay?.length ?? 0) - 1))
+                            SizedBox(
+                              height: height * 0.03,
+                            )
+                        ]
+                      ],
+                    ),
+                  )),
             ),
             Container(
-                height: height * 0.28,
+                height: height * 0.32,
                 width: width,
                 decoration: BoxDecoration(
                   color: AppColors.mainCardColor,
@@ -62,26 +70,94 @@ class PhoneTableTabView extends GetView<TableTabController> {
                     )
                   ],
                   borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(32)),
+                      const BorderRadius.vertical(bottom: Radius.circular(32)),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CustomButton(
-                      onPress: () {},
-                      text: "Show All",
-                      size: Size(width * 0.4, 60),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: Get.width / 3,
+                          child: SecText("Department",textAlign: TextAlign.center,),
+                        ),
+                        SizedBox(
+                          width: Get.width / 3,
+                          child: SecText("Level",textAlign: TextAlign.center,),
+                        ),
+                        SizedBox(
+                          width: Get.width / 3,
+                          child: SecText("Term",textAlign: TextAlign.center,),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.inverseCardColor,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          width: Get.width / 3.3,
+                          child: Center(
+                            child: Obx(
+                              ()=> DropdownButton(
+                                items: controller.departments,
+                                onChanged: controller.changeDepartment,
+                                value: controller.selectedDepartment.value,
+                                underline: const SizedBox(),
+                                dropdownColor: AppColors.inverseCardColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                          color: AppColors.inverseCardColor,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          width: Get.width / 3.3,
+                          child: Center(
+                            child: Obx(()=>DropdownButton(
+                              items: controller.levels,
+                              onChanged: controller.changeLevel,
+                              value: controller.selectedLevel.value,
+                              underline: const SizedBox(),
+                              dropdownColor: AppColors.inverseCardColor,
+                            ),)
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.inverseCardColor,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          width: Get.width / 3.3,
+                          child: Center(
+                            child: Obx(()=>DropdownButton(
+                              items: controller.terms,
+                              onChanged: controller.changeTerm,
+                              value: controller.selectedTerm.value,
+                              underline: const SizedBox(),
+                              dropdownColor: AppColors.inverseCardColor,
+                            ),),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
-                      width: width*0.96,
+                      width: width * 0.96,
                       height: height * 0.12,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
                               onPressed: () {
                                 (controller.selected.value > 0)
-                                    ? controller.selectedDayChange(controller.selected.value-1)
+                                    ? controller.selectedDayChange(
+                                        controller.selected.value - 1)
                                     : null;
                               },
                               icon: Icon(
@@ -89,47 +165,47 @@ class PhoneTableTabView extends GetView<TableTabController> {
                                 color: AppColors.inverseIconColor,
                               )),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              DayCard(
+                                  height: height * 0.09,
+                                  text: "sat".tr,
+                                  selected: (controller.selected.value == 0),
+                                  onPress: () {
+                                    controller.selectedDayChange(0);
+                                  }),
                               DayCard(
                                 height: height * 0.09,
                                 text: "sun".tr,
-                                selected: (controller.selected.value == 0),
+                                selected: (controller.selected.value == 1),
                                 onPress: () {
-                                  controller.selectedDayChange(0);
+                                  controller.selectedDayChange(1);
                                 },
                               ),
                               DayCard(
                                   height: height * 0.09,
                                   text: "mon".tr,
-                                  selected: (controller.selected.value == 1),
-                                  onPress: () {
-                                    controller.selectedDayChange(1);
-                                  }),
-                              DayCard(
-                                  height: height * 0.09,
-                                  text: "tue".tr,
                                   selected: (controller.selected.value == 2),
                                   onPress: () {
                                     controller.selectedDayChange(2);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "wed".tr,
+                                  text: "tue".tr,
                                   selected: (controller.selected.value == 3),
                                   onPress: () {
                                     controller.selectedDayChange(3);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "thu".tr,
+                                  text: "wed".tr,
                                   selected: (controller.selected.value == 4),
                                   onPress: () {
                                     controller.selectedDayChange(4);
                                   }),
                               DayCard(
                                   height: height * 0.09,
-                                  text: "sat".tr,
+                                  text: "thu".tr,
                                   selected: (controller.selected.value == 5),
                                   onPress: () {
                                     controller.selectedDayChange(5);
@@ -139,7 +215,8 @@ class PhoneTableTabView extends GetView<TableTabController> {
                           IconButton(
                               onPressed: () {
                                 (controller.selected.value < 5)
-                                    ?controller.selectedDayChange(controller.selected.value+1)
+                                    ? controller.selectedDayChange(
+                                        controller.selected.value + 1)
                                     : null;
                               },
                               icon: Icon(Icons.arrow_forward_ios,

@@ -7,11 +7,11 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 
 import '../globals.dart';
-import '../models/table_time_model.dart';
+import '../models/lecture_model.dart';
 
 class LectureCard extends StatelessWidget {
 
-  TableDayContent? content;
+  Lecture? content;
   double height;
 
   LectureCard({
@@ -70,19 +70,19 @@ class LectureCard extends StatelessWidget {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(32)),
                       ),
-                      child: SecText("  ${content?.startTime} - ${content?.endTime}  "),
+                      child: SecText("  ${content?.startTime} - ${DateTime.tryParse(content?.startTime??"00:00")?.add(Duration(minutes: int.parse(content?.duration??"0")))}  "),
                     ),
                     Container(
                       decoration:BoxDecoration(
-                        color:(content?.canceled?.value??false)?Colors.redAccent:Colors.greenAccent,
+                        color:(content?.canceled??false)?Colors.redAccent:Colors.greenAccent,
                         borderRadius:
                         const BorderRadius.all(Radius.circular(32)),
                       ),
-                      child: (content?.canceled?.value??false)?SecText("  canceled  "):SecText("  correct  "),
+                      child: (content?.canceled??false)?SecText("  canceled  "):SecText("  correct  "),
                     ),
                   ],
                 ),
-                MainText(content?.title.value??"Unknown".tr),
+                MainText(content?.title??"Unknown".tr),
               ],
             ),
           ),

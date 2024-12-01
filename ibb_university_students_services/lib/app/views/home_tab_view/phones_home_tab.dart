@@ -69,13 +69,16 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                   "")
                                           : null,
                                       child: ((controller.user?.profileImage !=
-                                                  null) ||
+                                                  null) &&
                                               (controller.user?.profileImage !=
                                                   ""))
                                           ? null
                                           : MainText(
                                               controller.user?.name?[0] ??
-                                                  "".toUpperCase()),
+                                                  "".toUpperCase(),
+                                              fontSize: 50,
+                                              textColor: AppColors.secTextColor,
+                                            ),
                                     )
                                   ],
                                 ),
