@@ -311,7 +311,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             return res.status(404).json({ message: 'No lectures found for the specified criteria' });
         }
 
-        const organizedLectures = { lectures: { sections: {} }};
+        const organizedLectures = {};
         
         lectures.forEach(lec => {
             const sectionName = lec.section.section_name; 
@@ -321,33 +321,21 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             const day = lec.lecture_day; 
             const time = lec.lecture_time; 
 
-            if (!organizedLectures.lectures.sections[sectionName]) {
-                organizedLectures.lectures.sections[sectionName] = {};
+            if (!organizedLectures[term]) {
+                organizedLectures[term] = {};
             }
 
-            if (!organizedLectures.lectures.sections[sectionName][levelName]) {
-                organizedLectures.lectures.sections[sectionName][levelName] = {};
+            if (!organizedLectures[term][day]) {
+                organizedLectures[term][day] = [];
             }
 
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year] = {};
-            }
-
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year][term] = {};
-            }
-
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term][day]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year][term][day] = [];
-            }
-
-            organizedLectures.lectures.sections[sectionName][levelName][year][term][day].push({
+            organizedLectures[term][day].push({
                 id: lec.id,
                 title: lec.subject.name, 
                 startTime: time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
-                location: lec.lecture_room, 
+                lecture_room: lec.lecture_room, 
             });
         });
 
