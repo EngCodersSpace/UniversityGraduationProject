@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
 
 
-      //(1) Relationship One-to-Many between "student table" and  "section table"
+      //(1) Relationship One-to-Many between "study_plan_elment table" and  "section table"
       section.hasMany(models.study_plan_elment, {
         foreignKey: 'section_id',
       });
@@ -44,6 +44,14 @@ module.exports = (sequelize, DataTypes) => {
       section.hasMany(models.user, {
         foreignKey: 'user_section_id',
       });
+
+
+      //(7)Relationship Many-to-Many between "document table" and  "section table through documentSectionLevel"
+      section.belongsToMany(models.document, {
+        through: 'documentSectionLevel',
+        foreignKey: 'sectionId',
+      });
+
 
     }
   }
