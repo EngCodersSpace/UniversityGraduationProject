@@ -24,9 +24,11 @@ const examRoute=require('./routes/examRoute')
 const gradeRoute=require('./routes/gradeRoute')
 const lectureRoute=require('./routes/lectureRoute')
 const phoneNumber=require('./routes/phoneNumberRoute')
+const getAllData=require('./routes/dataRoute')
 
 
 
+app.use(getAllData);
 app.use(mainRouter);
 app.use(authRoutes);
 app.use(userRoutes);
