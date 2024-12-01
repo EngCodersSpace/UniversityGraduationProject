@@ -36,8 +36,6 @@ app.use(gradeRoute);
 app.use(lectureRoute);
 app.use(phoneNumber);
 
-app.use(cors());
-
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
