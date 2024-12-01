@@ -28,7 +28,7 @@ class TableTimeServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("lectures/lectures/$sectionId/$levelId/$year");
+      response = await HttpProvider.get("lectures/$sectionId/$levelId/$year");
       if (response?.statusCode == 200) {
         _lectures ??= {};
         if(_lectures?[sectionId.toString()] == null){

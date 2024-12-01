@@ -11,11 +11,12 @@ import '../../models/result.dart';
 class TableTabController extends GetxController {
   late Rx<TableDays?> tableTime;
   List<Lecture>? selectedDay;
-  RxInt selected = 0.obs;
+  RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
-  RxString selectedTerm = "Term 1".obs;
   RxString selectedDepartment = "Computer".obs;
   RxString selectedLevel = "Level 5".obs;
+  RxString selectedYear = "2024".obs;
+  RxString selectedTerm = "Term 1".obs;
   Map termsData = {};
 
 
@@ -25,21 +26,25 @@ class TableTabController extends GetxController {
   List<DropdownMenuItem<String>> levels = [
     DropdownMenuItem<String>(value: "Level 5", child: SecText("Level 5",textColor: AppColors.mainTextColor,),),
   ];
+  List<DropdownMenuItem<String>> years = [
+    DropdownMenuItem<String>(value: "2024", child: SecText("2024",textColor: AppColors.mainTextColor)),
+    DropdownMenuItem<String>(value: "2023", child: SecText("2023",textColor: AppColors.mainTextColor)),
+  ];
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(value: "Term 1", child: SecText("Term 1",textColor: AppColors.mainTextColor)),
     DropdownMenuItem<String>(value: "Term 2", child: SecText("Term 2",textColor: AppColors.mainTextColor)),
   ];
+
+
   @override
   void onInit() async{
     // TODO: implement onInit
     Result res = await TableTimeServices.fetchTableTime(sectionId: 5,levelId: 5,year: "2024",);
     if(res.statusCode == 200){
-      print(res.data[selectedTerm.value]);
       termsData = res.data;
       tableTime = Rx(res.data[selectedTerm.value]);
     }
-    selectedDayChange(0);
-    print(tableTime?.value);
+    selectedDayChange(selected.value);
     super.onInit();
   }
 
@@ -50,6 +55,10 @@ class TableTabController extends GetxController {
   void changeLevel(String? val) {
     if(val == null)return;
     selectedLevel.value = val;
+  }
+  void changeYear(String? val) {
+    if(val == null)return;
+    selectedYear.value = val;
   }
   void changeTerm(String? val) {
     if(val == null)return;

@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
+import 'package:intl/intl.dart';
 
 import '../globals.dart';
 import '../models/lecture_model.dart';
@@ -19,9 +20,11 @@ class LectureCard extends StatelessWidget {
     required this.height,
     super.key,
   });
+  DateFormat timeFormat = DateFormat.Hms();
 
   @override
   Widget build(BuildContext context) {
+    DateTime endTime = timeFormat.parse((content?.startTime??"00:00:00")).add(Duration(minutes: content?.duration??0));
     return Container(
       height: height,
       width: double.maxFinite,
@@ -70,7 +73,8 @@ class LectureCard extends StatelessWidget {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(32)),
                       ),
-                      child: SecText("  ${content?.startTime} - ${DateTime.tryParse(content?.startTime??"00:00")?.add(Duration(minutes: int.parse(content?.duration??"0")))}  "),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: SecText("${content?.startTime??"00:00:00"} - ${timeFormat.format(endTime)}"),
                     ),
                     Container(
                       decoration:BoxDecoration(
@@ -78,11 +82,12 @@ class LectureCard extends StatelessWidget {
                         borderRadius:
                         const BorderRadius.all(Radius.circular(32)),
                       ),
-                      child: (content?.canceled??false)?SecText("  canceled  "):SecText("  correct  "),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: (content?.canceled??false)?SecText("Canceled".tr):SecText("Confirmed".tr),
                     ),
                   ],
                 ),
-                MainText(content?.title??"Unknown".tr),
+                MainText(content?.subjectName??"Unknown".tr),
               ],
             ),
           ),

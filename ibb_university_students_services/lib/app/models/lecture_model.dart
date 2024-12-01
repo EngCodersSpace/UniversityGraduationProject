@@ -1,19 +1,19 @@
-
-class Lecture{
+class Lecture {
   Lecture({
     required this.id,
-    this.title,
+    this.subjectName,
     this.startTime,
     this.duration,
     this.doctor,
-    this.hall ,
+    this.hall,
     this.description,
-    this.canceled ,
+    this.canceled,
   });
+
   int id;
-  String? title;
+  String? subjectName;
   String? startTime;
-  String? duration;
+  int? duration;
   String? doctor;
   String? hall;
   String? description;
@@ -27,17 +27,19 @@ class Lecture{
     // "lecturer": "William Rowe",
     // "lecture_room": "99Ji2"
     return Lecture(
-      id: json['id'],
-      startTime: json['startTime'],
-      duration: json['duration'],
-      doctor: json['lecturer'],
-      hall: json['lecture_room']
+        id: json['id'],
+        subjectName: json['subject_name'],
+        startTime: json['startTime'],
+        duration: json['duration'],
+        doctor: json['lecturer'],
+        hall: json['lecture_room']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "id": id,
+      "subject_name":subjectName,
       "startTime": startTime,
       "duration": duration,
       "lecturer": doctor,
