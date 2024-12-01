@@ -15,27 +15,36 @@ class WebProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Obx(() => (controller.initState.value)
         ? Container(
-            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 15.0),
             width: Get.width,
             height: Get.height,
             color: AppColors.inverseIconColor,
-            child: Stack(
-              alignment: Alignment.center,
+            child: Column(
               children: [
-                Container(
-                  height: Get.height * 0.16,
-                  width: Get.width * 0.6,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(width: 3, color: AppColors.tabBackColor),
-                    image: DecorationImage(
-                        image: AssetImage(controller.user.profileImage!),
-                        fit: BoxFit.fill),
-                  ),
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Container(
+                      alignment: Alignment.topCenter,
+                      height: Get.height * 0.22,
+                      width: Get.width * 0.4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border:
+                            Border.all(width: 3, color: AppColors.tabBackColor),
+                        image: DecorationImage(
+                            image: AssetImage(controller.user.profileImage!),
+                            fit: BoxFit.fill),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: Get.height * 0.05,
                 ),
                 Container(
                   alignment: Alignment.bottomCenter,
-                  width: Get.width * 0.6,
+                  width: Get.width * 0.4,
                   height: Get.height * 0.6,
                   padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   decoration: BoxDecoration(
@@ -49,16 +58,17 @@ class WebProfileView extends GetView<ProfileController> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: Get.width * 0.2,
+                                width: Get.width * 0.02,
                               ),
                               SecText(
                                 "User Name".tr,
                                 fontWeight: FontWeight.bold,
                               ),
                               SizedBox(
-                                width: Get.width * 0.4,
+                                width: Get.width * 0.06,
                               ),
                               SecText(controller.user.name!),
                             ],
@@ -66,29 +76,29 @@ class WebProfileView extends GetView<ProfileController> {
                           Row(
                             children: [
                               SizedBox(
-                                width: Get.width * 0.2,
+                                width: Get.width * 0.04,
                               ),
                               SecText(
                                 "ID".tr,
                                 fontWeight: FontWeight.bold,
                               ),
                               SizedBox(
-                                width: Get.width * 0.5,
+                                width: Get.width * 0.06,
                               ),
-                              SecText(controller.user.id as String),
+                              SecText(controller.user.id.toString()),
                             ],
                           ),
                           Row(
                             children: [
                               SizedBox(
-                                width: Get.width * 0.2,
+                                width: Get.width * 0.03,
                               ),
                               SecText(
                                 "Email".tr,
                                 fontWeight: FontWeight.bold,
                               ),
                               SizedBox(
-                                width: Get.width * 0.4,
+                                width: Get.width * 0.06,
                               ),
                               SecText(controller.user.email ?? "Unknown".tr),
                             ],
@@ -96,14 +106,14 @@ class WebProfileView extends GetView<ProfileController> {
                           Row(
                             children: [
                               SizedBox(
-                                width: Get.width * 0.2,
+                                width: Get.width * 0.03,
                               ),
                               SecText(
                                 "Phone".tr,
                                 fontWeight: FontWeight.bold,
                               ),
                               SizedBox(
-                                width: Get.width * 0.4,
+                                width: Get.width * 0.06,
                               ),
                               SecText(controller.user.phones?.first ??
                                   "Unknown".tr),
@@ -113,14 +123,14 @@ class WebProfileView extends GetView<ProfileController> {
                             Row(
                               children: [
                                 SizedBox(
-                                  width: Get.width * 0.2,
+                                  width: Get.width * 0.03,
                                 ),
                                 SecText(
                                   "Department".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 SizedBox(
-                                  width: Get.width * 0.4,
+                                  width: Get.width * 0.06,
                                 ),
                                 SecText((controller.user as Student)
                                         .section
@@ -132,14 +142,14 @@ class WebProfileView extends GetView<ProfileController> {
                             Row(
                               children: [
                                 SizedBox(
-                                  width: Get.width * 0.2,
+                                  width: Get.width * 0.03,
                                 ),
                                 SecText(
                                   "Level".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 SizedBox(
-                                  width: Get.width * 0.4,
+                                  width: Get.width * 0.06,
                                 ),
                                 SecText((controller.user as Student)
                                         .level
@@ -152,14 +162,14 @@ class WebProfileView extends GetView<ProfileController> {
                             Row(
                               children: [
                                 SizedBox(
-                                  width: Get.width * 0.2,
+                                  width: Get.width * 0.02,
                                 ),
                                 SecText(
                                   "Academic Degree".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 SizedBox(
-                                  width: Get.width * 0.4,
+                                  width: Get.width * 0.06,
                                 ),
                                 SecText((controller.user as Doctor)
                                         .academicDegree
@@ -170,14 +180,14 @@ class WebProfileView extends GetView<ProfileController> {
                             Row(
                               children: [
                                 SizedBox(
-                                  width: Get.width * 0.2,
+                                  width: Get.width * 0.02,
                                 ),
                                 SecText(
                                   "administrative Position".tr,
                                   fontWeight: FontWeight.bold,
                                 ),
                                 SizedBox(
-                                  width: Get.width * 0.4,
+                                  width: Get.width * 0.06,
                                 ),
                                 SecText((controller.user as Doctor)
                                         .administrativePosition
@@ -189,9 +199,10 @@ class WebProfileView extends GetView<ProfileController> {
                           CustomButton(
                             onPress: controller.logout,
                             text: "Logout".tr,
+                            size: Size(Get.width * 0.18, Get.height * 0.05),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

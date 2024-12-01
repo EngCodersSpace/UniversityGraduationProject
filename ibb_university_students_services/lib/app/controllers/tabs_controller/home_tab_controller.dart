@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/student_model.dart';
 import '../../models/result.dart';
 import '../../services/user_services.dart';
 import '../../models/user_model.dart';

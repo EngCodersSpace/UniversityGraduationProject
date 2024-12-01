@@ -73,7 +73,7 @@ class WebLoginView extends GetView<LoginController> {
               ),
 
               Container(
-                  width: width * 0.28,
+                  width: width * 0.25,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.backColor,
@@ -98,7 +98,7 @@ class WebLoginView extends GetView<LoginController> {
                                     SecText(
                                       'login'.tr,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 27,
+                                      fontSize: 17,
                                     ),
                                   ]),
                             ),

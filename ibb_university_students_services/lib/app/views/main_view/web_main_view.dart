@@ -66,7 +66,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 2)
+                                    color: (controller.selectedIndex.value == 0)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
@@ -112,7 +112,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 2)
+                                    color: (controller.selectedIndex.value == 1)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
@@ -198,7 +198,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 2)
+                                    color: (controller.selectedIndex.value == 3)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
@@ -241,7 +241,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 2)
+                                    color: (controller.selectedIndex.value == 4)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),

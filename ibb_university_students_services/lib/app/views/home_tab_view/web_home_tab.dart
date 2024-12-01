@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/models/student_model.dart';
 
 // ignore: must_be_immutable
 class WebHomeTab extends GetView<HomeTabController> {
@@ -59,20 +60,60 @@ class WebHomeTab extends GetView<HomeTabController> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SecText(
-                          "NAME :${controller.user?.name ?? " "}",
-                          textColor: AppColors.inverseCardColor,
-                          fontWeight: FontWeight.bold,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SecText(
+                              "NAME :${controller.user?.name ?? " "}",
+                              textColor: AppColors.inverseCardColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(
+                              width: width * 0.1,
+                            ),
+                            SecText(
+                              "Department",
+                              textColor: AppColors.inverseCardColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(
+                              width: width * 0.03,
+                            ),
+                            SecText((controller.user as Student)
+                                    .section
+                                    ?.name
+                                    ?.tr ??
+                                "Unknown".tr)
+                          ],
                         ),
-                        SecText(
-                          "ID : ${controller.user?.id}",
-                          textColor: AppColors.inverseCardColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SecText(
+                              "ID : ${controller.user?.id}",
+                              textColor: AppColors.inverseCardColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(
+                              width: width * 0.15,
+                            ),
+                            SecText(
+                              "Level",
+                              textColor: AppColors.inverseCardColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            SizedBox(
+                              width: width * 0.03,
+                            ),
+                            SecText(
+                                (controller.user as Student).level?.name?.tr ??
+                                    "Unknown".tr)
+                          ],
+                        )
                       ],
                     ),
                     SizedBox(
-                      width: (width - 450) * 0.8,
+                      width: width * 0.13,
                     ),
                     IconButton(
                       onPressed: () {},
@@ -118,9 +159,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/bookshelf_4797659.png",
-                                        width: width * 1 / 8,
-                                        height: hight * 1 / 8,
-                                        alignment: const Alignment(-0.55, 0.0),
+                                        width: width * 1 / 10,
+                                        height: hight * 1 / 10,
+                                        alignment: const Alignment(-0.4, 0.0),
                                       ),
                                       MainText(
                                         "Library",
@@ -166,9 +207,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/calendar.png",
-                                        width: width * 1 / 8,
-                                        height: hight * 1 / 8,
-                                        alignment: const Alignment(-0.3, 0.0),
+                                        width: width * 1 / 10,
+                                        height: hight * 1 / 10,
+                                        alignment: const Alignment(-0.15, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -177,10 +218,12 @@ class WebHomeTab extends GetView<HomeTabController> {
                                           MainText(
                                             "lecture",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                           MainText(
                                             "schedual",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                         ],
                                       )
@@ -224,13 +267,14 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/payment.png",
-                                        width: width * 1 / 8,
-                                        height: hight * 1 / 8,
-                                        alignment: const Alignment(-0.55, 0.0),
+                                        width: width * 1 / 10,
+                                        height: hight * 1 / 10,
+                                        alignment: const Alignment(-0.4, 0.0),
                                       ),
                                       MainText(
                                         "Payment",
                                         textColor: AppColors.tabBackColor,
+                                        fontSize: 22,
                                       ),
                                     ],
                                   ),
@@ -277,9 +321,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/credit-card.png",
-                                        width: width * 1 / 8,
-                                        height: hight * 1 / 8,
-                                        alignment: const Alignment(-0.55, 0.0),
+                                        width: width * 1 / 10,
+                                        height: hight * 1 / 10,
+                                        alignment: const Alignment(-0.1, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -288,10 +332,12 @@ class WebHomeTab extends GetView<HomeTabController> {
                                           MainText(
                                             "Academic",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                           MainText(
                                             "Card",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                         ],
                                       )
@@ -335,9 +381,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/a-.png",
-                                        width: width * 1 / 7,
-                                        height: hight * 1 / 7,
-                                        alignment: const Alignment(-0.6, 0.0),
+                                        width: width * 1 / 8,
+                                        height: hight * 1 / 8,
+                                        alignment: const Alignment(-0.5, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -346,10 +392,12 @@ class WebHomeTab extends GetView<HomeTabController> {
                                           MainText(
                                             "Student",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                           MainText(
                                             "Degrees",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                         ],
                                       )
@@ -393,9 +441,9 @@ class WebHomeTab extends GetView<HomeTabController> {
                                     children: [
                                       Image.asset(
                                         "assets/images/services_cards/exam_11776326.png",
-                                        width: width * 1 / 8,
-                                        height: hight * 1 / 8,
-                                        alignment: const Alignment(-0.35, 0.0),
+                                        width: width * 1 / 10,
+                                        height: hight * 1 / 10,
+                                        alignment: const Alignment(-0.1, 0.0),
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -404,10 +452,12 @@ class WebHomeTab extends GetView<HomeTabController> {
                                           MainText(
                                             "Exam",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                           MainText(
                                             "Schedule",
                                             textColor: AppColors.tabBackColor,
+                                            fontSize: 22,
                                           ),
                                         ],
                                       )
