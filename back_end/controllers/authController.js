@@ -27,8 +27,9 @@ exports.login = async (req, res) => {
         const foundUser = await user.scope('with_hidden_data').findOne({
             where: { user_id },
             include: [
-                { model: doctor, as: 'doctor' },
+                { model: doctor,  as: 'doctor' },
                 { model: student, as: 'student'},
+                { model: section, as: 'section'},
             ],
         });
         

@@ -10,4 +10,4 @@ router.get('/get-exam/:id', examController.getExam );
 router.put('/update/:id',validate.updateExam, examController.updateExam );
 router.delete('/delete/:id',  examController.deleteExam );
 
-module.exports = router;
+module.exports = router; 

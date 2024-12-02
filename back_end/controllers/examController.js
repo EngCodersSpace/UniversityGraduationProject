@@ -1,10 +1,9 @@
 
 
-const { exam, subject } = require('../models'); 
+const { exam, subject , section,level } = require('../models'); 
 const { validationResult } = require('express-validator'); 
 
 
-// when you create an Exam first see  (subjects IDs) must be the same  
 exports.createExam = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -61,12 +60,16 @@ exports.getExam = async (req, res) => {
       const { id : exam_id } = req.params;
       const examData = await exam.findOne({
         where: { exam_id },
-        include: [{ model: subject, as: 'subject' }], 
+        include: [
+            { model: subject, as: 'subject' },
+            { model: section, as: 'section'},
+            { model: level ,  as: 'level'}
+        ], 
       });
       if (!examData || !examData.subject) {
         return res.status(404).json({ message: 'Exam not found' });
       }
-      res.status(200).json(examData);
+      res.status(200).json({ message: `This is Exam of ${id} ID`, Exam :examData});
     } catch (err) {
       res.status(500).json({ message: 'Error fetching exam', error: err.message });
     }
@@ -75,10 +78,14 @@ exports.getExam = async (req, res) => {
 exports.getAllExams = async (req, res) => {
     try {
       const exams = await exam.findAll({
-        include: [{ model: subject, as: 'subject' }], 
+        include: [
+            { model: subject, as: 'subject' },
+            { model: section, as: 'section'},
+            { model: level ,  as: 'level'}
+        ], 
       });
   
-      res.status(200).json(exams);
+      res.status(200).json({ message: 'These are Exams', Exams : exams});
     } catch (err) {
       res.status(500).json({ message: 'Error fetching exams', error: err.message });
     }
@@ -173,6 +180,8 @@ exports.deleteExam = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+
 
 
 
