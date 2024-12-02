@@ -1,24 +1,21 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
-const { faker } = require('@faker-js/faker');
-const { level } = require('../models'); 
-module.exports = {
-   up : async (queryInterface, Sequelize) =>{
-    const levels = [];
+const { level } = require('../models');
 
-    for (let i = 0; i < 10; i++) {
-      levels.push({
-        id: i + 1, 
-        level_name: faker.helpers.arrayElement(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']), 
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    const levels = [
+      { id: 1, level_name: 'Level 1', createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, level_name: 'Level 2', createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, level_name: 'Level 3', createdAt: new Date(), updatedAt: new Date() },
+      { id: 4, level_name: 'Level 4', createdAt: new Date(), updatedAt: new Date() },
+      { id: 5, level_name: 'Level 5', createdAt: new Date(), updatedAt: new Date() }
+    ];
 
     await level.bulkCreate(levels);
   },
 
-   down : async (queryInterface, Sequelize) =>{
+  down: async (queryInterface, Sequelize) => {
     await level.destroy({ where: {}, truncate: true });
   },
 };

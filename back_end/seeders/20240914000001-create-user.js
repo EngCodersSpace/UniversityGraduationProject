@@ -16,9 +16,6 @@ module.exports = {
         email: faker.internet.email(),
         password: faker.internet.password(),
         permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']),
-        resetToken: faker.internet.url(),
-        resetTokenExpiry: faker.date.future(),
-        refreshToken: faker.internet.url(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
