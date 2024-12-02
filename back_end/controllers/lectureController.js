@@ -27,7 +27,6 @@ const updateLecture = async (req, res) => {
     const { id } = req.params;
     const {} = req.body;
 
-    // Find and update the lecture
     const updatedLecture = await lecture.update(req.body,
       {
         where: { id },
@@ -41,7 +40,7 @@ const updateLecture = async (req, res) => {
 
     res.status(200).json({
       message: 'Lecture updated successfully',
-      data: updatedLecture[1][0], // returning updated data
+      data: updatedLecture[1][0], 
     });
   } catch (error) {
     console.error(error);
@@ -120,10 +119,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
         const organizedLectures = {};
         
-        lectures.forEach(lec => {
-            const sectionName = lec.section.section_name; 
-            const levelName = lec.level.level_name;
-            const year = lec.year; 
+        lectures.forEach(lec => { 
             const term = lec.term; 
             const day = lec.lecture_day; 
             const time = lec.lecture_time; 
