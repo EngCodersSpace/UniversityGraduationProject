@@ -25,25 +25,13 @@ const createLecture = async (req, res) => {
 const updateLecture = async (req, res) => {
   try {
     const { id } = req.params;
-    const { subject_id, doctor_id, lecture_section, lecture_level, term, year, lecture_time, lecture_duration, lecture_day, lecture_room } = req.body;
+    const {} = req.body;
 
     // Find and update the lecture
-    const updatedLecture = await lecture.update(
-      {
-        subject_id,
-        doctor_id,
-        lecture_section,
-        lecture_level,
-        term,
-        year,
-        lecture_time,
-        lecture_duration,
-        lecture_day,
-        lecture_room,
-      },
+    const updatedLecture = await lecture.update(req.body,
       {
         where: { id },
-        returning: true, // returns the updated data
+        returning: true, 
       }
     );
 
