@@ -13,6 +13,16 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      user_section_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
       date_of_birth: {
         type: Sequelize.DATE,
         allowNull: true,
@@ -21,9 +31,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      collegeName:{
-        type:Sequelize.STRING(50),
-        allowNull:false,
+      collegeName: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
       },
       email: {
         type: Sequelize.STRING(100),
@@ -44,19 +54,19 @@ module.exports = {
           this.setDataValue('password', hasedpassword);
         },
       },
-      resetToken:{
-        type:Sequelize.TEXT,
-        allowNull:true,
+      resetToken: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
-      resetTokenExpiry:{
-        type:Sequelize.DATE,
-        allowNull:true,
+      resetTokenExpiry: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
-      refreshToken:{
-        type:Sequelize.TEXT,
-        allowNull:true,
+      refreshToken: {
+        type: Sequelize.TEXT,
+        allowNull: true,
       },
-      
+
 
       createdAt: {
         allowNull: false,
