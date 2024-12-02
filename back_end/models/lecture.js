@@ -96,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     lecture_duration: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     lecture_day: {

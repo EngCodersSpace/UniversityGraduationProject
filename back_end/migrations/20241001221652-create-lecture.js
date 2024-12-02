@@ -62,7 +62,7 @@ module.exports = {
         allowNull: false,
       },
       lecture_duration: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       lecture_day: {
