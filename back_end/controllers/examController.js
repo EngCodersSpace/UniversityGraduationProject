@@ -2,6 +2,8 @@
 
 const { exam, subject , section,level } = require('../models'); 
 const { validationResult } = require('express-validator'); 
+const { Sequelize} = require('sequelize');
+
 
 
 exports.createExam = async (req, res) => {
@@ -90,7 +92,83 @@ exports.getAllExams = async (req, res) => {
       res.status(500).json({ message: 'Error fetching exams', error: err.message });
     }
 };
+
+exports.getExamGroupedByCriteria = async (req, res) => {
+    try {
+        const { section_id, level_id, year , term  } = req.params; 
+
+        const whereClause = {};
+        if (section_id) whereClause.exam_section_id = section_id;
+        if (level_id) whereClause.exam_level_id = level_id;
+        if (year) whereClause.exam_year = year;
+        if (term) whereClause.exam_term = term;
+
+
+        const Exam = await exam.findAll({
+            where: whereClause,
+            include: [
+                { model: subject, as: 'subject' },
+                { model: section, as: 'section' },
+                { model: level, as: 'level' },
+            ],
+        });
+
+        if (!Exam.length) {
+            return res.status(404).json({ message: 'No Exams found for the specified criteria' });
+        }
+
+        const organizedLectures = {};
+        
+        Exam.forEach(lec => { 
+            const term = lec.exam_term; 
+            const date = lec.exam_date; 
+            const time = lec.exam_time; 
+
+            if (!organizedLectures[term]) {
+                organizedLectures[term] = {};
+            }
+
+            if (!organizedLectures[term][date]) {
+                organizedLectures[term][date]= [];
+            }
+
+            organizedLectures[term][date].push({
+                id   : lec.exam_id,
+                title: lec.subject.subject_name, 
+                Time : time, 
+                Exam_room: lec.exam_room, 
+            });
+        });
+
+        res.status(200).json({ message: 'Exams retrieved successfully', data: organizedLectures });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving Exams', error: error.message });
+    }
+};
+
+exports.getExamYear = async (req, res) => {
+    try {
+      const uniqueYears = await exam.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('exam_year')), 'year']
+        ],
+        raw: true
+      });
   
+      if (uniqueYears.length === 0) {
+        return res.status(404).json({ message: 'No unique years found in the Exam table' });
+      }
+  
+      const years = uniqueYears.map(item => item.year);
+  
+      res.status(200).json({ message: 'Unique years retrieved successfully', data: years });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving unique years', error: error.message });
+    }
+};
+
 exports.updateExam = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
