@@ -1,75 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/models/lavel_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model.dart';
+import 'package:ibb_university_students_services/app/models/section_model.dart';
+import 'package:ibb_university_students_services/app/services/level_services.dart';
+import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/table_time_services.dart';
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
 
-
 class TableTabController extends GetxController {
+
   late Rx<TableDays?> tableTime;
   List<Lecture>? selectedDay;
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
-  RxString selectedDepartment = "Computer".obs;
-  RxString selectedLevel = "Level 5".obs;
+  Rx<int?> selectedDepartment = Rx(null);
+  Rx<int?> selectedLevel = Rx(null);
   RxString selectedYear = "2024".obs;
   RxString selectedTerm = "Term 1".obs;
   Map termsData = {};
 
-
-  List<DropdownMenuItem<String>> departments = [
-    DropdownMenuItem<String>(value: "Computer", child: SecText("Computer",textColor: AppColors.mainTextColor,)),
-  ];
-  List<DropdownMenuItem<String>> levels = [
-    DropdownMenuItem<String>(value: "Level 5", child: SecText("Level 5",textColor: AppColors.mainTextColor,),),
-  ];
+  List<DropdownMenuItem<int>> departments = [];
+  List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [
-    DropdownMenuItem<String>(value: "2024", child: SecText("2024",textColor: AppColors.mainTextColor)),
-    DropdownMenuItem<String>(value: "2023", child: SecText("2023",textColor: AppColors.mainTextColor)),
+    DropdownMenuItem<String>(
+        value: "2024",
+        child: SecText("2024", textColor: AppColors.mainTextColor)),
+    DropdownMenuItem<String>(
+        value: "2023",
+        child: SecText("2023", textColor: AppColors.mainTextColor)),
   ];
   List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(value: "Term 1", child: SecText("Term 1",textColor: AppColors.mainTextColor)),
-    DropdownMenuItem<String>(value: "Term 2", child: SecText("Term 2",textColor: AppColors.mainTextColor)),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SecText("Term 1", textColor: AppColors.mainTextColor)),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SecText("Term 2", textColor: AppColors.mainTextColor)),
   ];
 
-
   @override
-  void onInit() async{
+  void onInit() async {
     // TODO: implement onInit
-    Result res = await TableTimeServices.fetchTableTime(sectionId: 5,levelId: 5,year: "2024",);
-    if(res.statusCode == 200){
-      termsData = res.data;
-      tableTime = Rx(res.data[selectedTerm.value]);
-    }
-    selectedDayChange(selected.value);
+    await initDropdownMenuLists();
+    (levels.isNotEmpty)?selectedLevel.value = levels.first.value:null;
+    (departments.isNotEmpty)?selectedDepartment.value = departments.first.value:null;
+    fetchTableData();
     super.onInit();
   }
 
-  void changeDepartment(String? val) {
-    if(val == null)return;
+  void fetchTableData() async {
+    if(selectedLevel.value == null)return;
+    if(selectedDepartment.value == null)return;
+    Result res = await LectureServices.fetchTableTime(
+      sectionId: selectedDepartment.value!,
+      levelId: selectedLevel.value!,
+      year: selectedYear.value,
+    );
+    if (res.statusCode == 200) {
+      termsData = res.data;
+      tableTime = Rx(res.data[selectedTerm.value]);
+      selectedDayChange(selected.value);
+    }
+  }
+
+  void changeDepartment(int? val) {
+    if (val == null) return;
     selectedDepartment.value = val;
   }
-  void changeLevel(String? val) {
-    if(val == null)return;
+
+  void changeLevel(int? val) {
+    if (val == null) return;
     selectedLevel.value = val;
   }
+
   void changeYear(String? val) {
-    if(val == null)return;
+    if (val == null) return;
     selectedYear.value = val;
   }
+
   void changeTerm(String? val) {
-    if(val == null)return;
+    if (val == null) return;
     selectedTerm.value = val;
     tableTime.value = termsData[selectedTerm.value];
     selectedDayChange(selected.value);
     selected.refresh();
   }
-  void selectedDayChange(int index){
+
+  void selectedDayChange(int index) {
     selected.value = index;
-    switch(index){
+    switch (index) {
       case 0:
         selectedDay = tableTime.value?.sat;
         selectedDayName = "Saturday".tr;
@@ -94,9 +117,37 @@ class TableTabController extends GetxController {
         selectedDay = tableTime.value?.thu;
         selectedDayName = "Thursday".tr;
         break;
-
     }
   }
+
+  Future<void> initDropdownMenuLists() async {
+    List<Section> sectionsData =
+        await SectionServices.fetchSections().then((e) => e.data ?? []);
+    List<Level> levelsData = await LevelServices.fetchLevels().then((e) => e.data ?? []);
+    departments = [];
+    for (Section section in sectionsData) {
+      departments.add(
+        DropdownMenuItem<int>(
+            value: section.id,
+            child: SecText(
+              section.name??"unknown",
+              textColor: AppColors.mainTextColor,
+            )),
+      );
+    }
+    levels = [];
+    for (Level level in levelsData) {
+      levels.add(
+        DropdownMenuItem<int>(
+            value: level.id,
+            child: SecText(
+              level.name??"unknown",
+              textColor: AppColors.mainTextColor,
+            )),
+      );
+    }
+  }
+
   @override
   void onClose() {}
 }

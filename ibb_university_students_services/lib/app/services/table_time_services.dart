@@ -5,7 +5,7 @@ import '../models/student_model.dart';
 import 'http_provider/http_provider.dart';
 
 
-class TableTimeServices {
+class LectureServices {
   static const int  _fetchError = 611;
 
   static Map<String,Map<String,Map<String,dynamic>?>?>? _lectures;
@@ -17,10 +17,17 @@ class TableTimeServices {
     int? term,
     bool hardFetch = false,
   }) async {
-    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch) {
-
+    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year][term] != null && !hardFetch && term !=null) {
       return Result(
-        data: null,
+          data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year][term],
+    statusCode: 200,
+    hasError: false,
+    message: "successful",
+    );
+    }
+    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch && term == null) {
+      return Result(
+        data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year],
         statusCode: 200,
         hasError: false,
         message: "successful",

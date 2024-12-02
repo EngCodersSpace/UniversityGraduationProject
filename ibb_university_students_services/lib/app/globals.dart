@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AppData{
-}
 
 class Utils {
   static double fontSizeScale(double fontSize) {
