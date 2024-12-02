@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-       //(1)Relationship One-to-Many between "document table" and  "user table"
-       document.belongsTo(models.user, {
+      //(1)Relationship One-to-Many between "document table" and  "user table"
+      document.belongsTo(models.user, {
         foreignKey: 'added_by',
       });
 
@@ -21,6 +21,17 @@ module.exports = (sequelize, DataTypes) => {
       document.belongsTo(models.subject, {
         foreignKey: 'subject_id',
       });
+      //(3)Relationship Many-to-Many between "document table" and  "level table through documentSectionLevel"
+      document.belongsToMany(models.level, {
+        through: 'documentSectionLevel',
+        foreignKey: 'documentId',
+      });
+      //(4)Relationship Many-to-Many between "document table" and  "section table through documentSectionLevel"
+      document.belongsToMany(models.section, {
+        through: 'documentSectionLevel',
+        foreignKey: 'documentId',
+      });
+
 
     }
   }
@@ -34,39 +45,39 @@ module.exports = (sequelize, DataTypes) => {
     },
     title: {
       type: DataTypes.STRING,
-      allowNull:false,
+      allowNull: false,
     },
-    author:{
-      type:DataTypes.STRING,
-      allowNull:true,
+    author: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    isbn:{
-      type:DataTypes.STRING(50),
-      allowNull:true,
+    isbn: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
-    edition:{
-      type:DataTypes.STRING(50),
-      allowNull:true,
+    edition: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
-    category:{
-      type:DataTypes.ENUM('Book','Reference','Lecture','Summary','Exam','Other'),
-      allowNull:false,
+    category: {
+      type: DataTypes.ENUM('Book', 'Reference', 'Lecture', 'Summary', 'Exam', 'Other'),
+      allowNull: false,
     },
-    file_size:{
-      type:DataTypes.FLOAT,
-      allowNull:true,
+    file_size: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
     },
-    file_path:{
-      type:DataTypes.TEXT,
-      allowNull:false,
+    file_path: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    display_image:{
-      type:DataTypes.STRING,
-      allowNull:true,
+    display_image: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    added_by:{
-      type:DataTypes.INTEGER,
-      allowNull:false,
+    added_by: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'user_id',
