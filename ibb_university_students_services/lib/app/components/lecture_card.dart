@@ -26,7 +26,6 @@ class LectureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime endTime = timeFormat.parse((content?.startTime??"00:00:00")).add(Duration(minutes: content?.duration??0));
     return Container(
-      height: height,
       width: double.maxFinite,
       padding: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -92,7 +91,7 @@ class LectureCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 28),
+            padding: const EdgeInsets.symmetric(vertical: 24,horizontal: 28),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,14 +105,11 @@ class LectureCard extends StatelessWidget {
             ),
                 if(content?.description != null && (content?.description?.isNotEmpty??false))...[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SecText("Description: ",fontWeight: FontWeight.bold,fontSize: 19),
                       SecText(content?.description??"unknown".tr)
                     ],
                   ),
-                ]else...[
-                  const SizedBox()
                 ]
 
           ]),)
