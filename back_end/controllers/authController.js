@@ -326,7 +326,6 @@ exports.resetPassword = async (req, res) => {
 
 // Function to get the currently logged-in user based on JWT token (me)
 exports.getCurrentUser = (req, res) => {
-  // الحصول على التوكن من الهيدر (الطلب)
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -334,14 +333,12 @@ exports.getCurrentUser = (req, res) => {
     return res.status(401).json({ message: "Access token is missing" });
   }
 
-  // التحقق من التوكن وفك شفرته
   jwt.verify(token, SECRET_KEY, async (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Invalid token" });
     }
 
     try {
-      // البحث عن المستخدم بناءً على user_id الموجود في التوكن
       const foundUser = await user.findOne({
         where: { user_id: decoded.user_id },
         include: [
