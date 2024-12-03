@@ -15,10 +15,10 @@ class WebProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return Obx(() => (controller.initState.value)
         ? Container(
-            padding: EdgeInsets.only(top: 15.0),
+            padding: const EdgeInsets.only(top: 18.0),
             width: Get.width,
             height: Get.height,
-            color: AppColors.inverseIconColor,
+            color: AppColors.tabBackColor,
             child: Column(
               children: [
                 Stack(
@@ -26,8 +26,8 @@ class WebProfileView extends GetView<ProfileController> {
                   children: [
                     Container(
                       alignment: Alignment.topCenter,
-                      height: Get.height * 0.22,
-                      width: Get.width * 0.4,
+                      height: Get.height * 0.2,
+                      width: Get.width * 0.3,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         border:
@@ -48,7 +48,17 @@ class WebProfileView extends GetView<ProfileController> {
                   height: Get.height * 0.6,
                   padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   decoration: BoxDecoration(
-                    color: AppColors.tabBackColor,
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.linkTextColor.withOpacity(0.3),
+                        AppColors.linkTextColor.withOpacity(0.2),
+                        AppColors.tabBackColor,
+                        AppColors.linkTextColor.withOpacity(0.2),
+                        AppColors.linkTextColor.withOpacity(0.3),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Stack(

@@ -79,7 +79,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                             SizedBox(
                               width: width * 0.03,
                             ),
-                            SecText((controller.user as Student)
+                            SecText((controller.user! as Student)
                                     .section
                                     ?.name
                                     ?.tr ??
