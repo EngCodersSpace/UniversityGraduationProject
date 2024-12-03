@@ -6,9 +6,13 @@ const vali = require('../validations/gradevalidation');
 
 router.post('/create-grade', vali.createGrade,   CRUD.createGrade);
 
-router.get('/get-all-grades/:id',   CRUD.getAllGrades);
+router.get('/get-all-grades/:id?/:levelID?',   CRUD.getAllGrades);
 router.get('/get-grade/:id',    CRUD.getGradeById);
 router.get('/get-grade-year',    CRUD.getGradeYear);
+router.get('/get-section',    CRUD.getSectionOfCurrentUser);
+
+
+
 
 
 router.put('/update-grade/:id',vali.updateGrade, CRUD.updateGrade);

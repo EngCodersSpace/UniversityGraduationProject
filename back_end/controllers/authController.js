@@ -342,7 +342,7 @@ exports.getCurrentUser = (req, res) => {
       const foundUser = await user.findOne({
         where: { user_id: decoded.user_id },
         include: [
-          { model: doctor, as: "doctor" },
+          { model: doctor , as: "doctor"  },
           { model: student, as: "student" },
           { model: section, as: "section" },
         ],
