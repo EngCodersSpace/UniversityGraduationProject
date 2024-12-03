@@ -1,7 +1,9 @@
 
-const { subject, grade ,student,section } = require('../models'); 
+const { user,subject, grade ,student,section,level } = require('../models'); 
 const { validationResult } = require('express-validator');
 const { Sequelize} = require('sequelize');
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = process.env.SECRET_KEY;
 
 exports.createGrade = async (req, res) => {
     const errors = validationResult(req);
@@ -56,19 +58,19 @@ exports.createGrade = async (req, res) => {
 };
 
 
-// get All Grades For specific student
+
+// get All Grades For specific =>  student_id  and  level_id
 exports.getAllGrades = async (req, res) => {
   try {
-      const { id  } = req.params; // Extract student_id from the request parameters
+      const { id , levelID} = req.params; 
 
-      // Validate that student_id is provided
       if (!id) {
           return res.status(400).json({ message: "Student ID is required" });
       }
 
-      // Fetch grades for the specified student
+      // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: {  student_id :id }, // Filter grades by the provided student_id
+          where: { student_id: id , level_id:levelID }, 
           include: [
               { model: student, as: 'student' },
               { model: subject, as: 'subject' },
@@ -76,19 +78,18 @@ exports.getAllGrades = async (req, res) => {
           ],
       });
 
-      // If no grades are found, respond with a message
       if (!grades.length) {
           return res.status(404).json({ message: 'No grades found for this student' });
       }
 
-      // Respond with the retrieved grades
       res.status(200).json({ message: 'These all grades', Grades: grades });
   } catch (error) {
       console.error('Error fetching grades:', error.message);
       res.status(500).json({ message: 'Internal server error', error: error.message });
   }
-};
-  
+}; 
+
+//   additional function i will deleted if it is unneccessary 
 exports.getGradeById = async (req, res) => {
     try {
       const { id } = req.params;
@@ -113,7 +114,7 @@ exports.getGradeById = async (req, res) => {
     }
 };
 
-// Grade table does not have year attribute 
+// To get All year_issue DISTINCT (without duplicate)
 exports.getGradeYear = async (req, res) => {
   try {
     const uniqueYears = await grade.findAll({
@@ -136,8 +137,42 @@ exports.getGradeYear = async (req, res) => {
   }
 };
 
+//  To get section of current logged user 
+exports.getSectionOfCurrentUser = (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
+  if (!token) {
+    return res.status(401).json({ message: "Access token is missing" });
+  }
 
+  jwt.verify(token, SECRET_KEY, async (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
+
+    try {
+      const foundUser = await user.findOne({
+        where: { user_id: decoded.user_id },
+        include: [
+          { model: student, as: "student" },
+          { model: section, as: "section" },
+        ],
+      });
+
+      if (!foundUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json({
+        message: "me",
+        section: foundUser.user_section_id
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error.message);
+      res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+  });
+};
 
 
 
