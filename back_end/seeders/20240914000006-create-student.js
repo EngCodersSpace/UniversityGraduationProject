@@ -26,6 +26,6 @@ module.exports = {
     await student.bulkCreate(students);
   },
   down: async (queryInterface, Sequelize) => {
-    await student.destroy({ where: {}, truncate: true });
+    await student.destroy({ where: {}, truncate: false });
   }
 };
