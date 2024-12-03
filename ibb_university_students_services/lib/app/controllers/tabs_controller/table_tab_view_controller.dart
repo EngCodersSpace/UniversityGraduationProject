@@ -10,9 +10,9 @@ import 'package:ibb_university_students_services/app/services/table_time_service
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
+import '../../services/app_data_services.dart';
 
 class TableTabController extends GetxController {
-
   late Rx<TableDays?> tableTime;
   List<Lecture>? selectedDay;
   RxInt selected = 3.obs;
@@ -25,36 +25,40 @@ class TableTabController extends GetxController {
 
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> years = [
-    DropdownMenuItem<String>(
-        value: "2024",
-        child: SecText("2024", textColor: AppColors.mainTextColor)),
-    DropdownMenuItem<String>(
-        value: "2023",
-        child: SecText("2023", textColor: AppColors.mainTextColor)),
-  ];
+  List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(
         value: "Term 1",
-        child: SecText("Term 1", textColor: AppColors.mainTextColor)),
+        child: SizedBox(
+            width: (Get.width / 3.3) * 0.75,
+            child: SecText("Term 1", textColor: AppColors.mainTextColor))),
     DropdownMenuItem<String>(
         value: "Term 2",
-        child: SecText("Term 2", textColor: AppColors.mainTextColor)),
+        child: SizedBox(
+            width: (Get.width / 3.3) * 0.75,
+            child: SecText("Term 2", textColor: AppColors.mainTextColor))),
   ];
 
   @override
   void onInit() async {
     // TODO: implement onInit
     await initDropdownMenuLists();
-    (levels.isNotEmpty)?selectedLevel.value = levels.first.value:null;
-    (departments.isNotEmpty)?selectedDepartment.value = departments.first.value:null;
+    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
+    (departments.isNotEmpty)
+        ? selectedDepartment.value = departments.first.value
+        : null;
     fetchTableData();
     super.onInit();
   }
 
+  @override
+  void refresh() {
+    super.refresh();
+  }
+
   void fetchTableData() async {
-    if(selectedLevel.value == null)return;
-    if(selectedDepartment.value == null)return;
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
     Result res = await LectureServices.fetchTableTime(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
@@ -69,6 +73,7 @@ class TableTabController extends GetxController {
 
   void changeDepartment(int? val) {
     if (val == null) return;
+    print(departments);
     selectedDepartment.value = val;
   }
 
@@ -123,15 +128,21 @@ class TableTabController extends GetxController {
   Future<void> initDropdownMenuLists() async {
     List<Section> sectionsData =
         await SectionServices.fetchSections().then((e) => e.data ?? []);
-    List<Level> levelsData = await LevelServices.fetchLevels().then((e) => e.data ?? []);
+    List<Level> levelsData =
+        await LevelServices.fetchLevels().then((e) => e.data ?? []);
+    List<String> yearData =
+        await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
         DropdownMenuItem<int>(
             value: section.id,
-            child: SecText(
-              section.name??"unknown",
-              textColor: AppColors.mainTextColor,
+            child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText(
+                section.name ?? "unknown",
+                textColor: AppColors.mainTextColor,
+              ),
             )),
       );
     }
@@ -140,9 +151,26 @@ class TableTabController extends GetxController {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
-            child: SecText(
-              level.name??"unknown",
-              textColor: AppColors.mainTextColor,
+            child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText(
+                level.name ?? "unknown",
+                textColor: AppColors.mainTextColor,
+              ),
+            )),
+      );
+    }
+    years = [];
+    for (String year in yearData) {
+      years.add(
+        DropdownMenuItem(
+            value: year,
+            child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText(
+                year,
+                textColor: AppColors.mainTextColor,
+              ),
             )),
       );
     }

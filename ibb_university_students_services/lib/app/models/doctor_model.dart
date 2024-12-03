@@ -32,7 +32,7 @@ class Doctor extends User {
       permission: json['permission'],
       phones: json['phones'],
       // profileImage: json['profile_picture'],
-      section: json['section'],
+      section: Section.fromJson(json['section']),
       academicDegree: json['academic_degree'],
       administrativePosition: json['administrative_position'],
       status: json['status'],

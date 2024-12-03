@@ -9,6 +9,8 @@ import 'http_provider/http_provider.dart';
 class AppDataServices {
   static const int _fetchError = 611;
 
+  static List<String>? _years  ;
+
   static Future<Result<bool>> fetchAppData() async {
     late Response? response;
     try {
@@ -44,4 +46,46 @@ class AppDataServices {
           data: null);
     }
   }
+
+  static Future<Result<List<String>>> fetchLectureYears({
+    bool hardFetch = false,
+}) async {
+
+    if (_years  != null &&
+        !hardFetch) {
+      return Result(
+        data: _years,
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("lecture/year");
+      if (response?.statusCode == 200) {
+         _years = response?.data["data"];
+         print("yers $_years");
+        return Result(
+            data: _years,
+            hasError: true,
+            statusCode: response?.statusCode ?? _fetchError,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
 }

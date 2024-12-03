@@ -137,7 +137,6 @@ class UserServices {
         message: "successful",
       );
     }
-    _fakeUser("student");
     late Response? response;
     try {
       response = await HttpProvider.post("auth/me");

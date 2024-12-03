@@ -12,11 +12,12 @@ class MainController extends GetxController {
   @override
 
   void onInit() async {
-    changeTabIndex(selectedIndex.value);
     Result res = await UserServices.fetchUser();
+    print("here");
     if (res.statusCode == 200) {
       user = res.data;
     }
+    changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
   }
