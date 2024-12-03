@@ -18,7 +18,6 @@ class TableDays {
   List<Lecture>? sat;
 
   factory TableDays.fromJson(Map<String, dynamic> json) {
-    print("here");
     Map<String, List<Lecture>> days = {};
     for (String day in json.keys) {
       days[day] = [];

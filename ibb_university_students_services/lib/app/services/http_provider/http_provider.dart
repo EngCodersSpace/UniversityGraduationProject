@@ -9,7 +9,6 @@ import '../user_services.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
-  static  String? refreshToken;
 
   static init({
     String baseUrl = "",
@@ -45,8 +44,10 @@ class HttpProvider {
           return handler.resolve(
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
+
         if (error.response?.statusCode == 401 &&
-            error.requestOptions.path != "auth/refresh") {
+            error.requestOptions.path != "refresh" &&
+            error.requestOptions.path != "login") {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
             if (response != null) {
@@ -60,6 +61,12 @@ class HttpProvider {
         } else if (((error.response?.statusCode) ?? 0) == 422) {
           return handler.resolve(error.response!);
         }
+
+        if (error.response?.statusCode == 401 &&
+            error.requestOptions.path == "refresh"){
+          return handler.resolve(error.response!);
+        }
+
         return handler.next(error);
       },
     ));
@@ -136,8 +143,10 @@ class HttpProvider {
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
-      addAuthTokenInterceptor(refreshToken??"");
-      Response response = await _dio.post("auth/refresh");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      Response response = await _dio.post("refresh",data: {
+        "refreshToken":prefs.getString("refreshToken")??""
+      });
       if (response.statusCode == 401) {
         // re login if remember me data available
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -148,7 +157,7 @@ class HttpProvider {
           get_x.Get.offAllNamed("/login");
         }
       } else if (response.statusCode == 200) {
-        addAuthTokenInterceptor(
+        addAccessTokenHeader(
           response.data["accessToken"],
         );
         return await _dio.request(
@@ -166,11 +175,16 @@ class HttpProvider {
     return null;
   }
 
-  static void addAuthTokenInterceptor(String authToken) {
-    _dio.options.headers["Authorization"] = "Bearer $authToken";
+  static void addAccessTokenHeader(String? accessToken) {
+    _dio.options.headers["Authorization"] = "Bearer $accessToken";
   }
 
-  static void removeAuthTokenInterceptor() {
+  static void storeRefreshToken(String refreshToken) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("refreshToken",refreshToken);
+  }
+
+  static void removeAccessTokenHeader() {
     _dio.options.headers["Authorization"] = null;
   }
 }

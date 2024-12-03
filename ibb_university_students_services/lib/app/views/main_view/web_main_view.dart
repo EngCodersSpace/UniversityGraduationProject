@@ -38,41 +38,41 @@ class WebMainView extends GetView<MainController> {
                             radius: Get.width * 0.05,
                             backgroundColor: AppColors.mainCardColor,
                           ),
-                          CircleAvatar(
-                            backgroundColor:
-                                (controller.user?.profileImage) != null
-                                    ? AppColors.tabBackColor
-                                    : AppColors.inverseMainTextColor,
-                            maxRadius: Get.width * 0.05 - 2,
-                            backgroundImage: (controller
-                                        .user?.profileImage) !=
-                                    null
-                                ? AssetImage(
-                                    controller.user?.profileImage ?? "")
-                                : null,
-                            child: (controller.user?.profileImage) != ""
-                                ? null
-                                : MainText(controller.user?.name?[0] ??
-                                    "".toUpperCase()),
-                          ),
+                          // CircleAvatar(
+                          //   backgroundColor:
+                          //       (controller.user?.profileImage) != null
+                          //           ? AppColors.tabBackColor
+                          //           : AppColors.inverseMainTextColor,
+                          //   maxRadius: Get.width * 0.05 - 2,
+                          //   backgroundImage: (controller
+                          //               .user?.profileImage) !=
+                          //           null
+                          //       ? AssetImage(
+                          //           controller.user?.profileImage ?? "")
+                          //       : null,
+                          //   child: (controller.user?.profileImage) != ""
+                          //       ? null
+                          //       : MainText(controller.user?.name?[0] ??
+                          //           "".toUpperCase()),
+                          // ),
                         ],
                       ),
                       SizedBox(
                         height: Get.height * 0.03,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SecText(
-                            "Name : ${controller.user?.name ?? ""}",
-                            textColor: AppColors.mainTextColor,
-                          ),
-                          SecText(
-                            "ID : ${controller.user?.id}",
-                            textColor: AppColors.mainTextColor,
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     SecText(
+                      //       "Name : ${controller.user?.name ?? ""}",
+                      //       textColor: AppColors.mainTextColor,
+                      //     ),
+                      //     SecText(
+                      //       "ID : ${controller.user?.id}",
+                      //       textColor: AppColors.mainTextColor,
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: Get.height * 0.03,
                       ),

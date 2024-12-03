@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart' as get_x;
 import '../models/doctor_model.dart';
@@ -9,7 +8,7 @@ import '../models/student_model.dart';
 import '../models/user_model.dart';
 import 'http_provider/http_provider.dart';
 
-class UserServices {
+class  UserServices {
   static SharedPreferences? _prefs;
   static User? _user;
   static String? _permission;
@@ -30,20 +29,18 @@ class UserServices {
         }
         _permission = response?.data["user"]["permission"];
 
-        HttpProvider.addAuthTokenInterceptor(response?.data["accessToken"]);
+        HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
+        HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
+
         if (rememberMe) {
           _prefs ??= await SharedPreferences.getInstance();
           await _prefs?.setStringList("credentials", <String>[id, password]);
-          return await _userFakeLogin(id, password);
         }
         return Result(
           hasError: false,
           statusCode: response?.statusCode,
           data: true,
         );
-      }
-      if (rememberMe) {
-        return await _userFakeLogin(id, password);
       }
       return Result(
         hasError: true,
@@ -82,7 +79,7 @@ class UserServices {
           _user = Doctor.fromJson(response?.data["user"]);
         }
         _permission = response?.data["user"]["permission"];
-        HttpProvider.addAuthTokenInterceptor(response?.data["token"]);
+        HttpProvider.addAccessTokenHeader(response?.data["token"]);
         return Result(
             hasError: false, statusCode: response?.statusCode, data: true);
       }
@@ -139,7 +136,7 @@ class UserServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.post("auth/me");
+      response = await HttpProvider.get("me");
       if (response?.statusCode == 200) {
         if (response?.data["userType"] == "student") {
           _user = Student.fromJson(response?.data["user"]);
@@ -182,62 +179,62 @@ class UserServices {
   ////////////////////////////////////////////////////////////////////////////////////////////
   //////                                     fake data                                 ///////
   ////////////////////////////////////////////////////////////////////////////////////////////
-  static void _fakeUser(String type) {
-    if (type == "student") {
-      // virtual response for test
-      Map<String, dynamic> response = {
-        'message': 'login successfully',
-        'user': {
-          'id': 2070093,
-          'name': 'Shehab AL-Saidi',
-          'email': 'shehab@gmail.com',
-          'phone': '772388461',
-          'level': '4th',
-          'part': 'Electrical engineering',
-          'department': 'Computer engineering',
-          'profile_image': 'assets/images/login_background_0.jpg',
-        },
-        'user_type': 'student',
-        'token': 'token_val'
-      };
-      if (response["user_type"] == "student") {
-        _user = Student.fromJson(response["user"]);
-      } else {
-        _user = Doctor.fromJson(response["user"]);
-      }
-    } else if (type == "doctor") {
-      // virtual response for test
-      Map<String, dynamic> response = {
-        'message': 'login successfully',
-        'user': {
-          'id': 2070093,
-          'name': 'Shehab AL-Saidi',
-          'email': 'shehab@gmail.com',
-          'phone': '772388461',
-          'department': 'Computer Eng',
-          'academic_degree': 'Doctor',
-          'administrative_position': 'Lecturer',
-          'profile_image': 'assets/images/login_background_0.jpg',
-        },
-        'user_type': 'doctor',
-        'token': 'token_val'
-      };
-      if (response["user_type"] == "student") {
-        _user = Student.fromJson(response["user"]);
-        _permission = "student";
-      } else {
-        _user = Doctor.fromJson(response["user"]);
-        _permission = "doctor";
-      }
-    }
-  }
-
-  static Future<Result<bool>> _userFakeLogin(String id, String password) async {
-    if (id == "1231" && password == "1111aaaa@") {
-      _fakeUser("student");
-    } else if (id == "113" && password == "1111aaaa@") {
-      _fakeUser("doctor");
-    }
-    return Result(hasError: false, statusCode: 200, data: true);
-  }
+  // static void _fakeUser(String type) {
+  //   if (type == "student") {
+  //     // virtual response for test
+  //     Map<String, dynamic> response = {
+  //       'message': 'login successfully',
+  //       'user': {
+  //         'id': 2070093,
+  //         'name': 'Shehab AL-Saidi',
+  //         'email': 'shehab@gmail.com',
+  //         'phone': '772388461',
+  //         'level': '4th',
+  //         'part': 'Electrical engineering',
+  //         'department': 'Computer engineering',
+  //         'profile_image': 'assets/images/login_background_0.jpg',
+  //       },
+  //       'user_type': 'student',
+  //       'token': 'token_val'
+  //     };
+  //     if (response["user_type"] == "student") {
+  //       _user = Student.fromJson(response["user"]);
+  //     } else {
+  //       _user = Doctor.fromJson(response["user"]);
+  //     }
+  //   } else if (type == "doctor") {
+  //     // virtual response for test
+  //     Map<String, dynamic> response = {
+  //       'message': 'login successfully',
+  //       'user': {
+  //         'id': 2070093,
+  //         'name': 'Shehab AL-Saidi',
+  //         'email': 'shehab@gmail.com',
+  //         'phone': '772388461',
+  //         'department': 'Computer Eng',
+  //         'academic_degree': 'Doctor',
+  //         'administrative_position': 'Lecturer',
+  //         'profile_image': 'assets/images/login_background_0.jpg',
+  //       },
+  //       'user_type': 'doctor',
+  //       'token': 'token_val'
+  //     };
+  //     if (response["user_type"] == "student") {
+  //       _user = Student.fromJson(response["user"]);
+  //       _permission = "student";
+  //     } else {
+  //       _user = Doctor.fromJson(response["user"]);
+  //       _permission = "doctor";
+  //     }
+  //   }
+  // }
+  //
+  // static Future<Result<bool>> _userFakeLogin(String id, String password) async {
+  //   if (id == "1231" && password == "1111aaaa@") {
+  //     _fakeUser("student");
+  //   } else if (id == "113" && password == "1111aaaa@") {
+  //     _fakeUser("doctor");
+  //   }
+  //   return Result(hasError: false, statusCode: 200, data: true);
+  // }
 }

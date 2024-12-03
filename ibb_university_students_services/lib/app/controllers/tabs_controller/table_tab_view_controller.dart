@@ -73,7 +73,6 @@ class TableTabController extends GetxController {
 
   void changeDepartment(int? val) {
     if (val == null) return;
-    print(departments);
     selectedDepartment.value = val;
   }
 

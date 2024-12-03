@@ -31,6 +31,7 @@ class Lecture {
         subjectName: json['subject_name'],
         startTime: json['startTime'],
         duration: json['duration'],
+        description: json['description'],
         doctor: json['lecturer'],
         hall: json['lecture_room']
     );
@@ -43,6 +44,7 @@ class Lecture {
       "startTime": startTime,
       "duration": duration,
       "lecturer": doctor,
+      "description":description,
       "lecture_room": hall,
     };
   }

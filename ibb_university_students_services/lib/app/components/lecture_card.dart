@@ -100,17 +100,21 @@ class LectureCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(children:[SecText("Doctor: ",fontWeight: FontWeight.bold,fontSize: 19),SecText("Dr.${content?.doctor??"-------"}")],),
-                    Row(children:[SecText("Hall: ",fontWeight: FontWeight.bold,fontSize: 19),SecText("${content?.hall??"-------"}")],),
+                    Row(children:[SecText("Doctor: ",fontWeight: FontWeight.bold,fontSize: 19),SecText("Dr.${content?.doctor??"unknown".tr}")],),
+                    Row(children:[SecText("Hall: ",fontWeight: FontWeight.bold,fontSize: 19),SecText(content?.hall??"unknown".tr)],),
               ],
             ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SecText("Description: ",fontWeight: FontWeight.bold,fontSize: 19),
-                    SecText("${content?.description??"-------"}")
-                  ],
-                ),
+                if(content?.description != null && (content?.description?.isNotEmpty??false))...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SecText("Description: ",fontWeight: FontWeight.bold,fontSize: 19),
+                      SecText(content?.description??"unknown".tr)
+                    ],
+                  ),
+                ]else...[
+                  const SizedBox()
+                ]
 
           ]),)
         ],

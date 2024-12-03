@@ -65,7 +65,6 @@ class AppDataServices {
       response = await HttpProvider.get("lecture/year");
       if (response?.statusCode == 200) {
          _years = response?.data["data"];
-         print("yers $_years");
         return Result(
             data: _years,
             hasError: true,
