@@ -1,6 +1,7 @@
 
 const { subject, grade ,student,section } = require('../models'); 
 const { validationResult } = require('express-validator');
+const { Sequelize} = require('sequelize');
 
 exports.createGrade = async (req, res) => {
     const errors = validationResult(req);
@@ -54,21 +55,38 @@ exports.createGrade = async (req, res) => {
     }
 };
 
+
+// get All Grades For specific student
 exports.getAllGrades = async (req, res) => {
-    try {
+  try {
+      const { id  } = req.params; // Extract student_id from the request parameters
+
+      // Validate that student_id is provided
+      if (!id) {
+          return res.status(400).json({ message: "Student ID is required" });
+      }
+
+      // Fetch grades for the specified student
       const grades = await grade.findAll({
-        include: [
-          { model: student, as: 'student' },
-          { model: subject, as: 'subject' },
-          { model: section, as: 'section'},
-        ],
+          where: {  student_id :id }, // Filter grades by the provided student_id
+          include: [
+              { model: student, as: 'student' },
+              { model: subject, as: 'subject' },
+              { model: section, as: 'section' }
+          ],
       });
-  
-      res.status(200).json({ message: 'These all degrees', Grades: grades });
-    } catch (error) {
+
+      // If no grades are found, respond with a message
+      if (!grades.length) {
+          return res.status(404).json({ message: 'No grades found for this student' });
+      }
+
+      // Respond with the retrieved grades
+      res.status(200).json({ message: 'These all grades', Grades: grades });
+  } catch (error) {
       console.error('Error fetching grades:', error.message);
       res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
+  }
 };
   
 exports.getGradeById = async (req, res) => {
@@ -80,7 +98,7 @@ exports.getGradeById = async (req, res) => {
         include: [
           { model: student, as: 'student' },
           { model: subject, as: 'subject' },
-          { model: section, as: 'section'},
+          { model: section, as: 'section'}
         ],
       });
   
@@ -94,6 +112,44 @@ exports.getGradeById = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+// Grade table does not have year attribute 
+exports.getGradeYear = async (req, res) => {
+  try {
+    const uniqueYears = await grade.findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('year_of_issue')), 'year']
+      ],
+      raw: true
+    });
+
+    if (uniqueYears.length === 0) {
+      return res.status(404).json({ message: 'No unique years found in the Grade table' });
+    }
+
+    const years = uniqueYears.map(item => item.year);
+
+    res.status(200).json({ message: 'Unique years retrieved successfully', data: years });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving unique years', error: error.message });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.updateGrade = async (req, res) => {
     const errors = validationResult(req);

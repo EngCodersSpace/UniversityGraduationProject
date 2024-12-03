@@ -1,7 +1,6 @@
 
 const { body } = require('express-validator');
-
-// Validation rules for creating a grade
+ 
 const createGrade = [
   body('student_id')
     .isInt()
@@ -63,7 +62,6 @@ const createGrade = [
     .withMessage('Status is required.'),
 ];
 
-// Validation rules for updating a grade
 const updateGrade = [
   body('student_id')
     .optional()
