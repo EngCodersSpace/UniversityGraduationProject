@@ -97,7 +97,6 @@ module.exports = (sequelize, DataTypes) => {
     },
 
 
-    title: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'document',
