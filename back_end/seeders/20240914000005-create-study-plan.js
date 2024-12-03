@@ -20,6 +20,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await study_plan.destroy({ where: {}, truncate: true });
+    await study_plan.destroy({ where: {}, truncate: false });
   }
 };

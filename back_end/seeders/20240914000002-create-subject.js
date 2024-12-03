@@ -5,40 +5,42 @@ const { subject } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const levels = await queryInterface.sequelize.query(
-      "SELECT * FROM levels",
-      { type: Sequelize.QueryTypes.SELECT }
-    );
-    const sections = await queryInterface.sequelize.query(
-      "SELECT * FROM sections",
-      { type: Sequelize.QueryTypes.SELECT }
-    );
-
-    if (!levels.length || !sections.length) {
-      console.log('Levels or Sections not found, aborting seeding.');
-      return;
-    }
+    
+    const subject_names = [
+      "Design Principles",
+      "Fundamentals",
+      "Materials Science",
+      "Fluid Mechanics",
+      "Thermodynamics",
+      "Control Systems",
+      "Power Systems",
+      "Signal Processing",
+      "Machine Learning",
+      "Project Management",
+      "Renewable Energy",
+      "AI Integration",
+      "Instrumentation",
+      "Embedded Systems",
+      "Advanced Mechanics",
+      "Finite Element Analysis",
+    ];
 
     const subjects = [];
+    for (let i=0;i<subject_names.length; i++) {
 
-    for (let level of levels) {
-      for (let section of sections) {
-        const subjectName = faker.lorem.word();
         subjects.push({
-          subject_id: `${level.id}_${section.id}_${subjectName.replace(/\s+/g, '_')}`,
-          subject_name: subjectName,
+          subject_id: faker.lorem.word(),
+          subject_name: subject_names[i],
           number_of_units: Math.floor(Math.random() * 5) + 1,
-          subject_description: `This is the description for ${subjectName} in Level ${level.name} Section ${section.name}.`,
+          subject_description: `This is the description for ${subject_names[i]}.`,
           createdAt: new Date(),
           updatedAt: new Date(),
         });
-      }
     }
-
     await subject.bulkCreate(subjects);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await subject.destroy({ where: {}, truncate: true });
+    await subject.destroy({ where: {}, truncate: false });
   }
 };

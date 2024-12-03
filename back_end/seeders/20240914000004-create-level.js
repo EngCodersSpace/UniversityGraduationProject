@@ -16,6 +16,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await level.destroy({ where: {}, truncate: true });
+    await level.destroy({ where: {}, truncate: false });
   },
 };
