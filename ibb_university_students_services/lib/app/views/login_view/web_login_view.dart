@@ -87,13 +87,13 @@ class WebLoginView extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // SizedBox(
-                            //   width: ((width * 0.35) - 194) * (1 / 3),
-                            // ),
                             SizedBox(
-                              width: ((width * 0.35) - 194) * (2 / 3),
+                              width: ((width * 0.35) - 194) * (1 / 3),
+                            ),
+                            SizedBox(
+                              width: ((width * 0.35) - 194) * (1 / 3),
                               child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SecText(
                                       'login'.tr,

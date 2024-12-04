@@ -48,7 +48,7 @@ class WebProfileView extends GetView<ProfileController> {
                   height: Get.height * 0.6,
                   padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: SweepGradient(
                       colors: [
                         AppColors.linkTextColor.withOpacity(0.3),
                         AppColors.linkTextColor.withOpacity(0.2),
@@ -56,8 +56,8 @@ class WebProfileView extends GetView<ProfileController> {
                         AppColors.linkTextColor.withOpacity(0.2),
                         AppColors.linkTextColor.withOpacity(0.3),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      // begin: Alignment.topLeft,
+                      // end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
