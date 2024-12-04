@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   translation.init({
-         id: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
