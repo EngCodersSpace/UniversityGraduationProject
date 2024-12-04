@@ -14,6 +14,8 @@ const nodemailer = require("nodemailer");
 const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
 
+const { addTranslation } = require('../middleware/translationServices');
+
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
@@ -144,10 +146,10 @@ exports.refreshToken = async (req, res) => {
 };
 ///////////////////////////
 exports.registerDoctor = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({ errors: errors.array() });
+  // }
 
   const {} = req.body;
 
@@ -156,6 +158,21 @@ exports.registerDoctor = async (req, res) => {
       include: [{ model: doctor, as: "doctor" }],
     });
 
+    const language = req.body.language || 'en'; 
+
+
+    
+    //   addTranslation(tableName, recordId, field, value, language)
+    await addTranslation('users', newDoctor.user_id, 'user_name', `${newDoctor.user_name}`, language);
+    // console.log("\n2\n",newDoctor);
+    await addTranslation('users', newDoctor.user_id, 'permission', `${newDoctor.permission}`, language);
+    await addTranslation('users', newDoctor.user_id, 'collegeName', `${newDoctor.collegeName}`, language);
+    // console.log("\n2\n",newDoctor);
+    await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${newDoctor.doctor.academic_degree}`, language);
+    await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${newDoctor.doctor.administrative_position}`, language);
+    // console.log("\n3\n",newDoctor);
+
+    
     res.status(201).json({
       message: "Doctor registered successfully",
       user: newDoctor,
@@ -181,6 +198,11 @@ exports.registerStudent = async (req, res) => {
       include: [{ model: student, as: "student" }],
     });
 
+    await addTranslation('users', newStudent.user_id, 'user_name', `${newStudent.user_name}`, language);
+    await addTranslation('users', newStudent.user_id, 'permission', `${newStudent.permission}`, language);
+    await addTranslation('users', newStudent.user_id, 'collegeName', `${newStudent.collegeName}`, language);
+    await addTranslation('students', newStudent.user_id, 'student_system', `${newStudent.student.student_system}`, language);
+    
     res.status(201).json({
       message: "Student registered successfully",
       user: newStudent,
