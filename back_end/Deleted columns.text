@@ -1,0 +1,31 @@
+user
+    user_name
+    collegeName
+
+student
+    student_system
+
+doctor 
+    status
+    academic_degree
+    administrative_position
+
+
+section
+    section_name
+
+lecture
+    lecture_room
+
+student_fee
+    payment_status
+
+grade
+    status
+
+subject
+    subject_name
+
+exam
+    exam_room
+

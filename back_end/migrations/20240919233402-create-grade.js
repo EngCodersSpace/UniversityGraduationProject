@@ -73,19 +73,11 @@ module.exports = {
         defaultValue: false,
       },
       //Determine if the student has tested the subject before or not .[if "Repeater" =>(he is tested before) , if "Freshman" =>(he has never tested it before)]
-      status: {
-        type: Sequelize.ENUM('Freshman', 'Repeater'),
-        allowNull: false,
-        defaultValue: 'Freshman',
-      },
-      // //How many times did he retest the subject 
-      // //Write a function to increase the value by +1  in every each time he retake the subject test
-      // retake_count: {
-      //   type: DataTypes.INTEGER,
+      // status: {
+      //   type: Sequelize.ENUM('Freshman', 'Repeater'),
       //   allowNull: false,
-      //   defaultValue: 0,
+      //   defaultValue: 'Freshman',
       // },
-
 
 
 
