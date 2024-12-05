@@ -8,7 +8,8 @@ class Utils {
     // double designRatio = 411 / 891;
     // double ratio = (screenRatio>designRatio)?designRatio/screenRatio:screenRatio / designRatio;
     double ratio = Get.width/411;
-    (ratio>1.2)?ratio=1.2:(ratio<0.8)?ratio=0.8:null;
+    (ratio>1.2)?ratio=1.2:(ratio<0.6)?ratio=0.6:null;
+    print(ratio);
     return fontSize * ratio;
   }
 }

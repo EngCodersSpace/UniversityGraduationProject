@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../globals.dart';
+import '../../../globals.dart';
 
 class ServicesCard extends GetView {
   ServicesCard(
