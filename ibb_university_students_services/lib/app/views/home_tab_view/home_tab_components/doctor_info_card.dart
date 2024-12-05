@@ -20,10 +20,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: (Get.width - 2) * 0.03,
-          ),
-          SizedBox(
-            width: (Get.width - 2) * 0.25,
+            width: (Get.width - 2) * 0.33,
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,
@@ -32,12 +29,13 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Department".tr,
                     textColor: AppColors
-                        .inverseSecTextColor),
+                        .inverseSecTextColor,fontSize: 12,),
                 Row(
                   children: [
                     Icon(Icons.groups_sharp,
                         color:
-                        AppColors.secTextColor),
+                        AppColors.secTextColor,
+                    ),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
@@ -50,10 +48,9 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                               "Unknown".tr,
                           textColor: AppColors
                               .secTextColor,
-                          fontSize: 14 *
-                              Get.textScaleFactor,
+                          fontSize: 12 ,
                           height: 0),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -65,10 +62,10 @@ class DoctorInfoCard extends GetView<HomeTabController> {
             color: AppColors.inverseSecTextColor,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.03,
+            width: (Get.width - 2) * 0.02,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.3,
+            width: (Get.width - 2) * 0.26,
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,
@@ -77,7 +74,9 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Academic Degree".tr,
                     textColor: AppColors
-                        .inverseSecTextColor),
+                        .inverseSecTextColor,
+                  fontSize: 12,
+                ),
                 Row(
                   children: [
                     Icon(Icons.card_membership,
@@ -92,8 +91,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                             "Unknown".tr,
                         textColor:
                         AppColors.secTextColor,
-                        fontSize: 14 *
-                            Get.textScaleFactor,
+                        fontSize: 12,
                         height: 0),
                   ],
                 ),
@@ -106,10 +104,10 @@ class DoctorInfoCard extends GetView<HomeTabController> {
             color: AppColors.inverseSecTextColor,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.03,
+            width: (Get.width - 2) * 0.02,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.3,
+            width: (Get.width - 2) * 0.26,
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,
@@ -121,7 +119,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                   textColor:
                   AppColors.inverseSecTextColor,
                   fontSize:
-                  14 * Get.textScaleFactor,
+                  12,
                 ),
                 Row(
                   children: [
@@ -137,8 +135,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                             "Unknown".tr,
                         textColor:
                         AppColors.secTextColor,
-                        fontSize: 14 *
-                            Get.textScaleFactor,
+                        fontSize: 12,
                         height: 0),
                   ],
                 ),
