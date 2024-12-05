@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     tableName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     recordId: {
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     field: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     languageId: {
@@ -47,12 +47,18 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     value: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
   }, {
     sequelize,
     modelName: 'translation',
+    indexes:[
+      {
+      unique:false,
+      fields:['tableName','recordId','field','languageId'],
+      },    
+    ],
   });
   return translation;
 };
