@@ -6,7 +6,7 @@ import 'package:ibb_university_students_services/app/models/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
-import 'package:ibb_university_students_services/app/services/table_time_services.dart';
+import 'package:ibb_university_students_services/app/services/lecture_services.dart';
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';

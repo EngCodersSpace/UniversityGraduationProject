@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import '../../globals.dart';
+import 'exam_table_view_components/exam_card.dart';
 
 class PhoneExamTableView extends GetView<ExamTableController> {
   PhoneExamTableView({super.key});
@@ -36,14 +37,22 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SecText("Exams".tr,
-                                textColor: AppColors.inverseSecTextColor),
+                            SecText("Exams:".tr,
+                                textColor: AppColors.inverseSecTextColor,fontSize: 18,),
                           ],
                         ),
-                        SizedBox(height: Get.height * 0.03),
+                        SizedBox(height: Get.height * 0.01),
                         for (int i = 0;
-                        i <  0;
-                        i++)...[]
+                        i <  (controller.exams?.value.length??0);
+                        i++)...[
+                          ExamCard(
+                            content: Rx(controller.exams?.value[i]),
+                          ),
+                          if (i < ((controller.exams?.value.length ?? 0) - 1))
+                            SizedBox(
+                              height: Get.height * 0.03,
+                            )
+                        ]
                       ],
                     ),
                   )),

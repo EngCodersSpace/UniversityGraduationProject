@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/services/exam_services.dart';
 import '../components/custom_text.dart';
 import '../globals.dart';
+import '../models/exam_model.dart';
 import '../models/level_model.dart';
 import '../models/section_model.dart';
 import '../services/app_data_services.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
-import '../services/table_time_services.dart';
+import '../services/lecture_services.dart';
 
 class ExamTableController extends GetxController {
   RxBool loadingState = true.obs;
@@ -16,9 +18,9 @@ class ExamTableController extends GetxController {
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedYear = "2024".obs;
+  Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Map termsData = {};
+  Rx<List<Exam>>? exams = Rx([]);
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
@@ -32,6 +34,10 @@ class ExamTableController extends GetxController {
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
+    (years.isNotEmpty)
+        ? selectedYear.value = years.first.value!
+        : null;
+    await fetchExamsData();
     super.onInit();
     loadingState.value = false;
   }
@@ -41,42 +47,43 @@ class ExamTableController extends GetxController {
     super.refresh();
   }
 
-  Future<void> fetchTableData() async {
+  Future<void> fetchExamsData() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
-    Result res = await LectureServices.fetchTableTime(
+    Result res = await ExamServices.fetchExams(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: selectedYear.value,
+      year: selectedYear.value!,
+      term: selectedTerm.value
     );
+    print("here ${res.statusCode}");
     if (res.statusCode == 200) {
-      termsData = res.data;
-      selected.refresh();
+      exams?.value = res.data??[];
     }
   }
 
   void changeDepartment(int? val) async {
     if (val == null) return;
     selectedDepartment.value = val;
-    await fetchTableData();
+    await fetchExamsData();
   }
 
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
-    await fetchTableData();
+    await fetchExamsData();
   }
 
   void changeYear(String? val) {
     if (val == null) return;
     selectedYear.value = val;
-    fetchTableData();
+    fetchExamsData();
   }
 
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    selected.refresh();
+    fetchExamsData();
   }
 
   Future<void> initDropdownMenuLists() async {
