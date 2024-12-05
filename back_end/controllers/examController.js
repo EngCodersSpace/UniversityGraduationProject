@@ -121,22 +121,19 @@ exports.getExamGroupedByCriteria = async (req, res) => {
         
         Exam.forEach(lec => { 
             const term = lec.exam_term; 
-            const date = lec.exam_date; 
-            const time = lec.exam_time; 
 
             if (!organizedLectures[term]) {
-                organizedLectures[term] = {};
+                organizedLectures[term] = [];
             }
 
-            if (!organizedLectures[term][date]) {
-                organizedLectures[term][date]= [];
-            }
 
-            organizedLectures[term][date].push({
+            organizedLectures[term].push({
                 id   : lec.exam_id,
-                title: lec.subject.subject_name, 
-                Time : time, 
-                Exam_room: lec.exam_room, 
+                subject_name: lec.subject.subject_name, 
+                exam_date:lec.exam_date,
+                exam_day:lec.exam_day,
+                exam_time : lec.exam_time, 
+                exam_room: lec.exam_room, 
             });
         });
 
