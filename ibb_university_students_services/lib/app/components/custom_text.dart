@@ -14,10 +14,6 @@ class MainText extends StatelessWidget {
     this.height,
   }) {
     textColor ??= AppColors.mainTextColor;
-    print(fontSize);
-    if(fontSize == 1){
-      print("font size ${Utils.fontSizeScale(fontSize)}");
-    }
     fontSize = Utils.fontSizeScale(fontSize);
   }
 

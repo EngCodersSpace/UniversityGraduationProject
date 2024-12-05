@@ -31,12 +31,12 @@ class TableTabController extends GetxController {
         value: "Term 1",
         child: SizedBox(
             width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 1", textColor: AppColors.mainTextColor))),
+            child: SecText("Term 1", textColor: AppColors.mainTextColor,fontSize: 12,))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
             width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 2", textColor: AppColors.mainTextColor))),
+            child: SecText("Term 2", textColor: AppColors.mainTextColor,fontSize: 12,))),
   ];
 
   @override
@@ -47,7 +47,8 @@ class TableTabController extends GetxController {
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    fetchTableData();
+    await fetchTableData();
+    selectedDayChange(selected.value);
     super.onInit();
   }
 
@@ -56,7 +57,7 @@ class TableTabController extends GetxController {
     super.refresh();
   }
 
-  void fetchTableData() async {
+  Future<void> fetchTableData() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     Result res = await LectureServices.fetchTableTime(
@@ -66,27 +67,31 @@ class TableTabController extends GetxController {
     );
     if (res.statusCode == 200) {
       termsData = res.data;
-      tableTime = Rx(res.data[selectedTerm.value]);
+      tableTime.value = res.data[selectedTerm.value];
       selectedDayChange(selected.value);
+      selected.refresh();
     }
   }
 
-  void changeDepartment(int? val) {
+  void changeDepartment(int? val) async{
     if (val == null) return;
     selectedDepartment.value = val;
+    await fetchTableData();
   }
 
-  void changeLevel(int? val) {
+  void changeLevel(int? val) async{
     if (val == null) return;
     selectedLevel.value = val;
+    await fetchTableData();
   }
 
   void changeYear(String? val) {
     if (val == null) return;
     selectedYear.value = val;
+    fetchTableData();
   }
 
-  void changeTerm(String? val) {
+  void changeTerm(String? val) async{
     if (val == null) return;
     selectedTerm.value = val;
     tableTime.value = termsData[selectedTerm.value];
@@ -141,6 +146,7 @@ class TableTabController extends GetxController {
               child: SecText(
                 section.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
+                fontSize: 12,
               ),
             )),
       );
@@ -155,6 +161,7 @@ class TableTabController extends GetxController {
               child: SecText(
                 level.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
+                fontSize: 12,
               ),
             )),
       );
@@ -169,6 +176,7 @@ class TableTabController extends GetxController {
               child: SecText(
                 year,
                 textColor: AppColors.mainTextColor,
+                fontSize: 12,
               ),
             )),
       );

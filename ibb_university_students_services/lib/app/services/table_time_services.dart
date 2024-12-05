@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import '../models/days_table.dart';
 import '../models/result.dart';
-import '../models/student_model.dart';
 import 'http_provider/http_provider.dart';
 
 
@@ -17,15 +16,15 @@ class LectureServices {
     int? term,
     bool hardFetch = false,
   }) async {
-    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year][term] != null && !hardFetch && term !=null) {
-      return Result(
-          data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year][term],
-    statusCode: 200,
-    hasError: false,
-    message: "successful",
-    );
-    }
     if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch && term == null) {
+      if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year][term] != null && term !=null) {
+        return Result(
+          data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year][term],
+          statusCode: 200,
+          hasError: false,
+          message: "successful",
+        );
+      }
       return Result(
         data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year],
         statusCode: 200,
@@ -78,74 +77,5 @@ class LectureServices {
 
 
 
-  ////////////////////////////////////////////////////////////////////////////////////////////
-  //////                                     fake data                                 ///////
-  ////////////////////////////////////////////////////////////////////////////////////////////
-  static Future<Result<Student>> _fakeFetchTableTime({bool hardFetch = false}) async {
-    // virtual response for test
-    Map<String, dynamic> response = {
-      'sun': [
-        {
-          "title": "AI",
-          "startTime": "8:00",
-          "endTime": "10:00",
-          "doctor": "Farhan",
-          "hall": "h1",
-          "description": null
-        },
-        {
-          "title": "Math",
-          "startTime": "10:00",
-          "endTime": "12:00",
-          "doctor": "Hameed",
-          "hall": "h1",
-          "description": null,
-          "canceled": true,
-        }
-      ],
-      'mon': [
-        {
-          "title": "English",
-          "startTime": "8:30",
-          "endTime": "10:30",
-          "doctor": "Ahmed",
-          "hall": "h1",
-          "description": null
-        }
-      ],
-      'tue': [
-        {
-          "title": "AI",
-          "startTime": "8:00",
-          "endTime": "10:00",
-          "doctor": "Farhan",
-          "hall": "h1",
-          "description": null
-        },
-        {
-          "title": "Math",
-          "startTime": "10:00",
-          "endTime": "12:00",
-          "doctor": "Hameed",
-          "hall": "h1",
-          "description": null,
-          "canceled": true,
-        },
-        {
-          "title": "Math",
-          "startTime": "12:00",
-          "endTime": "02:00",
-          "doctor": "Hameed",
-          "hall": "h1",
-          "description": null,
-          "canceled": true,
-        }
-      ],
-      'wed': [],
-      'the': [],
-      'sat': [],
-    };
-    return Result(hasError: true, message: "error");
-  }
 
 }

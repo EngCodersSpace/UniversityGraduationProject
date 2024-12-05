@@ -7,12 +7,12 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:intl/intl.dart';
 
-import '../globals.dart';
-import '../models/lecture_model.dart';
+import '../../../globals.dart';
+import '../../../models/lecture_model.dart';
 
 class LectureCard extends StatelessWidget {
 
-  Lecture? content;
+  Rx<Lecture?> content;
   double height;
 
   LectureCard({
@@ -24,8 +24,8 @@ class LectureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime endTime = timeFormat.parse((content?.startTime??"00:00:00")).add(Duration(minutes: content?.duration??0));
-    return Container(
+    DateTime endTime = timeFormat.parse((content.value?.startTime??"00:00:00")).add(Duration(minutes: content.value?.duration??0));
+    return Obx(()=>Container(
       width: double.maxFinite,
       padding: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -73,48 +73,48 @@ class LectureCard extends StatelessWidget {
                         const BorderRadius.all(Radius.circular(32)),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: SecText("${content?.startTime??"00:00:00"} - ${timeFormat.format(endTime)}"),
+                      child: SecText("${content.value?.startTime??"00:00:00"} - ${timeFormat.format(endTime)}"),
                     ),
                     Container(
                       decoration:BoxDecoration(
-                        color:(content?.canceled??false)?Colors.redAccent:Colors.greenAccent,
+                        color:(content.value?.canceled??false)?Colors.redAccent:Colors.greenAccent,
                         borderRadius:
                         const BorderRadius.all(Radius.circular(32)),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: (content?.canceled??false)?SecText("Canceled".tr):SecText("Confirmed".tr),
+                      child: (content.value?.canceled??false)?SecText("Canceled".tr):SecText("Confirmed".tr),
                     ),
                   ],
                 ),
-                MainText(content?.subjectName??"Unknown".tr),
+                MainText(content.value?.subjectName??"Unknown".tr),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24,horizontal: 28),
+            padding: const EdgeInsets.symmetric(vertical: 24,horizontal: 22),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(children:[SecText("Doctor: ",fontWeight: FontWeight.bold,fontSize: 19),SecText("Dr.${content?.doctor??"unknown".tr}")],),
-                    Row(children:[SecText("Hall: ",fontWeight: FontWeight.bold,fontSize: 19),SecText(content?.hall??"unknown".tr)],),
-              ],
-            ),
-                if(content?.description != null && (content?.description?.isNotEmpty??false))...[
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SecText("Description: ",fontWeight: FontWeight.bold,fontSize: 19),
-                      SecText(content?.description??"unknown".tr)
+                      Row(children:[SecText("Doctor: ",fontWeight: FontWeight.bold,fontSize: 19),SecText("Dr.${content.value?.doctor??"unknown".tr}")],),
+                      Row(children:[SecText("Hall: ",fontWeight: FontWeight.bold,fontSize: 19),SecText(content.value?.hall??"unknown".tr)],),
                     ],
                   ),
-                ]
+                  if(content.value?.description != null && (content.value?.description?.isNotEmpty??false))...[
+                    Row(
+                      children: [
+                        SecText("Description: ",fontWeight: FontWeight.bold,fontSize: 19),
+                        SecText(content.value?.description??"unknown".tr)
+                      ],
+                    ),
+                  ]
 
-          ]),)
+                ]),)
         ],
       ),
-    );
+    ));
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/day_cards.dart';
-import 'package:ibb_university_students_services/app/components/lecture_card.dart';
+import 'package:ibb_university_students_services/app/views/table_tab_view/table_tab_components/lecture_card.dart';
 
 import '../../controllers/tabs_controller/table_tab_view_controller.dart';
 import '../../globals.dart';
@@ -43,7 +43,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                             i < (controller.selectedDay?.length ?? 0);
                             i++) ...[
                           LectureCard(
-                            content: controller.selectedDay?[i],
+                            content: Rx(controller.selectedDay?[i]),
                             height: height * 0.56 * (1 / 2),
                           ),
                           if (i < ((controller.selectedDay?.length ?? 0) - 1))

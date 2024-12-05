@@ -50,7 +50,6 @@ class AppDataServices {
   static Future<Result<List<String>>> fetchLectureYears({
     bool hardFetch = false,
 }) async {
-
     if (_years  != null &&
         !hardFetch) {
       return Result(
@@ -64,14 +63,13 @@ class AppDataServices {
     try {
       response = await HttpProvider.get("lecture/year");
       if (response?.statusCode == 200) {
-         _years = response?.data["data"];
-        return Result(
+         _years = List<String>.from(response?.data["data"]);
+         return Result(
             data: _years,
             hasError: true,
             statusCode: response?.statusCode ?? _fetchError,
             message: response?.data["message"] ?? "error");
       }
-
       return Result(
           data: null,
           hasError: true,

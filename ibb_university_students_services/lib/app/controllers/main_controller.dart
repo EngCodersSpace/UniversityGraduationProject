@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
 
 class MainController extends GetxController {
-  RxInt selectedIndex = 2.obs;
+  RxInt selectedIndex = 1.obs;
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
   @override
