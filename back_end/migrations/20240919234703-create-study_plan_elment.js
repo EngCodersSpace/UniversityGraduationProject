@@ -31,21 +31,33 @@ module.exports = {
       },
       doctor_id: {
         type: Sequelize.INTEGER,
-        allowNull:true,
+        allowNull: true,
         references: {
-          model: 'doctors' ,
-          key:'doctor_id',
+          model: 'doctors',
+          key: 'doctor_id',
         },
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE',  
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
-      section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+      section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
       },
-      level: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+      level_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
       },
       number_of_units: {
         type: Sequelize.INTEGER,

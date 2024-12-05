@@ -50,19 +50,32 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   borderRadius: BorderRadius.circular(50),
                                   border: Border.all(
                                       width: 3, color: AppColors.tabBackColor),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          controller.user.profileImage!),
-                                      fit: BoxFit.fill),
+                                  image: ((controller.user.profileImage !=
+                                              null) &&
+                                          (controller.user.profileImage != ""))
+                                      ? DecorationImage(
+                                          image: AssetImage(
+                                              controller.user.profileImage!),
+                                          fit: BoxFit.fill)
+                                      : null,
                                 ),
+                                child: ((controller.user.profileImage !=
+                                    null) &&
+                                    (controller.user.profileImage != ""))
+                                    ? null
+                                    : Center(child: MainText(
+                                  controller.user.name?[0] ??
+                                      "".toUpperCase(),
+                                  fontSize: 50,
+                                ),),
                               ),
                             ],
                           ),
                           SizedBox(
                             height: height * 0.01,
                           ),
-                          MainText(controller.user.name!),
-                          SecText("shehab@gmail.com",
+                          MainText(controller.user.name??"Unknown".tr),
+                          SecText(controller.user.email??"Unknown".tr,
                               textColor: AppColors.mainTextColor),
                         ],
                       ),
@@ -132,7 +145,8 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ],
                             ),
                           ),
-                          SecText(controller.user.phones?.first ?? "Unknown".tr),
+                          SecText(
+                              controller.user.phones?.first ?? "Unknown".tr),
                         ],
                       ),
                       Row(
@@ -175,7 +189,10 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 ],
                               ),
                             ),
-                            SecText( (controller.user as Student).section?.name?.tr ??
+                            SecText((controller.user as Student)
+                                    .section
+                                    ?.name
+                                    ?.tr ??
                                 "Unknown".tr),
                           ],
                         ),
@@ -194,51 +211,57 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 ],
                               ),
                             ),
-                            SecText((controller.user as Student).level?.name?.tr ??
+                            SecText(
+                                (controller.user as Student).level?.name?.tr ??
+                                    "Unknown".tr),
+                          ],
+                        )
+                      ] else ...[
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width * 0.4,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.card_membership),
+                                  SizedBox(
+                                    width: width * 0.02,
+                                  ),
+                                  SecText("Academic Degree".tr,
+                                      fontWeight: FontWeight.bold),
+                                ],
+                              ),
+                            ),
+                            SecText((controller.user as Doctor)
+                                    .academicDegree
+                                    ?.tr ??
+                                "Unknown".tr),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: width * 0.4,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.manage_accounts),
+                                  SizedBox(
+                                    width: width * 0.02,
+                                  ),
+                                  Flexible(
+                                    child: SecText("administrative Position".tr,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SecText((controller.user as Doctor)
+                                    .administrativePosition
+                                    ?.tr ??
                                 "Unknown".tr),
                           ],
                         )
-                      ] else
-                        ...[
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: width * 0.4,
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.card_membership),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
-                                    SecText("Academic Degree".tr,
-                                        fontWeight: FontWeight.bold),
-                                  ],
-                                ),
-                              ),
-                              SecText((controller.user as Doctor).academicDegree?.tr ??
-                                  "Unknown".tr),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: width * 0.4,
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.manage_accounts),
-                                    SizedBox(
-                                      width: width * 0.02,
-                                    ),
-                                    Flexible(child: SecText("administrative Position".tr,
-                                        fontWeight: FontWeight.bold),)
-                                  ],
-                                ),
-                              ),
-                              SecText((controller.user as Doctor).administrativePosition?.tr ??
-                                  "Unknown".tr),
-                            ],
-                          )
-                        ],
+                      ],
                       CustomButton(
                         onPress: controller.logout,
                         text: "Logout".tr,

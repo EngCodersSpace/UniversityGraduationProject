@@ -1,5 +1,4 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:ibb_university_students_services/app/models/lavel_model.dart';
+import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
@@ -28,17 +27,18 @@ class Student extends User {
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
+    
     return Student(
-      id: json['id'],
-      name: json['name'],
+      id: json['user_id'],
+      name: json['user_name'],
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],
       phones: json['phones'],
-      profileImage: json['profile_image'],
+      // profileImage: json['profile_picture'],
       studyPlaneId: json['study_plan_id'],
-      level: json['student_level'],
-      section: json['student_section'],
+      level: Level.fromJson(json["level"]),
+      section: Section.fromJson(json["section"]),
       system: json['student_system'],
       enrollmentYear: json['enrollment_year'],
       createdAt: json['created_at'],

@@ -1,23 +1,14 @@
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
-import 'package:ibb_university_students_services/app/models/user_model.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
 
 class MainController extends GetxController {
-  RxInt selectedIndex = 2.obs;
+  RxInt selectedIndex = 1.obs;
   late CustomFloatActionButtonLocation currentPos;
-  User? user;
   RxBool loading = true.obs;
   @override
 
   void onInit() async {
-    currentPos = CustomFloatActionButtonLocation(
-        x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
-    Result res = await UserServices.fetchUser();
-    if (res.statusCode == 200) {
-      user = res.data;
-    }
+    changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
   }

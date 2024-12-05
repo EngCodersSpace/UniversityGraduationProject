@@ -19,16 +19,28 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      level_fees: {
-        type: Sequelize.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+      section_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
+      level_fees_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
       },
       term: {
         type: Sequelize.ENUM('Term 1', 'Term 2'),
-        allowNull: false,
-      },
-      section: {
-        type: Sequelize.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
         allowNull: false,
       },
       total_amount: {

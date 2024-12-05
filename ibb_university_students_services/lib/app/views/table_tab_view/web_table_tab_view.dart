@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/table_tab_view_controller.dart';
 
 class WebTableTabView extends GetView<TableTabController> {
+  const WebTableTabView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return const Placeholder();
   }
 }
