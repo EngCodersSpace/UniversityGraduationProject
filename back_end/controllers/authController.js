@@ -13,6 +13,9 @@ const {
 const nodemailer = require("nodemailer");
 const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
+const { sequelize} = require('sequelize');
+
+const translateTex = require('translate-google');
 
 const { addTranslation } = require('../middleware/translationServices');
 
@@ -145,45 +148,98 @@ exports.refreshToken = async (req, res) => {
   });
 };
 ///////////////////////////
+// exports.registerDoctor = async (req, res) => {
+//   // const errors = validationResult(req);
+//   // if (!errors.isEmpty()) {
+//   //   return res.status(400).json({ errors: errors.array() });
+//   // }
+
+//   const {} = req.body;
+
+//   try {
+//     const transaction = await Sequelize.transaction();
+//     const newDoctor = await user.create(req.body, { transaction, include: [{ model: doctor, as: "doctor" }] });
+//     const language = req.body.language || 'en'; 
+
+//     //   addTranslation(tableName, recordId, field, value, language)
+//     await addTranslation('users', newDoctor.user_id, 'user_name', `${newDoctor.user_name}`, language);
+//     await addTranslation('users', newDoctor.user_id, 'permission', `${newDoctor.permission}`, language);
+//     await addTranslation('users', newDoctor.user_id, 'collegeName', `${newDoctor.collegeName}`, language);
+//     await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${newDoctor.doctor.academic_degree}`, language);
+//     await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${newDoctor.doctor.administrative_position}`, language);
+
+//     await transaction.commit();
+//     res.status(201).json({
+//       message: "Doctor registered successfully",
+//       user: newDoctor,
+//     });
+//   } catch (error) {
+//     await transaction.rollback();
+//     console.error("Error during user registration:", error.message);
+//     res
+//       .status(500)
+//       .json({ message: "Internal server error", error: error.message });
+//   }
+// };
+
 exports.registerDoctor = async (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.array() });
-  // }
-
-  const {} = req.body;
-
+  const {language,user_section_id,email,password,user_id,date_of_birth,profile_picture} = req.body;
   try {
-    const newDoctor = await user.create(req.body, {
-      include: [{ model: doctor, as: "doctor" }],
+    // const transactions = await sequelize.transaction();
+    let englishData, arabicTranslations;
+    if (language === 'ar') {
+      englishData = {
+        user_name  : await translateTex(req.body.user_name,   {from:'ar' ,to:'en'}),
+        permission : await translateTex(req.body.permission,  {from:'ar' ,to:'en'}),
+        collegeName: await translateTex(req.body.collegeName, {from:'ar' ,to:'en'}),
+        doctor: {
+          academic_degree        : await translateTex(req.body.doctor.academic_degree,  {from:'ar' ,to:'en'}),
+          administrative_position: await translateTex(req.body.doctor.administrative_position,{from:'ar' ,to:'en'}),
+        },
+      user_section_id,  
+      email,
+      password,
+      user_id,
+      date_of_birth,
+      profile_picture,
+      };
+      arabicTranslations = req.body; 
+
+    } else {
+      englishData = req.body;
+      arabicTranslations = {
+        user_name  : await translateTex(req.body.user_name,{from:'en' ,to:'ar'}),
+        permission : await translateTex(req.body.permission, {from:'en' ,to:'ar'}),
+        collegeName: await translateTex(req.body.collegeName, {from:'en' ,to:'ar'}),
+        doctor: {
+          academic_degree        : await translateTex(req.body.doctor.academic_degree, {from:'en' ,to:'ar'}),
+          administrative_position: await translateTex(req.body.doctor.administrative_position, {from:'en' ,to:'ar'}),
+        },
+      };
+    }
+
+
+    const newDoctor = await user.create(englishData, {
+      include: [{ model: doctor, as: 'doctor' }],
     });
 
-    const language = req.body.language || 'en'; 
+    await addTranslation('users', newDoctor.user_id, 'user_name', `${arabicTranslations.user_name}`, 'ar');
+    await addTranslation('users', newDoctor.user_id, 'permission', `${arabicTranslations.permission}`, 'ar');
+    await addTranslation('users', newDoctor.user_id, 'collegeName', `${arabicTranslations.collegeName}`, 'ar');
+    await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${arabicTranslations.doctor.academic_degree}`, 'ar');
+    await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${arabicTranslations.doctor.administrative_position}`, 'ar');
 
-
-    
-    //   addTranslation(tableName, recordId, field, value, language)
-    await addTranslation('users', newDoctor.user_id, 'user_name', `${newDoctor.user_name}`, language);
-    // console.log("\n2\n",newDoctor);
-    await addTranslation('users', newDoctor.user_id, 'permission', `${newDoctor.permission}`, language);
-    await addTranslation('users', newDoctor.user_id, 'collegeName', `${newDoctor.collegeName}`, language);
-    // console.log("\n2\n",newDoctor);
-    await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${newDoctor.doctor.academic_degree}`, language);
-    await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${newDoctor.doctor.administrative_position}`, language);
-    // console.log("\n3\n",newDoctor);
-
-    
+    // await transactions.commit();
     res.status(201).json({
-      message: "Doctor registered successfully",
+      message: 'Doctor registered successfully',
       user: newDoctor,
     });
   } catch (error) {
-    console.error("Error during user registration:", error.message);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    console.error('Error during user registration:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: `${error.message}` });
   }
 };
+
 
 exports.registerStudent = async (req, res) => {
   const errors = validationResult(req);
