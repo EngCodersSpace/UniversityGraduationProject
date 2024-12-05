@@ -31,7 +31,7 @@ class PhoneTableTabView extends GetView<TableTabController> {
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
                           horizontal: width * 0.05, vertical: height * 0.03),
-                      child: Column(
+                      child: Obx(()=>Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,19 +44,19 @@ class PhoneTableTabView extends GetView<TableTabController> {
                           ),
                           SizedBox(height: height * 0.03),
                           for (int i = 0;
-                              i < (controller.selectedDay?.length ?? 0);
-                              i++) ...[
+                          i < (controller.selectedDay.value?.length ?? 0);
+                          i++) ...[
                             LectureCard(
-                              content: Rx(controller.selectedDay?[i]),
+                              content: Rx(controller.selectedDay.value?[i]),
                               height: height * 0.56 * (1 / 2),
                             ),
-                            if (i < ((controller.selectedDay?.length ?? 0) - 1))
+                            if (i < ((controller.selectedDay.value?.length ?? 0) - 1))
                               SizedBox(
                                 height: height * 0.03,
                               )
                           ]
                         ],
-                      ),
+                      )),
                     )),
               ),
               Container(

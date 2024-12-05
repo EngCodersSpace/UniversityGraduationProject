@@ -14,31 +14,20 @@ import '../../services/app_data_services.dart';
 
 class TableTabController extends GetxController {
   RxBool loadState = true.obs;
-  Rx<TableDays?>? tableTime;
-  List<Lecture>? selectedDay;
+  TableDays? tableTime;
+  Rx<List<Lecture>?> selectedDay =  Rx<List<Lecture>?>([]);
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedYear = "2024".obs;
+  Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Map termsData = {};
 
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
-  List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 1", textColor: AppColors.mainTextColor,fontSize: 12,))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 2", textColor: AppColors.mainTextColor,fontSize: 12,))),
-  ];
+  List<DropdownMenuItem<String>> terms = [];
 
   @override
   void onInit() async {
@@ -47,6 +36,9 @@ class TableTabController extends GetxController {
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
+        : null;
+    (years.isNotEmpty)
+        ? selectedYear.value = years.first.value!
         : null;
     await fetchTableData();
     selectedDayChange(selected.value);
@@ -62,16 +54,16 @@ class TableTabController extends GetxController {
   Future<void> fetchTableData() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
+    if (selectedYear.value == null) return;
     Result res = await LectureServices.fetchTableTime(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: selectedYear.value,
+      year: selectedYear.value!,
     );
     if (res.statusCode == 200) {
       termsData = res.data;
-      tableTime?.value = res.data[selectedTerm.value];
+      tableTime = res.data[selectedTerm.value];
       selectedDayChange(selected.value);
-      selected.refresh();
     }
   }
 
@@ -96,7 +88,7 @@ class TableTabController extends GetxController {
   void changeTerm(String? val) async{
     if (val == null) return;
     selectedTerm.value = val;
-    tableTime?.value = termsData[selectedTerm.value];
+    tableTime = termsData[selectedTerm.value];
     selectedDayChange(selected.value);
     selected.refresh();
   }
@@ -105,27 +97,27 @@ class TableTabController extends GetxController {
     selected.value = index;
     switch (index) {
       case 0:
-        selectedDay = tableTime?.value?.sat;
+        selectedDay.value = tableTime?.sat;
         selectedDayName = "Saturday".tr;
         break;
       case 1:
         selectedDayName = "Sunday".tr;
-        selectedDay = tableTime?.value?.sun;
+        selectedDay.value = tableTime?.sun;
         break;
       case 2:
-        selectedDay = tableTime?.value?.mon;
+        selectedDay.value = tableTime?.mon;
         selectedDayName = "Monday".tr;
         break;
       case 3:
-        selectedDay = tableTime?.value?.tue;
+        selectedDay.value = tableTime?.tue;
         selectedDayName = "Tuesday".tr;
         break;
       case 4:
-        selectedDay = tableTime?.value?.wed;
+        selectedDay.value = tableTime?.wed;
         selectedDayName = "Wednesday".tr;
         break;
       case 5:
-        selectedDay = tableTime?.value?.thu;
+        selectedDay.value = tableTime?.thu;
         selectedDayName = "Thursday".tr;
         break;
     }
@@ -183,6 +175,18 @@ class TableTabController extends GetxController {
             )),
       );
     }
+    terms = [
+      DropdownMenuItem<String>(
+          value: "Term 1",
+          child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText("Term 1", textColor: AppColors.mainTextColor,fontSize: 12,))),
+      DropdownMenuItem<String>(
+          value: "Term 2",
+          child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText("Term 2", textColor: AppColors.mainTextColor,fontSize: 12,))),
+    ];
   }
 
   @override
