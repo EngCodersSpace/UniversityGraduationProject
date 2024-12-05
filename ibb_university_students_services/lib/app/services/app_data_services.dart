@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
-import '../models/lavel_model.dart';
+import '../models/level_model.dart';
 import '../models/result.dart';
 import 'http_provider/http_provider.dart';
 

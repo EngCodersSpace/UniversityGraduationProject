@@ -1,4 +1,4 @@
-import 'package:ibb_university_students_services/app/models/lavel_model.dart';
+import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 

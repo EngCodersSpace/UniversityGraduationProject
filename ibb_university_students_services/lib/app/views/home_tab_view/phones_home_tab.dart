@@ -311,7 +311,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.examTableRoute,
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(

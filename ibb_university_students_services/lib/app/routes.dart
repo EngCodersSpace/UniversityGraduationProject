@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/bindings/exam_table_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/library_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
+import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/login_view_loader.dart';
@@ -37,6 +39,12 @@ class AppRoutes {
       page: () => const AcademicCardViewLoader(),
       // binding: LibraryBinding(),
     ),
+    GetPage(
+      name: '/exam_table',
+      page: () => const ExamTableViewLoader(),
+      binding: ExamTableBinding(),
+    ),
+
     // Add more routes here
   ];
 }

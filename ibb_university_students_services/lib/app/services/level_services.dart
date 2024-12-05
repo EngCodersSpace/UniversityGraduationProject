@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:ibb_university_students_services/app/models/lavel_model.dart';
+import 'package:ibb_university_students_services/app/models/level_model.dart';
 import '../models/result.dart';
 import 'http_provider/http_provider.dart';
 

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
-import 'package:ibb_university_students_services/app/models/level_model.dart';
-import 'package:ibb_university_students_services/app/models/lecture_model.dart';
-import 'package:ibb_university_students_services/app/models/section_model.dart';
-import 'package:ibb_university_students_services/app/services/level_services.dart';
-import 'package:ibb_university_students_services/app/services/section_services.dart';
-import 'package:ibb_university_students_services/app/services/table_time_services.dart';
-import '../../components/custom_text.dart';
-import '../../models/days_table.dart';
-import '../../models/result.dart';
-import '../../services/app_data_services.dart';
+import 'package:ibb_university_students_services/app/models/result.dart';
+import '../components/custom_text.dart';
+import '../globals.dart';
+import '../models/level_model.dart';
+import '../models/section_model.dart';
+import '../services/app_data_services.dart';
+import '../services/level_services.dart';
+import '../services/section_services.dart';
+import '../services/table_time_services.dart';
 
-class TableTabController extends GetxController {
-  late Rx<TableDays?> tableTime;
-  List<Lecture>? selectedDay;
+class ExamTableController extends GetxController {
+  RxBool loadingState = true.obs;
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedDepartment = Rx(null);
@@ -22,22 +19,10 @@ class TableTabController extends GetxController {
   RxString selectedYear = "2024".obs;
   RxString selectedTerm = "Term 1".obs;
   Map termsData = {};
-
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
-  List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 1", textColor: AppColors.mainTextColor,fontSize: 12,))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 2", textColor: AppColors.mainTextColor,fontSize: 12,))),
-  ];
+  List<DropdownMenuItem<String>> terms = [];
 
   @override
   void onInit() async {
@@ -47,9 +32,8 @@ class TableTabController extends GetxController {
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    await fetchTableData();
-    selectedDayChange(selected.value);
     super.onInit();
+    loadingState.value = false;
   }
 
   @override
@@ -67,19 +51,17 @@ class TableTabController extends GetxController {
     );
     if (res.statusCode == 200) {
       termsData = res.data;
-      tableTime.value = res.data[selectedTerm.value];
-      selectedDayChange(selected.value);
       selected.refresh();
     }
   }
 
-  void changeDepartment(int? val) async{
+  void changeDepartment(int? val) async {
     if (val == null) return;
     selectedDepartment.value = val;
     await fetchTableData();
   }
 
-  void changeLevel(int? val) async{
+  void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchTableData();
@@ -91,42 +73,10 @@ class TableTabController extends GetxController {
     fetchTableData();
   }
 
-  void changeTerm(String? val) async{
+  void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    tableTime.value = termsData[selectedTerm.value];
-    selectedDayChange(selected.value);
     selected.refresh();
-  }
-
-  void selectedDayChange(int index) {
-    selected.value = index;
-    switch (index) {
-      case 0:
-        selectedDay = tableTime.value?.sat;
-        selectedDayName = "Saturday".tr;
-        break;
-      case 1:
-        selectedDayName = "Sunday".tr;
-        selectedDay = tableTime.value?.sun;
-        break;
-      case 2:
-        selectedDay = tableTime.value?.mon;
-        selectedDayName = "Monday".tr;
-        break;
-      case 3:
-        selectedDay = tableTime.value?.tue;
-        selectedDayName = "Tuesday".tr;
-        break;
-      case 4:
-        selectedDay = tableTime.value?.wed;
-        selectedDayName = "Wednesday".tr;
-        break;
-      case 5:
-        selectedDay = tableTime.value?.thu;
-        selectedDayName = "Thursday".tr;
-        break;
-    }
   }
 
   Future<void> initDropdownMenuLists() async {
@@ -181,6 +131,26 @@ class TableTabController extends GetxController {
             )),
       );
     }
+    terms = [
+      DropdownMenuItem<String>(
+          value: "Term 1",
+          child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText(
+                "Term 1",
+                textColor: AppColors.mainTextColor,
+                fontSize: 12,
+              ))),
+      DropdownMenuItem<String>(
+          value: "Term 2",
+          child: SizedBox(
+              width: (Get.width / 3.3) * 0.75,
+              child: SecText(
+                "Term 2",
+                textColor: AppColors.mainTextColor,
+                fontSize: 12,
+              ))),
+    ];
   }
 
   @override

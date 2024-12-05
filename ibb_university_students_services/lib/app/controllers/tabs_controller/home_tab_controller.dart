@@ -117,4 +117,8 @@ class HomeTabController extends GetxController
   void academicCardRoute() {
     Get.toNamed("/academic_card");
   }
+
+  void examTableRoute() {
+    Get.toNamed("/exam_table");
+  }
 }
