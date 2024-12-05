@@ -64,10 +64,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
 
     },
-    user_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    // user_name: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
     user_section_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -86,10 +86,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    collegeName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
+    // collegeName: {
+    //   type: DataTypes.STRING(50),
+    //   allowNull: false,
+    // },
     email: {
       type: DataTypes.STRING(100),
       allowNull: false,
