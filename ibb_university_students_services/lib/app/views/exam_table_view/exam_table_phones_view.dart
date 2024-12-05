@@ -9,7 +9,6 @@ import '../../globals.dart';
 class PhoneExamTableView extends GetView<ExamTableController> {
   PhoneExamTableView({super.key});
 
-  double height = Get.height * (1 - 0.09);
   double width = Get.width;
 
   @override
@@ -28,10 +27,10 @@ class PhoneExamTableView extends GetView<ExamTableController> {
               alignment: Alignment.bottomCenter,
               child: SizedBox(
                   width: width,
-                  height: height * 0.78,
+                  height: Get.height * 0.76,
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.05, vertical: height * 0.03),
+                        horizontal: width * 0.05, vertical: Get.height * 0.03),
                     child: Column(
                       children: [
                         Row(
@@ -41,7 +40,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 textColor: AppColors.inverseSecTextColor),
                           ],
                         ),
-                        SizedBox(height: height * 0.03),
+                        SizedBox(height: Get.height * 0.03),
                         for (int i = 0;
                         i <  0;
                         i++)...[]
@@ -50,7 +49,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                   )),
             ),
             Container(
-                height: height * 0.15,
+                height: Get.height * 0.15,
                 width: width,
                 decoration: BoxDecoration(
                   color: AppColors.mainCardColor,
@@ -144,7 +143,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                       ],
                     ),
                     SizedBox(
-                      height: height * 0.004,
+                      height: Get.height * 0.004,
                     ),
                     Row(
                       children: [

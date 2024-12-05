@@ -13,7 +13,8 @@ import '../../models/result.dart';
 import '../../services/app_data_services.dart';
 
 class TableTabController extends GetxController {
-  late Rx<TableDays?> tableTime;
+  RxBool loadState = true.obs;
+  Rx<TableDays?>? tableTime;
   List<Lecture>? selectedDay;
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
@@ -49,6 +50,7 @@ class TableTabController extends GetxController {
         : null;
     await fetchTableData();
     selectedDayChange(selected.value);
+    loadState.value = false;
     super.onInit();
   }
 
@@ -67,7 +69,7 @@ class TableTabController extends GetxController {
     );
     if (res.statusCode == 200) {
       termsData = res.data;
-      tableTime.value = res.data[selectedTerm.value];
+      tableTime?.value = res.data[selectedTerm.value];
       selectedDayChange(selected.value);
       selected.refresh();
     }
@@ -94,7 +96,7 @@ class TableTabController extends GetxController {
   void changeTerm(String? val) async{
     if (val == null) return;
     selectedTerm.value = val;
-    tableTime.value = termsData[selectedTerm.value];
+    tableTime?.value = termsData[selectedTerm.value];
     selectedDayChange(selected.value);
     selected.refresh();
   }
@@ -103,27 +105,27 @@ class TableTabController extends GetxController {
     selected.value = index;
     switch (index) {
       case 0:
-        selectedDay = tableTime.value?.sat;
+        selectedDay = tableTime?.value?.sat;
         selectedDayName = "Saturday".tr;
         break;
       case 1:
         selectedDayName = "Sunday".tr;
-        selectedDay = tableTime.value?.sun;
+        selectedDay = tableTime?.value?.sun;
         break;
       case 2:
-        selectedDay = tableTime.value?.mon;
+        selectedDay = tableTime?.value?.mon;
         selectedDayName = "Monday".tr;
         break;
       case 3:
-        selectedDay = tableTime.value?.tue;
+        selectedDay = tableTime?.value?.tue;
         selectedDayName = "Tuesday".tr;
         break;
       case 4:
-        selectedDay = tableTime.value?.wed;
+        selectedDay = tableTime?.value?.wed;
         selectedDayName = "Wednesday".tr;
         break;
       case 5:
-        selectedDay = tableTime.value?.thu;
+        selectedDay = tableTime?.value?.thu;
         selectedDayName = "Thursday".tr;
         break;
     }
