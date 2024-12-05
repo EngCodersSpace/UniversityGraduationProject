@@ -10,13 +10,15 @@
     "express": "^4.19.2",
     "express-validator": "^7.2.0",
     "faker": "^5.5.3",
+    "google-translator": "^1.0.1",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.0",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
     "sequelize": "^6.37.3",
-    "translate": "^3.0.1"
+    "translate": "^3.0.1",
+    "translate-google": "^1.5.0"
   },
   "name": "y",
   "version": "1.0.0",
