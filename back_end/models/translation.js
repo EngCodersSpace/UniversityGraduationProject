@@ -11,35 +11,45 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      //(1)Relationship One-to-Many between "language table" and  "translation"
+      translation.belongsTo(models.language, {
+        foreignKey: 'languageId',//the foreign Key in the lecture table refers to subject table
+      });
     }
   }
   translation.init({
-         id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
+    tableName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    recordId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    field: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    languageId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references:{
+        model:'languages',
+        key:'id',
       },
-      tableName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      recordId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      field: {
-        type: DataTypes.STRING,
-        allowNull:false,
-      },
-      language:{
-        type:DataTypes.INTEGER,
-        allowNull:false,
-      },
-      value:{
-        type:DataTypes.STRING,
-        allowNull:false,
-      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    value: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'translation',
