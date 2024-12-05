@@ -122,7 +122,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
         lectures.forEach(lec => { 
             const term = lec.term; 
             const day = lec.lecture_day; 
-            const time = lec.lecture_time; 
+          
 
             if (!organizedLectures[term]) {
                 organizedLectures[term] = {};
@@ -134,8 +134,8 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term][day].push({
                 id: lec.id,
-                title: lec.subject.subject_name, 
-                startTime: time, 
+                subject_name: lec.subject.subject_name, 
+                startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
                 lecture_room: lec.lecture_room, 
