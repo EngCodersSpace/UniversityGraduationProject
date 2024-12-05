@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       tableName: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       recordId: {
@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
       },
       field: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull:false,
       },
       languageId: {
@@ -32,7 +32,7 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       value:{
-        type:Sequelize.STRING,
+        type:Sequelize.STRING(100),
         allowNull:false,
       },
 
@@ -46,6 +46,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    });
+    await queryInterface.addIndex('translations',{
+      unique:false,
+      fields:['tableName','recordId','field','languageId'],
     });
   },
   async down(queryInterface, Sequelize) {
