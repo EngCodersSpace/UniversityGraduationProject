@@ -13,18 +13,18 @@ module.exports = {
         onDelete:'CASCADE',
         onUpdate:'CASCADE',  
       },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      academic_degree: {
-        type: Sequelize.ENUM('Doctor','Professor','Master','Bachelor'),
-        allowNull: false,
-      },
-      administrative_position: {
-        type: Sequelize.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
-        defaultValue: 'None',
-      },
+      // status: {
+      //   type: Sequelize.STRING,
+      //   allowNull: true,
+      // },
+      // academic_degree: {
+      //   type: Sequelize.ENUM('Doctor','Professor','Master','Bachelor'),
+      //   allowNull: false,
+      // },
+      // administrative_position: {
+      //   type: Sequelize.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
+      //   defaultValue: 'None',
+      // },
 
 
       createdAt: {

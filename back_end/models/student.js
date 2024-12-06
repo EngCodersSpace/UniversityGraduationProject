@@ -73,10 +73,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    student_system: {
-      type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
-      allowNull: false,
-    },
+    // student_system: {
+    //   type: DataTypes.ENUM('General', 'Free Seat', 'Paid'),
+    //   allowNull: false,
+    // },
   }, {
     sequelize,
     modelName: 'student',
