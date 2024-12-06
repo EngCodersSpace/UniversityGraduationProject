@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       level_name: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.INTEGER,
         allowNull:false,
       },
       createdAt: {
