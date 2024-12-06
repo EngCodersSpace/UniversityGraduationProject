@@ -107,11 +107,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     //Determine if the student has tested the subject before or not .[if "Repeater" =>(he is tested before) , if "Freshman" =>(he has never tested it before)]
-    // status: {
-    //   type: DataTypes.ENUM('Freshman', 'Repeater'),
-    //   allowNull: false,
-    //   defaultValue: 'Freshman',
-    // },
+    status: {
+      type: DataTypes.ENUM('Freshman', 'Repeater'),
+      allowNull: false,
+      defaultValue: 'Freshman',
+    },
 
 
 
