@@ -21,201 +21,136 @@ class WebProfileView extends GetView<ProfileController> {
             color: AppColors.tabBackColor,
             child: Column(
               children: [
-                Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      height: Get.height * 0.2,
-                      width: Get.width * 0.3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border:
-                            Border.all(width: 3, color: AppColors.tabBackColor),
-                        image: DecorationImage(
-                            image: AssetImage(controller.user.profileImage!),
-                            fit: BoxFit.fill),
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
                 Container(
-                  alignment: Alignment.bottomCenter,
-                  width: Get.width * 0.4,
-                  height: Get.height * 0.6,
-                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                  decoration: BoxDecoration(
-                    gradient: SweepGradient(
-                      colors: [
-                        AppColors.linkTextColor.withOpacity(0.3),
-                        AppColors.linkTextColor.withOpacity(0.2),
-                        AppColors.tabBackColor,
-                        AppColors.linkTextColor.withOpacity(0.2),
-                        AppColors.linkTextColor.withOpacity(0.3),
-                      ],
-                      // begin: Alignment.topLeft,
-                      // end: Alignment.bottomRight,
+                    width: Get.width * 0.5,
+                    height: Get.height * 0.8,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Get.width * 0.03,
+                        vertical: Get.height * 0.03),
+                    decoration: BoxDecoration(
+                      // gradient: SweepGradient(
+                      //   colors: [
+                      //     AppColors.linkTextColor.withOpacity(0.4),
+                      //     AppColors.linkTextColor.withOpacity(0.3),
+                      //     AppColors.inverseCardColor.withOpacity(0.3),
+                      //     AppColors.inverseCardColor.withOpacity(0.2),
+                      //     AppColors.inverseCardColor.withOpacity(0.3),
+                      //     AppColors.linkTextColor.withOpacity(0.3),
+                      //     AppColors.linkTextColor.withOpacity(0.4),
+                      //   ],
+                      // ),
+                      color: AppColors.inverseCardColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                    child: Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: Stack(
+                            alignment: Alignment.center,
                             children: [
-                              SizedBox(
-                                width: Get.width * 0.02,
+                              CircleAvatar(
+                                  radius: Get.width * 0.07,
+                                  backgroundColor: AppColors.inverseCardColor),
+                              CircleAvatar(
+                                backgroundColor:
+                                    (controller.user.profileImage) != null
+                                        ? AppColors.inverseCardColor
+                                        : AppColors.inverseMainTextColor,
+                                maxRadius: Get.width * 0.07 - 2,
+                                backgroundImage:
+                                    (controller.user.profileImage) != null
+                                        ? AssetImage(
+                                            controller.user.profileImage ?? "")
+                                        : null,
+                                child: (controller.user.profileImage) != ""
+                                    ? null
+                                    : MainText(controller.user.name?[0] ??
+                                        "".toUpperCase()),
                               ),
-                              SecText(
-                                "User Name".tr,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.06,
-                              ),
-                              SecText(controller.user.name!),
                             ],
                           ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: Get.width * 0.04,
-                              ),
-                              SecText(
-                                "ID".tr,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.06,
-                              ),
-                              SecText(controller.user.id.toString()),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: Get.width * 0.03,
-                              ),
-                              SecText(
-                                "Email".tr,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.06,
-                              ),
-                              SecText(controller.user.email ?? "Unknown".tr),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: Get.width * 0.03,
-                              ),
-                              SecText(
-                                "Phone".tr,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.06,
-                              ),
-                              SecText(controller.user.phones?.first ??
-                                  "Unknown".tr),
-                            ],
-                          ),
-                          if (controller.user is Student) ...[
-                            Row(
+                        ),
+                        Stack(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                SizedBox(
-                                  width: Get.width * 0.03,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SecText(controller.user.name!),
+                                  ],
                                 ),
-                                SecText(
-                                  "Department".tr,
-                                  fontWeight: FontWeight.bold,
+                                Row(
+                                  children: [
+                                    SecText(controller.user.id.toString()),
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: Get.width * 0.06,
+                                Row(
+                                  children: [
+                                    SecText(
+                                        controller.user.email ?? "Unknown".tr),
+                                  ],
                                 ),
-                                SecText((controller.user as Student)
-                                        .section
-                                        ?.name
-                                        ?.tr ??
-                                    "Unknown".tr),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: Get.width * 0.03,
+                                Row(
+                                  children: [
+                                    SecText(controller.user.phones?.first ??
+                                        "Unknown".tr),
+                                  ],
                                 ),
-                                SecText(
-                                  "Level".tr,
-                                  fontWeight: FontWeight.bold,
+                                if (controller.user is Student) ...[
+                                  Row(
+                                    children: [
+                                      SecText((controller.user as Student)
+                                              .section
+                                              ?.name
+                                              ?.tr ??
+                                          "Unknown".tr),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SecText((controller.user as Student)
+                                              .level
+                                              ?.name
+                                              ?.tr ??
+                                          "Unknown".tr),
+                                    ],
+                                  ),
+                                ] else ...[
+                                  Row(
+                                    children: [
+                                      SecText((controller.user as Doctor)
+                                              .academicDegree
+                                              ?.tr ??
+                                          "Unknown".tr),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SecText((controller.user as Doctor)
+                                              .administrativePosition
+                                              ?.tr ??
+                                          "Unknown".tr),
+                                    ],
+                                  ),
+                                ],
+                                CustomButton(
+                                  onPress: controller.logout,
+                                  text: "Logout".tr,
+                                  size:
+                                      Size(Get.width * 0.18, Get.height * 0.05),
                                 ),
-                                SizedBox(
-                                  width: Get.width * 0.06,
-                                ),
-                                SecText((controller.user as Student)
-                                        .level
-                                        ?.name
-                                        ?.tr ??
-                                    "Unknown".tr),
-                              ],
-                            ),
-                          ] else ...[
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: Get.width * 0.02,
-                                ),
-                                SecText(
-                                  "Academic Degree".tr,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SizedBox(
-                                  width: Get.width * 0.06,
-                                ),
-                                SecText((controller.user as Doctor)
-                                        .academicDegree
-                                        ?.tr ??
-                                    "Unknown".tr),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: Get.width * 0.02,
-                                ),
-                                SecText(
-                                  "administrative Position".tr,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                SizedBox(
-                                  width: Get.width * 0.06,
-                                ),
-                                SecText((controller.user as Doctor)
-                                        .administrativePosition
-                                        ?.tr ??
-                                    "Unknown".tr),
                               ],
                             ),
                           ],
-                          CustomButton(
-                            onPress: controller.logout,
-                            text: "Logout".tr,
-                            size: Size(Get.width * 0.18, Get.height * 0.05),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                        ),
+                      ],
+                    )),
               ],
             ),
           )

@@ -54,26 +54,23 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                           AppColors.inverseIconColor,
                                     ),
                                     CircleAvatar(
-                                      backgroundColor: (controller
-                                                  .user?.profileImage) !=
-                                              ""
-                                          ? AppColors.tabBackColor
-                                          : AppColors.inverseMainTextColor,
+                                      backgroundColor:
+                                          (controller.user?.profileImage) != ""
+                                              ? AppColors.tabBackColor
+                                              : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage: (controller
-                                                  .user?.profileImage) !=
-                                              ""
-                                          ? AssetImage(controller
-                                                  .user?.profileImage ??
-                                              "")
-                                          : null,
-                                      child: (controller
-                                                  .user?.profileImage) !=
-                                              ""
-                                          ? null
-                                          : MainText(
-                                              controller.user?.name?[0] ??
-                                                  "".toUpperCase()),
+                                      backgroundImage:
+                                          (controller.user?.profileImage) != ""
+                                              ? AssetImage(controller
+                                                      .user?.profileImage ??
+                                                  "")
+                                              : null,
+                                      child:
+                                          (controller.user?.profileImage) != ""
+                                              ? null
+                                              : MainText(
+                                                  controller.user?.name?[0] ??
+                                                      "".toUpperCase()),
                                     )
                                   ],
                                 ),
@@ -308,8 +305,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .academicDegree
-                                                             ??
+                                                            .academicDegree ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,
@@ -354,8 +350,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                 ),
                                                 MainText(
                                                     (controller.user as Doctor)
-                                                            .administrativePosition
-                                                             ??
+                                                            .administrativePosition ??
                                                         "Unknown".tr,
                                                     textColor:
                                                         AppColors.secTextColor,
