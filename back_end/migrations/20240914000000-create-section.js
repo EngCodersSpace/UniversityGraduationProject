@@ -9,10 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      section_name: {
-        type: Sequelize.STRING(100),
-        allowNull:false,
-      },
+      // section_name: {
+      //   type: Sequelize.STRING(100),
+      //   allowNull:false,
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

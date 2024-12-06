@@ -55,10 +55,10 @@ module.exports = {
         type: Sequelize.DECIMAL(8, 2),
         allowNull: false,
       },
-      payment_status: {
-        type: Sequelize.ENUM('Paid', 'Unpaid', 'Remaining'),
-        allowNull: false,
-      },
+      // payment_status: {
+      //   type: Sequelize.ENUM('Paid', 'Unpaid', 'Remaining'),
+      //   allowNull: false,
+      // },
       payment_date: {
         type: Sequelize.DATE,
         allowNull: true,
