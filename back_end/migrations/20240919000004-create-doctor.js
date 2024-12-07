@@ -18,11 +18,11 @@ module.exports = {
       //   allowNull: true,
       // },
       academic_degree: {
-        type: Sequelize.ENUM('Doctor','Professor','Master','Bachelor'),
+        type: Sequelize.JSON,
         allowNull: false,
       },
       administrative_position: {
-        type: Sequelize.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
+        type: Sequelize.JSON,
         defaultValue: 'None',
       },
 
