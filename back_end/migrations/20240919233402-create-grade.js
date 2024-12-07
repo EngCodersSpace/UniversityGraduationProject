@@ -74,7 +74,7 @@ module.exports = {
       },
       //Determine if the student has tested the subject before or not .[if "Repeater" =>(he is tested before) , if "Freshman" =>(he has never tested it before)]
       status: {
-        type: Sequelize.ENUM('Freshman', 'Repeater'),
+        type: Sequelize.JSON,
         allowNull: false,
         defaultValue: 'Freshman',
       },

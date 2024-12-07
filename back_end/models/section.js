@@ -63,10 +63,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    // section_name: {
-    //   type: DataTypes.STRING(100),
-    //   allowNull: false,
-    // },
+    section_name: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
 
 
   }, {
