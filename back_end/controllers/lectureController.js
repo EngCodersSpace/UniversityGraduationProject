@@ -122,7 +122,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
         lectures.forEach(lec => { 
             const term = lec.term; 
             const day = lec.lecture_day; 
-            const time = lec.lecture_time; 
+          
 
             if (!organizedLectures[term]) {
                 organizedLectures[term] = {};
@@ -134,8 +134,8 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term][day].push({
                 id: lec.id,
-                title: lec.subject.subject_name, 
-                startTime: time, 
+                subject_name: lec.subject.subject_name, 
+                startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
                 lecture_room: lec.lecture_room, 
@@ -151,25 +151,6 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
 // To get All years in lecture table (without duplicate)
 const getLectureYear = async (req, res) => {
-  try {
-    const uniqueYears = await lecture.findAll({
-      attributes: [
-        [Sequelize.fn('DISTINCT', Sequelize.col('year')), 'year']
-      ],
-      raw: true
-    });
-
-    if (uniqueYears.length === 0) {
-      return res.status(404).json({ message: 'No unique years found in the lecture table' });
-    }
-
-    const years = uniqueYears.map(item => item.year);
-
-    res.status(200).json({ message: 'Unique years retrieved successfully', data: years });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving unique years', error: error.message });
-  }
 };
 
 
