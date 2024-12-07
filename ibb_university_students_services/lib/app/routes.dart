@@ -44,6 +44,11 @@ class AppRoutes {
       page: () => const ExamTableViewLoader(),
       binding: ExamTableBinding(),
     ),
+    GetPage(
+      name: '/student_result',
+      page: () => const ExamTableViewLoader(),
+      binding: ExamTableBinding(),
+    ),
 
     // Add more routes here
   ];
