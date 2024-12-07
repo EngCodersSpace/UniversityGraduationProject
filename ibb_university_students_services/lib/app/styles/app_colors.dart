@@ -1,24 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-class Utils {
-  static double fontSizeScale(double fontSize) {
-    // double screenRatio = Get.width / Get.height;
-    // double designRatio = 411 / 891;
-    // double ratio = (screenRatio>designRatio)?designRatio/screenRatio:screenRatio / designRatio;
-    if (Get.width <= 768 && Get.height <= 1025) {
-      double ratio = Get.width / 411;
-      if(ratio > 1.2) ratio = 1.2;
-      if(ratio < 0.6) ratio = 0.6;
-      return fontSize * ratio;
-    } else {
-      double ratio = Get.width / 411;
-      if(ratio > 1.2) ratio = 1.2;
-      if(ratio < 0.6) ratio = 0.6;
-      return fontSize * ratio;
-    }
-  }
-}
 
 class AppColors {
   static ButtonColors buttonColors =
@@ -26,9 +6,8 @@ class AppColors {
 
   static Color mainTextColor = Colors.white;
   static Color inverseMainTextColor = Color(int.parse("DF0D3976", radix: 16));
-
   static Color secTextColor = Color(int.parse("FF0D3976", radix: 16));
-  static Color inverseSecTextColor = Color(int.parse("5F0D3976", radix: 16));
+  static Color highlightTextColor = Color(int.parse("5F0D3976", radix: 16));
 
   static Color linkTextColor = Colors.blueAccent;
   static Color coverColor = const Color.fromRGBO(0, 191, 255, 0.25);

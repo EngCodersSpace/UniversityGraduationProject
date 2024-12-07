@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 
 import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/student_model.dart';
 
 class StudentInfoCard extends GetView<HomeTabController> {
@@ -30,7 +30,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Department".tr,
                     textColor: AppColors
-                        .inverseSecTextColor),
+                        .highlightTextColor),
                 Row(
                   children: [
                     Icon(Icons.groups_sharp,
@@ -59,7 +59,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.04,
@@ -74,7 +74,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Level".tr,
                     textColor: AppColors
-                        .inverseSecTextColor),
+                        .highlightTextColor),
                 Row(
                   children: [
                     Icon(Icons.school,
@@ -100,7 +100,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.03,
@@ -115,7 +115,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Level".tr,
                     textColor: AppColors
-                        .inverseSecTextColor),
+                        .highlightTextColor),
                 Row(
                   children: [
                     Icon(Icons.school,

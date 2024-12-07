@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 
 import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/doctor_model.dart';
 
 class DoctorInfoCard extends GetView<HomeTabController> {
@@ -29,7 +29,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Department".tr,
                     textColor: AppColors
-                        .inverseSecTextColor,fontSize: 12,),
+                        .highlightTextColor,fontSize: 12,),
                 Row(
                   children: [
                     Icon(Icons.groups_sharp,
@@ -59,7 +59,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.02,
@@ -74,7 +74,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               children: [
                 SecText("Academic Degree".tr,
                     textColor: AppColors
-                        .inverseSecTextColor,
+                        .highlightTextColor,
                   fontSize: 12,
                 ),
                 Row(
@@ -101,7 +101,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.02,
@@ -117,7 +117,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                 SecText(
                   "Academic Position".tr,
                   textColor:
-                  AppColors.inverseSecTextColor,
+                  AppColors.highlightTextColor,
                   fontSize:
                   12,
                 ),

@@ -7,7 +7,7 @@ import 'package:ibb_university_students_services/app/components/day_cards.dart';
 import 'package:ibb_university_students_services/app/views/table_tab_view/table_tab_components/lecture_card.dart';
 
 import '../../controllers/tabs_controller/table_tab_view_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class PhoneTableTabView extends GetView<TableTabController> {
   PhoneTableTabView({super.key});
@@ -37,9 +37,9 @@ class PhoneTableTabView extends GetView<TableTabController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SecText("Lectures".tr,
-                                  textColor: AppColors.inverseSecTextColor),
+                                  textColor: AppColors.highlightTextColor),
                               SecText(controller.selectedDayName,
-                                  textColor: AppColors.inverseSecTextColor)
+                                  textColor: AppColors.highlightTextColor)
                             ],
                           ),
                           SizedBox(height: height * 0.03),

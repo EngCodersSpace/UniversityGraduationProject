@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
 class NotificationCard extends StatelessWidget {
   NotificationCard(
@@ -31,7 +31,7 @@ class NotificationCard extends StatelessWidget {
               child: Column(
                 children: [
                   MainText(message,
-                      fontSize: Utils.fontSizeScale(18),
+                      fontSize: 18,
                       textColor: AppColors.mainCardColor),
                   const SizedBox(
                     height: 16,

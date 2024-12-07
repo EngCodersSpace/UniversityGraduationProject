@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../../../components/custom_text.dart';
 
 class NewsCard extends StatelessWidget {

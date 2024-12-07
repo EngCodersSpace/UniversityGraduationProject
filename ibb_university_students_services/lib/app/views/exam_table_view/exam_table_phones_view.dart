@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 import 'exam_table_view_components/exam_card.dart';
 
 class PhoneExamTableView extends GetView<ExamTableController> {
@@ -38,7 +38,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SecText("Exams:".tr,
-                                textColor: AppColors.inverseSecTextColor,fontSize: 18,),
+                                textColor: AppColors.highlightTextColor,fontSize: 18,),
                           ],
                         ),
                         SizedBox(height: Get.height * 0.01),

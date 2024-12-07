@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../components/text_field.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class LibraryPhonesView extends GetView<LibraryController> {
    const LibraryPhonesView({super.key});

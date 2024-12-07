@@ -7,7 +7,7 @@ import '../../components/buttons.dart';
 import '../../components/custom_text.dart';
 import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class WebLoginView extends GetView<LoginController> {
   WebLoginView({

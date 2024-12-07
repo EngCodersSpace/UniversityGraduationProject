@@ -7,7 +7,7 @@ import 'package:ibb_university_students_services/app/views/home_tab_view/home_ta
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/services_card.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
 import '../../controllers/tabs_controller/home_tab_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 import 'home_tab_components/doctor_info_card.dart';
 import 'home_tab_components/student_info_card.dart';
 
@@ -92,7 +92,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                     ),
                                     SecText(
                                       "ID : ${controller.user?.id}",
-                                      textColor: AppColors.inverseSecTextColor,
+                                      textColor: AppColors.highlightTextColor,
                                     )
                                   ],
                                 ),
@@ -119,7 +119,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         ),
                         SecText(
                           "News".tr,
-                          textColor: AppColors.inverseSecTextColor,
+                          textColor: AppColors.highlightTextColor,
                         ),
                         SizedBox(
                           height: height * 0.01,
@@ -172,7 +172,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       children: [
                         SecText(
                           "Services".tr,
-                          textColor: AppColors.inverseSecTextColor,
+                          textColor: AppColors.highlightTextColor,
                         ),
                         SizedBox(
                           height: height * 0.02,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 
 class AcademicCardLastPayment extends StatelessWidget {
   const AcademicCardLastPayment({super.key});

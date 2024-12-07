@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:intl/intl.dart';
 
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/lecture_model.dart';
 
 class LectureCard extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:intl/intl.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/exam_model.dart';
 
 class ExamCard extends StatelessWidget {
