@@ -43,14 +43,14 @@ module.exports = (sequelize, DataTypes) => {
     //   type: DataTypes.STRING,
     //   allowNull: true,
     // },
-    // academic_degree: {
-    //   type: DataTypes.ENUM('Doctor','Professor','Master','Bachelor'),
-    //   allowNull: false,
-    // },
-    // administrative_position: {
-    //   type: DataTypes.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
-    //   defaultValue: 'None',
-    // },
+    academic_degree: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    administrative_position: {
+      type: DataTypes.JSON,
+      defaultValue: 'None',
+    },
 
 
 

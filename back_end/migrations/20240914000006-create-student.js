@@ -37,10 +37,10 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },
-      // student_system: {
-      //   type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
-      //   allowNull: false,
-      // },
+      student_system: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
