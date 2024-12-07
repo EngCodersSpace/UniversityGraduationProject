@@ -4,8 +4,12 @@ const { translation } = require('../models');
 // const translator = require('google-translator');
 
 
+// const translateTex = require('translate-google');
 
 
+// function translateText(anystring, fromLang, toLang) {
+//     return translateTex(anystring, { from: fromLang, to: toLang });
+// }
 
 // async function addTranslation(tableName, recordId, field, value, language) {
 //   try {
@@ -36,6 +40,26 @@ const { translation } = require('../models');
 //     throw new Error(`Error adding translation ${error.message}`);
 //   }
 // }
+
+
+
+const translateTex = require('translate-google');
+
+async function translateText(anystring, fromLang, toLang) {
+  try {
+    const translatedValue = await translateTex(`${anystring}`, { from: `${fromLang}`, to: `${toLang}` });
+    
+    // Here, you may want to create a record in the translation table
+    // console.log(`Translated value for ${value}:`, translatedValue);
+    // If you were to save the translation, you could do something like this:
+   
+    return translatedValue; 
+  } catch (error) {
+    throw new Error(`Translation error: ${error.message}`);
+  }
+}
+
+
 
 async function addTranslation(tableName, recordId, field, value, language) {
   try {

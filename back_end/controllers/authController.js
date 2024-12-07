@@ -17,7 +17,7 @@ const { sequelize} = require('sequelize');
 
 const translateTex = require('translate-google');
 
-const { addTranslation } = require('../middleware/translationServices');
+const { addTranslation ,translateText} = require('../middleware/translationServices');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -183,9 +183,24 @@ exports.refreshToken = async (req, res) => {
 // };
 
 exports.registerDoctor = async (req, res) => {
-  const {language,user_section_id,email,password,user_id,date_of_birth,profile_picture} = req.body;
+  const {language} = req.body;
   try {
     // const transactions = await sequelize.transaction();
+
+    if (language === 'ar') {
+      const fieldsToTranslate = ['user_name', 'permission', 'collegeName']; 
+      const translatedData = {};
+      for (const field of fieldsToTranslate) {
+        const value = req.body[field];
+        translatedData[field] = await translateText(value, 'ar', 'en');
+      }
+    } else {
+
+    }
+
+
+
+
     let englishData, arabicTranslations;
     if (language === 'ar') {
       englishData = {
