@@ -9,10 +9,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
       },
-      // user_name: {
-      //   type: Sequelize.STRING,
-      //   allowNull: false,
-      // },
+      user_name: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
       user_section_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -31,10 +31,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      // collegeName: {
-      //   type: Sequelize.STRING(50),
-      //   allowNull: false,
-      // },
+      collegeName: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,

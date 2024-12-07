@@ -17,14 +17,14 @@ module.exports = {
       //   type: Sequelize.STRING,
       //   allowNull: true,
       // },
-      // academic_degree: {
-      //   type: Sequelize.ENUM('Doctor','Professor','Master','Bachelor'),
-      //   allowNull: false,
-      // },
-      // administrative_position: {
-      //   type: Sequelize.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
-      //   defaultValue: 'None',
-      // },
+      academic_degree: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
+      administrative_position: {
+        type: Sequelize.JSON,
+        defaultValue: 'None',
+      },
 
 
       createdAt: {
