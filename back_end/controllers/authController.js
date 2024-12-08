@@ -17,7 +17,7 @@ const { sequelize} = require('sequelize');
 
 // const translateTex = require('translate-google');
 
-const { addTranslation , translateText } = require('../middleware/translationServices');
+// const { addTranslation , translateText } = require('../middleware/translationServices');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -152,7 +152,7 @@ exports.refreshToken = async (req, res) => {
 
 exports.registerDoctor = async (req, res) => {
   const {
-    inputLanguage,
+    language,
     user_id,
     user_name,
     collageName,
@@ -161,31 +161,35 @@ exports.registerDoctor = async (req, res) => {
     profile_picture,
     email,
     password,
-    doctor,
+    doctorData,
   } = req.body;
 
   try {
-    const targetLanguage = inputLanguage === 'ar' ? 'en' : 'ar';
+    const targetLanguage = (req.body.language === 'ar')?'en':'ar';
 
-    const translatedUserName = await translateText(user_name, inputLanguage, targetLanguage);
-    const translatedCollageName = await translateText(collageName, inputLanguage, targetLanguage);
-    const translatedAcademicDegree = await translateText(doctor.academic_degree, inputLanguage, targetLanguage);
-    const translatedAdministrativePosition = await translateText(doctor.administrative_position, inputLanguage, targetLanguage);
+    // const translatedUserName = await translateText(user_name, inputLanguage, targetLanguage);
+    // const translatedCollageName = await translateText(collageName, inputLanguage, targetLanguage);
+    // const translatedAcademicDegree = await translateText(doctor.academic_degree, inputLanguage, targetLanguage);
+    // const translatedAdministrativePosition = await translateText(doctor.administrative_position, inputLanguage, targetLanguage);
     
     console.log('\n \n req.body \n',req.body)
 
+
+  //// first create the json with dynmaic kes 
+    userName = {}
+    userName[req.body.language] = user_name
+    userName[targetLanguage] = user_name
+    /////////////////////////////////////
     const newUser = await user.create({
       user_id,
-      user_name: {
-        [inputLanguage]: req.body.user_name,
-        [targetLanguage]: translatedUserName,
-      },
+      ///// user the json you create why? because here use variable as key not supported *_*
+      ///// uncommit your work and apply this mechnaizim for othes fields
+      user_name: userName,
       user_section_id,
       date_of_birth,
       profile_picture,
-      collageName: {
-        [inputLanguage]: req.body.collageName,
-        [targetLanguage]: translatedCollageName,
+      collegeName: {
+        en:"in en"
       },
       email,
       password,
@@ -194,24 +198,24 @@ exports.registerDoctor = async (req, res) => {
     console.log('\n \n newUser \n',newUser);
 
 
-    const newDoctor = await doctor.create({
-      user_id: newUser.user_id, 
-      academic_degree: {
-        [inputLanguage]: doctor.academic_degree,
-        [targetLanguage]: translatedAcademicDegree,
-      },
-      administrative_position: {
-        [inputLanguage]: doctor.administrative_position,
-        [targetLanguage]: translatedAdministrativePosition,
-      },
-    });
+    // const newDoctor = await doctor.create({
+    //   user_id: newUser.user_id, 
+    //   academic_degree: {
+    //     inputLanguage: doctorData.academic_degree,
+    //     targetLanguage: doctorData.academic_degree,
+    //   },
+    //   administrative_position: {
+    //     inputLanguage: doctorData.administrative_position,
+    //     targetLanguage: doctorData.administrative_position,
+    //   },
+    // });
 
-    console.log('\n \n newUser \n',newUser);
+    // console.log('\n \n newUser \n',newUser);
     
     res.status(201).json({
       message: 'Doctor registered successfully',
       user: newUser,
-      doctor: newDoctor,
+      // doctor: newDoctor,
     });
   } catch (error) {
     console.error('Error during user registration:', error.message);
@@ -220,34 +224,34 @@ exports.registerDoctor = async (req, res) => {
 };
 
 
-exports.registerDoctor = async (req, res) => {
-  const { inputLanguage
-  } = req.body;
+// exports.registerDoctor = async (req, res) => {
+//   const { inputLanguage
+//   } = req.body;
 
 
-  try {
-    const targetLanguage = req.body.inputLanguage === 'ar' ? 'en' : 'ar';
+//   try {
+//     const targetLanguage = req.body.inputLanguage === 'ar' ? 'en' : 'ar';
 
-    req.body.translatedUserName = await translateText(req.body.user_name, inputLanguage, targetLanguage);
-    req.body.translatedCollageName = await translateText(req.body.collageName, inputLanguage, targetLanguage);
-    req.body.doctor.translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, inputLanguage, targetLanguage);
-    req.body.doctor.translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, inputLanguage, targetLanguage);
+//     req.body.translatedUserName = await translateText(req.body.user_name, inputLanguage, targetLanguage);
+//     req.body.translatedCollageName = await translateText(req.body.collageName, inputLanguage, targetLanguage);
+//     req.body.doctor.translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, inputLanguage, targetLanguage);
+//     req.body.doctor.translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, inputLanguage, targetLanguage);
 
-    const newDoctor = await await user.create(req.body, {
-      include: [{ model: doctor, as: "doctor" }],
-    });
+//     const newDoctor = await await user.create(req.body, {
+//       include: [{ model: doctor, as: "doctor" }],
+//     });
 
-    res.status(201).json({
-      message: 'Doctor registered successfully',
-      user: newDoctor,
-    });
-  } catch (error) {
-    console.error("Error during user registration:", error.message);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
-  }
-};
+//     res.status(201).json({
+//       message: 'Doctor registered successfully',
+//       user: newDoctor,
+//     });
+//   } catch (error) {
+//     console.error("Error during user registration:", error.message);
+//     res
+//       .status(500)
+//       .json({ message: "Internal server error", error: error.message });
+//   }
+// };
 
 
 exports.registerStudent = async (req, res) => {
