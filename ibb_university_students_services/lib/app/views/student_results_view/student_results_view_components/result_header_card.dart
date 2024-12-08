@@ -21,8 +21,22 @@ class ResultHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 70,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: AppColors.inverseCardColor,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: Offset(0, 5),
+          )
+        ],
+        border: Border.all(color: AppColors.inverseCardColor,width: 0.5),
+        borderRadius:
+        const BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8),topRight: Radius.circular(16),bottomRight: Radius.circular(0)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -43,21 +57,21 @@ class ResultHeaderCard extends StatelessWidget {
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
-              "Practicality",
+              "Practicality\n(30)",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
-              "Final Exam",
+              "Final Exam\n(70)",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
-              "Sum",
+              "Sum\n(100)",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),

@@ -19,7 +19,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.mainCardColor,
+        backgroundColor: AppColors.backColor,
         foregroundColor: AppColors.inverseCardColor,
         // toolbarHeight: 35,
       ),
@@ -28,67 +28,45 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
         child: Stack(
           children: [
             Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                children: [
-                  SizedBox(height: Get.height * 0.16),
-                  Container(
-                    width: width,
-                    height: Get.height * 0.7,
-                    decoration: BoxDecoration(
-                      color: AppColors.inverseCardColor,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: Offset(0, 5),
-                        )
-                      ],
-                      borderRadius:
-                      const BorderRadius.all( Radius.circular(16)),
-                    ),
-                    padding: const EdgeInsets.only(top: 8,bottom: 8),
-                    margin: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        const ResultHeaderCard(),
-                        SizedBox(
-                          height: Get.height * 0.01,
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: width,
+                height: Get.height*0.7,
+                padding: const EdgeInsets.only(top: 8,bottom: 32),
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const ResultHeaderCard(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6),
+                        child: Column(
+                          children: [
+                            SizedBox(height: Get.height * 0.015),
+                            for (int i = 0;
+                            i <  (10);
+                            i++)...[
+                              (i%2 == 0)?ResultCard():ResultCard(type: "odd",),
+                              if (i < ((10) - 1))
+                                SizedBox(
+                                  height: Get.height * 0.005,
+                                )
+                            ]
+                          ],
                         ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                for (int i = 0;
-                                i <  (12);
-                                i++)...[
-                                  (i%2 == 0)?ResultCard():ResultCard(type: "odd",),
-                                  if (i < ((12) - 1))
-                                    SizedBox(
-                                      height: Get.height * 0.005,
-                                    ),
-                          
-                                ],
-                              ],
-                          
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
                 height: Get.height * 0.15,
                 width: width,
                 decoration: BoxDecoration(
-                  color: AppColors.mainCardColor,
+                  color: AppColors.backColor,
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,

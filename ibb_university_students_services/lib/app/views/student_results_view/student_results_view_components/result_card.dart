@@ -26,7 +26,7 @@ class ResultCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: (type == "even")
-            ? AppColors.mainCardColor.withOpacity(0.3):AppColors.tabBackColor,
+            ? AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
 
         boxShadow: const [
           BoxShadow(
@@ -89,35 +89,35 @@ class ResultCard extends StatelessWidget {
             width: ((Get.width-16)*2)/7,
             child: CustomText(
               "Power Systems of the world",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "2",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
               "30",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
               "70",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "100",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
 
