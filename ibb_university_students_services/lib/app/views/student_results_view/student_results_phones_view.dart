@@ -19,7 +19,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.backColor,
+        backgroundColor: AppColors.mainCardColor,
         foregroundColor: AppColors.inverseCardColor,
         // toolbarHeight: 35,
       ),
@@ -66,7 +66,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                 height: Get.height * 0.15,
                 width: width,
                 decoration: BoxDecoration(
-                  color: AppColors.backColor,
+                  color: AppColors.mainCardColor,
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,

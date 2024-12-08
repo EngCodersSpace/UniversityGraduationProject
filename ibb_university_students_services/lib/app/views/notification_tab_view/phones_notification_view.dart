@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
-import '../../components/notification_card.dart';
+import 'notification_tab_components/notification_card.dart';
 import '../../controllers/tabs_controller/notification_tab_controller.dart';
 
 class PhoneNotificationView extends GetView<NotificationTabController> {

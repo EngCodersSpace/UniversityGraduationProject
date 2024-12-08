@@ -26,7 +26,7 @@ class ResultCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: (type == "even")
-            ? AppColors.mainCardColor.withOpacity(0.8):AppColors.inverseCardColor,
+            ? AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
 
         boxShadow: const [
           BoxShadow(
@@ -36,11 +36,7 @@ class ResultCard extends StatelessWidget {
             offset: Offset(0, 5),
           )
         ],
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8),
-            bottomLeft: Radius.circular(8),
-            topRight: Radius.circular(16),
-            bottomRight: Radius.circular(0)),
+        borderRadius: const BorderRadius.all(Radius.circular(8),),
       ),
       child: (type == "even")?Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,35 +45,35 @@ class ResultCard extends StatelessWidget {
             width: ((Get.width-16)*2)/7,
             child: CustomText(
               "Power Systems",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "2",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
               "30",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.45)/7,
             child: CustomText(
               "70",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "100",
-              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
 
