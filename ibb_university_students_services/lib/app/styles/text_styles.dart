@@ -11,18 +11,21 @@ class TextHeaders{
   FontWeight fontWeight;
 }
 
-
-class AppTextStyles {
+class AppTextHeaders{
   static TextHeaders h1 = TextHeaders(fontSize: 24, fontWeight: FontWeight.bold);
   static TextHeaders h2 = TextHeaders(fontSize: 18, fontWeight: FontWeight.bold);
   static TextHeaders h3 = TextHeaders(fontSize: 14, fontWeight: FontWeight.bold);
   static TextHeaders h4 = TextHeaders(fontSize: 14, fontWeight: FontWeight.normal);
+  static TextHeaders h5 = TextHeaders(fontSize: 12, fontWeight: FontWeight.bold);
+}
+class AppTextStyles {
+
 
   static TextStyle mainStyle({
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= h2;
+    textHeader ??= AppTextHeaders.h2;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
@@ -35,11 +38,11 @@ class AppTextStyles {
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= h4;
+    textHeader ??= AppTextHeaders.h4;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
-      color: AppColors.mainTextColor,
+      color: AppColors.secTextColor,
       height: height,
     );
   }
@@ -48,7 +51,7 @@ class AppTextStyles {
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= h4;
+    textHeader ??= AppTextHeaders.h4;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,

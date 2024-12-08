@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/stydent_result_controller.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_card.dart';
+import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_header_card.dart';
+import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 
 class PhoneStudentResultView extends GetView<StudentResultController> {
@@ -24,35 +28,61 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
         child: Stack(
           children: [
             Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                  width: width,
-                  height: Get.height * 0.76,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.05, vertical: Get.height * 0.03),
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  SizedBox(height: Get.height * 0.16),
+                  Container(
+                    width: width,
+                    height: Get.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: AppColors.inverseCardColor,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: Offset(0, 5),
+                        )
+                      ],
+                      borderRadius:
+                      const BorderRadius.all( Radius.circular(16)),
+                    ),
+                    padding: const EdgeInsets.only(top: 8,bottom: 8),
+                    margin: const EdgeInsets.all(8),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SecText("Exams:".tr,
-                                textColor: AppColors.highlightTextColor,fontSize: 18,),
-                          ],
+                        const ResultHeaderCard(),
+                        SizedBox(
+                          height: Get.height * 0.01,
                         ),
-                        SizedBox(height: Get.height * 0.01),
-                        for (int i = 0;
-                        i <  (controller.exams?.value.length??0);
-                        i++)...[
-
-                          if (i < ((controller.exams?.value.length ?? 0) - 1))
-                            SizedBox(
-                              height: Get.height * 0.03,
-                            )
-                        ]
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                for (int i = 0;
+                                i <  (12);
+                                i++)...[
+                                  (i%2 == 0)?ResultCard():ResultCard(type: "odd",),
+                                  if (i < ((12) - 1))
+                                    SizedBox(
+                                      height: Get.height * 0.005,
+                                    ),
+                          
+                                ],
+                              ],
+                          
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  )),
+                  ),
+                ],
+              ),
             ),
             Container(
                 height: Get.height * 0.15,
@@ -77,50 +107,13 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                     Row(
                       children: [
                         SizedBox(
-                            width: ((Get.width-16) / 7)*3.5,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: SecText(
-                                    "Section:",
-                                    textAlign: TextAlign.start,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.inverseCardColor,
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  width: Get.width / 3.3,
-                                  child: Center(
-                                    child: Obx(
-                                          () => DropdownButton(
-                                        items: controller.departments,
-                                        onChanged: controller.changeDepartment,
-                                        value:
-                                        controller.selectedDepartment.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor: AppColors.mainCardColor,
-                                        dropdownColor:
-                                        AppColors.inverseCardColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: ((Get.width-16) / 7)*0.1,),
-                              ],
-                            )),
-                        SizedBox(width: ((Get.width-16) / 7)*0.4,),
-                        SizedBox(
                             width: ((Get.width-16) / 7)*3.1,
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: SecText(
+                                  child: CustomText(
                                     "Level:",
-                                    fontWeight: FontWeight.bold,
-                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                   ),
                                 ),
                                 Container(
@@ -146,58 +139,14 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 ),
                               ],
                             )),
-                      ],
-                    ),
-                    SizedBox(
-                      height: Get.height * 0.004,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                            width: ((Get.width-16) / 7)*3.5,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: SecText(
-                                    "     Year:",
-                                    fontWeight: FontWeight.bold,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.inverseCardColor,
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  width: Get.width / 3.3,
-                                  child: Center(
-                                    child: Obx(
-                                          () => DropdownButton(
-                                        items: controller.years,
-                                        onChanged: controller.changeYear,
-                                        value:
-                                        controller.selectedYear.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor: AppColors.mainCardColor,
-                                        dropdownColor:
-                                        AppColors.inverseCardColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: ((Get.width-16) / 7)*0.1,),
-                              ],
-                            )),
                         SizedBox(width: ((Get.width-16) / 7)*0.4,),
                         SizedBox(
                             width: ((Get.width-16) / 7)*3.1,
                             child: Row(
                               children: [
-                                Expanded(child: SecText(
+                                Expanded(child: CustomText(
                                   "Term:",
-                                  textAlign: TextAlign.start,
-                                  fontWeight: FontWeight.bold,
+                                  style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 ),),
                                 Container(
                                   decoration: BoxDecoration(
@@ -222,6 +171,42 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 ),
                               ],
                             )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: Get.height * 0.03,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomText(
+                              "GPA:",
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                            ),
+                            const SizedBox(width: 4,),
+                            CustomText(
+                              "99%",
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomText(
+                              "Summation:",
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                            ),
+                            const SizedBox(width: 4,),
+                            CustomText(
+                              "990",
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ],
