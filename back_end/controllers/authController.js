@@ -15,9 +15,9 @@ const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
 const { sequelize} = require('sequelize');
 
-const translateTex = require('translate-google');
+// const translateTex = require('translate-google');
 
-const { addTranslation ,translateText} = require('../middleware/translationServices');
+const { addTranslation , translateText } = require('../middleware/translationServices');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -148,110 +148,104 @@ exports.refreshToken = async (req, res) => {
   });
 };
 ///////////////////////////
-// exports.registerDoctor = async (req, res) => {
-//   // const errors = validationResult(req);
-//   // if (!errors.isEmpty()) {
-//   //   return res.status(400).json({ errors: errors.array() });
-//   // }
 
-//   const {} = req.body;
-
-//   try {
-//     const transaction = await Sequelize.transaction();
-//     const newDoctor = await user.create(req.body, { transaction, include: [{ model: doctor, as: "doctor" }] });
-//     const language = req.body.language || 'en'; 
-
-//     //   addTranslation(tableName, recordId, field, value, language)
-//     await addTranslation('users', newDoctor.user_id, 'user_name', `${newDoctor.user_name}`, language);
-//     await addTranslation('users', newDoctor.user_id, 'permission', `${newDoctor.permission}`, language);
-//     await addTranslation('users', newDoctor.user_id, 'collegeName', `${newDoctor.collegeName}`, language);
-//     await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${newDoctor.doctor.academic_degree}`, language);
-//     await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${newDoctor.doctor.administrative_position}`, language);
-
-//     await transaction.commit();
-//     res.status(201).json({
-//       message: "Doctor registered successfully",
-//       user: newDoctor,
-//     });
-//   } catch (error) {
-//     await transaction.rollback();
-//     console.error("Error during user registration:", error.message);
-//     res
-//       .status(500)
-//       .json({ message: "Internal server error", error: error.message });
-//   }
-// };
 
 exports.registerDoctor = async (req, res) => {
-  const {language} = req.body;
+  const {
+    inputLanguage,
+    user_id,
+    user_name,
+    collageName,
+    user_section_id,
+    date_of_birth,
+    profile_picture,
+    email,
+    password,
+    doctor,
+  } = req.body;
+
   try {
-    // const transactions = await sequelize.transaction();
+    const targetLanguage = inputLanguage === 'ar' ? 'en' : 'ar';
 
-    if (language === 'ar') {
-      const fieldsToTranslate = ['user_name', 'permission', 'collegeName']; 
-      const translatedData = {};
-      for (const field of fieldsToTranslate) {
-        const value = req.body[field];
-        translatedData[field] = await translateText(value, 'ar', 'en');
-      }
-    } else {
+    const translatedUserName = await translateText(user_name, inputLanguage, targetLanguage);
+    const translatedCollageName = await translateText(collageName, inputLanguage, targetLanguage);
+    const translatedAcademicDegree = await translateText(doctor.academic_degree, inputLanguage, targetLanguage);
+    const translatedAdministrativePosition = await translateText(doctor.administrative_position, inputLanguage, targetLanguage);
+    
+    console.log('\n \n req.body \n',req.body)
 
-    }
-
-
-
-
-    let englishData, arabicTranslations;
-    if (language === 'ar') {
-      englishData = {
-        user_name  : await translateTex(req.body.user_name,   {from:'ar' ,to:'en'}),
-        permission : await translateTex(req.body.permission,  {from:'ar' ,to:'en'}),
-        collegeName: await translateTex(req.body.collegeName, {from:'ar' ,to:'en'}),
-        doctor: {
-          academic_degree        : await translateTex(req.body.doctor.academic_degree,  {from:'ar' ,to:'en'}),
-          administrative_position: await translateTex(req.body.doctor.administrative_position,{from:'ar' ,to:'en'}),
-        },
-      user_section_id,  
-      email,
-      password,
+    const newUser = await user.create({
       user_id,
+      user_name: {
+        [inputLanguage]: req.body.user_name,
+        [targetLanguage]: translatedUserName,
+      },
+      user_section_id,
       date_of_birth,
       profile_picture,
-      };
-      arabicTranslations = req.body; 
-
-    } else {
-      englishData = req.body;
-      arabicTranslations = {
-        user_name  : await translateTex(req.body.user_name,{from:'en' ,to:'ar'}),
-        permission : await translateTex(req.body.permission, {from:'en' ,to:'ar'}),
-        collegeName: await translateTex(req.body.collegeName, {from:'en' ,to:'ar'}),
-        doctor: {
-          academic_degree        : await translateTex(req.body.doctor.academic_degree, {from:'en' ,to:'ar'}),
-          administrative_position: await translateTex(req.body.doctor.administrative_position, {from:'en' ,to:'ar'}),
-        },
-      };
-    }
-
-
-    const newDoctor = await user.create(englishData, {
-      include: [{ model: doctor, as: 'doctor' }],
+      collageName: {
+        [inputLanguage]: req.body.collageName,
+        [targetLanguage]: translatedCollageName,
+      },
+      email,
+      password,
     });
 
-    await addTranslation('users', newDoctor.user_id, 'user_name', `${arabicTranslations.user_name}`, 'ar');
-    await addTranslation('users', newDoctor.user_id, 'permission', `${arabicTranslations.permission}`, 'ar');
-    await addTranslation('users', newDoctor.user_id, 'collegeName', `${arabicTranslations.collegeName}`, 'ar');
-    await addTranslation('doctors', newDoctor.user_id, 'academic_degree', `${arabicTranslations.doctor.academic_degree}`, 'ar');
-    await addTranslation('doctors', newDoctor.user_id, 'administrative_position', `${arabicTranslations.doctor.administrative_position}`, 'ar');
+    console.log('\n \n newUser \n',newUser);
 
-    // await transactions.commit();
+
+    const newDoctor = await doctor.create({
+      user_id: newUser.user_id, 
+      academic_degree: {
+        [inputLanguage]: doctor.academic_degree,
+        [targetLanguage]: translatedAcademicDegree,
+      },
+      administrative_position: {
+        [inputLanguage]: doctor.administrative_position,
+        [targetLanguage]: translatedAdministrativePosition,
+      },
+    });
+
+    console.log('\n \n newUser \n',newUser);
+    
+    res.status(201).json({
+      message: 'Doctor registered successfully',
+      user: newUser,
+      doctor: newDoctor,
+    });
+  } catch (error) {
+    console.error('Error during user registration:', error.message);
+    res.status(500).json({ message: 'Internal server error',error: error.message});
+  }
+};
+
+
+exports.registerDoctor = async (req, res) => {
+  const { inputLanguage
+  } = req.body;
+
+
+  try {
+    const targetLanguage = req.body.inputLanguage === 'ar' ? 'en' : 'ar';
+
+    req.body.translatedUserName = await translateText(req.body.user_name, inputLanguage, targetLanguage);
+    req.body.translatedCollageName = await translateText(req.body.collageName, inputLanguage, targetLanguage);
+    req.body.doctor.translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, inputLanguage, targetLanguage);
+    req.body.doctor.translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, inputLanguage, targetLanguage);
+
+    const newDoctor = await await user.create(req.body, {
+      include: [{ model: doctor, as: "doctor" }],
+    });
+
     res.status(201).json({
       message: 'Doctor registered successfully',
       user: newDoctor,
     });
   } catch (error) {
-    console.error('Error during user registration:', error.message);
-    res.status(500).json({ message: 'Internal server error', error: `${error.message}` });
+    console.error("Error during user registration:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
