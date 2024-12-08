@@ -15,6 +15,7 @@ module.exports = {
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
         password: faker.internet.password(),
+        collegeName: faker.helpers.arrayElement(['Engineering', 'Science', 'Business', 'Arts']),
         permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']),
         createdAt: new Date(),
         updatedAt: new Date(),
