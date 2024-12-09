@@ -71,19 +71,24 @@ class WebHomeTab extends GetView<HomeTabController> {
                             SizedBox(
                               width: width * 0.1,
                             ),
-                            SecText(
-                              "Department",
-                              textColor: AppColors.inverseCardColor,
-                              fontWeight: FontWeight.bold,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SecText(
+                                  "Department",
+                                  textColor: AppColors.inverseCardColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                SizedBox(
+                                  width: width * 0.03,
+                                ),
+                                SecText((controller.user! as Student)
+                                        .section
+                                        ?.name
+                                        ?.tr ??
+                                    "Unknown".tr),
+                              ],
                             ),
-                            SizedBox(
-                              width: width * 0.03,
-                            ),
-                            SecText((controller.user! as Student)
-                                    .section
-                                    ?.name
-                                    ?.tr ??
-                                "Unknown".tr)
                           ],
                         ),
                         Row(
@@ -97,17 +102,24 @@ class WebHomeTab extends GetView<HomeTabController> {
                             SizedBox(
                               width: width * 0.15,
                             ),
-                            SecText(
-                              "Level",
-                              textColor: AppColors.inverseCardColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            SizedBox(
-                              width: width * 0.03,
-                            ),
-                            SecText(
-                                (controller.user as Student).level?.name?.tr ??
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SecText(
+                                  "Level",
+                                  textColor: AppColors.inverseCardColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                SizedBox(
+                                  width: width * 0.03,
+                                ),
+                                SecText((controller.user as Student)
+                                        .level
+                                        ?.name
+                                        ?.tr ??
                                     "Unknown".tr)
+                              ],
+                            ),
                           ],
                         )
                       ],
