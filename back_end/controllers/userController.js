@@ -1,6 +1,7 @@
 // controllers/userController.js
 // const bcrypt = require('bcrypt');
 const { user, doctor , student ,study_plan,level,section} = require('../models'); 
+const { Sequelize} = require('sequelize');
 
 
 exports.getUserById = async (req, res) => {
@@ -50,14 +51,30 @@ exports.deleteUser = async (req, res) => {
 
 exports.getDoctorById = async (req, res) => {
     const { id } = req.params;
+    const { language } = req.query;
+
+    if (!language) {
+        return res.status(400).json({ message: "Language parameter is required" });
+    }
 
     try {
         const Doctor = await doctor.findOne({
-            where: { doctor_id: id }, 
+            where: { doctor_id: id },
+            attributes: [
+                    [Sequelize.json(`academic_degree.${language}`), 'academic_degree'],
+                    [Sequelize.json(`administrative_position.${language}`), 'administrative_position']
+                ],
             include: [
                 {
                     model: user,
-                    as: 'user' 
+                    as: 'user',
+                    attributes: [
+                        'user_id',
+                        [Sequelize.json(`user_name.${language}`), 'user_name'],
+                        [Sequelize.json(`collegeName.${language}`), 'collegeName'],
+                        'date_of_birth',
+                        'email'
+                    ],
                 },
             ],
         });
@@ -66,9 +83,21 @@ exports.getDoctorById = async (req, res) => {
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
+        const doctorData = {
+            user_id: Doctor.user.user_id,
+            user_name: Doctor.user.user_name,
+            collegeName: Doctor.user.collegeName,
+            date_of_birth: Doctor.user.date_of_birth,
+            email: Doctor.user.email,
+            doctor: {
+                academic_degree: Doctor.academic_degree,  
+                administrative_position: Doctor.administrative_position      
+            }
+        };
+
         res.status(200).json({
             message: 'Doctor found',
-            data: Doctor,
+            data: doctorData,
         });
     } catch (error) {
         console.error('Error fetching doctor by ID:', error.message);
