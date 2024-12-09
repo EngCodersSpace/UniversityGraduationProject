@@ -14,9 +14,9 @@ router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
 
 router.post('/refresh', authController.refreshToken);
 
-router.post('/registerDoctor',authController.registerDoctor);
+router.post('/registerDoctor',vali.validateDoctorRegistration,authController.registerDoctor);
 
-router.post('/registerStudent',authController.registerStudent);
+router.post('/registerStudent',vali.validateStudentRegistration,authController.registerStudent);
 
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
 
