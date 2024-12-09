@@ -13,11 +13,9 @@ const {
 const nodemailer = require("nodemailer");
 const { Op } = require("sequelize");
 const { validationResult } = require("express-validator");
-const { sequelize} = require('sequelize');
+// const { sequelize} = require('sequelize');
 
-// const translateTex = require('translate-google');
-
-// const { addTranslation , translateText } = require('../middleware/translationServices');
+const {  translateText } = require('../middleware/translationServices');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -30,7 +28,6 @@ exports.welcome = (req, res) => {
     success: true,
   });
 };
-
 ///////////////////////////
 exports.login = async (req, res) => {
   const { user_id, password } = req.body;
@@ -148,130 +145,111 @@ exports.refreshToken = async (req, res) => {
   });
 };
 ///////////////////////////
-
-
 exports.registerDoctor = async (req, res) => {
-  const {
-    language,
-    user_id,
-    user_name,
-    collageName,
-    user_section_id,
-    date_of_birth,
-    profile_picture,
-    email,
-    password,
-    doctorData,
-  } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { } = req.body;
 
   try {
-    const targetLanguage = (req.body.language === 'ar')?'en':'ar';
+    const targetLanguage = req.body.language === 'en'?'ar':'en';
 
-    // const translatedUserName = await translateText(user_name, inputLanguage, targetLanguage);
-    // const translatedCollageName = await translateText(collageName, inputLanguage, targetLanguage);
-    // const translatedAcademicDegree = await translateText(doctor.academic_degree, inputLanguage, targetLanguage);
-    // const translatedAdministrativePosition = await translateText(doctor.administrative_position, inputLanguage, targetLanguage);
-    
-    console.log('\n \n req.body \n',req.body)
+    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
+    const translatedCollageName = await translateText(req.body.collageName, req.body.language, targetLanguage);
+    const translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, req.body.language, targetLanguage);
+    const translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, req.body.language, targetLanguage);
 
-
-  //// first create the json with dynmaic kes 
-    userName = {}
-    userName[req.body.language] = user_name
-    userName[targetLanguage] = user_name
-    /////////////////////////////////////
-    const newUser = await user.create({
-      user_id,
-      ///// user the json you create why? because here use variable as key not supported *_*
-      ///// uncommit your work and apply this mechnaizim for othes fields
-      user_name: userName,
-      user_section_id,
-      date_of_birth,
-      profile_picture,
-      collegeName: {
-        en:"in en"
+    const userData = {
+      user_id: req.body.user_id,
+      user_name:{
+        [req.body.language] : req.body.user_name,
+        [targetLanguage] : translatedUserName
       },
-      email,
-      password,
+      user_section_id: req.body.user_section_id,
+      date_of_birth: req.body.date_of_birth,
+      profile_picture: req.body.profile_picture,
+      collegeName: {
+        [req.body.language]: req.body.collageName,
+        [targetLanguage]: translatedCollageName,
+      },
+      email: req.body.email,
+      password: req.body.password,
+      permission: req.body.permission,
+      doctor:{
+        academic_degree: {
+            [req.body.language]: req.body.doctor.academic_degree,
+            [targetLanguage]: translatedAcademicDegree
+        },
+        administrative_position: {
+            [req.body.language]: req.body.doctor.administrative_position,
+            [targetLanguage]: translatedAdministrativePosition
+        }
+      }  
+    };
+  
+    const newDoctor = await user.create(userData, {
+        include: [{
+            model: doctor,
+            as: 'doctor' // تأكد من وضع الاسم الصحيح للنموذج
+        }]
     });
 
-    console.log('\n \n newUser \n',newUser);
-
-
-    // const newDoctor = await doctor.create({
-    //   user_id: newUser.user_id, 
-    //   academic_degree: {
-    //     inputLanguage: doctorData.academic_degree,
-    //     targetLanguage: doctorData.academic_degree,
-    //   },
-    //   administrative_position: {
-    //     inputLanguage: doctorData.administrative_position,
-    //     targetLanguage: doctorData.administrative_position,
-    //   },
-    // });
-
-    // console.log('\n \n newUser \n',newUser);
-    
     res.status(201).json({
       message: 'Doctor registered successfully',
-      user: newUser,
-      // doctor: newDoctor,
+      user: newDoctor,
     });
   } catch (error) {
     console.error('Error during user registration:', error.message);
     res.status(500).json({ message: 'Internal server error',error: error.message});
   }
 };
-
-
-// exports.registerDoctor = async (req, res) => {
-//   const { inputLanguage
-//   } = req.body;
-
-
-//   try {
-//     const targetLanguage = req.body.inputLanguage === 'ar' ? 'en' : 'ar';
-
-//     req.body.translatedUserName = await translateText(req.body.user_name, inputLanguage, targetLanguage);
-//     req.body.translatedCollageName = await translateText(req.body.collageName, inputLanguage, targetLanguage);
-//     req.body.doctor.translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, inputLanguage, targetLanguage);
-//     req.body.doctor.translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, inputLanguage, targetLanguage);
-
-//     const newDoctor = await await user.create(req.body, {
-//       include: [{ model: doctor, as: "doctor" }],
-//     });
-
-//     res.status(201).json({
-//       message: 'Doctor registered successfully',
-//       user: newDoctor,
-//     });
-//   } catch (error) {
-//     console.error("Error during user registration:", error.message);
-//     res
-//       .status(500)
-//       .json({ message: "Internal server error", error: error.message });
-//   }
-// };
-
-
 exports.registerStudent = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({ errors: errors.array() });
+  // }
 
   const {} = req.body;
 
   try {
-    const newStudent = await user.create(req.body, {
+
+    const targetLanguage = req.body.language === 'en'?'ar':'en';
+    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
+    const translatedCollageName = await translateText(req.body.collageName, req.body.language, targetLanguage);
+    const translatedStudentSystem = await translateText(req.body.student.student_system, req.body.language, targetLanguage);
+
+    const userData = {
+      user_id: req.body.user_id,
+      user_name: {
+        [req.body.language] : req.body.user_name,
+        [targetLanguage] : translatedUserName
+      },
+      user_section_id: req.body.user_section_id,
+      date_of_birth: req.body.date_of_birth,
+      profile_picture: req.body.profile_picture,
+      collegeName: {
+        [req.body.language]: req.body.collageName,
+        [targetLanguage]: translatedCollageName,
+      },
+      email: req.body.email,
+      password: req.body.password,
+      permission: req.body.permission,
+      student:{
+        study_plan_id:req.body.student.study_plan_id,
+        student_level_id:req.body.student.student_level_id,
+        enrollment_year:req.body.student.enrollment_year,
+        student_system:{
+          [req.body.language]:req.body.student.student_system,
+          [targetLanguage]:translatedStudentSystem
+        }
+      }  
+    };
+
+    const newStudent = await user.create(userData, {
       include: [{ model: student, as: "student" }],
     });
 
-    await addTranslation('users', newStudent.user_id, 'user_name', `${newStudent.user_name}`, language);
-    await addTranslation('users', newStudent.user_id, 'permission', `${newStudent.permission}`, language);
-    await addTranslation('users', newStudent.user_id, 'collegeName', `${newStudent.collegeName}`, language);
-    await addTranslation('students', newStudent.user_id, 'student_system', `${newStudent.student.student_system}`, language);
-    
     res.status(201).json({
       message: "Student registered successfully",
       user: newStudent,
@@ -283,7 +261,6 @@ exports.registerStudent = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
-
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
@@ -414,7 +391,6 @@ exports.resetPassword = async (req, res) => {
   }
 };
 ///////////////////////////
-
 // Function to get the currently logged-in user based on JWT token (me)
 exports.getCurrentUser = (req, res) => {
   const authHeader = req.headers["authorization"];
@@ -472,73 +448,3 @@ exports.getCurrentUser = (req, res) => {
     }
   });
 };
-
-// exports.registerStudent = async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         return res.status(400).json({ errors: errors.array() });
-//     }
-//     const {
-//         user_id,
-//         user_name,
-//         date_of_birth,
-//         profile_picture,
-//         collegeName,
-//         email,
-//         permission,
-//         password,
-//         student: studentData
-//     } = req.body;
-//     try {
-//         const existingUser = await user.findOne({ where: { user_id } });
-//         const existingEmail = await user.findOne({ where: { email } });
-//         if (existingUser) {
-//             return res.status(400).json({ message: "User ID already exists" });
-//         }
-//         if (existingEmail) {
-//             return res.status(400).json({ message: "Email already registered" });
-//         }
-//         const newUser = await user.create(
-//             {
-//                 user_id,
-//                 user_name,
-//                 date_of_birth,
-//                 profile_picture,
-//                 collegeName,
-//                 email,
-//                 password,
-//                 permission,
-//                 student: studentData ? {
-//                     student_section_id: studentData.student_section_id,
-//                     enrollment_year: studentData.enrollment_year,
-//                     student_level_id: studentData.student_level_id,
-//                     student_system: studentData.student_system,
-//                     study_plan_id: studentData.study_plan_id,
-//                 } : null,
-//             },
-//             {
-//                 include: [{ model: student, as: 'student' }],
-//             }
-//         );
-//         const responseUser = {
-//             user_id: newUser.user_id,
-//             user_name: newUser.user_name,
-//             date_of_birth: newUser.date_of_birth,
-//             email: newUser.email,
-//             permission: newUser.permission,
-//             student_section_id: newUser.student?.student_section_id || null,
-//             enrollment_year: newUser.student?.enrollment_year || null,
-//             student_level_id: newUser.student.student_level_id || null,
-//             student_system: newUser.student.student_system || null,
-//             study_plan_id: newUser.student.study_plan_id || null,
-//         };
-//         res.status(201).json({
-//             message: "Student registered successfully",
-//             user: responseUser,
-//         });
-
-//     } catch (error) {
-//         console.error("Error during user registration:", error.message);
-//         res.status(500).json({ message: "Internal server error", error: error.message });
-//     }
-// };
