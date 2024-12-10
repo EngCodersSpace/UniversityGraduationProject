@@ -41,6 +41,7 @@ class Doctor extends User {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -53,8 +54,8 @@ class Doctor extends User {
       "student_section": section,
       "status": status,
       "section": section,
-      "academic_degree":academicDegree,
-      "administrative_position":administrativePosition,
+      "academic_degree": academicDegree,
+      "administrative_position": administrativePosition,
       "created_at": createdAt,
       "updated_at": updatedAt,
     };

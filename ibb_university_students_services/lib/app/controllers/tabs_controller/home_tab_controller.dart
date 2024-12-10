@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -34,30 +35,6 @@ class HomeTabController extends GetxController
     tabController.dispose();
   }
 
-  bool scrollEvent(UserScrollNotification s) {
-    try {
-      Duration d = const Duration(seconds: 0, milliseconds: 500);
-      _timer.cancel();
-      if (scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        _newsCurrentPos++;
-        _newsCurrentPos == 3 ? _newsCurrentPos = 2 : null;
-        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
-      } else if (scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        _newsCurrentPos--;
-        _newsCurrentPos == -1 ? _newsCurrentPos = 0 : null;
-        newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
-      }
-      _setUpTimer();
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-    return false;
-  }
-
   void _setUpTimer() {
     try {
       const duration = Duration(seconds: 5);
@@ -83,7 +60,7 @@ class HomeTabController extends GetxController
     try {
       _timer.cancel();
       _newsCurrentPos = 0;
-      tabController.index = (0);
+      tabController.animateTo(0);
       _setUpTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -94,27 +71,13 @@ class HomeTabController extends GetxController
 
   void newsAnimate(double width, int i, Duration duration) {
     try {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(width * i,
-            duration: duration, curve: Curves.easeInOutQuart);
-        tabController.animateTo(i, duration: duration);
-      }
+      scrollController.animateTo(width * i,
+          duration: duration, curve: Curves.easeInOutQuart);
+      tabController.animateTo(i, duration: duration);
     } catch (e) {
       if (kDebugMode) {
         print("${e.toString()}\n_____________________________________________");
       }
     }
-  }
-
-  void libraryRoute() {
-    Get.toNamed("/library");
-  }
-
-  void lectureScheduleRoute() {
-    Get.find<MainController>().changeTabIndex(1);
-  }
-
-  void academicCardRoute() {
-    Get.toNamed("/academic_card");
   }
 }

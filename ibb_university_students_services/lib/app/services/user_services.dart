@@ -14,8 +14,9 @@ class UserServices {
   static User? _user;
 
   // static Student? _student;
-  static void _fakeUser(String type){
-    if (type == "student") {
+
+  static Future<Result<bool>> _userFakeLogin(String id, String password) async {
+    if (id == "1" && password == "12345678") {
       // virtual response for test
       Map<String, dynamic> response = {
         'message': 'login successfully',
@@ -37,7 +38,7 @@ class UserServices {
       } else {
         _user = Doctor.fromJson(response["user"]);
       }
-    } else if (type =="doctor") {
+    } else if (id == "2" && password == "12345678") {
       // virtual response for test
       Map<String, dynamic> response = {
         'message': 'login successfully',
@@ -62,19 +63,12 @@ class UserServices {
         AppData.role = "doctor";
       }
     }
-
-  }
-  static Future<Result<bool>> _userFakeLogin(String id, String password) async {
-    if (id == "1" && password == "12345678") {
-      _fakeUser("student");
-    } else if (id == "2" && password == "12345678") {
-      _fakeUser("doctor");
-    }
     return Result(hasError: false, statusCode: 200, data: true);
   }
 
   static Future<Result<bool>> userLogin(String id, String password,
       {bool rememberMe = false}) async {
+    return await _userFakeLogin(id, password);
     late Response? response;
     try {
       response = await HttpProvider.post("auth/login",
@@ -88,19 +82,11 @@ class UserServices {
           AppData.role = "doctor";
         }
         HttpProvider.addAuthTokenInterceptor(response?.data["token"]);
-        if (rememberMe) {
-          _prefs ??= await SharedPreferences.getInstance();
-          await _prefs?.setStringList("credentials", <String>[id, password]);
-          return await _userFakeLogin(id, password);
-        }
         return Result(
           hasError: false,
           statusCode: response?.statusCode,
           data: true,
         );
-      }
-      if(rememberMe){
-        return await _userFakeLogin(id, password);
       }
       return Result(
         hasError: true,
@@ -110,9 +96,7 @@ class UserServices {
       );
     } catch (error) {
       if (kDebugMode) {
-        print("____________________________________________");
         print("internalException\n");
-        print(error);
       }
       return Result(
         hasError: true,
@@ -195,7 +179,7 @@ class UserServices {
         message: "successful",
       );
     }
-    _fakeUser("student");
+
     late Response? response;
     try {
       response = await HttpProvider.post("auth/me");
@@ -219,8 +203,8 @@ class UserServices {
       return Result(
           data: null,
           hasError: true,
-          statusCode: response?.statusCode??604,
-          message: response?.data["message"]??"error");
+          statusCode: response?.statusCode ?? 604,
+          message: response?.data["message"] ?? "error");
     } catch (error) {
       return Result(
           hasError: true,

@@ -59,18 +59,20 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               ? AppColors.tabBackColor
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage:
-                                          (controller.user?.profileImage) != ""
-                                              ? AssetImage(controller
-                                                      .user?.profileImage ??
-                                                  "")
-                                              : null,
-                                      child:
-                                          (controller.user?.profileImage) != ""
-                                              ? null
-                                              : MainText(
-                                                  controller.user?.name?[0] ??
-                                                      "".toUpperCase()),
+                                      backgroundImage: (controller
+                                                  .user?.profileImage?.value) !=
+                                              ""
+                                          ? AssetImage(controller
+                                                  .user?.profileImage?.value ??
+                                              "")
+                                          : null,
+                                      child: (controller
+                                                  .user?.profileImage?.value) !=
+                                              ""
+                                          ? null
+                                          : MainText(
+                                              controller.user?.name?.value[0] ??
+                                                  "".toUpperCase()),
                                     )
                                   ],
                                 ),
@@ -379,31 +381,28 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  NotificationListener(
-                    onNotification: controller.scrollEvent,
-                    child: SingleChildScrollView(
-                      controller: controller.scrollController,
-                      dragStartBehavior: DragStartBehavior.down,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.1,
-                          ),
-                        ],
-                      ),
+                  SingleChildScrollView(
+                    controller: controller.scrollController,
+                    dragStartBehavior: DragStartBehavior.down,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.05,
+                        ),
+                        NewsCard(height: height * 0.25, width: width * 0.8),
+                        SizedBox(
+                          width: width * 0.1,
+                        ),
+                      ],
                     ),
                   ),
                   Align(

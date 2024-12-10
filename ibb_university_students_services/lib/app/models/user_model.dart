@@ -1,4 +1,3 @@
-
 abstract class User {
   int id;
   String? name;
@@ -22,9 +21,28 @@ abstract class User {
     this.updatedAt,
   });
 
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: RxInt(json['id']),
+      name: RxString(json['name'] ?? ""),
+      email: RxString(json['email'] ?? ""),
+      phone: RxString(json['phone'] ?? ""),
+      department: RxString(json['department'] ?? ""),
+      profileImage: RxString(json['profileImage'] ?? ""),
+      createdAt: RxString(json['created_at'] ?? ""),
+      updatedAt: RxString(json['updated_at'] ?? ""),
+    );
+  }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id.value,
+      "name": name?.value,
+      "email": email?.value,
+      "phone": phone?.value,
+      "profile_image": profileImage?.value,
+      "created_at": createdAt?.value,
+      "updated_at": updatedAt?.value,
+    };
+  }
 }
-
-
-
-
