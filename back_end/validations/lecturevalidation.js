@@ -105,6 +105,6 @@ const updateLectureValidator = [
     .isLength({ min: 1 })
     .withMessage('Lecture room should be a valid string'),
 ];
-
+ 
 module.exports = { createLectureValidator, updateLectureValidator };
  

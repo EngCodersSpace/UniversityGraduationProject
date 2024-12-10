@@ -4,7 +4,7 @@ const { exam, subject , section,level } = require('../models');
 const { validationResult } = require('express-validator'); 
 const { Sequelize} = require('sequelize');
 
-
+//  All Functions are perfict right now 2024-12-10
 
 exports.createExam = async (req, res) => {
     const errors = validationResult(req);
@@ -12,40 +12,17 @@ exports.createExam = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-        subject_id,
-        exam_section,
-        exam_level,
-        exam_term,
-        exam_year,
-        exam_date,
-        exam_time,
-        exam_day,
-        exam_room,
-    } = req.body;
+    const {} = req.body;
 
     try {
-        const existingSubject = await subject.findOne({ where: { subject_id } });
+        const existingSubject = await subject.findOne({ where: { subject_id:req.body.subject_id } });
         if (!existingSubject) {
             return res.status(404).json({ message: 'Subject not found' });
         }
 
-        const newExam = await exam.create(
-            {
-                subject_id, // Reference to the subject
-                exam_section,
-                exam_level,
-                exam_term,
-                exam_year,
-                exam_date,
-                exam_time,
-                exam_day,
-                exam_room,
-            },
-            {
-                include: [{ model: subject }], 
-            }
-        );
+        const newExam = await exam.create(req.body,{
+                include: [{ model: subject, as: 'subject' }], 
+            });
 
         res.status(201).json({
             message: 'Exam created successfully',
@@ -59,9 +36,9 @@ exports.createExam = async (req, res) => {
 
 exports.getExam = async (req, res) => {
     try {
-      const { id : exam_id } = req.params;
+      const {id } = req.params;
       const examData = await exam.findOne({
-        where: { exam_id },
+        where: { exam_id: id},
         include: [
             { model: subject, as: 'subject' },
             { model: section, as: 'section'},
@@ -171,24 +148,14 @@ exports.updateExam = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { id: exam_id } = req.params;
-    const {
-        subject_id,
-        exam_section,
-        exam_level,
-        exam_term,
-        exam_year,
-        exam_date,
-        exam_time,
-        exam_day,
-        exam_room,
-    } = req.body;
+    const { id } = req.params;
+    const { } = req.body;
 
     try {
         // Find the exam by ID, including the associated subject
         const foundExam = await exam.findOne({
-            where: { exam_id },
-            include: [{ model: subject }],
+            where: { exam_id:id },
+            include: [{ model: subject ,as:'subject'}],
         });
 
         // Check if the exam exists
@@ -198,7 +165,7 @@ exports.updateExam = async (req, res) => {
 
         // Check if the new subject_id exists in the database
         const foundSubject = await subject.findOne({
-            where: { subject_id },
+            where: { subject_id:req.body.subject_id },
         });
 
         if (!foundSubject) {
@@ -206,17 +173,7 @@ exports.updateExam = async (req, res) => {
         }
 
         // Update the exam data
-        await foundExam.update({
-            subject_id, // Update subject_id if changed
-            exam_section,
-            exam_level,
-            exam_term,
-            exam_year,
-            exam_date,
-            exam_time,
-            exam_day,
-            exam_room,
-        });
+        await foundExam.update(req.body);
 
         // Respond with the updated exam
         res.status(200).json({

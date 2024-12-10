@@ -11,41 +11,19 @@ exports.createGrade = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const {
-        student_id,
-        subject_id,
-        exam_grade,
-        work_grade,
-        term,
-        section,
-        level,
-        year_of_issue,
-        is_absent,
-        status,
-      } = req.body;
+      const { } = req.body;
   
-      const studentExists = await student.findOne({ where: {student_id}});
+      const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
       if (!studentExists) {
         return res.status(404).json({ message: 'Student not found' });
       }
   
-      const subjectExists = await subject.findOne({where:{subject_id}});
+      const subjectExists = await subject.findOne({where:{subject_id:req.body.subject_id}});
       if (!subjectExists) {
         return res.status(404).json({ message: 'Subject not found' });
       }
   
-      const newGrade = await grade.create({
-        student_id,
-        subject_id,
-        exam_grade,
-        work_grade,
-        term,
-        section,
-        level,
-        year_of_issue,
-        is_absent,
-        status,
-      });
+      const newGrade = await grade.create(req.body);
   
       res.status(201).json({
         message: 'Grade created successfully',
