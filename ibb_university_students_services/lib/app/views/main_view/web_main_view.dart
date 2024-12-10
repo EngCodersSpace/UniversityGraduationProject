@@ -295,7 +295,7 @@ class WebMainView extends GetView<MainController> {
     const WebProfileView(),
     const WebNotificationView(),
     WebHomeTab(),
-    const WebTableTabView(),
+    WebTableTabView(),
     Center(
       child: MainText(
         "Main page 3",
