@@ -18,7 +18,10 @@ class LibraryController extends GetxController
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
-    {"name": "bookknc zxnnznxlknnn", "image": "assets/images/services_cards/result.png"},
+    {
+      "name": "bookknc zxnnznxlknnn",
+      "image": "assets/images/services_cards/result.png"
+    },
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
@@ -60,7 +63,7 @@ class LibraryController extends GetxController
     const NotesTab(),
     const RefTab(),
   ]);
-  Map<String,dynamic> selectedBook = {};
+  Map<String, dynamic> selectedBook = {};
   @override
   void onInit() {
     // TODO: implement onInit
@@ -71,9 +74,9 @@ class LibraryController extends GetxController
     super.onInit();
   }
 
-  void showBookInfo(Map<String,dynamic> book) {
+  void showBookInfo(Map<String, dynamic> book) {
     selectedBook = book;
-    Get.dialog(const PopUpBookInfoCard());
+    Get.dialog(PopUpBookInfoCard());
   }
 
   void searching(String? val) {}

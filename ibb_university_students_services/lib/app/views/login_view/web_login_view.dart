@@ -7,7 +7,7 @@ import '../../components/buttons.dart';
 import '../../components/custom_text.dart';
 import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class WebLoginView extends GetView<LoginController> {
   WebLoginView({
@@ -31,6 +31,9 @@ class WebLoginView extends GetView<LoginController> {
         SizedBox(
           child: Image.asset("assets/images/ibb_background_6.jpeg",
               fit: BoxFit.fill),
+        ),
+        Container(
+          color: AppColors.coverColor.withOpacity(0.0),
         ),
         Container(
           color: AppColors.coverColor.withOpacity(0.0),
@@ -87,6 +90,9 @@ class WebLoginView extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // SizedBox(
+                            //   width: ((width * 0.35) - 194) * (1 / 3),
+                            // ),
                             SizedBox(
                               width: ((width * 0.35) - 194) * (1 / 3),
                             ),
@@ -135,9 +141,11 @@ class WebLoginView extends GetView<LoginController> {
                         ),
                         CustomTextFormField(
                           width: width,
+
                           controller: controller.id,
                           validator: (id) => controller.validateID(id),
                           labelText: 'studentid'.tr,
+                          //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
                         ),
                         SizedBox(
@@ -148,6 +156,7 @@ class WebLoginView extends GetView<LoginController> {
                             validator: (pwd) =>
                                 controller.validatePassword(pwd),
                             labelText: 'password'.tr,
+                            //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             isPassword: true,
                             onFieldSubmitted: (e) {

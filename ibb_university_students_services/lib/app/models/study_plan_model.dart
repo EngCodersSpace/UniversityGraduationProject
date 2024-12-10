@@ -1,4 +1,3 @@
-
 class StudyPlane {
   int id;
   String? name;
@@ -33,9 +32,4 @@ class StudyPlane {
       "updated_at": updatedAt,
     };
   }
-
 }
-
-
-
-

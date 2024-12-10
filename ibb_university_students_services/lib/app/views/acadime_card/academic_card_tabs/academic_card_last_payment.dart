@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 
 class AcademicCardLastPayment extends StatelessWidget {
   const AcademicCardLastPayment({super.key});
@@ -189,19 +189,17 @@ class AcademicCardLastPayment extends StatelessWidget {
                     ],
                   ),
                   RotatedBox(
-                    quarterTurns: 1,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
+                      quarterTurns: 1,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
                           image: AssetImage(
                             "assets/images/ibb_university_logo.png",
                           ),
                           fit: BoxFit.contain,
                           opacity: 0.25,
-                        )
-                      ),
-                    )
-                  )
+                        )),
+                      ))
                 ],
               ),
             ),

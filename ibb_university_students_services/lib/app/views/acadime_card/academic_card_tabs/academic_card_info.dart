@@ -1,8 +1,8 @@
-import 'package:barcode_widget/barcode_widget.dart';
+import "package:barcode_widget/barcode_widget.dart";
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
 class AcademicCardInfo extends GetView {
   const AcademicCardInfo({super.key});
@@ -10,25 +10,26 @@ class AcademicCardInfo extends GetView {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: Get.width* 0.88,
+      width: Get.width * 0.88,
       child: Card(
         color: Colors.white,
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Stack(
           children: [
-            RotatedBox(quarterTurns: 1,child: Container(
-              width: Get.height*0.599,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/ibb_university_logo.png",
-                      ),
-                      scale: 0.7,
-                      opacity: 0.1,
-                    )
-                )
-            ),),
+            RotatedBox(
+              quarterTurns: 1,
+              child: Container(
+                  width: Get.height * 0.599,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage(
+                      "assets/images/ibb_university_logo.png",
+                    ),
+                    scale: 0.7,
+                    opacity: 0.1,
+                  ))),
+            ),
             Column(
               children: [
                 const SizedBox(
@@ -49,13 +50,15 @@ class AcademicCardInfo extends GetView {
                           children: [
                             Row(
                               children: [
-                                const SizedBox(width: 8,),
+                                const SizedBox(
+                                  width: 8,
+                                ),
                                 BarcodeWidget(
                                   drawText: false,
                                   data: '2070093',
                                   barcode: Barcode.code128(),
                                   height: 50,
-                                  width:Get.height*0.65/2.6,
+                                  width: Get.height * 0.65 / 2.6,
                                 ),
                               ],
                             ),
@@ -78,7 +81,10 @@ class AcademicCardInfo extends GetView {
                             children: [
                               const Align(
                                 alignment: Alignment.topLeft,
-                                child: Icon(Icons.person,size: 80,),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 80,
+                                ),
                               ),
                               Expanded(
                                 child: Column(
@@ -91,7 +97,9 @@ class AcademicCardInfo extends GetView {
                                         fontSize: 20,
                                       ),
                                     ),
-                                    const SizedBox(height: 8,),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
                                     Center(
                                       child: SecText(
                                         "النظام العام",
@@ -100,7 +108,9 @@ class AcademicCardInfo extends GetView {
                                         fontSize: 20,
                                       ),
                                     ),
-                                    const SizedBox(height: 24,),
+                                    const SizedBox(
+                                      height: 24,
+                                    ),
                                     Center(
                                       child: SecText(
                                         "شهاب درهم محمد الصايدي",
@@ -180,7 +190,6 @@ class AcademicCardInfo extends GetView {
                 ),
               ],
             ),
-
           ],
         ),
       ),

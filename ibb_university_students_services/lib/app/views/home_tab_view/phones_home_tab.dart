@@ -3,13 +3,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/components/news_card.dart';
-import 'package:ibb_university_students_services/app/components/services_card.dart';
-import 'package:ibb_university_students_services/app/models/doctor_model.dart';
+import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/news_card.dart';
+import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/services_card.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
-
 import '../../controllers/tabs_controller/home_tab_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
+import 'home_tab_components/doctor_info_card.dart';
+import 'home_tab_components/student_info_card.dart';
 
 class PhoneMainTab extends GetView<HomeTabController> {
   PhoneMainTab({
@@ -59,20 +59,26 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               ? AppColors.tabBackColor
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage: (controller
-                                                  .user?.profileImage?.value) !=
-                                              ""
-                                          ? AssetImage(controller
-                                                  .user?.profileImage?.value ??
-                                              "")
+                                      backgroundImage: ((controller
+                                                      .user?.profileImage !=
+                                                  null) &&
+                                              (controller.user?.profileImage !=
+                                                  ""))
+                                          ? AssetImage(
+                                              controller.user?.profileImage ??
+                                                  "")
                                           : null,
-                                      child: (controller
-                                                  .user?.profileImage?.value) !=
-                                              ""
+                                      child: ((controller.user?.profileImage !=
+                                                  null) &&
+                                              (controller.user?.profileImage !=
+                                                  ""))
                                           ? null
                                           : MainText(
-                                              controller.user?.name?.value[0] ??
-                                                  "".toUpperCase()),
+                                              controller.user?.name?[0] ??
+                                                  "".toUpperCase(),
+                                              fontSize: 50,
+                                              textColor: AppColors.secTextColor,
+                                            ),
                                     )
                                   ],
                                 ),
@@ -86,7 +92,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                     ),
                                     SecText(
                                       "ID : ${controller.user?.id}",
-                                      textColor: AppColors.inverseSecTextColor,
+                                      textColor: AppColors.highlightTextColor,
                                     )
                                   ],
                                 ),
@@ -105,275 +111,15 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         SizedBox(
                           height: height * 0.14,
                           child: (controller.user is Student)
-                              ? Card(
-                                  elevation: 5,
-                                  surfaceTintColor: AppColors.mainCardColor,
-                                  color: AppColors.mainCardColor,
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: (width - 2) * 0.05,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.3,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText("Department".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.groups_sharp,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.025,
-                                                ),
-                                                // Flexible(
-                                                //   child: MainText(
-                                                //       (controller.user
-                                                //                   as Student)
-                                                //               .department??
-                                                //           "Unknown".tr,
-                                                //       textColor: AppColors
-                                                //           .secTextColor,
-                                                //       fontSize: 14 *
-                                                //           Get.textScaleFactor,
-                                                //       height: 0),
-                                                // )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: height * 0.06,
-                                        width: 1,
-                                        color: AppColors.inverseSecTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.04,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.25,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText("Level".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.school,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.025,
-                                                ),
-                                                MainText(
-                                                    (controller.user as Student)
-                                                            .level
-                                                            ?.name ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: height * 0.06,
-                                        width: 1,
-                                        color: AppColors.inverseSecTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.03,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.2,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText("Level".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.school,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.025,
-                                                ),
-                                                MainText(
-                                                    (controller.user as Student)
-                                                            .level
-                                                            ?.name ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Card(
-                                  elevation: 16,
-                                  surfaceTintColor: AppColors.mainCardColor,
-                                  color: AppColors.mainCardColor,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: (width - 2) * 0.03,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.25,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText("Department".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.groups_sharp,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.025,
-                                                ),
-                                                Flexible(
-                                                  child: MainText(
-                                                      (controller.user
-                                                                  as Doctor)
-                                                              .section
-                                                              ?.name ??
-                                                          "Unknown".tr,
-                                                      textColor: AppColors
-                                                          .secTextColor,
-                                                      fontSize: 14 *
-                                                          Get.textScaleFactor,
-                                                      height: 0),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: height * 0.06,
-                                        width: 1,
-                                        color: AppColors.inverseSecTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.03,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.3,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText("Academic Degree".tr,
-                                                textColor: AppColors
-                                                    .inverseSecTextColor),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.card_membership,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.025,
-                                                ),
-                                                MainText(
-                                                    (controller.user as Doctor)
-                                                            .academicDegree ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor,
-                                                    fontSize: 14 *
-                                                        Get.textScaleFactor,
-                                                    height: 0),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: height * 0.06,
-                                        width: 1,
-                                        color: AppColors.inverseSecTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.03,
-                                      ),
-                                      SizedBox(
-                                        width: (width - 2) * 0.3,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SecText(
-                                              "Academic Position".tr,
-                                              textColor:
-                                                  AppColors.inverseSecTextColor,
-                                              fontSize:
-                                                  14 * Get.textScaleFactor,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Icon(Icons.manage_accounts,
-                                                    color:
-                                                        AppColors.secTextColor),
-                                                SizedBox(
-                                                  width: width * 0.02,
-                                                ),
-                                                MainText(
-                                                    (controller.user as Doctor)
-                                                            .administrativePosition ??
-                                                        "Unknown".tr,
-                                                    textColor:
-                                                        AppColors.secTextColor,
-                                                    fontSize: 14 *
-                                                        Get.textScaleFactor,
-                                                    height: 0),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              ? const StudentInfoCard()
+                              : const DoctorInfoCard(),
                         ),
                         SizedBox(
                           height: height * 0.03,
                         ),
                         SecText(
                           "News".tr,
-                          textColor: AppColors.inverseSecTextColor,
+                          textColor: AppColors.highlightTextColor,
                         ),
                         SizedBox(
                           height: height * 0.01,
@@ -381,28 +127,31 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    controller: controller.scrollController,
-                    dragStartBehavior: DragStartBehavior.down,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.05,
-                        ),
-                        NewsCard(height: height * 0.25, width: width * 0.8),
-                        SizedBox(
-                          width: width * 0.1,
-                        ),
-                      ],
+                  NotificationListener(
+                    onNotification: controller.scrollEvent,
+                    child: SingleChildScrollView(
+                      controller: controller.scrollController,
+                      dragStartBehavior: DragStartBehavior.down,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.05,
+                          ),
+                          NewsCard(height: height * 0.25, width: width * 0.8),
+                          SizedBox(
+                            width: width * 0.1,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Align(
@@ -423,7 +172,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       children: [
                         SecText(
                           "Services".tr,
-                          textColor: AppColors.inverseSecTextColor,
+                          textColor: AppColors.highlightTextColor,
                         ),
                         SizedBox(
                           height: height * 0.02,
@@ -540,7 +289,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.studentResultRoute,
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
@@ -562,7 +311,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.examTableRoute,
                                   color: Colors.transparent,
                                   size: cardSize,
                                   image: const AssetImage(

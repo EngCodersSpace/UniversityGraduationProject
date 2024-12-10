@@ -16,6 +16,14 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      profile_picture: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      collegeName:{
+        type:Sequelize.STRING(50),
+        allowNull:false,
+      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,
@@ -43,10 +51,12 @@ module.exports = {
         type:Sequelize.DATE,
         allowNull:true,
       },
-      refreshToken: {
+      refreshToken:{
         type:Sequelize.TEXT,
-        allowNull: true,
+        allowNull:true,
       },
+      
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -61,6 +71,3 @@ module.exports = {
     await queryInterface.dropTable('users');
   }
 };
-
-
-

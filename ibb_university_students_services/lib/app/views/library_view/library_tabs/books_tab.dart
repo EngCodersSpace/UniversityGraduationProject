@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 
 import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../styles/app_colors.dart';
 import '../components/book_container.dart';
 
 class LecturesTab extends GetView<LibraryController> {

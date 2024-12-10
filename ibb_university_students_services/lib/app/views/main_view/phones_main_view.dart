@@ -8,7 +8,7 @@ import 'package:ibb_university_students_services/app/views/profile_tab_view/phon
 import 'package:ibb_university_students_services/app/views/table_tab_view/phones_table_tab_view.dart';
 
 import '../../components/custom_text.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 import '../home_tab_view/phones_home_tab.dart';
 
 class PhoneMainView extends GetView<MainController> {

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../components/text_field.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class LibraryPhonesView extends GetView<LibraryController> {
-   const LibraryPhonesView({super.key});
+  const LibraryPhonesView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -22,15 +22,30 @@ class LibraryPhonesView extends GetView<LibraryController> {
                             "assets/images/library/istockphoto-867895848-612x612_bottom.jpg"),
                         fit: BoxFit.fill),
                   ),
-                  padding: const EdgeInsets.only(left: 16,right: 8,top: 38 ),
+                  padding: const EdgeInsets.only(left: 16, right: 8, top: 38),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back_outlined,color: AppColors.mainCardColor,)),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.more_vert_outlined,color: AppColors.mainCardColor,)),
+                          IconButton(
+                              onPressed: () => Get.back(),
+                              icon: Icon(
+                                Icons.arrow_back_outlined,
+                                color: AppColors.mainCardColor,
+                              )),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.filter_list_alt,
+                                color: AppColors.mainCardColor,
+                              )),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.more_vert_outlined,
+                                color: AppColors.mainCardColor,
+                              )),
                           Expanded(
                             child: CustomTextFormField(
                               onChange: controller.searching,
@@ -40,8 +55,6 @@ class LibraryPhonesView extends GetView<LibraryController> {
                             ),
                           ),
                         ],
-
-
                       ),
                       TabBar(
                           controller: controller.tapController,
@@ -85,7 +98,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                     ],
                   )),
               SizedBox(
-                height: Get.height*0.82,
+                height: Get.height * 0.82,
                 child: TabBarView(
                     controller: controller.tapController,
                     physics: const NeverScrollableScrollPhysics(),

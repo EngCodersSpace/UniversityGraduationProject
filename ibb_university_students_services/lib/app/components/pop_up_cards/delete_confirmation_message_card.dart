@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 import '../buttons.dart';
 import '../custom_text.dart';
 
@@ -22,7 +22,7 @@ class PopUpMessageCard extends StatelessWidget {
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                     side:
-                    BorderSide(width: 3, color: AppColors.inverseCardColor),
+                        BorderSide(width: 3, color: AppColors.inverseCardColor),
                     borderRadius: BorderRadius.circular(32)),
                 child: SizedBox(
                     width: double.maxFinite,
@@ -45,9 +45,10 @@ class PopUpMessageCard extends StatelessWidget {
                             const SizedBox(height: 5),
                             const SizedBox(height: 15),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: SecText(
-                                  massage, textColor: AppColors.secTextColor),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: SecText(massage,
+                                  textColor: AppColors.secTextColor),
                             ),
                             const SizedBox(height: 20),
                             Row(

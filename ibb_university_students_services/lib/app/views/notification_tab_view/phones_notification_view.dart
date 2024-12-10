@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
-import '../../components/notification_card.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'notification_tab_components/notification_card.dart';
 import '../../controllers/tabs_controller/notification_tab_controller.dart';
 
 class PhoneNotificationView extends GetView<NotificationTabController> {
@@ -30,10 +31,15 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             "Notifications".tr,
                             textColor: AppColors.inverseMainTextColor,
                           ),
-                          if(AppData.role == "doctor")...[
-                            IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
+                          if (["teacher", "doctor"]
+                              .contains(UserServices.permission)) ...[
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.add_alert,
+                                  color: AppColors.inverseIconColor,
+                                ))
                           ]
-
                         ],
                       ),
                       SizedBox(
@@ -42,8 +48,8 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                       for (String key
                           in controller.notificationGroups.keys) ...[
                         SecText(
-                          (key == controller.today)?"Today".tr:key,
-                          textColor: AppColors.inverseSecTextColor,
+                          (key == controller.today) ? "Today".tr : key,
+                          textColor: AppColors.highlightTextColor,
                         ),
                         for (int i = 0;
                             i <
@@ -54,17 +60,21 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               NotificationCard(
-                                  message: controller
-                                          .notificationGroups[key]?[i]
-                                          .message
-                                          ?.value ??
-                                      "",
-                                  author: controller.notificationGroups[key]?[i]
-                                          .author?.value ??
-                                      "",
-                                  time: controller.notificationGroups[key]?[i]
-                                          .time?.value ??
-                                      "",readState: controller.notificationGroups[key]?[i].readState?.value??true,),
+                                message: controller.notificationGroups[key]?[i]
+                                        .message?.value ??
+                                    "",
+                                author: controller.notificationGroups[key]?[i]
+                                        .author?.value ??
+                                    "",
+                                time: controller.notificationGroups[key]?[i]
+                                        .time?.value ??
+                                    "",
+                                readState: controller
+                                        .notificationGroups[key]?[i]
+                                        .readState
+                                        ?.value ??
+                                    true,
+                              ),
                             ],
                           )
                       ]

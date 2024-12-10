@@ -22,6 +22,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the grade table refers to student table
       });
 
+      //(3)Relationship One-to-Many between "grade table" and  "sectiion table"
+      grade.belongsTo(models.section, {
+        foreignKey: 'section_id',//the foreign Key in the grade table refers to section table
+      });
+
+      //(4)Relationship One-to-Many between "grade table" and  "level table"
+      grade.belongsTo(models.section, {
+        foreignKey: 'level_id',//the foreign Key in the grade table refers to level table
+      });
+
+
     }
   }
   grade.init({
@@ -64,13 +75,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Term 1', 'Term 2'),
       allowNull: false,
     },
-    section: {
-      type: DataTypes.ENUM('Computer', 'Communications', 'Civil', 'Architecture'),
+    section_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
     },
-    level: {
-      type: DataTypes.ENUM('Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5',),
+    level_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
     },
     //Year the grade was issued
     year_of_issue: {

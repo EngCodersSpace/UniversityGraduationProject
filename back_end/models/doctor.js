@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       doctor.belongsTo(models.user, {
         foreignKey: 'doctor_id',//the foreign Key in the doctor table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
+        as: 'user',
       });
 
       //(2)Relationship One-to-Many between "doctor table" and  "study_plan_elment table"
@@ -61,5 +62,13 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'doctor',
   });
+  doctor.prototype.getFullData = function () {
+    const doctor = this.toJSON();
+    if (this.user) {
+      delete doctor.user;
+      return { ...this.user.toJSON(), ...doctor };
+    }
+    return doctor;
+  };
   return doctor;
 };

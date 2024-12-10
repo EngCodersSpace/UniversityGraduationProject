@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/profile_tab_controller.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
 
 import '../../components/buttons.dart';
+import '../../styles/app_colors.dart';
 
 class WebProfileView extends GetView<ProfileController> {
   const WebProfileView({super.key});

@@ -1,5 +1,3 @@
-
-
 class Section {
   int id;
   String? name;
@@ -16,7 +14,7 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
       id: json['id'],
-      name: json['name'],
+      name: json['section_name'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
@@ -30,9 +28,4 @@ class Section {
       "updated_at": updatedAt,
     };
   }
-
 }
-
-
-
-
