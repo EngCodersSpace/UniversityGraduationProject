@@ -32,17 +32,17 @@ const createGrade = [
     .notEmpty()
     .withMessage('Term is required.'),
 
-  body('section')
-    .isIn(['Computer', 'Communications', 'Civil', 'Architecture'])
-    .withMessage('Section must be one of: Computer, Communications, Civil, Architecture.')
+  body('section_id')
+    .isInt()
+    .withMessage('Section ID must be a number')
     .notEmpty()
-    .withMessage('Section is required.'),
+    .withMessage('Section ID is required.'),
 
-  body('level')
-    .isIn(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'])
-    .withMessage('Level must be one of: Level 1, Level 2, Level 3, Level 4, Level 5.')
+  body('level_id')
+    .isInt()
+    .withMessage('level ID must be a number')
     .notEmpty()
-    .withMessage('Level is required.'),
+    .withMessage('level ID is required.'),
 
   body('year_of_issue')
     .isISO8601()
@@ -90,15 +90,15 @@ const updateGrade = [
     .isIn(['Term 1', 'Term 2'])
     .withMessage('Term must be either "Term 1" or "Term 2".'),
 
-  body('section')
+  body('section_id')
     .optional()
-    .isIn(['Computer', 'Communications', 'Civil', 'Architecture'])
-    .withMessage('Section must be one of: Computer, Communications, Civil, Architecture.'),
+    .isInt()
+    .withMessage('Section ID must be a number'),
 
-  body('level')
+  body('level_id')
     .optional()
-    .isIn(['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'])
-    .withMessage('Level must be one of: Level 1, Level 2, Level 3, Level 4, Level 5.'),
+    .isInt()
+    .withMessage('level ID must be a number'),
 
   body('year_of_issue')
     .optional()
