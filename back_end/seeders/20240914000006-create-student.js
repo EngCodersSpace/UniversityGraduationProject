@@ -65,5 +65,6 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     // Clean up the student data when rolling back
     await student.destroy({ where: {}, truncate: false });
+    await user.destroy({ where: {}, truncate: false });
   },
 };
