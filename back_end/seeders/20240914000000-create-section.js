@@ -5,10 +5,22 @@ const { section } = require('../models');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const sections = [
-      { id: 1, section_name: 'Computer', createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, section_name: 'Communications', createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, section_name: 'Civil', createdAt: new Date(), updatedAt: new Date() },
-      { id: 4, section_name: 'Architecture', createdAt: new Date(), updatedAt: new Date() }
+      { id: 1, section_name: {
+        'en':'Computer',
+        'ar':'حاسبات'
+      }, createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, section_name: {
+        'en':'Communications',
+        'ar':'اتصالات'
+      }, createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, section_name: {
+        'en':'Civil',
+        'ar':'مدني'
+      }, createdAt: new Date(), updatedAt: new Date() },
+      { id: 4, section_name: {
+        'en':'Architecture',
+        'ar':'معماري'
+      }, createdAt: new Date(), updatedAt: new Date() }
     ];
 
     await section.bulkCreate(sections);
