@@ -1,38 +1,59 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+
 class Lecture {
   Lecture({
     required this.id,
-    this.subjectName,
+    this.subjectNameData,
     this.startTime,
     this.duration,
-    this.doctor,
+    this.doctorData,
     this.hall,
     this.description,
     this.canceled,
   });
 
   int id;
-  String? subjectName;
+  Map<String,dynamic>? subjectNameData;
   String? startTime;
   int? duration;
-  String? doctor;
+  Map<String,dynamic>? doctorData;
   String? hall;
   String? description;
   bool? canceled = false;
 
+  String? get doctor {
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    print(doctorData);
+    return doctorData?[currentLang];
+  }
+
+  String? get subjectName {
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    print(subjectNameData);
+    return subjectNameData?[currentLang];
+  }
 
   factory Lecture.fromJson(Map<String, dynamic> json) {
-    // "id": 5,
-    // "startTime": "12:40:00",
-    // "duration": "1 hours",
-    // "lecturer": "William Rowe",
-    // "lecture_room": "99Ji2"
+    Map<String,dynamic>? subjectNameDataJs = {};
+    Map<String,dynamic>? doctorDataJs = {};
+    try{
+       subjectNameDataJs = jsonDecode(json['subject_name']);
+       doctorDataJs = jsonDecode(json['lecturer']);
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+      }
+    }
     return Lecture(
         id: json['id'],
-        subjectName: json['subject_name'],
+        subjectNameData: subjectNameDataJs,
         startTime: json['startTime'],
         duration: json['duration'],
         description: json['description'],
-        doctor: json['lecturer'],
+        doctorData: doctorDataJs,
         hall: json['lecture_room']
     );
   }

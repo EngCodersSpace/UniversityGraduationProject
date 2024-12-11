@@ -32,6 +32,7 @@ class LectureServices {
         message: "successful",
       );
     }
+    print("here__________________________");
     late Response? response;
     try {
       response = await HttpProvider.get("lectures/$sectionId/$levelId/$year");
