@@ -19,8 +19,11 @@ class DoctorInfoCard extends GetView<HomeTabController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: (Get.width - 2) * 0.33,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth:(Get.width - 2) * 0.31,
+              minWidth: (Get.width - 2) * 0.23,
+            ),
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,
@@ -31,6 +34,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                     textColor: AppColors
                         .highlightTextColor,fontSize: 12,),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.groups_sharp,
                         color:

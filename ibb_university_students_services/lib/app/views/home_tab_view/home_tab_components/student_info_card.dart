@@ -20,8 +20,11 @@ class StudentInfoCard extends GetView<HomeTabController> {
           SizedBox(
             width: (Get.width - 2) * 0.05,
           ),
-          SizedBox(
-            width: (Get.width - 2) * 0.3,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth:(Get.width - 2) * 0.31,
+              minWidth: (Get.width - 2) * 0.23,
+            ),
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,

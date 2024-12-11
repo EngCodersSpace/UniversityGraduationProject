@@ -3,7 +3,6 @@ import 'package:ibb_university_students_services/app/bindings/exam_table_binding
 import 'package:ibb_university_students_services/app/bindings/library_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
-import 'package:ibb_university_students_services/app/controllers/stydent_result_controller.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_view_loder.dart';

@@ -18,7 +18,6 @@ class Exam {
 
 
   factory Exam.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Exam(
         id: json['id'],
         subjectName: json['subject_name'],

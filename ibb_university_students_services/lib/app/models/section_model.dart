@@ -1,22 +1,32 @@
 
 
+import 'dart:convert';
+
+import 'package:get/get.dart';
+
 class Section {
   int id;
-  String? name;
+  Map<String,dynamic>? nameData;
   String? createdAt;
   String? updatedAt;
 
   Section({
     required this.id,
-    this.name,
+    this.nameData,
     this.createdAt,
     this.updatedAt,
   });
 
+  String? get name{
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    print(nameData?[currentLang]);
+    return nameData?[currentLang];
+  }
+
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
       id: json['id'],
-      name: json['section_name'],
+      nameData: jsonDecode(json['section_name']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

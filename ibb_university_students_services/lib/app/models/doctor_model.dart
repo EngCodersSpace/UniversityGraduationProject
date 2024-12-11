@@ -1,40 +1,51 @@
+import 'dart:convert';
+
+import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
 class Doctor extends User {
-  Section? section;
   String? status;
-  String? academicDegree;
-  String? administrativePosition;
+  Map<String,dynamic>? academicDegreeData;
+  Map<String,dynamic>? administrativePositionData;
 
   Doctor({
     required super.id,
-    super.name,
+    super.nameData,
     super.dateOfBrith,
     super.email,
     super.phones,
     super.profileImage,
     super.permission,
-    this.section,
+    super.section,
     this.status,
-    this.administrativePosition,
-    this.academicDegree,
+    this.administrativePositionData,
+    this.academicDegreeData,
     super.createdAt,
     super.updatedAt,
   });
 
+  String? get administrativePosition{
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    return administrativePositionData?[currentLang];
+  }
+  String? get academicDegree{
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    return academicDegreeData?[currentLang];
+  }
+
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
       id: json['user_id'],
-      name: json['user_name'],
+      nameData: jsonDecode(json['user_name']),
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],
       phones: json['phones'],
       // profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
-      academicDegree: json['academic_degree'],
-      administrativePosition: json['administrative_position'],
+      academicDegreeData: jsonDecode(json['academic_degree']),
+      administrativePositionData: jsonDecode(json['administrative_position']),
       status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],

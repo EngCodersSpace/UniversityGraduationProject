@@ -5,13 +5,12 @@ import 'package:ibb_university_students_services/app/models/user_model.dart';
 class Student extends User {
   int? studyPlaneId;
   Level? level;
-  Section? section;
   String? system;
   String? enrollmentYear;
 
   Student({
     required super.id,
-    super.name,
+    super.nameData,
     super.dateOfBrith,
     super.email,
     super.phones,
@@ -19,7 +18,7 @@ class Student extends User {
     super.permission,
     this.studyPlaneId,
     this.level,
-    this.section,
+    super.section,
     this.system,
     this.enrollmentYear,
     super.createdAt,
@@ -27,10 +26,9 @@ class Student extends User {
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
-    
     return Student(
       id: json['user_id'],
-      name: json['user_name'],
+      nameData: json['user_name'],
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],

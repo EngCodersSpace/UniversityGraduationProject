@@ -55,7 +55,6 @@ class ExamTableController extends GetxController {
       year: selectedYear.value!,
       term: selectedTerm.value
     );
-    print("here ${res.statusCode}");
     if (res.statusCode == 200) {
       exams?.value = res.data??[];
     }
