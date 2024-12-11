@@ -28,35 +28,39 @@ class PhoneTableTabView extends GetView<TableTabController> {
                 child: SizedBox(
                     width: width,
                     height: height * 0.68,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.05, vertical: height * 0.03),
-                      child: Obx(()=>Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SecText("Lectures".tr,
-                                  textColor: AppColors.highlightTextColor),
-                              SecText(controller.selectedDayName,
-                                  textColor: AppColors.highlightTextColor)
-                            ],
-                          ),
-                          SizedBox(height: height * 0.03),
-                          for (int i = 0;
-                          i < (controller.selectedDay.value?.length ?? 0);
-                          i++) ...[
-                            LectureCard(
-                              content: Rx(controller.selectedDay.value?[i]),
-                              height: height * 0.56 * (1 / 2),
+                    child: RefreshIndicator(
+                      onRefresh: ()async=>controller.refresh(),
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05, vertical: height * 0.03),
+                        child: Obx(()=>Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SecText("Lectures".tr,
+                                    textColor: AppColors.highlightTextColor),
+                                SecText(controller.selectedDayName,
+                                    textColor: AppColors.highlightTextColor)
+                              ],
                             ),
-                            if (i < ((controller.selectedDay.value?.length ?? 0) - 1))
-                              SizedBox(
-                                height: height * 0.03,
-                              )
-                          ]
-                        ],
-                      )),
+                            SizedBox(height: height * 0.03),
+                            for (int i = 0;
+                            i < (controller.selectedDay.value?.length ?? 0);
+                            i++) ...[
+                              LectureCard(
+                                content: Rx(controller.selectedDay.value?[i]),
+                                height: height * 0.56 * (1 / 2),
+                              ),
+                              if (i < ((controller.selectedDay.value?.length ?? 0) - 1))
+                                SizedBox(
+                                  height: height * 0.03,
+                                )
+                            ]
+                          ],
+                        )),
+                      ),
                     )),
               ),
               Container(

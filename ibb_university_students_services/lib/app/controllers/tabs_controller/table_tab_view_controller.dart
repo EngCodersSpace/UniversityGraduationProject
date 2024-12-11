@@ -47,11 +47,15 @@ class TableTabController extends GetxController {
   }
 
   @override
-  void refresh() {
+  void refresh() async{
+
+    await fetchTableData(force: true);
+    selectedDayChange(selected.value);
+    loadState.value = false;
     super.refresh();
   }
 
-  Future<void> fetchTableData() async {
+  Future<void> fetchTableData({bool force = false}) async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     if (selectedYear.value == null) return;
@@ -59,6 +63,7 @@ class TableTabController extends GetxController {
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
       year: selectedYear.value!,
+      hardFetch: force
     );
     if (res.statusCode == 200) {
       termsData = res.data;
@@ -123,13 +128,13 @@ class TableTabController extends GetxController {
     }
   }
 
-  Future<void> initDropdownMenuLists() async {
+  Future<void> initDropdownMenuLists({bool force = false}) async {
     List<Section> sectionsData =
-        await SectionServices.fetchSections().then((e) => e.data ?? []);
+        await SectionServices.fetchSections(hardFetch: force).then((e) => e.data ?? []);
     List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data ?? []);
+        await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
     List<String> yearData =
-        await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
+        await AppDataServices.fetchLectureYears(hardFetch: force).then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(

@@ -19,7 +19,6 @@ class Section {
 
   String? get name{
     String currentLang = Get.locale?.languageCode.toString()??"en";
-    print(nameData?[currentLang]);
     return nameData?[currentLang];
   }
 

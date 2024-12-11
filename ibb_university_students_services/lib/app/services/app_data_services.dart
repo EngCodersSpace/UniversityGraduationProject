@@ -23,6 +23,7 @@ class AppDataServices {
         SectionServices.cacheSections(sections);
         List<Level> levels = [];
         for (Map<String, dynamic> level in response?.data["data"]["levels"]) {
+
           levels.add(Level.fromJson(level));
         }
         LevelServices.cacheLevels(levels);
