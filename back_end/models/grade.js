@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       //(4)Relationship One-to-Many between "grade table" and  "level table"
-      grade.belongsTo(models.section, {
+      grade.belongsTo(models.level, {
         foreignKey: 'level_id',//the foreign Key in the grade table refers to level table
       });
 

@@ -17,17 +17,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id',//the foreign Key in the exam table refers to subject table
       });
 
-       //(2)Relationship One-to-Many between "exam table" and  "section table"
-       exam.belongsTo(models.section, {
+      //(2)Relationship One-to-Many between "exam table" and  "section table"
+      exam.belongsTo(models.section, {
         foreignKey: 'exam_section_id',//the foreign Key in the exam table refers to section table
       });
 
- //(3)Relationship One-to-Many between "exam table" and  "level table"
- exam.belongsTo(models.level, {
-  foreignKey: 'exam_level_id',//the foreign Key in the exam table refers to level table
-});
-
-
+      //(3)Relationship One-to-Many between "exam table" and  "level table"
+      exam.belongsTo(models.level, {
+        foreignKey: 'exam_level_id',//the foreign Key in the exam table refers to level table
+      });
     }
   }
   exam.init({

@@ -1,50 +1,28 @@
 
 
-const { exam, subject } = require('../models'); 
+const { exam, subject , section,level } = require('../models'); 
 const { validationResult } = require('express-validator'); 
+const { Sequelize} = require('sequelize');
 
+//  All Functions are perfict right now 2024-12-10
 
-// when you create an Exam first see  (subjects IDs) must be the same  
 exports.createExam = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-        subject_id,
-        exam_section,
-        exam_level,
-        exam_term,
-        exam_year,
-        exam_date,
-        exam_time,
-        exam_day,
-        exam_room,
-    } = req.body;
+    const {} = req.body;
 
     try {
-        const existingSubject = await subject.findOne({ where: { subject_id } });
+        const existingSubject = await subject.findOne({ where: { subject_id:req.body.subject_id } });
         if (!existingSubject) {
             return res.status(404).json({ message: 'Subject not found' });
         }
 
-        const newExam = await exam.create(
-            {
-                subject_id, // Reference to the subject
-                exam_section,
-                exam_level,
-                exam_term,
-                exam_year,
-                exam_date,
-                exam_time,
-                exam_day,
-                exam_room,
-            },
-            {
-                include: [{ model: subject }], 
-            }
-        );
+        const newExam = await exam.create(req.body,{
+                include: [{ model: subject, as: 'subject' }], 
+            });
 
         res.status(201).json({
             message: 'Exam created successfully',
@@ -58,15 +36,19 @@ exports.createExam = async (req, res) => {
 
 exports.getExam = async (req, res) => {
     try {
-      const { id : exam_id } = req.params;
+      const {id } = req.params;
       const examData = await exam.findOne({
-        where: { exam_id },
-        include: [{ model: subject, as: 'subject' }], 
+        where: { exam_id: id},
+        include: [
+            { model: subject, as: 'subject' },
+            { model: section, as: 'section'},
+            { model: level ,  as: 'level'}
+        ], 
       });
       if (!examData || !examData.subject) {
         return res.status(404).json({ message: 'Exam not found' });
       }
-      res.status(200).json(examData);
+      res.status(200).json({ message: `This is Exam of ${id} ID`, Exam :examData});
     } catch (err) {
       res.status(500).json({ message: 'Error fetching exam', error: err.message });
     }
@@ -75,38 +57,105 @@ exports.getExam = async (req, res) => {
 exports.getAllExams = async (req, res) => {
     try {
       const exams = await exam.findAll({
-        include: [{ model: subject, as: 'subject' }], 
+        include: [
+            { model: subject, as: 'subject' },
+            { model: section, as: 'section'},
+            { model: level ,  as: 'level'}
+        ], 
       });
   
-      res.status(200).json(exams);
+      res.status(200).json({ message: 'These are Exams', Exams : exams});
     } catch (err) {
       res.status(500).json({ message: 'Error fetching exams', error: err.message });
     }
 };
+
+exports.getExamGroupedByCriteria = async (req, res) => {
+    try {
+        const { section_id, level_id, year , term  } = req.params; 
+
+        const whereClause = {};
+        if (section_id) whereClause.exam_section_id = section_id;
+        if (level_id) whereClause.exam_level_id = level_id;
+        if (year) whereClause.exam_year = year;
+        if (term) whereClause.exam_term = term;
+
+
+        const Exam = await exam.findAll({
+            where: whereClause,
+            include: [
+                { model: subject, as: 'subject' },
+                { model: section, as: 'section' },
+                { model: level, as: 'level' },
+            ],
+        });
+
+        if (!Exam.length) {
+            return res.status(404).json({ message: 'No Exams found for the specified criteria' });
+        }
+
+        const organizedLectures = {};
+        
+        Exam.forEach(lec => { 
+            const term = lec.exam_term; 
+
+            if (!organizedLectures[term]) {
+                organizedLectures[term] = [];
+            }
+
+
+            organizedLectures[term].push({
+                id   : lec.exam_id,
+                subject_name: lec.subject.subject_name, 
+                exam_date:lec.exam_date,
+                exam_day:lec.exam_day,
+                exam_time : lec.exam_time, 
+                exam_room: lec.exam_room, 
+            });
+        });
+
+        res.status(200).json({ message: 'Exams retrieved successfully', data: organizedLectures });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error retrieving Exams', error: error.message });
+    }
+};
+
+exports.getExamYear = async (req, res) => {
+    try {
+      const uniqueYears = await exam.findAll({
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('exam_year')), 'year']
+        ],
+        raw: true
+      });
   
+      if (uniqueYears.length === 0) {
+        return res.status(404).json({ message: 'No unique years found in the Exam table' });
+      }
+  
+      const years = uniqueYears.map(item => item.year);
+  
+      res.status(200).json({ message: 'Unique years retrieved successfully', data: years });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving unique years', error: error.message });
+    }
+};
+
 exports.updateExam = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { id: exam_id } = req.params;
-    const {
-        subject_id,
-        exam_section,
-        exam_level,
-        exam_term,
-        exam_year,
-        exam_date,
-        exam_time,
-        exam_day,
-        exam_room,
-    } = req.body;
+    const { id } = req.params;
+    const { } = req.body;
 
     try {
         // Find the exam by ID, including the associated subject
         const foundExam = await exam.findOne({
-            where: { exam_id },
-            include: [{ model: subject }],
+            where: { exam_id:id },
+            include: [{ model: subject ,as:'subject'}],
         });
 
         // Check if the exam exists
@@ -116,7 +165,7 @@ exports.updateExam = async (req, res) => {
 
         // Check if the new subject_id exists in the database
         const foundSubject = await subject.findOne({
-            where: { subject_id },
+            where: { subject_id:req.body.subject_id },
         });
 
         if (!foundSubject) {
@@ -124,17 +173,7 @@ exports.updateExam = async (req, res) => {
         }
 
         // Update the exam data
-        await foundExam.update({
-            subject_id, // Update subject_id if changed
-            exam_section,
-            exam_level,
-            exam_term,
-            exam_year,
-            exam_date,
-            exam_time,
-            exam_day,
-            exam_room,
-        });
+        await foundExam.update(req.body);
 
         // Respond with the updated exam
         res.status(200).json({
@@ -173,11 +212,3 @@ exports.deleteExam = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-
-
-
-
-
-
-
-

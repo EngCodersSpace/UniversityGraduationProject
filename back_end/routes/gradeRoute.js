@@ -1,17 +1,25 @@
 // gradeRoute.js
 const express = require('express');
 const router = express.Router();
-const gC = require('../controllers/gradeController');
+const CRUD = require('../controllers/gradeController');
 const vali = require('../validations/gradevalidation');
 
-router.post('/create-grade', vali.createGrade,   gC.createGrade);
-router.get('/get-all-grades',   gC.getAllGrades);
-router.get('/get-grade/:id',    gC.getGradeById);
-router.put('/update-grade/:id',vali.updateGrade, gC.updateGrade);
-router.delete('/delete-grade/:id',     gC.deleteGrade);
+router.post('/create-grade', vali.createGrade,   CRUD.createGrade);
 
+router.get('/get-all-grades/:id?/:levelID?',   CRUD.getAllGrades);
+router.get('/get-grade/:id',    CRUD.getGradeById);
+router.get('/get-grade-year',    CRUD.getGradeYear);
+router.get('/get-section',    CRUD.getSectionOfCurrentUser);
+
+
+
+
+
+router.put('/update-grade/:id',vali.updateGrade, CRUD.updateGrade);
+router.delete('/delete-grade/:id',     CRUD.deleteGrade);
+ 
 module.exports = router;
 
 
-
+ 
 
