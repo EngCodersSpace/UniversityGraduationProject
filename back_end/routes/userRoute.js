@@ -23,7 +23,7 @@ router.delete('/users/:id', userController.deleteUser);
 router.get('/doctor', userController.getAllDoctors);
 
 router.get('/doctor/:id', userController.getDoctorById);
-
+// ?/:language?
 router.put('/doctor/:id', userController.updateDoctor);
 
 router.delete('/doctor/:id', userController.deleteDoctor);

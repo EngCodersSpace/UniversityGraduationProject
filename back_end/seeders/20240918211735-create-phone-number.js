@@ -24,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await phone_number.destroy({ where: {}, truncate: true });
+    await phone_number.destroy({ where: {}, truncate: false });
   }
 };

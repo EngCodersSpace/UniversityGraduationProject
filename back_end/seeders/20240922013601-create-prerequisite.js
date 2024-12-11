@@ -21,6 +21,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await prerequisite.destroy({ where: {}, truncate: true });
+    await prerequisite.destroy({ where: {}, truncate: false });
   }
 };

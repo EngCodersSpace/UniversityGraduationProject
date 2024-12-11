@@ -11,7 +11,7 @@ const createLecture = async (req, res) => {
     const {} = req.body;
 
     const newLecture = await lecture.create(req.body);
-
+ 
     res.status(201).json({
       message: 'Lecture created successfully',
       data: newLecture,
@@ -25,25 +25,12 @@ const createLecture = async (req, res) => {
 const updateLecture = async (req, res) => {
   try {
     const { id } = req.params;
-    const { subject_id, doctor_id, lecture_section, lecture_level, term, year, lecture_time, lecture_duration, lecture_day, lecture_room } = req.body;
+    const {} = req.body;
 
-    // Find and update the lecture
-    const updatedLecture = await lecture.update(
-      {
-        subject_id,
-        doctor_id,
-        lecture_section,
-        lecture_level,
-        term,
-        year,
-        lecture_time,
-        lecture_duration,
-        lecture_day,
-        lecture_room,
-      },
+    const updatedLecture = await lecture.update(req.body,
       {
         where: { id },
-        returning: true, // returns the updated data
+        returning: true, 
       }
     );
 
@@ -53,7 +40,7 @@ const updateLecture = async (req, res) => {
 
     res.status(200).json({
       message: 'Lecture updated successfully',
-      data: updatedLecture[1][0], // returning updated data
+      data: updatedLecture[1][0], 
     });
   } catch (error) {
     console.error(error);
@@ -84,7 +71,7 @@ const deleteLecture = async (req, res) => {
 
 
 
-
+// To get all lectures
 const getLectures = async (req, res) => {
   try {
     const lectures = await lecture.findAll();
@@ -95,188 +82,7 @@ const getLectures = async (req, res) => {
   }
 };
 
-const getLectureById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const lectureDetails = await lecture.findOne({
-      where: { id },
-      include: [
-        {
-          model: subject,
-          as: 'subject'
-        },
-        {
-          model: doctor,
-          as: 'doctor'
-        },
-        {
-          model:section,
-          as:'section'
-        },
-        {
-          model:level,
-          as:'level'
-        },
-      ],
-    });
-
-    if (!lectureDetails) {
-      return res.status(404).json({ message: 'Lecture not found' });
-    }
-
-    res.status(200).json({message: `get lecture by id : ${id} `, data: lectureDetails });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving lecture', error: error.message });
-  }
-};
-
-const getLecturesBySection = async (req, res) => {
-  try {
-    const { sectionId } = req.params; 
-    const lectures = await lecture.findAll({
-      where: {
-        lecture_section_id: sectionId,
-      },
-      include: [
-        { model: subject, as: 'subject' }, 
-        { model: doctor, as:'doctor' },  
-      ],
-    });
-
-    if (!lectures.length) {
-      return res.status(404).json({ message: 'No lectures found for this section' });
-    }
-
-    res.status(200).json({ message: `Lectures for section id: ${sectionId}`, data: lectures });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving lectures by section', error: error.message });
-  }
-};
-
-const getLecturesByLevel = async (req, res) => {
-  try {
-    const { levelId } = req.params; 
-
-    const lectures = await lecture.findAll({
-      where: {
-        lecture_level_id: levelId,
-      },
-      include: [
-        { model: subject, as: 'subject' },
-        { model: doctor, as:'doctor' },
-      ],
-    });
-
-    if (!lectures.length) {
-      return res.status(404).json({ message: 'No lectures found for this level' });
-    }
-
-    res.status(200).json({ message: `Lectures for level id: ${levelId}`, data: lectures });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving lectures by level', error: error.message });
-  }
-};
-
-const getLecturesByDoctor = async (req, res) => {
-  try {
-    const { doctorId } = req.params;      
-    const lectures = await lecture.findAll({
-      where: {
-        doctor_id: doctorId,
-      },
-      include: [
-        { model: subject, as: 'subject' },
-        { model: section, as: 'section' },
-        { model: level,   as: 'level' },
-      ],
-      attributes: {
-          include: [
-              [Sequelize.fn('COUNT', Sequelize.col('lecture.id')), 'lectureCount'] 
-          ]
-      },
-      group: ['lecture.id'],
-    });
-
-    if (!lectures.length) {
-      return res.status(404).json({ message: 'No lectures found for this doctor' });
-    }
-
-    res.status(200).json({ message: `Lectures for doctor id: ${doctorId}`, data: lectures });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving lectures by doctor', error: error.message });
-  }
-};
-
-const getLectureBySubject = async (req, res) =>{
-  try {
-    const { subjectId } = req.params;
-    const lectures = await lecture.findAll({
-      where:{
-        subject_id : subjectId,
-      },
-      include:[
-        {model: doctor,  as: 'doctor' },
-        {model: level,   as: 'level'  },
-        {model: section, as: 'section'},
-      ],
-    });
-
-    if (!lectures.length) {
-      return res.status(404).json({ message: 'No lectures found for this subject' });
-    }
-    res.status(200).json({ message: `Lectures for subject ${subjectId}`, data: lectures });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving lectures by doctor', error: error.message });
-  }
-};
-
-
-const getSpecificLecture = async (req, res) => {
-  const { lecture_day, lecture_time, lecture_room, lecture_section_id } = req.query;
-
-  const whereConditions = {};
-
-  if (lecture_day) {
-    whereConditions.lecture_day = lecture_day; 
-  }
-
-  if (lecture_time) {
-    whereConditions.lecture_time = lecture_time;
-  }
-
-  if (lecture_room) {
-    whereConditions.lecture_room = lecture_room;
-  }
-
-  if (lecture_section_id) {
-    whereConditions.lecture_section_id = lecture_section_id;
-  }
-
-  try {
-    const lectures = await lecture.findAll({
-      where: whereConditions ,
-    });
-
-    if (!lectures.length) {
-      return res.status(404).json({ message: 'No lectures found for this subject' });
-    }
-    return res.status(200).json(lectures); 
-  } catch (error) {
-    console.error('Error fetching lectures:', error);
-    return res.status(500).json({ error: 'An error occurred while fetching lectures.' });
-  }
-};
-
-
-
-
-
+// To get lectures by searching => (section_id, level_id, year , term , day) ||  without searching  
 const getLecturesGroupedByCriteria = async (req, res) => {
     try {
         const { section_id, level_id, year , term , day } = req.params; 
@@ -311,43 +117,28 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             return res.status(404).json({ message: 'No lectures found for the specified criteria' });
         }
 
-        const organizedLectures = { lectures: { sections: {} }};
+        const organizedLectures = {};
         
-        lectures.forEach(lec => {
-            const sectionName = lec.section.section_name; 
-            const levelName = lec.level.level_name;
-            const year = lec.year; 
+        lectures.forEach(lec => { 
             const term = lec.term; 
             const day = lec.lecture_day; 
-            const time = lec.lecture_time; 
+          
 
-            if (!organizedLectures.lectures.sections[sectionName]) {
-                organizedLectures.lectures.sections[sectionName] = {};
+            if (!organizedLectures[term]) {
+                organizedLectures[term] = {};
             }
 
-            if (!organizedLectures.lectures.sections[sectionName][levelName]) {
-                organizedLectures.lectures.sections[sectionName][levelName] = {};
+            if (!organizedLectures[term][day]) {
+                organizedLectures[term][day] = [];
             }
 
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year] = {};
-            }
-
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year][term] = {};
-            }
-
-            if (!organizedLectures.lectures.sections[sectionName][levelName][year][term][day]) {
-                organizedLectures.lectures.sections[sectionName][levelName][year][term][day] = [];
-            }
-
-            organizedLectures.lectures.sections[sectionName][levelName][year][term][day].push({
+            organizedLectures[term][day].push({
                 id: lec.id,
-                title: lec.subject.name, 
-                startTime: time, 
+                subject_name: lec.subject.subject_name, 
+                startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
-                location: lec.lecture_room, 
+                lecture_room: lec.lecture_room, 
             });
         });
 
@@ -358,17 +149,35 @@ const getLecturesGroupedByCriteria = async (req, res) => {
     }
 };
 
+// To get All years in lecture table (without duplicate)
+const getLectureYear = async (req, res) => {
+  try {
+    const uniqueYears = await lecture.findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('year')), 'year']
+      ],
+      raw: true
+    });
+
+    if (uniqueYears.length === 0) {
+      return res.status(404).json({ message: 'No unique years found in the lecture table' });
+    }
+
+    const years = uniqueYears.map(item => item.year);
+
+    res.status(200).json({ message: 'Unique years retrieved successfully', data: years });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving unique years', error: error.message });
+  }
+};
+
 
 module.exports = {
   createLecture,
   getLectures,
-  getLectureById,
   updateLecture,
   deleteLecture,
-  getLecturesBySection,
-  getLecturesByLevel,
-  getLecturesByDoctor,
-  getLectureBySubject,
-  getSpecificLecture,
-  getLecturesGroupedByCriteria
+  getLecturesGroupedByCriteria,
+  getLectureYear
 };

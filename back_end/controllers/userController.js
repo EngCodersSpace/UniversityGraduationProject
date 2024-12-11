@@ -1,6 +1,7 @@
 // controllers/userController.js
 // const bcrypt = require('bcrypt');
 const { user, doctor , student ,study_plan,level,section} = require('../models'); 
+const { Sequelize} = require('sequelize');
 
 
 exports.getUserById = async (req, res) => {
@@ -10,7 +11,8 @@ exports.getUserById = async (req, res) => {
             where:{user_id:id},
             include: [
                 {model: student, as : 'student'},
-                {model: doctor , as : 'doctor' }
+                {model: doctor , as : 'doctor' },
+                {model: student , as : 'student' }
             ],
         });
         if (!foundUser) {
@@ -48,31 +50,79 @@ exports.deleteUser = async (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// exports.getDoctorById = async (req, res) => {
+//     const { id } = req.params;
+//     const { language } = req.query;
+
+//     if (!language) {
+//         return res.status(400).json({ message: "Language parameter is required" });
+//     }
+
+//     try {
+//         const Doctor = await doctor.findOne({
+//             where: { doctor_id: id },
+//             attributes: [
+//                     [Sequelize.json(`academic_degree.${language}`), 'academic_degree'],
+//                     [Sequelize.json(`administrative_position.${language}`), 'administrative_position']
+//                 ],
+//             include: [
+//                 {
+//                     model: user,
+//                     as: 'user',
+//                     attributes: [
+//                         'user_id',
+//                         [Sequelize.json(`user_name.${language}`), 'user_name'],
+//                         [Sequelize.json(`collegeName.${language}`), 'collegeName'],
+//                         'date_of_birth',
+//                         'email'
+//                     ],
+//                 },
+//             ],
+//         });
+
+//         if (!Doctor) {
+//             return res.status(404).json({ message: 'Doctor not found' });
+//         }
+
+//         const doctorData = {
+//             user_id: Doctor.user.user_id,
+//             user_name: Doctor.user.user_name,
+//             collegeName: Doctor.user.collegeName,
+//             date_of_birth: Doctor.user.date_of_birth,
+//             email: Doctor.user.email,
+//             doctor: {
+//                 academic_degree: Doctor.academic_degree,  
+//                 administrative_position: Doctor.administrative_position      
+//             }
+//         };
+
+//         res.status(200).json({
+//             message: 'Doctor found',
+//             data: doctorData,
+//         });
+//     } catch (error) {
+//         console.error('Error fetching doctor by ID:', error.message);
+//         res.status(500).json({ message: 'Internal server error', error: error.message });
+//     }
+// };
+
 exports.getDoctorById = async (req, res) => {
-    const { id } = req.params;
+    const { id: user_id } = req.params;
 
     try {
-        const Doctor = await doctor.findOne({
-            where: { doctor_id: id }, 
-            include: [
-                {
-                    model: user,
-                    as: 'user' 
-                },
-            ],
+        const foundUser = await user.findOne({
+            where: { user_id },
+            include: [{ model: doctor, as: 'doctor' }],
         });
 
-        if (!Doctor) {
-            return res.status(404).json({ message: 'Doctor not found' });
+        if (!foundUser || !foundUser.doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
         }
 
-        res.status(200).json({
-            message: 'Doctor found',
-            data: Doctor,
-        });
+        res.status(200).json(foundUser);
     } catch (error) {
-        console.error('Error fetching doctor by ID:', error.message);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+        console.error("Error fetching doctor:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
 
@@ -156,6 +206,58 @@ exports.getAllDoctors = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
+// exports.getAllDoctors = async (req, res) => {
+//     const { language } = req.query;
+
+//     if (!language) {
+//         return res.status(400).json({ message: "Language parameter is required" });
+//     }
+
+//     try {
+//         const doctors = await doctor.findAll({
+//             attributes: [
+//                     [Sequelize.json(`academic_degree.${language}`), 'academic_degree'],
+//                     [Sequelize.json(`administrative_position.${language}`), 'administrative_position']
+//                 ],
+//             include: [
+//                 {
+//                     model: user,
+//                     as: 'user',
+//                     attributes: [
+//                         'user_id',
+//                         [Sequelize.json(`user_name.${language}`), 'user_name'],
+//                         [Sequelize.json(`collegeName.${language}`), 'collegeName'],
+//                         'date_of_birth',
+//                         'email'
+//                     ],
+//                 },
+//             ],
+//         });
+
+//         if (doctors.length === 0) {
+//             return res.status(404).json({ message: 'No doctors found' });
+//         }
+
+//         const doctorsData = doctors.map(doctor => ({
+//             user_name: doctor.user.user_name,
+//             collegeName: doctor.user.collegeName,
+//             date_of_birth: doctor.user.date_of_birth,
+//             email: doctor.user.email,
+//             academic_degree: doctor.academic_degree,
+//             administrative_position: doctor.administrative_position
+//         }));
+
+//         res.status(200).json({
+//             message: 'Doctors found',
+//             data: doctorsData,
+//         });
+//     } catch (error) {
+//         console.error('Error fetching doctors:', error.message);
+//         res.status(500).json({ message: 'Internal server error', error: error.message });
+//     }
+// };
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

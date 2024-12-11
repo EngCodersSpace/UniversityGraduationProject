@@ -35,7 +35,7 @@ const createLectureValidator = [
     .withMessage('Lecture time is required and should be a valid time string'),
 
   body('lecture_duration')
-    .isString()
+    .isInt()
     .withMessage('Lecture duration is required and should be a valid string'),
 
   body('lecture_day')
@@ -91,7 +91,7 @@ const updateLectureValidator = [
 
   body('lecture_duration')
     .optional()
-    .isString()
+    .isInt()
     .withMessage('Lecture duration should be a valid string'),
 
   body('lecture_day')
@@ -105,5 +105,6 @@ const updateLectureValidator = [
     .isLength({ min: 1 })
     .withMessage('Lecture room should be a valid string'),
 ];
-
+ 
 module.exports = { createLectureValidator, updateLectureValidator };
+ 
