@@ -9,7 +9,8 @@ module.exports = {
         type: Sequelize.STRING(10),
       },
       subject_name: {
-        type: Sequelize.STRING
+        type: Sequelize.JSON,
+        allowNull:false,
       },
       number_of_units:{
         type:Sequelize.TINYINT,

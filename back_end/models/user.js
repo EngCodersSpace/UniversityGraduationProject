@@ -49,6 +49,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'added_by',
       });
 
+      //(6)Relationship One-to-Many between "user table" and  "section table"
+      user.belongsTo(models.section, {
+        foreignKey: 'user_section_id',//the foreign Key in the user table refers to section table
+      });
+
+
     }
   }
   user.init({
@@ -59,8 +65,18 @@ module.exports = (sequelize, DataTypes) => {
 
     },
     user_name: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
+    },
+    user_section_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
     },
     date_of_birth: {
       type: DataTypes.DATE,
@@ -71,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     collegeName: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.JSON,
       allowNull: false,
     },
     email: {
@@ -105,7 +121,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    
+
   }, {
     sequelize,
     modelName: 'user',

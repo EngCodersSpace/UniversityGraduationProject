@@ -23,16 +23,6 @@ module.exports = {
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       },
-      student_section_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'sections',
-          key: 'id',
-        },
-        onDelete: 'NO ACTION',
-        onUpdate: 'CASCADE',
-      },
       student_level_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -48,7 +38,7 @@ module.exports = {
         allowNull: false,
       },
       student_system: {
-        type: Sequelize.ENUM('General', 'Free Seat', 'Paid'),
+        type: Sequelize.JSON,
         allowNull: false,
       },
       createdAt: {

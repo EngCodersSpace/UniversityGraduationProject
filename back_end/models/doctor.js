@@ -39,20 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete:'CASCADE',
       onUpdate:'CASCADE',  
     },
-    department: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
+    // status: {
+    //   type: DataTypes.STRING,
+    //   allowNull: true,
+    // },
     academic_degree: {
-      type: DataTypes.ENUM('Doctor','Professor','Master','Bachelor'),
+      type: DataTypes.JSON,
       allowNull: false,
     },
     administrative_position: {
-      type: DataTypes.ENUM('Dean','Vice Dean','Lecturer','Department Chair','None'),
+      type: DataTypes.JSON,
       defaultValue: 'None',
     },
 

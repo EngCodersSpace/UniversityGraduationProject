@@ -56,7 +56,7 @@ module.exports = {
         allowNull: false,
       },
       payment_status: {
-        type: Sequelize.ENUM('Paid', 'Unpaid', 'Remaining'),
+        type: Sequelize.JSON,
         allowNull: false,
       },
       payment_date: {

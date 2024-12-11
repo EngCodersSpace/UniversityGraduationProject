@@ -10,7 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       section_name: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.JSON,
         allowNull:false,
       },
       createdAt: {

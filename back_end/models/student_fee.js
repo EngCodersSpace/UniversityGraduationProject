@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     payment_status: {
-      type: DataTypes.ENUM('Paid', 'Unpaid', 'Remaining'),
+      type: DataTypes.JSON,
       allowNull: false,
     },
     payment_date: {

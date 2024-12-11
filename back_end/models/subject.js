@@ -47,7 +47,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(10),
     },
     subject_name: {
-      type: DataTypes.STRING
+      type: DataTypes.JSON,
+      allowNull:false,
     },
     number_of_units: {
       type: DataTypes.TINYINT,

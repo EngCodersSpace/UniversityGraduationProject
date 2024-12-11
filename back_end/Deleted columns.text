@@ -1,0 +1,15 @@
+user
+    user_name
+    collegeName
+
+student
+    student_system
+
+section
+    section_name
+
+
+subject
+    subject_name
+
+
