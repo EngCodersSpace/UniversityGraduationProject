@@ -15,10 +15,8 @@ module.exports = {
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
         password: faker.internet.password(),
+        collegeName: faker.helpers.arrayElement(['Engineering', 'Science', 'Business', 'Arts']),
         permission: faker.helpers.arrayElement(['student', 'teacher', 'admin', 'staff']),
-        resetToken: faker.internet.url(),
-        resetTokenExpiry: faker.date.future(),
-        refreshToken: faker.internet.url(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -27,6 +25,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await user.destroy({ where: {}, truncate: true });
+    await user.destroy({ where: {}, truncate: false });
   }
 };
