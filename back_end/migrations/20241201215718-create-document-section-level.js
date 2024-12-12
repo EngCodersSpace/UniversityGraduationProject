@@ -4,10 +4,15 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('documentSectionLevels', {
     
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       documentId:{
         type:Sequelize.INTEGER,
         allowNull:false,
-        primaryKey:true,
         references:{
           model:'documents',
           key:'id',
