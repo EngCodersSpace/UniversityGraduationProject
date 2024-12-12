@@ -5,7 +5,7 @@ const { lecture, subject, doctor, section, level } = require("../models");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-
+  
     const subjects = await subject.findAll();
     const doctors = await doctor.findAll();
     const sections = await section.findAll();
