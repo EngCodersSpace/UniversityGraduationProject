@@ -26,6 +26,7 @@ const lectureRoute=require('./routes/lectureRoute')
 const phoneNumber=require('./routes/phoneNumberRoute')
 const getAllData=require('./routes/dataRoute')
 const subject=require('./routes/subjectRoute')
+const studyPlaneRoute=require('./routes/studyPlaneRoute')
 
 
 
@@ -39,6 +40,9 @@ app.use(gradeRoute);
 app.use(lectureRoute);
 app.use(phoneNumber);
 app.use(subject);
+app.use(studyPlaneRoute);
+
+
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
