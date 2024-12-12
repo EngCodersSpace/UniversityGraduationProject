@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 
 class Lecture {
   Lecture({
@@ -37,23 +37,13 @@ class Lecture {
   }
 
   factory Lecture.fromJson(Map<String, dynamic> json) {
-    Map<String,dynamic>? subjectNameDataJs = {};
-    Map<String,dynamic>? doctorDataJs = {};
-    try{
-       subjectNameDataJs = jsonDecode(json['subject_name']);
-       doctorDataJs = jsonDecode(json['lecturer']);
-    }catch(e){
-      if (kDebugMode) {
-        print(e);
-      }
-    }
     return Lecture(
         id: json['id'],
-        subjectNameData: subjectNameDataJs,
+        subjectNameData: JsonUtils.tryJsonDecode(json['subject_name']),
         startTime: json['startTime'],
         duration: json['duration'],
         description: json['description'],
-        doctorData: doctorDataJs,
+        doctorData: JsonUtils.tryJsonDecode(json['lecturer']),
         hall: json['lecture_room']
     );
   }

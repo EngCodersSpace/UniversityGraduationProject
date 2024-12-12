@@ -2,6 +2,8 @@ import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
 
+import '../utils/json_utils.dart';
+
 class Student extends User {
   int? studyPlaneId;
   Level? level;
@@ -28,7 +30,7 @@ class Student extends User {
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       id: json['user_id'],
-      nameData: json['user_name'],
+      nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],

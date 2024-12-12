@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 
+import '../utils/json_utils.dart';
+
 class Section {
   int id;
   Map<String,dynamic>? nameData;
@@ -25,7 +27,7 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
       id: json['id'],
-      nameData: jsonDecode(json['section_name']),
+      nameData: JsonUtils.tryJsonDecode(json['section_name']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

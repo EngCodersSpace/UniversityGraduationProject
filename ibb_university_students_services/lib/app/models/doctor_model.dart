@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
+
+import '../utils/json_utils.dart';
 
 class Doctor extends User {
   String? status;
@@ -36,29 +37,17 @@ class Doctor extends User {
   }
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
-    Map<String,dynamic>? administrativePositionDataJs = {};
-    Map<String,dynamic>? academicDegreeDataJs = {};
-    Map<String,dynamic>? nameDataJs = {};
-    try{
-      administrativePositionDataJs = jsonDecode(json['administrative_position']);
-      academicDegreeDataJs = jsonDecode(json['academic_degree']);
-      nameDataJs = jsonDecode(json['user_name']);
-    }catch(e){
-      if (kDebugMode) {
-        print(e);
-      }
-    }
     return Doctor(
       id: json['user_id'],
-      nameData: nameDataJs,
+      nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
       permission: json['permission'],
       phones: json['phones'],
       // profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
-      academicDegreeData: academicDegreeDataJs,
-      administrativePositionData: administrativePositionDataJs,
+      academicDegreeData: JsonUtils.tryJsonDecode(json['academic_degree']),
+      administrativePositionData: JsonUtils.tryJsonDecode(json['administrative_position']),
       status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
