@@ -58,6 +58,20 @@ const validateDoctorRegistration = [
         .notEmpty().withMessage('Date Of Birth is required')
         .isDate().withMessage('Date Of Birth must be a Date'),
 
+    body('permission')
+        .notEmpty().withMessage('permission is required')
+        .isString().withMessage('permission must be a String'),
+
+    body('password')
+        .notEmpty().withMessage('password is required')
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+        .matches(/[a-zA-Z]/).withMessage('Password must include at least one letter')
+        .matches(/\d/).withMessage('Password must include at least one number')
+        .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
+        .not().matches(/\s/).withMessage('Password cannot contain spaces'),
+
+   
+
     body('collegeName')
         .notEmpty().withMessage('collegeName is required')
         .isString().withMessage('collegeName must be a String'),
@@ -72,20 +86,6 @@ const validateDoctorRegistration = [
             }
             return true;
         }),
-
-   
-
-    body('password')
-        .notEmpty().withMessage('password is required')
-        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
-        .matches(/[a-zA-Z]/).withMessage('Password must include at least one letter')
-        .matches(/\d/).withMessage('Password must include at least one number')
-        .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
-        .not().matches(/\s/).withMessage('Password cannot contain spaces'),
-
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
 
     body('doctor.academic_degree')
         .notEmpty().withMessage('Academic degree is required')
