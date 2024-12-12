@@ -55,8 +55,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     subject_description: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: DataTypes.JSON,
+      allowNull: false,
     },
   }, {
     sequelize,

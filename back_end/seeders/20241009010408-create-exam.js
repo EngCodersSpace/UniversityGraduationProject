@@ -56,6 +56,7 @@ module.exports = {
 
     await exam.bulkCreate(exams);
   },
+  
 
   down: async (queryInterface, Sequelize) => {
     await exam.destroy({ where: {}, truncate: false });
