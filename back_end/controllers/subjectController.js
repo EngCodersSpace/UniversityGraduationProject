@@ -1,8 +1,6 @@
-   
-const {subject,study_plan_elment,grade,prerequisite,exam, document }=require('../models');
+const {subject}=require('../models');
 const { validationResult } = require('express-validator');
-
-
+const {  translateText } = require('../middleware/translationServices');
 
 
 exports.createSubject=async (req, res) => {
@@ -12,8 +10,23 @@ exports.createSubject=async (req, res) => {
           return res.status(400).json({ errors: errors.array() });
         }
         const {} = req.body;
-    
-        const newSubject = await subject.create(req.body);
+
+        const targetLanguage = req.body.language === 'en'?'ar':'en';
+        const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
+        const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+
+        const newSubject = await subject.create({
+          subject_id: req.body.subject_id,
+          subject_name:{
+            [req.body.language] : req.body.subject_name,
+            [targetLanguage] : translatedName
+          },
+          number_of_units:req.body.number_of_units,
+          subject_description:{
+            [req.body.language] : req.body.subject_description,
+            [targetLanguage] : translatedDesc
+          }
+        });
     
         res.status(201).json({
           message: 'Subject created successfully',
@@ -31,9 +44,6 @@ exports.getSubjectById=async (req, res) => {
     try {
         const Subject = await subject.findOne({
             where: { subject_id: id }, 
-            // include: [
-                
-            // ],
         });
 
         if (!Subject) {
@@ -65,7 +75,26 @@ exports.updateSubject = async (req, res) => {
       const { id } = req.query;
       const {} = req.body;
 
-      const updateSubject = await subject.update(req.body, {
+      if (!id) {
+        return res.status(400).json({ message: 'Subject ID is required' });
+      }
+
+      const targetLanguage = req.body.language === 'en'?'ar':'en';
+      const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
+      const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+
+      const updateSubject = await subject.update({
+        subject_id: req.body.subject_id,
+          subject_name:{
+            [req.body.language] : req.body.subject_name,
+            [targetLanguage] : translatedName
+          },
+          number_of_units:req.body.number_of_units,
+          subject_description:{
+            [req.body.language] : req.body.subject_description,
+            [targetLanguage] : translatedDesc
+          }
+      }, {
         where: { subject_id : id },
         returning: true,
       });
@@ -90,8 +119,15 @@ exports.deleteSubject=async (req, res) => {
     
         const deleted = await subject.destroy({
           where: { subject_id: id },
+          // include:[
+          //   {model:study_plan_elment,as:'study_plan_elment'},
+          //   {model:exam,as:'exam'},
+          //   {model:grade,as:'grade'},
+          //   {model:prerequisite,as:'prerequisite'},
+          //   {model:document,as:'document'}
+          // ]
         });
-    
+        
         if (deleted === 0) {
           return res.status(404).json({ message: 'Subject not found' });
         }
@@ -104,6 +140,3 @@ exports.deleteSubject=async (req, res) => {
         res.status(500).json({ message: 'Error deleting Subject', error: error.message });
       }
 };
-
-
-

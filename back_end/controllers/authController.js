@@ -156,7 +156,7 @@ exports.registerDoctor = async (req, res) => {
     const targetLanguage = req.body.language === 'en'?'ar':'en';
 
     const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollageName = await translateText(req.body.collageName, req.body.language, targetLanguage);
+    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
     const translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, req.body.language, targetLanguage);
     const translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, req.body.language, targetLanguage);
 
@@ -170,8 +170,8 @@ exports.registerDoctor = async (req, res) => {
       date_of_birth: req.body.date_of_birth,
       profile_picture: req.body.profile_picture,
       collegeName: {
-        [req.body.language]: req.body.collageName,
-        [targetLanguage]: translatedCollageName,
+        [req.body.language]: req.body.collegeName,
+        [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
@@ -191,7 +191,7 @@ exports.registerDoctor = async (req, res) => {
     const newDoctor = await user.create(userData, {
         include: [{
             model: doctor,
-            as: 'doctor' // تأكد من وضع الاسم الصحيح للنموذج
+            as: 'doctor' 
         }]
     });
 

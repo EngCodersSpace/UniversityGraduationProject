@@ -17,8 +17,8 @@ module.exports = {
         allowNull:false,
       },
       subject_description:{
-        type: Sequelize.STRING,
-        allowNull: true,
+        type: Sequelize.JSON,
+        allowNull: false,
       },
 
       createdAt: {
