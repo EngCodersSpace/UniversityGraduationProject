@@ -299,6 +299,8 @@ class WebMainView extends GetView<MainController> {
       ),
     ),
   ];
+
+  WebMainView({super.key});
 }
 
 

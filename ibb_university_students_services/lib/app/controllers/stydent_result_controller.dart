@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
-import 'package:ibb_university_students_services/app/services/exam_services.dart';
 import '../components/custom_text.dart';
 import '../styles/app_colors.dart';
 import '../models/exam_model.dart';
 import '../models/level_model.dart';
-import '../models/section_model.dart';
-import '../services/app_data_services.dart';
 import '../services/level_services.dart';
-import '../services/section_services.dart';
 
 class StudentResultController extends GetxController {
   RxBool loadingState = true.obs;
@@ -22,7 +17,6 @@ class StudentResultController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     await fetchExamsData();
@@ -47,15 +41,11 @@ class StudentResultController extends GetxController {
     // }
   }
 
-
-
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchExamsData();
   }
-
-
 
   void changeTerm(String? val) async {
     if (val == null) return;

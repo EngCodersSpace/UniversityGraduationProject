@@ -12,7 +12,6 @@ class ProfileController extends GetxController {
   RxBool initState = false.obs;
   @override
   void onInit() async {
-    // TODO: implement onInit
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;

@@ -31,7 +31,6 @@ class TableTabController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (departments.isNotEmpty)

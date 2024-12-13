@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:intl/intl.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/exam_model.dart';
 import '../../../styles/text_styles.dart';
 
 class ResultCard extends StatelessWidget {
@@ -26,8 +24,8 @@ class ResultCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         color: (type == "even")
-            ? AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
-
+            ? AppColors.inverseCardColor.withOpacity(0.6)
+            : AppColors.inverseCardColor,
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,
@@ -36,89 +34,101 @@ class ResultCard extends StatelessWidget {
             offset: Offset(0, 5),
           )
         ],
-        borderRadius: const BorderRadius.all(Radius.circular(8),),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(8),
+        ),
       ),
-      child: (type == "even")?Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: ((Get.width-16)*2)/7,
-            child: CustomText(
-              "Power Systems",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+      child: (type == "even")
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: ((Get.width - 16) * 2) / 7,
+                  child: CustomText(
+                    "Power Systems",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 0.55) / 7,
+                  child: CustomText(
+                    "2",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 1.45) / 7,
+                  child: CustomText(
+                    "30",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 1.45) / 7,
+                  child: CustomText(
+                    "70",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 0.55) / 7,
+                  child: CustomText(
+                    "100",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: ((Get.width - 16) * 2) / 7,
+                  child: CustomText(
+                    "Power Systems of the world",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 0.55) / 7,
+                  child: CustomText(
+                    "2",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 1.45) / 7,
+                  child: CustomText(
+                    "30",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 1.45) / 7,
+                  child: CustomText(
+                    "70",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+                SizedBox(
+                  width: ((Get.width - 16) * 0.55) / 7,
+                  child: CustomText(
+                    "100",
+                    style:
+                        AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*0.55)/7,
-            child: CustomText(
-              "2",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*1.45)/7,
-            child: CustomText(
-              "30",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*1.45)/7,
-            child: CustomText(
-              "70",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*0.55)/7,
-            child: CustomText(
-              "100",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-
-        ],
-      ):Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: ((Get.width-16)*2)/7,
-            child: CustomText(
-              "Power Systems of the world",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*0.55)/7,
-            child: CustomText(
-              "2",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*1.45)/7,
-            child: CustomText(
-              "30",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*1.45)/7,
-            child: CustomText(
-              "70",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-          SizedBox(
-            width: ((Get.width-16)*0.55)/7,
-            child: CustomText(
-              "100",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
-            ),
-          ),
-
-        ],
-      ),
     );
   }
 }

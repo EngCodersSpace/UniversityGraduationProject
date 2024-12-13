@@ -27,15 +27,12 @@ class ExamTableController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    (years.isNotEmpty)
-        ? selectedYear.value = years.first.value!
-        : null;
+    (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
     loadingState.value = false;
@@ -50,14 +47,13 @@ class ExamTableController extends GetxController {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     Result res = await ExamServices.fetchExams(
-      sectionId: selectedDepartment.value!,
-      levelId: selectedLevel.value!,
-      year: selectedYear.value!,
-      term: selectedTerm.value
-    );
+        sectionId: selectedDepartment.value!,
+        levelId: selectedLevel.value!,
+        year: selectedYear.value!,
+        term: selectedTerm.value);
     print("here ${res.statusCode}");
     if (res.statusCode == 200) {
-      exams?.value = res.data??[];
+      exams?.value = res.data ?? [];
     }
   }
 

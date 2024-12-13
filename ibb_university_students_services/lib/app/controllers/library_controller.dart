@@ -66,7 +66,6 @@ class LibraryController extends GetxController
   Map<String, dynamic> selectedBook = {};
   @override
   void onInit() {
-    // TODO: implement onInit
     tapController = TabController(
       length: 3,
       vsync: this,
