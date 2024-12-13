@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model.dart';
@@ -7,8 +8,13 @@ import '../utils/json_utils.dart';
 class Student extends User {
   int? studyPlaneId;
   Level? level;
-  String? system;
+  Map<String,dynamic>? systemData;
   String? enrollmentYear;
+
+  String? get system {
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    return systemData?[currentLang];
+  }
 
   Student({
     required super.id,
@@ -20,8 +26,9 @@ class Student extends User {
     super.permission,
     this.studyPlaneId,
     this.level,
+    super.collegeNameData,
     super.section,
-    this.system,
+    this.systemData,
     this.enrollmentYear,
     super.createdAt,
     super.updatedAt,
@@ -38,8 +45,9 @@ class Student extends User {
       // profileImage: json['profile_picture'],
       studyPlaneId: json['study_plan_id'],
       level: Level.fromJson(json["level"]),
+      collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
       section: Section.fromJson(json["section"]),
-      system: json['student_system'],
+      systemData: JsonUtils.tryJsonDecode(json['student_system']),
       enrollmentYear: json['enrollment_year'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
@@ -58,7 +66,7 @@ class Student extends User {
       "study_plan_id": studyPlaneId,
       "student_level": level,
       "student_section": section,
-      "student_system": system,
+      "student_system": systemData,
       "enrollment_year": enrollmentYear,
       "created_at": createdAt,
       "updated_at": updatedAt,

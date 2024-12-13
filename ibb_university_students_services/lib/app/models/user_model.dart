@@ -10,6 +10,7 @@ abstract class User {
   String? permission;
   String? profileImage;
   List<String>? phones;
+  Map<String,dynamic>? collegeNameData;
   Section? section;
   String? createdAt;
   String? updatedAt;
@@ -22,6 +23,7 @@ abstract class User {
     this.permission,
     this.profileImage,
     this.phones,
+    this.collegeNameData,
     this.section,
     this.createdAt,
     this.updatedAt,
@@ -30,6 +32,11 @@ abstract class User {
   String? get name {
     String currentLang = Get.locale?.languageCode.toString()??"en";
     return nameData?[currentLang];
+  }
+
+  String? get collegeName {
+    String currentLang = Get.locale?.languageCode.toString()??"en";
+    return collegeNameData?[currentLang];
   }
 
 }

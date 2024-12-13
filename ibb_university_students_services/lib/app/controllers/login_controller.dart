@@ -26,7 +26,7 @@ class LoginController extends GetxController {
   }
   @override
   void onInit() {
-    id.text = "1813";
+    id.text = "200";
     password.text = "1111aaaa@";
     super.onInit();
   }

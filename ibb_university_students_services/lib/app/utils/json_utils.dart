@@ -5,6 +5,7 @@ class JsonUtils{
   static Map<String,dynamic>? tryJsonDecode(String jsonData){
     try{
       Map<String,dynamic> data = jsonDecode(jsonData);
+      return data;
     }catch(e){
       if (kDebugMode) {
         print(e);

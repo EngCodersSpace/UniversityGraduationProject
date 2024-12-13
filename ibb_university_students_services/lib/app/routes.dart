@@ -11,6 +11,7 @@ import 'package:ibb_university_students_services/app/views/login_view/login_view
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 
+import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
 
 class AppRoutes {
@@ -39,7 +40,7 @@ class AppRoutes {
     GetPage(
       name: '/academic_card',
       page: () => const AcademicCardViewLoader(),
-      // binding: LibraryBinding(),
+      binding: AcademicCardBinding(),
     ),
     GetPage(
       name: '/exam_table',
