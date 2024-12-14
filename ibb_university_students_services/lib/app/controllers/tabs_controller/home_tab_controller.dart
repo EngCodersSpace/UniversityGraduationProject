@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,7 +6,6 @@ import 'package:get/get.dart';
 import '../../models/result.dart';
 import '../../services/user_services.dart';
 import '../../models/user_model.dart';
-import '../main_controller.dart';
 import '../main_controller.dart';
 
 class HomeTabController extends GetxController
