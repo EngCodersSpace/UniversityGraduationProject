@@ -32,9 +32,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id', //the foreign Key in the exam table refers to subject table
       });
 
-      //(5)Relationship One-to-Many between "subject table" and  "document"
-      subject.hasMany(models.document, {
-        foreignKey: 'subject_id', //the foreign Key in the document table refers to subject table
+      //(5)Relationship One-to-Many between "subject table" and  "book"
+      subject.hasMany(models.book, {
+        foreignKey: 'subject_id', //the foreign Key in the book table refers to subject table
       });
 
     }

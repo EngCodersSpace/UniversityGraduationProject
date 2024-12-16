@@ -46,9 +46,9 @@ module.exports = (sequelize, DataTypes) => {
       });
 
 
-      //(7)Relationship Many-to-Many between "document table" and  "section table through documentSectionLevel"
-      section.belongsToMany(models.document, {
-        through: 'documentSectionLevel',
+      //(7)Relationship Many-to-Many between "book table" and  "section table through bookSectionLevel"
+      section.belongsToMany(models.book, {
+        through: 'bookSectionLevel',
         foreignKey: 'sectionId',
       });
 
