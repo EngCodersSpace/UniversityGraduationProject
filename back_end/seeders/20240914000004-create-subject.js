@@ -2,7 +2,7 @@
 
 "use strict";
 
-const { faker } = require("@faker-js/faker");
+const { faker, ar } = require("@faker-js/faker");
 const { subject } = require("../models");
 
 module.exports = {
@@ -32,7 +32,10 @@ module.exports = {
         subject_id: faker.lorem.slug(),
         subject_name: subject_names[i], 
         number_of_units: Math.floor(Math.random() * 5) + 1,
-        subject_description: `This is the description for ${subject_names[i].en}.`, // الوصف باللغة الإنجليزية
+        subject_description:{ 
+          en:`This is the description for ${subject_names[i].en}.`,
+          ar:`هذا الوصف ل ${subject_names[i].en}.`,
+      },
         createdAt: new Date(),
         updatedAt: new Date(),
       });
