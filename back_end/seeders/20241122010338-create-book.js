@@ -3,20 +3,20 @@
 "use strict";
 
 const { faker } = require("@faker-js/faker");
-const { user, subject, document } = require("../models");
+const { user, subject, book } = require("../models");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Fetch all users and subjects to associate with documents
+    // Fetch all users and subjects to associate with books
     const users = await user.findAll();
     const subjects = await subject.findAll();
 
-    const documents = [];
+    const books = [];
     for (let i = 0; i < 20; i++) {
-      const addedByUser = faker.helpers.arrayElement(users); // Randomly select a user as the document creator
+      const addedByUser = faker.helpers.arrayElement(users); // Randomly select a user as the book creator
       const subjectData = faker.helpers.arrayElement(subjects); // Randomly select a subject
 
-      documents.push({
+      books.push({
         title: faker.lorem.words(5), // Generate a random title
         author: faker.person.fullName(), // Generate a random author name
         isbn: faker.string.uuid(), // Generate a random ISBN
@@ -39,12 +39,12 @@ module.exports = {
       });
     }
 
-    // Bulk insert all document records
-    await document.bulkCreate(documents);
+    // Bulk insert all book records
+    await book.bulkCreate(books);
   },
 
   down: async (queryInterface, Sequelize) => {
-    // Remove all documents when rolling back
-    await document.destroy({ where: {}, truncate: false });
+    // Remove all books when rolling back
+    await book.destroy({ where: {}, truncate: false });
   },
 };

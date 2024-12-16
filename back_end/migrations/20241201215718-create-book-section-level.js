@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('documentSectionLevels', {
+    await queryInterface.createTable('bookSectionLevels', {
     
       id: {
         allowNull: false,
@@ -10,11 +10,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      documentId:{
+      bookId:{
         type:Sequelize.INTEGER,
         allowNull:false,
         references:{
-          model:'documents',
+          model:'books',
           key:'id',
         },
         onDelete: 'NO ACTION',
@@ -45,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('documentSectionLevels');
+    await queryInterface.dropTable('bookSectionLevels');
   }
 };

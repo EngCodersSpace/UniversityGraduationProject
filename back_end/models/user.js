@@ -44,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'user_id',
       });
 
-      //(5)Relationship One-to-Many between "user table" and  "document"
-      user.hasMany(models.document, {
+      //(5)Relationship One-to-Many between "user table" and  "book"
+      user.hasMany(models.book, {
         foreignKey: 'added_by',
       });
 
