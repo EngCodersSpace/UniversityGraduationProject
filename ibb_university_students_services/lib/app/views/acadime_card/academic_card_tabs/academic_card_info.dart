@@ -130,7 +130,7 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                               borderRadius: BorderRadius.circular(8)),
                           child: Center(
                             child: SecText(
-                              "كلية ال${controller.user?.value.collegeNameData?["ar"]??"??"} - كهربائية - ${controller.user?.value.section?.nameData?["ar"]}",
+                              "كلية ${controller.user?.value.collegeNameData?["ar"]??"??"} - كهربائية - ${controller.user?.value.section?.nameData?["ar"]}",
                               textColor: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,

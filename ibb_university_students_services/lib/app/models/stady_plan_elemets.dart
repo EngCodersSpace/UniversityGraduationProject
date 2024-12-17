@@ -1,19 +1,22 @@
 
-class StudyPlane {
+class StudyPlanElement {
   int id;
+  // int studyPlanId;
+  // int subjectId;
+  // int doctorId;
   String? name;
   String? createdAt;
   String? updatedAt;
 
-  StudyPlane({
+  StudyPlanElement({
     required this.id,
     this.name,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory StudyPlane.fromJson(Map<String, dynamic> json) {
-    return StudyPlane(
+  factory StudyPlanElement.fromJson(Map<String, dynamic> json) {
+    return StudyPlanElement(
       id: json['id'],
       name: json['name'],
       createdAt: json['created_at'],
