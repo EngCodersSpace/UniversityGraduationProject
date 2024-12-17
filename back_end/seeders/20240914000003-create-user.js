@@ -39,7 +39,7 @@ module.exports = {
         date_of_birth: faker.date.past(20),
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
-        password: '12345678',
+        password:  faker.internet.password(),
         collegeName: college, // Assign college name in JSON format
         permission: permissionn,
         createdAt: new Date(),
