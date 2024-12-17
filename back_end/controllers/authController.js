@@ -205,10 +205,10 @@ exports.registerDoctor = async (req, res) => {
   }
 };
 exports.registerStudent = async (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.array() });
-  // }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   const {} = req.body;
 
@@ -216,7 +216,7 @@ exports.registerStudent = async (req, res) => {
 
     const targetLanguage = req.body.language === 'en'?'ar':'en';
     const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollageName = await translateText(req.body.collageName, req.body.language, targetLanguage);
+    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
     const translatedStudentSystem = await translateText(req.body.student.student_system, req.body.language, targetLanguage);
 
     const userData = {
@@ -229,8 +229,8 @@ exports.registerStudent = async (req, res) => {
       date_of_birth: req.body.date_of_birth,
       profile_picture: req.body.profile_picture,
       collegeName: {
-        [req.body.language]: req.body.collageName,
-        [targetLanguage]: translatedCollageName,
+        [req.body.language]: req.body.collegeName,
+        [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
