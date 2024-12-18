@@ -51,6 +51,8 @@ class StudentResultController extends GetxController {
         unitSum += (grad.subject?.units??0);
       }
       gpa.value = summation.value/unitSum;
+    }else{
+      grads?.value = [];
     }
   }
 
