@@ -3,6 +3,7 @@
 
 const { faker } = require('@faker-js/faker');
 const { user, student, doctor, study_plan, level, section } = require('../models');
+const bcrypt = require("bcrypt");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -32,6 +33,7 @@ module.exports = {
         ar: userName.split(' ').reverse().join(' '), // عكس الاسم كطريقة عشوائية لترجمته
       };
       const permissionn = faker.helpers.arrayElement(['student', 'teacher',]);
+      // const hashedPassword = await bcrypt.hash('1234pass@', 10); 
       const userData = {
         user_id: i + 1,
         user_name: userNameLocalized, // Assign user name in JSON format
@@ -39,7 +41,7 @@ module.exports = {
         date_of_birth: faker.date.past(20),
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
-        password:  faker.internet.password(),
+        password: '1234pass@',
         collegeName: college, // Assign college name in JSON format
         permission: permissionn,
         createdAt: new Date(),

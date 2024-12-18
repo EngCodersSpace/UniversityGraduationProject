@@ -1,5 +1,5 @@
 
-const { user,subject, grade ,student,section,level } = require('../models'); 
+const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const { validationResult } = require('express-validator');
 const { Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
@@ -40,20 +40,15 @@ exports.createGrade = async (req, res) => {
 // get All Grades For specific =>  student_id  and  level_id and Term 
 exports.getGrades = async (req, res) => {
   try {
-      const { id , levelID , Term} = req.query; 
-
-      if (!id) {
-          return res.status(400).json({ message: "Student ID is required" });
-      }
+      const userId = req.user.user_id; 
+      const {levelID , Term} = req.query; 
 
       // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: { student_id: id , level_id:levelID ,term:Term}, 
-          // include: [
-          //     { model: student, as: 'student' },
-          //     { model: subject, as: 'subject' },
-          //     { model: section, as: 'section' }
-          // ],
+          where: {student_id:userId , level_id:levelID , term:Term }, 
+          include: [
+              { model: subject, as: 'subject' },
+            ],
       });
 
       if (!grades.length) {
@@ -172,10 +167,44 @@ exports.getSectionOfCurrentUser = (req, res) => {
 
 
 
+exports.getDoctorGrades = async (req, res) => {
+  try {
+    const doctorId = req.user.user_id;
+    const { sectionId, levelId, term } = req.query;
 
+    const filters = {};
+    if (sectionId) filters['$section.id$'] = sectionId;
+    if (levelId) filters['$level.id$'] = levelId;
+    if (term) filters['term'] = term;
 
+    const grades = await grade.findAll({
+      include: [
+        {
+          model: subject,
+          include: [
+            {
+              model: study_plan_elment,
+              where: { doctor_id: doctorId },
+            },
+          ],
+        },
+        {
+          model: level,
+        },
+        {
+          model: section,
+        },
+       
+      ],
+      where: filters,
+    });
 
-
+    res.status(200).json({ message: "Your student's grades", grades });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching doctor grades', error });
+  }
+};
 
 
 
