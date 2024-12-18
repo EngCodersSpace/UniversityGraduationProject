@@ -85,13 +85,13 @@ const getLectures = async (req, res) => {
 // To get lectures by searching => (section_id, level_id, year , term , day) ||  without searching  
 const getLecturesGroupedByCriteria = async (req, res) => {
     try {
-        const { section_id, level_id, year , term , day } = req.params; 
+        const { section_id, level_id, year , term , day } = req.query; 
 
         const whereClause = {};
         if (section_id) whereClause.lecture_section_id = section_id;
         if (level_id) whereClause.lecture_level_id = level_id;
         if (year) whereClause.year = year;
-        if (term) whereClause.term = term;
+        if (term) whereClause.Term = term;
         if (day) whereClause.lecture_day = day;
 
 
@@ -173,11 +173,66 @@ const getLectureYear = async (req, res) => {
 };
 
 
+// To get lectures for a specific doctor
+const getDoctorLectures = async (req, res) => {
+  try {
+    const doctorId = req.user.user_id; 
+
+    const lectures = await lecture.findAll({
+      where: { doctor_id: doctorId }, 
+      include: [
+        { model: subject, as: 'subject', attributes: ['subject_name'] },
+        { model: section, as: 'section', attributes: ['section_name'] },
+        { model: level, as: 'level', attributes: ['level_name'] },
+      ],
+    });
+
+    if (!lectures.length) {
+      return res.status(404).json({ message: 'No lectures found for this doctor' });
+    }
+
+    const organizedLectures = {};
+    lectures.forEach((lec) => {
+      const term = lec.term;
+      const day = lec.lecture_day;
+
+      if (!organizedLectures[term]) {
+        organizedLectures[term] = {};
+      }
+      if (!organizedLectures[term][day]) {
+        organizedLectures[term][day] = [];
+      }
+
+      organizedLectures[term][day].push({
+        id: lec.id,
+        subject_name: lec.subject.subject_name,
+        startTime: lec.lecture_time,
+        duration: lec.lecture_duration,
+        lecture_room: lec.lecture_room,
+      });
+    });
+
+    res.status(200).json({
+      message: 'Lectures retrieved successfully',
+      data: organizedLectures,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving lectures', error: error.message });
+  }
+};
+
+
+
+
+
 module.exports = {
   createLecture,
   getLectures,
   updateLecture,
   deleteLecture,
   getLecturesGroupedByCriteria,
-  getLectureYear
+  getLectureYear,
+  getDoctorLectures
+
 };
