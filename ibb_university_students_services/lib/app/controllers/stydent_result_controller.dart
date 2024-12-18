@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/services/grad_services.dart';
 import '../components/custom_text.dart';
+import '../models/grads_model.dart';
+import '../models/result.dart';
 import '../styles/app_colors.dart';
-import '../models/exam_model.dart';
 import '../models/level_model.dart';
 import '../services/level_services.dart';
 
@@ -11,7 +13,9 @@ class StudentResultController extends GetxController {
   RxInt selected = 3.obs;
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Rx<List<Exam>>? exams = Rx([]);
+  Rx<List<Grad>>? grads = Rx([]);
+  RxInt summation = 0.obs;
+  RxDouble gpa = 0.0.obs;
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> terms = [];
 
@@ -20,26 +24,34 @@ class StudentResultController extends GetxController {
     // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    await fetchExamsData();
+    await fetchStudentGrads();
     super.onInit();
     loadingState.value = false;
   }
 
   @override
-  void refresh() {
+  void refresh() async{
+    await fetchStudentGrads();
     super.refresh();
   }
 
-  Future<void> fetchExamsData() async {
+  Future<void> fetchStudentGrads() async {
+    gpa.value = 0.0;
+    summation.value = 0;
     if (selectedLevel.value == null) return;
-    // Result res = await ExamServices.fetchExams(
-    //   levelId: selectedLevel.value!,
-    //   term: selectedTerm.value
-    // );
-    // print("here ${res.statusCode}");
-    // if (res.statusCode == 200) {
-    //   exams?.value = res.data??[];
-    // }
+    Result res = await GradServices.fetchStudentGrads(
+      levelId: selectedLevel.value!,
+      term: selectedTerm.value
+    );
+    if (res.statusCode == 200) {
+      int unitSum = 0;
+      grads?.value = res.data??[];
+      for(Grad grad in grads?.value??[]){
+        summation.value += ((grad.examGrad??0)+(grad.workGrad??0))* (grad.subject?.units??0);
+        unitSum += (grad.subject?.units??0);
+      }
+      gpa.value = summation.value/unitSum;
+    }
   }
 
 
@@ -47,7 +59,7 @@ class StudentResultController extends GetxController {
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
-    await fetchExamsData();
+    await fetchStudentGrads();
   }
 
 
@@ -55,7 +67,7 @@ class StudentResultController extends GetxController {
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    fetchExamsData();
+    fetchStudentGrads();
   }
 
   Future<void> initDropdownMenuLists() async {
