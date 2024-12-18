@@ -81,7 +81,7 @@ class ExamCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8,),
-                MainText(content.value?.subjectName??"Unknown".tr),
+                MainText(content.value?.subject?.subjectName??"Unknown".tr),
               ],
             ),
           ),
