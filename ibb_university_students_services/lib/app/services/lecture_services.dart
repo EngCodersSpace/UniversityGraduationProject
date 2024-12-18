@@ -13,29 +13,20 @@ class LectureServices {
     required int sectionId,
     required int levelId,
     required String year,
-    int? term,
+    required String term,
     bool hardFetch = false,
   }) async {
-    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch && term == null) {
-      if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year][term] != null && term !=null) {
-        return Result(
-          data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year][term],
-          statusCode: 200,
-          hasError: false,
-          message: "successful",
-        );
-      }
+    if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch) {
       return Result(
-        data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year],
+        data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year][term],
         statusCode: 200,
         hasError: false,
         message: "successful",
       );
     }
-    print("here__________________________");
     late Response? response;
     try {
-      response = await HttpProvider.get("lectures/$sectionId/$levelId/$year");
+      response = await HttpProvider.get("lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
       if (response?.statusCode == 200) {
         _lectures ??= {};
         if(_lectures?[sectionId.toString()] == null){
