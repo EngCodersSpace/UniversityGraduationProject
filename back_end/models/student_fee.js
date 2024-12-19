@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       //(3)Relationship One-to-Many between "student_fee table" and  "level table"
-      student_fee.belongsTo(models.section, {
+      student_fee.belongsTo(models.level, {
         foreignKey: 'level_fees_id',//the foreign Key in the student_fee table refers to level table
       });
 
