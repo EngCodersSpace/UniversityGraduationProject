@@ -106,7 +106,7 @@ exports.getExamGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term].push({
                 id   : lec.exam_id,
-                subject_name: lec.subject.subject_name, 
+                subject_name: lec.subject, 
                 exam_date:lec.exam_date,
                 exam_day:lec.exam_day,
                 exam_time : lec.exam_time, 
