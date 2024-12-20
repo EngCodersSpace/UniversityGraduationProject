@@ -21,6 +21,7 @@ class HomeTabController extends GetxController
   void onInit() async {
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
+      print(res.data);
       user = res.data;
     }
     tabController = TabController(length: 3, initialIndex: 0, vsync: this);

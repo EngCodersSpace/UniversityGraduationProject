@@ -138,7 +138,7 @@ class  UserServices {
     try {
       response = await HttpProvider.get("me");
       if (response?.statusCode == 200) {
-        if (response?.data["userType"] == "student") {
+        if (response?.data["user_type"] == "student") {
           _user = Student.fromJson(response?.data["user"]);
           return Result(
               data: _user as Student,

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
 
+import '../services/http_provider/http_provider.dart';
+
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -33,7 +35,7 @@ class LoginController extends GetxController {
 
   @override
   void onReady() {
-    onLogin();
+    // onLogin();
     super.onReady();
   }
 
@@ -91,7 +93,12 @@ class LoginController extends GetxController {
     logging.value = false;
   }
 
-  void toggleRememberMe(bool? val) {
+  void toggleRememberMe(bool? val) async{
+    if(val == true){
+      await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
+    }else{
+      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+    }
     rememberMe.value = val ?? false;
   }
 
