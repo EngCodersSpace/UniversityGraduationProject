@@ -137,7 +137,7 @@ class ExamTableController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 1",
           child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: (Get.width / 4.5) * 0.6,
               child: SecText(
                 "Term 1",
                 textColor: AppColors.mainTextColor,
@@ -146,7 +146,7 @@ class ExamTableController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: (Get.width / 4.5) * 0.6,
               child: SecText(
                 "Term 2",
                 textColor: AppColors.mainTextColor,
