@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/table_tab_view_controller.dart';
-import 'package:ibb_university_students_services/app/models/lavel_model.dart';
-
 import '../../styles/app_colors.dart';
 
 // ignore: must_be_immutable
@@ -23,48 +21,53 @@ class WebTableTabView extends GetView<TableTabController> {
             children: [
               Container(
                 width: width,
-                height: height,
-                color: AppColors.tabBackColor,
+                height: height * 0.1,
+                decoration: BoxDecoration(
+                    color: AppColors.mainTextColor,
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(24))),
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     SecText(
-                      "Section",
+                      "Section".tr,
                       fontWeight: FontWeight.bold,
                     ),
                     SizedBox(
-                      width: width * 0.02,
+                      width: width * 0.008,
                     ),
                     Container(
-                      width: width * 0.2,
+                      width: width * 0.15,
                       decoration: BoxDecoration(
                         color: AppColors.inverseIconColor,
                         borderRadius: BorderRadius.circular(24),
                       ),
                       child: Center(
-                        child: Obx(() => DropdownButton(
-                              items: controller.departments,
-                              onChanged: controller.changeDepartment,
-                              value: controller.selectedDepartment.value,
-                              underline: const SizedBox(),
-                              iconEnabledColor: AppColors.mainCardColor,
-                              dropdownColor: AppColors.inverseCardColor,
-                            )),
+                        child: Obx(
+                          () => DropdownButton(
+                            items: controller.departments,
+                            onChanged: controller.changeDepartment,
+                            value: controller.selectedDepartment.value,
+                            underline: const SizedBox(),
+                            iconEnabledColor: AppColors.mainCardColor,
+                            dropdownColor: AppColors.inverseCardColor,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.1,
+                      width: width * 0.05,
                     ),
                     SecText(
-                      "Level",
+                      "Level".tr,
                       fontWeight: FontWeight.bold,
                     ),
                     SizedBox(
-                      width: width * 0.02,
+                      width: width * 0.008,
                     ),
                     Container(
-                      width: width * 0.2,
+                      width: width * 0.15,
                       decoration: BoxDecoration(
                         color: AppColors.inverseIconColor,
                         borderRadius: BorderRadius.circular(24),
@@ -81,17 +84,17 @@ class WebTableTabView extends GetView<TableTabController> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.1,
+                      width: width * 0.05,
                     ),
                     SecText(
-                      "Term",
+                      "Term".tr,
                       fontWeight: FontWeight.bold,
                     ),
                     SizedBox(
-                      width: width * 0.02,
+                      width: width * 0.008,
                     ),
                     Container(
-                      width: width * 0.2,
+                      width: width * 0.16,
                       decoration: BoxDecoration(
                         color: AppColors.inverseIconColor,
                         borderRadius: BorderRadius.circular(24),
@@ -108,17 +111,17 @@ class WebTableTabView extends GetView<TableTabController> {
                       ),
                     ),
                     SizedBox(
-                      width: width * 0.1,
+                      width: width * 0.05,
                     ),
                     SecText(
-                      "Year",
+                      "Year".tr,
                       fontWeight: FontWeight.bold,
                     ),
                     SizedBox(
-                      width: width * 0.02,
+                      width: width * 0.008,
                     ),
                     Container(
-                      width: width * 0.2,
+                      width: width * 0.15,
                       decoration: BoxDecoration(
                         color: AppColors.inverseIconColor,
                         borderRadius: BorderRadius.circular(24),
@@ -134,9 +137,9 @@ class WebTableTabView extends GetView<TableTabController> {
                             )),
                       ),
                     ),
-                    SizedBox(
-                      width: width * 0.1,
-                    ),
+                    // SizedBox(
+                    //   width: width * 0.1,
+                    // ),
                   ],
                 ),
               ),
@@ -209,7 +212,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Saterday"),
+                                  child: SecText("Saterday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(
@@ -260,7 +263,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Sunday"),
+                                  child: SecText("Sunday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(
@@ -311,7 +314,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Monday"),
+                                  child: SecText("Monday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(
@@ -362,7 +365,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Tuseday"),
+                                  child: SecText("Tuseday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(
@@ -413,7 +416,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Wednesday"),
+                                  child: SecText("Wednesday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(
@@ -464,7 +467,7 @@ class WebTableTabView extends GetView<TableTabController> {
                                 TableCell(
                                     child: Padding(
                                   padding: const EdgeInsets.all(8),
-                                  child: SecText("Thursday"),
+                                  child: SecText("Thursday".tr),
                                 )),
                                 TableCell(
                                     child: Padding(

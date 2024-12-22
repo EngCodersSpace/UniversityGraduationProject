@@ -12,32 +12,44 @@ class ExamTableWebView extends GetView<ExamTableController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.tabBackColor,
       body: Obx(
         () => (controller.loadingState.value)
             ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Container(
-                padding: const EdgeInsets.all(8),
                 child: Stack(
                   children: [
                     Container(
                       width: width,
-                      height: height * 0.1,
-                      color: AppColors.tabBackColor,
+                      height: height * 0.2,
+                      decoration: BoxDecoration(
+                        color: AppColors.mainTextColor,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 5),
+                          )
+                        ],
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(24),
+                        ),
+                      ),
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SecText(
-                            "Section",
+                            "Section".tr,
                             fontWeight: FontWeight.bold,
                           ),
                           SizedBox(
                             width: width * 0.008,
                           ),
                           Container(
+                            height: height * 0.1,
                             width: width * 0.15,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
@@ -60,13 +72,14 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             width: width * 0.05,
                           ),
                           SecText(
-                            "Level",
+                            "Level".tr,
                             fontWeight: FontWeight.bold,
                           ),
                           SizedBox(
                             width: width * 0.008,
                           ),
                           Container(
+                            height: height * 0.1,
                             width: width * 0.15,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
@@ -87,13 +100,14 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             width: width * 0.05,
                           ),
                           SecText(
-                            "Term",
+                            "Term".tr,
                             fontWeight: FontWeight.bold,
                           ),
                           SizedBox(
                             width: width * 0.008,
                           ),
                           Container(
+                            height: height * 0.1,
                             width: width * 0.16,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
@@ -114,13 +128,14 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             width: width * 0.05,
                           ),
                           SecText(
-                            "Year",
+                            "Year".tr,
                             fontWeight: FontWeight.bold,
                           ),
                           SizedBox(
                             width: width * 0.008,
                           ),
                           Container(
+                            height: height * 0.1,
                             width: width * 0.15,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
@@ -137,12 +152,31 @@ class ExamTableWebView extends GetView<ExamTableController> {
                                   )),
                             ),
                           ),
-                          // SizedBox(
-                          //   width: width * 0.1,
-                          // ),
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: height * 0.01,
+                    ),
+                    Container(
+                      width: width,
+                      height: height * 0.5,
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              SecText(
+                                "Exams ",
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                textColor: AppColors.highlightTextColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
