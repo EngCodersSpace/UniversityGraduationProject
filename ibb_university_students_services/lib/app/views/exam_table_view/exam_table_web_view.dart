@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/exam_card.dart';
 
 import '../../components/custom_text.dart';
 
@@ -20,6 +21,42 @@ class ExamTableWebView extends GetView<ExamTableController> {
             : Container(
                 child: Stack(
                   children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: width,
+                        height: height * 0.8,
+                        padding: const EdgeInsets.all(12),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SecText(
+                                    "Exams ",
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    textColor: AppColors.highlightTextColor,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: height * 0.01,
+                              ),
+                              for (int i = 0;
+                                  i < controller.exams!.value.length;
+                                  i++) ...[
+                                ExamCard(
+                                    content: Rx(controller.exams?.value[i])),
+                              ]
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 0.02,
+                    ),
                     Container(
                       width: width,
                       height: height * 0.2,
@@ -69,7 +106,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.05,
+                            width: width * 0.03,
                           ),
                           SecText(
                             "Level".tr,
@@ -97,7 +134,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.05,
+                            width: width * 0.03,
                           ),
                           SecText(
                             "Term".tr,
@@ -125,7 +162,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.05,
+                            width: width * 0.03,
                           ),
                           SecText(
                             "Year".tr,
@@ -155,28 +192,6 @@ class ExamTableWebView extends GetView<ExamTableController> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.01,
-                    ),
-                    Container(
-                      width: width,
-                      height: height * 0.5,
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              SecText(
-                                "Exams ",
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                textColor: AppColors.highlightTextColor,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
