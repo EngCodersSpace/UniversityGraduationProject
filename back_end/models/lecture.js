@@ -32,6 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'lecture_level_id',//the foreign Key in the lecture table refers to level table
       });
 
+      lecture.belongsTo(models.lecture, {
+        foreignKey: 'originalLecturId',
+        as: 'originalLecture',
+      });
+
+      lecture.hasMany(models.lecture, {
+        foreignKey: 'originalLecturId',
+        as: 'replacedLecture',
+      });
+
 
     }
   }
@@ -105,7 +115,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     lecture_room: {
       type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    isReplaced: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
+    },
+    originalLecturId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null,
+      references: {
+        model: 'lectures',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
     },
 
 

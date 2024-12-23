@@ -1,4 +1,7 @@
 'use strict';
+
+const { fa } = require('@faker-js/faker');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -71,7 +74,23 @@ module.exports = {
       },
       lecture_room: {
         type: Sequelize.STRING(50),
+        allowNull: true,
+      },
+      isReplaced: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
+      },
+      originalLecturId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+        references: {
+          model: 'lectures',
+          key: 'id',
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
 
 
