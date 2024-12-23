@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const validate = require('../validations/examvalidation');
-const examController = require('../controllers/examController');
-// const authMiddleware = require('../middleware/authMiddleware');
+const CRUD = require('../controllers/examController');
+const { verifyToken } = require('../middleware/authMiddleware');
+const checkRole = require('../middleware/roleMiddleware');
 
-router.post('/create-exam', validate.createExam, examController.createExam);
+router.use(verifyToken);
 
-router.get('/get-all-exam',  examController.getAllExams);
-router.get('/get-exam/:id?', examController.getExam );
-router.get('/get-exam-grouped/:section_id?/:level_id?/:year?/:term?', examController.getExamGroupedByCriteria );
-router.get('/get-exam-year', examController.getExamYear );
+router.post('/create-exam',checkRole('teacher'), validate.createExam, CRUD.createExam);
+router.put('/update-exam/:id',checkRole(['student', 'teacher']),validate.updateExam, CRUD.updateExam );
+router.delete('/delete-exam',  CRUD.deleteExam );
 
-
-router.put('/update/:id',validate.updateExam, examController.updateExam );
-router.delete('/delete/:id',  examController.deleteExam );
+router.get('/get-all-exam',  CRUD.getAllExams);
+router.get('/get-exam/:id?', CRUD.getExam );
+router.get('/get-exam-grouped/:section_id?/:level_id?/:year?/:term?', CRUD.getExamGroupedByCriteria );
+router.get('/get-exam-year', CRUD.getExamYear );
 
 module.exports = router; 

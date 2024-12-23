@@ -5,35 +5,7 @@ const { Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
-exports.createGrade = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    try {
-      const { } = req.body;
-  
-      const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
-      if (!studentExists) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-  
-      const subjectExists = await subject.findOne({where:{subject_id:req.body.subject_id}});
-      if (!subjectExists) {
-        return res.status(404).json({ message: 'Subject not found' });
-      }
-  
-      const newGrade = await grade.create(req.body);
-  
-      res.status(201).json({
-        message: 'Grade created successfully',
-        grade: newGrade,
-      });
-    } catch (error) {
-      console.error('Error creating grade:', error.message);
-      res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-};
+
 
 
 
@@ -165,7 +137,40 @@ exports.getSectionOfCurrentUser = (req, res) => {
 };
 
 
+// at frontEnd the  doctor can see all his subjects with details as cards 
+// when he click any subject he will going to tables to see all students who study that subject with him and their degrees 
+// and a doctor can write(create) degrees for all of them(his student who study this subject with him) or update their degrees >>> so  
+//  when i deal with grades doctor  how i do (create , update and get ) functions ?????
+// 
+exports.createGrade = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const { } = req.body;
 
+    const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
+    if (!studentExists) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const subjectExists = await subject.findOne({where:{subject_id:req.body.subject_id}});
+    if (!subjectExists) {
+      return res.status(404).json({ message: 'Subject not found' });
+    }
+
+    const newGrade = await grade.create(req.body);
+
+    res.status(201).json({
+      message: 'Grade created successfully',
+      grade: newGrade,
+    });
+  } catch (error) {
+    console.error('Error creating grade:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
 
 exports.getDoctorGrades = async (req, res) => {
   try {
@@ -205,10 +210,6 @@ exports.getDoctorGrades = async (req, res) => {
     res.status(500).json({ message: 'Error fetching doctor grades', error });
   }
 };
-
-
-
-
 
 exports.updateGrade = async (req, res) => {
     const errors = validationResult(req);
@@ -274,6 +275,9 @@ exports.updateGrade = async (req, res) => {
     }
 };
 
+
+
+
 exports.deleteGrade = async (req, res) => {
     try {
       const { id } = req.params;
@@ -292,6 +296,4 @@ exports.deleteGrade = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-
-
 

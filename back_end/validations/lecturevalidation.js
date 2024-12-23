@@ -1,4 +1,5 @@
 const { body, param } = require('express-validator');
+const { lecture } = require('../models');
 
 const createLectureValidator = [
   body('subject_id')
@@ -7,17 +8,17 @@ const createLectureValidator = [
     .withMessage('Subject ID is required and should be a valid string'),
 
   body('doctor_id')
-    .isInt()
+    .isInt({ gt: 0 })
     .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('Doctor ID is required and should be a valid integer'),
 
   body('lecture_section_id')
-    .isInt()
+    .isInt({ gt: 0 })
     .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('lecture-section-ID is required and should be a valid integer'),
 
   body('lecture_level_id')
-    .isInt()
+    .isInt({ gt: 0 })
     .custom((value) => value > 0).withMessage('User ID must be greater than 0')
     .withMessage('lecture-level-ID is required and should be a valid integer'),
 
@@ -35,7 +36,7 @@ const createLectureValidator = [
     .withMessage('Lecture time is required and should be a valid time string'),
 
   body('lecture_duration')
-    .isInt()
+    .isInt({ gt: 0 })
     .withMessage('Lecture duration is required and should be a valid string'),
 
   body('lecture_day')
@@ -49,7 +50,15 @@ const createLectureValidator = [
 ];
 
 const updateLectureValidator = [
-  param('id').isInt().withMessage('Lecture ID must be a valid integer'),
+  param('id')
+      .isInt({ gt: 0 })
+      .withMessage(' ID must be a positive integer')
+      .custom(async (value) => {
+        const foundLecture = await lecture.findOne({ where: {id:value} });
+        if (!foundLecture) {
+          throw new Error('lecture not found');
+        }
+      }).withMessage('Invalid  ID'),
 
   body('subject_id')
     .optional()
@@ -59,18 +68,17 @@ const updateLectureValidator = [
 
   body('doctor_id')
     .optional()
-    .isInt()
-    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .isInt({ gt: 0 })
     .withMessage('Doctor ID should be a valid integer'),
 
   body('lecture_section_id')
     .optional()
-    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .isInt({ gt: 0 })
     .withMessage('lecture-level-ID is required and should be a valid integer'),
 
   body('lecture_level_id')
     .optional()
-    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
+    .isInt({ gt: 0 })
     .withMessage('lecture-level-ID is required and should be a valid integer'),
 
   body('term')
@@ -91,7 +99,7 @@ const updateLectureValidator = [
 
   body('lecture_duration')
     .optional()
-    .isInt()
+    .isInt({gt:0})
     .withMessage('Lecture duration should be a valid string'),
 
   body('lecture_day')
