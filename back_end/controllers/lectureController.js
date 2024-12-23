@@ -1,50 +1,44 @@
 const { validationResult } = require('express-validator');
-const { lecture, subject, doctor ,section , level , user } = require('../models'); 
+const { lecture, subject, doctor ,section , level , user } = require('../models');
 const { Sequelize} = require('sequelize');
 
 const createLecture = async (req, res) => {
-  try {
-    const errors = validationResult(req);
+  const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const {} = req.body;
-
+  try {
     const newLecture = await lecture.create(req.body);
- 
     res.status(201).json({
       message: 'Lecture created successfully',
       data: newLecture,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error creating lecture', error: error.message });
+    console.error('Error creating lecture:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
 const updateLecture = async (req, res) => {
+  const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
   try {
-    const { id } = req.params;
-    const {} = req.body;
-
-    const updatedLecture = await lecture.update(req.body,
+    await lecture.update(req.body,
       {
-        where: { id },
+        where: { id : req.params.id},
         returning: true, 
       }
-    );
-
-    if (updatedLecture[0] === 0) {
-      return res.status(404).json({ message: 'Lecture not found' });
-    }
+    );    
 
     res.status(200).json({
       message: 'Lecture updated successfully',
-      data: updatedLecture[1][0], 
+      // data: await lecture.findOne({where: { id : req.params.id}}),
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error updating lecture', error: error.message });
+    console.error('Error creating lecture:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
@@ -68,8 +62,6 @@ const deleteLecture = async (req, res) => {
     res.status(500).json({ message: 'Error deleting lecture', error: error.message });
   }
 };
-
-
 
 // To get all lectures
 const getLectures = async (req, res) => {
@@ -172,7 +164,6 @@ const getLectureYear = async (req, res) => {
   }
 };
 
-
 // To get lectures for a specific doctor
 const getDoctorLectures = async (req, res) => {
   try {
@@ -222,10 +213,6 @@ const getDoctorLectures = async (req, res) => {
   }
 };
 
-
-
-
-
 module.exports = {
   createLecture,
   getLectures,
@@ -234,5 +221,4 @@ module.exports = {
   getLecturesGroupedByCriteria,
   getLectureYear,
   getDoctorLectures
-
 };
