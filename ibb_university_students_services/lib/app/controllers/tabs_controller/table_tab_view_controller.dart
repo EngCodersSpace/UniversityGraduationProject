@@ -195,6 +195,14 @@ class TableTabController extends GetxController {
     ];
   }
 
+
+  void more(String val) {
+    if (val == "print") {
+
+    } else if (val == "Calculator") {
+
+    }
+  }
   @override
   void onClose() {}
 }
