@@ -9,6 +9,9 @@ router.use(verifyToken);
 
 router.post('/create-lecture', checkRole(['student', 'teacher']), vali.createLectureValidator ,CRUD.createLecture);
 router.put('/update-lecture/:id', checkRole(['student', 'teacher']),vali.updateLectureValidator, CRUD.updateLecture);
+router.post('/replaceOne-lecture', checkRole(['student', 'teacher']),CRUD.replaceOne);
+
+
 router.delete('/delete-lecture/:id', checkRole('teacher'), CRUD.deleteLecture);
 
 router.get('/get-all-lecture', CRUD.getLectures);
