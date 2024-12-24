@@ -9,8 +9,8 @@ import 'package:ibb_university_students_services/app/views/table_tab_view/table_
 import '../../controllers/tabs_controller/table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
 
-class PhoneTableTabView extends GetView<TableTabController> {
-  PhoneTableTabView({super.key});
+class PhoneLectureTableTabView extends GetView<TableTabController> {
+  PhoneLectureTableTabView({super.key});
 
   double height = Get.height * (1 - 0.09);
   double width = Get.width;

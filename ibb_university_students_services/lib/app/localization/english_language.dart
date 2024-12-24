@@ -14,7 +14,7 @@ class English {
     //             main view             ////
     /////////////////////////////////////////
     'Notification':'Notification',
-    'Table':'Table',
+    'LectureTable':'Lecture\nTable',
     'Home':'Home',
     'Reports':'Reports',
     'Profile':'Profile',
@@ -44,7 +44,7 @@ class English {
     'Exam':'Exam',
     'Schedule':'Schedule',
     //////////////////////////////////////////
-    //            table tab view          ////
+    //       lecture table tab view       ///
     /////////////////////////////////////////
     'mon': 'Mon',
     'tue': 'Tue',

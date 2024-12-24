@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
-import 'package:ibb_university_students_services/app/views/table_tab_view/phones_table_tab_view.dart';
 
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
 import '../home_tab_view/phones_home_tab.dart';
+import '../table_tab_view/phones_table_tab_view.dart';
 
 class PhoneMainView extends GetView<MainController> {
   PhoneMainView({
@@ -18,8 +18,6 @@ class PhoneMainView extends GetView<MainController> {
 
   double height = Get.height;
   double width = Get.width;
-  late FloatingActionButtonLocation floatingActionButtonLocation;
-
   @override
   Widget build(BuildContext context) {
     List iconFAB = [
@@ -39,10 +37,11 @@ class PhoneMainView extends GetView<MainController> {
           Icon(
             Icons.calendar_month,
             color: AppColors.mainTextColor,
+            size: 18,
           ),
           SecText(
-            "Table".tr,
-            fontSize: 10,
+            "LectureTable".tr,
+            fontSize: 8,
             fontWeight: FontWeight.bold,
             textColor: AppColors.mainTextColor,
           )
@@ -140,7 +139,7 @@ class PhoneMainView extends GetView<MainController> {
                           : null,
                     ),
                     SecText(
-                      "Table".tr,
+                      "LectureTable".tr,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 1)
