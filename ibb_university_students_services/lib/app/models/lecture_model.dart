@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 
@@ -26,13 +24,11 @@ class Lecture {
 
   String? get doctor {
     String currentLang = Get.locale?.languageCode.toString()??"en";
-    print(doctorData);
     return doctorData?[currentLang];
   }
 
   String? get subjectName {
     String currentLang = Get.locale?.languageCode.toString()??"en";
-    print(subjectNameData);
     return subjectNameData?[currentLang];
   }
 

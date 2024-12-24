@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
 import '../../components/custom_text.dart';
 import '../../controllers/main_controller.dart';
-import '../table_tab_view/web_table_tab_view.dart';
 
 class WebMainView extends GetView<MainController> {
   WebMainView({
@@ -215,7 +215,7 @@ class WebMainView extends GetView<MainController> {
     const WebProfileView(),
     const WebNotificationView(),
     WebHomeTab(),
-    const WebTableTabView(),
+    const WebLectureTableTabView(),
     Center(
       child: MainText(
         "Main page 3",

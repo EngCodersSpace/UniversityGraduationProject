@@ -1,9 +1,4 @@
-
-
-import 'dart:convert';
-
 import 'package:get/get.dart';
-
 import '../utils/json_utils.dart';
 
 class Section {

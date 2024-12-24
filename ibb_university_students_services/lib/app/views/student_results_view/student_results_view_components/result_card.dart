@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../models/grads_model.dart';
 import '../../../styles/app_colors.dart';
@@ -15,14 +14,11 @@ class ResultCard extends StatelessWidget {
     this.type = "even",
   });
 
-  final DateFormat _timeFormat = DateFormat("hh:mm a");
   String type;
   Rx<Grad> grad;
 
   @override
   Widget build(BuildContext context) {
-    print((grad.value.workGrad ?? -100) +
-        (grad.value.examGrad ?? -100));
     final Color color;
     if (type == "even") {
       if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <

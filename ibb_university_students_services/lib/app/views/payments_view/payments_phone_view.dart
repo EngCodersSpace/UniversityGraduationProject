@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/payments_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_fee.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/payments_view/payments_view_components/payment_card.dart';
-import 'package:ibb_university_students_services/app/views/payments_view/payments_view_components/payments_level_card.dart';
 
 class PaymentsPhoneView extends GetView<PaymentsController> {
   const PaymentsPhoneView({super.key});

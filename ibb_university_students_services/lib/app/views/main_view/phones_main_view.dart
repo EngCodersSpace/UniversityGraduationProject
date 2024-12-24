@@ -3,13 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/phones_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
-
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
 import '../home_tab_view/phones_home_tab.dart';
-import '../table_tab_view/phones_table_tab_view.dart';
 
 class PhoneMainView extends GetView<MainController> {
   PhoneMainView({
@@ -219,7 +218,7 @@ class PhoneMainView extends GetView<MainController> {
 
   List screens = [
     PhoneNotificationView(),
-    PhoneTableTabView(),
+    PhoneLectureTableTabView(),
     PhoneMainTab(),
     Center(
       child: MainText(

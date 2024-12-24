@@ -63,7 +63,7 @@ class TableTabController extends GetxController {
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
       year: selectedYear.value!,
-      term: selectedTerm.value!,
+      term: selectedTerm.value,
       hardFetch: force
     );
     if (res.statusCode == 200) {

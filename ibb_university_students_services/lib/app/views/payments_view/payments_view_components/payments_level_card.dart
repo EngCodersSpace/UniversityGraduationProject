@@ -1,7 +1,8 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/student_fee.dart';
-import 'package:ibb_university_students_services/app/models/student_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/text_styles.dart';
@@ -25,7 +26,7 @@ class PaymentLevelCard extends GetView {
       collapsedIconColor: AppColors.mainCardColor,
       iconColor: AppColors.mainCardColor,
       collapsedBackgroundColor: AppColors.inverseCardColor,
-      childrenPadding: EdgeInsets.all(8),
+      childrenPadding: const EdgeInsets.all(8),
       children: [
         CustomText(
           title,

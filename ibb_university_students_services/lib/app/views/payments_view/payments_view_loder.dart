@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_phone_view.dart';
-import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_web_view.dart';
 import 'package:ibb_university_students_services/app/views/payments_view/payments_phone_view.dart';
 import 'package:ibb_university_students_services/app/views/payments_view/payments_web_view.dart';
 
