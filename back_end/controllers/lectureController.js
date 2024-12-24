@@ -1,6 +1,8 @@
 const { validationResult } = require('express-validator');
 const { lecture, subject, doctor ,section , level , user } = require('../models');
-const { Sequelize} = require('sequelize');
+const { sequelize,Sequelize } = require('sequelize');
+// const { } = require('../middleware/helperLecture');
+
 
 const createLecture = async (req, res) => {
   const errors = validationResult(req);
@@ -18,6 +20,53 @@ const createLecture = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
+
+
+const replaceOne = async (req, res) => {
+  try {
+    const originalLecture = await lecture.findOne(req.body.originalLectureId);
+
+    if (!originalLecture) {
+      throw new Error('Original lecture not found');
+    }
+
+    await originalLecture.update(
+      { isReplaced: true },
+      { fields: ['isReplaced'] } 
+    );
+    
+
+    const replacedLecture = await lecture.create(req.body);
+
+    const lectureStartTime = new Date();
+    const [hours, minutes, seconds] = originalLecture.lecture_time.split(':').map(Number);
+    lectureStartTime.setHours(hours, minutes, seconds, 0);
+    const lectureEndTime = new Date(lectureStartTime.getTime() + originalLecture.lecture_duration * 60000); 
+    const remainingTime = lectureEndTime.getTime() - new Date().getTime(); 
+
+    if (remainingTime > 0) {
+      setTimeout(async () => {
+        try {
+          await replacedLecture.destroy();
+          await originalLecture.update({
+            isReplaced: false,
+          });
+
+          console.log('Original lecture restored successfully.');
+        } catch (error) {
+          console.error('Failed to restore original lecture:', error);
+        }
+      }, remainingTime);
+    } 
+
+    return res.status(200).json({ message: 'Lecture replaced successfully', replacedLecture });
+  } catch (error) {
+    console.error('Error during lecture replacement:', error);
+    return res.status(500).json({ message: 'Failed to replace lecture', error: error.message });
+  }
+};
+
+
 
 const updateLecture = async (req, res) => {
   const errors = validationResult(req);
@@ -220,5 +269,6 @@ module.exports = {
   deleteLecture,
   getLecturesGroupedByCriteria,
   getLectureYear,
-  getDoctorLectures
+  getDoctorLectures,
+  replaceOne
 };
