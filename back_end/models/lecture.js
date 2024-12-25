@@ -146,11 +146,8 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room'],
+        fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room','isReplaced'],
         name: 'unique_constraint_in_lecture',
-        where: {
-          isReplaced: false, 
-        },
       },
     ],
   });

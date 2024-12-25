@@ -22,24 +22,61 @@ const createLecture = async (req, res) => {
 };
 
 
+const getNextLectureDay = (lectureDay) => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); 
+
+  const daysMap = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+  };
+
+  const lectureDayNumber = daysMap[lectureDay];
+  const daysUntilLecture = (lectureDayNumber - dayOfWeek + 7) % 7 || 7;
+
+  const nextLectureDate = new Date(today);
+  nextLectureDate.setDate(today.getDate() + daysUntilLecture);
+
+  return nextLectureDate;
+};
+
 const replaceOne = async (req, res) => {
   try {
     const originalLecture = await lecture.findOne(req.body.originalLectureId);
     if (!originalLecture) {
       throw new Error('Original lecture not found');
     }
+
+    console.log('originalLecture:before update replace', originalLecture);
+
     await originalLecture.update(
       { isReplaced: true },
-      { fields: ['isReplaced'] } 
-    );   
+      { fields: ['isReplaced'] }
+    );
+
+    console.log('originalLecture:after update replace', originalLecture);
 
     const replacedLecture = await lecture.create(req.body);
 
-    const lectureStartTime = new Date();
+    // Get the next lecture day dynamically
+    const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
+
+    // Set lecture start time
     const [hours, minutes, seconds] = originalLecture.lecture_time.split(':').map(Number);
-    lectureStartTime.setHours(hours, minutes, seconds, 0);
-    const lectureEndTime = new Date(lectureStartTime.getTime() + originalLecture.lecture_duration * 60000); 
-    const remainingTime = lectureEndTime.getTime() - new Date().getTime(); 
+    nextLectureDay.setHours(hours, minutes, seconds, 0);
+
+    const lectureStartTime = nextLectureDay;
+    const lectureEndTime = new Date(
+      lectureStartTime.getTime() + originalLecture.lecture_duration * 60000
+    );
+
+    // Calculate the remaining time
+    const remainingTime = lectureEndTime.getTime() - new Date().getTime();
 
     if (remainingTime > 0) {
       setTimeout(async () => {
@@ -47,14 +84,14 @@ const replaceOne = async (req, res) => {
           await replacedLecture.destroy();
           await originalLecture.update(
             { isReplaced: false },
-            { fields: ['isReplaced'] } 
-          );  
+            { fields: ['isReplaced'] }
+          );
           console.log('Original lecture restored successfully.');
         } catch (error) {
           console.error('Failed to restore original lecture:', error);
         }
       }, remainingTime);
-    } 
+    }
 
     return res.status(200).json({ message: 'Lecture replaced successfully', replacedLecture });
   } catch (error) {
@@ -62,6 +99,7 @@ const replaceOne = async (req, res) => {
     return res.status(500).json({ message: 'Failed to replace lecture', error: error.message });
   }
 };
+
 
 
 
