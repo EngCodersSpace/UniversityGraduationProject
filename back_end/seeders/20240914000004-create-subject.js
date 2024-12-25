@@ -31,7 +31,7 @@ module.exports = {
       subjects.push({
         subject_id: faker.lorem.slug(),
         subject_name: subject_names[i], 
-        number_of_units: Math.floor(Math.random() * 5) + 1,
+        number_of_units: faker.number.int({min:2,max:3}),
         subject_description:{ 
           en:`This is the description for ${subject_names[i].en}.`,
           ar:`هذا الوصف ل ${subject_names[i].en}.`,

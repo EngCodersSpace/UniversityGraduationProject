@@ -31,7 +31,7 @@ module.exports = {
         en: userName,
         ar: userName.split(' ').reverse().join(' '), // عكس الاسم كطريقة عشوائية لترجمته
       };
-      const permissionn = faker.helpers.arrayElement(['student', 'teacher',]);
+      const permissionn = faker.helpers.arrayElement(['student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary']);
       const userData = {
         user_id: i + 1,
         user_name: userNameLocalized, // Assign user name in JSON format
@@ -49,7 +49,7 @@ module.exports = {
       users.push(userData);
 
       // Add student or doctor data based on permission
-      if (permissionn === 'student') {
+      if (['student', 'representative'].includes(permissionn)) {
         const system = faker.helpers.arrayElement(["General", "Free Seat", "Paid"]);
         const translatedSystem = system === "General" ? "عام" : system === "Free Seat" ? "مقعد مجاني" : "موازي";
 
@@ -65,7 +65,7 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         });
-      } else if (permissionn === 'teacher') {
+      } else if (['dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary'].includes(permissionn)) {
         const academicDegree = faker.helpers.arrayElement([
           { en: 'Doctor', ar: 'دكتور' },
           { en: 'Professor', ar: 'بروفسور' },
