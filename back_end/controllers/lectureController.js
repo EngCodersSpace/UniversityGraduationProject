@@ -25,16 +25,13 @@ const createLecture = async (req, res) => {
 const replaceOne = async (req, res) => {
   try {
     const originalLecture = await lecture.findOne(req.body.originalLectureId);
-
     if (!originalLecture) {
       throw new Error('Original lecture not found');
     }
-
     await originalLecture.update(
       { isReplaced: true },
       { fields: ['isReplaced'] } 
-    );
-    
+    );   
 
     const replacedLecture = await lecture.create(req.body);
 
@@ -48,10 +45,10 @@ const replaceOne = async (req, res) => {
       setTimeout(async () => {
         try {
           await replacedLecture.destroy();
-          await originalLecture.update({
-            isReplaced: false,
-          });
-
+          await originalLecture.update(
+            { isReplaced: false },
+            { fields: ['isReplaced'] } 
+          );  
           console.log('Original lecture restored successfully.');
         } catch (error) {
           console.error('Failed to restore original lecture:', error);
