@@ -42,7 +42,7 @@ module.exports = {
         validate: { isEmail: true, },
       },
       permission: {
-        type: Sequelize.ENUM('student', 'teacher', 'admin', 'staff'),
+        type: Sequelize.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
         allowNull: false,
         defaultValue: 'student',
       },

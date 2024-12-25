@@ -17,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_id',//the foreign Key in the student_fee table refers to student table
       });
 
-      //(2)Relationship One-to-Many between "student_fee table" and  "section table"
-      student_fee.belongsTo(models.section, {
-        foreignKey: 'section_id',//the foreign Key in the student_fee table refers to section table
-      });
+      // //(2)Relationship One-to-Many between "student_fee table" and  "section table"
+      // student_fee.belongsTo(models.section, {
+      //   foreignKey: 'section_id',//the foreign Key in the student_fee table refers to section table
+      // });
 
       //(3)Relationship One-to-Many between "student_fee table" and  "level table"
       student_fee.belongsTo(models.level, {
@@ -48,16 +48,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    section_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'sections',
-        key: 'id',
-      },
-      onDelete: 'NO ACTION',
-      onUpdate: 'CASCADE',
-    },
+    // section_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: 'sections',
+    //     key: 'id',
+    //   },
+    //   onDelete: 'NO ACTION',
+    //   onUpdate: 'CASCADE',
+    // },
 
     level_fees_id: {
       type: DataTypes.INTEGER,
@@ -85,10 +85,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(8, 2),
       allowNull: false,
     },
-    payment_status: {
-      type: DataTypes.JSON,
-      allowNull: false,
-    },
+    // payment_status: {
+    //   type: DataTypes.JSON,
+    //   allowNull: false,
+    // },
     payment_date: {
       type: DataTypes.DATE,
       allowNull: true,
