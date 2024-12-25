@@ -11,6 +11,10 @@ npx sequelize-cli db:seed:all --config config\database.json
 
 npx sequelize-cli db:seed:undo:all --config config\database.json
 
+npx sequelize-cli db:seed --seed 
+
+npx sequelize-cli db:seed:undo --seed 
+
 npx sequelize-cli seed:generate --name section
 
                     GIT

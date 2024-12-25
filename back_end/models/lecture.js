@@ -117,6 +117,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: true,
     },
+    lectureStatus:{
+      type:DataTypes.BOOLEAN,
+      allowNull:false,
+      defaultValue:true,
+    },
     isReplaced: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
