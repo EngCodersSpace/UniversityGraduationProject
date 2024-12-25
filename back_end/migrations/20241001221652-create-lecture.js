@@ -110,7 +110,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('lectures', {
-      fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room'],
+      fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room','isReplaced'],
       type: 'unique',
       name: 'unique_constraint_in_lecture',
 
