@@ -17,13 +17,15 @@ class TableDays {
   List<Lecture>? thu;
   List<Lecture>? sat;
 
-  factory TableDays.fromJson(Map<String, dynamic> json) {
+  factory TableDays.fromJson(Map<String, Map<int,Lecture>> json) {
+    print(json);
     Map<String, List<Lecture>> days = {};
     for (String day in json.keys) {
       days[day] = [];
-      for (var lecture in json[day]) {
-        days[day]?.add(Lecture.fromJson(lecture));
+      for (Lecture lecture in (json[day]?.values.toList()??[])) {
+        days[day]?.add(lecture);
       }
+      print(days[day]);
     }
     return TableDays(
       sun: days["Sunday"],

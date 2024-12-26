@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
 import '../../components/custom_text.dart';
 import '../../components/day_cards.dart';
@@ -318,6 +320,11 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                         child: Obx(()=>Column(
                           children: [
                             SizedBox(height: height * 0.03),
+                            if(controller.selectedDay.value?.isEmpty??true)...[
+                              SizedBox(height: height*0.2,),
+                              Center(child: CustomText("No Lecture Exist".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
+                              IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh))
+                            ],
                             for (int i = 0;
                             i < (controller.selectedDay.value?.length ?? 0);
                             i++) ...[

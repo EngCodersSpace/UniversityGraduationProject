@@ -27,7 +27,6 @@ class LectureController extends GetxController {
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Map termsData = {};
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
@@ -88,8 +87,7 @@ class LectureController extends GetxController {
       hardFetch: force
     );
     if (res.statusCode == 200) {
-      termsData = res.data;
-      tableTime = res.data[selectedTerm.value];
+      tableTime = res.data;
       selectedDayChange(selected.value);
     }
   }
@@ -115,8 +113,7 @@ class LectureController extends GetxController {
   void changeTerm(String? val) async{
     if (val == null) return;
     selectedTerm.value = val;
-    tableTime = termsData[selectedTerm.value];
-    selectedDayChange(selected.value);
+    fetchTableData();
     selected.refresh();
   }
 
@@ -124,6 +121,7 @@ class LectureController extends GetxController {
     selected.value = index;
     switch (index) {
       case 0:
+        print(tableTime?.sat);
         selectedDay.value = tableTime?.sat;
         selectedDayName = "Saturday".tr;
         break;
