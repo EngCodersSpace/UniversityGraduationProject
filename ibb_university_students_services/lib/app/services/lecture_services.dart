@@ -8,6 +8,7 @@ class LectureServices {
   static const int  _fetchError = 611;
 
   static Map<String,Map<String,Map<String,dynamic>?>?>? _lectures;
+  static List<String>? _years  ;
 
   static Future<Result<Map>> fetchTableTime({
     required int sectionId,
@@ -67,7 +68,42 @@ class LectureServices {
   }
 
 
-
+  static Future<Result<List<String>>> fetchLectureYears({
+    bool hardFetch = false,
+  }) async {
+    if (_years  != null &&
+        !hardFetch) {
+      return Result(
+        data: _years,
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("lecture/year");
+      if (response?.statusCode == 200) {
+        _years = List<String>.from(response?.data["data"]);
+        return Result(
+            data: _years,
+            hasError: true,
+            statusCode: response?.statusCode ?? _fetchError,
+            message: response?.data["message"] ?? "error");
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
 
 
 }

@@ -7,16 +7,16 @@ import 'http_provider/http_provider.dart';
 class GradServices {
   static const int  _fetchError = 611;
 
-  static Map<int,List<Grad>>? _levels;
+  static Map<int,Map<int,Grad>>? _gradsByLevels;
 
   static Future<Result<List<Grad>>> fetchStudentGrads({
     required int levelId,
     required String? term,
     bool hardFetch = false,
   }) async {
-    if (_levels?[levelId] != null && (_levels?[levelId]?.isNotEmpty??false) && !hardFetch){
+    if (_gradsByLevels?[levelId] != null && (_gradsByLevels?[levelId]?.isNotEmpty??false) && !hardFetch){
       return Result(
-        data: _levels?[levelId],
+        data: _gradsByLevels?[levelId]?.values.toList(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -26,10 +26,11 @@ class GradServices {
     try {
       response = await HttpProvider.get("get-grades?levelID=$levelId&Term=$term");
       if (response?.statusCode == 200) {
-        _levels ??= {};
-        _levels?[levelId] = [];
-        for(Map<String,dynamic> grad in response?.data["Grades"]){
-          _levels?[levelId]?.add(Grad.fromJson(grad));
+        _gradsByLevels ??= {};
+        _gradsByLevels?[levelId] = {};
+        for(Map<String,dynamic> jsGrad in response?.data["Grades"]){
+          Grad grad = Grad.fromJson(jsGrad);
+          _gradsByLevels?[levelId]?[grad.id] = grad;
         }
 
         return Result(

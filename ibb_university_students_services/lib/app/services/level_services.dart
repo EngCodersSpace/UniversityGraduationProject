@@ -7,7 +7,7 @@ import 'http_provider/http_provider.dart';
 class LevelServices {
   static const int _fetchError = 611;
 
-  static List<Level>? _levels;
+  static Map<int,Level>? _levels;
 
   static Future<Result<List<Level>>> fetchLevels({
     bool hardFetch = false,
@@ -15,7 +15,7 @@ class LevelServices {
     if (_levels  != null &&
         !hardFetch) {
       return Result(
-        data: _levels,
+        data: _levels?.values.toList(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -48,7 +48,7 @@ class LevelServices {
   }
 
 
-  static void cacheLevels(List<Level> levels){
+  static void cacheLevels(Map<int,Level> levels){
     _levels = levels;
   }
 

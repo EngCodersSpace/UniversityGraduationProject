@@ -107,8 +107,8 @@ class ExamTableController extends GetxController {
         await SectionServices.fetchSections().then((e) => e.data ?? []);
     List<Level> levelsData =
         await LevelServices.fetchLevels().then((e) => e.data ?? []);
-    List<String> yearData =
-        await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
+    // List<String> yearData =
+    //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -139,21 +139,21 @@ class ExamTableController extends GetxController {
             )),
       );
     }
-    years = [];
-    for (String year in yearData) {
-      years.add(
-        DropdownMenuItem(
-            value: year,
-            child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                year,
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ),
-            )),
-      );
-    }
+    // years = [];
+    // for (String year in yearData) {
+    //   years.add(
+    //     DropdownMenuItem(
+    //         value: year,
+    //         child: SizedBox(
+    //           width: (Get.width / 3.3) * 0.75,
+    //           child: SecText(
+    //             year,
+    //             textColor: AppColors.mainTextColor,
+    //             fontSize: 12,
+    //           ),
+    //         )),
+    //   );
+    // }
     terms = [
       DropdownMenuItem<String>(
           value: "Term 1",

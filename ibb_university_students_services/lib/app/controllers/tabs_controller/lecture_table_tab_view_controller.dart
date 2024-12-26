@@ -156,7 +156,7 @@ class LectureController extends GetxController {
     List<Level> levelsData =
         await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
     List<String> yearData =
-        await AppDataServices.fetchLectureYears(hardFetch: force).then((e) => e.data ?? []);
+        await LectureServices.fetchLectureYears(hardFetch: force).then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(

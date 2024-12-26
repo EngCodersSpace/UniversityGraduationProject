@@ -7,7 +7,7 @@ import 'http_provider/http_provider.dart';
 class SectionServices {
   static const int _fetchError = 611;
 
-  static List<Section>? _sections;
+  static Map<int,Section>? _sections;
 
   static Future<Result<List<Section>>> fetchSections({
     bool hardFetch = false,
@@ -15,7 +15,7 @@ class SectionServices {
     if (_sections != null &&
         !hardFetch) {
       return Result(
-        data: _sections,
+        data: _sections?.values.toList(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -48,7 +48,7 @@ class SectionServices {
   }
 
 
-  static void cacheSections(List<Section> sections){
+  static void cacheSections(Map<int,Section> sections){
     _sections = sections;
   }
 
