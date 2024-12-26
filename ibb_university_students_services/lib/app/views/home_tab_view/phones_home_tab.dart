@@ -2,12 +2,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/news_card.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/services_card.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
+import '../../components/custom_text_v2.dart';
 import '../../controllers/tabs_controller/home_tab_controller.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 import 'home_tab_components/doctor_info_card.dart';
 import 'home_tab_components/student_info_card.dart';
 
@@ -73,11 +74,11 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               (controller.user?.profileImage !=
                                                   ""))
                                           ? null
-                                          : MainText(
+                                          : CustomText(
                                               controller.user?.name?[0] ??
                                                   "".toUpperCase(),
-                                              fontSize: 50,
-                                              textColor: AppColors.secTextColor,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
                                             ),
                                     )
                                   ],
@@ -86,13 +87,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    MainText(
+                                    CustomText(
                                       controller.user?.name ?? "",
-                                      textColor: AppColors.inverseIconColor,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h1,height: 0)
                                     ),
-                                    SecText(
+                                    CustomText(
                                       "ID : ${controller.user?.id}",
-                                      textColor: AppColors.highlightTextColor,
+                                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                     )
                                   ],
                                 ),
@@ -117,12 +119,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         SizedBox(
                           height: height * 0.03,
                         ),
-                        SecText(
-                          "News".tr,
-                          textColor: AppColors.highlightTextColor,
-                        ),
-                        SizedBox(
-                          height: height * 0.01,
+                        Padding(
+                          padding:  EdgeInsets.symmetric(
+                            horizontal: Get.width*0.02
+                          ),
+                          child: CustomText(
+                            "News".tr,
+                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2)
+                          ),
                         ),
                       ],
                     ),
@@ -170,12 +174,12 @@ class PhoneMainTab extends GetView<HomeTabController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SecText(
+                        CustomText(
                           "Services".tr,
-                          textColor: AppColors.highlightTextColor,
+                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2)
                         ),
                         SizedBox(
-                          height: height * 0.02,
+                          height: height * 0.01,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,9 +194,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/book_6874557.png"),
                                 ),
-                                SecText(
+                                CustomText(
                                   "Library".tr,
-                                  fontWeight: FontWeight.bold,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                 ),
                               ],
                             ),
@@ -206,14 +210,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/calendar.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Schedule".tr}\n${"Lectures".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ] else ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Lectures".tr}\n${"Schedule".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
                               ],
@@ -227,9 +231,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/payment.png"),
                                 ),
-                                SecText(
+                                CustomText(
                                   "Payments".tr,
-                                  fontWeight: FontWeight.bold,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                 ),
                               ],
                             ),
@@ -243,14 +247,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/credit-card.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Card".tr}\n${"Academic".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ] else ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Academic".tr}\n${"Card".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
                               ],
@@ -274,14 +278,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/a-.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Student".tr}\n${"Degrees".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ] else ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Degrees".tr}\n${"Student".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
                               ],
@@ -296,14 +300,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/result.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Student".tr}\n${"Degrees".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ] else ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Degrees".tr}\n${"Student".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
                               ],
@@ -318,14 +322,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/exam_11776326.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Schedule".tr}\n${"Exam".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ] else ...[
-                                  SecText(
+                                  CustomText(
                                     "${"Exam".tr}\n${"Schedule".tr}",
-                                    fontWeight: FontWeight.bold,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
                               ],
@@ -339,9 +343,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
-                                SecText(
+                                CustomText(
                                   "Library".tr,
-                                  fontWeight: FontWeight.bold,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                 ),
                               ],
                             ),
