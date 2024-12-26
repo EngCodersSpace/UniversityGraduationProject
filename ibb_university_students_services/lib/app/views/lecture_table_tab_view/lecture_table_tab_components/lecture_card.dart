@@ -5,12 +5,12 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controllers/tabs_controller/table_tab_view_controller.dart';
+import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../styles/app_colors.dart';
 import '../../../models/lecture_model.dart';
 import '../../../utils/permission_checker.dart';
 
-class LectureCard extends GetView<TableTabController> {
+class LectureCard extends GetView<LectureController> {
   Rx<Lecture?> content;
   double height;
 
@@ -104,19 +104,37 @@ class LectureCard extends GetView<TableTabController> {
                                 height: 24,
                                 width: 24,
                                 child: PopupMenuButton<String>(
-                                  onSelected: controller.more,
+                                  onSelected: (val)=>controller.more(val,data: content.toJson()),
                                   color: AppColors.inverseCardColor,
                                   itemBuilder: (ctx) => [
                                     PopupMenuItem(
-                                        value: "print",
+                                        value: "TemporaryReplace",
                                         child: SecText(
-                                          "Print",
+                                          "TemporaryReplace".tr,
                                           textColor: AppColors.mainTextColor,
                                         )),
                                     PopupMenuItem(
-                                        value: "Calculator",
+                                        value: "Update",
                                         child: SecText(
-                                          "Calculator",
+                                          "Update".tr,
+                                          textColor: AppColors.mainTextColor,
+                                        )),
+                                    PopupMenuItem(
+                                        value: "Delete",
+                                        child: SecText(
+                                          "Delete".tr,
+                                          textColor: AppColors.mainTextColor,
+                                        )),
+                                    PopupMenuItem(
+                                        value: "Confirm",
+                                        child: SecText(
+                                          "Confirm".tr,
+                                          textColor: AppColors.mainTextColor,
+                                        )),
+                                    PopupMenuItem(
+                                        value: "Cancel",
+                                        child: SecText(
+                                          "Cancel".tr,
                                           textColor: AppColors.mainTextColor,
                                         )),
                                   ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model.dart';
@@ -11,8 +12,12 @@ import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
 import '../../services/app_data_services.dart';
+import '../../utils/formatter.dart';
+import '../../views/lecture_table_tab_view/lecture_table_tab_components/add_and_update_lecture_card.dart';
 
-class TableTabController extends GetxController {
+class LectureController extends GetxController {
+
+  //Lecture main view variables
   RxBool loadState = true.obs;
   TableDays? tableTime;
   Rx<List<Lecture>?> selectedDay =  Rx<List<Lecture>?>([]);
@@ -23,11 +28,27 @@ class TableTabController extends GetxController {
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Map termsData = {};
-
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [];
+
+  //Lecture popCard variables
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController doctorController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController hallController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FocusNode nameFocus = FocusNode();
+  FocusNode timeFocus = FocusNode();
+  FocusNode durationFocus = FocusNode();
+  FocusNode entryYearFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  RxString mode = "Add".obs;
+
+
+
 
   @override
   void onInit() async {
@@ -195,14 +216,93 @@ class TableTabController extends GetxController {
     ];
   }
 
-
-  void more(String val) {
-    if (val == "print") {
-
-    } else if (val == "Calculator") {
-
+  void more(String val,{Map<String,dynamic>? data}) {
+    if (val == "Update") {
+      mode.value = "Update";
+      if(data!=null){
+        subjectController.text = data["subject_name"].toString();
+        doctorController.text = data["lecturer"].toString();
+        timeController.text = data["startTime"].toString();
+        durationController.text = data["duration"].toString();
+        hallController.text = data["lecture_room"].toString();
+      }
+      Get.dialog(const PopUpIAddAndUpdateLectureCard());
+    } else if (val == "Delete") {
+    }else if (val == "TemporaryReplace") {
+    }else if (val == "Confirm") {
+    }else if (val == "Cancel") {
     }
   }
+
+  void addButtonClick(){
+    Get.dialog(const PopUpIAddAndUpdateLectureCard());
+  }
+
+
+  void timePiker(BuildContext context) async {
+    TimeOfDay? pikeTime = await showTimePicker(
+      context: context,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+            data: ThemeData().copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppColors.inverseCardColor,
+                onPrimary: AppColors.mainCardColor,
+                surface: AppColors.mainCardColor,
+                onSurface: AppColors.inverseCardColor,
+              ),
+            ),
+            child: child!);
+      },
+      initialTime: TimeOfDay.now(),
+    );
+    if (pikeTime != null) {
+      timeController.text = Formatter.formatTimeOfDay(pikeTime);
+      durationFocus.requestFocus();
+    }
+  }
+
+  void submit() async {
+    Get.dialog(const PopUpLoadingCard());
+    await Future.delayed(const Duration(seconds: 2));
+    // Map<String, dynamic> jsData = {};
+    // rentController.text = double.parse(rentController.text).toStringAsFixed(2);
+    // if (formKey.currentState!.validate()) {
+    //   (nameController.text.isNotEmpty && nameController.text != "Unknown".tr)
+    //       ? jsData["name"] = nameController.text
+    //       : null;
+    //   (rentController.text.isNotEmpty && rentController.text != "Unknown".tr)
+    //       ? jsData["rent"] = double.parse(rentController.text)
+    //       : null;
+    //   (activityController.text.isNotEmpty && activityController.text != "Unknown".tr)
+    //       ? jsData["job_domain"] = activityController.text
+    //       : null;
+    //   (entryYearController.text.isNotEmpty && entryYearController.text != "Unknown".tr)
+    //       ? jsData["entery_year"] = entryYearController.text
+    //       : null;
+    //   (phoneController.text.isNotEmpty && phoneController.text != "Unknown".tr )
+    //       ? jsData["phones"] = [phoneController.text]
+    //       : null;
+    //   Get.back(result: jsData);
+    // }
+    Get.back();
+  }
+
+  void popCardClear() {
+    subjectController.dispose();
+    timeController.dispose();
+    durationController.dispose();
+    hallController.dispose();
+    doctorController.dispose();
+    nameFocus.dispose();
+    timeFocus.dispose();
+    durationFocus.dispose();
+    entryYearFocus.dispose();
+    phoneFocus.dispose();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    popCardClear();
+  }
 }

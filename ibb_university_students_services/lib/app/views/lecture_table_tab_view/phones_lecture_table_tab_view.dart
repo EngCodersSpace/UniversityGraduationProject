@@ -6,12 +6,12 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
 import '../../components/custom_text.dart';
 import '../../components/day_cards.dart';
-import '../../controllers/tabs_controller/table_tab_view_controller.dart';
+import '../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
 import 'lecture_table_tab_components/lecture_card.dart';
 
 
-class PhoneLectureTableTabView extends GetView<TableTabController> {
+class PhoneLectureTableTabView extends GetView<LectureController> {
   PhoneLectureTableTabView({super.key});
 
   double height = Get.height * (1 - 0.09);
@@ -298,7 +298,7 @@ class PhoneLectureTableTabView extends GetView<TableTabController> {
                         SecText(controller.selectedDayName,
                             textColor: AppColors.highlightTextColor),
                         if(PermissionUtils.checkPermission("addLecture"))
-                        CustomButton(onPress: (){},text: "Add Lecture",),
+                        CustomButton(onPress: controller.addButtonClick,text: "Add Lecture",),
                       ],
                     ),
                   ),
@@ -308,7 +308,7 @@ class PhoneLectureTableTabView extends GetView<TableTabController> {
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
                     width: width,
-                    height: height * 0.62,
+                    height: (PermissionUtils.checkPermission("addLecture"))?height * 0.58:height * 0.62,
                     child: RefreshIndicator(
                       onRefresh: ()async=>controller.refresh(),
                       child: SingleChildScrollView(
