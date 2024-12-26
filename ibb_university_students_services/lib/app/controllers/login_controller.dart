@@ -28,9 +28,15 @@ class LoginController extends GetxController {
     passwordFocus.dispose();
   }
   @override
-  void onInit() {
-    id.text = "1";
-    password.text = "1111aaaa@";
+  void onInit() async{
+    List<String>? credentials = await UserServices.fetchCachedCredentials();
+    if (credentials != null) {
+      id.text = credentials[0];
+      password.text = credentials[1];
+      // id.text = "1";
+      // password.text = "1234pass@";
+      onLogin();
+    }
     super.onInit();
   }
 
@@ -38,31 +44,6 @@ class LoginController extends GetxController {
   void onReady() {
     // onLogin();
     super.onReady();
-  }
-
-  String? validateID(String? id) {
-    bool valid = false;
-    if (id == "" || id == null) {
-      return "required ID";
-    } else if (GetUtils.isNumericOnly(id)) {
-      logWith = "ID";
-      valid = true;
-    }
-    else if (GetUtils.isEmail(id)) {
-      logWith = "Email";
-      valid = true;
-    }
-    return (valid)?null:"Invalid ID";
-  }
-
-  String? validatePassword(String? password) {
-    if (GetUtils.isNullOrBlank(password ?? "") == null) {
-      return "Password required";
-    } else if (password!.length < 8) {
-      return "Password must be at least 8 characters  long";
-    } else {
-      return null;
-    }
   }
 
   void forgotPassword(){
