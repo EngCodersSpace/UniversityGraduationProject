@@ -20,9 +20,10 @@ class Exam {
 
 
   factory Exam.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Exam(
         id: json['id'],
-        subject: Subject.fromJson(json['subject']) ,
+        subject: Subject.fromJson(json['subject_name']) ,
         date: json['exam_date'],
         day: json['exam_day'],
         examTime: json['exam_time'],

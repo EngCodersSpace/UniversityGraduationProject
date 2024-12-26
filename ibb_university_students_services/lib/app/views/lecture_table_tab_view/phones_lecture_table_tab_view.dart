@@ -299,7 +299,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                       children: [
                         SecText(controller.selectedDayName,
                             textColor: AppColors.highlightTextColor),
-                        if(PermissionUtils.checkPermission("addLecture"))
+                        if((PermissionUtils.checkPermission(target: "Lectures",action: "add")))
                         CustomButton(onPress: controller.addButtonClick,text: "Add Lecture",),
                       ],
                     ),
@@ -310,7 +310,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
                     width: width,
-                    height: (PermissionUtils.checkPermission("addLecture"))?height * 0.58:height * 0.62,
+                    height: (PermissionUtils.checkPermission(target: "Lectures",action: "add"))?height * 0.58:height * 0.62,
                     child: RefreshIndicator(
                       onRefresh: ()async=>controller.refresh(),
                       child: SingleChildScrollView(

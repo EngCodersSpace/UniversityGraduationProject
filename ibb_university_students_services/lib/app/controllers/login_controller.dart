@@ -31,10 +31,10 @@ class LoginController extends GetxController {
   void onInit() async{
     List<String>? credentials = await UserServices.fetchCachedCredentials();
     if (credentials != null) {
-      id.text = credentials[0];
-      password.text = credentials[1];
-      // id.text = "1000";
-      // password.text = "1111aaaa@";
+      // id.text = credentials[0];
+      // password.text = credentials[1];
+      id.text = "1000";
+      password.text = "1111aaaa@";
       // password.text = "1234pass@";
       onLogin();
     }

@@ -61,18 +61,22 @@ class ExamTableController extends GetxController {
 
   @override
   void refresh() {
+    fetchExamsData(force: true);
     super.refresh();
   }
 
-  Future<void> fetchExamsData() async {
+  Future<void> fetchExamsData({bool force=false}) async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     Result res = await ExamServices.fetchExams(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: selectedYear.value!,
-      term: selectedTerm.value
+      year: "2023",
+      term: selectedTerm.value,
+      hardFetch: force,
     );
+    print(res.statusCode);
+    print(res.message);
     if (res.statusCode == 200) {
       exams?.value = res.data??[];
     }

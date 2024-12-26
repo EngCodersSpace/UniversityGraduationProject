@@ -95,8 +95,7 @@ class LectureCard extends GetView<LectureController> {
                                   ? SecText("Canceled".tr)
                                   : SecText("Confirmed".tr),
                             ),
-                            if (PermissionUtils.checkPermission(
-                                "addLecture")) ...[
+                            if ((PermissionUtils.checkPermission(target: "Lectures",action: "add"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),

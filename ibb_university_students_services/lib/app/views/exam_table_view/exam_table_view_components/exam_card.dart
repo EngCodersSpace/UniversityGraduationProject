@@ -5,11 +5,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
+import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:intl/intl.dart';
 import '../../../styles/app_colors.dart';
 import '../../../models/exam_model.dart';
+import '../../../utils/permission_checker.dart';
 
-class ExamCard extends StatelessWidget {
+class ExamCard extends GetView<ExamTableController> {
 
   Rx<Exam?> content;
   ExamCard({
@@ -69,14 +71,48 @@ class ExamCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: SecText(content.value?.date??""),
                     ),
-                    Container(
-                      decoration:BoxDecoration(
-                        color: AppColors.mainCardColor,
-                        borderRadius:
-                        const BorderRadius.all(Radius.circular(32)),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: SecText("${content.value?.day}".tr),
+                    Row(
+                      children: [
+                        Container(
+                          decoration:BoxDecoration(
+                            color: AppColors.mainCardColor,
+                            borderRadius:
+                            const BorderRadius.all(Radius.circular(32)),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: SecText("${content.value?.day}".tr),
+                        ),
+                        if ((PermissionUtils.checkPermission(target: "Exams",action: "edit"))) ...[
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: PopupMenuButton<String>(
+                              onSelected: (val)=>controller.more(val,data: content.toJson()),
+                              color: AppColors.inverseCardColor,
+                              itemBuilder: (ctx) => [
+                                PopupMenuItem(
+                                    value: "Update",
+                                    child: SecText(
+                                      "Update".tr,
+                                      textColor: AppColors.mainTextColor,
+                                    )),
+                                PopupMenuItem(
+                                    value: "Delete",
+                                    child: SecText(
+                                      "Delete".tr,
+                                      textColor: AppColors.mainTextColor,
+                                    )),
+                              ],
+                              child:
+                              Icon(Icons.more_vert_outlined, color: AppColors.mainTextColor),
+                            ),
+
+                          )
+                        ]
+                      ],
                     ),
                   ],
                 ),

@@ -7,7 +7,7 @@ import 'http_provider/http_provider.dart';
 class ExamServices {
   static const int  _fetchError = 611;
 
-  static Map<String,Map<String,Map<String,dynamic>?>?>? _exams;
+  static Map<String,Map<String,Map<int,Exam>?>?>? _exams;
 
   static Future<Result<List<Exam>>> fetchExams({
     required int sectionId,
@@ -16,9 +16,9 @@ class ExamServices {
     required String term,
     bool hardFetch = false,
   }) async {
-    if (_exams?[sectionId.toString()]?[levelId.toString()]?[year] != null && !hardFetch) {
+    if (_exams?[sectionId.toString()]?[levelId.toString()] != null && !hardFetch) {
       return Result(
-        data: _exams?[sectionId.toString()]?[levelId.toString()]?[year][term],
+        data: _exams?[sectionId.toString()]?[levelId.toString()]?.values.toList(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -26,7 +26,7 @@ class ExamServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("get-exam-grouped/$sectionId/$levelId/$year");
+      response = await HttpProvider.get("get-exam-grouped/$sectionId/$levelId");
       if (response?.statusCode == 200) {
         _exams ??= {};
         if(_exams?[sectionId.toString()] == null){
@@ -35,18 +35,13 @@ class ExamServices {
         if(_exams?[sectionId.toString()]?[levelId.toString()] == null){
           _exams?[sectionId.toString()]?[levelId.toString()] = {};
         }
-        if(_exams?[sectionId.toString()]?[levelId.toString()]?[year] == null){
-          _exams?[sectionId.toString()]?[levelId.toString()]?[year] = {};
-        }
-        for(String term in (response?.data["data"] as Map).keys){
-           List<Exam> exams = [];
-          for(Map<String,dynamic> exam in response?.data["data"][term]){
-            exams.add(Exam.fromJson(exam));
-          }
-          _exams?[sectionId.toString()]?[levelId.toString()]?[year][term] = exams;
+        for(Map<String,dynamic> jsExam in response?.data["data"]["Term 1"]){
+          Exam exam = Exam.fromJson(jsExam);
+          _exams?[sectionId.toString()]?[levelId.toString()]?[exam.id] = exam;
+          print("here");
         }
         return Result(
-            data: _exams?[sectionId.toString()]?[levelId.toString()]?[year][term],
+            data: _exams?[sectionId.toString()]?[levelId.toString()]?.values.toList(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
