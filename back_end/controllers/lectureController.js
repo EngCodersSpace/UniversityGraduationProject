@@ -3,6 +3,7 @@ const { lecture, subject, doctor ,section , level , user } = require('../models'
 const {Sequelize } = require('sequelize');
 // const { } = require('../middleware/helperLecture');
 const { Op } = require('sequelize');
+const cron = require('node-cron');
 
 
 const createLecture = async (req, res) => {
@@ -28,7 +29,6 @@ const createLecture = async (req, res) => {
 const getNextLectureDay = (lectureDay) => {
   const today = new Date();
   const dayOfWeek = today.getDay(); 
-
   const daysMap = {
     Sunday: 0,
     Monday: 1,
@@ -38,56 +38,62 @@ const getNextLectureDay = (lectureDay) => {
     Friday: 5,
     Saturday: 6,
   };
-
   const lectureDayNumber = daysMap[lectureDay];
   const daysUntilLecture = (lectureDayNumber - dayOfWeek + 7) % 7 || 7;
-
   const nextLectureDate = new Date(today);
   nextLectureDate.setDate(today.getDate() + daysUntilLecture);
-
   return nextLectureDate;
+};
+
+async function restoreOriginalLecture(originalLectureId){
+  try {
+      const originalLecture = await lecture.findByPk(originalLectureId);
+      if (originalLecture && originalLecture.isReplaced) {
+        await originalLecture.update({ isReplaced: false });
+        console.log(`Restored the original lecture: ${originalLectureId}`);
+      }
+  } catch (error) {
+    console.error('Error restoring original lecture:', error);
+  }
 };
 
 const replaceOne = async (req, res) => {
   const transaction = await lecture.sequelize.transaction();
   try {
-    const originalLecture = await lecture.findOne(req.body.originalLectureId);
+    const originalLecture = await lecture.findByPk(req.query.id);    
     if (!originalLecture) {
       throw new Error('Original lecture not found');
     }
 
-    console.log('\n \n before update isReplaced field : (false) \n  ', originalLecture.isReplaced);
-    
-    const replacedLecture = await lecture.create(req.body, { transaction });
-    
     originalLecture.isReplaced = true;
     await originalLecture.save({ transaction });
-    console.log('\n \n after update isReplaced field  : (true) \n \n ', originalLecture.isReplaced);
 
-    // Get the next lecture day dynamically
+    const replacedLecture = await lecture.create(req.body , { transaction });
+    
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
-
-    // Set lecture start time
     const [hours, minutes, seconds] = originalLecture.lecture_time.split(':').map(Number);
     nextLectureDay.setHours(hours, minutes, seconds, 0);
-
     const lectureStartTime = nextLectureDay;
     const lectureEndTime = new Date(
       lectureStartTime.getTime() + originalLecture.lecture_duration * 60000
     );
 
     // Calculate the remaining time
-    const remainingTime = lectureEndTime.getTime() - new Date().getTime();
+    // const remainingTime = lectureEndTime.getTime() - new Date().getTime();
+    // cron.schedule(`*/${remainingTime / 60000} * * * *`, () => {
+    //   restoreOriginalLecture(req.body.originalLectureId);
+    //   replacedLecture.destroy(); 
+    // });
 
-    setTimeout(async () => {
-        await transaction.rollback();
-        await replacedLecture.destroy();
-        originalLecture.isReplaced = false;
-        await originalLecture.save();
-    }, remainingTime > 0 ? remainingTime : 0);
-
+    // Set a timeout for restoring the original lecture
+    cron.schedule(`*/5 * * * *`, async () => { 
+      const now = new Date().getTime();
+      if (now >= lectureEndTime.getTime()) {
+          await restoreOriginalLecture(req.body.originalLectureId);
+          await replacedLecture.destroy(); 
+      }
+    });
     await transaction.commit();
-
     return res.status(200).json({ message: 'Lecture replaced successfully', replacedLecture });
   } catch (error) {
     await transaction.rollback();
