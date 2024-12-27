@@ -6,7 +6,8 @@ import 'http_provider/http_provider.dart';
 
 class LectureServices {
   static const int _fetchError = 611;
-  static const int _fetchYearsError = 612;
+  static const int _createError = 612;
+  static const int _fetchYearsError = 619;
 
   static Map<
           String,
@@ -95,6 +96,47 @@ class LectureServices {
     }
   }
 
+
+  static Future<Result<Lecture>> createLecture({
+    required int sectionId,
+    required int levelId,
+    required String year,
+    required String term,
+    required data,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+    //   "subject_id": "commodi-in",
+    // "doctor_id": 5,
+    // "lecture_section_id": 4,
+    // "lecture_level_id": 4,
+    // "term": "Term 2",
+    // "year": "2024",
+    // "lecture_time": "23:40:00",
+    // "lecture_duration": 5,
+    // "lecture_day": "Thursday",
+    // "lecture_room": "Hall 35 "
+      print(data);
+      response = await HttpProvider.post(
+          "create-lecture",data: data);
+      if (response?.statusCode == 200) {
+
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<List<String>>> fetchLectureYears({
     bool hardFetch = false,
   }) async {
@@ -114,7 +156,7 @@ class LectureServices {
         return Result(
             data: _years,
             hasError: true,
-            statusCode: response?.statusCode ?? _fetchYearsError,
+            statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
       }
       return Result(

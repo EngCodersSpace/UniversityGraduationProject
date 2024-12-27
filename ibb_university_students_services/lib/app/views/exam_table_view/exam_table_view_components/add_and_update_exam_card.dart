@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
-import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
@@ -153,16 +152,53 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                   CustomText("Day".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
                                 ],
                               ),
-                              CustomTextFormField(
-                                controller: controller.dayController,
-                                labelText: "Day".tr,
-                                keyboardType: TextInputType.number,
-                                focusNode: controller.dayFocus,
-                                onFieldSubmitted: (e) {
-                                  controller.hallFocus.requestFocus();
-                                },
-                                width: (Get.width-12)*0.46,
-                              ),
+                              Container(
+                                width: Get.width*0.45,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)
+                                ),
+                                child: Center(
+                                  child: Obx(()=>DropdownButton<String>(
+                                    value: controller.day.value,
+                                    icon: Icon(Icons.arrow_drop_down_sharp,
+                                        color: AppColors.inverseCardColor),
+                                    underline: const SizedBox(),
+                                    dropdownColor: AppColors.mainCardColor,
+                                    onChanged: (val) {
+                                      controller.day.value = val ?? "sat";
+                                      controller.hallFocus.requestFocus();
+                                    },
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        value: "sat",
+                                        child:  CustomText("Saturday".tr,),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "sun",
+                                        child:  CustomText("Sunday".tr,),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "mon",
+                                        child:  CustomText("Monday".tr,),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "tue",
+                                        child:  CustomText("Tuesday".tr,),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "wed",
+                                        child:  CustomText("Wednesday".tr,),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "thu",
+                                        child:  CustomText("Thursday".tr,),
+                                      ),
+                                    ],
+                                  )),
+                                ),)
+
                             ],
                           ),
                           Row(

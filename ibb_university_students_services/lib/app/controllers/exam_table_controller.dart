@@ -9,7 +9,6 @@ import '../styles/app_colors.dart';
 import '../models/exam_model.dart';
 import '../models/level_model.dart';
 import '../models/section_model.dart';
-import '../services/app_data_services.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
 import '../utils/formatter.dart';
@@ -33,7 +32,7 @@ class ExamTableController extends GetxController {
   TextEditingController subjectController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
-  TextEditingController dayController = TextEditingController();
+  RxString day = "sat".obs;
   TextEditingController hallController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FocusNode subjectFocus = FocusNode();
@@ -187,7 +186,7 @@ class ExamTableController extends GetxController {
         subjectController.text = data["subject"]["subject_name"].toString();
         dateController.text = data["exam_date"].toString();
         timeController.text = data["exam_time"].toString();
-        dayController.text = data["exam_day"].toString();
+        day.value = data["exam_day"].toString();
         hallController.text = data["exam_room"].toString();
       }
       Get.dialog(const PopUpIAddAndUpdateExamCard());
@@ -275,7 +274,6 @@ class ExamTableController extends GetxController {
   void popCardClear() {
     subjectController.dispose();
     timeController.dispose();
-    dayController.dispose();
     hallController.dispose();
     dateController.dispose();
     subjectFocus.dispose();

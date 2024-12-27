@@ -5,7 +5,8 @@ import 'http_provider/http_provider.dart';
 
 
 class ExamServices {
-  static const int  _fetchError = 611;
+  static const int  _fetchError = 621;
+  static const int _createError = 622;
 
   static Map<String,Map<String,Map<int,Exam>?>?>? _exams;
 
@@ -57,6 +58,45 @@ class ExamServices {
       return Result(
           hasError: true,
           statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
+  static Future<Result<Exam>> createExam({
+    required int sectionId,
+    required int levelId,
+    required String year,
+    required String term,
+    required data,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+    //   "subject_id": "adfero-neq",
+    // "exam_section_id":3 ,
+    // "exam_level_id": 3,
+    // "exam_term": "Term 2",
+    // "exam_year": "2024",
+    // "exam_date": "2024-11-01",
+    // "exam_time": "10:00:00",
+    // "exam_day": "Wednesday",
+    // "exam_room": "Hall 75"
+      response = await HttpProvider.post(
+          "create-exam",data: data);
+      if (response?.statusCode == 200) {
+
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
           message: error.toString(),
           data: null);
     }

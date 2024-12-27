@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../styles/app_colors.dart';
-import '../buttons.dart';
-import '../custom_text.dart';
 
 // ignore: must_be_immutable
 class PopUpLoadingCard extends StatelessWidget {

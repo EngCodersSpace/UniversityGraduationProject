@@ -11,7 +11,6 @@ import 'package:ibb_university_students_services/app/services/lecture_services.d
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
-import '../../services/app_data_services.dart';
 import '../../utils/formatter.dart';
 import '../../views/lecture_table_tab_view/lecture_table_tab_components/add_and_update_lecture_card.dart';
 
@@ -121,7 +120,6 @@ class LectureController extends GetxController {
     selected.value = index;
     switch (index) {
       case 0:
-        print(tableTime?.sat);
         selectedDay.value = tableTime?.sat;
         selectedDayName = "Saturday".tr;
         break;
@@ -263,26 +261,29 @@ class LectureController extends GetxController {
   void submit() async {
     Get.dialog(const PopUpLoadingCard());
     await Future.delayed(const Duration(seconds: 2));
-    // Map<String, dynamic> jsData = {};
-    // rentController.text = double.parse(rentController.text).toStringAsFixed(2);
-    // if (formKey.currentState!.validate()) {
-    //   (nameController.text.isNotEmpty && nameController.text != "Unknown".tr)
-    //       ? jsData["name"] = nameController.text
-    //       : null;
-    //   (rentController.text.isNotEmpty && rentController.text != "Unknown".tr)
-    //       ? jsData["rent"] = double.parse(rentController.text)
-    //       : null;
-    //   (activityController.text.isNotEmpty && activityController.text != "Unknown".tr)
-    //       ? jsData["job_domain"] = activityController.text
-    //       : null;
-    //   (entryYearController.text.isNotEmpty && entryYearController.text != "Unknown".tr)
-    //       ? jsData["entery_year"] = entryYearController.text
-    //       : null;
-    //   (phoneController.text.isNotEmpty && phoneController.text != "Unknown".tr )
-    //       ? jsData["phones"] = [phoneController.text]
-    //       : null;
-    //   Get.back(result: jsData);
-    // }
+    Map<String,dynamic> jsData = {};
+    if (formKey.currentState!.validate()) {
+      jsData["lecture_section_id"] = selectedDepartment.value;
+      jsData["lecture_level_id"] = selectedLevel.value;
+      jsData["term"] = selectedYear.value;
+      jsData["year"] = selectedTerm.value;
+      (subjectController.text.isNotEmpty && subjectController.text != "Unknown".tr)
+          ? jsData["subject_id"] = subjectController.text
+          : null;
+      (doctorController.text.isNotEmpty && doctorController.text != "Unknown".tr)
+          ? jsData["doctor_id"] = double.parse(doctorController.text)
+          : null;
+      (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
+          ? jsData["lecture_time"] = timeController.text
+          : null;
+      (durationController.text.isNotEmpty && durationController.text != "Unknown".tr)
+          ? jsData["lecture_duration"] = durationController.text
+          : null;
+      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr )
+          ? jsData["lecture_room"] = [hallController.text]
+          : null;
+    }
+    print(jsData);
     Get.back();
   }
 
