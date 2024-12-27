@@ -29,6 +29,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
             children: [
               Column(
                 children: [
+
                   Container(
                       height: height * 0.32,
                       width: width,
