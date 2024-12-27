@@ -1,7 +1,8 @@
 const { validationResult } = require('express-validator');
 const { lecture, subject, doctor ,section , level , user } = require('../models');
-const { sequelize,Sequelize } = require('sequelize');
+const {Sequelize } = require('sequelize');
 // const { } = require('../middleware/helperLecture');
+const { Op } = require('sequelize');
 
 
 const createLecture = async (req, res) => {
@@ -20,6 +21,8 @@ const createLecture = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
+
+
 
 
 const getNextLectureDay = (lectureDay) => {
@@ -46,22 +49,20 @@ const getNextLectureDay = (lectureDay) => {
 };
 
 const replaceOne = async (req, res) => {
+  const transaction = await lecture.sequelize.transaction();
   try {
     const originalLecture = await lecture.findOne(req.body.originalLectureId);
     if (!originalLecture) {
       throw new Error('Original lecture not found');
     }
 
-    console.log('originalLecture:before update replace', originalLecture);
-
-    await originalLecture.update(
-      { isReplaced: true },
-      { fields: ['isReplaced'] }
-    );
-
-    console.log('originalLecture:after update replace', originalLecture);
-
-    const replacedLecture = await lecture.create(req.body);
+    console.log('\n \n before update isReplaced field : (false) \n  ', originalLecture.isReplaced);
+    
+    const replacedLecture = await lecture.create(req.body, { transaction });
+    
+    originalLecture.isReplaced = true;
+    await originalLecture.save({ transaction });
+    console.log('\n \n after update isReplaced field  : (true) \n \n ', originalLecture.isReplaced);
 
     // Get the next lecture day dynamically
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
@@ -78,25 +79,38 @@ const replaceOne = async (req, res) => {
     // Calculate the remaining time
     const remainingTime = lectureEndTime.getTime() - new Date().getTime();
 
-    if (remainingTime > 0) {
-      setTimeout(async () => {
-        try {
-          await replacedLecture.destroy();
-          await originalLecture.update(
-            { isReplaced: false },
-            { fields: ['isReplaced'] }
-          );
-          console.log('Original lecture restored successfully.');
-        } catch (error) {
-          console.error('Failed to restore original lecture:', error);
-        }
-      }, remainingTime);
-    }
+    setTimeout(async () => {
+        await transaction.rollback();
+        await replacedLecture.destroy();
+        originalLecture.isReplaced = false;
+        await originalLecture.save();
+    }, remainingTime > 0 ? remainingTime : 0);
+
+    await transaction.commit();
 
     return res.status(200).json({ message: 'Lecture replaced successfully', replacedLecture });
   } catch (error) {
+    await transaction.rollback();
     console.error('Error during lecture replacement:', error);
     return res.status(500).json({ message: 'Failed to replace lecture', error: error.message });
+  }
+};
+
+const changeLecStatus = async (req, res) => {
+  if (req.body.action !== 'confirm' && req.body.action !== 'cancel') {
+    return res.status(400).json({ message: 'Invalid action. Use either "confirm" or "cancel".' });
+  }
+  const lectureCancled = await lecture.findByPk(req.body.id);
+  if (!lectureCancled) {
+    return res.status(404).json({ message: 'Lecture not found' });
+  }
+  try {
+    lectureCancled.lectureStatus = (req.body.action === 'confirm');
+    await lectureCancled.save();
+    return res.status(200).json({ message: `Lecture ${req.body.action}ed successfully` });
+  } catch (error) {
+    console.error('Error during lecture status update:', error);
+    return res.status(500).json({ message: 'Failed to update lecture status', error: error.message });
   }
 };
 
@@ -305,5 +319,6 @@ module.exports = {
   getLecturesGroupedByCriteria,
   getLectureYear,
   getDoctorLectures,
-  replaceOne
+  replaceOne,
+  changeLecStatus
 };
