@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class document extends Model {
+  class book extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,30 +12,30 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      //(1)Relationship One-to-Many between "document table" and  "user table"
-      document.belongsTo(models.user, {
+      //(1)Relationship One-to-Many between "book table" and  "user table"
+      book.belongsTo(models.user, {
         foreignKey: 'added_by',
       });
 
-      //(2)Relationship One-to-Many between "document table" and  "subject table"
-      document.belongsTo(models.subject, {
+      //(2)Relationship One-to-Many between "book table" and  "subject table"
+      book.belongsTo(models.subject, {
         foreignKey: 'subject_id',
       });
-      //(3)Relationship Many-to-Many between "document table" and  "level table through documentSectionLevel"
-      document.belongsToMany(models.level, {
-        through: 'documentSectionLevel',
-        foreignKey: 'documentId',
+      //(3)Relationship Many-to-Many between "book table" and  "level table through bookSectionLevel"
+      book.belongsToMany(models.level, {
+        through: 'bookSectionLevel',
+        foreignKey: 'bookId',
       });
-      //(4)Relationship Many-to-Many between "document table" and  "section table through documentSectionLevel"
-      document.belongsToMany(models.section, {
-        through: 'documentSectionLevel',
-        foreignKey: 'documentId',
+      //(4)Relationship Many-to-Many between "book table" and  "section table through bookSectionLevel"
+      book.belongsToMany(models.section, {
+        through: 'bookSectionLevel',
+        foreignKey: 'bookId',
       });
 
 
     }
   }
-  document.init({
+  book.init({
 
     id: {
       allowNull: false,
@@ -99,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
 
   }, {
     sequelize,
-    modelName: 'document',
+    modelName: 'book',
   });
-  return document;
+  return book;
 };

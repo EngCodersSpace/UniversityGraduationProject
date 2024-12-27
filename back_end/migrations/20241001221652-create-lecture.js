@@ -1,4 +1,7 @@
 'use strict';
+
+const { fa } = require('@faker-js/faker');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -71,11 +74,29 @@ module.exports = {
       },
       lecture_room: {
         type: Sequelize.STRING(50),
-        allowNull: false,
+        allowNull: true,
       },
-
-
-
+      lectureStatus:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false,
+        defaultValue:true,
+      },
+      isReplaced: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      originalLecturId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: null,
+        references: {
+          model: 'lectures',
+          key: 'id',
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -86,10 +107,9 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('lectures', {
-      fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room'],
+      fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room','isReplaced'],
       type: 'unique',
       name: 'unique_constraint_in_lecture',
-
     });
 
 

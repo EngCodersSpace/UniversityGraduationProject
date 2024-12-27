@@ -39,14 +39,6 @@ module.exports = {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
-      exam_term: {
-        type: Sequelize.ENUM('Term 1', 'Term 2'),
-        allowNull: false,
-      },
-      exam_year: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-      },
       exam_date: {
         type: Sequelize.DATEONLY,
         allowNull: false,
@@ -76,7 +68,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('exams', {
-      fields: ['exam_section_id', 'exam_level_id', 'exam_term', 'exam_year', 'exam_date', 'exam_time', 'exam_day'],
+      fields: ['exam_section_id', 'exam_level_id','exam_date', 'exam_time', 'exam_day'],
       type: 'unique',
       name: 'unique_constraint_in_exam',
 

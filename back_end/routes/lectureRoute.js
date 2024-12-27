@@ -1,23 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { 
-    createLecture,
-    getLectures,
-    updateLecture, 
-    deleteLecture,
-    getLecturesGroupedByCriteria,
-    getLectureYear
- } = require('../controllers/lectureController');
+const CRUD = require('../controllers/lectureController');
 const vali=require('../validations/lecturevalidation')
+const { verifyToken } = require('../middleware/authMiddleware');
+const checkRole = require('../middleware/roleMiddleware');
 
-router.post('/create-lecture', vali.createLectureValidator ,createLecture);
-router.put('/update-lecture/:id',vali.updateLectureValidator, updateLecture);
-router.delete('/delete-lecture/:id', deleteLecture);
+router.use(verifyToken);
+
+router.post('/create-lecture', checkRole(['student_affairs', 'teacher']), vali.createLectureValidator ,CRUD.createLecture);
+router.put('/update-lecture/:id', checkRole(['student_affairs', 'teacher']),vali.updateLectureValidator, CRUD.updateLecture);
+router.post('/replaceOne-lecture', checkRole(['student_affairs', 'teacher']),CRUD.replaceOne);
+router.post('/changeLecStatus-lecture', checkRole(['representative', 'teacher']),CRUD.changeLecStatus);
 
 
-router.get('/get-all-lecture', getLectures);
-router.get('/lectures/:section_id?/:level_id?/:year?/:term?/:day?', getLecturesGroupedByCriteria);
-router.get('/lecture/year', getLectureYear);
+router.delete('/delete-lecture/:id', checkRole('teacher'), CRUD.deleteLecture);
 
+router.get('/get-all-lecture', CRUD.getLectures);
+router.get('/lectures/grouped', CRUD.getLecturesGroupedByCriteria);
+router.get('/lecture/year', CRUD.getLectureYear);
+router.get('/lecture/doctor', verifyToken , CRUD.getDoctorLectures );
 
 module.exports = router;

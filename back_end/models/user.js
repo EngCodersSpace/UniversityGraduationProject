@@ -44,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'user_id',
       });
 
-      //(5)Relationship One-to-Many between "user table" and  "document"
-      user.hasMany(models.document, {
+      //(5)Relationship One-to-Many between "user table" and  "book"
+      user.hasMany(models.book, {
         foreignKey: 'added_by',
       });
 
@@ -97,7 +97,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { isEmail: true, },
     },
     permission: {
-      type: DataTypes.ENUM('student', 'teacher', 'admin', 'staff'),
+      type: DataTypes.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
       allowNull: false,
       defaultValue: 'student',
     },

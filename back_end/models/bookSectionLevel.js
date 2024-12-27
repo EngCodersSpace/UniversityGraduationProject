@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class documentSectionLevel extends Model {
+  class bookSectionLevel extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,18 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  documentSectionLevel.init({
+  bookSectionLevel.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    documentId:{
+    bookId:{
       type:DataTypes.INTEGER,
       allowNull:false,
       references:{
-        model:'documents',
+        model:'books',
         key:'id',
       },
       onDelete: 'NO ACTION',
@@ -52,8 +52,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'documentSectionLevel',
+    modelName: 'bookSectionLevel',
     timestamps:false,
   });
-  return documentSectionLevel;
+  return bookSectionLevel;
 };

@@ -32,6 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'lecture_level_id',//the foreign Key in the lecture table refers to level table
       });
 
+      lecture.belongsTo(models.lecture, {
+        foreignKey: 'originalLecturId',
+        as: 'originalLecture',
+      });
+
+      lecture.hasMany(models.lecture, {
+        foreignKey: 'originalLecturId',
+        as: 'replacedLecture',
+      });
+
 
     }
   }
@@ -105,7 +115,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     lecture_room: {
       type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    lectureStatus:{
+      type:DataTypes.BOOLEAN,
+      allowNull:false,
+      defaultValue:true,
+    },
+    isReplaced: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
+    },
+    originalLecturId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: null,
+      references: {
+        model: 'lectures',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
     },
 
 
@@ -115,9 +146,8 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: true,
-        fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room'],
+        fields: ['lecture_time', 'lecture_day', 'lecture_section_id', 'lecture_room','isReplaced'],
         name: 'unique_constraint_in_lecture',
-
       },
     ],
   });
