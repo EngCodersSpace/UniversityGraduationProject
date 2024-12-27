@@ -10,8 +10,7 @@ module.exports = {
     const sections = await section.findAll();
 
     const exams = [];
-    const examYear = 2024;
-    const startDate = new Date(examYear, 0, 1); // بداية السنة
+    const startDate = new Date(0, 1); // بداية السنة
     const examSchedule = {}; // لتتبع مواعيد الامتحانات لكل قسم ومستوى
 
     for (const section of sections) {
@@ -35,8 +34,6 @@ module.exports = {
             subject_id: subject.subject_id,
             exam_section_id: section.id,
             exam_level_id: level.id,
-            exam_term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
-            exam_year: examYear,
             exam_date: currentDate.toISOString().split('T')[0],
             exam_time: faker.date.future(1, currentDate).toISOString().split('T')[1].slice(0, 8),
             exam_day: currentDate.toLocaleString('en-US', { weekday: 'long' }),

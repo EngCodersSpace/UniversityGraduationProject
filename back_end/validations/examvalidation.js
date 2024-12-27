@@ -22,17 +22,6 @@ const createExam = [
     .isInt().withMessage('Exam level ID must be a number')
     .notEmpty().withMessage('Exam level ID required'),
     
-  body('exam_term')
-    .isIn(['Term 1', 'Term 2'])
-    .withMessage('Exam term must be one of: Term 1, Term 2')
-    .notEmpty()
-    .withMessage('Exam term is required.'),
-
-  body('exam_year')
-    .isString()
-    .notEmpty()
-    .withMessage('Exam year is required and must be a string'),
-
   body('exam_date')
     .isISO8601()
     .withMessage('Exam date must be a valid date')
@@ -92,17 +81,6 @@ const updateExam = [
     .isInt().withMessage('Exam level ID must be a number')
     .notEmpty().withMessage('Exam level ID required'),
 
-  body('exam_term')
-    .optional()
-    .isIn(['Term 1', 'Term 2'])
-    .withMessage('Exam term must be one of: Term 1, Term 2')
-    .notEmpty().withMessage('Exam term is required'),
-
-  body('exam_year')
-    .optional()
-    .isString()
-    .notEmpty()
-    .withMessage('Exam year must be a string'),
 
   body('exam_date')
     .optional()

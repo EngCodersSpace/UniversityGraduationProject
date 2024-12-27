@@ -8,7 +8,6 @@ exports.createExam = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
     try {
         const newExam = await exam.create(req.body,{
             include: [{ model: subject, as: 'subject' }], 
@@ -61,14 +60,11 @@ exports.getAllExams = async (req, res) => {
 
 exports.getExamGroupedByCriteria = async (req, res) => {
     try {
-        const { section_id, level_id, year , term  } = req.params; 
+        const { section_id, level_id } = req.params; 
 
         const whereClause = {};
         if (section_id) whereClause.exam_section_id = section_id;
         if (level_id) whereClause.exam_level_id = level_id;
-        if (year) whereClause.exam_year = year;
-        if (term) whereClause.exam_term = term;
-
 
         const Exam = await exam.findAll({
             where: whereClause,
@@ -83,19 +79,12 @@ exports.getExamGroupedByCriteria = async (req, res) => {
             return res.status(404).json({ message: 'No Exams found for the specified criteria' });
         }
 
-        const organizedLectures = {};
+        const organizedLectures = [];
         
         Exam.forEach(lec => { 
-            const term = lec.exam_term; 
-
-            if (!organizedLectures[term]) {
-                organizedLectures[term] = [];
-            }
-
-
-            organizedLectures[term].push({
+            organizedLectures.push({
                 id   : lec.exam_id,
-                subject_name: lec.subject, 
+                subject: lec.subject, 
                 exam_date:lec.exam_date,
                 exam_day:lec.exam_day,
                 exam_time : lec.exam_time, 
