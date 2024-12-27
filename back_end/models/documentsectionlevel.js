@@ -14,10 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   documentSectionLevel.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     documentId:{
       type:DataTypes.INTEGER,
       allowNull:false,
-      primaryKey:true,
       references:{
         model:'documents',
         key:'id',
