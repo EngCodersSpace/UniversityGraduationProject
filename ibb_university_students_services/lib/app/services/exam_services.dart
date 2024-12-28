@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
+import '../components/pop_up_cards/loading_card.dart';
 import '../models/exam_model.dart';
 import '../models/result.dart';
 import 'http_provider/http_provider.dart';
@@ -66,29 +70,24 @@ class ExamServices {
   static Future<Result<Exam>> createExam({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     required data,
     bool hardFetch = false,
   }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false,name: "loadingDialog");
     late Response? response;
     try {
-    //   "subject_id": "adfero-neq",
-    // "exam_section_id":3 ,
-    // "exam_level_id": 3,
-    // "exam_term": "Term 2",
-    // "exam_year": "2024",
-    // "exam_date": "2024-11-01",
-    // "exam_time": "10:00:00",
-    // "exam_day": "Wednesday",
-    // "exam_room": "Hall 75"
       response = await HttpProvider.post(
           "create-exam",data: data);
-      if (response?.statusCode == 200) {
-
+      Exam? newExam;
+      print(response?.data);
+      if (response?.statusCode == 201) {
+        newExam = Exam.fromJson(response?.data["exam"]);
+        _exams?[sectionId.toString()]?[levelId.toString()]?[newExam.id] = newExam;
+      }else if(response?.statusCode == 403){
+        await get_x.Get.dialog(PopUpAlertCard(response?.data["message"]??"UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: null,
+          data: newExam,
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
           message: response?.data["message"] ?? "error");

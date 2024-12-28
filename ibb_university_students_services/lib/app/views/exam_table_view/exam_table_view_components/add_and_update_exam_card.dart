@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
@@ -62,17 +63,57 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                   ),
                                 ],
                               ),
-                              CustomTextFormField(
-                                controller: controller.subjectController,
-                                // validator:controller.validateName,
-                                labelText: 'Subject'.tr,
-                                focusNode: controller.subjectFocus,
-                                  onFieldSubmitted: (e) {
-                                  controller.timeFocus.requestFocus();
-                                  controller.timePiker(context);
-                                  },
-                                width: (Get.width-12)*0.46,
-                              ),
+                              Container(
+                                width: Get.width*0.45,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)
+                                ),
+                                child: Center(
+                                  child: Obx(()=>DropdownButton<String>(
+                                    value: controller.subject.value,
+                                    icon: Icon(Icons.arrow_drop_down_sharp,
+                                        color: AppColors.inverseCardColor),
+                                    underline: const SizedBox(),
+                                    dropdownColor: AppColors.mainCardColor,
+                                    onChanged: (val) {
+                                      if(val == null)return;
+                                      controller.subject.value = val;
+                                    },
+                                    isExpanded: true,
+                                    menuWidth: Get.width*0.7,
+                                    selectedItemBuilder: (_){
+                                      List<Widget> items = [];
+                                      for(Subject subjectI in controller.subjects??[]) {
+                                        items.add(DropdownMenuItem<String>(
+                                          value: subjectI.id,
+                                          child: SizedBox(
+                                              width: Get.width * 0.28,
+                                              child: CustomText(
+                                                subjectI.subjectName ?? "",
+                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                                softWrap: false,
+                                              )),
+                                        ));
+                                    }
+                                      return items;
+                                    },
+                                    items: [
+                                      for(Subject subjectI in controller.subjects??[])...[
+                                        DropdownMenuItem<String>(
+                                          value: subjectI.id,
+                                          child:  Column(
+                                            children: [
+                                              CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                              // Divider(color: AppColors.highlightTextColor,)
+                                            ],
+                                          )
+                                        ),
+                                      ]
+                                    ],
+                                  )),
+                                ),)
                             ],
                           ),
                           Row(
@@ -81,7 +122,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.person,
+                                    Icons.calendar_month,
                                     size: 40,
                                     color: AppColors.inverseIconColor,
                                   ),
@@ -94,6 +135,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                               CustomTextFormField(
                                 controller: controller.dateController,
                                 // validator: controller.validateDate,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dateFocus,
                                 readOnly: true,
@@ -123,6 +165,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.timeController,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 // validator: controller.validateTime,
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
@@ -167,33 +210,33 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                     underline: const SizedBox(),
                                     dropdownColor: AppColors.mainCardColor,
                                     onChanged: (val) {
-                                      controller.day.value = val ?? "sat";
+                                      controller.day.value = val ?? "Saturday";
                                       controller.hallFocus.requestFocus();
                                     },
                                     items: [
                                       DropdownMenuItem<String>(
-                                        value: "sat",
-                                        child:  CustomText("Saturday".tr,),
+                                        value: "Saturday",
+                                        child:  CustomText("Saturday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                       DropdownMenuItem<String>(
-                                        value: "sun",
-                                        child:  CustomText("Sunday".tr,),
+                                        value: "Sunday",
+                                        child:  CustomText("Sunday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                       DropdownMenuItem<String>(
-                                        value: "mon",
-                                        child:  CustomText("Monday".tr,),
+                                        value: "Monday",
+                                        child:  CustomText("Monday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                       DropdownMenuItem<String>(
-                                        value: "tue",
-                                        child:  CustomText("Tuesday".tr,),
+                                        value: "Tuesday",
+                                        child:  CustomText("Tuesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                       DropdownMenuItem<String>(
-                                        value: "wed",
-                                        child:  CustomText("Wednesday".tr,),
+                                        value: "Wednesday",
+                                        child:  CustomText("Wednesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                       DropdownMenuItem<String>(
-                                        value: "thu",
-                                        child:  CustomText("Thursday".tr,),
+                                        value: "Thursday",
+                                        child:  CustomText("Thursday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
                                       ),
                                     ],
                                   )),
@@ -219,8 +262,8 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.hallController,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 // validator: controller.validateEntryYear,
-                                keyboardType: TextInputType.datetime,
                                 labelText: "Hall".tr,
                                 focusNode: controller.hallFocus,
                                 onFieldSubmitted: (e) {

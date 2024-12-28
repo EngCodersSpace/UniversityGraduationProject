@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 // ignore: must_be_immutable
-class PopUpLoadingCard extends StatelessWidget {
+class PopUpLoadingCard extends GetView {
 
   const PopUpLoadingCard({super.key});
 
@@ -11,11 +12,9 @@ class PopUpLoadingCard extends StatelessWidget {
     return const Center(
       child: Padding(
           padding: EdgeInsets.all(32.0),
-          child: Hero(
-              tag: "LoadingPupCard",
-              child: CircularProgressIndicator(
-                color: Colors.lightBlueAccent,
-              ))),
+          child: CircularProgressIndicator(
+            color: Colors.lightBlueAccent,
+          )),
     );
   }
 }

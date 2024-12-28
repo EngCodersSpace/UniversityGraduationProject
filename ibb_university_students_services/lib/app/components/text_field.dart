@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     super.key,
     this.isPassword = false,
+    this.style,
+    this.labelStyle,
     this.readOnly = false,
     this.enable,
     this.minLines,
@@ -25,7 +28,9 @@ class CustomTextFormField extends StatelessWidget {
     this.onChange,
     this.keyboardType,
     this.prefixIcon,
-  });
+  }){
+    labelStyle??=AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h4);
+  }
 
   bool isPassword;
   bool readOnly;
@@ -41,6 +46,8 @@ class CustomTextFormField extends StatelessWidget {
   IconData? prefixIcon;
   Color color;
   TextInputType? keyboardType;
+  TextStyle? style;
+  TextStyle? labelStyle;
 
   String? Function(String?)? validator;
   void Function()? onTap;
@@ -57,6 +64,7 @@ class CustomTextFormField extends StatelessWidget {
       child: (isPassword)
           ? Obx(() => TextFormField(
                 controller: controller,
+                style: style,
                 enabled: enable,
                 readOnly: readOnly,
                 keyboardType: keyboardType,
@@ -89,6 +97,7 @@ class CustomTextFormField extends StatelessWidget {
                           )
                         : null,
                     labelText: labelText,
+                    labelStyle: labelStyle,
                     suffixIcon: Obx(() {
                       return GestureDetector(
                         child: Icon((hide.value)
@@ -102,6 +111,7 @@ class CustomTextFormField extends StatelessWidget {
               ))
           : TextFormField(
               controller: controller,
+              style: style,
               readOnly: readOnly,
               keyboardType: keyboardType,
               focusNode: focusNode,
@@ -132,7 +142,7 @@ class CustomTextFormField extends StatelessWidget {
                       )
                     : null,
                 labelText: labelText,
-                labelStyle: TextStyle(color: color)
+                labelStyle: labelStyle,
               ),
             ),
     );

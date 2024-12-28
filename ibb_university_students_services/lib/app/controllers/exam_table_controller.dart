@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/services/exam_services.dart';
+import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
+import 'package:intl/intl.dart';
 import '../components/custom_text.dart';
-import '../components/pop_up_cards/loading_card.dart';
 import '../styles/app_colors.dart';
 import '../models/exam_model.dart';
 import '../models/level_model.dart';
@@ -29,10 +31,11 @@ class ExamTableController extends GetxController {
 
 
   //Exam popCard variables
-  TextEditingController subjectController = TextEditingController();
+  List<Subject>? subjects;
+  late RxString subject ;
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
-  RxString day = "sat".obs;
+  RxString day = "Saturday".obs;
   TextEditingController hallController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FocusNode subjectFocus = FocusNode();
@@ -181,7 +184,7 @@ class ExamTableController extends GetxController {
     if (val == "Update") {
       mode.value = "Update";
       if(data!=null){
-        subjectController.text = data["subject"]["subject_name"].toString();
+        subject.value = data["subject"]["subject_name"].toString();
         dateController.text = data["exam_date"].toString();
         timeController.text = data["exam_time"].toString();
         day.value = data["exam_day"].toString();
@@ -192,7 +195,14 @@ class ExamTableController extends GetxController {
     }
   }
 
-  void addButtonClick(){
+  void addButtonClick()async{
+    dateController.text = DateTime.now().toString().split(" ")[0];
+    timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
+    subjects = [];
+    subjects = await SubjectServices.fetchSubjects().then((e)=>e.data??[]);
+    if(subjects?.first != null){
+      subject = RxString(subjects!.first.id);
+    }
     Get.dialog(const PopUpIAddAndUpdateExamCard());
   }
 
@@ -244,33 +254,51 @@ class ExamTableController extends GetxController {
   }
 
   void submit() async {
-    Get.dialog(const PopUpLoadingCard());
-    await Future.delayed(const Duration(seconds: 2));
-    // Map<String, dynamic> jsData = {};
-    // rentController.text = double.parse(rentController.text).toStringAsFixed(2);
-    // if (formKey.currentState!.validate()) {
-    //   (nameController.text.isNotEmpty && nameController.text != "Unknown".tr)
-    //       ? jsData["name"] = nameController.text
-    //       : null;
-    //   (rentController.text.isNotEmpty && rentController.text != "Unknown".tr)
-    //       ? jsData["rent"] = double.parse(rentController.text)
-    //       : null;
-    //   (activityController.text.isNotEmpty && activityController.text != "Unknown".tr)
-    //       ? jsData["job_domain"] = activityController.text
-    //       : null;
-    //   (entryYearController.text.isNotEmpty && entryYearController.text != "Unknown".tr)
-    //       ? jsData["entery_year"] = entryYearController.text
-    //       : null;
-    //   (phoneController.text.isNotEmpty && phoneController.text != "Unknown".tr )
-    //       ? jsData["phones"] = [phoneController.text]
-    //       : null;
-    //   Get.back(result: jsData);
-    // }
     Get.back();
+    Map<String, dynamic> jsData = {};
+    if (formKey.currentState!.validate()) {
+      jsData["exam_section_id"] = selectedDepartment.value;
+      jsData["exam_level_id"] = selectedLevel.value;
+      (subject.value.isNotEmpty && subject.value != "Unknown".tr)
+          ? jsData["subject_id"] = subject.value
+          : null;
+      (dateController.text.isNotEmpty && dateController.text != "Unknown".tr)
+          ? jsData["exam_date"] = dateController.text
+          : null;
+      (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
+          ? jsData["exam_time"] = DateFormat('HH:mm:ss').format(DateFormat('hh:mm a').parse(timeController.text))
+          : null;
+      (day.value.isNotEmpty && day.value != "Unknown".tr)
+          ? jsData["exam_day"] = day.value
+          : null;
+      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr )
+          ? jsData["exam_room"] = hallController.text
+          : null;
+    }
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
+    print(jsData);
+    Result<Exam> res = await ExamServices.createExam( sectionId: selectedDepartment.value!,levelId: selectedLevel.value!,data: jsData);
+    Get.back();
+    if(res.statusCode == 201 && res.data !=null){
+      exams?.value.add(res.data!);
+      Get.snackbar(
+        "",
+        "Add successfully",
+        snackPosition: SnackPosition.BOTTOM,
+        overlayBlur: 0,
+        backgroundColor: AppColors.inverseCardColor.withOpacity(0.8),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16),
+        overlayColor: Colors.transparent,
+        isDismissible: true,
+        snackStyle: SnackStyle.FLOATING,
+      );
+    }
+
   }
 
   void popCardClear() {
-    subjectController.dispose();
     timeController.dispose();
     hallController.dispose();
     dateController.dispose();
