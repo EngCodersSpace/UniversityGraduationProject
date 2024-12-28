@@ -79,7 +79,6 @@ class ExamServices {
       response = await HttpProvider.post(
           "create-exam",data: data);
       Exam? newExam;
-      print(response?.data);
       if (response?.statusCode == 201) {
         newExam = Exam.fromJson(response?.data["exam"]);
         _exams?[sectionId.toString()]?[levelId.toString()]?[newExam.id] = newExam;

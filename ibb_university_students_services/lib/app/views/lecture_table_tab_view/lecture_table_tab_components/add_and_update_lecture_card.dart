@@ -6,6 +6,7 @@ import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/date_and_time_piker.dart';
 
 class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
   const PopUpIAddAndUpdateLectureCard({super.key});
@@ -127,7 +128,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
                                 readOnly: true,
-                                onTap: () => controller.timePiker(context),
+                                onTap: () => timePiker(context,controller.timeController),
                                 onFieldSubmitted: (e) {
                                   controller.durationFocus.requestFocus();
                                 },

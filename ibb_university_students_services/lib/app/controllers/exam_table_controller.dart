@@ -206,53 +206,6 @@ class ExamTableController extends GetxController {
     Get.dialog(const PopUpIAddAndUpdateExamCard());
   }
 
-  void datePiker(BuildContext context) async {
-    DateTime? pikeDate = await showDatePicker(
-      context: context,
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-            data: ThemeData().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: AppColors.inverseCardColor,
-                onPrimary: AppColors.mainCardColor,
-                surface: AppColors.mainCardColor,
-                onSurface: AppColors.inverseCardColor,
-              ),
-            ),
-            child: child!);
-      },
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (pikeDate != null) {
-      dateController.text = pikeDate.toString().split(" ")[0];
-    }
-  }
-
-  void timePiker(BuildContext context) async {
-    TimeOfDay? pikeTime = await showTimePicker(
-      context: context,
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-            data: ThemeData().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: AppColors.inverseCardColor,
-                onPrimary: AppColors.mainCardColor,
-                surface: AppColors.mainCardColor,
-                onSurface: AppColors.inverseCardColor,
-              ),
-            ),
-            child: child!);
-      },
-      initialTime: TimeOfDay.now(),
-    );
-    if (pikeTime != null) {
-      timeController.text = Formatter.formatTimeOfDay(pikeTime);
-      dayFocus.requestFocus();
-    }
-  }
-
   void submit() async {
     Get.back();
     Map<String, dynamic> jsData = {};
@@ -277,7 +230,6 @@ class ExamTableController extends GetxController {
     }
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
-    print(jsData);
     Result<Exam> res = await ExamServices.createExam( sectionId: selectedDepartment.value!,levelId: selectedLevel.value!,data: jsData);
     Get.back();
     if(res.statusCode == 201 && res.data !=null){

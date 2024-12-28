@@ -7,6 +7,7 @@ import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/date_and_time_piker.dart';
 
 class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
   const PopUpIAddAndUpdateExamCard({super.key});
@@ -139,7 +140,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dateFocus,
                                 readOnly: true,
-                                onTap: () => controller.datePiker(context),
+                                onTap: () => datePiker(context,controller.dateController),
                                 onFieldSubmitted: (e) {
                                   controller.timeFocus.requestFocus();
                                 },
@@ -170,7 +171,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
                                 readOnly: true,
-                                onTap: () => controller.timePiker(context),
+                                onTap: () => timePiker(context,controller.timeController),
                                 onFieldSubmitted: (e) {
                                   controller.dayFocus.requestFocus();
                                 },

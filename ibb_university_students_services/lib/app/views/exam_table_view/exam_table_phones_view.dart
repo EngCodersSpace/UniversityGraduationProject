@@ -234,7 +234,10 @@ class PhoneExamTableView extends GetView<ExamTableController> {
             child: SizedBox(
                 width: width,
                 height: (PermissionUtils.checkPermission(target: "Exams",action: "add"))?Get.height * 0.7:Get.height * 0.73,
-                child: SingleChildScrollView(
+                child: RefreshIndicator(
+                  onRefresh: ()async=>controller.refresh()
+                ,child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                       horizontal: width * 0.05, vertical: Get.height * 0.01),
                   child: Column(
@@ -258,7 +261,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                       ]
                     ],
                   ),
-                )),
+                ),)),
           ),
         ],
       ),
