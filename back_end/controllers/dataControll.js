@@ -1,6 +1,4 @@
-
-const {subject, section , level ,study_plan_elment } = require('../models'); 
-
+const {subject, section , level ,study_plan_elment,user ,doctor,student} = require('../models'); 
 
 const getAllData = async (req, res) => {
     try {
@@ -62,24 +60,103 @@ const getSubjects= async (req,res)=>{
   }
 };
 
-// this function wrote in subjectControll ?
-const getAllSubject= async (req,res)=>{
+const getAllSubjects = async (req, res) => {
   try {
-    const Subjects = await subject.findAll();
-    res.status(200).json({
-      message: 'get All Subjects',
-      data: {
-        subjects: Subjects,
-      }
-    });
+      const subjects = await subject.findAll();
+      res.status(200).json({
+          message: 'getAllSubjects',
+          data: {
+              subjects: subjects
+          }
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving subjects', error: error.message });
+  }
+};
+
+const getAllSections = async (req, res) => {
+  try {
+      const sections = await section.findAll();
+      res.status(200).json({
+          message: 'getAllSections',
+          data: {
+              sections: sections
+          }
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving sections', error: error.message });
+  }
+};
+
+const getAllLevels = async (req, res) => {
+  try {
+      const levels = await level.findAll();
+      res.status(200).json({
+          message: 'getAllLevels',
+          data: {
+              levels: levels
+          }
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving levels', error: error.message });
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  try {
+      const Users = await user.findAll();
+      res.status(200).json({
+          message: 'getAllUsers',
+          data: {
+            users: Users
+          }
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error retrieving data', error: error.message });
+    res.status(500).json({ message: 'Error retrieving Users', error: error.message });
+  }
+};
+
+const getAllDoctors = async (req, res) => {
+  try {
+      const Doctors = await doctor.findAll();
+      res.status(200).json({
+          message: 'getAllDoctor',
+          data: {
+            doctors: Doctors
+          }
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving Doctors', error: error.message });
+  }
+};
+
+const getAllStudents = async (req, res) => {
+  try {
+      const Students = await student.findAll();
+      res.status(200).json({
+          message: 'getAllDoctor',
+          data: {
+            students: Students
+          }
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving Students', error: error.message });
   }
 };
 
 module.exports = { 
   getAllData,
   getSubjects,
-  getAllSubject
+  getAllSubjects,
+  getAllSections,
+  getAllLevels,
+  getAllUsers,
+  getAllDoctors,
+  getAllStudents
 };

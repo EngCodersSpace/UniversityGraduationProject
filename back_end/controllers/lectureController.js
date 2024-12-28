@@ -23,9 +23,6 @@ const createLecture = async (req, res) => {
   }
 };
 
-
-
-
 const getNextLectureDay = (lectureDay) => {
   const today = new Date();
   const dayOfWeek = today.getDay(); 
@@ -198,9 +195,9 @@ const getLecturesGroupedByCriteria = async (req, res) => {
                 { model: doctor,as: 'doctor',
                   include: [
                       {
-                          model: user, 
-                          as: 'user', 
-                          attributes: ['user_name'], 
+                        model: user, 
+                        as: 'user', 
+                        attributes: ['user_name'], 
                       },
                   ],
                 },
@@ -230,7 +227,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term][day].push({
                 id: lec.id,
-                subject_name: lec.subject.subject_name, 
+                subject: lec.subject, 
                 startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
@@ -300,7 +297,7 @@ const getDoctorLectures = async (req, res) => {
 
       organizedLectures[term][day].push({
         id: lec.id,
-        subject_name: lec.subject.subject_name,
+        subject: lec.subject,
         startTime: lec.lecture_time,
         duration: lec.lecture_duration,
         lecture_room: lec.lecture_room,
