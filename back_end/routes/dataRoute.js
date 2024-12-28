@@ -12,8 +12,12 @@ const corsOptions = {
   
 router.get('/all-data', cors(corsOptions), CRUD.getAllData); 
 router.get('/get-subjects', CRUD.getSubjects); 
-router.get('/get-all-subjects', CRUD.getAllSubject); 
-
+router.get('/get-all-subjects', CRUD.getAllSubjects); 
+router.get('/get-all-sections', CRUD.getAllSections); 
+router.get('/get-all-levels', CRUD.getAllLevels); 
+router.get('/get-all-users', CRUD.getAllUsers); 
+router.get('/get-all-doctors', CRUD.getAllDoctors); 
+router.get('/get-all-students', CRUD.getAllStudents); 
 
 
 module.exports = router;
