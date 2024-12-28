@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { getAllData } = require('../controllers/dataControll');
+const CRUD = require('../controllers/dataControll');
 const router = express.Router();
 const cors = require('cors');
 const corsOptions = {
@@ -8,8 +8,12 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only necessary methods
     allowedHeaders: ['Accept', 'Content-Type', 'Authorization'], // Headers Flutter Web might send
     credentials: true, // Allow cookies or Authorization headers
-  };
+};
   
-router.get('/all-data', cors(corsOptions), getAllData); 
+router.get('/all-data', cors(corsOptions), CRUD.getAllData); 
+router.get('/get-subjects', CRUD.getSubjects); 
+router.get('/get-all-subjects', CRUD.getAllSubject); 
+
+
 
 module.exports = router;
