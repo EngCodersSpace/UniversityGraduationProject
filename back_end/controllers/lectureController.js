@@ -23,9 +23,6 @@ const createLecture = async (req, res) => {
   }
 };
 
-
-
-
 const getNextLectureDay = (lectureDay) => {
   const today = new Date();
   const dayOfWeek = today.getDay(); 
@@ -198,9 +195,9 @@ const getLecturesGroupedByCriteria = async (req, res) => {
                 { model: doctor,as: 'doctor',
                   include: [
                       {
-                          model: user, 
-                          as: 'user', 
-                          attributes: ['user_name'], 
+                        model: user, 
+                        as: 'user', 
+                        attributes: ['user_name'], 
                       },
                   ],
                 },
@@ -230,7 +227,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term][day].push({
                 id: lec.id,
-                subject_name: lec.subject.subject_name, 
+                subject: lec.subject, 
                 startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
@@ -271,10 +268,8 @@ const getLectureYear = async (req, res) => {
 // To get lectures for a specific doctor
 const getDoctorLectures = async (req, res) => {
   try {
-    const doctorId = req.user.user_id; 
-
     const lectures = await lecture.findAll({
-      where: { doctor_id: doctorId }, 
+      where: { doctor_id: req.user.user_id }, 
       include: [
         { model: subject, as: 'subject', attributes: ['subject_name'] },
         { model: section, as: 'section', attributes: ['section_name'] },
@@ -300,7 +295,7 @@ const getDoctorLectures = async (req, res) => {
 
       organizedLectures[term][day].push({
         id: lec.id,
-        subject_name: lec.subject.subject_name,
+        subject: lec.subject,
         startTime: lec.lecture_time,
         duration: lec.lecture_duration,
         lecture_room: lec.lecture_room,
@@ -317,6 +312,52 @@ const getDoctorLectures = async (req, res) => {
   }
 };
 
+const getSubjectsDoctor = async (req,res) => {
+  try {
+      const doctorWithSubjects = await doctor.findAll({
+          where: { doctor_id: req.user.user_id },
+          include: [{
+              model: subject,
+              through: { attributes: [] } // exclude the join table fields, if you don’t need them
+          }]
+      });
+
+      if (!doctorWithSubjects) {
+        return res.status(404).json({ message: 'No Subjects found for this doctor' });
+      }
+      res.status(200).json({
+        message: 'Subjects retrieved successfully',
+        data: doctorWithSubjects,
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving Subjects', error: error.message });
+  }
+};
+
+const getDoctorsSubject = async (req,res) => {
+  try {
+      const subjectWithDoctors = await subject.findAll({
+          where: { subject_id: req.body.subject_id },
+          include: [{
+              model: doctor,
+              through: { attributes: [] } // exclude the join table fields if you don’t need them
+          }]
+      });
+
+      if (!subjectWithDoctors) {
+        return res.status(404).json({ message: 'No doctors found for this doctor' }); 
+      }
+      res.status(200).json({
+        message: 'Doctors retrieved successfully',
+        data: subjectWithDoctors,
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving Doctors', error: error.message });
+  }
+};
+
 module.exports = {
   createLecture,
   getLectures,
@@ -326,5 +367,7 @@ module.exports = {
   getLectureYear,
   getDoctorLectures,
   replaceOne,
-  changeLecStatus
+  changeLecStatus,
+  getSubjectsDoctor,
+  getDoctorsSubject
 };

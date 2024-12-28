@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'doctor_id',
       });
 
+      doctor.belongsToMany(models.subject, {
+        through: 'subject_teacher',
+        foreignKey: 'doctor_id',
+      });
+
 
     }
   }
