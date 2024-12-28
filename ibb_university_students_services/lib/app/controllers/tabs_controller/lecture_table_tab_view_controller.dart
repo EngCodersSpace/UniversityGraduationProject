@@ -283,7 +283,6 @@ class LectureController extends GetxController {
           ? jsData["lecture_room"] = [hallController.text]
           : null;
     }
-    print(jsData);
     Get.back();
   }
 

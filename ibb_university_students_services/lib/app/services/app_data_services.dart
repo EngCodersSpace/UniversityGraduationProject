@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/section_model.dart';
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
+import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import '../models/level_model.dart';
 import '../models/result.dart';
 import 'http_provider/http_provider.dart';
@@ -16,6 +18,15 @@ class AppDataServices {
     try {
       response = await HttpProvider.get("all-data");
       if (response?.statusCode == 200) {
+
+        Map<String,Subject> subjects = {};
+        for (Map<String, dynamic> jsSubject in response?.data["data"]["subjects"]) {
+          Subject subject = Subject.fromJson(jsSubject);
+          subjects[subject.id]=subject;
+        }
+        SubjectServices.cacheSubjects(subjects);
+
+
         Map<int,Section> sections = {};
         for (Map<String, dynamic> jsSection in response?.data["data"]["sections"]) {
           Section section = Section.fromJson(jsSection);

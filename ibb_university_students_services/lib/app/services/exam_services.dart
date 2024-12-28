@@ -36,10 +36,9 @@ class ExamServices {
         if(_exams?[sectionId.toString()]?[levelId.toString()] == null){
           _exams?[sectionId.toString()]?[levelId.toString()] = {};
         }
-        for(Map<String,dynamic> jsExam in response?.data["data"]["Term 1"]){
+        for(Map<String,dynamic> jsExam in response?.data["data"]){
           Exam exam = Exam.fromJson(jsExam);
           _exams?[sectionId.toString()]?[levelId.toString()]?[exam.id] = exam;
-          print("here");
         }
         return Result(
             data: _exams?[sectionId.toString()]?[levelId.toString()]?.values.toList(),

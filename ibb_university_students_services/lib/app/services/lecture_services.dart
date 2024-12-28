@@ -72,7 +72,6 @@ class LectureServices {
         if (_lectures?[sectionId.toString()]?[levelId.toString()]?[year]
                 ?[term] !=
             null) {
-          print("here");
           return Result(
               data:  TableDays.fromJson(_lectures![sectionId.toString()]![
                   levelId.toString()]![year]![term]!),
@@ -117,7 +116,6 @@ class LectureServices {
     // "lecture_duration": 5,
     // "lecture_day": "Thursday",
     // "lecture_room": "Hall 35 "
-      print(data);
       response = await HttpProvider.post(
           "create-lecture",data: data);
       if (response?.statusCode == 200) {

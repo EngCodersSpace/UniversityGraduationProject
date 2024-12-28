@@ -18,14 +18,12 @@ class TableDays {
   List<Lecture>? sat;
 
   factory TableDays.fromJson(Map<String, Map<int,Lecture>> json) {
-    print(json);
     Map<String, List<Lecture>> days = {};
     for (String day in json.keys) {
       days[day] = [];
       for (Lecture lecture in (json[day]?.values.toList()??[])) {
         days[day]?.add(lecture);
       }
-      print(days[day]);
     }
     return TableDays(
       sun: days["Sunday"],

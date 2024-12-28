@@ -233,7 +233,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
             alignment: Alignment.bottomCenter,
             child: SizedBox(
                 width: width,
-                height: (PermissionUtils.checkPermission(target: "Exams",action: "add"))?Get.height * 0.7:Get.height * 0.74,
+                height: (PermissionUtils.checkPermission(target: "Exams",action: "add"))?Get.height * 0.7:Get.height * 0.73,
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
                       horizontal: width * 0.05, vertical: Get.height * 0.01),

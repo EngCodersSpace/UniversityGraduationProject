@@ -6,7 +6,7 @@ class PermissionUtils {
       "Lecturers": ["add", "delete", "view"],
       "Exams": ["add", "delete", "view"],
     },
-    "teacher": {
+    "lecturer": {
       "Lectures": ["add","edit" "delete", "view"],
       "Exams": ["add", "edit","delete", "view"],
     },

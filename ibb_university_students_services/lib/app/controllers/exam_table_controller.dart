@@ -74,8 +74,6 @@ class ExamTableController extends GetxController {
       term: selectedTerm.value,
       hardFetch: force,
     );
-    print(res.statusCode);
-    print(res.message);
     if (res.statusCode == 200) {
       exams?.value = res.data??[];
     }
