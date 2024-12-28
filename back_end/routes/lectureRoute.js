@@ -20,4 +20,8 @@ router.get('/lectures/grouped', CRUD.getLecturesGroupedByCriteria);
 router.get('/lecture/year', CRUD.getLectureYear);
 router.get('/lecture/doctor', verifyToken , CRUD.getDoctorLectures );
 
+router.get('/get-subjects-doctor', verifyToken , CRUD.getSubjectsDoctor );
+router.get('/get-doctors-subject', verifyToken , CRUD.getDoctorsSubject );
+
+
 module.exports = router;
