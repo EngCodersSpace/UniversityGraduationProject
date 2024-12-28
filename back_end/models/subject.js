@@ -37,6 +37,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id', //the foreign Key in the book table refers to subject table
       });
 
+      subject.belongsToMany(models.doctor, {
+        through: 'subject_teacher',
+        foreignKey: 'subject_id',
+      });
+
+
     }
   }
   subject.init({
