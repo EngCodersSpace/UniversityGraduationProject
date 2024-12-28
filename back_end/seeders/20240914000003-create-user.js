@@ -51,18 +51,18 @@ module.exports = {
 
       // Add student or doctor data based on permission
       if (['student', 'representative'].includes(permissionn)) {
-        const system = faker.helpers.arrayElement(["General", "Free Seat", "Paid"]);
-        const translatedSystem = system === "General" ? "عام" : system === "Free Seat" ? "مقعد مجاني" : "موازي";
+        const system = faker.helpers.arrayElement([
+          { en: 'General', ar: 'عام' },
+          { en: 'Free Seat', ar: 'مقعد مجاني' },
+          { en: 'Paid', ar: 'موازي' },
+        ]);
 
         students.push({
           student_id: i + 1, // Associating student with the corresponding user
           study_plan_id: studyPlans[i % studyPlans.length].study_plan_id, // Select study plan cyclically
           enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
           student_level_id: levels[i % levels.length].id, // Assign level cyclically
-          student_system: {
-            en: system,
-            ar: translatedSystem
-          },
+          student_system: system,
           createdAt: new Date(),
           updatedAt: new Date(),
         });
