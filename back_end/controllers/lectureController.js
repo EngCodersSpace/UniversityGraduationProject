@@ -118,8 +118,6 @@ const changeLecStatus = async (req, res) => {
 };
 
 
-
-
 const updateLecture = async (req, res) => {
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -128,14 +126,13 @@ const updateLecture = async (req, res) => {
   try {
     await lecture.update(req.body,
       {
-        where: { id : req.params.id},
+        where: { id : req.query.id},
         returning: true, 
       }
     );    
 
     res.status(200).json({
       message: 'Lecture updated successfully',
-      // data: await lecture.findOne({where: { id : req.params.id}}),
     });
   } catch (error) {
     console.error('Error creating lecture:', error.message);
@@ -165,7 +162,20 @@ const deleteLecture = async (req, res) => {
 // To get all lectures
 const getLectures = async (req, res) => {
   try {
-    const lectures = await lecture.findAll();
+    const lectures = await lecture.findAll({
+      attributes: ['id'],
+      include: [{
+        model: doctor,
+        as: 'doctor', 
+        attributes: ['doctor_id'], 
+        include: [{
+          model: user,
+          as: 'user', 
+          attributes: ['user_name'], 
+        }],
+      }],
+    });
+
     res.status(200).json({message:'getAllLectures', data: lectures });
   } catch (error) {
     console.error(error);
@@ -310,52 +320,6 @@ const getDoctorLectures = async (req, res) => {
   }
 };
 
-const getSubjectsDoctor = async (req,res) => {
-  try {
-      const doctorWithSubjects = await doctor.findAll({
-          where: { doctor_id: req.user.user_id },
-          include: [{
-              model: subject,
-              through: { attributes: [] } // exclude the join table fields, if you don’t need them
-          }]
-      });
-
-      if (!doctorWithSubjects) {
-        return res.status(404).json({ message: 'No Subjects found for this doctor' });
-      }
-      res.status(200).json({
-        message: 'Subjects retrieved successfully',
-        data: doctorWithSubjects,
-      });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving Subjects', error: error.message });
-  }
-};
-
-const getDoctorsSubject = async (req,res) => {
-  try {
-      const subjectWithDoctors = await subject.findAll({
-          where: { subject_id: req.body.subject_id },
-          include: [{
-              model: doctor,
-              through: { attributes: [] } // exclude the join table fields if you don’t need them
-          }]
-      });
-
-      if (!subjectWithDoctors) {
-        return res.status(404).json({ message: 'No doctors found for this doctor' }); 
-      }
-      res.status(200).json({
-        message: 'Doctors retrieved successfully',
-        data: subjectWithDoctors,
-      });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error retrieving Doctors', error: error.message });
-  }
-};
-
 module.exports = {
   createLecture,
   getLectures,
@@ -366,6 +330,4 @@ module.exports = {
   getDoctorLectures,
   replaceOne,
   changeLecStatus,
-  getSubjectsDoctor,
-  getDoctorsSubject
 };
