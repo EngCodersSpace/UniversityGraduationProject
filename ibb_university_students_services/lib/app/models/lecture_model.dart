@@ -30,7 +30,6 @@ class Lecture {
 
 
   factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
-    print("here ${json}");
     return Lecture(
         id: json['id'],
         subject: subject,

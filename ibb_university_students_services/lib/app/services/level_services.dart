@@ -9,13 +9,13 @@ class LevelServices {
 
   static Map<int,Level>? _levels;
 
-  static Future<Result<List<Level>>> fetchLevels({
+  static Future<Result<Map<int,Level>>> fetchLevels({
     bool hardFetch = false,
   }) async {
     if (_levels  != null &&
         !hardFetch) {
       return Result(
-        data: _levels?.values.toList(),
+        data: _levels!,
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -23,11 +23,15 @@ class LevelServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("lectures/");
+      response = await HttpProvider.get("get-all-levels");
       if (response?.statusCode == 200) {
-
+        _levels = {};
+        for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
+          Level level = Level.fromJson(jsLevel);
+          _levels?[level.id]= level;
+        }
         return Result(
-            data: null,
+            data: _levels,
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

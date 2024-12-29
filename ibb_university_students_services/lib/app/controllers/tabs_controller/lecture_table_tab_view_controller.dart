@@ -85,9 +85,6 @@ class LectureController extends GetxController {
       term: selectedTerm.value,
       hardFetch: force
     );
-    print(res.data);
-    print(res.statusCode);
-    print(res.message);
     if (res.statusCode == 200) {
       tableTime = res.data;
       selectedDayChange(selected.value);
@@ -151,9 +148,9 @@ class LectureController extends GetxController {
 
   Future<void> initDropdownMenuLists({bool force = false}) async {
     List<Section> sectionsData =
-        await SectionServices.fetchSections(hardFetch: force).then((e) => e.data ?? []);
+        await SectionServices.fetchSections(hardFetch: force).then((e) => e.data?.values.toList() ?? []);
     List<Level> levelsData =
-        await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
+        await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data?.values.toList() ?? []);
     List<String> yearData =
         await LectureServices.fetchLectureYears(hardFetch: force).then((e) => e.data ?? []);
     departments = [];

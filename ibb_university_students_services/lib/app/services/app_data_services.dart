@@ -18,7 +18,6 @@ class AppDataServices {
     try {
       response = await HttpProvider.get("all-data");
       if (response?.statusCode == 200) {
-
         Map<String,Subject> subjects = {};
         for (Map<String, dynamic> jsSubject in response?.data["data"]["subjects"]) {
           Subject subject = Subject.fromJson(jsSubject);

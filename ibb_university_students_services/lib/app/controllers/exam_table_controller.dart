@@ -51,7 +51,8 @@ class ExamTableController extends GetxController {
   @override
   void onInit() async {
     // TODO: implement onInit
-    await initDropdownMenuLists();
+    await initSectionDropdownMenuList();
+    await initLevelDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
@@ -69,8 +70,15 @@ class ExamTableController extends GetxController {
   }
 
   Future<void> fetchExamsData({bool force = false}) async {
-    if (selectedLevel.value == null) return;
-    if (selectedDepartment.value == null) return;
+    if (selectedLevel.value == null) {
+      await initLevelDropdownMenuLists();
+    }
+    if (selectedDepartment.value == null) {
+      await initSectionDropdownMenuList();
+    }
+    if (selectedDepartment.value == null || selectedLevel.value == null) {
+      return;
+    }
     Result res = await ExamServices.fetchExamsGroup(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
@@ -112,13 +120,10 @@ class ExamTableController extends GetxController {
     fetchExamsData();
   }
 
-  Future<void> initDropdownMenuLists() async {
+
+  Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData =
-        await SectionServices.fetchSections().then((e) => e.data ?? []);
-    List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data ?? []);
-    // List<String> yearData =
-    //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
+    await SectionServices.fetchSections().then((e) => e.data?.values.toList() ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -134,6 +139,15 @@ class ExamTableController extends GetxController {
             )),
       );
     }
+    selectedDepartment.value = sectionsData.first.id;
+  }
+
+
+  Future<void> initLevelDropdownMenuLists() async {
+    List<Level> levelsData =
+        await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    // List<String> yearData =
+    //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -149,6 +163,8 @@ class ExamTableController extends GetxController {
             )),
       );
     }
+    selectedLevel.value = levelsData.first.id;
+
     // years = [];
     // for (String year in yearData) {
     //   years.add(
@@ -164,26 +180,26 @@ class ExamTableController extends GetxController {
     //         )),
     //   );
     // }
-    terms = [
-      DropdownMenuItem<String>(
-          value: "Term 1",
-          child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                "Term 1",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ))),
-      DropdownMenuItem<String>(
-          value: "Term 2",
-          child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                "Term 2",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ))),
-    ];
+    // terms = [
+    //   DropdownMenuItem<String>(
+    //       value: "Term 1",
+    //       child: SizedBox(
+    //           width: (Get.width / 3.3) * 0.75,
+    //           child: SecText(
+    //             "Term 1",
+    //             textColor: AppColors.mainTextColor,
+    //             fontSize: 12,
+    //           ))),
+    //   DropdownMenuItem<String>(
+    //       value: "Term 2",
+    //       child: SizedBox(
+    //           width: (Get.width / 3.3) * 0.75,
+    //           child: SecText(
+    //             "Term 2",
+    //             textColor: AppColors.mainTextColor,
+    //             fontSize: 12,
+    //           ))),
+    // ];
   }
 
   void more(String val, {Map<String, dynamic>? data}) async{
