@@ -145,10 +145,8 @@ const updateLecture = async (req, res) => {
 
 const deleteLecture = async (req, res) => {
   try {
-    const { id } = req.params;
-
     const deleted = await lecture.destroy({
-      where: { id },
+      where: { id:req.query.id },
     });
 
     if (deleted === 0) {

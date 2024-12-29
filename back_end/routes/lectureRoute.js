@@ -13,7 +13,7 @@ router.post('/replaceOne-lecture', checkRole(['student_affairs', 'teacher']),CRU
 router.post('/changeLecStatus-lecture', checkRole(['representative', 'teacher']),CRUD.changeLecStatus);
 
 
-router.delete('/delete-lecture/:id', checkRole('teacher'), CRUD.deleteLecture);
+router.delete('/delete-lecture', checkRole('dean'), CRUD.deleteLecture);
 
 router.get('/get-all-lecture', CRUD.getLectures);
 router.get('/lectures/grouped', CRUD.getLecturesGroupedByCriteria);
