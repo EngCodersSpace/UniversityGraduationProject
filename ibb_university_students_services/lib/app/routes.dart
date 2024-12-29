@@ -3,6 +3,7 @@ import 'package:ibb_university_students_services/app/bindings/exam_table_binding
 import 'package:ibb_university_students_services/app/bindings/library_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
+import 'package:ibb_university_students_services/app/bindings/table_tab_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_view_loder.dart';
@@ -12,6 +13,7 @@ import 'package:ibb_university_students_services/app/views/main_view/main_view_l
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 
 import 'bindings/main_binding.dart';
+import 'views/table_tab_view/web_table_tab_view.dart';
 
 class AppRoutes {
   static final routes = [
@@ -51,6 +53,11 @@ class AppRoutes {
       page: () => const StudentResultViewLoader(),
       binding: StudentResultBinding(),
     ),
+    GetPage(
+      name: "/WebTableTabView",
+      page: () => WebTableTabView(),
+      binding: TableTabBinding(),
+    )
 
     // Add more routes here
   ];
