@@ -200,7 +200,24 @@ class ExamTableController extends GetxController {
         hallController.text = data["exam_room"].toString();
       }
       Get.dialog(const PopUpIAddAndUpdateExamCard());
-    } else if (val == "Delete") {}
+    } else if (val == "Delete") {
+      if (selectedLevel.value == null) return;
+      if (selectedDepartment.value == null) return;
+      selectedExam = data?["exam_id"];
+      Result<void> res = await ExamServices.deleteExam(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          id: selectedExam
+      );
+      Get.back();
+      if(res.statusCode == 200) {
+        exams?.value.remove(selectedExam);
+        exams?.refresh();
+        showSnakeBar(message: "Delete successfully");
+      }else{
+        showSnakeBar(message: "Delete failed");
+      }
+    }
   }
 
   void addButtonClick() async {

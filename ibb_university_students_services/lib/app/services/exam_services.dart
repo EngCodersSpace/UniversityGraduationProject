@@ -15,6 +15,7 @@ class ExamServices {
   static const int  _fetchError = 622;
   static const int _createError = 623;
   static const int _updateError = 624;
+  static const int _deleteError = 625;
 
   static Map<String,Map<String,Map<int,Exam>?>?>? _exams;
 
@@ -33,7 +34,7 @@ class ExamServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("get-exam-grouped/$sectionId/$levelId");
+      response = await HttpProvider.get("get-exam-grouped?section_id=$sectionId&level_id=$levelId");
       if (response?.statusCode == 200) {
         _exams ??= {};
         if(_exams?[sectionId.toString()] == null){
@@ -126,7 +127,6 @@ class ExamServices {
       response = await HttpProvider.put(
           "update-exam/$id",data: data);
       Exam? newExam;
-      print(response?.data);
       if (response?.statusCode == 200) {
         Subject? subject = await SubjectServices.fetchSubject(id:  response?.data["exam"]["subject_id"]).then((e)=>e.data);
         newExam = Exam.fromJson(response?.data["exam"],subject:subject);
@@ -143,6 +143,36 @@ class ExamServices {
       return Result(
           hasError: true,
           statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
+  static Future<Result<void>> deleteExam({
+    required int sectionId,
+    required int levelId,
+    required id,
+    bool hardFetch = false,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false,name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.delete(
+          "delete-exam?exam_id=$id");
+      if (response?.statusCode == 200) {
+        _exams?[sectionId.toString()]?[levelId.toString()]?.remove(id);
+      }else if(response?.statusCode == 403){
+        await get_x.Get.dialog(PopUpAlertCard(response?.data["message"]??"UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
           message: error.toString(),
           data: null);
     }

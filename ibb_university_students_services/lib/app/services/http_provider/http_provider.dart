@@ -48,7 +48,7 @@ class HttpProvider {
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
 
-        if (error.response?.statusCode == 403 &&
+        if (error.response?.statusCode == 401 &&
             error.requestOptions.path != "refresh" &&
             error.requestOptions.path != "login") {
           try {
