@@ -1,4 +1,4 @@
-const { body, param } = require('express-validator');
+const { body,  query } = require('express-validator');
 const { lecture } = require('../models');
 
 const createLectureValidator = [
@@ -50,15 +50,15 @@ const createLectureValidator = [
 ];
 
 const updateLectureValidator = [
-  param('id')
-      .isInt({ gt: 0 })
-      .withMessage(' ID must be a positive integer')
-      .custom(async (value) => {
-        const foundLecture = await lecture.findOne({ where: {id:value} });
-        if (!foundLecture) {
-          throw new Error('lecture not found');
-        }
-      }).withMessage('Invalid  ID'),
+  query('id')
+    .isInt({ gt: 0 })
+    .withMessage('ID must be a positive integer')
+    .custom(async (value) => {
+      const foundLecture = await lecture.findOne({ where: { id: value } });
+      if (!foundLecture) {
+        throw new Error('Lecture not found'); // this is the custom error message
+      }
+    }),
 
   body('subject_id')
     .optional()
