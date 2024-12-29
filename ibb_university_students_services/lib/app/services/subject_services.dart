@@ -5,17 +5,19 @@ import 'http_provider/http_provider.dart';
 
 
 class SubjectServices {
-  static const int _fetchError = 611;
+  static const int _fetchAllError = 681;
+  static const int _fetchError = 682;
 
   static Map<String,Subject>? _subjects;
 
-  static Future<Result<List<Subject>>> fetchSubjects({
+  static Future<Result<Map<String,Subject>>> fetchSubjects({
     bool hardFetch = false,
+    bool asMap = false
   }) async {
     if (_subjects  != null &&
         !hardFetch) {
       return Result(
-        data: _subjects?.values.toList(),
+        data: _subjects,
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -36,6 +38,45 @@ class SubjectServices {
       return Result(
           data: null,
           hasError: true,
+          statusCode: response?.statusCode ?? _fetchAllError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchAllError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<Subject>> fetchSubject({
+    required String id,
+    bool hardFetch = false,
+  }) async {
+    if (_subjects?[id]  != null &&
+        !hardFetch) {
+      return Result(
+        data: _subjects?[id],
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("/get-subject-id?id=$id");
+      if (response?.statusCode == 200) {
+        throw Exception(UnimplementedError);
+        return Result(
+            data: null,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
           statusCode: response?.statusCode ?? _fetchError,
           message: response?.data["message"] ?? "error");
     } catch (error) {
@@ -46,7 +87,6 @@ class SubjectServices {
           data: null);
     }
   }
-
 
   static void cacheSubjects(Map<String,Subject> subjects){
     _subjects = subjects;

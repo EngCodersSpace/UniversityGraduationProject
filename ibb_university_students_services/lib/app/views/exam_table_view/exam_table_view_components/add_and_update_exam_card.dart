@@ -86,7 +86,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                     menuWidth: Get.width*0.7,
                                     selectedItemBuilder: (_){
                                       List<Widget> items = [];
-                                      for(Subject subjectI in controller.subjects??[]) {
+                                      for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
                                         items.add(DropdownMenuItem<String>(
                                           value: subjectI.id,
                                           child: SizedBox(
@@ -101,7 +101,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                       return items;
                                     },
                                     items: [
-                                      for(Subject subjectI in controller.subjects??[])...[
+                                      for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
                                         DropdownMenuItem<String>(
                                           value: subjectI.id,
                                           child:  Column(
@@ -279,7 +279,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                             children: [
                               CustomButton(
                                 onPress: controller.submit,
-                                text: controller.mode.value,
+                                text: controller.mode,
                               ),
                               CustomButton(
                                 onPress: () => Get.back(result: null),

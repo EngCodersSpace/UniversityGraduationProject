@@ -19,10 +19,10 @@ class Exam {
   String? hall;
 
 
-  factory Exam.fromJson(Map<String, dynamic> json) {
+  factory Exam.fromJson(Map<String, dynamic> json,{Subject? subject}) {
     return Exam(
-        id: json['id'],
-        subject: Subject.fromJson(json['subject']) ,
+        id: json['exam_id'],
+        subject: subject,
         date: json['exam_date'],
         day: json['exam_day'],
         examTime: json['exam_time'],
@@ -32,7 +32,7 @@ class Exam {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
+      "exam_id": id,
       "subject":subject?.toJson(),
       "exam_date": date,
       "exam_day": day,

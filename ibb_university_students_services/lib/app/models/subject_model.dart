@@ -37,7 +37,7 @@ class Subject {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id,
+      "subject_id": id,
       "subject_name":subjectName,
 
     };

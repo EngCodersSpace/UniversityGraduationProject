@@ -48,7 +48,7 @@ class HttpProvider {
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
 
-        if (error.response?.statusCode == 401 &&
+        if (error.response?.statusCode == 403 &&
             error.requestOptions.path != "refresh" &&
             error.requestOptions.path != "login") {
           try {
@@ -108,9 +108,9 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> patch(String url, {dynamic data}) async {
+  static Future<Response?> put(String url, {dynamic data}) async {
     try {
-      final response = await _dio.patch(url, data: data);
+      final response = await _dio.put(url, data: data);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {

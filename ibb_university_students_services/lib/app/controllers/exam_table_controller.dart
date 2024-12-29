@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/services/exam_services.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
 import 'package:intl/intl.dart';
 import '../components/custom_text.dart';
@@ -23,16 +24,17 @@ class ExamTableController extends GetxController {
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Rx<List<Exam>>? exams = Rx([]);
+  Rx<Map<int,Exam>>? exams = Rx({});
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [];
-
+  RxString fieldMessage = "".obs;
 
   //Exam popCard variables
-  List<Subject>? subjects;
-  late RxString subject ;
+  Map<String,Subject>? subjects;
+  late RxString subject;
+
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   RxString day = "Saturday".obs;
@@ -43,7 +45,8 @@ class ExamTableController extends GetxController {
   FocusNode timeFocus = FocusNode();
   FocusNode dayFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
-  RxString mode = "Add".obs;
+  String mode = "Add";
+  int? selectedExam;
 
   @override
   void onInit() async {
@@ -53,9 +56,7 @@ class ExamTableController extends GetxController {
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    (years.isNotEmpty)
-        ? selectedYear.value = years.first.value!
-        : null;
+    (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
     loadingState.value = false;
@@ -67,18 +68,23 @@ class ExamTableController extends GetxController {
     super.refresh();
   }
 
-  Future<void> fetchExamsData({bool force=false}) async {
+  Future<void> fetchExamsData({bool force = false}) async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
-    Result res = await ExamServices.fetchExams(
+    Result res = await ExamServices.fetchExamsGroup(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: "2023",
-      term: selectedTerm.value,
       hardFetch: force,
     );
     if (res.statusCode == 200) {
-      exams?.value = res.data??[];
+      exams?.value = {};
+      exams?.value = res.data ?? {};
+    } else if (res.statusCode == 404) {
+      exams?.value = res.data ?? {};
+      fieldMessage.value = "this section and level not has Exams";
+      showSnakeBar(
+          title: "Fetch Exams Field",
+          message: "this section and level not has Exams ");
     }
   }
 
@@ -180,28 +186,31 @@ class ExamTableController extends GetxController {
     ];
   }
 
-  void more(String val,{Map<String,dynamic>? data}) {
+  void more(String val, {Map<String, dynamic>? data}) async{
     if (val == "Update") {
-      mode.value = "Update";
-      if(data!=null){
-        subject.value = data["subject"]["subject_name"].toString();
+      mode = "Update";
+      if (data != null) {
+        selectedExam = data["exam_id"];
+        subjects = {};
+        subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+        subject = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
-        timeController.text = data["exam_time"].toString();
+        timeController.text = Formatter.formatTimeOfDay(TimeOfDay.fromDateTime(DateFormat("hh:mm:ss").parse(data["exam_time"])));
         day.value = data["exam_day"].toString();
         hallController.text = data["exam_room"].toString();
       }
       Get.dialog(const PopUpIAddAndUpdateExamCard());
-    } else if (val == "Delete") {
-    }
+    } else if (val == "Delete") {}
   }
 
-  void addButtonClick()async{
+  void addButtonClick() async {
+    mode == "Add";
     dateController.text = DateTime.now().toString().split(" ")[0];
     timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
-    subjects = [];
-    subjects = await SubjectServices.fetchSubjects().then((e)=>e.data??[]);
-    if(subjects?.first != null){
-      subject = RxString(subjects!.first.id);
+    subjects = {};
+    subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+    if (subjects?.values.first != null) {
+      subject = RxString(subjects!.values.first.id);
     }
     Get.dialog(const PopUpIAddAndUpdateExamCard());
   }
@@ -219,35 +228,48 @@ class ExamTableController extends GetxController {
           ? jsData["exam_date"] = dateController.text
           : null;
       (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
-          ? jsData["exam_time"] = DateFormat('HH:mm:ss').format(DateFormat('hh:mm a').parse(timeController.text))
+          ? jsData["exam_time"] = DateFormat('HH:mm:ss')
+              .format(DateFormat('hh:mm a').parse(timeController.text))
           : null;
       (day.value.isNotEmpty && day.value != "Unknown".tr)
           ? jsData["exam_day"] = day.value
           : null;
-      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr )
+      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
           ? jsData["exam_room"] = hallController.text
           : null;
     }
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
-    Result<Exam> res = await ExamServices.createExam( sectionId: selectedDepartment.value!,levelId: selectedLevel.value!,data: jsData);
-    Get.back();
-    if(res.statusCode == 201 && res.data !=null){
-      exams?.value.add(res.data!);
-      Get.snackbar(
-        "",
-        "Add successfully",
-        snackPosition: SnackPosition.BOTTOM,
-        overlayBlur: 0,
-        backgroundColor: AppColors.inverseCardColor.withOpacity(0.8),
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(16),
-        overlayColor: Colors.transparent,
-        isDismissible: true,
-        snackStyle: SnackStyle.FLOATING,
-      );
-    }
 
+    if (mode == "Add") {
+      Result<Exam> res = await ExamServices.createExam(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          data: jsData);
+      Get.back();
+      if (res.statusCode == 201 && res.data != null) {
+        exams?.value[res.data!.id] = res.data!;
+        exams?.refresh();
+        showSnakeBar(message: "Add successfully");
+      }else{
+        showSnakeBar(message: "Add failed");
+      }
+    } else if (mode == "Update") {
+      Result<Exam> res = await ExamServices.updateExam(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          data: jsData,
+          id: selectedExam
+      );
+      Get.back();
+      if (res.statusCode == 200 && res.data != null) {
+        exams?.value[res.data!.id] = res.data!;
+        exams?.refresh();
+        showSnakeBar(message: "Update successfully");
+      }else{
+        showSnakeBar(message: "Update failed");
+      }
+    }
   }
 
   void popCardClear() {

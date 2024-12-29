@@ -240,19 +240,19 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                       horizontal: width * 0.05, vertical: Get.height * 0.01),
-                  child: Column(
+                  child: Obx(()=>Column(
                     children: [
                       SizedBox(height: Get.height * 0.01),
                       if(controller.exams?.value.isEmpty??true)...[
                         SizedBox(height: Get.height*0.2,),
-                        Center(child: CustomText("No Exams Exist".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
+                        Center(child: CustomText(controller.fieldMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
                         IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh))
                       ],
                       for (int i = 0;
                       i <  (controller.exams?.value.length??0);
                       i++)...[
                         ExamCard(
-                          content: Rx(controller.exams?.value[i]),
+                          content: Rx(controller.exams?.value.values.toList()[i]),
                         ),
                         if (i < ((controller.exams?.value.length ?? 0) - 1))
                           SizedBox(
@@ -260,7 +260,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           )
                       ]
                     ],
-                  ),
+                  ),)
                 ),)),
           ),
         ],
