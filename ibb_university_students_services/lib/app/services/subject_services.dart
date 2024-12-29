@@ -53,6 +53,11 @@ class SubjectServices {
     required String id,
     bool hardFetch = false,
   }) async {
+
+    if(_subjects == null){
+     fetchSubjects();
+    }
+
     if (_subjects?[id]  != null &&
         !hardFetch) {
       return Result(
