@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 
 class Lecture {
   Lecture({
     required this.id,
-    this.subjectNameData,
+    this.subject,
     this.startTime,
     this.duration,
     this.doctorData,
@@ -14,7 +15,7 @@ class Lecture {
   });
 
   int id;
-  Map<String,dynamic>? subjectNameData;
+  Subject? subject;
   String? startTime;
   int? duration;
   Map<String,dynamic>? doctorData;
@@ -27,15 +28,12 @@ class Lecture {
     return doctorData?[currentLang];
   }
 
-  String? get subjectName {
-    String currentLang = Get.locale?.languageCode.toString()??"en";
-    return subjectNameData?[currentLang];
-  }
 
-  factory Lecture.fromJson(Map<String, dynamic> json) {
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+    print("here ${json}");
     return Lecture(
         id: json['id'],
-        subjectNameData: JsonUtils.tryJsonDecode(json['subject_name']),
+        subject: subject,
         startTime: json['startTime'],
         duration: json['duration'],
         description: json['description'],
@@ -47,7 +45,7 @@ class Lecture {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "subject_name":subjectName,
+      "subject":subject?.toJson(),
       "startTime": startTime,
       "duration": duration,
       "lecturer": doctor,

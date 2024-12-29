@@ -330,7 +330,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                             i < (controller.selectedDay.value?.length ?? 0);
                             i++) ...[
                               LectureCard(
-                                content: Rx(controller.selectedDay.value?[i]),
+                                content: Rx(controller.selectedDay.value?.values.toList()[i]),
                                 height: height * 0.56 * (1 / 2),
                               ),
                               if (i < ((controller.selectedDay.value?.length ?? 0) - 1))

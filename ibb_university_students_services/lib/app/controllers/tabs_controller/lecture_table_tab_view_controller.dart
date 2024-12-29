@@ -19,7 +19,7 @@ class LectureController extends GetxController {
   //Lecture main view variables
   RxBool loadState = true.obs;
   TableDays? tableTime;
-  Rx<List<Lecture>?> selectedDay =  Rx<List<Lecture>?>([]);
+  Rx<Map<int,Lecture>?> selectedDay =  Rx<Map<int,Lecture>?>({});
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedDepartment = Rx(null);
@@ -85,6 +85,9 @@ class LectureController extends GetxController {
       term: selectedTerm.value,
       hardFetch: force
     );
+    print(res.data);
+    print(res.statusCode);
+    print(res.message);
     if (res.statusCode == 200) {
       tableTime = res.data;
       selectedDayChange(selected.value);

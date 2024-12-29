@@ -148,7 +148,7 @@ class LectureCard extends GetView<LectureController> {
                         // if(PermissionUtils.checkPermission("addLecture"))
                       ],
                     ),
-                    MainText(content.value?.subjectName ?? "Unknown".tr),
+                    MainText(content.value?.subject?.subjectName ?? "Unknown".tr),
                   ],
                 ),
               ),

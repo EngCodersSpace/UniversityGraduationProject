@@ -1,12 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model.dart';
+import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import '../components/pop_up_cards/alert_message_card.dart';
+import '../components/pop_up_cards/loading_card.dart';
 import '../models/days_table.dart';
 import '../models/result.dart';
+import '../models/subject_model.dart';
 import 'http_provider/http_provider.dart';
 
 class LectureServices {
+  static const int _fetchAllError = 611;
   static const int _fetchError = 611;
   static const int _createError = 612;
+  static const int _updateError = 612;
   static const int _fetchYearsError = 619;
 
   static Map<
@@ -63,7 +71,10 @@ class LectureServices {
             ?[term]?[day] = {};
             for (Map<String, dynamic> jsLecture in response?.data["data"][term]
                 [day]) {
-              Lecture lecture = Lecture.fromJson(jsLecture);
+              Subject? subject = await SubjectServices.fetchSubject(id: jsLecture["subject_id"]).then((e){
+                return e.data;
+              });
+              Lecture lecture = Lecture.fromJson(jsLecture,subject: subject);
               _lectures?[sectionId.toString()]?[levelId.toString()]?[year]
                   ?[term]?[day]?[lecture.id] = lecture;
             }
@@ -84,45 +95,40 @@ class LectureServices {
       return Result(
           data: null,
           hasError: true,
-          statusCode: response?.statusCode ?? _fetchError,
+          statusCode: response?.statusCode ?? _fetchAllError,
           message: response?.data["message"] ?? "error");
     } catch (error) {
       return Result(
           hasError: true,
-          statusCode: _fetchError,
+          statusCode: _fetchAllError,
           message: error.toString(),
           data: null);
     }
   }
 
 
+
   static Future<Result<Lecture>> createLecture({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     required data,
     bool hardFetch = false,
   }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false,name: "loadingDialog");
     late Response? response;
     try {
-    //   "subject_id": "commodi-in",
-    // "doctor_id": 5,
-    // "lecture_section_id": 4,
-    // "lecture_level_id": 4,
-    // "term": "Term 2",
-    // "year": "2024",
-    // "lecture_time": "23:40:00",
-    // "lecture_duration": 5,
-    // "lecture_day": "Thursday",
-    // "lecture_room": "Hall 35 "
       response = await HttpProvider.post(
-          "create-lecture",data: data);
-      if (response?.statusCode == 200) {
-
+          "create-exam",data: data);
+      Lecture? newLecture;
+      if (response?.statusCode == 201) {
+        Subject? subject = await SubjectServices.fetchSubject(id:  response?.data["exam"]["subject_id"]).then((e)=>e.data);
+        newLecture = Lecture.fromJson(response?.data["exam"],subject:subject);
+        // _exams?[sectionId.toString()]?[levelId.toString()]?[newLecture.id] = newLecture;
+      }else if(response?.statusCode == 403){
+        await get_x.Get.dialog(PopUpAlertCard(response?.data["message"]??"UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: null,
+          data: newLecture,
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
           message: response?.data["message"] ?? "error");
@@ -130,6 +136,41 @@ class LectureServices {
       return Result(
           hasError: true,
           statusCode: _createError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
+  static Future<Result<Lecture>> updateLecture({
+    required int sectionId,
+    required int levelId,
+    required data,
+    required id,
+    bool hardFetch = false,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false,name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.put(
+          "update-exam/$id",data: data);
+      Lecture? newExam;
+      if (response?.statusCode == 200) {
+        Subject? subject = await SubjectServices.fetchSubject(id:  response?.data["exam"]["subject_id"]).then((e)=>e.data);
+        newExam = Lecture.fromJson(response?.data["exam"],subject:subject);
+        // _exams?[sectionId.toString()]?[levelId.toString()]?[newExam.id] = newExam;
+      }else if(response?.statusCode == 403){
+        await get_x.Get.dialog(PopUpAlertCard(response?.data["message"]??"UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: newExam,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
           message: error.toString(),
           data: null);
     }

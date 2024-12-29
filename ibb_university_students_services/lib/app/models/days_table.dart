@@ -10,19 +10,19 @@ class TableDays {
     this.sat,
   });
 
-  List<Lecture>? sun;
-  List<Lecture>? mon;
-  List<Lecture>? tue;
-  List<Lecture>? wed;
-  List<Lecture>? thu;
-  List<Lecture>? sat;
+  Map<int,Lecture>? sun;
+  Map<int,Lecture>? mon;
+  Map<int,Lecture>? tue;
+  Map<int,Lecture>? wed;
+  Map<int,Lecture>? thu;
+  Map<int,Lecture>? sat;
 
   factory TableDays.fromJson(Map<String, Map<int,Lecture>> json) {
-    Map<String, List<Lecture>> days = {};
+    Map<String, Map<int,Lecture>> days = {};
     for (String day in json.keys) {
-      days[day] = [];
+      days[day] = {};
       for (Lecture lecture in (json[day]?.values.toList()??[])) {
-        days[day]?.add(lecture);
+        days[day]?[lecture.id] = lecture;
       }
     }
     return TableDays(
