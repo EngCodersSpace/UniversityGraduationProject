@@ -24,9 +24,8 @@ exports.createExam = async (req, res) => {
 
 exports.getExam = async (req, res) => {
     try {
-      const {id } = req.params;
       const examData = await exam.findOne({
-        where: { exam_id: id},
+        where: { exam_id: req.query.exam_id},
         include: [
             { model: subject, as: 'subject' },
             { model: section, as: 'section'},
@@ -36,7 +35,7 @@ exports.getExam = async (req, res) => {
       if (!examData || !examData.subject) {
         return res.status(404).json({ message: 'Exam not found' });
       }
-      res.status(200).json({ message: `This is Exam of ${id} ID`, Exam :examData});
+      res.status(200).json({ message: `This is Exam of ${req.query.exam_id} ID`, Exam :examData});
     } catch (err) {
       res.status(500).json({ message: 'Error fetching exam', error: err.message });
     }
@@ -60,11 +59,9 @@ exports.getAllExams = async (req, res) => {
 
 exports.getExamGroupedByCriteria = async (req, res) => {
     try {
-        const { section_id, level_id } = req.params; 
-
         const whereClause = {};
-        if (section_id) whereClause.exam_section_id = section_id;
-        if (level_id) whereClause.exam_level_id = level_id;
+        if (req.query.section_id) whereClause.exam_section_id = req.query.section_id;
+        if (req.query.level_id) whereClause.exam_level_id = req.query.level_id;
 
         const Exam = await exam.findAll({
             where: whereClause,
@@ -83,8 +80,8 @@ exports.getExamGroupedByCriteria = async (req, res) => {
         
         Exam.forEach(lec => { 
             organizedLectures.push({
-                id   : lec.exam_id,
-                subject: lec.subject, 
+                exam_id: lec.exam_id,
+                subject_id: lec.subject_id, 
                 exam_date:lec.exam_date,
                 exam_day:lec.exam_day,
                 exam_time : lec.exam_time, 
@@ -129,11 +126,11 @@ exports.updateExam = async (req, res) => {
 
     try {   
         await exam.update(req.body, {
-            where:   { exam_id: req.params.id },
+            where: { exam_id: req.query.exam_id },
         });
 
         const updatedExam = await exam.findOne({
-            where: { exam_id: req.params.id },
+            where: { exam_id: req.query.exam_id },
             include: [{ model: subject, as: 'subject' }], 
         });
 
@@ -148,23 +145,14 @@ exports.updateExam = async (req, res) => {
 };
 
 exports.deleteExam = async (req, res) => {
-    const { id: exam_id } = req.params;
-
     try {
-        // Find the exam by ID, including the associated subject
-        const foundExam = await exam.findOne({
-            where: { exam_id },
-            include: [{ model: subject }],
+        const foundExam = await exam.destroy({
+            where: { exam_id: req.query.exam_id },
         });
 
-        // Check if the exam exists
         if (!foundExam) {
             return res.status(404).json({ message: 'Exam not found' });
         }
-
-        // Delete the exam (optional: you can delete associated subject if needed)
-        await foundExam.destroy();
-
         res.status(200).json({
             message: 'Exam deleted successfully',
         });

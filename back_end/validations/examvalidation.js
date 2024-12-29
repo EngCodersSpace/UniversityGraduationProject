@@ -1,4 +1,4 @@
-const { body , param} = require('express-validator');
+const { body , query} = require('express-validator');
 const { exam, subject } = require('../models');
 
 const createExam = [
@@ -47,11 +47,11 @@ const createExam = [
 ];
 
 const updateExam = [
-  param('id')
+  query('exam_id')
     .isInt({ gt: 0 })
     .withMessage('Exam ID must be a positive integer')
-    .custom(async (id) => {
-      const foundExam = await exam.findOne({ where: { exam_id: id } });
+    .custom(async (exam_id) => {
+      const foundExam = await exam.findOne({ where: { exam_id :exam_id} });
       if (!foundExam) {
         throw new Error('Exam not found');
       }
