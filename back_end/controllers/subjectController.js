@@ -1,4 +1,4 @@
-const {subject,doctor,user,subject_teacher}=require('../models');
+const {subject,doctor,user}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
 

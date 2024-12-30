@@ -7,8 +7,8 @@ const checkRole = require('../middleware/roleMiddleware');
 
 router.use(verifyToken);
 
-router.post('/create-exam',checkRole('student_affairs'), validate.createExam, CRUD.createExam);
-router.put('/update-exam',checkRole(['student', 'dean']),validate.updateExam, CRUD.updateExam );
+router.post('/create-exam',checkRole(['student', 'dean','controller']), validate.createExam, CRUD.createExam);
+router.put('/update-exam',checkRole(['student', 'dean','controller']),validate.updateExam, CRUD.updateExam );
 router.delete('/delete-exam',  CRUD.deleteExam );
 
 router.get('/get-all-exam',  CRUD.getAllExams);
