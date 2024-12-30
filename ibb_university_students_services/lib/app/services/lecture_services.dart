@@ -224,6 +224,87 @@ class LectureServices {
     }
   }
 
+  static Future<Result<Lecture>> changeLectureState({
+    required int sectionId,
+    required int levelId,
+    required String year,
+    required String term,
+    required String day,
+    required data,
+    bool hardFetch = false,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.put("changeLecStatus-lecture", data: data);
+      Lecture? newLecture;
+      if (response?.statusCode == 200) {
+        // Subject? subject = await SubjectServices.fetchSubject(
+        //     id: response?.data["exam"]["subject_id"])
+        //     .then((e) => e.data);
+        // newLecture = Lecture.fromJson(response?.data["exam"], subject: subject);
+        // _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
+        // ?[day]?[newLecture.id] = newLecture;
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: newLecture,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<Lecture>> tempReplaceLecture({
+    required int sectionId,
+    required int levelId,
+    required String year,
+    required String term,
+    required String day,
+    required data,
+    required id,
+    bool hardFetch = false,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.put("replaceOne-lecture?id=$id", data: data);
+      Lecture? newLecture;
+      if (response?.statusCode == 200) {
+        // Subject? subject = await SubjectServices.fetchSubject(
+        //     id: response?.data["exam"]["subject_id"])
+        //     .then((e) => e.data);
+        // newLecture = Lecture.fromJson(response?.data["exam"], subject: subject);
+        // _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
+        // ?[day]?[newLecture.id] = newLecture;
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: newLecture,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<List<String>>> fetchLectureYears({
     bool hardFetch = false,
   }) async {
