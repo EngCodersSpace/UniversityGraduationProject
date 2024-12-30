@@ -1,4 +1,4 @@
-const {subject,doctor,user}=require('../models');
+const {subject,doctor,user,subject_teacher}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
 
@@ -64,13 +64,18 @@ exports.getAllSubject=async (req, res) => {
     try {
         const Subjects = await subject.findAll({
           include: [{
+            model: subject_teacher,
+            attributes: [],
+
             model: doctor,
+            // as:'doctor',
             attributes: ['doctor_id'], 
-            include: [{
-              model: user,
-              as: 'user', 
-              attributes: ['user_name'], 
-            }],
+            
+            // include: [{
+            //   model: user,
+            //   as: 'user', 
+            //   attributes: ['user_name'], 
+            // }],
           }],
         });
         res.status(200).json({message:'getAllLectures', data: Subjects });
