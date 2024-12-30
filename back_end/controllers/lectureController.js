@@ -163,7 +163,7 @@ const deleteLecture = async (req, res) => {
 const getLectures = async (req, res) => {
   try {
     const lectures = await lecture.findAll({
-      attributes: ['id'],
+      attributes: ['id','subject_id','lecture_time','lecture_duration','lecture_room'], 
       include: [{
         model: doctor,
         as: 'doctor', 
@@ -235,7 +235,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
             organizedLectures[term][day].push({
                 id: lec.id,
-                subject: lec.subject, 
+                subject_id: lec.subject_id,
                 startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
                 lecturer: lec.doctor.user.user_name, 
