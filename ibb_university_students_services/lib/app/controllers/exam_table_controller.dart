@@ -94,7 +94,7 @@ class ExamTableController extends GetxController {
           title: "Fetch Exams Failed",
           message: "this section and level doesn't has Exams ");
     }else{
-      fieldMessage.value = "fetching exam failed please check connection\nTry Again";
+      fieldMessage.value = "fetching exam failed please check connection";
       showSnakeBar(
           title: "Fetch Exams Failed",
           message: "fetching exam failed please check connection ");
@@ -242,7 +242,7 @@ class ExamTableController extends GetxController {
   }
 
   void addButtonClick() async {
-    mode == "Add";
+    mode = "Add";
     dateController.text = DateTime.now().toString().split(" ")[0];
     timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
     subjects = {};

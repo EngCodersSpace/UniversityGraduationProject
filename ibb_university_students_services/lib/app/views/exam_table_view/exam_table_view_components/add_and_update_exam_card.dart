@@ -179,7 +179,6 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                               ),
                             ],
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

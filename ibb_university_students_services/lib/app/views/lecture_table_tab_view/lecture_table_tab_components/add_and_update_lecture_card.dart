@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
+import '../../../models/subject_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/date_and_time_piker.dart';
@@ -63,17 +64,57 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   ),
                                 ],
                               ),
-                              CustomTextFormField(
-                                controller: controller.subjectController,
-                                // validator:controller.validateName,
-                                labelText: 'Subject'.tr,
-                                focusNode: controller.nameFocus,
-                                  onFieldSubmitted: (e) {
-                                  controller.timeFocus.requestFocus();
-                                  controller.timePiker(context);
-                                  },
-                                width: (Get.width-12)*0.46,
-                              ),
+                              Container(
+                                width: Get.width*0.45,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)
+                                ),
+                                child: Center(
+                                  child: Obx(()=>DropdownButton<String>(
+                                    value: controller.subject.value,
+                                    icon: Icon(Icons.arrow_drop_down_sharp,
+                                        color: AppColors.inverseCardColor),
+                                    underline: const SizedBox(),
+                                    dropdownColor: AppColors.mainCardColor,
+                                    onChanged: (val) {
+                                      if(val == null)return;
+                                      controller.subject.value = val;
+                                    },
+                                    isExpanded: true,
+                                    menuWidth: Get.width*0.7,
+                                    selectedItemBuilder: (_){
+                                      List<Widget> items = [];
+                                      for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
+                                        items.add(DropdownMenuItem<String>(
+                                          value: subjectI.id,
+                                          child: SizedBox(
+                                              width: Get.width * 0.28,
+                                              child: CustomText(
+                                                subjectI.subjectName ?? "",
+                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                                softWrap: false,
+                                              )),
+                                        ));
+                                      }
+                                      return items;
+                                    },
+                                    items: [
+                                      for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
+                                        DropdownMenuItem<String>(
+                                            value: subjectI.id,
+                                            child:  Column(
+                                              children: [
+                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                                // Divider(color: AppColors.highlightTextColor,)
+                                              ],
+                                            )
+                                        ),
+                                      ]
+                                    ],
+                                  )),
+                                ),)
                             ],
                           ),
                           Row(
@@ -184,7 +225,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                               CustomTextFormField(
                                 controller: controller.hallController,
                                 // validator: controller.validateEntryYear,
-                                keyboardType: TextInputType.datetime,
+                                keyboardType: TextInputType.text,
                                 labelText: "Hall".tr,
                                 focusNode: controller.entryYearFocus,
                                 onFieldSubmitted: (e) {
@@ -199,7 +240,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                             children: [
                               CustomButton(
                                 onPress: controller.submit,
-                                text: controller.mode.value,
+                                text: controller.mode,
                               ),
                               CustomButton(
                                 onPress: () => Get.back(result: null),

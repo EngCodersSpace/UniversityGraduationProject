@@ -63,6 +63,7 @@ class CustomTextFormField extends StatelessWidget {
       width: width,
       child: (isPassword)
           ? Obx(() => TextFormField(
+
                 controller: controller,
                 style: style,
                 enabled: enable,

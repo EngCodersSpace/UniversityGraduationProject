@@ -29,7 +29,6 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
             children: [
               Column(
                 children: [
-
                   Container(
                       height: height * 0.32,
                       width: width,
@@ -321,19 +320,19 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                         child: Obx(()=>Column(
                           children: [
                             SizedBox(height: height * 0.03),
-                            if(controller.selectedDay.value?.isEmpty??true)...[
+                            if(controller.selectedDay(controller.selected.value)?.isEmpty??true)...[
                               SizedBox(height: height*0.2,),
-                              Center(child: CustomText("No Lecture Exist".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
-                              IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh))
+                              Center(child: CustomText(controller.fieldMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
+                              IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
                             ],
                             for (int i = 0;
-                            i < (controller.selectedDay.value?.length ?? 0);
+                            i < (controller.selectedDay(controller.selected.value)?.length ?? 0);
                             i++) ...[
                               LectureCard(
-                                content: Rx(controller.selectedDay.value?.values.toList()[i]),
+                                content: Rx(controller.selectedDay(controller.selected.value)?.values.toList()[i]),
                                 height: height * 0.56 * (1 / 2),
                               ),
-                              if (i < ((controller.selectedDay.value?.length ?? 0) - 1))
+                              if (i < ((controller.selectedDay(controller.selected.value)?.length ?? 0) - 1))
                                 SizedBox(
                                   height: height * 0.03,
                                 )
