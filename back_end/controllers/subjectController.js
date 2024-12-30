@@ -64,20 +64,17 @@ exports.getAllSubject=async (req, res) => {
     try {
         const Subjects = await subject.findAll({
           include: [{
-            model: subject_teacher,
-            attributes: [],
-
             model: doctor,
-            // as:'doctor',
-            attributes: ['doctor_id'], 
-            
-            // include: [{
-            //   model: user,
-            //   as: 'user', 
-            //   attributes: ['user_name'], 
-            // }],
+            attributes: ['doctor_id'],
+            through:{ attributes: [] },
+            include:[{
+              model:user,
+              as:'user',
+              attributes: ['user_name'],
+            }]
           }],
         });
+
         res.status(200).json({message:'getAllLectures', data: Subjects });
       } catch (error) {
         console.error(error);
