@@ -1,9 +1,19 @@
 const {subject, section , level ,study_plan_elment,user ,doctor,student} = require('../models'); 
-
 const getAllData = async (req, res) => {
     try {
       const [subjects, sections, levels] = await Promise.all([
-        subject.findAll(),
+         subject.findAll({
+          include: [{
+            model: doctor,
+            attributes: ['doctor_id'],
+            through:{ attributes: [] },
+            include:[{
+              model:user,
+              as:'user',
+              attributes: ['user_name'],
+            }]
+          }],
+        }),
         section.findAll(),
         level.findAll()
       ]);

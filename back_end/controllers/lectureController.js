@@ -201,6 +201,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             include: [
                 { model: subject, as: 'subject' },
                 { model: doctor,as: 'doctor',
+                  attributes: ['doctor_id'], 
                   include: [
                       {
                         model: user, 
@@ -238,7 +239,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
                 subject_id: lec.subject_id,
                 startTime: lec.lecture_time, 
                 duration: lec.lecture_duration, 
-                lecturer: lec.doctor.user.user_name, 
+                instructor: lec.doctor, 
                 lecture_room: lec.lecture_room, 
             });
         });
