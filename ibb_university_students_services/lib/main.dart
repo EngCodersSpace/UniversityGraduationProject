@@ -10,7 +10,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
   // HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
-  await AppDataServices.fetchAppData();
+  await AppDataServices.fetchAppData().then((e){print(e.message);});
   runApp(const MyApp());
 }
 

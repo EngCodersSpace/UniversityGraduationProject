@@ -47,6 +47,7 @@ class LectureServices {
     try {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
+      print(response?.data);
       if (response?.statusCode == 200) {
         _lectures ??= {};
         if (_lectures?[sectionId.toString()] == null) {
@@ -73,7 +74,7 @@ class LectureServices {
             for (Map<String, dynamic> jsLecture in response?.data["data"][term]
                 [day]) {
               Subject? subject = await SubjectServices.fetchSubject(
-                      id: jsLecture["subject"]["subject_id"])
+                      id: jsLecture["subject_id"])
                   .then((e) => e.data);
               Lecture lecture = Lecture.fromJson(jsLecture, subject: subject);
               _lectures?[sectionId.toString()]?[levelId.toString()]?[year]

@@ -83,7 +83,7 @@ class LectureCard extends GetView<LectureController> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: (content.value?.canceled ?? false)
+                                color: (content.value?.lectureStatus ?? false)
                                     ? Colors.redAccent
                                     : Colors.greenAccent,
                                 borderRadius:
@@ -91,7 +91,7 @@ class LectureCard extends GetView<LectureController> {
                               ),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
-                              child: (content.value?.canceled ?? false)
+                              child: (content.value?.lectureStatus ?? false)
                                   ? SecText("Canceled".tr)
                                   : SecText("Confirmed".tr),
                             ),
@@ -167,7 +167,7 @@ class LectureCard extends GetView<LectureController> {
                               SecText("Doctor: ",
                                   fontWeight: FontWeight.bold, fontSize: 19),
                               SecText(
-                                  "Dr.${content.value?.doctor ?? "unknown".tr}")
+                                  "Dr.${content.value?.instructor?.name ?? "unknown".tr}")
                             ],
                           ),
                           Row(

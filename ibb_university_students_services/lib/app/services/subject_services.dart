@@ -25,7 +25,7 @@ class SubjectServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("lectures/");
+      response = await HttpProvider.get("get-all-subject");
       if (response?.statusCode == 200) {
 
         return Result(

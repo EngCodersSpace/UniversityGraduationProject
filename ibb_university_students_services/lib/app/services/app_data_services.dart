@@ -17,25 +17,25 @@ class AppDataServices {
     late Response? response;
     try {
       response = await HttpProvider.get("all-data");
+      print(response?.statusCode);
       if (response?.statusCode == 200) {
         Map<String,Subject> subjects = {};
+
         for (Map<String, dynamic> jsSubject in response?.data["data"]["subjects"]) {
-          Subject subject = Subject.fromJson(jsSubject);
-          subjects[subject.id]=subject;
+          subjects[jsSubject["subject_id"]]=Subject.fromJson(jsSubject);
         }
         SubjectServices.cacheSubjects(subjects);
 
 
         Map<int,Section> sections = {};
         for (Map<String, dynamic> jsSection in response?.data["data"]["sections"]) {
-          Section section = Section.fromJson(jsSection);
-          sections[section.id]=section;
+          sections[jsSection["id"]]=Section.fromJson(jsSection);
         }
         SectionServices.cacheSections(sections);
         Map<int,Level> levels = {};
         for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
-          Level level = Level.fromJson(jsLevel);
-          levels[level.id]= level;
+
+          levels[jsLevel["id"]]= Level.fromJson(jsLevel);
         }
         LevelServices.cacheLevels(levels);
         return Result(

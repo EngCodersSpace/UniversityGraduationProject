@@ -46,8 +46,8 @@ class LectureController extends GetxController {
 
   //Lecture popCard variables
   Map<String, Subject>? subjects;
-  late RxString subject;
-  TextEditingController doctorController = TextEditingController();
+  late RxString subjectId;
+  Rx<int?> doctorId = Rx(null);
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   TextEditingController hallController = TextEditingController();
@@ -101,7 +101,7 @@ class LectureController extends GetxController {
     Result res = await LectureServices.fetchTableTime(
         sectionId: selectedDepartment.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value!,
+        year: selectedYear.value??"2024",
         term: selectedTerm.value,
         hardFetch: force);
     if (res.statusCode == 200) {
@@ -155,27 +155,21 @@ class LectureController extends GetxController {
       case 0:
         selectedDayName = "Saturday".tr;
         return tableTime?.sat;
-        break;
       case 1:
         selectedDayName = "Sunday".tr;
         return tableTime?.sun;
-        break;
       case 2:
         selectedDayName = "Monday".tr;
         return tableTime?.mon;
-        break;
       case 3:
         selectedDayName = "Tuesday".tr;
         return tableTime?.tue;
-        break;
       case 4:
         selectedDayName = "Wednesday".tr;
         return tableTime?.wed;
-        break;
       case 5:
         selectedDayName = "Thursday".tr;
         return tableTime?.thu;
-        break;
       default:
         return null;
     }
@@ -247,7 +241,7 @@ class LectureController extends GetxController {
     if (val == "Update") {
       mode = "Update";
       if (data != null) {
-        doctorController.text = data["lecturer"].toString();
+        doctorId.value = data["instructor"]["doctor_id"];
         timeController.text = data["startTime"].toString();
         durationController.text = data["duration"].toString();
         hallController.text = data["lecture_room"].toString();
@@ -281,14 +275,21 @@ class LectureController extends GetxController {
   }
 
   Future<void> addButtonClick() async {
-    doctorController.text = "1000";
+    // doctorId.value = 1000;
 
     mode = "Add";
     timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
     subjects = {};
     subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
-    if (subjects?.values.first != null) {
-      subject = RxString(subjects!.values.first.id);
+    if ((subjects?.isNotEmpty??false)&&subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+      if((subjects?.values.first.instructors?.isNotEmpty??false) && subjects?.values.first.instructors?.values.first != null) {
+        doctorId.value = subjects?.values.first.instructors?.values.first.id;
+      }else{
+        doctorId.value = null;
+      }
+    }else{
+
     }
     Get.dialog(const PopUpIAddAndUpdateLectureCard());
   }
@@ -298,15 +299,14 @@ class LectureController extends GetxController {
     if (formKey.currentState!.validate()) {
       jsData["lecture_section_id"] = selectedDepartment.value;
       jsData["lecture_level_id"] = selectedLevel.value;
-      jsData["year"] = selectedYear.value;
+      jsData["year"] = selectedYear.value??"2024";
       jsData["term"] = selectedTerm.value;
       jsData["lecture_day"] = selectedDayName;
-      (subject.value.isNotEmpty && subject.value != "Unknown".tr)
-          ? jsData["subject_id"] = subject.value
+      (subjectId.value.isNotEmpty && subjectId.value != "Unknown".tr)
+          ? jsData["subject_id"] = subjectId.value
           : null;
-      (doctorController.text.isNotEmpty &&
-              doctorController.text != "Unknown".tr)
-          ? jsData["doctor_id"] = double.parse(doctorController.text)
+      (doctorId.value != null)
+          ? jsData["doctor_id"] = doctorId.value
           : null;
       (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
           ? jsData["lecture_time"] = timeController.text
@@ -323,7 +323,7 @@ class LectureController extends GetxController {
       Result<Lecture> res = await LectureServices.createLecture(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
-          year: selectedYear.value!,
+          year: selectedYear.value??"2024",
           term: selectedTerm.value,
           day: selectedDayName,
           data: jsData);
@@ -359,7 +359,6 @@ class LectureController extends GetxController {
     timeController.dispose();
     durationController.dispose();
     hallController.dispose();
-    doctorController.dispose();
     nameFocus.dispose();
     timeFocus.dispose();
     durationFocus.dispose();

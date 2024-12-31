@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 
@@ -8,36 +9,32 @@ class Lecture {
     this.subject,
     this.startTime,
     this.duration,
-    this.doctorData,
+    this.instructor,
     this.hall,
     this.description,
-    this.canceled,
+    this.lectureStatus,
   });
 
   int id;
   Subject? subject;
   String? startTime;
   int? duration;
-  Map<String,dynamic>? doctorData;
   String? hall;
   String? description;
-  bool? canceled = false;
-
-  String? get doctor {
-    String currentLang = Get.locale?.languageCode.toString()??"en";
-    return doctorData?[currentLang];
-  }
+  bool? lectureStatus = false;
+  Instructor? instructor;
 
 
   factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return Lecture(
         id: json['id'],
+        lectureStatus: json["lectureStatus"],
         subject: subject,
         startTime: json['startTime'],
-        duration: json['duration'],
-        description: json['description'],
-        doctorData: JsonUtils.tryJsonDecode(json['lecturer']),
-        hall: json['lecture_room']
+        duration: json['lecture_duration'],
+        // description: json['description'],
+      instructor: Instructor.fromJson(json["instructor"]),
+        hall: json['lecture_room'],
     );
   }
 
@@ -47,7 +44,7 @@ class Lecture {
       "subject":subject?.toJson(),
       "startTime": startTime,
       "duration": duration,
-      "lecturer": doctor,
+      "instructor": instructor?.toJson(),
       "description":description,
       "lecture_room": hall,
     };
