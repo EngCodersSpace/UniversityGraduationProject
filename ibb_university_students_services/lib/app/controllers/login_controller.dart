@@ -77,13 +77,13 @@ class LoginController extends GetxController {
   }
 
   void toggleRememberMe(bool? val) async{
-    if(val == true){
-      await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
-      await AppDataServices.fetchAppData();
-    }else{
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      await AppDataServices.fetchAppData();
-    }
+    // if(val == true){
+    //   await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
+    //   await AppDataServices.fetchAppData();
+    // }else{
+    //   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+    //   await AppDataServices.fetchAppData();
+    // }
     rememberMe.value = val ?? false;
   }
 

@@ -14,7 +14,7 @@ import '../models/level_model.dart';
 import '../models/section_model.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
-import '../utils/formatter.dart';
+import '../utils/date_time_utils.dart';
 
 class ExamTableController extends GetxController {
   RxBool loadingState = true.obs;
@@ -216,7 +216,7 @@ class ExamTableController extends GetxController {
         subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
         subject = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
-        timeController.text = Formatter.formatTimeOfDay(TimeOfDay.fromDateTime(DateFormat("hh:mm:ss").parse(data["exam_time"])));
+        timeController.text = DateTimeUtils.formatStringTime(time:data["exam_time"]);
         day.value = data["exam_day"].toString();
         hallController.text = data["exam_room"].toString();
       }
@@ -244,7 +244,7 @@ class ExamTableController extends GetxController {
   void addButtonClick() async {
     mode = "Add";
     dateController.text = DateTime.now().toString().split(" ")[0];
-    timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
+    timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
     subjects = {};
     subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {

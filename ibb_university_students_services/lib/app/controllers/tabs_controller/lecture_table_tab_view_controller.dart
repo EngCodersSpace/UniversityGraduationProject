@@ -8,12 +8,13 @@ import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';
+import 'package:intl/intl.dart';
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
 import '../../models/subject_model.dart';
 import '../../services/subject_services.dart';
-import '../../utils/formatter.dart';
+import '../../utils/date_time_utils.dart';
 import '../../utils/snake_bar.dart';
 import '../../views/lecture_table_tab_view/lecture_table_tab_components/add_and_update_lecture_card.dart';
 
@@ -46,7 +47,7 @@ class LectureController extends GetxController {
 
   //Lecture popCard variables
   Map<String, Subject>? subjects;
-  late RxString subjectId;
+  Rx<String?> subjectId = Rx(null);
   Rx<int?> doctorId = Rx(null);
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
@@ -241,8 +242,8 @@ class LectureController extends GetxController {
     if (val == "Update") {
       mode = "Update";
       if (data != null) {
-        doctorId.value = data["instructor"]["doctor_id"];
-        timeController.text = data["startTime"].toString();
+        // doctorId.value = data["instructor"]["doctor_id"];
+        timeController.text = DateTimeUtils.timeOfDayFromString(time: data["startTime"]).toString();
         durationController.text = data["duration"].toString();
         hallController.text = data["lecture_room"].toString();
       }
@@ -278,7 +279,7 @@ class LectureController extends GetxController {
     // doctorId.value = 1000;
 
     mode = "Add";
-    timeController.text = Formatter.formatTimeOfDay(TimeOfDay.now());
+    timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
     subjects = {};
     subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty??false)&&subjects?.values.first != null) {
@@ -302,7 +303,7 @@ class LectureController extends GetxController {
       jsData["year"] = selectedYear.value??"2024";
       jsData["term"] = selectedTerm.value;
       jsData["lecture_day"] = selectedDayName;
-      (subjectId.value.isNotEmpty && subjectId.value != "Unknown".tr)
+      ((subjectId.value?.isNotEmpty??false) && subjectId.value != "Unknown".tr)
           ? jsData["subject_id"] = subjectId.value
           : null;
       (doctorId.value != null)
@@ -320,21 +321,22 @@ class LectureController extends GetxController {
           : null;
     }
     if (mode == "Add") {
-      Result<Lecture> res = await LectureServices.createLecture(
-          sectionId: selectedDepartment.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value??"2024",
-          term: selectedTerm.value,
-          day: selectedDayName,
-          data: jsData);
-      Get.back();
-      if (res.statusCode == 201 && res.data != null) {
-        selectedDay(selected.value)?[res.data!.id] = res.data!;
-        selected.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
+      print(jsData);
+      // Result<Lecture> res = await LectureServices.createLecture(
+      //     sectionId: selectedDepartment.value!,
+      //     levelId: selectedLevel.value!,
+      //     year: selectedYear.value??"2024",
+      //     term: selectedTerm.value,
+      //     day: selectedDayName,
+      //     data: jsData);
+      // Get.back();
+      // if (res.statusCode == 201 && res.data != null) {
+      //   selectedDay(selected.value)?[res.data!.id] = res.data!;
+      //   selected.refresh();
+      //   showSnakeBar(message: "Add successfully");
+      // } else {
+      //   showSnakeBar(message: "Add failed");
+      // }
     } else if (mode == "Update") {
       Result<Lecture> res = await LectureServices.updateLecture(
           sectionId: selectedDepartment.value!,

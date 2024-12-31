@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../styles/app_colors.dart';
 import '../../../models/lecture_model.dart';
+import '../../../utils/date_time_utils.dart';
 import '../../../utils/permission_checker.dart';
 
 class LectureCard extends GetView<LectureController> {
@@ -24,9 +25,7 @@ class LectureCard extends GetView<LectureController> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime endTime = timeFormat
-        .parse((content.value?.startTime ?? "00:00:00"))
-        .add(Duration(minutes: content.value?.duration ?? 0));
+    // DateTime endTime = DateTimeUtils.timeOfDayFromString(((content.value?.startTime ?? "00:00:00")).add(Duration(minutes: content.value?.duration ?? 0));
     return Obx(() => Container(
           width: double.maxFinite,
           padding: const EdgeInsets.only(bottom: 10),
@@ -77,7 +76,7 @@ class LectureCard extends GetView<LectureController> {
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: SecText(
-                              "${content.value?.startTime ?? "00:00:00"} - ${timeFormat.format(endTime)}"),
+                              "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(time: content.value?.startTime ?? "00:00:00",duration: Duration(minutes: content.value?.duration ?? 0))}"),
                         ),
                         Row(
                           children: [
@@ -95,7 +94,8 @@ class LectureCard extends GetView<LectureController> {
                                   ? SecText("Canceled".tr)
                                   : SecText("Confirmed".tr),
                             ),
-                            if ((PermissionUtils.checkPermission(target: "Lectures",action: "add"))) ...[
+                            if ((PermissionUtils.checkPermission(
+                                target: "Lectures", action: "add"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),
@@ -103,7 +103,8 @@ class LectureCard extends GetView<LectureController> {
                                 height: 24,
                                 width: 24,
                                 child: PopupMenuButton<String>(
-                                  onSelected: (val)=>controller.more(val,data: content.toJson()),
+                                  onSelected: (val) => controller.more(val,
+                                      data: content.toJson()),
                                   color: AppColors.inverseCardColor,
                                   itemBuilder: (ctx) => [
                                     PopupMenuItem(
@@ -137,10 +138,9 @@ class LectureCard extends GetView<LectureController> {
                                           textColor: AppColors.mainTextColor,
                                         )),
                                   ],
-                                  child:
-                                  Icon(Icons.more_vert_outlined, color: AppColors.mainTextColor),
+                                  child: Icon(Icons.more_vert_outlined,
+                                      color: AppColors.mainTextColor),
                                 ),
-
                               )
                             ]
                           ],
@@ -148,7 +148,8 @@ class LectureCard extends GetView<LectureController> {
                         // if(PermissionUtils.checkPermission("addLecture"))
                       ],
                     ),
-                    MainText(content.value?.subject?.subjectName ?? "Unknown".tr),
+                    MainText(
+                        content.value?.subject?.subjectName ?? "Unknown".tr),
                   ],
                 ),
               ),

@@ -8,7 +8,7 @@ import '../../../components/text_field.dart';
 import '../../../models/subject_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/date_and_time_piker.dart';
+import '../../../utils/date_time_utils.dart';
 
 class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
   const PopUpIAddAndUpdateLectureCard({super.key});
@@ -73,7 +73,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                     borderRadius: BorderRadius.circular(24)
                                 ),
                                 child: Center(
-                                  child: Obx(()=>DropdownButton<String>(
+                                  child: Obx(()=>DropdownButton<String?>(
                                     value: controller.subjectId.value,
                                     icon: Icon(Icons.arrow_drop_down_sharp,
                                         color: AppColors.inverseCardColor),
@@ -89,7 +89,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                     selectedItemBuilder: (_){
                                       List<Widget> items = [];
                                       for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<String>(
+                                        items.add(DropdownMenuItem<String?>(
                                           value: subjectI.id,
                                           child: SizedBox(
                                               width: Get.width * 0.28,
@@ -104,7 +104,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                     },
                                     items: [
                                       for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
-                                        DropdownMenuItem<String>(
+                                        DropdownMenuItem<String?>(
                                             value: subjectI.id,
                                             child:  Column(
                                               children: [
@@ -207,7 +207,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
                                 readOnly: true,
-                                onTap: () => timePiker(context,controller.timeController),
+                                onTap: () => DateTimeUtils.timePiker(context,controller.timeController),
                                 onFieldSubmitted: (e) {
                                   controller.durationFocus.requestFocus();
                                 },
