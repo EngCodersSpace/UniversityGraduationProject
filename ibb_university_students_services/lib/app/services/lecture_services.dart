@@ -17,6 +17,7 @@ class LectureServices {
   static const int _createError = 612;
   static const int _updateError = 612;
   static const int _deleteError = 612;
+  static const int _changeStateError = 612;
   static const int _fetchYearsError = 619;
 
   static Map<
@@ -230,41 +231,40 @@ class LectureServices {
     }
   }
 
-  static Future<Result<Lecture>> changeLectureState({
+  static Future<Result<void>> changeLectureState({
     required int sectionId,
     required int levelId,
     required String year,
     required String term,
     required String day,
-    required data,
+    required String action,
+    required int id,
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response = await HttpProvider.put("changeLecStatus-lecture", data: data);
-      Lecture? newLecture;
+      response = await HttpProvider.post("changeLecStatus-lecture", data: {
+        "id": 7,
+        "action": action
+      });
       if (response?.statusCode == 200) {
-        // Subject? subject = await SubjectServices.fetchSubject(
-        //     id: response?.data["exam"]["subject_id"])
-        //     .then((e) => e.data);
-        // newLecture = Lecture.fromJson(response?.data["exam"], subject: subject);
-        // _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
-        // ?[day]?[newLecture.id] = newLecture;
+        _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
+        ?[day]?[id]?.lectureStatus = (action=="confirm")?true:(action=="cancel")?false:null;
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
+
       return Result(
-          data: newLecture,
-          hasError: true,
-          statusCode: response?.statusCode ?? _updateError,
+          hasError: false,
+          statusCode: response?.statusCode ?? _changeStateError,
           message: response?.data["message"] ?? "error");
     } catch (error) {
       return Result(
           hasError: true,
-          statusCode: _updateError,
+          statusCode: _changeStateError,
           message: error.toString(),
           data: null);
     }

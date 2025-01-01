@@ -239,6 +239,7 @@ class LectureController extends GetxController {
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
     if (val == "Update") {
+      await getSubjects();
       mode = "Update";
       if (data != null) {
         selectedLecture = data["id"];
@@ -270,27 +271,61 @@ class LectureController extends GetxController {
         showSnakeBar(message: "Delete failed");
       }
     } else if (val == "TemporaryReplace") {
+      await getSubjects();
+      mode = "Replace";
+      if (data != null) {
+        selectedLecture = data["id"];
+        doctorId.value =  data["doctor_id"];
+        subjectId.value = data["subject"]["subject_id"];
+        timeController.text = DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+        durationController.text = data["duration"].toString();
+        hallController.text = data["lecture_room"].toString();
+      }
+      Get.dialog(const PopUpIAddAndUpdateLectureCard());
     } else if (val == "Confirm") {
-    } else if (val == "Cancel") {}
+      selectedLecture = data?["id"];
+      if(selectedLecture == null)return;
+      Result<void> res = await LectureServices.changeLectureState(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          year: selectedYear.value!,
+          term: selectedTerm.value,
+          day: selectedDayName,
+          id: selectedLecture!, action: 'confirm');
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        selectedDay(selected.value)?[selectedLecture]?.lectureStatus = true;
+        selected.refresh();
+        showSnakeBar(message: "Confirm successfully");
+      } else {
+        showSnakeBar(message: "Confirm failed");
+      }
+    } else if (val == "Cancel") {
+      selectedLecture = data?["id"];
+      if(selectedLecture == null)return;
+      Result<void> res = await LectureServices.changeLectureState(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          year: selectedYear.value!,
+          term: selectedTerm.value,
+          day: selectedDayName,
+          id: selectedLecture!, action: 'cancel');
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        selectedDay(selected.value)?[selectedLecture]?.lectureStatus = false;
+        selected.refresh();
+        showSnakeBar(message: "Cancel successfully");
+      } else {
+        showSnakeBar(message: "Cancel failed");
+      }
+    }
   }
 
   Future<void> addButtonClick() async {
     // doctorId.value = 1000;
-
+    await getSubjects();
     mode = "Add";
     timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
-    subjects = {};
-    subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
-    if ((subjects?.isNotEmpty??false)&&subjects?.values.first != null) {
-      subjectId = RxString(subjects!.values.first.id);
-      if((subjects?.values.first.instructors?.isNotEmpty??false) && subjects?.values.first.instructors?.values.first != null) {
-        doctorId.value = subjects?.values.first.instructors?.values.first.id;
-      }else{
-        doctorId.value = null;
-      }
-    }else{
-
-    }
     Get.dialog(const PopUpIAddAndUpdateLectureCard());
   }
 
@@ -356,10 +391,42 @@ class LectureController extends GetxController {
       } else {
         showSnakeBar(message: "Update failed");
       }
+    }else if (mode == "Replace"){
+      if(selectedLecture == null)return;
+      Result<Lecture> res = await LectureServices.tempReplaceLecture(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          year: selectedYear.value!,
+          term: selectedTerm.value,
+          day: selectedDayName,
+          data: jsData,
+          id: selectedLecture);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200 && res.data!=null) {
+        selectedDay(selected.value)?[selectedLecture!] = res.data!;
+        selected.refresh();
+        showSnakeBar(message: "Replace successfully");
+      } else {
+        showSnakeBar(message: "Replace failed");
+      }
     }
     adding = false;
   }
 
+  Future<void> getSubjects()async{
+    subjects = {};
+    subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty??false)&&subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+      if((subjects?.values.first.instructors?.isNotEmpty??false) && subjects?.values.first.instructors?.values.first != null) {
+        doctorId.value = subjects?.values.first.instructors?.values.first.id;
+      }else{
+        doctorId.value = null;
+      }
+    }else{
+      subjectId.value = null;
+    }
+  }
   void popCardClear() {
     timeController.dispose();
     durationController.dispose();

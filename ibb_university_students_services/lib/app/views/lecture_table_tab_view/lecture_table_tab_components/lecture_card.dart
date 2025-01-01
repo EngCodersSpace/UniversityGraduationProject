@@ -25,8 +25,7 @@ class LectureCard extends GetView<LectureController> {
 
   @override
   Widget build(BuildContext context) {
-    print(content.value?.subject?.toJson()
-    );
+    print(content.value?.id);
     return Obx(() => Container(
           width: double.maxFinite,
           padding: const EdgeInsets.only(bottom: 10),
@@ -77,24 +76,26 @@ class LectureCard extends GetView<LectureController> {
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: SecText(
-                              "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(time: content.value?.startTime ?? "00:00:00",duration: Duration(minutes: content.value?.duration ?? 0))}"),
+                              "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(time: content.value?.startTime ?? "00:00:00", duration: Duration(minutes: content.value?.duration ?? 0))}"),
                         ),
                         Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: (content.value?.lectureStatus ?? false)
-                                    ? Colors.redAccent
-                                    : Colors.greenAccent,
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(32)),
+                            if (content.value?.lectureStatus != null) ...[
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: (content.value?.lectureStatus ?? false)
+                                      ? Colors.greenAccent
+                                      : Colors.redAccent,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(32)),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: (content.value?.lectureStatus ?? false)
+                                    ? SecText("Confirmed".tr)
+                                    : SecText("Canceled".tr),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: (content.value?.lectureStatus ?? false)
-                                  ? SecText("Canceled".tr)
-                                  : SecText("Confirmed".tr),
-                            ),
+                            ],
                             if ((PermissionUtils.checkPermission(
                                 target: "Lectures", action: "add"))) ...[
                               const SizedBox(
