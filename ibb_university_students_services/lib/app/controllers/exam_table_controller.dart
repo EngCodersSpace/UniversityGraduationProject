@@ -91,8 +91,8 @@ class ExamTableController extends GetxController {
       exams?.value = res.data ?? {};
       fieldMessage.value = "this section and level not has Exams";
       showSnakeBar(
-          title: "Fetch Exams Failed",
-          message: "this section and level doesn't has Exams ");
+          title: "Not Found Exams ",
+          message: "this section and level doesn't has exams ");
     }else{
       fieldMessage.value = "fetching exam failed please check connection";
       showSnakeBar(

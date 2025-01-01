@@ -7,6 +7,7 @@ import '../models/result.dart';
 import '../styles/app_colors.dart';
 import '../models/level_model.dart';
 import '../services/level_services.dart';
+import '../utils/snake_bar.dart';
 
 class StudentResultController extends GetxController {
   RxBool loadingState = true.obs;
@@ -18,6 +19,7 @@ class StudentResultController extends GetxController {
   RxDouble gpa = 0.0.obs;
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> terms = [];
+  RxString failedMessage = "".obs;
 
   @override
   void onInit() async {
@@ -30,7 +32,7 @@ class StudentResultController extends GetxController {
   }
 
   @override
-  void refresh() async{
+  void refresh() async {
     await fetchStudentGrads();
     super.refresh();
   }
@@ -40,32 +42,36 @@ class StudentResultController extends GetxController {
     summation.value = 0;
     if (selectedLevel.value == null) return;
     Result res = await GradServices.fetchStudentGrads(
-      levelId: selectedLevel.value!,
-      term: selectedTerm.value
-    );
-    print(res.message);
+        levelId: selectedLevel.value!, term: selectedTerm.value);
     if (res.statusCode == 200) {
       int unitSum = 0;
-      grads?.value = res.data??[];
-      for(Grad grad in grads?.value??[]){
-        summation.value += ((grad.examGrad??0)+(grad.workGrad??0))* (grad.subject?.units??0);
-        unitSum += (grad.subject?.units??0);
+      grads?.value = res.data ?? [];
+      for (Grad grad in grads?.value ?? []) {
+        summation.value += ((grad.examGrad ?? 0) + (grad.workGrad ?? 0)) *
+            (grad.subject?.units ?? 0);
+        unitSum += (grad.subject?.units ?? 0);
       }
-      gpa.value = summation.value/unitSum;
-    }else{
+      gpa.value = summation.value / unitSum;
+    } else if (res.statusCode == 404) {
       grads?.value = [];
+      failedMessage.value = "this level and term not has grads";
+      showSnakeBar(
+          title: "Not Found Grads",
+          message: "this level and term not has grads");
+    } else {
+      failedMessage.value = "fetching grads failed please check connection";
+      showSnakeBar(
+          title: "Fetch Grads Failed",
+          message: "fetching lectures failed please check connection ");
     }
+    grads?.refresh();
   }
-
-
 
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchStudentGrads();
   }
-
-
 
   void changeTerm(String? val) async {
     if (val == null) return;
@@ -74,8 +80,8 @@ class StudentResultController extends GetxController {
   }
 
   Future<void> initDropdownMenuLists() async {
-    List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelServices.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(

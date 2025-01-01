@@ -22,63 +22,8 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Stack(
+          : Column(
               children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: width,
-                    height: Get.height * 0.7,
-                    padding: const EdgeInsets.only(top: 8, bottom: 32),
-                    margin: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        const ResultHeaderCard(),
-                        RefreshIndicator(
-                          onRefresh: () async => controller.refresh(),
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: Get.height * 0.015),
-                                if((controller.grads?.value.isEmpty??true) )...[
-                                  SizedBox(height: Get.height * 0.25),
-                                  CustomText(
-                                    "Empty",
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h5),
-                                  )
-                                ],
-                                for (int i = 0;
-                                    i < (controller.grads?.value.length ?? 0);
-                                    i++) ...[
-                                  (i % 2 == 0)
-                                      ? ResultCard(
-                                          grad:
-                                              Rx(controller.grads!.value[i]))
-                                      : ResultCard(
-                                          grad:
-                                              Rx(controller.grads!.value[i]),
-                                          type: "odd",
-                                        ),
-                                  if (i <
-                                      ((controller.grads?.value.length ?? 0) -
-                                          1))
-                                    SizedBox(
-                                      height: Get.height * 0.005,
-                                    )
-                                ]
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Container(
                     height: Get.height * 0.25,
                     width: width,
@@ -99,6 +44,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        const SizedBox(height: 8,),
                         Row(
                           children: [
                             IconButton(
@@ -237,6 +183,59 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                         ),
                       ],
                     )),
+                const SizedBox(height: 32,),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: width,
+                    height: Get.height * 0.65,
+                    padding: const EdgeInsets.only(top: 8, bottom: 32),
+                    margin: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        const ResultHeaderCard(),
+                        RefreshIndicator(
+                          onRefresh: () async => controller.refresh(),
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(height: Get.height * 0.015),
+                                if((controller.grads?.value.isEmpty??true) )...[
+                                  SizedBox(height: Get.height*0.2,),
+                                  Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
+                                  IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
+                                ],
+                                for (int i = 0;
+                                i < (controller.grads?.value.length ?? 0);
+                                i++) ...[
+                                  (i % 2 == 0)
+                                      ? ResultCard(
+                                      grad:
+                                      Rx(controller.grads!.value[i]))
+                                      : ResultCard(
+                                    grad:
+                                    Rx(controller.grads!.value[i]),
+                                    type: "odd",
+                                  ),
+                                  if (i <
+                                      ((controller.grads?.value.length ?? 0) -
+                                          1))
+                                    SizedBox(
+                                      height: Get.height * 0.005,
+                                    )
+                                ]
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             )),
     );

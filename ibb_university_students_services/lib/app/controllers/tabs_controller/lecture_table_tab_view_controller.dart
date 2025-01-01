@@ -111,7 +111,7 @@ class LectureController extends GetxController {
       tableTime = null;
       fieldMessage.value = "this section and level not has Lectures";
       showSnakeBar(
-          title: "Fetch Lectures Failed",
+          title: "Not Found Lectures",
           message: "this section and level doesn't has Lectures ");
     } else {
       fieldMessage.value = "fetching lectures failed please check connection";

@@ -38,17 +38,12 @@ class GradServices {
           _gradsByLevels?[levelId]?[grad.id] = grad;
         }
 
-        return Result(
-            data: null,
-            hasError: false,
-            statusCode: response?.statusCode,
-            message: response?.data["message"] ?? "error");
       }
 
       return Result(
-          data: null,
-          hasError: true,
-          statusCode: response?.statusCode ?? _fetchError,
+          data: _gradsByLevels?[levelId]?.values.toList(),
+          hasError: false,
+          statusCode: response?.statusCode,
           message: response?.data["message"] ?? "error");
 
     } catch (error) {
