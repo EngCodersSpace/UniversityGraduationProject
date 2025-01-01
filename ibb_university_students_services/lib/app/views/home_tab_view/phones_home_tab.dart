@@ -271,7 +271,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.studentResultRoute,
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
@@ -279,12 +279,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
                                   CustomText(
-                                    "${"Student".tr}\n${"Degrees".tr}",
+                                      "${"Degrees".tr}\n${"Student".tr}",
                                       style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
+
                                 ] else ...[
                                   CustomText(
-                                    "${"Degrees".tr}\n${"Student".tr}",
+                                      "${"Student".tr}\n${"Degrees".tr}",
                                       style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]
@@ -301,12 +302,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
                                   CustomText(
-                                    "${"Student".tr}\n${"Degrees".tr}",
+                                      "${"Degrees".tr}\n${"Student".tr}",
                                       style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
+
                                 ] else ...[
                                   CustomText(
-                                    "${"Degrees".tr}\n${"Student".tr}",
+                                      "${"Student".tr}\n${"Degrees".tr}",
                                       style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
                                   ),
                                 ]

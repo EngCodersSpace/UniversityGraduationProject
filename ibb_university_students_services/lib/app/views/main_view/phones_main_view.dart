@@ -62,9 +62,9 @@ class PhoneMainView extends GetView<MainController> {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.repartition, color: AppColors.mainTextColor),
-          SecText("Reports".tr,
-              fontSize: 10,
+          Icon(Icons.assignment_outlined, color: AppColors.mainTextColor),
+          SecText("Assignments".tr,
+              fontSize: 7,
               fontWeight: FontWeight.bold,
               textColor: AppColors.mainTextColor)
         ],
@@ -175,12 +175,12 @@ class PhoneMainView extends GetView<MainController> {
                 },
                 icon: Column(
                   children: [
-                    Icon(Icons.description_outlined,
+                    Icon(Icons.assignment_outlined,
                         color: (controller.selectedIndex.value == 3)
                             ? Colors.transparent
                             : null),
-                    SecText("Reports".tr,
-                        fontSize: 10,
+                    SecText("Assignments".tr,
+                        fontSize: 8,
                         fontWeight: FontWeight.bold,
                         textColor: (controller.selectedIndex.value == 3)
                             ? Colors.transparent
