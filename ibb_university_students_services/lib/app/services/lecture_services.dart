@@ -12,6 +12,7 @@ import 'http_provider/http_provider.dart';
 
 class LectureServices {
   static const int _fetchAllError = 611;
+  // ignore: unused_field
   static const int _fetchError = 611;
   static const int _createError = 612;
   static const int _updateError = 612;
@@ -47,7 +48,6 @@ class LectureServices {
     try {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
-      print(response?.data);
       if (response?.statusCode == 200) {
         _lectures ??= {};
         if (_lectures?[sectionId.toString()] == null) {
@@ -73,6 +73,7 @@ class LectureServices {
                 ?[day] = {};
             for (Map<String, dynamic> jsLecture in response?.data["data"][term]
                 [day]) {
+              // print(jsLecture);
               Subject? subject = await SubjectServices.fetchSubject(
                       id: jsLecture["subject_id"])
                   .then((e) => e.data);
@@ -118,11 +119,10 @@ class LectureServices {
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
-        barrierDismissible: false, name: "loadingDialog");
+        barrierDismissible: false);
     late Response? response;
     try {
       response = await HttpProvider.post("create-lecture", data: data);
-      print(response?.data);
       Lecture? newLecture;
       if (response?.statusCode == 201) {
         Subject? subject = await SubjectServices.fetchSubject(
@@ -164,21 +164,26 @@ class LectureServices {
     late Response? response;
     try {
       response = await HttpProvider.put("update-lecture?id=$id", data: data);
-      print(response?.data);
-      Lecture? newLecture;
+      print(id);
+      print(data);
       if (response?.statusCode == 200) {
-        Subject? subject = await SubjectServices.fetchSubject(
-                id: response?.data["exam"]["subject_id"])
-            .then((e) => e.data);
-        newLecture = Lecture.fromJson(response?.data["exam"], subject: subject);
+        Subject? subject;
+        if(_lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
+        ?[day]?[id]?.subject?.id != data["subject_id"]){
+          subject = await SubjectServices.fetchSubject(
+              id: data["subject_id"])
+              .then((e) => e.data);
+        }
         _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
-        ?[day]?[newLecture.id] = newLecture;
+        ?[day]?[id]?.updateFromJson(data,subject: subject);
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: newLecture,
+          data: _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
+          ?[day]?[id],
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
@@ -204,7 +209,7 @@ class LectureServices {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response = await HttpProvider.delete("delete-exam?exam_id=$id");
+      response = await HttpProvider.delete("delete-lecture?id=$id");
       if (response?.statusCode == 200) {
         _lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
         ?[day]?.remove(id);

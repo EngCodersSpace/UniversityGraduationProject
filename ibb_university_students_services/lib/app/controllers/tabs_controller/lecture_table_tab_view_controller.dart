@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/models/level_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model.dart';
@@ -8,7 +7,6 @@ import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';
-import 'package:intl/intl.dart';
 import '../../components/custom_text.dart';
 import '../../models/days_table.dart';
 import '../../models/result.dart';
@@ -60,6 +58,7 @@ class LectureController extends GetxController {
   FocusNode phoneFocus = FocusNode();
   String mode = "Add";
   int? selectedLecture;
+  bool adding = false;
 
   @override
   void onInit() async {
@@ -242,8 +241,10 @@ class LectureController extends GetxController {
     if (val == "Update") {
       mode = "Update";
       if (data != null) {
-        // doctorId.value = data["instructor"]["doctor_id"];
-        timeController.text = DateTimeUtils.timeOfDayFromString(time: data["startTime"]).toString();
+        selectedLecture = data["id"];
+        doctorId.value =  data["doctor_id"];
+        subjectId.value = data["subject"]["subject_id"];
+        timeController.text = DateTimeUtils.formatStringTime(time: data["lecture_time"]);
         durationController.text = data["duration"].toString();
         hallController.text = data["lecture_room"].toString();
       }
@@ -260,9 +261,7 @@ class LectureController extends GetxController {
           term: selectedTerm.value,
           day: selectedDayName,
           id: selectedLecture);
-      Get.back();
-      selectedDay(selected.value)?.remove(selectedLecture);
-      selected.refresh();
+      Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?.remove(selectedLecture);
         selected.refresh();
@@ -296,6 +295,8 @@ class LectureController extends GetxController {
   }
 
   void submit() async {
+    if(adding) return;
+    adding = true;
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
       jsData["lecture_section_id"] = selectedDepartment.value;
@@ -310,34 +311,35 @@ class LectureController extends GetxController {
           ? jsData["doctor_id"] = doctorId.value
           : null;
       (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
-          ? jsData["lecture_time"] = timeController.text
+          ? jsData["lecture_time"] = DateTimeUtils.formatStringTime(time: timeController.text,format: TimeFormat.hhMmSs,currentFormat: TimeFormat.hhMmA)
           : null;
       (durationController.text.isNotEmpty &&
               durationController.text != "Unknown".tr)
-          ? jsData["lecture_duration"] = durationController.text
+          ? jsData["lecture_duration"] = int.tryParse(durationController.text)??0
           : null;
       (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
           ? jsData["lecture_room"] = hallController.text
           : null;
     }
     if (mode == "Add") {
-      print(jsData);
-      // Result<Lecture> res = await LectureServices.createLecture(
-      //     sectionId: selectedDepartment.value!,
-      //     levelId: selectedLevel.value!,
-      //     year: selectedYear.value??"2024",
-      //     term: selectedTerm.value,
-      //     day: selectedDayName,
-      //     data: jsData);
-      // Get.back();
-      // if (res.statusCode == 201 && res.data != null) {
-      //   selectedDay(selected.value)?[res.data!.id] = res.data!;
-      //   selected.refresh();
-      //   showSnakeBar(message: "Add successfully");
-      // } else {
-      //   showSnakeBar(message: "Add failed");
-      // }
+      Result<Lecture> res = await LectureServices.createLecture(
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          year: selectedYear.value??"2024",
+          term: selectedTerm.value,
+          day: selectedDayName,
+          data: jsData);
+
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 201 && res.data != null) {
+        selectedDay(selected.value)?[res.data!.id] = res.data!;
+        selected.refresh();
+        showSnakeBar(message: "Add successfully");
+      } else {
+        showSnakeBar(message: "Add failed");
+      }
     } else if (mode == "Update") {
+      if(selectedLecture == null)return;
       Result<Lecture> res = await LectureServices.updateLecture(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
@@ -345,16 +347,17 @@ class LectureController extends GetxController {
           term: selectedTerm.value,
           day: selectedDayName,
           data: jsData,
-          id: null);
-      Get.back();
-      if (res.statusCode == 200 && res.data != null) {
-        selectedDay(selected.value)?[res.data!.id] = res.data!;
+          id: selectedLecture);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200 && res.data!=null) {
+        selectedDay(selected.value)?[selectedLecture!] = res.data!;
         selected.refresh();
         showSnakeBar(message: "Update successfully");
       } else {
         showSnakeBar(message: "Update failed");
       }
     }
+    adding = false;
   }
 
   void popCardClear() {

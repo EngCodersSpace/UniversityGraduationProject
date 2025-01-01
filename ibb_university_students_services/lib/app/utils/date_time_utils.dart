@@ -3,39 +3,50 @@ import 'package:intl/intl.dart';
 
 import '../styles/app_colors.dart';
 
-enum TimeOfDayFormat {
-  s_24("hh:mm"),
-  s_12("hh:mm a");
+enum TimeFormat {
+  hhMm("hh:mm"),
+  hhMmSs("hh:mm:ss"),
+  hhMmA("hh:mm a");
 
   final String value;
 
-  const TimeOfDayFormat(this.value);
+  const TimeFormat(this.value);
 }
 
 class DateTimeUtils {
-  static String addToStringTime(
-      {required String time,
-      required Duration duration,
-      TimeOfDayFormat format = TimeOfDayFormat.s_12}) {
-    DateTime newTime = DateFormat("hh:mm:ss").parse(time).add(duration);
+  static String addToStringTime({
+    required String time,
+    required Duration duration,
+    TimeFormat format = TimeFormat.hhMmA,
+    TimeFormat currentFormat = TimeFormat.hhMmSs,
+  }) {
+    DateTime newTime =
+        DateFormat(currentFormat.value).parse(time).add(duration);
     return DateFormat(format.value).format(newTime);
   }
 
-  static String formatStringTime(
-      {required String time, TimeOfDayFormat format = TimeOfDayFormat.s_12}) {
-    return DateFormat(format.value).format(DateFormat("hh:mm:ss").parse(time));
+  static String formatStringTime({
+    required String time,
+    TimeFormat format = TimeFormat.hhMmA,
+    TimeFormat currentFormat = TimeFormat.hhMmSs,
+  }) {
+    return DateFormat(format.value)
+        .format(DateFormat(currentFormat.value).parse(time));
   }
 
-  static formatTimeOfDay(
-      {required TimeOfDay time,
-      TimeOfDayFormat format = TimeOfDayFormat.s_12}) {
+  static formatTimeOfDay({
+    required TimeOfDay time,
+    TimeFormat format = TimeFormat.hhMmA,
+  }) {
     return DateFormat(format.value)
         .format(DateTime(2000, 1, 1, time.hour, time.minute));
   }
 
-  static TimeOfDay timeOfDayFromString(
-      {required String time, TimeOfDayFormat format = TimeOfDayFormat.s_12}) {
-    return TimeOfDay.fromDateTime(DateFormat("hh:mm:ss").parse(time));
+  static TimeOfDay timeOfDayFromString({
+    required String time,
+    TimeFormat currentFormat = TimeFormat.hhMmSs,
+  }) {
+    return TimeOfDay.fromDateTime(DateFormat(currentFormat.value).parse(time));
   }
 
   static DateTime dateTimeFromString(String time) {

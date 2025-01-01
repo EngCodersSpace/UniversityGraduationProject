@@ -25,7 +25,8 @@ class LectureCard extends GetView<LectureController> {
 
   @override
   Widget build(BuildContext context) {
-    // DateTime endTime = DateTimeUtils.timeOfDayFromString(((content.value?.startTime ?? "00:00:00")).add(Duration(minutes: content.value?.duration ?? 0));
+    print(content.value?.subject?.toJson()
+    );
     return Obx(() => Container(
           width: double.maxFinite,
           padding: const EdgeInsets.only(bottom: 10),
@@ -168,7 +169,7 @@ class LectureCard extends GetView<LectureController> {
                               SecText("Doctor: ",
                                   fontWeight: FontWeight.bold, fontSize: 19),
                               SecText(
-                                  "Dr.${content.value?.instructor?.name ?? "unknown".tr}")
+                                  "Dr.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}")
                             ],
                           ),
                           Row(

@@ -17,7 +17,6 @@ class AppDataServices {
     late Response? response;
     try {
       response = await HttpProvider.get("all-data");
-      print(response?.statusCode);
       if (response?.statusCode == 200) {
         Map<String,Subject> subjects = {};
 

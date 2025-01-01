@@ -3,19 +3,15 @@ import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import '../models/result.dart';
 import 'http_provider/http_provider.dart';
 
-
 class SubjectServices {
   static const int _fetchAllError = 681;
   static const int _fetchError = 682;
 
-  static Map<String,Subject>? _subjects;
+  static Map<String, Subject>? _subjects;
 
-  static Future<Result<Map<String,Subject>>> fetchSubjects({
-    bool hardFetch = false,
-    bool asMap = false
-  }) async {
-    if (_subjects  != null &&
-        !hardFetch) {
+  static Future<Result<Map<String, Subject>>> fetchSubjects(
+      {bool hardFetch = false, bool asMap = false}) async {
+    if (_subjects != null && !hardFetch) {
       return Result(
         data: _subjects,
         statusCode: 200,
@@ -27,7 +23,6 @@ class SubjectServices {
     try {
       response = await HttpProvider.get("get-all-subject");
       if (response?.statusCode == 200) {
-
         return Result(
             data: null,
             hasError: false,
@@ -54,12 +49,12 @@ class SubjectServices {
     bool hardFetch = false,
   }) async {
 
-    if(_subjects == null){
-     fetchSubjects();
+    print("here2");
+    if (_subjects == null) {
+      fetchSubjects();
     }
 
-    if (_subjects?[id]  != null &&
-        !hardFetch) {
+    if (_subjects?[id] != null && !hardFetch) {
       return Result(
         data: _subjects?[id],
         statusCode: 200,
@@ -71,9 +66,9 @@ class SubjectServices {
     try {
       response = await HttpProvider.get("/get-subject-id?id=$id");
       if (response?.statusCode == 200) {
-        throw Exception(UnimplementedError);
+        _subjects?[response?.data["data"]["subject_id"]] =Subject.fromJson(response?.data["data"]);
         return Result(
-            data: null,
+            data: _subjects?[id],
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -93,8 +88,7 @@ class SubjectServices {
     }
   }
 
-  static void cacheSubjects(Map<String,Subject> subjects){
+  static void cacheSubjects(Map<String, Subject> subjects) {
     _subjects = subjects;
   }
-
 }

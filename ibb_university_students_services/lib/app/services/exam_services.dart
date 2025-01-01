@@ -12,6 +12,7 @@ import 'http_provider/http_provider.dart';
 
 class ExamServices {
   static const int  _fetchAllError = 621;
+  // ignore: unused_field
   static const int  _fetchError = 622;
   static const int _createError = 623;
   static const int _updateError = 624;

@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
 
-import '../services/app_data_services.dart';
-import '../services/http_provider/http_provider.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
