@@ -78,8 +78,8 @@ module.exports = {
       },
       lectureStatus:{
         type:Sequelize.BOOLEAN,
-        allowNull:false,
-        defaultValue:true,
+        allowNull:true,
+        defaultValue:null,
       },
       isReplaced: {
         type: Sequelize.BOOLEAN,

@@ -200,16 +200,6 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             where: whereClause,
             include: [
                 { model: subject, as: 'subject' },
-                { model: doctor,as: 'doctor',
-                  attributes: ['doctor_id'], 
-                  include: [
-                      {
-                        model: user, 
-                        as: 'user', 
-                        attributes: ['user_name'], 
-                      },
-                  ],
-                },
                 { model: section, as: 'section' },
                 { model: level, as: 'level' },
             ],
@@ -237,10 +227,11 @@ const getLecturesGroupedByCriteria = async (req, res) => {
             organizedLectures[term][day].push({
                 id: lec.id,
                 subject_id: lec.subject_id,
-                startTime: lec.lecture_time, 
-                duration: lec.lecture_duration, 
-                instructor: lec.doctor, 
-                lecture_room: lec.lecture_room, 
+                lecture_time: lec.lecture_time, 
+                lecture_duration: lec.lecture_duration, 
+                doctor_id:lec.doctor_id,
+                lecture_room: lec.lecture_room,
+                lectureStatus:lec.lectureStatus,
             });
         });
 
