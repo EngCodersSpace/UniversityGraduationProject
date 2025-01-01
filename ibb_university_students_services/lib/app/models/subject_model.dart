@@ -32,7 +32,7 @@ class Subject {
   factory Subject.fromJson(Map<String, dynamic> json) {
 
     Map<int,Instructor> instructors = {};
-    for(Map<String,dynamic> instructor in json["doctors"]){
+    for(Map<String,dynamic> instructor in (json["doctors"]??{})){
       instructors[instructor["doctor_id"]] = Instructor.fromJson(instructor);
     }
     return Subject(

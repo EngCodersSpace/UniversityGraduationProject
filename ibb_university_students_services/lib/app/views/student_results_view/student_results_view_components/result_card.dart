@@ -19,28 +19,23 @@ class ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color;
-    if (type == "even") {
-      if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
-          48) {
-        color = Colors.red;
-      } else {
-        color = AppColors.inverseCardColor.withOpacity(0.6);
-      }
+      String? subjectName = grad.value.subject?.subjectName??"";
+    if(grad.value.isAbsent == true){
+      subjectName = "|  ${grad.value.subject?.subjectName??""}";
+    }
+    TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
+    if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
+        48) {
+      style = AppTextStyles.failedGrads(textHeader: AppTextHeaders.h5);
     } else {
-      if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
-          48) {
-        color = Colors.red;
-      } else {
-        color = AppColors.inverseCardColor;
-      }
+      style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
     }
     return Obx(() => Container(
           width: double.maxFinite,
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: color,
+            color: (type == "even")?AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black26,
@@ -58,43 +53,38 @@ class ResultCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: ((Get.width - 16) * 2) / 7,
+                      width: ((Get.width - 16) * 2.5) / 7,
                       child: CustomText(
-                        grad.value.subject?.subjectName ?? "unknown",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        subjectName ?? "unknown",
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 0.55) / 7,
+                      width: ((Get.width - 16) * 0.5) / 7,
                       child: CustomText(
                         "${grad.value.subject?.units ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 1.45) / 7,
+                      width: ((Get.width - 16) * 1.25) / 7,
                       child: CustomText(
                         "${grad.value.workGrad ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 1.45) / 7,
+                      width: ((Get.width - 16) * 1.25) / 7,
                       child: CustomText(
                         "${grad.value.examGrad ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
                       width: ((Get.width - 16) * 0.55) / 7,
                       child: CustomText(
                         "${((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100))}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                   ],
@@ -103,43 +93,38 @@ class ResultCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: ((Get.width - 16) * 2) / 7,
+                      width: ((Get.width - 16) * 2.5) / 7,
                       child: CustomText(
-                        "${grad.value.subject?.subjectName}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        "${subjectName}",
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 0.55) / 7,
+                      width: ((Get.width - 16) * 0.5) / 7,
                       child: CustomText(
                         "${grad.value.subject?.units ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 1.45) / 7,
+                      width: ((Get.width - 16) * 1.25) / 7,
                       child: CustomText(
                         "${grad.value.workGrad ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
-                      width: ((Get.width - 16) * 1.45) / 7,
+                      width: ((Get.width - 16) * 1.25) / 7,
                       child: CustomText(
                         "${grad.value.examGrad ?? "??"}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                     SizedBox(
                       width: ((Get.width - 16) * 0.55) / 7,
                       child: CustomText(
                         "${((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100))}",
-                        style: AppTextStyles.mainStyle(
-                            textHeader: AppTextHeaders.h5),
+                        style: style,
                       ),
                     ),
                   ],

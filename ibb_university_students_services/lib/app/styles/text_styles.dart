@@ -59,5 +59,16 @@ class AppTextStyles {
       height: height,
     );
   }
-
+  static TextStyle failedGrads({
+    TextHeaders? textHeader,
+    double? height
+  }) {
+    textHeader ??= AppTextHeaders.h2;
+    return TextStyle(
+      fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
+      fontWeight: textHeader.fontWeight,
+      color: Colors.redAccent,
+      height: height,
+    );
+  }
 }

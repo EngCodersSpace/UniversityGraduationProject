@@ -26,12 +26,15 @@ class GradServices {
     try {
 
       response = await HttpProvider.get("get-grades?levelID=$levelId&Term=$term");
-
+      // print(response?.data);
       if (response?.statusCode == 200) {
         _gradsByLevels ??= {};
         _gradsByLevels?[levelId] = {};
+
         for(Map<String,dynamic> jsGrad in response?.data["Grades"]){
+          // print("here");
           Grad grad = Grad.fromJson(jsGrad);
+
           _gradsByLevels?[levelId]?[grad.id] = grad;
         }
 

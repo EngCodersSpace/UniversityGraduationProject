@@ -38,7 +38,7 @@ class ResultHeaderCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: ((Get.width-16)*2)/7,
+            width: ((Get.width-16)*2.5)/7,
             child: CustomText(
               "Subject Name",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
@@ -52,14 +52,14 @@ class ResultHeaderCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: ((Get.width-16)*1.45)/7,
+            width: ((Get.width-16)*1.25)/7,
             child: CustomText(
               "Practicality\n(30)",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
             ),
           ),
           SizedBox(
-            width: ((Get.width-16)*1.45)/7,
+            width: ((Get.width-16)*1.25)/7,
             child: CustomText(
               "Final Exam\n(70)",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),

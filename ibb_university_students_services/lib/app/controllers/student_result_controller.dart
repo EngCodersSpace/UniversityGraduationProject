@@ -43,6 +43,7 @@ class StudentResultController extends GetxController {
       levelId: selectedLevel.value!,
       term: selectedTerm.value
     );
+    print(res.message);
     if (res.statusCode == 200) {
       int unitSum = 0;
       grads?.value = res.data??[];
