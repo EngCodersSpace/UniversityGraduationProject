@@ -32,9 +32,9 @@ class PaymentsPhoneView extends GetView<PaymentsController> {
                     totalAmount: 10000,
                     paymentDate: "2024-10-10",
                     paymentState: "Payed",
-                    receiptNumber: "jghhjghgkhjkj",
+                    receiptNumber: "1056896247",
                     remainAmount: 0))),
-                const SizedBox(height: 8,)
+                const SizedBox(height: 24,)
               ]
             ],
           ),

@@ -18,11 +18,11 @@ class StudentInfoCard extends GetView<HomeTabController> {
       child: Row(
         children: [
           SizedBox(
-            width: (Get.width - 2) * 0.05,
+            width: (Get.width - 2) * 0.04,
           ),
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: (Get.width - 2) * 0.31,
+              maxWidth: (Get.width - 2) * 0.34,
               minWidth: (Get.width - 2) * 0.23,
             ),
             child: Column(

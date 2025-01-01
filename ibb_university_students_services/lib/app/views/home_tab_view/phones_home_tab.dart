@@ -35,8 +35,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      left: width * 0.02,
-                      right: width * 0.02,
+                      left: width * 0.01,
+                      right: width * 0.01,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

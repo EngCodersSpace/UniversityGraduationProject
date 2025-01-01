@@ -74,56 +74,32 @@ class PaymentsCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.mainCardColor,
                             borderRadius:
+                            const BorderRadius.all(Radius.circular(32)),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: SecText("Level ${(studentFee.value.levelId??0)+1}".tr),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.mainCardColor,
+                            borderRadius:
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText("${studentFee.value.paymentState}".tr),
+                          child: SecText("Term ${studentFee.value.term}".tr),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 16,
                     ),
                     CustomText(
-                      "receiptNumber: ${studentFee.value.receiptNumber ?? "Unknown".tr}",
+                      "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
                       style: AppTextStyles.mainStyle(
                           textHeader: AppTextHeaders.h2),
                     ),
                     const SizedBox(
                       height: 8,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            CustomText(
-                              "Level:   ",
-                              style: AppTextStyles.mainStyle(
-                                  textHeader: AppTextHeaders.h3),
-                            ),
-                            CustomText(
-                              "${studentFee.value.levelId ?? "unknown".tr}",
-                              style: AppTextStyles.mainStyle(
-                                  textHeader: AppTextHeaders.h3),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            CustomText(
-                              "Term:   ",
-                              style: AppTextStyles.mainStyle(
-                                  textHeader: AppTextHeaders.h3),
-                            ),
-                            CustomText(
-                              "${studentFee.value.term ?? "unknown"}",
-                              style: AppTextStyles.mainStyle(
-                                  textHeader: AppTextHeaders.h3),
-                            )
-                          ],
-                        ),
-                      ],
                     ),
                   ],
                 ),
@@ -139,7 +115,7 @@ class PaymentsCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            "Total Amount:",
+                            "Total Amount",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),
@@ -155,7 +131,7 @@ class PaymentsCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            "Payed Amount:",
+                            "Payed Amount",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),
@@ -170,7 +146,7 @@ class PaymentsCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            "Remain Amount:",
+                            "Remain Amount",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),

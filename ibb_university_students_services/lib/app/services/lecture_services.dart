@@ -165,8 +165,6 @@ class LectureServices {
     late Response? response;
     try {
       response = await HttpProvider.put("update-lecture?id=$id", data: data);
-      print(id);
-      print(data);
       if (response?.statusCode == 200) {
         Subject? subject;
         if(_lectures?[sectionId.toString()]?[levelId.toString()]?[year]?[term]
