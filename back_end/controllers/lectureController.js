@@ -65,8 +65,27 @@ const replaceOne = async (req, res) => {
     originalLecture.isReplaced = true;
     await originalLecture.save({ transaction });
 
-    const replacedLecture = await lecture.create(req.body , { transaction });
-    
+    const updateFields = {
+      originalLecturId:req.query.id,
+      lecture_section_id:originalLecture.lecture_section_id,
+      lecture_level_id:originalLecture.lecture_level_id,
+      term:originalLecture.term,
+      year:originalLecture.year,
+      subject_id: req.body.subject_id,
+      doctor_id: req.body.doctor_id ,
+      lecture_time: req.body.lecture_time || originalLecture.lecture_time,
+      lecture_duration: req.body.lecture_duration || originalLecture.lecture_duration,
+      lecture_day:req.body.lecture_day || originalLecture.lecture_day,
+      lecture_room: req.body.lecture_room || originalLecture.lecture_room,
+    };
+    const replacedLecture = await lecture.create(updateFields , { transaction });
+
+    // Object.entries(updateFields).forEach(([key, value]) => {
+    //   if (value !== undefined) {
+    //     originalLecture[key] = value; 
+    //   }
+    // });
+
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     const [hours, minutes, seconds] = originalLecture.lecture_time.split(':').map(Number);
     nextLectureDay.setHours(hours, minutes, seconds, 0);
