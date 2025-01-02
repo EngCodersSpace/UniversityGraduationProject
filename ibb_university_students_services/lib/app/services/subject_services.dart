@@ -48,8 +48,6 @@ class SubjectServices {
     required String id,
     bool hardFetch = false,
   }) async {
-
-    print("here2");
     if (_subjects == null) {
       fetchSubjects();
     }

@@ -25,7 +25,6 @@ class LectureCard extends GetView<LectureController> {
 
   @override
   Widget build(BuildContext context) {
-    print(content.value?.id);
     return Obx(() => Container(
           width: double.maxFinite,
           padding: const EdgeInsets.only(bottom: 10),
@@ -54,7 +53,9 @@ class LectureCard extends GetView<LectureController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: height * 0.52,
+                constraints: BoxConstraints(
+                  minHeight:height * 0.52,
+                ),
                 width: double.maxFinite,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -62,7 +63,7 @@ class LectureCard extends GetView<LectureController> {
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -150,6 +151,7 @@ class LectureCard extends GetView<LectureController> {
                         // if(PermissionUtils.checkPermission("addLecture"))
                       ],
                     ),
+                    const SizedBox(height: 8,),
                     MainText(
                         content.value?.subject?.subjectName ?? "Unknown".tr),
                   ],

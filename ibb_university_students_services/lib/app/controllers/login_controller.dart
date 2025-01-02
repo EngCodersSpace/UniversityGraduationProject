@@ -31,7 +31,7 @@ class LoginController extends GetxController {
     if (credentials != null) {
       // id.text = credentials[0];
       // password.text = credentials[1];
-      id.text = "10";
+      id.text = "1000";
       password.text = "1234pass@";
       // password.text = "1111aaaa@";
       onLogin();

@@ -403,7 +403,8 @@ class LectureController extends GetxController {
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200 && res.data!=null) {
-        selectedDay(selected.value)?[selectedLecture!] = res.data!;
+        selectedDay(selected.value)?.remove(selectedLecture);
+        selectedDay(selected.value)?[res.data!.id] = res.data!;
         selected.refresh();
         showSnakeBar(message: "Replace successfully");
       } else {
