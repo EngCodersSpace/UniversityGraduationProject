@@ -9,7 +9,7 @@ router.use(verifyToken);
 
 router.post('/create-lecture', checkRole(['student_affairs', 'teacher','controller']), vali.createLectureValidator ,CRUD.createLecture);
 router.put('/update-lecture', checkRole(['student_affairs', 'dean','controller']),vali.updateLectureValidator, CRUD.updateLecture);
-router.post('/replaceOne-lecture', checkRole(['student_affairs', 'teacher','controller']),CRUD.replaceOne);
+router.post('/replaceOne-lecture', checkRole(['lecturer', 'teacher','controller']),CRUD.replaceOne);
 router.post('/changeLecStatus-lecture', checkRole(['representative', 'teacher','controller']),CRUD.changeLecStatus);
 
 
