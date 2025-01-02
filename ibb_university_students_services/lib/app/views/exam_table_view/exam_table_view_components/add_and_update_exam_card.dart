@@ -211,7 +211,6 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                     dropdownColor: AppColors.mainCardColor,
                                     onChanged: (val) {
                                       controller.day.value = val ?? "Saturday";
-                                      controller.hallFocus.requestFocus();
                                     },
                                     items: [
                                       DropdownMenuItem<String>(
@@ -267,7 +266,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                 labelText: "Hall".tr,
                                 focusNode: controller.hallFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.dateFocus.requestFocus();
+                                  controller.submit();
                                 },
                                 width: (Get.width-12)*0.46,
                               ),

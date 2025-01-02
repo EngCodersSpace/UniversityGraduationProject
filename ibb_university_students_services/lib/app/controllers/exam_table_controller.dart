@@ -254,7 +254,6 @@ class ExamTableController extends GetxController {
   }
 
   void submit() async {
-    Get.back();
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
       jsData["exam_section_id"] = selectedDepartment.value;
@@ -284,7 +283,7 @@ class ExamTableController extends GetxController {
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           data: jsData);
-      Get.back();
+      Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 201 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
@@ -299,7 +298,7 @@ class ExamTableController extends GetxController {
           data: jsData,
           id: selectedExam
       );
-      Get.back();
+      Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();

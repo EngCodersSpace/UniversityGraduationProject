@@ -126,7 +126,7 @@ class ExamServices {
     late Response? response;
     try {
       response = await HttpProvider.put(
-          "update-exam/$id",data: data);
+          "update-exam?exam_id=$id",data: data);
       Exam? newExam;
       if (response?.statusCode == 200) {
         Subject? subject = await SubjectServices.fetchSubject(id:  response?.data["exam"]["subject_id"]).then((e)=>e.data);
@@ -156,7 +156,7 @@ class ExamServices {
     required id,
     bool hardFetch = false,
   }) async {
-    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false,name: "loadingDialog");
+    get_x.Get.dialog(const PopUpLoadingCard(),barrierDismissible: false);
     late Response? response;
     try {
       response = await HttpProvider.delete(
