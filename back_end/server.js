@@ -28,6 +28,7 @@ const getAllData=require('./routes/dataRoute')
 const subject=require('./routes/subjectRoute')
 const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
+const bookRoutes = require('./routes/bookRoutes');
 
 
 
@@ -43,6 +44,7 @@ app.use(phoneNumber);
 app.use(subject);
 app.use(studyPlaneRoute);
 app.use(studentFeeRoute);
+app.use(bookRoutes);
 
 
 
