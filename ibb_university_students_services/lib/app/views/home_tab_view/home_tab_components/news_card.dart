@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
-import '../../../components/custom_text.dart';
+import '../../../styles/text_styles.dart';
 
 class NewsCard extends StatelessWidget {
   NewsCard({
@@ -65,7 +66,8 @@ class NewsCard extends StatelessWidget {
                     left: width * 0.1,
                     right: width * 0.2),
                 child:
-                MainText(text),
+                CustomText(text,style: AppTextStyles.mainStyle(
+                    textHeader: AppTextHeaders.h1,height: 0)),
               )),
         ],
       ),

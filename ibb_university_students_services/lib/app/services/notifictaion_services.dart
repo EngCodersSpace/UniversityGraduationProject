@@ -270,6 +270,7 @@ class NotificationServices {
       );
     }
 
+    // ignore: unused_local_variable
     late Response? response;
     try {
       // response = await HttpProvider.post("");

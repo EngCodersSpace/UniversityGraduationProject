@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../controllers/stydent_result_controller.dart';
+import '../controllers/student_result_controller.dart';
 
 class StudentResultBinding implements Bindings{
   @override

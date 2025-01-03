@@ -9,12 +9,12 @@ import '../../../components/custom_text.dart';
 
 class BookContainer extends GetView<LibraryController> {
   BookContainer({required this.book, super.key});
-  Map<String, dynamic> book = {};
+  Map<String,dynamic> book = {};
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => controller.showBookInfo(book),
+      onTap: ()=>controller.showBookInfo(book),
       child: SizedBox(
         width: Get.width / 5,
         child: Column(
@@ -24,7 +24,7 @@ class BookContainer extends GetView<LibraryController> {
               height: 8,
             ),
             SizedBox(
-              height: Get.width / 5,
+              height: Get.width/5,
               child: Image(
                 image: AssetImage(
                   book["image"] ?? "",

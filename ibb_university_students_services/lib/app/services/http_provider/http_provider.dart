@@ -10,26 +10,29 @@ import '../user_services.dart';
 class HttpProvider {
   static final Dio _dio = Dio();
 
-  static init({
+  static Future<void> init({
     String baseUrl = "",
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration connectTimeout = const Duration(seconds: 3),
     Duration sendTimeout = const Duration(seconds: 3),
     Duration receiveTimeout = const Duration(seconds: 3),
-  }) {
+  }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
     _dio.options.headers["Content-Type"] = contentType;
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
+    if(kIsWeb){
+     await reSetAccessToken();
+    }
     _dio.interceptors.add(InterceptorsWrapper(
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
         if (kDebugMode) {
-          print(error.requestOptions.path);
+          print(error.requestOptions.uri);
           print("HttpProviderError ------------------ ");
           print("error: ${error.message}");
           print("status code: ${error.response?.statusCode}");
@@ -63,10 +66,9 @@ class HttpProvider {
         }
 
         if (error.response?.statusCode == 401 &&
-            error.requestOptions.path == "refresh") {
+            error.requestOptions.path == "refresh"){
           return handler.resolve(error.response!);
         }
-
         return handler.next(error);
       },
     ));
@@ -106,9 +108,9 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> patch(String url, {dynamic data}) async {
+  static Future<Response?> put(String url, {dynamic data}) async {
     try {
-      final response = await _dio.patch(url, data: data);
+      final response = await _dio.put(url, data: data);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -144,8 +146,9 @@ class HttpProvider {
       RequestOptions requestOptions) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      Response response = await _dio.post("refresh",
-          data: {"refreshToken": prefs.getString("refreshToken") ?? ""});
+      Response response = await _dio.post("refresh",data: {
+        "refreshToken":prefs.getString("refreshToken")??""
+      });
       if (response.statusCode == 401) {
         // re login if remember me data available
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -176,11 +179,24 @@ class HttpProvider {
 
   static void addAccessTokenHeader(String? accessToken) {
     _dio.options.headers["Authorization"] = "Bearer $accessToken";
+    if(kIsWeb){
+      storeAccessToken(accessToken??"");
+    }
   }
 
-  static void storeRefreshToken(String refreshToken) async {
+  static void storeRefreshToken(String refreshToken) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("refreshToken", refreshToken);
+    await prefs.setString("refreshToken",refreshToken);
+  }
+
+  static void storeAccessToken(String accessToken) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("AccessToken",accessToken);
+  }
+
+  static Future<void> reSetAccessToken() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _dio.options.headers["Authorization"] = "Bearer ${prefs.getString("AccessToken")}";
   }
 
   static void removeAccessTokenHeader() {

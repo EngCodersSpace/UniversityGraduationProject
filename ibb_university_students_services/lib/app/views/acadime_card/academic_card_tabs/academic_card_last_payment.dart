@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
+import 'package:ibb_university_students_services/app/models/student_model.dart';
 
 import '../../../components/custom_text.dart';
 import '../../../styles/app_colors.dart';
 
-class AcademicCardLastPayment extends StatelessWidget {
+class AcademicCardLastPayment extends GetView<AcademicCardController> {
   const AcademicCardLastPayment({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Obx(()=>SizedBox(
       width: Get.width * 0.88,
       child: Card(
           color: Colors.white,
           elevation: 8,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -105,7 +107,7 @@ class AcademicCardLastPayment extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 SecText(
-                                  "حاسبات",
+                                  controller.user?.value.section?.nameData?["ar"]??"??",
                                   textColor: AppColors.inverseCardColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
@@ -124,12 +126,16 @@ class AcademicCardLastPayment extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
-                                  "5",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
+                                if(controller.user?.value is Student)...[
+                                  SecText(
+                                    (controller.user?.value as Student).level?.name??"??",
+                                    textColor: AppColors.inverseCardColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ]else...[
+                                  SecText("??")
+                                ],                                 
                                 SecText(
                                   "  :المستوى",
                                   textColor: AppColors.inverseCardColor,
@@ -193,17 +199,19 @@ class AcademicCardLastPayment extends StatelessWidget {
                       child: Container(
                         decoration: const BoxDecoration(
                             image: DecorationImage(
-                          image: AssetImage(
-                            "assets/images/ibb_university_logo.png",
-                          ),
-                          fit: BoxFit.contain,
-                          opacity: 0.25,
-                        )),
-                      ))
+                              image: AssetImage(
+                                "assets/images/ibb_university_logo.png",
+                              ),
+                              fit: BoxFit.contain,
+                              opacity: 0.25,
+                            )
+                        ),
+                      )
+                  )
                 ],
               ),
             ),
           )),
-    );
+    ));
   }
 }

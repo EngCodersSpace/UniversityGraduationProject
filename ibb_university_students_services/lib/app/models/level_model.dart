@@ -16,7 +16,7 @@ class Level {
   factory Level.fromJson(Map<String, dynamic> json) {
     return Level(
       id: json['id'],
-      name: json['level_name'],
+      name: json['level_name'].toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

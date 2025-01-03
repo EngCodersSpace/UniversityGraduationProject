@@ -9,12 +9,14 @@ class CustomText extends StatelessWidget {
         super.key,
         this.style ,
         this.textAlign = TextAlign.center,
+        this.softWrap = true,
       }){
     style?? AppTextStyles.mainStyle();
   }
   String text;
   TextStyle? style;
   TextAlign textAlign;
+  bool softWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,8 @@ class CustomText extends StatelessWidget {
       text,
       style: style,
       textAlign: textAlign,
+      overflow: (!softWrap)?TextOverflow.ellipsis:null,
+      softWrap: softWrap,
     );
   }
 }

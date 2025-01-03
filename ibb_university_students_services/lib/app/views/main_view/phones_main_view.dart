@@ -3,10 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/phones_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
-import 'package:ibb_university_students_services/app/views/table_tab_view/phones_table_tab_view.dart';
-
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
 import '../home_tab_view/phones_home_tab.dart';
@@ -18,8 +17,6 @@ class PhoneMainView extends GetView<MainController> {
 
   double height = Get.height;
   double width = Get.width;
-  late FloatingActionButtonLocation floatingActionButtonLocation;
-
   @override
   Widget build(BuildContext context) {
     List iconFAB = [
@@ -39,10 +36,11 @@ class PhoneMainView extends GetView<MainController> {
           Icon(
             Icons.calendar_month,
             color: AppColors.mainTextColor,
+            size: 18,
           ),
           SecText(
-            "Table".tr,
-            fontSize: 10,
+            "LectureTable".tr,
+            fontSize: 8,
             fontWeight: FontWeight.bold,
             textColor: AppColors.mainTextColor,
           )
@@ -64,9 +62,9 @@ class PhoneMainView extends GetView<MainController> {
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.repartition, color: AppColors.mainTextColor),
-          SecText("Reports".tr,
-              fontSize: 10,
+          Icon(Icons.assignment_outlined, color: AppColors.mainTextColor),
+          SecText("Assignments".tr,
+              fontSize: 7,
               fontWeight: FontWeight.bold,
               textColor: AppColors.mainTextColor)
         ],
@@ -140,7 +138,7 @@ class PhoneMainView extends GetView<MainController> {
                           : null,
                     ),
                     SecText(
-                      "Table".tr,
+                      "LectureTable".tr,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       textColor: (controller.selectedIndex.value == 1)
@@ -177,12 +175,12 @@ class PhoneMainView extends GetView<MainController> {
                 },
                 icon: Column(
                   children: [
-                    Icon(Icons.description_outlined,
+                    Icon(Icons.assignment_outlined,
                         color: (controller.selectedIndex.value == 3)
                             ? Colors.transparent
                             : null),
-                    SecText("Reports".tr,
-                        fontSize: 10,
+                    SecText("Assignments".tr,
+                        fontSize: 8,
                         fontWeight: FontWeight.bold,
                         textColor: (controller.selectedIndex.value == 3)
                             ? Colors.transparent
@@ -220,7 +218,7 @@ class PhoneMainView extends GetView<MainController> {
 
   List screens = [
     PhoneNotificationView(),
-    PhoneTableTabView(),
+    PhoneLectureTableTabView(),
     PhoneMainTab(),
     Center(
       child: MainText(

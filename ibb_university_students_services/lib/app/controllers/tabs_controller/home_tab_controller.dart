@@ -17,50 +17,6 @@ class HomeTabController extends GetxController
   late Timer _timer;
   int _newsCurrentPos = 0;
 
-  void newsAnimate(double width, int i, Duration duration) {
-    try {
-      scrollController.animateTo(width * i,
-          duration: duration, curve: Curves.easeInOutQuart);
-      tabController.animateTo(i, duration: duration);
-    } catch (e) {
-      if (kDebugMode) {
-        print("${e.toString()}\n_____________________________________________");
-      }
-    }
-    try {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(width * i,
-            duration: duration, curve: Curves.easeInOutQuart);
-        tabController.animateTo(i, duration: duration);
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("${e.toString()}\n_____________________________________________");
-      }
-    }
-  }
-
-  void _setUpTimer() {
-    try {
-      const duration = Duration(seconds: 5);
-      _timer = Timer.periodic(duration, (timer) {
-        _newsCurrentPos++;
-        if (_newsCurrentPos > 2) {
-          _newsCurrentPos = 0;
-          if (scrollController.hasClients) {
-            scrollController.jumpTo(0);
-          }
-        }
-        newsAnimate(Get.width * 0.8, _newsCurrentPos,
-            const Duration(seconds: 2, milliseconds: 500));
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print("${e.toString()}\n_____________________________________________");
-      }
-    }
-  }
-
   @override
   void onInit() async {
     Result res = await UserServices.fetchUser();
@@ -78,8 +34,6 @@ class HomeTabController extends GetxController
     tabController.dispose();
   }
 
-  // void _setUpTimer() {
-  //   try{
   bool scrollEvent(UserScrollNotification s) {
     try {
       Duration d = const Duration(seconds: 0, milliseconds: 500);
@@ -104,16 +58,20 @@ class HomeTabController extends GetxController
     return false;
   }
 
-  void startTimer() {
+  void _setUpTimer() {
     try {
-      _timer.cancel();
-      _newsCurrentPos = 0;
-      tabController.animateTo(0);
-      _setUpTimer();
-    } catch (e) {
-      if (kDebugMode) {
-        print("${e.toString()}\n_____________________________________________");
-      }
+      const duration = Duration(seconds: 5);
+      _timer = Timer.periodic(duration, (timer) {
+        _newsCurrentPos++;
+        if (_newsCurrentPos > 2) {
+          _newsCurrentPos = 0;
+          if (scrollController.hasClients) {
+            scrollController.jumpTo(0);
+          }
+        }
+        newsAnimate(Get.width * 0.8, _newsCurrentPos,
+            const Duration(seconds: 2, milliseconds: 500));
+      });
     } catch (e) {
       if (kDebugMode) {
         print("${e.toString()}\n_____________________________________________");
@@ -121,19 +79,32 @@ class HomeTabController extends GetxController
     }
   }
 
-  // void startTimer() {
-  //   try {
-  //     _timer.cancel();
-  //     _newsCurrentPos = 0;
-  //     tabController.index = (0);
-  //     _setUpTimer();
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print(
-  //           "${e.toString()}\n_____________________________________________");
-  //     }
-  //   }
-  // }
+  void startTimer() {
+    try {
+      _timer.cancel();
+      _newsCurrentPos = 0;
+      tabController.index = (0);
+      _setUpTimer();
+    } catch (e) {
+      if (kDebugMode) {
+        print("${e.toString()}\n_____________________________________________");
+      }
+    }
+  }
+
+  void newsAnimate(double width, int i, Duration duration) {
+    try {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(width * i,
+            duration: duration, curve: Curves.easeInOutQuart);
+        tabController.animateTo(i, duration: duration);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("${e.toString()}\n_____________________________________________");
+      }
+    }
+  }
 
   void libraryRoute() {
     Get.toNamed("/library");
@@ -146,6 +117,9 @@ class HomeTabController extends GetxController
   void academicCardRoute() {
     Get.toNamed("/academic_card");
   }
+  void paymentsRoute() {
+    Get.toNamed("/student_payments");
+  }
 
   void examTableRoute() {
     Get.toNamed("/exam_table");
@@ -154,6 +128,5 @@ class HomeTabController extends GetxController
   void studentResultRoute() {
     Get.toNamed("/student_result");
   }
+
 }
-// }
-//     }

@@ -24,7 +24,7 @@ class DayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      padding: EdgeInsets.symmetric(horizontal: height * 0.12),
+      padding: EdgeInsets.symmetric(horizontal: height*0.12),
       decoration: BoxDecoration(
         color: (selected) ? AppColors.inverseCardColor : null,
         borderRadius: BorderRadius.all(Radius.circular(height * 0.2)),
@@ -35,9 +35,9 @@ class DayCard extends StatelessWidget {
             child: SecText(
               text,
               fontWeight: FontWeight.bold,
-              fontSize: (Get.locale?.languageCode == "ar") ? 12 : 18,
+              fontSize: (Get.locale?.languageCode == "ar")?12:16,
               textColor:
-                  (selected) ? AppColors.mainTextColor : AppColors.secTextColor,
+              (selected) ? AppColors.mainTextColor : AppColors.secTextColor,
             )),
       ),
     );

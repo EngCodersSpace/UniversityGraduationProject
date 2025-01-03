@@ -37,8 +37,8 @@ class NotificationCard extends StatelessWidget {
                     width: double.maxFinite,
                     child: CustomText(
                       " the title:",
-                      style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h1),
+                      style:
+                          AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1),
                       textAlign: TextAlign.start,
                     ),
                   ),

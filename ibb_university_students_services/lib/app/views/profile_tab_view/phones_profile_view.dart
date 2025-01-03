@@ -60,24 +60,22 @@ class PhoneProfileView extends GetView<ProfileController> {
                                       : null,
                                 ),
                                 child: ((controller.user.profileImage !=
-                                            null) &&
-                                        (controller.user.profileImage != ""))
+                                    null) &&
+                                    (controller.user.profileImage != ""))
                                     ? null
-                                    : Center(
-                                        child: MainText(
-                                          controller.user.name?[0] ??
-                                              "".toUpperCase(),
-                                          fontSize: 50,
-                                        ),
-                                      ),
+                                    : Center(child: MainText(
+                                  controller.user.name?[0] ??
+                                      "".toUpperCase(),
+                                  fontSize: 50,
+                                ),),
                               ),
                             ],
                           ),
                           SizedBox(
                             height: height * 0.01,
                           ),
-                          MainText(controller.user.name ?? "Unknown".tr),
-                          SecText(controller.user.email ?? "Unknown".tr,
+                          MainText(controller.user.name??"Unknown".tr),
+                          SecText(controller.user.email??"Unknown".tr,
                               textColor: AppColors.mainTextColor),
                         ],
                       ),

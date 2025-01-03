@@ -6,6 +6,7 @@ class MainController extends GetxController {
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
   @override
+
   void onInit() async {
     changeTabIndex(selectedIndex.value);
     super.onInit();
@@ -44,6 +45,7 @@ class MainController extends GetxController {
     }
     selectedIndex.value = index;
   }
+
 
   @override
   void onClose() {}

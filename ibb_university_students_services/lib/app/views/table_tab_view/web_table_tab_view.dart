@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
-import 'package:ibb_university_students_services/app/controllers/tabs_controller/table_tab_view_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
 
 // ignore: must_be_immutable
-class WebTableTabView extends GetView<TableTabController> {
+class WebTableTabView extends GetView<LectureController> {
   double width = Get.width;
   double height = Get.height;
 

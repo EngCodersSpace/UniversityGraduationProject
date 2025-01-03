@@ -31,15 +31,10 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             "Notifications".tr,
                             textColor: AppColors.inverseMainTextColor,
                           ),
-                          if (["teacher", "doctor"]
-                              .contains(UserServices.permission)) ...[
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.add_alert,
-                                  color: AppColors.inverseIconColor,
-                                ))
+                          if(["teacher","doctor"].contains(UserServices.permission))...[
+                            IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
                           ]
+
                         ],
                       ),
                       SizedBox(
@@ -48,7 +43,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                       for (String key
                           in controller.notificationGroups.keys) ...[
                         SecText(
-                          (key == controller.today) ? "Today".tr : key,
+                          (key == controller.today)?"Today".tr:key,
                           textColor: AppColors.highlightTextColor,
                         ),
                         for (int i = 0;
@@ -60,21 +55,17 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               NotificationCard(
-                                message: controller.notificationGroups[key]?[i]
-                                        .message?.value ??
-                                    "",
-                                author: controller.notificationGroups[key]?[i]
-                                        .author?.value ??
-                                    "",
-                                time: controller.notificationGroups[key]?[i]
-                                        .time?.value ??
-                                    "",
-                                readState: controller
-                                        .notificationGroups[key]?[i]
-                                        .readState
-                                        ?.value ??
-                                    true,
-                              ),
+                                  message: controller
+                                          .notificationGroups[key]?[i]
+                                          .message
+                                          ?.value ??
+                                      "",
+                                  author: controller.notificationGroups[key]?[i]
+                                          .author?.value ??
+                                      "",
+                                  time: controller.notificationGroups[key]?[i]
+                                          .time?.value ??
+                                      "",readState: controller.notificationGroups[key]?[i].readState?.value??true,),
                             ],
                           )
                       ]
