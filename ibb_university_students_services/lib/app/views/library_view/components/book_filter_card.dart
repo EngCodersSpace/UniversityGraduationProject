@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import 'package:ibb_university_students_services/app/views/library_view/components/sort_icons.dart';
 import '../../../components/buttons.dart';
-import '../../../components/custom_text.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';

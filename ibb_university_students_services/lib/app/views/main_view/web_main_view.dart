@@ -479,7 +479,7 @@ class WebMainView extends GetView<MainController> {
       ),
     ),
     ExamTableWebView(),
-    StudentResultsWebView(),
+    const StudentResultsWebView(),
     const AcademicCardWebView(),
   ];
 

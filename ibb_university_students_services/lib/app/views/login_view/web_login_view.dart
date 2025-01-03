@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/utils/validators.dart';
 
 import '../../components/buttons.dart';
 import '../../components/custom_text.dart';
@@ -143,7 +144,7 @@ class WebLoginView extends GetView<LoginController> {
                           width: width,
 
                           controller: controller.id,
-                          validator: (id) => controller.validateID(id),
+                          validator: (id) => Validators.validateID(id),
                           labelText: 'studentid'.tr,
                           //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
@@ -154,7 +155,7 @@ class WebLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                             controller: controller.password,
                             validator: (pwd) =>
-                                controller.validatePassword(pwd),
+                                Validators.validatePassword(pwd),
                             labelText: 'password'.tr,
                             //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,

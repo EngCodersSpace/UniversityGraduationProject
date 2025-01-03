@@ -95,7 +95,7 @@ class ResultCard extends StatelessWidget {
                     SizedBox(
                       width: ((Get.width - 16) * 2.5) / 7,
                       child: CustomText(
-                        "${subjectName}",
+                        "$subjectName",
                         style: style,
                       ),
                     ),
