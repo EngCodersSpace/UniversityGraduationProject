@@ -10,6 +10,8 @@ class ExamTableWebView extends GetView<ExamTableController> {
   double width = Get.width;
   double height = Get.height;
 
+  ExamTableWebView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

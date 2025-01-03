@@ -30,27 +30,27 @@ class WebMainView extends GetView<MainController> {
                   height: Get.height,
                   child: Column(
                     children: [
-                      Image.asset("assets/images/ibb_university_logo.png"),
-                      SizedBox(
-                        height: Get.height * 0.005,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MainText(
-                            "IBB",
-                            textColor: AppColors.mainTextColor,
-                          ),
-                          MainText(
-                            "UNIVERCITY",
-                            textColor: AppColors.mainTextColor,
-                          ),
-                          Divider(
-                            thickness: 0.2,
-                            color: AppColors.tabBackColor,
-                          ),
-                        ],
-                      ),
+                      // Image.asset("assets/images/ibb_university_logo.png"),
+                      // SizedBox(
+                      //   height: Get.height * 0.005,
+                      // ),
+                      // Column(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     MainText(
+                      //       "IBB",
+                      //       textColor: AppColors.mainTextColor,
+                      //     ),
+                      //     MainText(
+                      //       "UNIVERCITY",
+                      //       textColor: AppColors.mainTextColor,
+                      //     ),
+                      //     Divider(
+                      //       thickness: 0.2,
+                      //       color: AppColors.tabBackColor,
+                      //     ),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: Get.height * 0.03,
                       ),
@@ -70,20 +70,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.person_outline_sharp,
+                                        Icons.library_books_outlined,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     0)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Library".tr,
@@ -116,10 +120,11 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
@@ -131,6 +136,7 @@ class WebMainView extends GetView<MainController> {
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
+                                      SizedBox(width: Get.width * 0.005),
                                       SecText(
                                         "Profile".tr,
                                         fontSize:
@@ -162,20 +168,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.notifications_none,
+                                        Icons.home_outlined,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     2)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Home".tr,
@@ -205,20 +215,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.home_outlined,
+                                        Icons.notifications_outlined,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     3)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Notification".tr,
@@ -248,10 +262,11 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
@@ -263,8 +278,11 @@ class WebMainView extends GetView<MainController> {
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
+                                      ),
                                       SecText(
-                                        "Table".tr,
+                                        "Lectur Table".tr,
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         textColor:
@@ -291,10 +309,11 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
@@ -305,6 +324,9 @@ class WebMainView extends GetView<MainController> {
                                                     5)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Reports".tr,
@@ -334,20 +356,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.repartition,
+                                        Icons.assignment_outlined,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     6)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Exam Table".tr,
@@ -377,20 +403,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.repartition,
+                                        Icons.bar_chart_sharp,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     7)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Results".tr,
@@ -420,20 +450,24 @@ class WebMainView extends GetView<MainController> {
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
+                                  padding: const EdgeInsets.only(left: 25),
                                   margin: const EdgeInsets.only(left: 16),
                                   height: Get.height * 0.08,
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.repartition,
+                                        Icons.credit_card_sharp,
                                         color:
                                             (controller.selectedIndex.value ==
                                                     8)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
                                       ),
                                       SecText(
                                         "Acadimic Card".tr,
@@ -479,7 +513,7 @@ class WebMainView extends GetView<MainController> {
       ),
     ),
     ExamTableWebView(),
-    StudentResultsWebView(),
+    const StudentResultsWebView(),
     const AcademicCardWebView(),
   ];
 
