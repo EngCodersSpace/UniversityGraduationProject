@@ -146,8 +146,6 @@ class ExamTableController extends GetxController {
     }
     selectedDepartment.value = sectionsData.first.id;
   }
-
-
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData =
         await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);

@@ -21,7 +21,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
           child: Hero(
               tag: "PupCard",
               child: Material(
-                color: AppColors.mainCardColor,
+                color: AppColors.tabBackColor,
                 elevation: 2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
                 child: Container(
@@ -41,19 +41,20 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                              Icon(Icons.info_outline,color: AppColors.secTextColor,),
-                              const SizedBox(width: 6,),
-                              SecText("Book Information"),
-                            ],),
+                          children: [Padding(padding: const EdgeInsets.symmetric(horizontal: 8),
+                             child:  Row(
+                               children: [
+                                 Icon(Icons.info_outline,color: AppColors.secTextColor,),
+                                 const SizedBox(width: 6,),
+                                 SecText("Book Information"),
+                               ],),
+                           ),
                             IconButton(onPressed: (){Get.back();}, icon: Icon(Icons.close,color: AppColors.secTextColor,))
                           ],
                         ),
                         Divider(
                           color: AppColors.inverseCardColor,
-                          thickness: 2,
+                          thickness: 0.5,
                         ),
                         Expanded(
                           child: Container(
@@ -77,10 +78,6 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                               ],
                             ),
                           )
-                        ),
-                        Divider(
-                          color: AppColors.inverseCardColor,
-                          thickness: 2,
                         ),
                         Column(
                           children: [

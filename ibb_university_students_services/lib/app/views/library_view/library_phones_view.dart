@@ -29,7 +29,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                       Row(
                         children: [
                           IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back_outlined,color: AppColors.mainCardColor,)),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
+                          IconButton(onPressed: controller.filteringIconClick, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
                           IconButton(onPressed: (){}, icon: Icon(Icons.more_vert_outlined,color: AppColors.mainCardColor,)),
                           Expanded(
                             child: CustomTextFormField(
