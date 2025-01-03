@@ -1,7 +1,8 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
+import 'package:ibb_university_students_services/app/utils/responsivity.dart';
 
-import '../globals.dart';
+import '../styles/app_colors.dart';
 
 class MainText extends StatelessWidget {
   MainText(
@@ -14,7 +15,7 @@ class MainText extends StatelessWidget {
     this.height,
   }) {
     textColor ??= AppColors.mainTextColor;
-    fontSize = Utils.fontSizeScale(fontSize);
+    fontSize = Responsivity.fontSizeScale(fontSize);
   }
 
   String text;

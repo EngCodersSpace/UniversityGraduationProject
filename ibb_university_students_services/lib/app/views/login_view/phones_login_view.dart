@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/utils/validators.dart';
 
 import '../../controllers/login_controller.dart';
 
@@ -140,7 +141,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                         CustomTextFormField(
                           controller: controller.id,
-                          validator: (id) => controller.validateID(id),
+                          validator: (id) => Validators.validateID(id),
                           labelText: 'studentid'.tr,
                           icon: Icons.account_circle_outlined,
                           focusNode: controller.idFocus,
@@ -162,7 +163,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         ),
                         CustomTextFormField(
                           controller: controller.password,
-                          validator: (pwd) => controller.validatePassword(pwd),
+                          validator: (pwd) => Validators.validatePassword(pwd),
                           labelText: 'password'.tr,
                           icon: Icons.key_sharp,
                           isPassword: true,

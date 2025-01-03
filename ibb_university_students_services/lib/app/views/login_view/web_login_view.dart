@@ -7,7 +7,8 @@ import '../../components/buttons.dart';
 import '../../components/custom_text.dart';
 import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
+import '../../utils/validators.dart';
 
 class WebLoginView extends GetView<LoginController> {
   WebLoginView({
@@ -136,7 +137,7 @@ class WebLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                           width: width,
                           controller: controller.id,
-                          validator: (id) => controller.validateID(id),
+                          validator: (id) => Validators.validateID(id),
                           labelText: 'studentid'.tr,
                           //icon: Icons.account_circle_outlined,
                         ),
@@ -146,7 +147,7 @@ class WebLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                             controller: controller.password,
                             validator: (pwd) =>
-                                controller.validatePassword(pwd),
+                                Validators.validatePassword(pwd),
                             labelText: 'password'.tr,
                             //icon: Icons.key_sharp,
                             isPassword: true,

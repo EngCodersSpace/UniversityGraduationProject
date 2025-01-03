@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../components/text_field.dart';
-import '../../globals.dart';
+import '../../styles/app_colors.dart';
 
 class LibraryPhonesView extends GetView<LibraryController> {
    const LibraryPhonesView({super.key});
@@ -29,7 +29,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                       Row(
                         children: [
                           IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back_outlined,color: AppColors.mainCardColor,)),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
+                          IconButton(onPressed: controller.filteringIconClick, icon: Icon(Icons.filter_list_alt,color: AppColors.mainCardColor,)),
                           IconButton(onPressed: (){}, icon: Icon(Icons.more_vert_outlined,color: AppColors.mainCardColor,)),
                           Expanded(
                             child: CustomTextFormField(

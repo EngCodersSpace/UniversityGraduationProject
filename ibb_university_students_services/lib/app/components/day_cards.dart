@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../globals.dart';
+import '../styles/app_colors.dart';
 import 'custom_text.dart';
 
 class DayCard extends StatelessWidget {

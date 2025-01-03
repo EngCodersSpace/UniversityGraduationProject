@@ -1,16 +1,13 @@
 
-
 class StudyPlane {
   int id;
   String? name;
-  List<String>? phones;
   String? createdAt;
   String? updatedAt;
 
   StudyPlane({
     required this.id,
     this.name,
-    this.phones,
     this.createdAt,
     this.updatedAt,
   });
@@ -19,7 +16,6 @@ class StudyPlane {
     return StudyPlane(
       id: json['id'],
       name: json['name'],
-      phones: json['phones'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
@@ -29,7 +25,6 @@ class StudyPlane {
     return {
       "id": id,
       "name": name,
-      "phones": phones,
       "created_at": createdAt,
       "updated_at": updatedAt,
     };

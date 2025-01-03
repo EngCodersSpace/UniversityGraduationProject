@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
-
-import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import '../../../components/custom_text_v2.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/student_model.dart';
 
 class StudentInfoCard extends GetView<HomeTabController> {
@@ -18,39 +18,33 @@ class StudentInfoCard extends GetView<HomeTabController> {
       child: Row(
         children: [
           SizedBox(
-            width: (Get.width - 2) * 0.05,
+            width: (Get.width - 2) * 0.04,
           ),
-          SizedBox(
-            width: (Get.width - 2) * 0.3,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: (Get.width - 2) * 0.34,
+              minWidth: (Get.width - 2) * 0.23,
+            ),
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecText("Department".tr,
-                    textColor: AppColors
-                        .inverseSecTextColor),
+                CustomText("Department".tr,
+                    style: AppTextStyles.highlightStyle(
+                        textHeader: AppTextHeaders.h5)),
                 Row(
                   children: [
-                    Icon(Icons.groups_sharp,
-                        color:
-                        AppColors.secTextColor),
+                    Icon(Icons.groups_sharp, color: AppColors.secTextColor),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
                     Flexible(
-                      child: MainText(
-                          (controller.user
-                          as Student)
-                              .section
-                              ?.name ??
-                              "Unknown".tr,
-                          textColor: AppColors
-                              .secTextColor,
-                          fontSize: 14,
-                          height: 0),
-                    )
+                        child: CustomText(
+                      (controller.user as Student).section?.name ??
+                          "Unknown".tr,
+                          style: AppTextStyles.secStyle(
+                              textHeader: AppTextHeaders.h5,height: 0),
+                    ))
                   ],
                 ),
               ],
@@ -59,7 +53,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.04,
@@ -67,31 +61,22 @@ class StudentInfoCard extends GetView<HomeTabController> {
           SizedBox(
             width: (Get.width - 2) * 0.25,
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecText("Level".tr,
-                    textColor: AppColors
-                        .inverseSecTextColor),
+                CustomText("Level".tr,
+                    style: AppTextStyles.highlightStyle(
+                        textHeader: AppTextHeaders.h5)),
                 Row(
                   children: [
-                    Icon(Icons.school,
-                        color:
-                        AppColors.secTextColor),
+                    Icon(Icons.school, color: AppColors.secTextColor),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
-                    MainText(
-                      (controller.user as Student)
-                          .level
-                          ?.name ??
-                          "??".tr,
-                      textColor:
-                      AppColors.secTextColor,
-                      fontSize: 14,
-                    ),
+                    CustomText(
+                        "${"Level".tr} ${(controller.user as Student).level?.name ?? "??".tr}",
+                        style: AppTextStyles.secStyle(
+                            textHeader: AppTextHeaders.h5,height: 0)),
                   ],
                 ),
               ],
@@ -100,7 +85,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.03,
@@ -108,31 +93,23 @@ class StudentInfoCard extends GetView<HomeTabController> {
           SizedBox(
             width: (Get.width - 2) * 0.2,
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SecText("Level".tr,
-                    textColor: AppColors
-                        .inverseSecTextColor),
+                CustomText(
+                  "Assignments".tr,
+                  style: AppTextStyles.highlightStyle(
+                      textHeader: AppTextHeaders.h5),
+                ),
                 Row(
                   children: [
-                    Icon(Icons.school,
-                        color:
-                        AppColors.secTextColor),
+                    Icon(Icons.assignment, color: AppColors.secTextColor),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
-                    MainText(
-                      (controller.user as Student)
-                          .level
-                          ?.name ??
-                          "??".tr,
-                      textColor:
-                      AppColors.secTextColor,
-                      fontSize: 14,
-                    ),
+                    CustomText("0/0",
+                        style: AppTextStyles.secStyle(
+                            textHeader: AppTextHeaders.h5,height: 0)),
                   ],
                 ),
               ],

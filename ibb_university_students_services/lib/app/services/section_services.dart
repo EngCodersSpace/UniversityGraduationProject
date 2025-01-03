@@ -7,9 +7,9 @@ import 'http_provider/http_provider.dart';
 class SectionServices {
   static const int _fetchError = 611;
 
-  static List<Section>? _sections;
+  static Map<int,Section>? _sections;
 
-  static Future<Result<List<Section>>> fetchSections({
+  static Future<Result<Map<int,Section>>> fetchSections({
     bool hardFetch = false,
   }) async {
     if (_sections != null &&
@@ -23,11 +23,15 @@ class SectionServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("lectures/");
+      response = await HttpProvider.get("get-all-sections");
       if (response?.statusCode == 200) {
-
+        _sections = {};
+        for (Map<String, dynamic> jsSection in response?.data["data"]["sections"]) {
+          Section section = Section.fromJson(jsSection);
+          _sections?[section.id]=section;
+        }
         return Result(
-            data: null,
+            data: _sections,
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -48,7 +52,7 @@ class SectionServices {
   }
 
 
-  static void cacheSections(List<Section> sections){
+  static void cacheSections(Map<int,Section> sections){
     _sections = sections;
   }
 

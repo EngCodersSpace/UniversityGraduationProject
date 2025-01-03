@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
-
-import '../../../components/custom_text.dart';
-import '../../../globals.dart';
+import '../../../components/custom_text_v2.dart';
+import '../../../styles/app_colors.dart';
 import '../../../models/doctor_model.dart';
+import '../../../styles/text_styles.dart';
 
 class DoctorInfoCard extends GetView<HomeTabController> {
   const DoctorInfoCard({super.key});
@@ -19,18 +19,21 @@ class DoctorInfoCard extends GetView<HomeTabController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: (Get.width - 2) * 0.33,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth:(Get.width - 2) * 0.31,
+              minWidth: (Get.width - 2) * 0.23,
+            ),
             child: Column(
               mainAxisAlignment:
               MainAxisAlignment.center,
               crossAxisAlignment:
               CrossAxisAlignment.start,
               children: [
-                SecText("Department".tr,
-                    textColor: AppColors
-                        .inverseSecTextColor,fontSize: 12,),
+                CustomText("Department".tr,
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.groups_sharp,
                         color:
@@ -40,16 +43,13 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                       width: Get.width * 0.025,
                     ),
                     Flexible(
-                      child: MainText(
+                      child: CustomText(
                           (controller.user
                           as Doctor)
                               .section
                               ?.name ??
                               "Unknown".tr,
-                          textColor: AppColors
-                              .secTextColor,
-                          fontSize: 12 ,
-                          height: 0),
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
                     ),
                   ],
                 ),
@@ -59,7 +59,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.02,
@@ -72,10 +72,8 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               crossAxisAlignment:
               CrossAxisAlignment.start,
               children: [
-                SecText("Academic Degree".tr,
-                    textColor: AppColors
-                        .inverseSecTextColor,
-                  fontSize: 12,
+                CustomText("Academic Degree".tr,
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
                 ),
                 Row(
                   children: [
@@ -85,14 +83,11 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
-                    MainText(
+                    CustomText(
                         (controller.user as Doctor)
                             .academicDegree ??
                             "Unknown".tr,
-                        textColor:
-                        AppColors.secTextColor,
-                        fontSize: 12,
-                        height: 0),
+                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
                   ],
                 ),
               ],
@@ -101,7 +96,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           Container(
             height: Get.height * 0.06,
             width: 1,
-            color: AppColors.inverseSecTextColor,
+            color: AppColors.highlightTextColor,
           ),
           SizedBox(
             width: (Get.width - 2) * 0.02,
@@ -114,12 +109,9 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               crossAxisAlignment:
               CrossAxisAlignment.start,
               children: [
-                SecText(
+                CustomText(
                   "Academic Position".tr,
-                  textColor:
-                  AppColors.inverseSecTextColor,
-                  fontSize:
-                  12,
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
                 ),
                 Row(
                   children: [
@@ -129,14 +121,11 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                     SizedBox(
                       width: Get.width * 0.02,
                     ),
-                    MainText(
+                    CustomText(
                         (controller.user as Doctor)
                             .administrativePosition ??
                             "Unknown".tr,
-                        textColor:
-                        AppColors.secTextColor,
-                        fontSize: 12,
-                        height: 0),
+                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
                   ],
                 ),
               ],

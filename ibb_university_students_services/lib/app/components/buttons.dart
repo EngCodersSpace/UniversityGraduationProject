@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:ibb_university_students_services/app/globals.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   CustomButton({

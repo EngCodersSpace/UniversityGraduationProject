@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
 
+
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -25,41 +26,23 @@ class LoginController extends GetxController {
     passwordFocus.dispose();
   }
   @override
-  void onInit() {
-    id.text = "1813";
-    password.text = "1111aaaa@";
+  void onInit() async{
+    List<String>? credentials = await UserServices.fetchCachedCredentials();
+    if (credentials != null) {
+      // id.text = credentials[0];
+      // password.text = credentials[1];
+      id.text = "1000";
+      password.text = "1234pass@";
+      // password.text = "1111aaaa@";
+      onLogin();
+    }
     super.onInit();
   }
 
   @override
   void onReady() {
-    onLogin();
+    // onLogin();
     super.onReady();
-  }
-
-  String? validateID(String? id) {
-    bool valid = false;
-    if (id == "" || id == null) {
-      return "required ID";
-    } else if (GetUtils.isNumericOnly(id)) {
-      logWith = "ID";
-      valid = true;
-    }
-    else if (GetUtils.isEmail(id)) {
-      logWith = "Email";
-      valid = true;
-    }
-    return (valid)?null:"Invalid ID";
-  }
-
-  String? validatePassword(String? password) {
-    if (GetUtils.isNullOrBlank(password ?? "") == null) {
-      return "Password required";
-    } else if (password!.length < 8) {
-      return "Password must be at least 8 characters  long";
-    } else {
-      return null;
-    }
   }
 
   void forgotPassword(){
@@ -91,7 +74,14 @@ class LoginController extends GetxController {
     logging.value = false;
   }
 
-  void toggleRememberMe(bool? val) {
+  void toggleRememberMe(bool? val) async{
+    // if(val == true){
+    //   await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
+    //   await AppDataServices.fetchAppData();
+    // }else{
+    //   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+    //   await AppDataServices.fetchAppData();
+    // }
     rememberMe.value = val ?? false;
   }
 

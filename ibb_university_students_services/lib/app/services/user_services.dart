@@ -11,8 +11,7 @@ import 'http_provider/http_provider.dart';
 class  UserServices {
   static SharedPreferences? _prefs;
   static User? _user;
-  static String? _permission;
-  static get permission => _permission;
+  static get permission => _user?.permission;
 
 
   static Future<Result<bool>> userLogin(String id, String password,
@@ -27,8 +26,6 @@ class  UserServices {
         } else {
           _user = Doctor.fromJson(response?.data["user"]);
         }
-        _permission = response?.data["user"]["permission"];
-
         HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
@@ -78,7 +75,6 @@ class  UserServices {
         } else {
           _user = Doctor.fromJson(response?.data["user"]);
         }
-        _permission = response?.data["user"]["permission"];
         HttpProvider.addAccessTokenHeader(response?.data["token"]);
         return Result(
             hasError: false, statusCode: response?.statusCode, data: true);
@@ -138,7 +134,7 @@ class  UserServices {
     try {
       response = await HttpProvider.get("me");
       if (response?.statusCode == 200) {
-        if (response?.data["userType"] == "student") {
+        if (response?.data["user_type"] == "student") {
           _user = Student.fromJson(response?.data["user"]);
           return Result(
               data: _user as Student,

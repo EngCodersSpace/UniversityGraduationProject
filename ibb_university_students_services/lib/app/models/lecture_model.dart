@@ -1,52 +1,60 @@
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
+
 class Lecture {
   Lecture({
     required this.id,
-    this.subjectName,
+    this.subject,
     this.startTime,
     this.duration,
-    this.doctor,
+    this.instructorId,
     this.hall,
     this.description,
-    this.canceled,
+    this.lectureStatus,
   });
 
   int id;
-  String? subjectName;
+  Subject? subject;
   String? startTime;
   int? duration;
-  String? doctor;
   String? hall;
   String? description;
-  bool? canceled = false;
+  bool? lectureStatus = false;
+  int? instructorId;
 
-
-  factory Lecture.fromJson(Map<String, dynamic> json) {
-    // "id": 5,
-    // "startTime": "12:40:00",
-    // "duration": "1 hours",
-    // "lecturer": "William Rowe",
-    // "lecture_room": "99Ji2"
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return Lecture(
-        id: json['id'],
-        subjectName: json['subject_name'],
-        startTime: json['startTime'],
-        duration: json['duration'],
-        description: json['description'],
-        doctor: json['lecturer'],
-        hall: json['lecture_room']
+      id: json['id'],
+      lectureStatus: json["lectureStatus"],
+      subject: subject,
+      startTime: json['lecture_time'],
+      duration: json['lecture_duration'],
+      description: json['description'],
+      instructorId: json["doctor_id"],
+      hall: json['lecture_room'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "subject_name":subjectName,
-      "startTime": startTime,
+      "subject": subject?.toJson(),
+      "lecture_time": startTime,
       "duration": duration,
-      "lecturer": doctor,
-      "description":description,
+      "doctor_id": instructorId,
+      "description": description,
+      "lectureStatus": lectureStatus,
       "lecture_room": hall,
     };
   }
 
+  void updateFromJson(Map<String, dynamic> json, {Subject? subject}) {
+    id = json['id'] ?? id;
+    lectureStatus = json["lectureStatus"] ?? lectureStatus;
+    this.subject = subject ?? this.subject;
+    startTime = json['lecture_time'] ?? startTime;
+    duration = json['lecture_duration'] ?? duration;
+    description = json['description'] ?? description;
+    instructorId = json["doctor_id"] ?? instructorId;
+    hall = json['lecture_room'] ?? hall;
+  }
 }
