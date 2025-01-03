@@ -8,7 +8,6 @@ import '../../components/custom_text.dart';
 import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
 import '../../styles/app_colors.dart';
-import '../../utils/validators.dart';
 
 class WebLoginView extends GetView<LoginController> {
   WebLoginView({
@@ -32,6 +31,9 @@ class WebLoginView extends GetView<LoginController> {
         SizedBox(
           child: Image.asset("assets/images/ibb_background_6.jpeg",
               fit: BoxFit.fill),
+        ),
+        Container(
+          color: AppColors.coverColor.withOpacity(0.0),
         ),
         Container(
           color: AppColors.coverColor.withOpacity(0.0),
@@ -74,7 +76,7 @@ class WebLoginView extends GetView<LoginController> {
               ),
 
               Container(
-                  width: width * 0.26,
+                  width: width * 0.25,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.backColor,
@@ -92,14 +94,17 @@ class WebLoginView extends GetView<LoginController> {
                             //   width: ((width * 0.35) - 194) * (1 / 3),
                             // ),
                             SizedBox(
-                              width: ((width * 0.35) - 194) * (2 / 3),
+                              width: ((width * 0.35) - 194) * (1 / 3),
+                            ),
+                            SizedBox(
+                              width: ((width * 0.35) - 194) * (1 / 3),
                               child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SecText(
                                       'login'.tr,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 30,
+                                      fontSize: 17,
                                     ),
                                   ]),
                             ),
@@ -136,9 +141,11 @@ class WebLoginView extends GetView<LoginController> {
                         ),
                         CustomTextFormField(
                           width: width,
+
                           controller: controller.id,
-                          validator: (id) => Validators.validateID(id),
+                          validator: (id) => controller.validateID(id),
                           labelText: 'studentid'.tr,
+                          //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
                         ),
                         SizedBox(
@@ -147,8 +154,9 @@ class WebLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                             controller: controller.password,
                             validator: (pwd) =>
-                                Validators.validatePassword(pwd),
+                                controller.validatePassword(pwd),
                             labelText: 'password'.tr,
+                            //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             isPassword: true,
                             onFieldSubmitted: (e) {
@@ -189,8 +197,24 @@ class WebLoginView extends GetView<LoginController> {
                                         quarterTurns: 2,
                                         child: Icon(Icons.login,
                                             color: AppColors.mainTextColor)),
-                                size: Size(width * 0.12, 40),
-                              ))
+                                size: Size(width * 0.15, 40),
+                              )),
+                        SizedBox(
+                          height: height * 0.03,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SecText("Remember me",
+                                textColor: AppColors.linkTextColor),
+                            Checkbox(
+                                value: controller.rememberMe.value,
+                                onChanged: controller.toggleRememberMe),
+                          ],
+                        ),
+                        SizedBox(
+                          height: height * 0.01,
+                        ),
                       ],
                     ),
                   )),

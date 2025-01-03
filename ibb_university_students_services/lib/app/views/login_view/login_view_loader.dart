@@ -8,16 +8,14 @@ class LoginViewLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
-            return  PhoneLoginView();
+            return PhoneLoginView();
           } else {
-            return  WebLoginView();
+            return WebLoginView();
           }
         },
       ),
