@@ -1,11 +1,12 @@
+// utils/downloadWorker.js
 const fs = require("fs");
 const path = require("path");
 const { workerData, parentPort } = require("worker_threads");
 
-const { filePath, id } = workerData;
+const { filePath } = workerData;
 const downloadPath = path.join(__dirname, "../storage", "downloads");
 
-// Ensure the download folder exists
+// Ensure the download folder exists if not ( make it )
 if (!fs.existsSync(downloadPath)) {
   fs.mkdirSync(downloadPath, { recursive: true });
 }
@@ -25,7 +26,6 @@ function downloadFileInBackground() {
       const [start, end] = range.replace(/bytes=/, "").split("-");
       const startPos = parseInt(start, 10);
       const endPos = end ? parseInt(end, 10) : fileSize - 1;
-      const chunkSize = endPos - startPos + 1;
 
       const readStream = fs.createReadStream(filePath, { start: startPos, end: endPos });
       const writeStream = fs.createWriteStream(downloadFilePath);
@@ -33,7 +33,7 @@ function downloadFileInBackground() {
       readStream.pipe(writeStream);
 
       writeStream.on("finish", () => {
-        parentPort.postMessage({ status: "success", filePath: downloadFilePath });
+        parentPort.postMessage({ status: "success", filePath: downloadFilePath});
       });
 
       readStream.on("error", (err) => {

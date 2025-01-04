@@ -1,28 +1,13 @@
+//  routes/bookRoute.js
 
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
-const multer = require('multer');
+const { uploadFields } = require('../utils/multerConfig');
 
-// Configure multer middleware for file upload
-const upload = multer({ dest: 'uploads/' });
+router.post('/upload', uploadFields, bookController.uploadFile);
 
-// Routes
-router.post('/upload', upload.single('file'), bookController.uploadBook);
-router.get('/download/:id', bookController.downloadBook);
+
+router.get('/download/:id', bookController.downloadFile);
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

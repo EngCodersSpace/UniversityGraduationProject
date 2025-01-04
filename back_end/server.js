@@ -28,7 +28,7 @@ const getAllData=require('./routes/dataRoute')
 const subject=require('./routes/subjectRoute')
 const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
-const bookRoutes = require('./routes/bookRoutes');
+const bookRoutes = require('./routes/bookRoute');
 
 
 

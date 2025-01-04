@@ -1,3 +1,4 @@
+// utils/filePaths.js
 const path = require('path');
 
 function getStoragePaths(category, id, title) {
@@ -11,3 +12,5 @@ function getStoragePaths(category, id, title) {
 }
 
 module.exports = getStoragePaths;
+
+

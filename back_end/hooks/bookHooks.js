@@ -1,3 +1,5 @@
+// hooks/bookhooks.js
+
 const getStoragePaths = require('../utils/filePaths');
 const extractDisplayImage = require('../utils/imageExtractor');
 
