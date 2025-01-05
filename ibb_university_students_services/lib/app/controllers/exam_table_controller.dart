@@ -24,7 +24,7 @@ class ExamTableController extends GetxController {
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Rx<Map<int,Exam>>? exams = Rx({});
+  Rx<Map<int, Exam>>? exams = Rx({});
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
@@ -32,7 +32,7 @@ class ExamTableController extends GetxController {
   RxString fieldMessage = "".obs;
 
   //Exam popCard variables
-  Map<String,Subject>? subjects;
+  Map<String, Subject>? subjects;
   late RxString subject;
 
   TextEditingController dateController = TextEditingController();
@@ -50,7 +50,6 @@ class ExamTableController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
@@ -93,7 +92,7 @@ class ExamTableController extends GetxController {
       showSnakeBar(
           title: "Not Found Exams ",
           message: "this section and level doesn't has exams ");
-    }else{
+    } else {
       fieldMessage.value = "fetching exam failed please check connection";
       showSnakeBar(
           title: "Fetch Exams Failed",
@@ -125,10 +124,9 @@ class ExamTableController extends GetxController {
     fetchExamsData();
   }
 
-
   Future<void> initSectionDropdownMenuList() async {
-    List<Section> sectionsData =
-    await SectionServices.fetchSections().then((e) => e.data?.values.toList() ?? []);
+    List<Section> sectionsData = await SectionServices.fetchSections()
+        .then((e) => e.data?.values.toList() ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -146,9 +144,10 @@ class ExamTableController extends GetxController {
     }
     selectedDepartment.value = sectionsData.first.id;
   }
+
   Future<void> initLevelDropdownMenuLists() async {
-    List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelServices.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -205,16 +204,18 @@ class ExamTableController extends GetxController {
     // ];
   }
 
-  void more(String val, {Map<String, dynamic>? data}) async{
+  void more(String val, {Map<String, dynamic>? data}) async {
     if (val == "Update") {
       mode = "Update";
       if (data != null) {
         selectedExam = data["exam_id"];
         subjects = {};
-        subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+        subjects =
+            await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
         subject = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
-        timeController.text = DateTimeUtils.formatStringTime(time:data["exam_time"]);
+        timeController.text =
+            DateTimeUtils.formatStringTime(time: data["exam_time"]);
         day.value = data["exam_day"].toString();
         hallController.text = data["exam_room"].toString();
       }
@@ -226,14 +227,13 @@ class ExamTableController extends GetxController {
       Result<void> res = await ExamServices.deleteExam(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
-          id: selectedExam
-      );
+          id: selectedExam);
       Get.back();
-      if(res.statusCode == 200) {
+      if (res.statusCode == 200) {
         exams?.value.remove(selectedExam);
         exams?.refresh();
         showSnakeBar(message: "Delete successfully");
-      }else{
+      } else {
         showSnakeBar(message: "Delete failed");
       }
     }
@@ -242,7 +242,7 @@ class ExamTableController extends GetxController {
   void addButtonClick() async {
     mode = "Add";
     dateController.text = DateTime.now().toString().split(" ")[0];
-    timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
+    timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
     subjects = {};
     subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {
@@ -286,7 +286,7 @@ class ExamTableController extends GetxController {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
         showSnakeBar(message: "Add successfully");
-      }else{
+      } else {
         showSnakeBar(message: "Add failed");
       }
     } else if (mode == "Update") {
@@ -294,14 +294,13 @@ class ExamTableController extends GetxController {
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           data: jsData,
-          id: selectedExam
-      );
+          id: selectedExam);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
         showSnakeBar(message: "Update successfully");
-      }else{
+      } else {
         showSnakeBar(message: "Update failed");
       }
     }

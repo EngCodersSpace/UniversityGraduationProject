@@ -5,10 +5,9 @@ import 'package:ibb_university_students_services/app/routes.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/services/app_data_services.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+  await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
   // HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
   await AppDataServices.fetchAppData();
   runApp(const MyApp());
@@ -23,11 +22,7 @@ class MyApp extends StatelessWidget {
         //IOS UI
         ? GetCupertinoApp(
             title: "StudentServices",
-<<<<<<< HEAD
-            initialRoute: "/main",
-=======
             initialRoute: "/login",
->>>>>>> FrontEnd
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
@@ -37,24 +32,12 @@ class MyApp extends StatelessWidget {
         // Android and web UI
         : GetMaterialApp(
             title: "StudentServices",
-<<<<<<< HEAD
-            initialRoute: "/main",
-=======
             initialRoute: "/login",
->>>>>>> FrontEnd
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
           );
-
   }
 }
-
-
-
-
-
-
-

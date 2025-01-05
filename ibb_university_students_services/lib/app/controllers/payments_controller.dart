@@ -10,7 +10,6 @@ class PaymentsController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    // TODO: implement onInit
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = Rx(res.data);

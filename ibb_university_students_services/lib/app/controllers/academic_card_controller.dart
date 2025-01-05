@@ -8,7 +8,6 @@ class AcademicCardController extends GetxController {
   Rx<User>? user;
   @override
   void onInit() async {
-    // TODO: implement onInit
     Result res = await UserServices.fetchUser();
     if (res.statusCode == 200) {
       user = Rx(res.data);

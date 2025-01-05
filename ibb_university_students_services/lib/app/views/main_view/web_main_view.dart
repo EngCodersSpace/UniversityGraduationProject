@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
-import 'package:ibb_university_students_services/app/views/table_tab_view/web_table_tab_view.dart';
 import '../../components/custom_text.dart';
 import '../../controllers/main_controller.dart';
 import '../acadime_card/academic_card_web_view.dart';
@@ -57,7 +57,7 @@ class WebMainView extends GetView<MainController> {
                       Obx(() => Column(
                             children: [
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 0,
+                                onTap: () => controller.putControllers,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -66,7 +66,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 0)
+                                    color: (controller.selectedIndex.value == 5)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
@@ -82,7 +82,7 @@ class WebMainView extends GetView<MainController> {
                                         Icons.library_books_outlined,
                                         color:
                                             (controller.selectedIndex.value ==
-                                                    0)
+                                                    5)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -98,7 +98,7 @@ class WebMainView extends GetView<MainController> {
                                         fontWeight: FontWeight.bold,
                                         textColor:
                                             (controller.selectedIndex.value ==
-                                                    0)
+                                                    5)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -107,7 +107,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 1,
+                                onTap: () => controller.selectedIndex.value = 4,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -116,7 +116,7 @@ class WebMainView extends GetView<MainController> {
                                       bottomLeft: Radius.circular(
                                           24), // Bottom-left corner rounded
                                     ),
-                                    color: (controller.selectedIndex.value == 1)
+                                    color: (controller.selectedIndex.value == 4)
                                         ? AppColors.tabBackColor
                                         : AppColors.inverseCardColor,
                                   ),
@@ -132,7 +132,7 @@ class WebMainView extends GetView<MainController> {
                                         Icons.person_outline_sharp,
                                         color:
                                             (controller.selectedIndex.value ==
-                                                    1)
+                                                    4)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -146,7 +146,7 @@ class WebMainView extends GetView<MainController> {
                                         fontWeight: FontWeight.bold,
                                         textColor:
                                             (controller.selectedIndex.value ==
-                                                    1)
+                                                    4)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -202,6 +202,100 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
+                                onTap: () => controller.selectedIndex.value = 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 0)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  padding: const EdgeInsets.only(left: 25),
+                                  margin: const EdgeInsets.only(left: 16),
+                                  height: Get.height * 0.08,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.notifications_outlined,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
+                                      ),
+                                      SecText(
+                                        "Notification".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    0)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () => controller.selectedIndex.value = 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(
+                                          24), // Top-left corner rounded
+                                      bottomLeft: Radius.circular(
+                                          24), // Bottom-left corner rounded
+                                    ),
+                                    color: (controller.selectedIndex.value == 1)
+                                        ? AppColors.tabBackColor
+                                        : AppColors.inverseCardColor,
+                                  ),
+                                  padding: const EdgeInsets.only(left: 25),
+                                  margin: const EdgeInsets.only(left: 16),
+                                  height: Get.height * 0.08,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month,
+                                        color:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.005,
+                                      ),
+                                      SecText(
+                                        "Lectur Table".tr,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        textColor:
+                                            (controller.selectedIndex.value ==
+                                                    1)
+                                                ? AppColors.secTextColor
+                                                : AppColors.mainTextColor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
                                 onTap: () => controller.selectedIndex.value = 3,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -224,104 +318,10 @@ class WebMainView extends GetView<MainController> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.notifications_outlined,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    3)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      SecText(
-                                        "Notification".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    3)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.selectedIndex.value = 4,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 4)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    4)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      SecText(
-                                        "Lectur Table".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    4)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.selectedIndex.value = 5,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 5)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
                                         Icons.repartition,
                                         color:
                                             (controller.selectedIndex.value ==
-                                                    5)
+                                                    3)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -334,7 +334,7 @@ class WebMainView extends GetView<MainController> {
                                         fontWeight: FontWeight.bold,
                                         textColor:
                                             (controller.selectedIndex.value ==
-                                                    5)
+                                                    3)
                                                 ? AppColors.secTextColor
                                                 : AppColors.mainTextColor,
                                       ),
@@ -343,7 +343,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 6,
+                                onTap: () => controller.putControllers,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -390,7 +390,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 7,
+                                onTap: () => controller.putControllers,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -437,7 +437,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 8,
+                                onTap: () => controller.putControllers,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -501,17 +501,17 @@ class WebMainView extends GetView<MainController> {
   }
 
   List screens = [
-    const LibraryWebView(),
-    const WebProfileView(),
-    WebHomeTab(),
     const WebNotificationView(),
-    WebTableTabView(),
+    WebLectureTableTabView(),
+    WebHomeTab(),
     Center(
       child: MainText(
         "Main page 3",
         textColor: Colors.black,
       ),
     ),
+    const WebProfileView(),
+    const LibraryWebView(),
     ExamTableWebView(),
     const StudentResultsWebView(),
     const AcademicCardWebView(),

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
 
-
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -17,7 +16,6 @@ class LoginController extends GetxController {
   RxDouble heightScale = 0.6.obs;
   RxBool rememberMe = false.obs;
 
-
   @override
   void onClose() {
     id.dispose();
@@ -25,14 +23,15 @@ class LoginController extends GetxController {
     idFocus.dispose();
     passwordFocus.dispose();
   }
+
   @override
-  void onInit() async{
+  void onInit() async {
     List<String>? credentials = await UserServices.fetchCachedCredentials();
     if (credentials != null) {
-      // id.text = credentials[0];
-      // password.text = credentials[1];
-      id.text = "1000";
-      password.text = "1234pass@";
+      id.text = credentials[0];
+      password.text = credentials[1];
+      // id.text = "1000";
+      // password.text = "1234pass@";
       // password.text = "1111aaaa@";
       onLogin();
     }
@@ -45,19 +44,20 @@ class LoginController extends GetxController {
     super.onReady();
   }
 
-  void forgotPassword(){
+  void forgotPassword() {
     Get.toNamed("/forgotPassword");
   }
 
   Future<void> onLogin() async {
     logging.value = true;
     if (formKey.currentState!.validate()) {
-      Result res = await UserServices.userLogin(id.text, password.text,rememberMe: rememberMe.value);
+      Result res = await UserServices.userLogin(id.text, password.text,
+          rememberMe: rememberMe.value);
       if (res.statusCode == 200) {
         Get.offNamed("/main");
       } else if (res.statusCode == 900) {
         loggingFiledMessage.value =
-        "no internet connection \n please check your connection ";
+            "no internet connection \n please check your connection ";
         loggingFiled.value = true;
       } else if (res.statusCode == 401) {
         loggingFiledMessage.value = "password or id is wrong";
@@ -67,14 +67,14 @@ class LoginController extends GetxController {
         loggingFiled.value = true;
       } else {
         loggingFiledMessage.value =
-        "something get wrong \n please check your connection ";
+            "something get wrong \n please check your connection ";
         loggingFiled.value = true;
       }
     }
     logging.value = false;
   }
 
-  void toggleRememberMe(bool? val) async{
+  void toggleRememberMe(bool? val) async {
     // if(val == true){
     //   await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
     //   await AppDataServices.fetchAppData();
@@ -85,7 +85,7 @@ class LoginController extends GetxController {
     rememberMe.value = val ?? false;
   }
 
-  void changeLang(String lang){
+  void changeLang(String lang) {
     Get.updateLocale(Locale(lang));
   }
 }

@@ -11,10 +11,9 @@ class ProfileController extends GetxController {
   RxString language = (Get.locale?.languageCode ?? "en").obs;
   RxBool initState = false.obs;
   @override
-  void onInit() async{
-    // TODO: implement onInit
+  void onInit() async {
     Result res = await UserServices.fetchUser();
-    if(res.statusCode == 200){
+    if (res.statusCode == 200) {
       user = res.data;
     }
     initState.value = true;
@@ -22,12 +21,12 @@ class ProfileController extends GetxController {
   }
 
   void changeLang(String lang) {
-  Get.updateLocale(Locale(lang));
-  language.value = lang;
-  Get.find<MainController>().changeTabIndex(4);
+    Get.updateLocale(Locale(lang));
+    language.value = lang;
+    Get.find<MainController>().changeTabIndex(4);
   }
 
-  void logout(){
+  void logout() {
     Get.offAllNamed("/login");
   }
 

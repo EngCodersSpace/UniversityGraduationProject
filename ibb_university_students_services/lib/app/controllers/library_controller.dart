@@ -27,12 +27,12 @@ class LibraryController extends GetxController
   PageController refPagesController = PageController();
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<Border> borders =[];
-  Map<String,List<String>> sortOptions = {
-    "title":["A to Z","Z to A"],
-    "size":["Smallest","Largest"],
-    "page":["Lowest","Highest"],
-    "date":["Oldest","Newest"],
+  List<Border> borders = [];
+  Map<String, List<String>> sortOptions = {
+    "title": ["A to Z", "Z to A"],
+    "size": ["Smallest", "Largest"],
+    "page": ["Lowest", "Highest"],
+    "date": ["Oldest", "Newest"],
   };
 
   RxList books = [
@@ -88,8 +88,7 @@ class LibraryController extends GetxController
   Map<String, dynamic> selectedBook = {};
 
   @override
-  void onInit() async{
-    // TODO: implement onInit
+  void onInit() async {
     tapController = TabController(
       length: 3,
       vsync: this,
@@ -100,9 +99,8 @@ class LibraryController extends GetxController
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    BorderSide borderSide = BorderSide(
-        color:AppColors.inverseCardColor,
-        width: 1.0);
+    BorderSide borderSide =
+        BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
       Border(
         top: borderSide,
@@ -111,11 +109,9 @@ class LibraryController extends GetxController
       ),
       Border(
         top: borderSide,
-        left:borderSide,
+        left: borderSide,
         bottom: borderSide,
       ),
-
-
     ];
     super.onInit();
   }
@@ -170,6 +166,7 @@ class LibraryController extends GetxController
     if (val == null) return;
     selectedSortOption.value = val;
   }
+
   void changeSelectedSortDirection(int? val) async {
     if (val == null) return;
     sortDirection.value = val;
