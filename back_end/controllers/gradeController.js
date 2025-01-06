@@ -1,63 +1,47 @@
 
-const { user,subject, grade ,student,section,level } = require('../models'); 
+const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const { validationResult } = require('express-validator');
 const { Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
-exports.createGrade = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    try {
-      const { } = req.body;
-  
-      const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
-      if (!studentExists) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-  
-      const subjectExists = await subject.findOne({where:{subject_id:req.body.subject_id}});
-      if (!subjectExists) {
-        return res.status(404).json({ message: 'Subject not found' });
-      }
-  
-      const newGrade = await grade.create(req.body);
-  
-      res.status(201).json({
-        message: 'Grade created successfully',
-        grade: newGrade,
-      });
-    } catch (error) {
-      console.error('Error creating grade:', error.message);
-      res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-};
 
 
 
-// get All Grades For specific =>  student_id  and  level_id
-exports.getAllGrades = async (req, res) => {
+
+// get All Grades For specific =>  student_id  and  level_id and Term 
+exports.getGrades = async (req, res) => {
   try {
-      const { id , levelID} = req.params; 
-
-      if (!id) {
-          return res.status(400).json({ message: "Student ID is required" });
-      }
+      const userId = req.user.user_id; 
+      const {levelID , Term} = req.query; 
 
       // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: { student_id: id , level_id:levelID }, 
+          where: {student_id:userId , level_id:levelID , term:Term }, 
           include: [
-              { model: student, as: 'student' },
               { model: subject, as: 'subject' },
-              { model: section, as: 'section' }
-          ],
+            ],
       });
 
       if (!grades.length) {
           return res.status(404).json({ message: 'No grades found for this student' });
+      }
+
+      res.status(200).json({ message: 'These your grades', Grades: grades });
+  } catch (error) {
+      console.error('Error fetching grades:', error.message);
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+}; 
+
+exports.getAllGrades = async (req, res) => {
+  try {
+    
+      // Use a condition for levelID to prevent errors if it's not supplied
+      const grades = await grade.findAll();
+
+      if (!grades.length) {
+          return res.status(404).json({ message: 'No grades found ' });
       }
 
       res.status(200).json({ message: 'These all grades', Grades: grades });
@@ -153,16 +137,79 @@ exports.getSectionOfCurrentUser = (req, res) => {
 };
 
 
+// at frontEnd the  doctor can see all his subjects with details as cards 
+// when he click any subject he will going to tables to see all students who study that subject with him and their degrees 
+// and a doctor can write(create) degrees for all of them(his student who study this subject with him) or update their degrees >>> so  
+//  when i deal with grades doctor  how i do (create , update and get ) functions ?????
+// 
+exports.createGrade = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const { } = req.body;
 
+    const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
+    if (!studentExists) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
 
+    const subjectExists = await subject.findOne({where:{subject_id:req.body.subject_id}});
+    if (!subjectExists) {
+      return res.status(404).json({ message: 'Subject not found' });
+    }
 
+    const newGrade = await grade.create(req.body);
 
+    res.status(201).json({
+      message: 'Grade created successfully',
+      grade: newGrade,
+    });
+  } catch (error) {
+    console.error('Error creating grade:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
 
+exports.getDoctorGrades = async (req, res) => {
+  try {
+    const doctorId = req.user.user_id;
+    const { sectionId, levelId, term } = req.query;
 
+    const filters = {};
+    if (sectionId) filters['$section.id$'] = sectionId;
+    if (levelId) filters['$level.id$'] = levelId;
+    if (term) filters['term'] = term;
 
+    const grades = await grade.findAll({
+      include: [
+        {
+          model: subject,
+          include: [
+            {
+              model: study_plan_elment,
+              where: { doctor_id: doctorId },
+            },
+          ],
+        },
+        {
+          model: level,
+        },
+        {
+          model: section,
+        },
+       
+      ],
+      where: filters,
+    });
 
-
-
+    res.status(200).json({ message: "Your student's grades", grades });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching doctor grades', error });
+  }
+};
 
 exports.updateGrade = async (req, res) => {
     const errors = validationResult(req);
@@ -228,6 +275,9 @@ exports.updateGrade = async (req, res) => {
     }
 };
 
+
+
+
 exports.deleteGrade = async (req, res) => {
     try {
       const { id } = req.params;
@@ -246,6 +296,4 @@ exports.deleteGrade = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-
-
 

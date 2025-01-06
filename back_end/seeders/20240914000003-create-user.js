@@ -3,6 +3,7 @@
 
 const { faker } = require('@faker-js/faker');
 const { user, student, doctor, study_plan, level, section } = require('../models');
+const bcrypt = require("bcrypt");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -39,7 +40,7 @@ module.exports = {
         date_of_birth: faker.date.past(20),
         profile_picture: faker.internet.url(),
         email: faker.internet.email(),
-        password: '12345678',
+        password: '1234pass@',
         collegeName: college, // Assign college name in JSON format
         permission: permissionn,
         createdAt: new Date(),
