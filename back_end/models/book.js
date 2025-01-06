@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       file_path: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       display_image: {
         type: DataTypes.STRING,
@@ -95,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   // Add hooks to the model
-  book.addHook('beforeCreate', bookHooks.beforeCreate);
+  book.addHook('afterCreate', bookHooks.afterCreate);
 
   return book;
 };

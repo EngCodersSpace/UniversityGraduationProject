@@ -21,8 +21,8 @@
 // utils/imageExtractor.js
 
 const fs = require('fs');
-const { PDFDocument } = require('pdf-lib');
-const sharp = require('sharp');
+const path = require('path');
+const pdfPoppler = require('pdf-poppler');
 
 /**
  * Extract the first page of a PDF and save it as an image.
@@ -31,37 +31,35 @@ const sharp = require('sharp');
  */
 async function extractDisplayImage(pdfPath, outputPath) {
   try {
-    // Load the PDF file
-    const pdfBytes = fs.readFileSync(pdfPath);
-    const pdfDoc = await PDFDocument.load(pdfBytes);
+    // Ensure output directory exists
+    const outputDir = path.dirname(outputPath);
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
 
-    // Get the first page
-    const firstPage = pdfDoc.getPage(0);
+    // Configure options for pdf-poppler
+    const options = {
+      format: 'png', // Output format (e.g., png or jpeg)
+      out_dir: outputDir, // Directory to save the image
+      out_prefix: path.basename(pdfPath, '.pdf'), // Image file prefix
+      page: 1 // Extract only the first page
+    };
 
-    // Get page dimensions
-    const { width, height } = firstPage.getSize();
+    // Use pdf-poppler to convert the first page of the PDF to an image
+    await pdfPoppler.convert(pdfPath, options);
 
-    // Render the page to an image
-    const pageImage = await firstPage.render({
-      scale: 1.0, // Adjust scale if needed
-    });
+    const generatedImagePath = path.join(
+      outputDir,
+      `${options.out_prefix}-1.${options.format}`
+    );
+    console.log(`First page saved as an image at: ${generatedImagePath}`);
 
-    // Convert the page image to PNG using sharp
-    const imageBuffer = Buffer.from(pageImage.data);
-    await sharp(imageBuffer, {
-      raw: {
-        width: pageImage.width,
-        height: pageImage.height,
-        channels: 4, // RGBA
-      },
-    })
-      .png()
-      .toFile(outputPath);
-
-    console.log(`First page saved as an image at: ${outputPath}`);
+    return generatedImagePath; 
   } catch (error) {
-    console.error('Error extracting first page as image:', error);
+    console.error('Error extracting display image:', error.message);
+    throw error;
   }
 }
+
 
 module.exports = extractDisplayImage;
