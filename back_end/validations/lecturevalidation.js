@@ -1,4 +1,4 @@
-const { body, param } = require('express-validator');
+const { body,  query } = require('express-validator');
 const { lecture } = require('../models');
 
 const createLectureValidator = [
@@ -18,9 +18,7 @@ const createLectureValidator = [
     .withMessage('lecture-section-ID is required and should be a valid integer'),
 
   body('lecture_level_id')
-    .isInt({ gt: 0 })
-    .custom((value) => value > 0).withMessage('User ID must be greater than 0')
-    .withMessage('lecture-level-ID is required and should be a valid integer'),
+    .isInt({ gt: 0 }).withMessage('User ID must be greater than 0'),
 
   body('term')
     .isIn(['Term 1', 'Term 2'])
@@ -50,15 +48,15 @@ const createLectureValidator = [
 ];
 
 const updateLectureValidator = [
-  param('id')
-      .isInt({ gt: 0 })
-      .withMessage(' ID must be a positive integer')
-      .custom(async (value) => {
-        const foundLecture = await lecture.findOne({ where: {id:value} });
-        if (!foundLecture) {
-          throw new Error('lecture not found');
-        }
-      }).withMessage('Invalid  ID'),
+  query('id')
+    .isInt({ gt: 0 })
+    .withMessage('ID must be a positive integer')
+    .custom(async (value) => {
+      const foundLecture = await lecture.findOne({ where: { id: value } });
+      if (!foundLecture) {
+        throw new Error('Lecture not found'); // this is the custom error message
+      }
+    }),
 
   body('subject_id')
     .optional()
@@ -113,6 +111,6 @@ const updateLectureValidator = [
     .isLength({ min: 1 })
     .withMessage('Lecture room should be a valid string'),
 ];
- 
+
 module.exports = { createLectureValidator, updateLectureValidator };
  

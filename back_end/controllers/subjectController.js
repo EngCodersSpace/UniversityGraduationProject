@@ -1,4 +1,4 @@
-const {subject}=require('../models');
+const {subject,doctor,user}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
 
@@ -62,7 +62,19 @@ exports.getSubjectById=async (req, res) => {
 
 exports.getAllSubject=async (req, res) => {
     try {
-        const Subjects = await subject.findAll();
+        const Subjects = await subject.findAll({
+          include: [{
+            model: doctor,
+            attributes: ['doctor_id'],
+            through:{ attributes: [] },
+            include:[{
+              model:user,
+              as:'user',
+              attributes: ['user_name'],
+            }]
+          }],
+        });
+
         res.status(200).json({message:'getAllLectures', data: Subjects });
       } catch (error) {
         console.error(error);
@@ -114,18 +126,9 @@ exports.updateSubject = async (req, res) => {
 };
 
 exports.deleteSubject=async (req, res) => {
-    try {
-        const { id } = req.query;
-    
+    try {    
         const deleted = await subject.destroy({
-          where: { subject_id: id },
-          // include:[
-          //   {model:study_plan_elment,as:'study_plan_elment'},
-          //   {model:exam,as:'exam'},
-          //   {model:grade,as:'grade'},
-          //   {model:prerequisite,as:'prerequisite'},
-          //   {model:document,as:'document'}
-          // ]
+          where: { subject_id: req.query.id }
         });
         
         if (deleted === 0) {

@@ -26,7 +26,7 @@ module.exports = {
         allowNull:true,
       },
       category:{
-        type:Sequelize.ENUM('Book','Reference','Lecture','Summary','Exam','Other'),
+        type:Sequelize.ENUM('Reference','Lecture','ExamForm'),
         allowNull:false,
       },
       file_size:{
@@ -35,7 +35,7 @@ module.exports = {
       },
       file_path:{
         type:Sequelize.TEXT,
-        allowNull:false,
+        allowNull:true,
       },
       display_image:{
         type:Sequelize.STRING,
