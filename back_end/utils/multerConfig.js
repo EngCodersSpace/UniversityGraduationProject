@@ -19,6 +19,7 @@ const validCategories = ["Lecture", "ExamForm", "Reference"];
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         console.log('Processing file:', file); 
+
         const uploadFolderBase = path.join(__dirname, '../storage/library');
         const { category } = req.query;
 
@@ -27,6 +28,7 @@ const storage = multer.diskStorage({
         }
 
         const categoryFolder = path.join(uploadFolderBase, category);
+
         await createFolderIfNotExists(categoryFolder);
         cb(null, categoryFolder);
     },

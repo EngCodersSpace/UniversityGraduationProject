@@ -23,6 +23,7 @@
 const fs = require('fs');
 const path = require('path');
 const pdfPoppler = require('pdf-poppler');
+const { PDFDocument } = require('pdf-lib');
 
 /**
  * Extract the first page of a PDF and save it as an image.
@@ -45,7 +46,6 @@ async function extractDisplayImage(pdfPath, outputPath) {
       page: 1 // Extract only the first page
     };
 
-    // Use pdf-poppler to convert the first page of the PDF to an image
     await pdfPoppler.convert(pdfPath, options);
 
     const generatedImagePath = path.join(
@@ -61,5 +61,52 @@ async function extractDisplayImage(pdfPath, outputPath) {
   }
 }
 
+/**
+ * Extract metadata and additional details from a PDF file.
+ * @param {string} filePath - Path to the PDF file.
+ * @returns {Promise<Object>} - Object containing metadata and additional details.
+ */
+async function extractBookDetails(filePath) {
+  try {
+    // Read the file
+    const fileBuffer = fs.readFileSync(filePath);
 
-module.exports = extractDisplayImage;
+    // Load file data using pdf-lib
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+
+    // Extract metadata
+    const metadata = {
+      title: pdfDoc.getTitle() || path.basename(filePath, '.pdf'),
+      author: pdfDoc.getAuthor() || 'Unknown',
+      subject: pdfDoc.getSubject() || 'Unknown',
+      keywords: pdfDoc.getKeywords() || [],
+      creationDate: pdfDoc.getCreationDate() || null,
+      modificationDate: pdfDoc.getModificationDate() || null,
+      producer: pdfDoc.getProducer() || 'Unknown',
+    };
+
+    // Calculate file size (in MB)
+    const fileSizeInBytes = fs.statSync(filePath).size;
+    const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+
+    // Additional details (can be customized manually or fetched from a database)
+    const additionalDetails = {
+      edition: 'Unknown',
+      file_size: fileSizeInMB, 
+    };
+
+    // Merge metadata and additional details
+    const bookDetails = { ...metadata, ...additionalDetails };
+
+    console.log(bookDetails);
+    return bookDetails;
+  } catch (error) {
+    console.error('Error extracting book details:', error.message);
+    throw error;
+  }
+}
+
+module.exports = {
+  extractDisplayImage,
+  extractBookDetails,
+};

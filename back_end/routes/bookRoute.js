@@ -8,6 +8,6 @@ const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
 router.post('/upload',verifyToken,  bookController.uploadFile);
-router.get('/download/:id', bookController.downloadFile);
+router.get('/download', bookController.downloadFile);
 
 module.exports = router;

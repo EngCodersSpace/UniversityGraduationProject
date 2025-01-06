@@ -1,8 +1,7 @@
 // hooks/bookhooks.js
 const getStoragePaths = require('../utils/filePaths');
-const extractDisplayImage = require('../utils/imageExtractor');
+const { extractDisplayImage , extractBookDetails }= require('../utils/imageExtractor');
 const fs = require("fs");
-
 
 const bookHooks = {
   afterCreate: async (bookInstance) => {
@@ -21,6 +20,19 @@ const bookHooks = {
         console.log('Created directory:', directory);
       }
       await extractDisplayImage(filePath, displayImagePath);
+      const bookDetails = await extractBookDetails(filePath);
+
+      // Update fields in the model
+      bookInstance.author = bookDetails.author || 'Unknown';
+      bookInstance.edition = bookDetails.edition || 'Unknown';
+      // bookInstance.file_size = `${parseFloat(bookDetails.file_size)} MB` || null; // in book model >> convert type of file_size to string
+      bookInstance.file_size = parseFloat(bookDetails.file_size) || null;
+
+      console.log('Updated book instance with additional details:', {
+        author: bookInstance.author,
+        edition: bookInstance.edition,
+        file_size: bookInstance.file_size,
+      });
       await bookInstance.save();
     } catch (error) {
       console.error('Error in afterCreate hook:', error.message, '\n \n Stack Trace:\n ', error.stack);
@@ -28,5 +40,4 @@ const bookHooks = {
     }
   },
 };
-
 module.exports = bookHooks;
