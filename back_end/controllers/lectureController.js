@@ -81,6 +81,7 @@ const replaceOne = async (req, res) => {
     };
     const replacedLecture = await lecture.create(updateFields, { transaction });
 
+
     
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     const [hours, minutes, seconds] = originalLecture.lecture_time
