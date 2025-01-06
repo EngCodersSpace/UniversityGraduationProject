@@ -66,14 +66,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
-    exam_term: {
-      type: DataTypes.ENUM('Term 1', 'Term 2'),
-      allowNull: false,
-    },
-    exam_year: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-    },
     exam_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,

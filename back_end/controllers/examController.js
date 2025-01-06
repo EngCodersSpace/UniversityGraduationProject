@@ -1,29 +1,17 @@
-
-
 const { exam, subject , section,level } = require('../models'); 
 const { validationResult } = require('express-validator'); 
 const { Sequelize} = require('sequelize');
 
 //  All Functions are perfict right now 2024-12-10
-
 exports.createExam = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
-    const {} = req.body;
-
     try {
-        const existingSubject = await subject.findOne({ where: { subject_id:req.body.subject_id } });
-        if (!existingSubject) {
-            return res.status(404).json({ message: 'Subject not found' });
-        }
-
         const newExam = await exam.create(req.body,{
-                include: [{ model: subject, as: 'subject' }], 
-            });
-
+            include: [{ model: subject, as: 'subject' }], 
+        });
         res.status(201).json({
             message: 'Exam created successfully',
             exam: newExam,
@@ -72,14 +60,11 @@ exports.getAllExams = async (req, res) => {
 
 exports.getExamGroupedByCriteria = async (req, res) => {
     try {
-        const { section_id, level_id, year , term  } = req.params; 
+        const { section_id, level_id } = req.params; 
 
         const whereClause = {};
         if (section_id) whereClause.exam_section_id = section_id;
         if (level_id) whereClause.exam_level_id = level_id;
-        if (year) whereClause.exam_year = year;
-        if (term) whereClause.exam_term = term;
-
 
         const Exam = await exam.findAll({
             where: whereClause,
@@ -94,19 +79,12 @@ exports.getExamGroupedByCriteria = async (req, res) => {
             return res.status(404).json({ message: 'No Exams found for the specified criteria' });
         }
 
-        const organizedLectures = {};
+        const organizedLectures = [];
         
         Exam.forEach(lec => { 
-            const term = lec.exam_term; 
-
-            if (!organizedLectures[term]) {
-                organizedLectures[term] = [];
-            }
-
-
-            organizedLectures[term].push({
+            organizedLectures.push({
                 id   : lec.exam_id,
-                subject_name: lec.subject.subject_name, 
+                subject: lec.subject, 
                 exam_date:lec.exam_date,
                 exam_day:lec.exam_day,
                 exam_time : lec.exam_time, 
@@ -148,37 +126,20 @@ exports.updateExam = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    const { id } = req.params;
-    const { } = req.body;
 
-    try {
-        // Find the exam by ID, including the associated subject
-        const foundExam = await exam.findOne({
-            where: { exam_id:id },
-            include: [{ model: subject ,as:'subject'}],
+    try {   
+        await exam.update(req.body, {
+            where:   { exam_id: req.params.id },
         });
 
-        // Check if the exam exists
-        if (!foundExam) {
-            return res.status(404).json({ message: 'Exam not found' });
-        }
-
-        // Check if the new subject_id exists in the database
-        const foundSubject = await subject.findOne({
-            where: { subject_id:req.body.subject_id },
+        const updatedExam = await exam.findOne({
+            where: { exam_id: req.params.id },
+            include: [{ model: subject, as: 'subject' }], 
         });
 
-        if (!foundSubject) {
-            return res.status(404).json({ message: 'Subject not found' });
-        }
-
-        // Update the exam data
-        await foundExam.update(req.body);
-
-        // Respond with the updated exam
         res.status(200).json({
             message: 'Exam updated successfully',
-            exam: foundExam,
+            exam: updatedExam,
         });
     } catch (error) {
         console.error('Error updating exam:', error.message);

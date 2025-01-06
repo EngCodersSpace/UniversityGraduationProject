@@ -44,7 +44,6 @@ const validateDoctorRegistration = [
             }
             return true;
         }),
-<<<<<<< HEAD
 
     body('user_name')
         .notEmpty().withMessage('User Name is required')
@@ -59,6 +58,11 @@ const validateDoctorRegistration = [
         .notEmpty().withMessage('Date Of Birth is required')
         .isDate().withMessage('Date Of Birth must be a Date'),
 
+<<<<<<< HEAD
+    body('permission')
+        .notEmpty().withMessage('permission is required')
+        .isString().withMessage('permission must be a String'),
+=======
     body('collegeName')
         .notEmpty().withMessage('collegeName is required')
         .isString().withMessage('collegeName must be a String'),
@@ -75,25 +79,7 @@ const validateDoctorRegistration = [
         }),
 
    
-=======
-
-    body('user_name')
-        .notEmpty().withMessage('User Name is required')
-        .isString().withMessage('User Name must be a String'),
-
-    body('user_section_id')
-        .notEmpty().withMessage('User Section ID is required')
-        .isInt().withMessage('User Section ID must be a number')
-        .custom((value) => value > 0).withMessage('User Section ID must be greater than 0'),
-    
-    body('date_of_birth')
-        .notEmpty().withMessage('Date Of Birth is required')
-        .isDate().withMessage('Date Of Birth must be a Date'),
-
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
->>>>>>> origin/Ahmed
+>>>>>>> Ahmed
 
     body('password')
         .notEmpty().withMessage('password is required')
@@ -104,10 +90,6 @@ const validateDoctorRegistration = [
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
 <<<<<<< HEAD
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-=======
    
 
     body('collegeName')
@@ -124,7 +106,11 @@ const validateDoctorRegistration = [
             }
             return true;
         }),
->>>>>>> origin/Ahmed
+=======
+    body('permission')
+        .notEmpty().withMessage('permission is required')
+        .isString().withMessage('permission must be a String'),
+>>>>>>> Ahmed
 
     body('doctor.academic_degree')
         .notEmpty().withMessage('Academic degree is required')

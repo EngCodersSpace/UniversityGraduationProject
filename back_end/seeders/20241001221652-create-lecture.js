@@ -63,6 +63,7 @@ module.exports = {
                 }),
                 lecture_day: days[d],
                 lecture_room: `Hall ${faker.number.int({ min: 1, max: 100 })}`,
+                isReplaced: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
               };
