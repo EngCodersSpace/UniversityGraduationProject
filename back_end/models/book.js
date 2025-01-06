@@ -1,6 +1,6 @@
 'use strict'; 
 const { Model } = require('sequelize');
-const bookHooks = require('../hooks/bookHooks'); // Import the hooks
+const bookHooks = require('../hooks/bookHooks');
 
 module.exports = (sequelize, DataTypes) => {
   class book extends Model {

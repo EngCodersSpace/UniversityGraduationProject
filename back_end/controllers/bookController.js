@@ -1,24 +1,8 @@
-
-// const BASE_URL = process.env.BASE_URL;
-// const UPLOAD_DIR = process.env.UPLOAD_DIR;
-// const uniqueName = `${Date.now()}_${file.originalname}`;
-// const fileUrl = `${BASE_URL}/${category}/${uniqueName}`;
-// npm install pdf2pic sharp
-
-
-
-// const fs = require('fs-extra');
-// const getStoragePaths = require('../utils/filePaths'); 
-// const extractDisplayImage=require('../utils/imageExtractor');
-
 // controllers/bookController.js
-
 const path = require('path');
 const fs = require("fs");
 const { book } = require('../models');
 const { Worker } = require("worker_threads");
-
-
 const { uploadFields  } = require('../utils/multerConfig');
 
 exports.uploadFile = [
@@ -41,7 +25,21 @@ exports.uploadFile = [
             const title = file.originalname;
 
             console.log('\n \n File.originalname:', title); 
-
+            const existingBook = await book.findOne({
+              where: {
+                title:path.parse(title).name,
+                category: req.query.category,
+                subject_id: req.body.subject_id,
+              },
+            });
+            
+            if (existingBook) {
+              return res.status(409).json({
+                message: "This file has already been uploaded.",
+                book: existingBook,
+              });
+            }
+            
             const newBook = await book.create({
                 title: path.parse(title).name,
                 category : req.query.category,
@@ -52,8 +50,6 @@ exports.uploadFile = [
                   individualHooks: true,
                 }
             );
-
-
 
             res.status(200).json({
                 message: "File uploaded successfully.",
@@ -66,31 +62,32 @@ exports.uploadFile = [
     },
 ];
 
-
-
 exports.downloadFile = async (req, res) => {
   try {
-    const { id } = req.params;
-    const fileData = await book.findByPk(id);
+    const fileData = await book.findByPk(req.query.id);
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath = path.join(__dirname, `../${fileData.file_path}`);
+    const filePath = path.resolve(__dirname, '../storage/library', fileData.category, `${fileData.title}.pdf`);
+    console.log(`\n \n fileData category ${fileData.category} --- fileData.title ${fileData.title} \n \n `);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
 
     // start download using worker_threads 
-    const worker = new Worker("./utils/downloadWorker.js", {
-      workerData: { filePath }
+    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
+      workerData: { filePath },
     });
+    console.log(`\n \n worker find path ${filePath} \n \n` );
     worker.on("message", (message) => {
       if (message.status === "success") {
-        res.status(200).json({ message: "Download started in the background.", path: message.filePath });
+        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
+        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
       }
     });
     worker.on("error", (err) => {
-      res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
+      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
+      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
     });
     
     res.status(200).json({ message: "Download started in the background." });
@@ -104,137 +101,6 @@ exports.downloadFile = async (req, res) => {
 
 
 
-
-// axios({
-// method: 'get',
-// url: url,
-// responseType: 'stream',
-// }).then((response) => {
-// const writer = fs.createWriteStream(filePath);
-// response.data.pipe(writer);
-
-// writer.on('finish', () => {
-//     console.log('Download completed!');
-// });
-
-// writer.on('error', (err) => {
-//     console.error('Download failed:', err);
-// });
-// });
-
-// router.get('/books', async (req, res) => {
-//     const { levelId, sectionId, category, page = 1, size = 10 } = req.query;
-//     const limit = parseInt(size);
-//     const offset = (parseInt(page) - 1) * limit;
-  
-//     const where = {};
-//     if (category) where.category = category; // فلترة حسب الفئة (Lecture, Reference, etc.)
-  
-//     try {
-//       const { count, rows } = await Book.findAndCountAll({
-//         where,
-//         include: [
-//           {
-//             model: Level,
-//             through: { attributes: [] }, // منع عرض جدول الوسيط
-//             where: levelId ? { id: levelId } : undefined, // فلترة حسب المستوى
-//           },
-//           {
-//             model: Section,
-//             through: { attributes: [] }, // منع عرض جدول الوسيط
-//             where: sectionId ? { id: sectionId } : undefined, // فلترة حسب القسم
-//           },
-//         ],
-//         limit,
-//         offset,
-//         order: [['title', 'ASC']], // ترتيب حسب العنوان
-//       });
-  
-//       res.json({
-//         totalItems: count,
-//         totalPages: Math.ceil(count / limit),
-//         currentPage: parseInt(page),
-//         books: rows,
-//       });
-//     } catch (error) {
-//       res.status(500).json({ message: 'حدث خطأ أثناء البحث', error });
-//     }
-// });
-  
-// const sharp = require('sharp');
-// router.post('/upload', upload.single('bookFile'), async (req, res) => {
-//   const { title, author, subject_id, category } = req.body;
-
-//   try {
-//     const thumbnailPath = `uploads/thumbnails/${Date.now()}-thumbnail.jpg`;
-
-//     // Generate thumbnail
-//     await sharp(req.file.path)
-//       .resize(200, 300) // Width: 200px, Height: 300px
-//       .toFile(thumbnailPath);
-
-//     const newBook = await Book.create({
-//       title,
-//       author,
-//       subject_id,
-//       category,
-//       file_path: req.file.path,
-//       display_image: thumbnailPath,
-//       file_size: req.file.size / (1024 * 1024), // Convert bytes to MB
-//     });
-
-//     res.status(201).json({ message: 'Book uploaded successfully!', book: newBook });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error uploading book', error });
-//   }
-// });
-
-// router.get('/books', async (req, res) => {
-//   const { page = 1, size = 10 } = req.query; // Default: page 1, 10 items per page
-//   const limit = parseInt(size);
-//   const offset = (parseInt(page) - 1) * limit;
-
-//   try {
-//     const { count, rows } = await Book.findAndCountAll({
-//       limit,
-//       offset,
-//       order: [['title', 'ASC']], // Sort by title
-//     });
-
-//     res.json({
-//       totalItems: count,
-//       totalPages: Math.ceil(count / limit),
-//       currentPage: parseInt(page),
-//       books: rows,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Error fetching books', error });
-//   }
-// });
-
-// const sharp = require('sharp');
-// sharp('output.jpg')
-//     .resize({ width: 300 }) // Resize to thumbnail size
-//     .toFile('optimized_thumbnail.jpg', (err, info) => {
-//         if (err) throw err;
-//         console.log('Thumbnail created:', info);
-// });
-
-// async function getBooksByCategory(req, res) {
-//     try {
-//         const { category } = req.params;
-//         const books = await Book.findAll({
-//             where: { category },
-//             attributes: ["id", "title", "author", "thumbnailPath"],
-//         });
-//         res.status(200).json(books);
-//     } catch (err) {
-//         console.error("Error fetching books:", err);
-//         res.status(500).json({ error: "Failed to fetch books" });
-//     }
-// }
-
-
 //  for storage 
 //  const >> from  path of hostage to file of local storage 
 //  var   >> depends on each path of (image,....file path)
@@ -246,3 +112,7 @@ exports.downloadFile = async (req, res) => {
 // 
 // 
 // 
+// const BASE_URL = process.env.BASE_URL;
+// const UPLOAD_DIR = process.env.UPLOAD_DIR;
+// const uniqueName = `${Date.now()}_${file.originalname}`;
+// const fileUrl = `${BASE_URL}/${category}/${uniqueName}`;
