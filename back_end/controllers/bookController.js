@@ -18,7 +18,6 @@ const fs = require("fs");
 const { book } = require('../models');
 const { Worker } = require("worker_threads");
 
-// const  upload = require('../utils/multerConfig');
 
 const { uploadFields  } = require('../utils/multerConfig');
 
@@ -26,28 +25,35 @@ exports.uploadFile = [
   uploadFields , 
     async (req, res) => {
         try {
-            const {  title, subject_id, added_by } = req.body;
+            const added_by= req.user.user_id;
 
-            if (!title || !subject_id || !added_by) {
-                return res.status(400).json({ message: " title, subject_id, and added_by are required." });
+            const { subject_id } = req.body;
+
+            if ( !subject_id ) {
+              return res.status(400).json({ message: " subject_id is required." });
             }
 
-            const { file } = req;
-            if (!file) {
-                return res.status(400).json({ message: "No file uploaded." });
+            if (!req.files || !req.files['file']) {
+              return res.status(400).json({ message: "No file uploaded." });
             }
-            console.log ('\n  file   \n ' );
+    
+            const file = req.files['file'][0];
+            const title = file.originalname;
 
-            if (!file.mimetype.includes('pdf')) {
-                return res.status(400).json({ message: "Only PDF files are allowed." });
-            }
+            console.log('\n \n File.originalname:', title); 
 
             const newBook = await book.create({
-                title,
-                category,
+                title: path.parse(title).name,
+                category : req.query.category,
                 subject_id,
                 added_by,
-            });
+                },
+                {
+                  individualHooks: true,
+                }
+            );
+
+
 
             res.status(200).json({
                 message: "File uploaded successfully.",

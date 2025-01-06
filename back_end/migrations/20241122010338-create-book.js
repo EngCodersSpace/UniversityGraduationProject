@@ -35,7 +35,7 @@ module.exports = {
       },
       file_path:{
         type:Sequelize.TEXT,
-        allowNull:false,
+        allowNull:true,
       },
       display_image:{
         type:Sequelize.STRING,

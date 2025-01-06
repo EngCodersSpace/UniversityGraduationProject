@@ -3,11 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
-const { uploadFields } = require('../utils/multerConfig');
+const { verifyToken } = require('../middleware/authMiddleware');
 
-router.post('/upload', uploadFields, bookController.uploadFile);
+router.use(verifyToken);
 
-
+router.post('/upload',verifyToken,  bookController.uploadFile);
 router.get('/download/:id', bookController.downloadFile);
 
 module.exports = router;
