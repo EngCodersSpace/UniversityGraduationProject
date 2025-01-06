@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
 
@@ -5,6 +6,10 @@ import '../views/acadime_card/academic_card_web_view.dart';
 import '../views/exam_table_view/exam_table_web_view.dart';
 import '../views/library_view/library_web_view.dart';
 import '../views/student_results_view/student_results_web_view.dart';
+import 'academic_card_controller.dart';
+import 'exam_table_controller.dart';
+import 'library_controller.dart';
+import 'student_result_controller.dart';
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
@@ -37,7 +42,7 @@ class MainController extends GetxController {
     } else if (index == 3) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.71) - 28, y: Get.height - (Get.height * 0.1))
+              x: (Get.width * 0.71) - 8, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
               x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1));
     } else if (index == 4) {
@@ -47,35 +52,41 @@ class MainController extends GetxController {
           : currentPos = CustomFloatActionButtonLocation(
               x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
     }
-    // index
+
+    if (!(Get.width <= 768 && Get.height <= 1025)) {
+      putControllers(index);
+    }
+
     selectedIndex.value = index;
   }
 
   void putControllers(int index) {
+    GetxController? controller;
     switch (index) {
       case 5:
-        Get.put(
-          const LibraryWebView(),
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<LibraryController>(
+          LibraryController(),
         );
-        // selectedIndex.value = index;
         break;
       case 6:
-        Get.put(
-          ExamTableWebView(),
+        Get.put<ExamTableController>(
+          ExamTableController(),
         );
         break;
       case 7:
-        Get.put(
-          const StudentResultsWebView(),
+        Get.put<StudentResultController>(
+          StudentResultController(),
         );
         break;
       case 8:
-        Get.put(
-          const AcademicCardWebView(),
+        Get.put<AcademicCardController>(
+          AcademicCardController(),
         );
         break;
     }
-    selectedIndex.value = index;
   }
 
   @override

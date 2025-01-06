@@ -9,20 +9,17 @@ class MainViewLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (Get.width <= 768 && Get.height <= 1025) {
-            return  PhoneMainView();
+            return PhoneMainView();
           } else {
-            return   WebMainView();
+            return WebMainView();
           }
         },
       ),
     );
   }
 }
-

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -23,24 +24,20 @@ class LectureController extends GetxController {
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedDepartment = Rx(null);
-  // Rx<int?> selectedwebDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  // Rx<int?> selectedwebLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
-  // Rx<String?> selectedwebYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
   List<DropdownMenuItem<int>> departments = [];
-  List<DropdownMenuItem<int>> webdepartments = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<int>> weblevels = [];
   List<DropdownMenuItem<String>> years = [];
-  List<DropdownMenuItem<String>> webyears = [];
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
+            width: (Get.width <= 768 && Get.height <= 1025)
+                ? (Get.width / 3.3) * 0.75
+                : (Get.width / 6) * 0.6,
             child: SecText(
               "Term 1",
               textColor: AppColors.mainTextColor,
@@ -49,28 +46,9 @@ class LectureController extends GetxController {
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText(
-              "Term 2",
-              textColor: AppColors.mainTextColor,
-              fontSize: 12,
-            ))),
-  ];
-
-  List<DropdownMenuItem<String>> webterms = [
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 7) * 0.6,
-            child: SecText(
-              "Term 1",
-              textColor: AppColors.mainTextColor,
-              fontSize: 12,
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 7) * 0.6,
+            width: (Get.width <= 768 && Get.height <= 1025)
+                ? (Get.width / 3.3) * 0.75
+                : (Get.width / 6) * 0.6,
             child: SecText(
               "Term 2",
               textColor: AppColors.mainTextColor,
@@ -98,20 +76,13 @@ class LectureController extends GetxController {
   @override
   void onInit() async {
     await initSectionDropdownMenuList();
-    await webinitSectionDropdownMenuList();
     await initLevelDropdownMenuList();
-    await webinitLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (weblevels.isNotEmpty) ? selectedLevel.value = weblevels.first.value : null;
     (departments.isNotEmpty)
         ? selectedDepartment.value = departments.first.value
         : null;
-    (webdepartments.isNotEmpty)
-        ? selectedDepartment.value = webdepartments.first.value
-        : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
-    (webyears.isNotEmpty) ? selectedYear.value = webyears.first.value! : null;
     await fetchTableData();
     loadState.value = false;
     super.onInit();
@@ -128,26 +99,17 @@ class LectureController extends GetxController {
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuList();
     }
-    if (selectedLevel.value == null) {
-      await webinitLevelDropdownMenuList();
-    }
+
     if (selectedDepartment.value == null) {
       await initSectionDropdownMenuList();
     }
-    if (selectedDepartment.value == null) {
-      await webinitSectionDropdownMenuList();
-    }
+
     if (selectedYear.value == null) {
       await initYearDropdownMenuList();
     }
-    if (selectedYear.value == null) {
-      await webinitYearDropdownMenuList();
-    }
+
     if (selectedDepartment.value == null ||
-        // selectedwebDepartment.value == null ||
         selectedLevel.value == null ||
-        // selectedwebLevel.value == null ||
-        // selectedwebYear == null ||
         selectedYear.value == null) {
       return;
     }
@@ -180,19 +142,7 @@ class LectureController extends GetxController {
     await fetchTableData();
   }
 
-  void changewebDepartment(int? val) async {
-    if (val == null) return;
-    selectedDepartment.value = val;
-    await fetchTableData();
-  }
-
   void changeLevel(int? val) async {
-    if (val == null) return;
-    selectedLevel.value = val;
-    await fetchTableData();
-  }
-
-  void changewebLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchTableData();
@@ -204,20 +154,7 @@ class LectureController extends GetxController {
     fetchTableData();
   }
 
-  void changewebYear(String? val) {
-    if (val == null) return;
-    selectedYear.value = val;
-    fetchTableData();
-  }
-
   void changeTerm(String? val) async {
-    if (val == null) return;
-    selectedTerm.value = val;
-    fetchTableData();
-    selected.refresh();
-  }
-
-  void changewebTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
     fetchTableData();
@@ -263,28 +200,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                section.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ),
-            )),
-      );
-    }
-  }
-
-  Future<void> webinitSectionDropdownMenuList({bool force = false}) async {
-    List<Section> sectionsData =
-        await SectionServices.fetchSections(hardFetch: force)
-            .then((e) => e.data?.values.toList() ?? []);
-    webdepartments = [];
-    for (Section section in sectionsData) {
-      webdepartments.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (Get.width / 5.5) * 0.6,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 5.5) * 0.6,
               child: SecText(
                 section.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
@@ -304,27 +222,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ),
-            )),
-      );
-    }
-  }
-
-  Future<void> webinitLevelDropdownMenuList({bool force = false}) async {
-    List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
-    weblevels = [];
-    for (Level level in levelsData) {
-      weblevels.add(
-        DropdownMenuItem<int>(
-            value: level.id,
-            child: SizedBox(
-              width: (Get.width / 8) * 0.6,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 8) * 0.6,
               child: SecText(
                 level.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
@@ -345,28 +245,9 @@ class LectureController extends GetxController {
         DropdownMenuItem(
             value: year,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
-                year,
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
-              ),
-            )),
-      );
-    }
-  }
-
-  Future<void> webinitYearDropdownMenuList({bool force = false}) async {
-    List<String> yearData =
-        await LectureServices.fetchLectureYears(hardFetch: force)
-            .then((e) => e.data ?? []);
-    webyears = [];
-    for (String year in yearData) {
-      webyears.add(
-        DropdownMenuItem(
-            value: year,
-            child: SizedBox(
-              width: (Get.width / 7) * 0.6,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 7) * 0.6,
               child: SecText(
                 year,
                 textColor: AppColors.mainTextColor,
@@ -393,11 +274,8 @@ class LectureController extends GetxController {
       Get.dialog(const PopUpIAddAndUpdateLectureCard());
     } else if (val == "Delete") {
       if (selectedLevel.value == null) return;
-      // if (selectedwebLevel.value == null) return;
       if (selectedDepartment.value == null) return;
-      // if (selectedwebDepartment.value == null) return;
       if (selectedYear.value == null) return;
-      // if (selectedwebYear.value == null) return;
       selectedLecture = data?["id"];
       Result<void> res = await LectureServices.deleteLecture(
           sectionId: selectedDepartment.value!,

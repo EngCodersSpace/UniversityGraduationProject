@@ -57,7 +57,7 @@ class WebMainView extends GetView<MainController> {
                       Obx(() => Column(
                             children: [
                               InkWell(
-                                onTap: () => controller.putControllers,
+                                onTap: () => controller.changeTabIndex(5),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -107,7 +107,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 4,
+                                onTap: () => controller.changeTabIndex(4),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -155,7 +155,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 2,
+                                onTap: () => controller.changeTabIndex(2),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -202,7 +202,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 0,
+                                onTap: () => controller.changeTabIndex(0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -249,7 +249,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 1,
+                                onTap: () => controller.changeTabIndex(1),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -296,7 +296,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.selectedIndex.value = 3,
+                                onTap: () => controller.changeTabIndex(3),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -343,7 +343,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.putControllers,
+                                onTap: () => controller.changeTabIndex(6),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -390,7 +390,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.putControllers,
+                                onTap: () => controller.changeTabIndex(7),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
@@ -437,7 +437,7 @@ class WebMainView extends GetView<MainController> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () => controller.putControllers,
+                                onTap: () => controller.putControllers(8),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
