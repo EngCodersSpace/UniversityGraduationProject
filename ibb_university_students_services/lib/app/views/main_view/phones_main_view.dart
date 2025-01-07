@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/phone_assignments_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/phones_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
@@ -220,12 +221,7 @@ class PhoneMainView extends GetView<MainController> {
     PhoneNotificationView(),
     PhoneLectureTableTabView(),
     PhoneMainTab(),
-    Center(
-      child: MainText(
-        "MainPage 3",
-        textColor: Colors.black,
-      ),
-    ),
+    PhoneAssignmentsTabView(),
     PhoneProfileView(),
   ];
 }
