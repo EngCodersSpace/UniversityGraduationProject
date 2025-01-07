@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'student_level_id',//the foreign Key in the student table refers to level table
       });
 
+      student.belongsToMany(models.assignment, {
+        through: 'student_assignment',
+        foreignKey: 'student_id',
+      });
+
 
 
 
@@ -82,13 +87,13 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'student',
 
     defaultScope: {
-      attributes: { exclude: ['study_plan_id',  'student_level_id'] },
+      attributes: { exclude: ['study_plan_id', 'student_level_id'] },
       include: [
         {
           association: 'study_plan',
 
         },
-     
+
         {
           association: 'level',
 
