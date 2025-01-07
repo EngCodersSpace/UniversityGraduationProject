@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:ibb_university_students_services/app/views/login_view/phones_login_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/web_login_view.dart';
 
+import '../../utils/screen_utils.dart';
+
 class LoginViewLoader extends StatelessWidget {
   const LoginViewLoader({super.key});
 
@@ -12,7 +14,7 @@ class LoginViewLoader extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
+          if (ScreenUtils.isPhoneScreen()) {
             return PhoneLoginView();
           } else {
             return WebLoginView();
