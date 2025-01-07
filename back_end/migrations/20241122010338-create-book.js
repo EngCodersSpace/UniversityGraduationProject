@@ -11,39 +11,39 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        allowNull:false,
+        allowNull: false,
       },
-      author:{
-        type:Sequelize.STRING,
-        allowNull:true,
+      author: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
-      isbn:{
-        type:Sequelize.STRING(50),
-        allowNull:true,
+      numberOfPages: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       },
-      edition:{
-        type:Sequelize.STRING(50),
-        allowNull:true,
+      edition: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
       },
-      category:{
-        type:Sequelize.ENUM('Book','Reference','Lecture','Summary','Exam','Other'),
-        allowNull:false,
+      category: {
+        type: Sequelize.ENUM('Book', 'Reference', 'Lecture', 'Summary', 'Exam', 'Other'),
+        allowNull: false,
       },
-      file_size:{
-        type:Sequelize.FLOAT,
-        allowNull:true,
+      file_size: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
       },
-      file_path:{
-        type:Sequelize.TEXT,
-        allowNull:false,
+      file_path: {
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
-      display_image:{
-        type:Sequelize.STRING,
-        allowNull:true,
+      display_image: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
-      added_by:{
-        type:Sequelize.INTEGER,
-        allowNull:false,
+      added_by: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'users',
           key: 'user_id',
@@ -71,6 +71,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    });
+    await queryInterface.addConstraint('books', {
+      fields: ['title', 'numberOfPages', 'author', 'edition'],
+      type: 'unique',
+      name: 'unique_constraint_in_book',
     });
   },
   async down(queryInterface, Sequelize) {
