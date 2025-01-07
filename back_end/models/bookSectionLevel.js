@@ -20,32 +20,32 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    bookId:{
-      type:DataTypes.INTEGER,
-      allowNull:false,
-      references:{
-        model:'books',
-        key:'id',
+    bookId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'books',
+        key: 'id',
       },
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
-    sectionId:{
-      type:DataTypes.INTEGER,
-      allowNull:false,
-      references:{
-        model:'sections',
-        key:'id',
+    sectionId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
       },
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
-    levelId:{
-      type:DataTypes.INTEGER,
-      allowNull:false,
-      references:{
-        model:'levels',
-        key:'id',
+    levelId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
       },
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
@@ -53,7 +53,14 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'bookSectionLevel',
-    timestamps:false,
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['bookId', 'sectionId', 'levelId'],
+        name: 'unique_constraint_in_bookSectionLevel',
+      },
+    ],
   });
   return bookSectionLevel;
 };
