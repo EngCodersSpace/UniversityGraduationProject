@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(50),
         allowNull: true,
       },
+      numberOfPages: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       edition: {
         type: DataTypes.STRING(50),
         allowNull: true,
