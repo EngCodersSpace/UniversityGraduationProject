@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id',
       });
 
+      subject.hasMany(models.assignment, {
+        foreignKey: 'subject_id',
+      });
+
 
     }
   }
@@ -54,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     subject_name: {
       type: DataTypes.JSON,
-      allowNull:false,
+      allowNull: false,
     },
     number_of_units: {
       type: DataTypes.TINYINT,

@@ -20,12 +20,16 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       //(2)Relationship One-to-Many between "doctor table" and  "study_plan_elment table"
-      doctor.hasMany(models.study_plan_elment,{
-        foreignKey:'doctor_id',
+      doctor.hasMany(models.study_plan_elment, {
+        foreignKey: 'doctor_id',
       });
 
       doctor.belongsToMany(models.subject, {
         through: 'subject_teacher',
+        foreignKey: 'doctor_id',
+      });
+
+      doctor.hasMany(models.assignment, {
         foreignKey: 'doctor_id',
       });
 
@@ -38,11 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       references: {
-        model: 'users' ,
-        key:'user_id',
+        model: 'users',
+        key: 'user_id',
       },
-      onDelete:'CASCADE',
-      onUpdate:'CASCADE',  
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     // status: {
     //   type: DataTypes.STRING,

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class bookSectionLevel extends Model {
+  class student_assignment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,54 +13,48 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  bookSectionLevel.init({
+  student_assignment.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    bookId: {
+    student_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'books',
-        key: 'id',
+        model: 'students',
+        key: 'student_id',
       },
-      onDelete: 'NO ACTION',
+      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    sectionId: {
+    assignment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'sections',
+        model: 'assignments',
         key: 'id',
       },
-      onDelete: 'NO ACTION',
+      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    levelId: {
-      type: DataTypes.INTEGER,
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
       allowNull: false,
-      references: {
-        model: 'levels',
-        key: 'id',
-      },
-      onDelete: 'NO ACTION',
-      onUpdate: 'CASCADE',
     },
+    attachment: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    
+
+
   }, {
     sequelize,
-    modelName: 'bookSectionLevel',
-    timestamps: false,
-    indexes: [
-      {
-        unique: true,
-        fields: ['bookId', 'sectionId', 'levelId'],
-        name: 'unique_constraint_in_bookSectionLevel',
-      },
-    ],
+    modelName: 'student_assignment',
   });
-  return bookSectionLevel;
+  return student_assignment;
 };
