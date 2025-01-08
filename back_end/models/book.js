@@ -91,11 +91,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'book',
-    }
-  );
-
-  // Add hooks to the model
-  book.addHook('afterCreate', bookHooks.afterCreate);
-
-  return book;
+      indexes: [
+      {
+        unique: true,
+        fields: ['title', 'numberOfPages', 'author', 'edition'],
+        name: 'unique_constraint_in_book',
+      },
+        ],
+    });
+    book.addHook('afterCreate', bookHooks.afterCreate);
+    return book;
 };
