@@ -56,58 +56,54 @@ async function translateText(anystring, fromLang, toLang) {
 
 
 
-async function addTranslation(tableName, recordId, field, value, language) {
-  try {
-    if (language === 'ar') {
-      await translation.create({
-        tableName,
-        recordId,
-        field,
-        value,
-        language,
-      });
-    }
-  } catch (error) {
-    throw new Error(Error `addingtranslation: ${error.message}`);
-  }
-}
+// async function addTranslation(tableName, recordId, field, value, language) {
+//   try {
+//     if (language === 'ar') {
+//       await translation.create({
+//         tableName,
+//         recordId,
+//         field,
+//         value,
+//         language,
+//       });
+//     }
+//   } catch (error) {
+//     throw new Error(Error `addingtranslation: ${error.message}`);
+//   }
+// }
 
+// async function getTranslation(tableName, recordId, field, language) {
+//   try {
+//     const translationRecord = await translation.findOne({
+//       where: { tableName, recordId, field, language },
+//     });
 
-async function getTranslation(tableName, recordId, field, language) {
-  try {
-    const translationRecord = await translation.findOne({
-      where: { tableName, recordId, field, language },
-    });
+//     return translationRecord ? translationRecord.value : null;
+//   } catch (error) {
+//     throw new Error('Error fetching translation');
+//   }
+// }
 
-    return translationRecord ? translationRecord.value : null;
-  } catch (error) {
-    throw new Error('Error fetching translation');
-  }
-}
+// async function updateTranslation(tableName, recordId, field, value, language) {
+//   try {
+//     await translation.update(
+//       { value },
+//       { where: { tableName, recordId, field, language } }
+//     );
 
-async function updateTranslation(tableName, recordId, field, value, language) {
-  try {
-    await translation.update(
-      { value },
-      { where: { tableName, recordId, field, language } }
-    );
+//     const targetLanguage = language === 'ar' ? 'en' : 'ar';
+//     const translatedValue = await translateText(value, targetLanguage);
 
-    const targetLanguage = language === 'ar' ? 'en' : 'ar';
-    const translatedValue = await translateText(value, targetLanguage);
-
-    await translation.update(
-      { value: translatedValue },
-      { where: { tableName, recordId, field, language: targetLanguage } }
-    );
-  } catch (error) {
-    throw new Error('Error updating translation');
-  }
-}
+//     await translation.update(
+//       { value: translatedValue },
+//       { where: { tableName, recordId, field, language: targetLanguage } }
+//     );
+//   } catch (error) {
+//     throw new Error('Error updating translation');
+//   }
+// }
 
 module.exports = {
-  addTranslation,
-  getTranslation,
-  updateTranslation,
   translateText
 };
 
