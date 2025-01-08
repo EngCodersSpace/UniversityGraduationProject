@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -34,13 +35,25 @@ class LectureController extends GetxController {
     DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 1", textColor: AppColors.mainTextColor,fontSize: 12,))),
+            width: (Get.width <= 768 && Get.height <= 1025)
+                ? (Get.width / 3.3) * 0.75
+                : (Get.width / 6) * 0.6,
+            child: SecText(
+              "Term 1",
+              textColor: AppColors.mainTextColor,
+              fontSize: 12,
+            ))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
-            width: (Get.width / 3.3) * 0.75,
-            child: SecText("Term 2", textColor: AppColors.mainTextColor,fontSize: 12,))),
+            width: (Get.width <= 768 && Get.height <= 1025)
+                ? (Get.width / 3.3) * 0.75
+                : (Get.width / 6) * 0.6,
+            child: SecText(
+              "Term 2",
+              textColor: AppColors.mainTextColor,
+              fontSize: 12,
+            ))),
   ];
 
   //Lecture popCard variables
@@ -62,7 +75,6 @@ class LectureController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
@@ -87,12 +99,15 @@ class LectureController extends GetxController {
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuList();
     }
+
     if (selectedDepartment.value == null) {
       await initSectionDropdownMenuList();
     }
+
     if (selectedYear.value == null) {
       await initYearDropdownMenuList();
     }
+
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
         selectedYear.value == null) {
@@ -101,7 +116,7 @@ class LectureController extends GetxController {
     Result res = await LectureServices.fetchTableTime(
         sectionId: selectedDepartment.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value??"2024",
+        year: selectedYear.value ?? "2024",
         term: selectedTerm.value,
         hardFetch: force);
     if (res.statusCode == 200) {
@@ -177,15 +192,17 @@ class LectureController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-    await SectionServices.fetchSections(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
+        await SectionServices.fetchSections(hardFetch: force)
+            .then((e) => e.data?.values.toList() ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 5.5) * 0.6,
               child: SecText(
                 section.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
@@ -205,7 +222,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 8) * 0.6,
               child: SecText(
                 level.name ?? "unknown",
                 textColor: AppColors.mainTextColor,
@@ -226,7 +245,9 @@ class LectureController extends GetxController {
         DropdownMenuItem(
             value: year,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: (Get.width <= 768 && Get.height <= 1025)
+                  ? (Get.width / 3.3) * 0.75
+                  : (Get.width / 7) * 0.6,
               child: SecText(
                 year,
                 textColor: AppColors.mainTextColor,
@@ -243,9 +264,10 @@ class LectureController extends GetxController {
       mode = "Update";
       if (data != null) {
         selectedLecture = data["id"];
-        doctorId.value =  data["doctor_id"];
+        doctorId.value = data["doctor_id"];
         subjectId.value = data["subject"]["subject_id"];
-        timeController.text = DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+        timeController.text =
+            DateTimeUtils.formatStringTime(time: data["lecture_time"]);
         durationController.text = data["duration"].toString();
         hallController.text = data["lecture_room"].toString();
       }
@@ -275,23 +297,25 @@ class LectureController extends GetxController {
       mode = "Replace";
       if (data != null) {
         selectedLecture = data["id"];
-        doctorId.value =  data["doctor_id"];
+        doctorId.value = data["doctor_id"];
         subjectId.value = data["subject"]["subject_id"];
-        timeController.text = DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+        timeController.text =
+            DateTimeUtils.formatStringTime(time: data["lecture_time"]);
         durationController.text = data["duration"].toString();
         hallController.text = data["lecture_room"].toString();
       }
       Get.dialog(const PopUpIAddAndUpdateLectureCard());
     } else if (val == "Confirm") {
       selectedLecture = data?["id"];
-      if(selectedLecture == null)return;
+      if (selectedLecture == null) return;
       Result<void> res = await LectureServices.changeLectureState(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
           day: selectedDayName,
-          id: selectedLecture!, action: 'confirm');
+          id: selectedLecture!,
+          action: 'confirm');
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?[selectedLecture]?.lectureStatus = true;
@@ -302,14 +326,15 @@ class LectureController extends GetxController {
       }
     } else if (val == "Cancel") {
       selectedLecture = data?["id"];
-      if(selectedLecture == null)return;
+      if (selectedLecture == null) return;
       Result<void> res = await LectureServices.changeLectureState(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
           day: selectedDayName,
-          id: selectedLecture!, action: 'cancel');
+          id: selectedLecture!,
+          action: 'cancel');
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?[selectedLecture]?.lectureStatus = false;
@@ -325,32 +350,35 @@ class LectureController extends GetxController {
     // doctorId.value = 1000;
     await getSubjects();
     mode = "Add";
-    timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
+    timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
     Get.dialog(const PopUpIAddAndUpdateLectureCard());
   }
 
   void submit() async {
-    if(adding) return;
+    if (adding) return;
     adding = true;
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
       jsData["lecture_section_id"] = selectedDepartment.value;
       jsData["lecture_level_id"] = selectedLevel.value;
-      jsData["year"] = selectedYear.value??"2024";
+      jsData["year"] = selectedYear.value ?? "2024";
       jsData["term"] = selectedTerm.value;
       jsData["lecture_day"] = selectedDayName;
-      ((subjectId.value?.isNotEmpty??false) && subjectId.value != "Unknown".tr)
+      ((subjectId.value?.isNotEmpty ?? false) &&
+              subjectId.value != "Unknown".tr)
           ? jsData["subject_id"] = subjectId.value
           : null;
-      (doctorId.value != null)
-          ? jsData["doctor_id"] = doctorId.value
-          : null;
+      (doctorId.value != null) ? jsData["doctor_id"] = doctorId.value : null;
       (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
-          ? jsData["lecture_time"] = DateTimeUtils.formatStringTime(time: timeController.text,format: TimeFormat.hhMmSs,currentFormat: TimeFormat.hhMmA)
+          ? jsData["lecture_time"] = DateTimeUtils.formatStringTime(
+              time: timeController.text,
+              format: TimeFormat.hhMmSs,
+              currentFormat: TimeFormat.hhMmA)
           : null;
       (durationController.text.isNotEmpty &&
               durationController.text != "Unknown".tr)
-          ? jsData["lecture_duration"] = int.tryParse(durationController.text)??0
+          ? jsData["lecture_duration"] =
+              int.tryParse(durationController.text) ?? 0
           : null;
       (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
           ? jsData["lecture_room"] = hallController.text
@@ -360,7 +388,7 @@ class LectureController extends GetxController {
       Result<Lecture> res = await LectureServices.createLecture(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
-          year: selectedYear.value??"2024",
+          year: selectedYear.value ?? "2024",
           term: selectedTerm.value,
           day: selectedDayName,
           data: jsData);
@@ -374,7 +402,7 @@ class LectureController extends GetxController {
         showSnakeBar(message: "Add failed");
       }
     } else if (mode == "Update") {
-      if(selectedLecture == null)return;
+      if (selectedLecture == null) return;
       Result<Lecture> res = await LectureServices.updateLecture(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
@@ -384,15 +412,15 @@ class LectureController extends GetxController {
           data: jsData,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data!=null) {
+      if (res.statusCode == 200 && res.data != null) {
         selectedDay(selected.value)?[selectedLecture!] = res.data!;
         selected.refresh();
         showSnakeBar(message: "Update successfully");
       } else {
         showSnakeBar(message: "Update failed");
       }
-    }else if (mode == "Replace"){
-      if(selectedLecture == null)return;
+    } else if (mode == "Replace") {
+      if (selectedLecture == null) return;
       Result<Lecture> res = await LectureServices.tempReplaceLecture(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
@@ -402,7 +430,7 @@ class LectureController extends GetxController {
           data: jsData,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data!=null) {
+      if (res.statusCode == 200 && res.data != null) {
         selectedDay(selected.value)?.remove(selectedLecture);
         selectedDay(selected.value)?[res.data!.id] = res.data!;
         selected.refresh();
@@ -414,20 +442,22 @@ class LectureController extends GetxController {
     adding = false;
   }
 
-  Future<void> getSubjects()async{
+  Future<void> getSubjects() async {
     subjects = {};
     subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
-    if ((subjects?.isNotEmpty??false)&&subjects?.values.first != null) {
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       subjectId = RxString(subjects!.values.first.id);
-      if((subjects?.values.first.instructors?.isNotEmpty??false) && subjects?.values.first.instructors?.values.first != null) {
+      if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&
+          subjects?.values.first.instructors?.values.first != null) {
         doctorId.value = subjects?.values.first.instructors?.values.first.id;
-      }else{
+      } else {
         doctorId.value = null;
       }
-    }else{
+    } else {
       subjectId.value = null;
     }
   }
+
   void popCardClear() {
     timeController.dispose();
     durationController.dispose();
