@@ -248,52 +248,59 @@ class WebLectureTableTabView extends GetView<LectureController> {
                               Row(
                                 children: [
                                   SecText(
-                                    "Day ".tr,
-                                    fontSize: 18,
+                                    "time ".tr,
+                                    fontSize: 16,
                                   ),
                                   const Text(
                                     "\\",
                                     style: TextStyle(
-                                      fontSize: 50,
+                                      fontSize: 40,
                                     ),
                                   ),
                                   SecText(
-                                    "Level".tr,
+                                    "Day".tr,
+                                    fontSize: 16,
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.06,
+                                  ),
+                                  SecText(
+                                    "Saturday".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
                                   SecText(
-                                    "Level 1".tr,
+                                    "Sunday".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
                                   SecText(
-                                    "Level 2".tr,
+                                    "Monday".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
                                   SecText(
-                                    "Level 3".tr,
+                                    "Tuesday".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
                                   SecText(
-                                    "Level 4".tr,
+                                    "Wednesday".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
                                   SecText(
-                                    "Level 5".tr,
+                                    "Thursday".tr,
                                     fontSize: 18,
                                   ),
                                 ],
@@ -312,23 +319,12 @@ class WebLectureTableTabView extends GetView<LectureController> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SecText(
-                                    "Saterday".tr,
+                                    "8 AM".tr,
                                     fontSize: 18,
                                   ),
                                   SizedBox(
                                     width: width * 0.06,
                                   ),
-                                  Column(
-                                    children: [
-                                      SecText("electrical circute"),
-                                      SecText("8-10 AM"),
-                                      SizedBox(
-                                        height: height * 0.01,
-                                      ),
-                                      SecText("electrical circute"),
-                                      SecText("8-10 AM"),
-                                    ],
-                                  )
                                 ],
                               ),
                               SizedBox(

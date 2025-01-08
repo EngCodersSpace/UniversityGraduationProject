@@ -24,35 +24,81 @@ class WebMainView extends GetView<MainController> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 10),
                   color: AppColors.inverseCardColor,
                   width: Get.width * 0.2,
                   height: Get.height,
                   child: Column(
                     children: [
-                      // Image.asset("assets/images/ibb_university_logo.png"),
-                      // SizedBox(
-                      //   height: Get.height * 0.005,
-                      // ),
-                      // Column(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     MainText(
-                      //       "IBB",
-                      //       textColor: AppColors.mainTextColor,
-                      //     ),
-                      //     MainText(
-                      //       "UNIVERCITY",
-                      //       textColor: AppColors.mainTextColor,
-                      //     ),
-                      //     Divider(
-                      //       thickness: 0.2,
-                      //       color: AppColors.tabBackColor,
-                      //     ),
-                      //   ],
-                      // ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CircleAvatar(
+                                    radius: Get.width * 0.03,
+                                    backgroundColor: AppColors.mainCardColor),
+                                CircleAvatar(
+                                  backgroundColor:
+                                      (controller.user?.profileImage) != null
+                                          ? AppColors.inverseCardColor
+                                          : AppColors.inverseMainTextColor,
+                                  maxRadius: Get.width * 0.03 - 2,
+                                  backgroundImage: (controller
+                                              .user?.profileImage) !=
+                                          null
+                                      ? AssetImage(
+                                          controller.user?.profileImage ?? "")
+                                      : null,
+                                  child: (controller.user?.profileImage) != ""
+                                      ? null
+                                      : MainText(controller.user?.name?[0] ??
+                                          "".toUpperCase()),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: Get.width * 0.002,
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SecText(
+                                        "NAME :${controller.user?.name ?? " "}",
+                                        textColor: AppColors.mainTextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10,
+                                      ),
+                                    ]),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SecText(
+                                        "ID :${controller.user?.id ?? " "}",
+                                        textColor: AppColors.mainTextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10,
+                                      ),
+                                    ]),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(
-                        height: Get.height * 0.03,
+                        height: Get.height * 0.01,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: AppColors.tabBackColor,
+                      ),
+                      SizedBox(
+                        height: Get.height * 0.01,
                       ),
                       Obx(() => Column(
                             children: [

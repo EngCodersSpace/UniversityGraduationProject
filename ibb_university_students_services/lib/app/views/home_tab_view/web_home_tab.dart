@@ -59,103 +59,103 @@ class WebHomeTab extends GetView<HomeTabController> {
       //       child: SizedBox(
       //         height: hight,
       //         width: width,
-      //         child: Column(
-      //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //           children: [
-      //             Row(children: [
-      //               Stack(
-      //                 alignment: Alignment.center,
-      //                 children: [
-      //                   CircleAvatar(
-      //                       radius: Get.width * 0.05,
-      //                       backgroundColor: AppColors.mainCardColor),
-      //                   CircleAvatar(
-      //                     backgroundColor:
-      //                         (controller.user?.profileImage) != null
-      //                             ? AppColors.inverseCardColor
-      //                             : AppColors.inverseMainTextColor,
-      //                     maxRadius: Get.width * 0.05 - 2,
-      //                     backgroundImage: (controller.user?.profileImage) !=
-      //                             null
-      //                         ? AssetImage(controller.user?.profileImage ?? "")
-      //                         : null,
-      //                     child: (controller.user?.profileImage) != ""
-      //                         ? null
-      //                         : MainText(controller.user?.name?[0] ??
-      //                             "".toUpperCase()),
-      //                   ),
-      //                 ],
+      // child: Column(
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   children: [
+      //     Row(children: [
+      //       Stack(
+      //         alignment: Alignment.center,
+      //         children: [
+      //           CircleAvatar(
+      //               radius: Get.width * 0.05,
+      //               backgroundColor: AppColors.mainCardColor),
+      //           CircleAvatar(
+      //             backgroundColor:
+      //                 (controller.user?.profileImage) != null
+      //                     ? AppColors.inverseCardColor
+      //                     : AppColors.inverseMainTextColor,
+      //             maxRadius: Get.width * 0.05 - 2,
+      //             backgroundImage: (controller.user?.profileImage) !=
+      //                     null
+      //                 ? AssetImage(controller.user?.profileImage ?? "")
+      //                 : null,
+      //             child: (controller.user?.profileImage) != ""
+      //                 ? null
+      //                 : MainText(controller.user?.name?[0] ??
+      //                     "".toUpperCase()),
+      //           ),
+      //         ],
+      //       ),
+      //       SizedBox(
+      //         width: Get.height * 0.03,
+      //       ),
+      //       Column(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: [
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             children: [
+      //               SecText(
+      //                 "NAME :${controller.user?.name ?? " "}",
+      //                 textColor: AppColors.inverseCardColor,
+      //                 fontWeight: FontWeight.bold,
       //               ),
       //               SizedBox(
-      //                 width: Get.height * 0.03,
+      //                 width: width * 0.1,
       //               ),
-      //               Column(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //               Row(
+      //                 mainAxisAlignment: MainAxisAlignment.start,
       //                 children: [
-      //                   Row(
-      //                     mainAxisAlignment: MainAxisAlignment.start,
-      //                     children: [
-      //                       SecText(
-      //                         "NAME :${controller.user?.name ?? " "}",
-      //                         textColor: AppColors.inverseCardColor,
-      //                         fontWeight: FontWeight.bold,
-      //                       ),
-      //                       SizedBox(
-      //                         width: width * 0.1,
-      //                       ),
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.start,
-      //                         children: [
-      //                           SecText(
-      //                             "Department",
-      //                             textColor: AppColors.inverseCardColor,
-      //                             fontWeight: FontWeight.bold,
-      //                           ),
-      //                           SizedBox(
-      //                             width: width * 0.03,
-      //                           ),
-      //                           SecText((controller.user! as Student)
-      //                                   .section
-      //                                   ?.name
-      //                                   ?.tr ??
-      //                               "Unknown".tr),
-      //                         ],
-      //                       ),
-      //                     ],
+      //                   SecText(
+      //                     "Department",
+      //                     textColor: AppColors.inverseCardColor,
+      //                     fontWeight: FontWeight.bold,
       //                   ),
-      //                   Row(
-      //                     mainAxisAlignment: MainAxisAlignment.start,
-      //                     children: [
-      //                       SecText(
-      //                         "ID : ${controller.user?.id}",
-      //                         textColor: AppColors.inverseCardColor,
-      //                         fontWeight: FontWeight.bold,
-      //                       ),
-      //                       SizedBox(
-      //                         width: width * 0.15,
-      //                       ),
-      //                       Row(
-      //                         mainAxisAlignment: MainAxisAlignment.start,
-      //                         children: [
-      //                           SecText(
-      //                             "Level",
-      //                             textColor: AppColors.inverseCardColor,
-      //                             fontWeight: FontWeight.bold,
-      //                           ),
-      //                           SizedBox(
-      //                             width: width * 0.03,
-      //                           ),
-      //                           SecText((controller.user as Student)
-      //                                   .level
-      //                                   ?.name
-      //                                   ?.tr ??
-      //                               "Unknown".tr)
-      //                         ],
-      //                       ),
-      //                     ],
-      //                   )
+      //                   SizedBox(
+      //                     width: width * 0.03,
+      //                   ),
+      //                   SecText((controller.user! as Student)
+      //                           .section
+      //                           ?.name
+      //                           ?.tr ??
+      //                       "Unknown".tr),
       //                 ],
       //               ),
+      //             ],
+      //           ),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             children: [
+      //               SecText(
+      //                 "ID : ${controller.user?.id}",
+      //                 textColor: AppColors.inverseCardColor,
+      //                 fontWeight: FontWeight.bold,
+      //               ),
+      //               SizedBox(
+      //                 width: width * 0.15,
+      //               ),
+      //               Row(
+      //                 mainAxisAlignment: MainAxisAlignment.start,
+      //                 children: [
+      //                   SecText(
+      //                     "Level",
+      //                     textColor: AppColors.inverseCardColor,
+      //                     fontWeight: FontWeight.bold,
+      //                   ),
+      //                   SizedBox(
+      //                     width: width * 0.03,
+      //                   ),
+      //                   SecText((controller.user as Student)
+      //                           .level
+      //                           ?.name
+      //                           ?.tr ??
+      //                       "Unknown".tr)
+      //                 ],
+      //               ),
+      //             ],
+      //           )
+      //         ],
+      //       ),
       //               SizedBox(
       //                 width: width * 0.13,
       //               ),

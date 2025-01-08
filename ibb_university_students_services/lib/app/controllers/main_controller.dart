@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-
-import '../views/acadime_card/academic_card_web_view.dart';
-import '../views/exam_table_view/exam_table_web_view.dart';
-import '../views/library_view/library_web_view.dart';
-import '../views/student_results_view/student_results_web_view.dart';
+import '../models/result.dart';
+import '../models/user_model.dart';
+import '../services/user_services.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';
 import 'library_controller.dart';
@@ -13,6 +11,7 @@ import 'student_result_controller.dart';
 
 class MainController extends GetxController {
   RxInt selectedIndex = 2.obs;
+  User? user;
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
   @override
@@ -20,6 +19,10 @@ class MainController extends GetxController {
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
+    Result res = await UserServices.fetchUser();
+    if (res.statusCode == 200) {
+      user = res.data;
+    }
   }
 
   // Method to change the selected index
@@ -72,17 +75,26 @@ class MainController extends GetxController {
         );
         break;
       case 6:
-        Get.put<ExamTableController>(
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<ExamTableController>(
           ExamTableController(),
         );
         break;
       case 7:
-        Get.put<StudentResultController>(
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<StudentResultController>(
           StudentResultController(),
         );
         break;
       case 8:
-        Get.put<AcademicCardController>(
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<AcademicCardController>(
           AcademicCardController(),
         );
         break;
