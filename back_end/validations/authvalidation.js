@@ -58,11 +58,6 @@ const validateDoctorRegistration = [
         .notEmpty().withMessage('Date Of Birth is required')
         .isDate().withMessage('Date Of Birth must be a Date'),
 
-<<<<<<< HEAD
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-=======
     body('collegeName')
         .notEmpty().withMessage('collegeName is required')
         .isString().withMessage('collegeName must be a String'),
@@ -79,7 +74,6 @@ const validateDoctorRegistration = [
         }),
 
    
->>>>>>> Ahmed
 
     body('password')
         .notEmpty().withMessage('password is required')
