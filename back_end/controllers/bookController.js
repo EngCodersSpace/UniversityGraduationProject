@@ -98,6 +98,57 @@ exports.downloadFile = async (req, res) => {
 };
 
 
+exports.getBooksByCategory = async (req, res) => {
+  try {
+
+      if (!req.query.category) {
+          return res.status(400).json({message: "Category is required" });
+      }
+
+      const books = await book.findAll({
+          where: { category: req.query.category },
+          attributes: ['id', 'title', 'file_path', 'image_path'],
+      });
+
+      if (books.length === 0) {
+          return res.status(404).json({ success: false, message: "No books found for the specified category" });
+      }
+
+      res.status(200).json({ message: `get all books depends on category:${req.query.category} succssfully `, data: books });
+  } catch (error) {
+      console.error("Error fetching books by category:", error);
+      res.status(500).json({message: "An error occurred while fetching books", error: error.message });
+  }
+};
+
+exports.deleteBook = async (req, res) => {
+    try {
+        const Book = await book.findByPk({ where: { id:req.query.id } });
+        if (!Book) {
+            return { success: false, message: "Book not found" };
+        }
+
+        await fs.promises.unlink(path.resolve(Book.file_path));
+        await fs.promises.unlink(path.resolve(Book.image_path));
+        await book.destroy({ where: { id:req.query.id } });
+        res.status(200).json({ message: "Book and its related files were deleted successfully" });
+         
+    } catch (error) {
+        console.error("Error deleting book:", error);
+        res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 
