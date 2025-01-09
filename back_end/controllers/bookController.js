@@ -3,63 +3,74 @@ const path = require('path');
 const fs = require("fs");
 const { book } = require('../models');
 const { Worker } = require("worker_threads");
+const crypto = require('crypto');
+
 const { uploadFields  } = require('../utils/multerConfig');
+const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 
-exports.uploadFile = [
-  uploadFields , 
-    async (req, res) => {
-        try {
-            const added_by= req.user.user_id;
 
-            const { subject_id } = req.body;
+exports.uploadFile =[
+  uploadFields,
+  async (req, res) => {
+    try {
 
-            if ( !subject_id ) {
-              return res.status(400).json({ message: " subject_id is required." });
-            }
-
-            if (!req.files || !req.files['file']) {
-              return res.status(400).json({ message: "No file uploaded." });
-            }
-    
-            const file = req.files['file'][0];
-            const title = file.originalname;
-
-            console.log('\n \n File.originalname:', title); 
-            const existingBook = await book.findOne({
-              where: {
-                title:path.parse(title).name,
-                category: req.query.category,
-                subject_id: req.body.subject_id,
-              },
-            });
-            
-            if (existingBook) {
-              return res.status(409).json({
-                message: "This file has already been uploaded.",
-                book: existingBook,
-              });
-            }
-            
-            const newBook = await book.create({
-                title: path.parse(title).name,
-                category : req.query.category,
-                subject_id,
-                added_by,
-                },
-                {
-                  individualHooks: true,
-                }
-            );
-
-            res.status(200).json({
-                message: "File uploaded successfully.",
-                book: newBook,
-            });
-        } catch (error) {
-            console.error("Error during file upload:", error);
-            res.status(500).json({ message: "An error occurred while uploading the file.", error: error.message });
+        if (!req.files || !req.files['file']) {
+            return res.status(400).json({ message: "No file uploaded." });
         }
-    },
+        const file = req.files['file'][0];
+        const tempFilePath = file.path; 
+        const bookDetails = await extractBookDetails(tempFilePath);
+        if (!bookDetails) {
+            return res.status(400).json({ message: "Unable to extract book details." });
+        }
+        const hash = crypto.createHash('sha256').update(
+            `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
+        ).digest('hex').substring(0, 10); 
+
+        const fileExtension = path.extname(tempFilePath);
+        const fileName = `${bookDetails.title}-${hash}${fileExtension}`;
+        const finalFilePath = path.join(__dirname, '../storage/library', req.body.category, 'books', fileName);
+        const displayImagePath= path.join(__dirname, '../storage/library', req.body.category, 'photos', `${bookDetails.title}-${hash}-01.jpg`);
+        const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
+
+
+        if (existingBook) {
+            fs.unlinkSync(tempFilePath);
+            return res.status(400).json({ message: "Duplicate book detected." });
+        }
+        
+
+        const newBook = await book.create({
+            title: bookDetails.title || path.parse(file.originalname).name,
+            category: req.body.category,
+            subject_id:req.body.subject_id,
+            added_by : req.user.user_id,
+            file_path: finalFilePath,
+            author: bookDetails.author,
+            edition: bookDetails.edition,
+            numberOfPages: bookDetails.totalPages,
+            file_size: bookDetails.file_size
+        });
+
+        const directory = path.dirname(finalFilePath);
+        if (!fs.existsSync(directory)) {
+            fs.mkdirSync(directory, { recursive: true });
+        }
+        fs.renameSync(tempFilePath, finalFilePath);
+
+        await extractDisplayImage(finalFilePath, displayImagePath);
+        newBook.display_image=displayImagePath;
+        await newBook.save();
+
+        return res.status(201).json({
+            message: "Book created successfully.",
+            book: newBook
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error.", error: error.message });
+    }
+  }
 ];
 
 exports.downloadFile = async (req, res) => {
@@ -68,8 +79,7 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath = path.resolve(__dirname, '../storage/library', fileData.category, `${fileData.title}.pdf`);
-    console.log(`\n \n fileData category ${fileData.category} --- fileData.title ${fileData.title} \n \n `);
+    const filePath= fileData.file_path;
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -107,14 +117,13 @@ exports.getBooksByCategory = async (req, res) => {
 
       const books = await book.findAll({
           where: { category: req.query.category },
-          attributes: ['id', 'title', 'file_path', 'image_path'],
       });
 
       if (books.length === 0) {
           return res.status(404).json({ success: false, message: "No books found for the specified category" });
       }
 
-      res.status(200).json({ message: `get all books depends on category:${req.query.category} succssfully `, data: books });
+      res.status(200).json({ message: `get all books depends on category:${ (  req.query.category )} succssfully `, data: books });
   } catch (error) {
       console.error("Error fetching books by category:", error);
       res.status(500).json({message: "An error occurred while fetching books", error: error.message });
@@ -123,13 +132,31 @@ exports.getBooksByCategory = async (req, res) => {
 
 exports.deleteBook = async (req, res) => {
     try {
-        const Book = await book.findByPk({ where: { id:req.query.id } });
+        const Book = await book.findByPk(req.query.id);
         if (!Book) {
             return { success: false, message: "Book not found" };
         }
 
-        await fs.promises.unlink(path.resolve(Book.file_path));
-        await fs.promises.unlink(path.resolve(Book.image_path));
+        // await fs.promises.unlink(path.resolve(Book.file_path));
+        // await fs.promises.unlink(path.resolve(Book.display_image));
+        const filePath = path.resolve(Book.file_path);
+        const imagePath = path.resolve(Book.display_image);
+
+
+        if (fs.existsSync(filePath)) {
+            await fs.promises.unlink(filePath);
+            console.log(`Deleted file: ${filePath}`);
+        } else {
+            console.warn(`\n \n \n File not found: ${filePath}`);
+        }
+
+        if (fs.existsSync(imagePath)) {
+            await fs.promises.unlink(imagePath);
+            console.log(`Deleted image: ${imagePath}`);
+        } else {
+            console.warn(`\n \n \n Image not found: ${imagePath}`);
+        }
+
         await book.destroy({ where: { id:req.query.id } });
         res.status(200).json({ message: "Book and its related files were deleted successfully" });
          

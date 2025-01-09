@@ -43,10 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      isbn: {
-        type: DataTypes.STRING(50),
-        allowNull: true,
-      },
       numberOfPages: {
         type: DataTypes.INTEGER,
         allowNull: true,
