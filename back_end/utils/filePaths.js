@@ -1,16 +1,10 @@
 // utils/filePaths.js
 const path = require('path');
-
-function getStoragePaths(category,title) {
-  const basePath = process.env.UPLOAD_PATH || path.join(__dirname, '../storage/library');
-  const categoryPath = path.join(basePath, category);
-
-  const filePath =  path.join(categoryPath, `${title}.pdf`);
-  const displayImagePath = path.join(categoryPath, `${path.parse(title).name}`); 
-
-  console.log('\n \n inside utils/filePaths.js >> filePath:', filePath);
+function getStoragePaths(category, title) {
+  // const filePath = path.resolve(__dirname, '../storage/library', category , 'books', `${title}.pdf`);
+  const displayImagePath = path.resolve(__dirname, '../storage/library' , category ,'photos', `${path.parse(title).name}.jpg`);
+  // console.log('\n \n inside utils/filePaths.js >> filePath:', filePath);
   console.log('\n \n inside utils/filePaths.js >> displayImagePath:', displayImagePath);
-
-  return { filePath, displayImagePath };
+  return { displayImagePath };
 }
 module.exports = getStoragePaths;

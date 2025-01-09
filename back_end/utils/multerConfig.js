@@ -19,15 +19,12 @@ const validCategories = ["Lecture", "ExamForm", "Reference"];
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         console.log('Processing file:', file); 
-
-        const uploadFolderBase = path.join(__dirname, '../storage/library');
-        const { category } = req.query;
-
+        const {category}= req.body;
         if (!category || !validCategories.includes(category)) {
             return cb(new Error("Invalid or missing category."), false);
         }
-
-        const categoryFolder = path.join(uploadFolderBase, category);
+        // const categoryFolder =  path.resolve(__dirname, '../storage/library', category, 'books');
+        const categoryFolder =  path.resolve(__dirname, '../storage' ,'temp');
 
         await createFolderIfNotExists(categoryFolder);
         cb(null, categoryFolder);
