@@ -25,7 +25,7 @@ class PhoneLoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Obx(()=>(controller.loading.value)?const Center(child: CircularProgressIndicator(),):Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Column(
@@ -60,10 +60,10 @@ class PhoneLoginView extends GetView<LoginController> {
                 width: double.maxFinite,
                 decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                  colors: [Colors.transparent, Colors.black87],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                )),
+                      colors: [Colors.transparent, Colors.black87],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )),
                 child: Column(
                   children: [
                     MainText(
@@ -74,7 +74,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     MainText(
                       "UNIVERSITY",
                       fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      fontSize: 24,
                     ),
                     SizedBox(
                       height: height * 0.05,
@@ -91,9 +91,9 @@ class PhoneLoginView extends GetView<LoginController> {
             Obx(
                   () => Container(
                   width: width,
-                      constraints: BoxConstraints(
-                        minHeight: height * controller.heightScale.value,
-                      ),
+                  constraints: BoxConstraints(
+                    minHeight: height * controller.heightScale.value,
+                  ),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: AppColors.backColor,
@@ -247,6 +247,6 @@ class PhoneLoginView extends GetView<LoginController> {
         )
 
       ],
-    );
+    ));
   }
 }

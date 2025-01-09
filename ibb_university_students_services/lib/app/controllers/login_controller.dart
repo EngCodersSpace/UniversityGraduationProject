@@ -16,6 +16,7 @@ class LoginController extends GetxController {
   RxString loggingFiledMessage = "".obs;
   RxDouble heightScale = 0.6.obs;
   RxBool rememberMe = false.obs;
+  RxBool loading = true.obs;
 
 
   @override
@@ -29,14 +30,15 @@ class LoginController extends GetxController {
   void onInit() async{
     List<String>? credentials = await UserServices.fetchCachedCredentials();
     if (credentials != null) {
-      // id.text = credentials[0];
-      // password.text = credentials[1];
-      id.text = "1000";
-      password.text = "1234pass@";
-      // password.text = "1111aaaa@";
-      onLogin();
+      // Result res = await UserServices.userLogin(credentials[0], credentials[1]);
+      Result res = await UserServices.userLogin("1000", "1234pass@");
+      Get.updateLocale(const Locale("ar"));
+      if (res.statusCode == 200) {
+        Get.offNamed("/main");
+      }
     }
     super.onInit();
+    loading.value = false;
   }
 
   @override

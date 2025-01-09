@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
-import 'package:ibb_university_students_services/app/models/instructor_model.dart';
+import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
+import 'package:ibb_university_students_services/app/models/subject_model.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
-import '../../../models/subject_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/date_time_utils.dart';
 
-class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
-  const PopUpIAddAndUpdateLectureCard({super.key});
+class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
+  const PopUpIAddAndUpdateAssignmentsCard({super.key});
 
 
 
@@ -44,7 +43,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          CustomText("${controller.mode} Lecture",
+                          CustomText("${controller.mode} Assignment",
                               style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,23 +72,22 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                     borderRadius: BorderRadius.circular(24)
                                 ),
                                 child: Center(
-                                  child: Obx(()=>DropdownButton<String?>(
-                                    value: controller.subjectId.value,
+                                  child: Obx(()=>DropdownButton<String>(
+                                    value: controller.subject.value,
                                     icon: Icon(Icons.arrow_drop_down_sharp,
                                         color: AppColors.inverseCardColor),
                                     underline: const SizedBox(),
                                     dropdownColor: AppColors.mainCardColor,
                                     onChanged: (val) {
                                       if(val == null)return;
-                                      controller.subjectId.value = val;
-                                      controller.doctorId.value = controller.subjects?[controller.subjectId.value]?.instructors?.values.first.id;
+                                      controller.subject.value = val;
                                     },
                                     isExpanded: true,
                                     menuWidth: Get.width*0.7,
                                     selectedItemBuilder: (_){
                                       List<Widget> items = [];
                                       for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<String?>(
+                                        items.add(DropdownMenuItem<String>(
                                           value: subjectI.id,
                                           child: SizedBox(
                                               width: Get.width * 0.28,
@@ -99,19 +97,19 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                                 softWrap: false,
                                               )),
                                         ));
-                                      }
+                                    }
                                       return items;
                                     },
                                     items: [
                                       for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
-                                        DropdownMenuItem<String?>(
-                                            value: subjectI.id,
-                                            child:  Column(
-                                              children: [
-                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
-                                                // Divider(color: AppColors.highlightTextColor,)
-                                              ],
-                                            )
+                                        DropdownMenuItem<String>(
+                                          value: subjectI.id,
+                                          child:  Column(
+                                            children: [
+                                              CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                              // Divider(color: AppColors.highlightTextColor,)
+                                            ],
+                                          )
                                         ),
                                       ]
                                     ],
@@ -125,64 +123,29 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.menu_book,
+                                    Icons.calendar_month,
                                     size: 40,
                                     color: AppColors.inverseIconColor,
                                   ),
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Doctor".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
+                                  CustomText("Date".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
                                 ],
                               ),
-                              Container(
-                                width: Get.width*0.45,
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)
-                                ),
-                                child: Center(
-                                  child: Obx(()=>DropdownButton<int?>(
-                                    value: controller.doctorId.value,
-                                    icon: Icon(Icons.arrow_drop_down_sharp,
-                                        color: AppColors.inverseCardColor),
-                                    underline: const SizedBox(),
-                                    dropdownColor: AppColors.mainCardColor,
-                                    onChanged: (val) {
-                                      controller.doctorId.value = val;
-                                    },
-                                    isExpanded: true,
-                                    menuWidth: Get.width*0.7,
-                                    selectedItemBuilder: (_){
-                                      List<Widget> items = [];
-                                      for(Instructor instructorI in (controller.subjects?[controller.subjectId.value]?.instructors?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<int?>(
-                                          value: instructorI.id,
-                                          child: SizedBox(
-                                              width: Get.width * 0.28,
-                                              child: CustomText(
-                                                instructorI.name ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
-                                                softWrap: false,
-                                              )),
-                                        ));
-                                      }
-                                      return items;
-                                    },
-                                    items: [
-                                      for(Instructor instructorI in (controller.subjects?[controller.subjectId.value]?.instructors?.values.toList())??[])...[
-                                        DropdownMenuItem<int?>(
-                                            value: instructorI.id,
-                                            child:  CustomText(instructorI.name??"unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),)
-                                        ),
-                                      ]
-                                    ],
-                                  )),
-                                ),)
+                              CustomTextFormField(
+                                controller: controller.dateController,
+                                // validator: controller.validateDate,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                labelText: 'Date'.tr,
+                                focusNode: controller.dateFocus,
+                                readOnly: true,
+                                onTap: () => DateTimeUtils.datePiker(context,controller.dateController),
+                                onFieldSubmitted: (e) {
+                                  controller.timeFocus.requestFocus();
+                                },
+                                width: (Get.width - 12) * 0.46,
+                              ),
                             ],
                           ),
                           Row(
@@ -203,19 +166,19 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.timeController,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 // validator: controller.validateTime,
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
                                 readOnly: true,
                                 onTap: () => DateTimeUtils.timePiker(context,controller.timeController),
                                 onFieldSubmitted: (e) {
-                                  controller.durationFocus.requestFocus();
+                                  controller.dayFocus.requestFocus();
                                 },
                                 width: (Get.width - 12) * 0.46,
                               ),
                             ],
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -229,19 +192,55 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Duration".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Day".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
                                 ],
                               ),
-                              CustomTextFormField(
-                                controller: controller.durationController,
-                                labelText: "Duration".tr,
-                                keyboardType: TextInputType.number,
-                                focusNode: controller.durationFocus,
-                                onFieldSubmitted: (e) {
-                                  controller.entryYearFocus.requestFocus();
-                                },
-                                width: (Get.width-12)*0.46,
-                              ),
+                              Container(
+                                width: Get.width*0.45,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)
+                                ),
+                                child: Center(
+                                  child: Obx(()=>DropdownButton<String>(
+                                    value: controller.day.value,
+                                    icon: Icon(Icons.arrow_drop_down_sharp,
+                                        color: AppColors.inverseCardColor),
+                                    underline: const SizedBox(),
+                                    dropdownColor: AppColors.mainCardColor,
+                                    onChanged: (val) {
+                                      controller.day.value = val ?? "Saturday";
+                                    },
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        value: "Saturday",
+                                        child:  CustomText("Saturday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Sunday",
+                                        child:  CustomText("Sunday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Monday",
+                                        child:  CustomText("Monday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Tuesday",
+                                        child:  CustomText("Tuesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Wednesday",
+                                        child:  CustomText("Wednesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        value: "Thursday",
+                                        child:  CustomText("Thursday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                      ),
+                                    ],
+                                  )),
+                                ),)
+
                             ],
                           ),
                           Row(
@@ -262,12 +261,12 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.hallController,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
                                 // validator: controller.validateEntryYear,
-                                keyboardType: TextInputType.text,
                                 labelText: "Hall".tr,
-                                focusNode: controller.entryYearFocus,
+                                focusNode: controller.hallFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.phoneFocus.requestFocus();
+                                  controller.submit();
                                 },
                                 width: (Get.width-12)*0.46,
                               ),
@@ -278,11 +277,11 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                             children: [
                               CustomButton(
                                 onPress: controller.submit,
-                                text: (controller.mode).tr,
+                                text: controller.mode,
                               ),
                               CustomButton(
-                                onPress: () => Navigator.of(Get.overlayContext!).pop(),
-                                text: "Close".tr,
+                                onPress: () => Get.back(result: null),
+                                text: "Close",
                               ),
                             ],
                           )

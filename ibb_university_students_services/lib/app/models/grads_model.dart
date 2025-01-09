@@ -22,7 +22,6 @@ class Grad {
   int? workGrad;
 
   factory Grad.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Grad(
       id: json['grad_id'],
       levelId: json['level_id'],

@@ -29,7 +29,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText("Department".tr,
+                CustomText("Section".tr,
                     style: AppTextStyles.highlightStyle(
                         textHeader: AppTextHeaders.h5)),
                 Row(

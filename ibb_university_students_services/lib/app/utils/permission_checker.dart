@@ -5,18 +5,22 @@ class PermissionUtils {
     "controller": {
       "Lectures": ["add","edit" "delete", "view"],
       "Exams": ["add", "edit","delete", "view"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
+    },
+    "student": {
+      "Lecturers": ["studentView"],
+      "Exams": ["studentView"],
+      "Assignments": ["studentView"],
     },
     "lecturer": {
       "Lectures": ["add","edit" "delete", "view"],
       "Exams": ["add", "edit","delete", "view"],
-    },
-    "student": {
-      "Lecturers": ["add", "delete", "view"],
-      "Exams": ["add", "delete", "view"],
+      "Assignments": ["add", "edit","delete", "view"],
     },
     "admin": {
       "Lecturers": ["add", "delete", "view"],
       "Exams": ["add", "delete", "view"],
+      "Assignments": ["add", "edit","delete", "view"],
     }
   };
 

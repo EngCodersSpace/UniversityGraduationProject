@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../utils/screen_utils.dart';
 import 'exam_table_phones_view.dart';
 
 
@@ -16,7 +17,7 @@ class ExamTableViewLoader extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
+          if (ScreenUtils.isPhoneScreen()) {
             return   PhoneExamTableView();
           } else {
             return   Placeholder();

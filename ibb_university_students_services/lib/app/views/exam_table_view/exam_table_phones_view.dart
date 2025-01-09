@@ -53,7 +53,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 color: AppColors.inverseIconColor,
                               )),
                           CustomText(
-                            "Exams Table",
+                            "Exams Table".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h2),
                           ),
@@ -70,7 +70,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 children: [
                                   Expanded(
                                     child: SecText(
-                                      "Section:",
+                                      "${"Section".tr}:",
                                       textAlign: TextAlign.start,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -106,7 +106,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 children: [
                                   Expanded(
                                     child: SecText(
-                                      "Level:",
+                                      "${"Level".tr}:",
                                       fontWeight: FontWeight.bold,
                                       textAlign: TextAlign.start,
                                     ),
@@ -220,10 +220,10 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomText("Exams",
+                    CustomText("Exams".tr,
                       style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2),),
                     if((PermissionUtils.checkPermission(target: "Exams",action: "add")))
-                      CustomButton(onPress: controller.addButtonClick,text: "Add Exam",),
+                      CustomButton(onPress: controller.addButtonClick,text: "Add Exam".tr,),
                   ],
                 ),
               ),
