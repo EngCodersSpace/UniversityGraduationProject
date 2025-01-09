@@ -31,7 +31,7 @@ class WebMainView extends GetView<MainController> {
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         child: Row(
                           // mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [

@@ -10,18 +10,18 @@ class TableDays {
     this.sat,
   });
 
-  Map<int,Lecture>? sun;
-  Map<int,Lecture>? mon;
-  Map<int,Lecture>? tue;
-  Map<int,Lecture>? wed;
-  Map<int,Lecture>? thu;
-  Map<int,Lecture>? sat;
+  Map<int, Lecture>? sun;
+  Map<int, Lecture>? mon;
+  Map<int, Lecture>? tue;
+  Map<int, Lecture>? wed;
+  Map<int, Lecture>? thu;
+  Map<int, Lecture>? sat;
 
-  factory TableDays.fromJson(Map<String, Map<int,Lecture>> json) {
-    Map<String, Map<int,Lecture>> days = {};
+  factory TableDays.fromJson(Map<String, Map<int, Lecture>> json) {
+    Map<String, Map<int, Lecture>> days = {};
     for (String day in json.keys) {
       days[day] = {};
-      for (Lecture lecture in (json[day]?.values.toList()??[])) {
+      for (Lecture lecture in (json[day]?.values.toList() ?? [])) {
         days[day]?[lecture.id] = lecture;
       }
     }
@@ -34,5 +34,4 @@ class TableDays {
       sat: days["Saturday"],
     );
   }
-
 }

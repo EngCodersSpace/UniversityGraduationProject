@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
 import '../models/result.dart';
@@ -67,6 +66,7 @@ class MainController extends GetxController {
     GetxController? controller;
     switch (index) {
       case 5:
+        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -75,6 +75,7 @@ class MainController extends GetxController {
         );
         break;
       case 6:
+        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -83,6 +84,7 @@ class MainController extends GetxController {
         );
         break;
       case 7:
+        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -91,6 +93,7 @@ class MainController extends GetxController {
         );
         break;
       case 8:
+        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
