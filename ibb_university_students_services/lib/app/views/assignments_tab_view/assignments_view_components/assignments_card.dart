@@ -6,7 +6,6 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../../models/assignment_model.dart';
 import '../../../styles/app_colors.dart';
@@ -102,7 +101,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                                     PopupMenuItem(
                                         value: "Update",
                                         child: CustomText(
-                                          "Update".tr,
+                                          "Edit".tr,
                                           style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
@@ -140,7 +139,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                       Row(
                         children: [
                           CustomText(
-                            "Doctor:",
+                            "${"Doctor".tr}:",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),
@@ -160,7 +159,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                       Row(
                         children: [
                           CustomText(
-                            "Due Date:",
+                            "${"Due Date".tr}:",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),
@@ -176,7 +175,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                             width: 8,
                           ),
                           CustomText(
-                            content.value?.assignmentDay ?? "",
+                            (content.value?.assignmentDay??"").tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3),
                           ),
@@ -190,28 +189,28 @@ class AssignmentsCard extends GetView<ExamTableController> {
                         ...[
                           CustomButton(
                             onPress: () {},
-                            text: "Add Attachment",
+                            text: "Add Attachments".tr,
                           ),
                           const SizedBox(
                             height: 8,
                           ),
                           CustomButton(
                             onPress: () {},
-                            text: "show Student",
+                            text: "Show Students".tr,
                           ),
                         ]
                       else
                         ...[
                           CustomButton(
                             onPress: () {},
-                            text: "Show Attachment",
+                            text: "Show Attachments".tr,
                           ),
                           const SizedBox(
                             height: 8,
                           ),
                           CustomButton(
                             onPress: () {},
-                            text: "Upload Assignment",
+                            text: "Upload Assignment".tr,
                           ),
                         ],
                     ]),

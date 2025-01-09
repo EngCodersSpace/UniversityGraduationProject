@@ -57,7 +57,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     children: [
                                       Expanded(
                                         child: SecText(
-                                          "Section:",
+                                          "${"Section".tr}:",
                                           textAlign: TextAlign.start,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -99,7 +99,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     children: [
                                       Expanded(
                                         child: SecText(
-                                          "Level:",
+                                          "${"Level".tr}:",
                                           fontWeight: FontWeight.bold,
                                           textAlign: TextAlign.start,
                                         ),
@@ -142,7 +142,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     children: [
                                       Expanded(
                                         child: SecText(
-                                          "     Year:",
+                                          "${"Year".tr}:",
                                           fontWeight: FontWeight.bold,
                                           textAlign: TextAlign.start,
                                         ),
@@ -182,7 +182,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     children: [
                                       Expanded(
                                         child: SecText(
-                                          "Term:",
+                                          "${"Term".tr}:",
                                           textAlign: TextAlign.start,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -300,7 +300,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                         SecText(controller.selectedDayName,
                             textColor: AppColors.highlightTextColor),
                         if((PermissionUtils.checkPermission(target: "Lectures",action: "add")))
-                        CustomButton(onPress: controller.addButtonClick,text: "Add Lecture",),
+                        CustomButton(onPress: controller.addButtonClick,text: "Add Lecture".tr,),
                       ],
                     ),
                   ),

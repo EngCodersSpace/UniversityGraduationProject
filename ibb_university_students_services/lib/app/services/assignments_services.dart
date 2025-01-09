@@ -4,13 +4,11 @@ import '../models/result.dart';
 import '../models/subject_model.dart';
 
 class AssignmentsServices {
-  static const int _fetchAllError = 621;
-
-  // ignore: unused_field
-  static const int _fetchError = 622;
-  static const int _createError = 623;
-  static const int _updateError = 624;
-  static const int _deleteError = 625;
+  // static const int _fetchAllError = 621;
+  // static const int _fetchError = 622;
+  // static const int _createError = 623;
+  // static const int _updateError = 624;
+  // static const int _deleteError = 625;
 
   static Map<String, Map<int, Assignment>?>? _assignments;
 

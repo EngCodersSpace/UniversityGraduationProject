@@ -278,11 +278,11 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                             children: [
                               CustomButton(
                                 onPress: controller.submit,
-                                text: controller.mode,
+                                text: (controller.mode).tr,
                               ),
                               CustomButton(
                                 onPress: () => Navigator.of(Get.overlayContext!).pop(),
-                                text: "Close",
+                                text: "Close".tr,
                               ),
                             ],
                           )

@@ -206,8 +206,8 @@ class ExamTableController extends GetxController {
   }
 
   void more(String val, {Map<String, dynamic>? data}) async{
-    if (val == "Update") {
-      mode = "Update";
+    if (val == "Edit") {
+      mode = "Edit";
       if (data != null) {
         selectedExam = data["exam_id"];
         subjects = {};
@@ -289,7 +289,7 @@ class ExamTableController extends GetxController {
       }else{
         showSnakeBar(message: "Add failed");
       }
-    } else if (mode == "Update") {
+    } else if (mode == "Edit") {
       Result<Exam> res = await ExamServices.updateExam(
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
@@ -300,9 +300,9 @@ class ExamTableController extends GetxController {
       if (res.statusCode == 200 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
-        showSnakeBar(message: "Update successfully");
+        showSnakeBar(message: "Edit successfully");
       }else{
-        showSnakeBar(message: "Update failed");
+        showSnakeBar(message: "Edit failed");
       }
     }
   }

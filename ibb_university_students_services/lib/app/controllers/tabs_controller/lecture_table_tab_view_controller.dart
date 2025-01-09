@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -14,6 +13,7 @@ import '../../models/result.dart';
 import '../../models/subject_model.dart';
 import '../../services/subject_services.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
 import '../../views/lecture_table_tab_view/lecture_table_tab_components/add_and_update_lecture_card.dart';
 
@@ -35,7 +35,7 @@ class LectureController extends GetxController {
     DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
-            width: (Get.width <= 768 && Get.height <= 1025)
+            width: (ScreenUtils.isPhoneScreen())
                 ? (Get.width / 3.3) * 0.75
                 : (Get.width / 6) * 0.6,
             child: SecText(
@@ -46,7 +46,7 @@ class LectureController extends GetxController {
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
-            width: (Get.width <= 768 && Get.height <= 1025)
+            width: (ScreenUtils.isPhoneScreen())
                 ? (Get.width / 3.3) * 0.75
                 : (Get.width / 6) * 0.6,
             child: SecText(
@@ -200,7 +200,7 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width <= 768 && Get.height <= 1025)
+              width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 5.5) * 0.6,
               child: SecText(
@@ -222,7 +222,7 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width <= 768 && Get.height <= 1025)
+              width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 8) * 0.6,
               child: SecText(
@@ -245,7 +245,7 @@ class LectureController extends GetxController {
         DropdownMenuItem(
             value: year,
             child: SizedBox(
-              width: (Get.width <= 768 && Get.height <= 1025)
+              width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 7) * 0.6,
               child: SecText(
@@ -259,9 +259,9 @@ class LectureController extends GetxController {
   }
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
-    if (val == "Update") {
+    if (val == "Edit") {
       await getSubjects();
-      mode = "Update";
+      mode = "Edit";
       if (data != null) {
         selectedLecture = data["id"];
         doctorId.value = data["doctor_id"];
@@ -401,7 +401,7 @@ class LectureController extends GetxController {
       } else {
         showSnakeBar(message: "Add failed");
       }
-    } else if (mode == "Update") {
+    } else if (mode == "Edit") {
       if (selectedLecture == null) return;
       Result<Lecture> res = await LectureServices.updateLecture(
           sectionId: selectedDepartment.value!,
@@ -415,9 +415,9 @@ class LectureController extends GetxController {
       if (res.statusCode == 200 && res.data != null) {
         selectedDay(selected.value)?[selectedLecture!] = res.data!;
         selected.refresh();
-        showSnakeBar(message: "Update successfully");
+        showSnakeBar(message: "Edit successfully");
       } else {
-        showSnakeBar(message: "Update failed");
+        showSnakeBar(message: "Edit failed");
       }
     } else if (mode == "Replace") {
       if (selectedLecture == null) return;

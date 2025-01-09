@@ -9,7 +9,7 @@ import 'package:ibb_university_students_services/app/services/app_data_services.
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-  // HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
+  // HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
   await AppDataServices.fetchAppData();
   runApp(const MyApp());
 }

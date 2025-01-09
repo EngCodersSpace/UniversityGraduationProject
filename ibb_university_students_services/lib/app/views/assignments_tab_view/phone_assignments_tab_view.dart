@@ -29,7 +29,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                 Column(
                   children: [
                     Container(
-                        height: Get.height * 0.2,
+                        height: Get.height * 0.16,
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.mainCardColor,
@@ -48,22 +48,6 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () => Get.back(),
-                                    icon: Icon(
-                                      Icons.arrow_back_outlined,
-                                      color: AppColors.inverseIconColor,
-                                    )),
-                                CustomText(
-                                  "Assignments",
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h2),
-                                ),
-                              ],
-                            ),
                             SizedBox(
                               height: Get.height * 0.02,
                             ),
@@ -71,7 +55,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 SecText(
-                                  "Subject",
+                                  "Subject".tr,
                                   fontWeight: FontWeight.bold,
                                   textAlign: TextAlign.start,
                                 ),
@@ -114,7 +98,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomText(
-                            "Assignments",
+                            "Assignments".tr,
                             style: AppTextStyles.highlightStyle(
                                 textHeader: AppTextHeaders.h2),
                           ),
@@ -122,7 +106,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                               target: "Assignments", action: "add")))
                             CustomButton(
                               onPress: controller.addButtonClick,
-                              text: "Add Assignments",
+                              text: "Add Assignment".tr,
                             ),
                         ],
                       ),
@@ -135,8 +119,8 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                       width: width,
                       height: (PermissionUtils.checkPermission(
                               target: "Assignments", action: "add"))
-                          ? Get.height * 0.62
-                          : Get.height * 0.62,
+                          ? Get.height * 0.66
+                          : Get.height * 0.69,
                       child: RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(

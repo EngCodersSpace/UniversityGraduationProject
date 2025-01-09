@@ -32,6 +32,7 @@ class LoginController extends GetxController {
     if (credentials != null) {
       // Result res = await UserServices.userLogin(credentials[0], credentials[1]);
       Result res = await UserServices.userLogin("1000", "1234pass@");
+      Get.updateLocale(const Locale("ar"));
       if (res.statusCode == 200) {
         Get.offNamed("/main");
       }

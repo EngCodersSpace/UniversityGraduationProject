@@ -30,7 +30,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               crossAxisAlignment:
               CrossAxisAlignment.start,
               children: [
-                CustomText("Department".tr,
+                CustomText("Section".tr,
                     style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -110,7 +110,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               CrossAxisAlignment.start,
               children: [
                 CustomText(
-                  "Academic Position".tr,
+                  "Administrative Position".tr,
                     style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
                 ),
                 Row(

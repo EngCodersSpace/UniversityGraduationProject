@@ -277,11 +277,11 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                             children: [
                               CustomButton(
                                 onPress: controller.submit,
-                                text: controller.mode,
+                                text: (controller.mode).tr,
                               ),
                               CustomButton(
                                 onPress: () => Get.back(result: null),
-                                text: "Close",
+                                text: "Close".tr,
                               ),
                             ],
                           )

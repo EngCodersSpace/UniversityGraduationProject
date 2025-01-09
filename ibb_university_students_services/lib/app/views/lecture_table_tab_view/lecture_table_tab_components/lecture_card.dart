@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:intl/intl.dart';
 
+import '../../../components/custom_text_v2.dart';
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../styles/app_colors.dart';
 import '../../../models/lecture_model.dart';
@@ -54,7 +56,7 @@ class LectureCard extends GetView<LectureController> {
             children: [
               Container(
                 constraints: BoxConstraints(
-                  minHeight:height * 0.52,
+                  minHeight: height * 0.52,
                 ),
                 width: double.maxFinite,
                 padding: const EdgeInsets.all(20),
@@ -76,7 +78,7 @@ class LectureCard extends GetView<LectureController> {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText(
+                          child: CustomText(
                               "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(time: content.value?.startTime ?? "00:00:00", duration: Duration(minutes: content.value?.duration ?? 0))}"),
                         ),
                         Row(
@@ -93,8 +95,8 @@ class LectureCard extends GetView<LectureController> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: (content.value?.lectureStatus ?? false)
-                                    ? SecText("Confirmed".tr)
-                                    : SecText("Canceled".tr),
+                                    ? CustomText("Confirmed".tr)
+                                    : CustomText("Canceled".tr),
                               ),
                             ],
                             if ((PermissionUtils.checkPermission(
@@ -112,33 +114,38 @@ class LectureCard extends GetView<LectureController> {
                                   itemBuilder: (ctx) => [
                                     PopupMenuItem(
                                         value: "TemporaryReplace",
-                                        child: SecText(
-                                          "TemporaryReplace".tr,
-                                          textColor: AppColors.mainTextColor,
+                                        child: CustomText(
+                                          "Temporary Replace".tr,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
-                                        value: "Update",
-                                        child: SecText(
-                                          "Update".tr,
-                                          textColor: AppColors.mainTextColor,
+                                        value: "Edit",
+                                        child: CustomText(
+                                          "Edit".tr,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
-                                        child: SecText(
+                                        child: CustomText(
                                           "Delete".tr,
-                                          textColor: AppColors.mainTextColor,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Confirm",
-                                        child: SecText(
+                                        child: CustomText(
                                           "Confirm".tr,
-                                          textColor: AppColors.mainTextColor,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Cancel",
-                                        child: SecText(
+                                        child: CustomText(
                                           "Cancel".tr,
-                                          textColor: AppColors.mainTextColor,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3),
                                         )),
                                   ],
                                   child: Icon(Icons.more_vert_outlined,
@@ -151,7 +158,9 @@ class LectureCard extends GetView<LectureController> {
                         // if(PermissionUtils.checkPermission("addLecture"))
                       ],
                     ),
-                    const SizedBox(height: 8,),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     MainText(
                         content.value?.subject?.subjectName ?? "Unknown".tr),
                   ],
@@ -159,7 +168,7 @@ class LectureCard extends GetView<LectureController> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
+                    const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,17 +178,30 @@ class LectureCard extends GetView<LectureController> {
                         children: [
                           Row(
                             children: [
-                              SecText("Doctor: ",
-                                  fontWeight: FontWeight.bold, fontSize: 19),
-                              SecText(
-                                  "Dr.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}")
+                              CustomText(
+                                "${"Doctor".tr}:   ",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h2),
+                              ),
+                              CustomText(
+                                "${"Dr".tr}.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3),
+                              )
                             ],
                           ),
                           Row(
                             children: [
-                              SecText("Hall: ",
-                                  fontWeight: FontWeight.bold, fontSize: 19),
-                              SecText(content.value?.hall ?? "unknown".tr)
+                              CustomText(
+                                "${"Hall".tr}:   ",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h2),
+                              ),
+                              CustomText(
+                                content.value?.hall ?? "unknown".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3),
+                              )
                             ],
                           ),
                         ],
@@ -189,9 +211,16 @@ class LectureCard extends GetView<LectureController> {
                               false)) ...[
                         Row(
                           children: [
-                            SecText("Description: ",
-                                fontWeight: FontWeight.bold, fontSize: 19),
-                            SecText(content.value?.description ?? "unknown".tr)
+                            CustomText(
+                              "Description: ",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3),
+                            ),
+                            CustomText(
+                              content.value?.description ?? "unknown".tr,
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3),
+                            )
                           ],
                         ),
                       ]

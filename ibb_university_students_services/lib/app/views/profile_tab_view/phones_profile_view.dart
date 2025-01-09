@@ -8,6 +8,9 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model.dart';
 import 'package:ibb_university_students_services/app/models/student_model.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+
+import '../../components/custom_text_v2.dart';
 
 class PhoneProfileView extends GetView<ProfileController> {
   PhoneProfileView({
@@ -17,8 +20,8 @@ class PhoneProfileView extends GetView<ProfileController> {
   double height = Get.height;
   double width = Get.width;
   List<DropdownMenuItem<String>> dropdownMenuItems = [
-    DropdownMenuItem<String>(value: "en", child: SecText("English")),
-    DropdownMenuItem<String>(value: "ar", child: SecText("العربية")),
+    DropdownMenuItem<String>(value: "en", child: CustomText("English",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),)),
+    DropdownMenuItem<String>(value: "ar", child: CustomText("العربية",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),)),
   ];
 
   @override
@@ -60,23 +63,28 @@ class PhoneProfileView extends GetView<ProfileController> {
                                       : null,
                                 ),
                                 child: ((controller.user.profileImage !=
-                                    null) &&
-                                    (controller.user.profileImage != ""))
+                                            null) &&
+                                        (controller.user.profileImage != ""))
                                     ? null
-                                    : Center(child: MainText(
-                                  controller.user.name?[0] ??
-                                      "".toUpperCase(),
-                                  fontSize: 50,
-                                ),),
+                                    : Center(
+                                        child: MainText(
+                                          controller.user.name?[0] ??
+                                              "".toUpperCase(),
+                                          fontSize: 50,
+                                        ),
+                                      ),
                               ),
                             ],
                           ),
                           SizedBox(
                             height: height * 0.01,
                           ),
-                          MainText(controller.user.name??"Unknown".tr),
-                          SecText(controller.user.email??"Unknown".tr,
-                              textColor: AppColors.mainTextColor),
+                          MainText(controller.user.name ?? "Unknown".tr),
+                          CustomText(
+                            controller.user.email ?? "Unknown".tr,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h3),
+                          ),
                         ],
                       ),
                     )
@@ -104,12 +112,15 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                SecText("UserName".tr,
-                                    fontWeight: FontWeight.bold),
+                                CustomText(
+                                  "UserName".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3),
+                                ),
                               ],
                             ),
                           ),
-                          SecText(controller.user.name!),
+                          CustomText(controller.user.name!,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                         ],
                       ),
                       Row(
@@ -122,12 +133,15 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                SecText("Email".tr,
-                                    fontWeight: FontWeight.bold),
+                                CustomText(
+                                  "Email".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3),
+                                ),
                               ],
                             ),
                           ),
-                          SecText(controller.user.email ?? "Unknown".tr),
+                          CustomText(controller.user.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                         ],
                       ),
                       Row(
@@ -140,13 +154,16 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                SecText("Phone".tr,
-                                    fontWeight: FontWeight.bold),
+                                CustomText(
+                                  "Phone".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3),
+                                ),
                               ],
                             ),
                           ),
-                          SecText(
-                              controller.user.phones?.first ?? "Unknown".tr),
+                          CustomText(
+                              controller.user.phones?.first ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                         ],
                       ),
                       Row(
@@ -159,13 +176,17 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                SecText("Language".tr,
-                                    fontWeight: FontWeight.bold),
+                                CustomText(
+                                  "Language".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3),
+                                ),
                               ],
                             ),
                           ),
                           DropdownButton(
                             items: dropdownMenuItems,
+                            underline: const SizedBox(),
                             onChanged: (val) {
                               controller.changeLang(val.toString());
                             },
@@ -184,16 +205,19 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   SizedBox(
                                     width: width * 0.02,
                                   ),
-                                  SecText("Department".tr,
-                                      fontWeight: FontWeight.bold),
+                                  CustomText(
+                                    "Section".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3),
+                                  ),
                                 ],
                               ),
                             ),
-                            SecText((controller.user as Student)
+                            CustomText((controller.user as Student)
                                     .section
                                     ?.name
                                     ?.tr ??
-                                "Unknown".tr),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                           ],
                         ),
                         Row(
@@ -206,14 +230,20 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   SizedBox(
                                     width: width * 0.02,
                                   ),
-                                  SecText("Level".tr,
-                                      fontWeight: FontWeight.bold),
+                                  CustomText(
+                                    "Level".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3),
+                                  ),
                                 ],
                               ),
                             ),
-                            SecText(
-                                (controller.user as Student).level?.name?.tr ??
-                                    "Unknown".tr),
+                            CustomText(
+                              (controller.user as Student).level?.name?.tr ??
+                                  "Unknown".tr,
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h4),
+                            ),
                           ],
                         )
                       ] else ...[
@@ -227,15 +257,18 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   SizedBox(
                                     width: width * 0.02,
                                   ),
-                                  SecText("Academic Degree".tr,
-                                      fontWeight: FontWeight.bold),
+                                  CustomText(
+                                    "Academic Degree".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3),
+                                  ),
                                 ],
                               ),
                             ),
-                            SecText((controller.user as Doctor)
+                            CustomText((controller.user as Doctor)
                                     .academicDegree
                                     ?.tr ??
-                                "Unknown".tr),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                           ],
                         ),
                         Row(
@@ -249,16 +282,19 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     width: width * 0.02,
                                   ),
                                   Flexible(
-                                    child: SecText("administrative Position".tr,
-                                        fontWeight: FontWeight.bold),
+                                    child: CustomText(
+                                      "Administrative Position".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3),
+                                    ),
                                   )
                                 ],
                               ),
                             ),
-                            SecText((controller.user as Doctor)
+                            CustomText((controller.user as Doctor)
                                     .administrativePosition
                                     ?.tr ??
-                                "Unknown".tr),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
                           ],
                         )
                       ],

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/day_cards.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
-
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
 
