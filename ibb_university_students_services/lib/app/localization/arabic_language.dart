@@ -13,7 +13,7 @@ class Arabic {
     //             main view             ////
     /////////////////////////////////////////
     'Notification':'التنبيهات',
-    'LectureTable':'جدول \n المحاضرات',
+    'Lecture\nTable':'جدول \n المحاضرات',
     'Home':'الرئيسية',
     'Reports':'التقارير',
     'Profile':'الملف الشخصي',

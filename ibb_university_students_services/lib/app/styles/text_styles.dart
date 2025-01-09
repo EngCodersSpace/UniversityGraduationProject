@@ -17,6 +17,8 @@ class AppTextHeaders{
   static TextHeaders h3 = TextHeaders(fontSize: 14, fontWeight: FontWeight.bold);
   static TextHeaders h4 = TextHeaders(fontSize: 14, fontWeight: FontWeight.normal);
   static TextHeaders h5 = TextHeaders(fontSize: 12, fontWeight: FontWeight.bold);
+  static TextHeaders h6 = TextHeaders(fontSize: 10, fontWeight: FontWeight.bold);
+  static TextHeaders h7 = TextHeaders(fontSize: 8, fontWeight: FontWeight.bold);
 }
 class AppTextStyles {
 

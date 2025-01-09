@@ -31,30 +31,30 @@ class MainController extends GetxController {
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.85) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 1) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.32) - 36, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.71) - 28, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.71) - 36, y: Get.height - (Get.height * 0.1));
     } else if (index == 2) {
       currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.45)-12, y: Get.height - (Get.height * 0.1));
     } else if (index == 3) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.71) - 8, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.71) - 32, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.31) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 4) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.9) - 48, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1));
     }
 
     if (!(Get.width <= 768 && Get.height <= 1025)) {
