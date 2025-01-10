@@ -94,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [
       {
         unique: true,
-        fields: ['title', 'numberOfPages', 'author', 'edition'],
+        fields: ['title', 'numberOfPages', 'author', 'edition','category'],
         name: 'unique_constraint_in_book',
       },
         ],
