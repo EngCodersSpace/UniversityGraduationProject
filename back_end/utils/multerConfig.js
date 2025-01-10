@@ -3,7 +3,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Utility function to create folders if they don't exist  (duplicate)
 const createFolderIfNotExists = async (folderPath) => {
     try {
         await fs.promises.access(folderPath);
@@ -12,7 +11,6 @@ const createFolderIfNotExists = async (folderPath) => {
     }
 };
 
-// List of valid categories
 const validCategories = ["Lecture", "ExamForm", "Reference"];
 
 // Configure multer storage
@@ -47,7 +45,7 @@ const upload = multer({
         }
         cb(null, true);
     },
-}).fields([{ name: 'file', maxCount: 1 }]);
+}).fields([{ name: 'files', maxCount: 10 }]);
 
 module.exports = {
     uploadFields: upload, 

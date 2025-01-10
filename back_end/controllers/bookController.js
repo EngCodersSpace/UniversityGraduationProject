@@ -9,66 +9,77 @@ const { uploadFields  } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 
 
-exports.uploadFile =[
-  uploadFields,
+exports.uploadFile = [
+  uploadFields, 
   async (req, res) => {
     try {
+      if (!req.files || !req.files['files'] || req.files['files'].length === 0) {
+        return res.status(400).json({ message: "No files uploaded." });
+      }
 
-        if (!req.files || !req.files['file']) {
-            return res.status(400).json({ message: "No file uploaded." });
-        }
-        const file = req.files['file'][0];
-        const tempFilePath = file.path; 
+      const uploadedBooks = [];
+
+      for (const file of req.files['files']) {
+        const tempFilePath = file.path;
         const bookDetails = await extractBookDetails(tempFilePath);
+
         if (!bookDetails) {
-            return res.status(400).json({ message: "Unable to extract book details." });
+          fs.unlinkSync(tempFilePath);
+          continue; 
         }
-        const hash = crypto.createHash('sha256').update(
-            `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
-        ).digest('hex').substring(0, 10); 
+
+        const hash = crypto.createHash('md5').update(
+          `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
+        ).digest('hex');
 
         const fileExtension = path.extname(tempFilePath);
-        const fileName = `${bookDetails.title}-${hash}${fileExtension}`;
+        const fileName = `${hash}${fileExtension}`;
         const finalFilePath = path.join(__dirname, '../storage/library', req.body.category, 'books', fileName);
-        const displayImagePath= path.join(__dirname, '../storage/library', req.body.category, 'photos', `${bookDetails.title}-${hash}-01.jpg`);
+        const displayImagePath = path.join(__dirname, '../storage/library', req.body.category, 'photos', `${hash}.jpg`);
+
         const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
 
-
         if (existingBook) {
-            fs.unlinkSync(tempFilePath);
-            return res.status(400).json({ message: "Duplicate book detected." });
+          fs.unlinkSync(tempFilePath); 
+          continue; 
         }
-        
 
         const newBook = await book.create({
-            title: bookDetails.title || path.parse(file.originalname).name,
-            category: req.body.category,
-            subject_id:req.body.subject_id,
-            added_by : req.user.user_id,
-            file_path: finalFilePath,
-            author: bookDetails.author,
-            edition: bookDetails.edition,
-            numberOfPages: bookDetails.totalPages,
-            file_size: bookDetails.file_size
+          title: bookDetails.title || path.parse(file.originalname).name,
+          category: req.body.category,
+          subject_id: req.body.subject_id,
+          added_by: req.user.user_id,
+          file_path: finalFilePath,
+          author: bookDetails.author,
+          edition: bookDetails.edition,
+          numberOfPages: bookDetails.totalPages,
+          file_size: bookDetails.file_size,
         });
 
         const directory = path.dirname(finalFilePath);
         if (!fs.existsSync(directory)) {
-            fs.mkdirSync(directory, { recursive: true });
+          fs.mkdirSync(directory, { recursive: true });
         }
         fs.renameSync(tempFilePath, finalFilePath);
 
         await extractDisplayImage(finalFilePath, displayImagePath);
-        newBook.display_image=displayImagePath;
+        newBook.display_image = displayImagePath;
         await newBook.save();
 
-        return res.status(201).json({
-            message: "Book created successfully.",
-            book: newBook
-        });
+        uploadedBooks.push(newBook);
+      }
+
+      if (uploadedBooks.length === 0) {
+        return res.status(400).json({ message: "No valid books were uploaded." });
+      }
+
+      return res.status(201).json({
+        message: "Books uploaded successfully.",
+        books: uploadedBooks,
+      });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error.", error: error.message });
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error.", error: error.message });
     }
   }
 ];
@@ -131,51 +142,32 @@ exports.getBooksByCategory = async (req, res) => {
 };
 
 exports.deleteBook = async (req, res) => {
-    try {
-        const Book = await book.findByPk(req.query.id);
-        if (!Book) {
-            return { success: false, message: "Book not found" };
-        }
-
-        // await fs.promises.unlink(path.resolve(Book.file_path));
-        // await fs.promises.unlink(path.resolve(Book.display_image));
-        const filePath = path.resolve(Book.file_path);
-        const imagePath = path.resolve(Book.display_image);
-
-
-        if (fs.existsSync(filePath)) {
-            await fs.promises.unlink(filePath);
-            console.log(`Deleted file: ${filePath}`);
-        } else {
-            console.warn(`\n \n \n File not found: ${filePath}`);
-        }
-
-        if (fs.existsSync(imagePath)) {
-            await fs.promises.unlink(imagePath);
-            console.log(`Deleted image: ${imagePath}`);
-        } else {
-            console.warn(`\n \n \n Image not found: ${imagePath}`);
-        }
-
-        await book.destroy({ where: { id:req.query.id } });
-        res.status(200).json({ message: "Book and its related files were deleted successfully" });
-         
-    } catch (error) {
+  try {
+    const Book = await book.findByPk(req.query.id);
+    if (!Book) {
+        return { success: false, message: "Book not found" };
+    }
+    const filePath = path.resolve(Book.file_path);
+    const imagePath = path.resolve(Book.display_image);
+    if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+        console.log(`Deleted file: ${filePath}`);
+    } else {
+        console.warn(`\n \n \n File not found: ${filePath}`);
+    }
+    if (fs.existsSync(imagePath)) {
+        await fs.promises.unlink(imagePath);
+        console.log(`Deleted image: ${imagePath}`);
+    } else {
+        console.warn(`\n \n \n Image not found: ${imagePath}`);
+    }
+    await book.destroy({ where: { id:req.query.id } });
+    res.status(200).json({ message: "Book and its related files were deleted successfully" });
+  } catch (error) {
         console.error("Error deleting book:", error);
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
-    }
+  }
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 

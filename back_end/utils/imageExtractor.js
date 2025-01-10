@@ -42,7 +42,19 @@ async function extractDisplayImage(pdfPath, outputPath) {
     };
 
     await pdfPoppler.convert(pdfPath, options);
-    const generatedImagePath = path.join(outputDir,`${options.out_prefix}.${options.format}`);
+
+    const finalImageName = `${path.basename(pdfPath, '.pdf')}.${options.format}`;
+    const generatedImagePath = path.join(outputDir, finalImageName);
+
+    // إعادة تسمية الصورة الناتجة إلى الاسم النهائي
+    const generatedImageFiles = fs.readdirSync(outputDir).filter(file => file.startsWith(options.out_prefix));
+    if (generatedImageFiles.length > 0) {
+      const tempImagePath = path.join(outputDir, generatedImageFiles[0]);
+      await fs.promises.rename(tempImagePath, generatedImagePath);
+    }
+
+
+    // const generatedImagePath = path.join(outputDir,`${options.out_prefix}.${options.format}`);
 
     console.log(`\n \n outputPath: ${outputPath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpg
     console.log(`\n \n options.out_prefix: ${options.out_prefix}`);  // Data_Structure
