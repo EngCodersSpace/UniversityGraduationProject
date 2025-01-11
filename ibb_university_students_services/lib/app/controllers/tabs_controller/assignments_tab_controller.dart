@@ -49,15 +49,15 @@ class AssignmentsTabController extends GetxController {
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
       assignments?.value = res.data ?? {};
-      fieldMessage.value = "this section and level not has Exams";
+      fieldMessage.value = "this section and level not has Assignments";
       showSnakeBar(
-          title: "Not Found Exams ",
-          message: "this section and level doesn't has exams ");
+          title: "Not Found Assignments ",
+          message: "this section and level doesn't has assignments ");
     } else {
-      fieldMessage.value = "fetching exam failed please check connection";
+      fieldMessage.value = "fetching assignments failed please check connection";
       showSnakeBar(
-          title: "Fetch Exams Failed",
-          message: "fetching exam failed please check connection ");
+          title: "Fetch Assignments Failed",
+          message: "fetching assignments failed please check connection ");
     }
   }
 
@@ -73,7 +73,6 @@ class AssignmentsTabController extends GetxController {
             .then((e) => e.data ?? []);
     subjectsItems = [];
     selectedSubjectsItems = [];
-
     for (String id in subjectsIds) {
       Subject? subject =
           await SubjectServices.fetchSubject(id: id).then((e) => e.data);

@@ -31,15 +31,15 @@ class HttpProvider {
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
-        if (kDebugMode) {
-          print(error.requestOptions.uri);
-          print("HttpProviderError ------------------ ");
-          print("error: ${error.message}");
-          print("status code: ${error.response?.statusCode}");
-          print("status headers: ${error.response?.isRedirect}");
-          print("request headers: ${error.requestOptions.headers}");
-          print(connectivityResult);
-        }
+        // if (kDebugMode) {
+        //   print(error.requestOptions.uri);
+        //   print("HttpProviderError ------------------ ");
+        //   print("error: ${error.message}");
+        //   print("status code: ${error.response?.statusCode}");
+        //   print("status headers: ${error.response?.isRedirect}");
+        //   print("request headers: ${error.requestOptions.headers}");
+        //   print(connectivityResult);
+        // }
         if (connectivityResult.contains(ConnectivityResult.none)) {
           get_x.Get.dialog(PopUpAlertCard(
               "no internet connection \n please check your connection ",

@@ -142,7 +142,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                           controller: controller.id,
                           validator: (id) => Validators.validateID(id),
-                          labelText: 'studentid'.tr,
+                          labelText: "User ID".tr,
                           icon: Icons.account_circle_outlined,
                           focusNode: controller.idFocus,
                           onFieldSubmitted: (e) {
@@ -164,7 +164,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         CustomTextFormField(
                           controller: controller.password,
                           validator: (pwd) => Validators.validatePassword(pwd),
-                          labelText: 'password'.tr,
+                          labelText: "Password".tr,
                           icon: Icons.key_sharp,
                           isPassword: true,
                           focusNode: controller.passwordFocus,
@@ -185,7 +185,7 @@ class PhoneLoginView extends GetView<LoginController> {
                           child: TextButton(
                             onPressed: () => controller.forgotPassword,
                             child: SecText(
-                              "forgotPassword?".tr,
+                              "Forgot Password?".tr,
                               textColor: AppColors.linkTextColor,
                             ),
                           ),
@@ -230,7 +230,7 @@ class PhoneLoginView extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SecText("Remember me",textColor: AppColors.linkTextColor),
+                            SecText("Remember me".tr,textColor: AppColors.linkTextColor),
                             Checkbox(
                                 value: controller.rememberMe.value,
                                 onChanged: controller.toggleRememberMe),
