@@ -20,7 +20,7 @@ class PermissionUtils {
     "admin": {
       "Lecturers": ["add", "delete", "view"],
       "Exams": ["add", "delete", "view"],
-      "Assignments": ["add", "edit","delete", "view"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     }
   };
 

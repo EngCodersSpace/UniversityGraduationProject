@@ -98,6 +98,7 @@ class Arabic {
     'Unknown':'غير معروف',
     'Edit':'تعديل',
     'Delete':'حذف',
+    'Upload':'رفع',
     'Add':'إضافة',
     'Close':'إغلاق',
     'Level':'المستوى',

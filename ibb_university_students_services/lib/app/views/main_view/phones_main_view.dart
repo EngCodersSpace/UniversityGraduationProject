@@ -7,7 +7,6 @@ import 'package:ibb_university_students_services/app/views/assignments_tab_view/
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/phones_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
-import '../../components/custom_text.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';

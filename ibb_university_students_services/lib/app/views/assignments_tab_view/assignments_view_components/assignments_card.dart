@@ -10,6 +10,7 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../../models/assignment_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
+import 'add_attachments_card.dart';
 
 class AssignmentsCard extends GetView<ExamTableController> {
   Rx<Assignment?> content;
@@ -86,7 +87,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                                   "${content.value?.assignmentDay}".tr),
                             ),
                             if ((PermissionUtils.checkPermission(
-                                target: "Exams", action: "edit"))) ...[
+                                target: "Assignments", action: "edit"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),
@@ -188,14 +189,18 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           target: "Assignments", action: "doctorView")))
                         ...[
                           CustomButton(
-                            onPress: () {},
+                            onPress: () {
+                              Get.dialog(const AddAttachmentsCard());
+                            },
                             text: "Add Attachments".tr,
                           ),
                           const SizedBox(
                             height: 8,
                           ),
                           CustomButton(
-                            onPress: () {},
+                            onPress: () {
+                              // Get.toNamed("");
+                            },
                             text: "Show Students".tr,
                           ),
                         ]
