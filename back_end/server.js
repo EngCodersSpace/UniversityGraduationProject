@@ -29,6 +29,7 @@ const subject=require('./routes/subjectRoute')
 const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
 const bookRoutes = require('./routes/bookRoute');
+const assignmentRoutes = require('./routes/assignmentRoute');
 
 
 
@@ -45,7 +46,7 @@ app.use(subject);
 app.use(studyPlaneRoute);
 app.use(studentFeeRoute);
 app.use(bookRoutes);
-
+app.use(assignmentRoutes);
 
 
 const PORT = process.env.PORT ;
