@@ -11,16 +11,17 @@ const createFolderIfNotExists = async (folderPath) => {
     }
 };
 
-const validCategories = ["Lecture", "ExamForm", "Reference"];
+// const validCategories = ["Lecture", "ExamForm", "Reference"];
 
 // Configure multer storage
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         console.log('Processing file:', file); 
-        const {category}= req.body;
-        if (!category || !validCategories.includes(category)) {
-            return cb(new Error("Invalid or missing category."), false);
-        }
+        // const {category}= req.body;
+
+        // if (!category || !validCategories.includes(category)) {
+        //     return cb(new Error("Invalid or missing category."), false);
+        // }
         // const categoryFolder =  path.resolve(__dirname, '../storage/library', category, 'books');
         const categoryFolder =  path.resolve(__dirname, '../storage' ,'temp');
 
@@ -40,11 +41,37 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
-        if (!file.mimetype.includes('pdf')) {
-            return cb(new Error('Only PDF files are allowed.'), false);
+        const allowedMimetypes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/webp',
+            'image/svg+xml',
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+            'video/mp4',
+            'video/x-msvideo',
+            'video/x-m4v',
+            'audio/mpeg',
+            'audio/wav',
+            'audio/ogg',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword',
+            'application/zip',
+            'text/csv',        
+        ];
+    
+        if (!allowedMimetypes.includes(file.mimetype)) {
+            return cb(new Error('File type not allowed.'), false);
         }
         cb(null, true);
     },
+
+
 }).fields([{ name: 'files', maxCount: 10 }]);
 
 module.exports = {
