@@ -192,7 +192,6 @@ class AssignmentsTabController extends GetxController {
     );
     if (result != null) {
       selectedAttachments?.value.addAll(result.files);
-      print(selectedAttachments?.value.first.name);
     } else {
       // User canceled the picker
       print('No file selected');

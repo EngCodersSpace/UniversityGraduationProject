@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
+import 'package:ibb_university_students_services/app/services/downloder/download_manager.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/services/app_data_services.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await DownloadManager.initialize();
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
   // HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
   await AppDataServices.fetchAppData();
