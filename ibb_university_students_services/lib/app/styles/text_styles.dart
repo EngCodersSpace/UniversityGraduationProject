@@ -61,7 +61,19 @@ class AppTextStyles {
       height: height,
     );
   }
-  static TextStyle failedGrads({
+  static TextStyle linkStyle({
+    TextHeaders? textHeader,
+    double? height
+  }) {
+    textHeader ??= AppTextHeaders.h4;
+    return TextStyle(
+      fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
+      fontWeight: textHeader.fontWeight,
+      color: AppColors.linkTextColor,
+      height: height,
+    );
+  }
+  static TextStyle failedAndErrorStyle({
     TextHeaders? textHeader,
     double? height
   }) {

@@ -12,7 +12,6 @@ import 'package:ibb_university_students_services/app/services/user_services.dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-  await DownloadManager.initialize();
   await Hive.initFlutter();
   HiveServices.registerAdapters();
   await UserServices.openBox();
@@ -37,6 +36,9 @@ class MyApp extends StatelessWidget {
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
+            onReady: (){
+              DownloadManager.initialize();
+            },
           )
         // Android and web UI
         : GetMaterialApp(

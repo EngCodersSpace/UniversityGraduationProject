@@ -26,7 +26,7 @@ class ResultCard extends StatelessWidget {
     TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
     if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
         48) {
-      style = AppTextStyles.failedGrads(textHeader: AppTextHeaders.h5);
+      style = AppTextStyles.failedAndErrorStyle(textHeader: AppTextHeaders.h5);
     } else {
       style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
     }
