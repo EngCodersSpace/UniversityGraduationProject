@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      student_assignment.hasMany(models.student_assignment_attachment, {
+        foreignKey: 'student_assignment_id',
+      });
     }
   }
   student_assignment.init({
@@ -45,11 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
       allowNull: false,
     },
-    attachment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    
+
+
 
 
   }, {
