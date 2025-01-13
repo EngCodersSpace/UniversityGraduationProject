@@ -1,4 +1,4 @@
-const {subject,doctor,user}=require('../models');
+const {subject,doctor,user,study_plan_elment}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
 
@@ -80,6 +80,38 @@ exports.getAllSubject=async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Error retrieving Subjects', error: error.message });
       }
+};
+
+exports.getSubjectByfilter = async (req,res) => {
+
+  try {
+    const { section_id, level_id , study_plan_id} = req.query;
+    const whereClause = {};
+    if (section_id) whereClause.section_id = section_id;
+    if (level_id) whereClause.level_id = level_id;
+    if (study_plan_id) whereClause.study_plan_id = study_plan_id;
+
+    const Subjects= await study_plan_elment.findAll({
+      where:whereClause,
+      attributes: [],
+      include: [
+        {
+          model:subject,
+          attributes: ['subject_id', 'subject_name','number_of_units'],
+        },
+      ],
+    });
+    
+    if (!Subjects || Subjects.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No Subjects found for the specified criteria" });
+    }
+    return res.status(200).json({message:'Bring All Subjects after fltering ', SubjectbyFilter:Subjects});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving Subjects', error: error.message });
+  }
 };
 
 exports.updateSubject = async (req, res) => {
