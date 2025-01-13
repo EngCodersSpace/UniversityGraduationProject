@@ -24,6 +24,12 @@ module.exports = (sequelize, DataTypes) => {
         through: 'student_assignment',
         foreignKey: 'assignment_id',
       });
+
+      assignment.hasMany(models.assignment_attachment, {
+        foreignKey: 'assignment_id',
+      });
+
+
     }
   }
   assignment.init({
@@ -54,10 +60,10 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
     },
-    assignment_day: {
+    assignment_due_day: {
       type: DataTypes.ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'),
       allowNull: false,
     },
@@ -69,10 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    attachment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
+
 
 
   }, {

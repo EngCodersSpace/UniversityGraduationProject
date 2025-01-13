@@ -30,10 +30,10 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         allowNull: false,
       },
-      assignment_day: {
+      assignment_due_day: {
         type: Sequelize.ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'),
         allowNull: false,
       },
@@ -45,10 +45,7 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      attachment: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
+
 
 
       createdAt: {

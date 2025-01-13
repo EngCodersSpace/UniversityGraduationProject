@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 
     user_id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'user_id',
@@ -37,7 +37,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone_number: {
       type: DataTypes.STRING(25),
-      primaryKey: true,
       allowNull: false,
     },
 
@@ -45,6 +44,12 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'phone_number',
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['user_id', 'phone_number'],
+      },
+    ],
   });
   return phone_number;
 };

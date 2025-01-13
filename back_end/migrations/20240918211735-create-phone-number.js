@@ -9,6 +9,7 @@ module.exports = {
 
       user_id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'users',
           key: 'user_id',
@@ -20,13 +21,13 @@ module.exports = {
         type: Sequelize.STRING(25),
         allowNull: false,
       },
-      
+
 
     });
-    await queryInterface.addConstraint('phone_numbers',{
-      fields:['user_id','phone_number'],
-      type:'primary key',
-      name:'phone_number_pkey',
+    await queryInterface.addConstraint('phone_numbers', {
+      fields: ['user_id', 'phone_number'],
+      type: 'primary key',
+      name: 'phone_number_pkey',
     });
 
 
