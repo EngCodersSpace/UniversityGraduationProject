@@ -15,7 +15,7 @@ module.exports = {
     const students = [];
     const doctors = [];
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 40; i++) {
       // Generate fake data
 
       //user
@@ -32,7 +32,14 @@ module.exports = {
         en: userName,
         ar: userName.split(' ').reverse().join(' '), // عكس الاسم كطريقة عشوائية لترجمته
       };
-      const permissionn = faker.helpers.arrayElement(['student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary']);
+      let permissionn
+      if (i < 20) {
+        permissionn = faker.helpers.arrayElement(['dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary']);
+      } else if (i >= 20 && i < 25) {
+        permissionn = 'representative';
+      } else {
+        permissionn = 'student';
+      }
       const userData = {
         user_id: i + 1,
         user_name: userNameLocalized, // Assign user name in JSON format
@@ -50,23 +57,7 @@ module.exports = {
       users.push(userData);
 
       // Add student or doctor data based on permission
-      if (['student', 'representative'].includes(permissionn)) {
-        const system = faker.helpers.arrayElement([
-          { en: 'General', ar: 'عام' },
-          { en: 'Free Seat', ar: 'مقعد مجاني' },
-          { en: 'Paid', ar: 'موازي' },
-        ]);
-
-        students.push({
-          student_id: i + 1, // Associating student with the corresponding user
-          study_plan_id: studyPlans[i % studyPlans.length].study_plan_id, // Select study plan cyclically
-          enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
-          student_level_id: levels[i % levels.length].id, // Assign level cyclically
-          student_system: system,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-      } else if (['dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary'].includes(permissionn)) {
+      if (i < 20) {
         const academicDegree = faker.helpers.arrayElement([
           { en: 'Doctor', ar: 'دكتور' },
           { en: 'Professor', ar: 'بروفسور' },
@@ -85,6 +76,23 @@ module.exports = {
           academic_degree: academicDegree, // Assign academic degree in JSON format
           administrative_position: administrativePosition, // Assign administrative position in JSON format
 
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+
+      } else if (i < 40) {
+        const system = faker.helpers.arrayElement([
+          { en: 'General', ar: 'عام' },
+          { en: 'Free Seat', ar: 'مقعد مجاني' },
+          { en: 'Paid', ar: 'موازي' },
+        ]);
+
+        students.push({
+          student_id: i + 1, // Associating student with the corresponding user
+          study_plan_id: studyPlans[i % studyPlans.length].study_plan_id, // Select study plan cyclically
+          enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
+          student_level_id: levels[i % levels.length].id, // Assign level cyclically
+          student_system: system,
           createdAt: new Date(),
           updatedAt: new Date(),
         });
