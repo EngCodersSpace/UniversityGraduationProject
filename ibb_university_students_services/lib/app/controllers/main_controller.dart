@@ -3,7 +3,7 @@
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
 import '../models/result.dart';
-import '../models/user_model.dart';
+import '../models/user_model/user.dart';
 import '../services/user_services.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';

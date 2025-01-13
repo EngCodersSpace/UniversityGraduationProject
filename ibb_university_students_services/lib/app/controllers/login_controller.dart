@@ -28,15 +28,11 @@ class LoginController extends GetxController {
   }
   @override
   void onInit() async{
-    List<String>? credentials = await UserServices.fetchCachedCredentials();
-    if (credentials != null) {
-      // Result res = await UserServices.userLogin(credentials[0], credentials[1]);
-      Result res = await UserServices.userLogin("1000", "1234pass@");
-      Get.updateLocale(const Locale("ar"));
-      if (res.statusCode == 200) {
-        Get.offNamed("/main");
-      }
-    }
+    id.text = "10";
+    password.text = "1234pass@";
+    // if (await UserServices.isCredentialsCached()) {
+    //     Get.offNamed("/main");
+    // }
     super.onInit();
     loading.value = false;
   }

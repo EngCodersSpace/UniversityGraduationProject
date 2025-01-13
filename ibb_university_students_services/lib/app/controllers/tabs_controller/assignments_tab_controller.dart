@@ -7,9 +7,9 @@ import 'package:ibb_university_students_services/app/services/assignments_servic
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../components/custom_text.dart';
-import '../../models/level_model.dart';
+import '../../models/level_model/level.dart';
 import '../../models/result.dart';
-import '../../models/section_model.dart';
+import '../../models/section_model/section.dart';
 import '../../models/subject_model.dart';
 import '../../services/level_services.dart';
 import '../../services/section_services.dart';

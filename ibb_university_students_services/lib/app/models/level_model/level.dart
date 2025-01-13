@@ -1,9 +1,14 @@
-
-
+import 'package:hive/hive.dart';
+part 'level.g.dart';
+@HiveType(typeId: 0)
 class Level {
+  @HiveField(0)
   int id;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? createdAt;
+  @HiveField(3)
   String? updatedAt;
 
   Level({

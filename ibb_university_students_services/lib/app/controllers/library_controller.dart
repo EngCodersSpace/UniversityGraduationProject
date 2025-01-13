@@ -6,8 +6,8 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
 
 import '../components/custom_text_v2.dart';
-import '../models/level_model.dart';
-import '../models/section_model.dart';
+import '../models/level_model/level.dart';
+import '../models/section_model/section.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
 import '../styles/app_colors.dart';

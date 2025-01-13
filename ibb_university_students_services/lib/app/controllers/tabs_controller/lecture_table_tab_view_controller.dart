@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/models/level_model.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model.dart';
-import 'package:ibb_university_students_services/app/models/section_model.dart';
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';

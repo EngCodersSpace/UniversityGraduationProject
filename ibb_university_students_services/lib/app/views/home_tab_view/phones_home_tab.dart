@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/news_card.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/services_card.dart';
-import 'package:ibb_university_students_services/app/models/student_model.dart';
+import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import '../../components/custom_text_v2.dart';
 import '../../controllers/tabs_controller/home_tab_controller.dart';
 import '../../styles/app_colors.dart';

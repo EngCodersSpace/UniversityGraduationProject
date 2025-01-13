@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/doctor_model.dart';
+import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/text_styles.dart';
 
 class DoctorInfoCard extends GetView<HomeTabController> {

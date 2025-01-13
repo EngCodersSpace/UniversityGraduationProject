@@ -5,7 +5,7 @@ import '../components/custom_text.dart';
 import '../models/grads_model.dart';
 import '../models/result.dart';
 import '../styles/app_colors.dart';
-import '../models/level_model.dart';
+import '../models/level_model/level.dart';
 import '../services/level_services.dart';
 import '../utils/snake_bar.dart';
 

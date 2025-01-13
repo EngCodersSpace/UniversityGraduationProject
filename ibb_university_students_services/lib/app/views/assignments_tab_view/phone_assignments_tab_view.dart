@@ -223,7 +223,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                       height: (PermissionUtils.checkPermission(
                               target: "Assignments", action: "add"))
                           ? Get.height * 0.64
-                          : Get.height * 0.69,
+                          : Get.height * 0.666,
                       child: RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(

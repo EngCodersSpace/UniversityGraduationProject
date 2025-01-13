@@ -4,7 +4,7 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/student_model.dart';
+import '../../../models/student_model/student.dart';
 
 class StudentInfoCard extends GetView<HomeTabController> {
   const StudentInfoCard({super.key});

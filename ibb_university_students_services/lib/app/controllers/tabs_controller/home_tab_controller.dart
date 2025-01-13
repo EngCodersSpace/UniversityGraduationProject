@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import '../../models/result.dart';
 import '../../services/user_services.dart';
-import '../../models/user_model.dart';
+import '../../models/user_model/user.dart';
 import '../main_controller.dart';
 
 class HomeTabController extends GetxController
