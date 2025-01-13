@@ -8,6 +8,7 @@ module.exports = {
     await queryInterface.createTable('phone_numbers', {
 
       user_id: {
+        
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

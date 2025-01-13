@@ -4,6 +4,12 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('assignment_attachments', {
 
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       assignment_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -18,13 +24,18 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      attachment_hash:{
+        type:Sequelize.STRING(64),
+        allowNull:false,
+      }
+
 
 
     });
     await queryInterface.addConstraint('assignment_attachments', {
-      fields: ['assignment_id', 'attachment'],
-      type: 'primary key',
-      name: 'assignment_attachment_pkey',
+      fields: ['assignment_id', 'attachment_hash'],
+      type: 'unique',
+      name: 'assignment_attachment_unique',
     });
   },
   async down(queryInterface, Sequelize) {
