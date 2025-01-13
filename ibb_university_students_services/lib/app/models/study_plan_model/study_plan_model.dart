@@ -1,22 +1,26 @@
+import 'package:hive/hive.dart';
+part 'study_plan_model.g.dart';
 
-class StudyPlanElement {
+@HiveType(typeId: 12)
+class StudyPlane {
+  @HiveField(0)
   int id;
-  // int studyPlanId;
-  // int subjectId;
-  // int doctorId;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? createdAt;
+  @HiveField(3)
   String? updatedAt;
 
-  StudyPlanElement({
+  StudyPlane({
     required this.id,
     this.name,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory StudyPlanElement.fromJson(Map<String, dynamic> json) {
-    return StudyPlanElement(
+  factory StudyPlane.fromJson(Map<String, dynamic> json) {
+    return StudyPlane(
       id: json['id'],
       name: json['name'],
       createdAt: json['created_at'],

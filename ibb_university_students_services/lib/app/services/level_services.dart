@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
-import '../models/result.dart';
+import '../models/helper_models/result.dart';
 import 'http_provider/http_provider.dart';
 
 

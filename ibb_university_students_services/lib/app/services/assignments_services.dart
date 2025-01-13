@@ -1,7 +1,7 @@
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
-import '../models/assignment_model.dart';
-import '../models/result.dart';
-import '../models/subject_model.dart';
+import '../models/assignment_model/assignment_model.dart';
+import '../models/helper_models/result.dart';
+import '../models/subject_model/subject_model.dart';
 
 class AssignmentsServices {
   // static const int _fetchAllError = 621;

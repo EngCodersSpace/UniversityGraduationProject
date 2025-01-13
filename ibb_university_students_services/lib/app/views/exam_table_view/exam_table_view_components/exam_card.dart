@@ -6,8 +6,8 @@ import 'package:ibb_university_students_services/app/components/custom_text.dart
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import '../../../components/custom_text_v2.dart';
+import '../../../models/exam_model/exam_model.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/exam_model.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/permission_checker.dart';
 

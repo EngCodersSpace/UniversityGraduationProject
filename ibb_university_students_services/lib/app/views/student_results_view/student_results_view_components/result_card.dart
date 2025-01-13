@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../components/custom_text_v2.dart';
-import '../../../models/grads_model.dart';
+import '../../../models/grads_model/grads_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 

@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 
-import 'instructor_model.dart';
+import '../instructor_model/instructor_model.dart';
 
+part 'subject_model.g.dart';
+
+@HiveType(typeId: 5)
 class Subject {
   Subject({
     required this.id,
@@ -12,11 +16,15 @@ class Subject {
     this.instructors,
   });
 
-
+  @HiveField(0)
   String id;
+  @HiveField(1)
   Map<String,dynamic>? subjectNameData;
+  @HiveField(2)
   int? units;
+  @HiveField(3)
   Map<String,dynamic>? descriptionData;
+  @HiveField(4)
   Map<int,Instructor>? instructors;
 
   String? get subjectName {

@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:ibb_university_students_services/app/models/lecture_model.dart';
+import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
-import '../models/days_table.dart';
-import '../models/result.dart';
-import '../models/subject_model.dart';
+import '../models/helper_models/days_table.dart';
+import '../models/helper_models/result.dart';
+import '../models/subject_model/subject_model.dart';
 import 'http_provider/http_provider.dart';
 
 class LectureServices {

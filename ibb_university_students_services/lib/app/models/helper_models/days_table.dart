@@ -1,4 +1,4 @@
-import 'package:ibb_university_students_services/app/models/lecture_model.dart';
+import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 
 class TableDays {
   TableDays({

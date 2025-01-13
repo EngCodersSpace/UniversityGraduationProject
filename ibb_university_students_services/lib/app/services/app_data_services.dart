@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
-import '../models/result.dart';
+import '../models/subject_model/subject_model.dart';
 import 'http_provider/http_provider.dart';
 
 class AppDataServices {

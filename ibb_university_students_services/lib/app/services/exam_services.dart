@@ -4,9 +4,9 @@ import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import '../components/pop_up_cards/loading_card.dart';
-import '../models/exam_model.dart';
-import '../models/result.dart';
-import '../models/subject_model.dart';
+import '../models/exam_model/exam_model.dart';
+import '../models/helper_models/result.dart';
+import '../models/subject_model/subject_model.dart';
 import 'http_provider/http_provider.dart';
 
 

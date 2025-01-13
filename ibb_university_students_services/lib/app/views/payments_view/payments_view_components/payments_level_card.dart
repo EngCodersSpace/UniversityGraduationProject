@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/student_fee.dart';
+import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/text_styles.dart';

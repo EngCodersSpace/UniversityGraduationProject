@@ -7,7 +7,7 @@ import 'package:ibb_university_students_services/app/components/custom_text.dart
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import '../../../models/assignment_model.dart';
+import '../../../models/assignment_model/assignment_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
 import 'add_attachments_card.dart';

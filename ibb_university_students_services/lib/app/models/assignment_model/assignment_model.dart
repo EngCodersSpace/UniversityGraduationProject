@@ -1,5 +1,6 @@
-import 'package:ibb_university_students_services/app/models/instructor_model.dart';
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
+import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+
+import '../subject_model/subject_model.dart';
 
 class Assignment {
   Assignment({

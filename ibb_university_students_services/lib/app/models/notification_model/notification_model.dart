@@ -1,13 +1,23 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
+import 'package:hive/hive.dart';
+part 'notification_model.g.dart';
+@HiveType(typeId: 9)
 class Notification {
+  @HiveField(0)
   RxInt id;
+  @HiveField(1)
   RxString? author;
+  @HiveField(2)
   RxString? time;
+  @HiveField(3)
   RxString? message;
+  @HiveField(4)
   RxString? date;
+  @HiveField(5)
   RxBool? readState;
+  @HiveField(6)
   RxString? createdAt;
+  @HiveField(7)
   RxString? updatedAt;
 
   Notification({

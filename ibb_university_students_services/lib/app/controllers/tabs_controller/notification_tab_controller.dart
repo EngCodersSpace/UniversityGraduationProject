@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/notification_model.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
+import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
 import 'package:ibb_university_students_services/app/services/notifictaion_services.dart';
+import '../../models/helper_models/result.dart';
 
 class NotificationTabController extends GetxController {
   Map<String, List<Notification>> notificationGroups = {};

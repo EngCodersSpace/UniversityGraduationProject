@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../models/result.dart';
+import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
 import '../services/user_services.dart';
 
