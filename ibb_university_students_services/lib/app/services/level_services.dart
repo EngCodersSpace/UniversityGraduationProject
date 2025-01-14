@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import '../models/helper_models/result.dart';
 import 'http_provider/http_provider.dart';
@@ -7,15 +8,24 @@ import 'http_provider/http_provider.dart';
 class LevelServices {
   static const int _fetchError = 611;
 
-  static Map<int,Level>? _levels;
+  static Box<Level>? _levelBox;
 
-  static Future<Result<Map<int,Level>>> fetchLevels({
+  static Future<void> openBox() async {
+    _levelBox = await Hive.openBox<Level>('levelBox');
+    // Box  = await Hive.openBox('');
+  }
+
+  static Future<void> closeBox() async {
+    await _levelBox?.close();
+  }
+
+  static Future<Result<List<Level>>> fetchLevels({
     bool hardFetch = false,
   }) async {
-    if (_levels  != null &&
+    if ((_levelBox?.values.isNotEmpty??true) &&
         !hardFetch) {
       return Result(
-        data: _levels!,
+        data: _levelBox?.values.toList()??[],
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -25,13 +35,12 @@ class LevelServices {
     try {
       response = await HttpProvider.get("get-all-levels");
       if (response?.statusCode == 200) {
-        _levels = {};
         for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
           Level level = Level.fromJson(jsLevel);
-          _levels?[level.id]= level;
+          await _levelBox?.put(level.id, level) ;
         }
         return Result(
-            data: _levels,
+            data:  _levelBox?.values.toList()??[],
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -53,7 +62,7 @@ class LevelServices {
 
 
   static void cacheLevels(Map<int,Level> levels){
-    _levels = levels;
+    _levelBox?.putAll(levels)  ;
   }
 
 }

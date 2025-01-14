@@ -81,7 +81,7 @@ class StudentResultController extends GetxController {
 
   Future<void> initDropdownMenuLists() async {
     List<Level> levelsData = await LevelServices.fetchLevels()
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(

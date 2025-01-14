@@ -101,7 +101,7 @@ class AssignmentsTabController extends GetxController {
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
     await SectionServices.fetchSections(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
@@ -124,7 +124,7 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(

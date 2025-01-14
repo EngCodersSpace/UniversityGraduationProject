@@ -193,7 +193,7 @@ class LectureController extends GetxController {
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
         await SectionServices.fetchSections(hardFetch: force)
-            .then((e) => e.data?.values.toList() ?? []);
+            .then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -211,11 +211,14 @@ class LectureController extends GetxController {
             )),
       );
     }
+    if (sectionsData.isNotEmpty) {
+      selectedDepartment.value = sectionsData.first.id;
+    }
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -232,6 +235,9 @@ class LectureController extends GetxController {
               ),
             )),
       );
+    }
+    if (levelsData.isNotEmpty) {
+      selectedLevel.value = levelsData.first.id;
     }
   }
 
@@ -256,6 +262,7 @@ class LectureController extends GetxController {
             )),
       );
     }
+    selectedYear.value = yearData.first;
   }
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {

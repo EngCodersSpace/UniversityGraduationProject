@@ -14,9 +14,10 @@ void main() async {
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
   await Hive.initFlutter();
   HiveServices.registerAdapters();
-  await UserServices.openBox();
   // HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
   await AppDataServices.fetchAppData();
+  DownloadManager.initialize();
+  await HiveServices.openGlobalBoxes();
   runApp(const MyApp());
 }
 
@@ -36,8 +37,9 @@ class MyApp extends StatelessWidget {
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
-            onReady: (){
+            onReady: () async {
               DownloadManager.initialize();
+              await HiveServices.openGlobalBoxes();
             },
           )
         // Android and web UI
@@ -51,7 +53,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             onDispose: () async {
               await Hive.close();
-            }
+            },
+            onReady: () async {
+            },
           );
   }
 }

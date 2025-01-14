@@ -11,6 +11,11 @@ import 'package:ibb_university_students_services/app/models/student_model/studen
 import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/services/lecture_services.dart';
+import 'package:ibb_university_students_services/app/services/section_services.dart';
+import 'package:ibb_university_students_services/app/services/user_services.dart';
+
+import '../level_services.dart';
 
 
 class HiveServices{
@@ -28,5 +33,11 @@ class HiveServices{
     Hive.registerAdapter(StudentFeeAdapter());
     Hive.registerAdapter(StudyPlanElementAdapter());
     Hive.registerAdapter(StudyPlaneAdapter());
+  }
+  static openGlobalBoxes()async{
+    await UserServices.openBox();
+    await LevelServices.openBox();
+    await SectionServices.openBox();
+    await LectureServices.openBox();
   }
 }

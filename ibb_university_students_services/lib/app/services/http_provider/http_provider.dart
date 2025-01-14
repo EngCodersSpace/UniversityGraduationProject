@@ -146,10 +146,11 @@ class HttpProvider {
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      Box box = await Hive.openBox('Tokens');
       Response response = await _dio.post("refresh",data: {
-        "refreshToken":prefs.getString("refreshToken")??""
+        "refreshToken":box.get("refreshToken")??""
       });
+      await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
         SharedPreferences prefs = await SharedPreferences.getInstance();

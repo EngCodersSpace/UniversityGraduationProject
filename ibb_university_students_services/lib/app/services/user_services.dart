@@ -9,11 +9,11 @@ import '../models/user_model/user.dart';
 import 'http_provider/http_provider.dart';
 
 class UserServices {
-  static Box<dynamic>? _userBox;
-  static get permission  => _userBox?.values.first.permission;
+  static Box<User>? _userBox;
+  static get permission  => _userBox?.get('currentUser')?.permission;
 
   static Future<void> openBox() async {
-    _userBox = await Hive.openBox<dynamic>('userBox');
+    _userBox = await Hive.openBox<User>('userBox');
     // Box  = await Hive.openBox('');
   }
 

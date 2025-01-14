@@ -128,7 +128,7 @@ class ExamTableController extends GetxController {
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData =
-    await SectionServices.fetchSections().then((e) => e.data?.values.toList() ?? []);
+    await SectionServices.fetchSections().then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -148,7 +148,7 @@ class ExamTableController extends GetxController {
   }
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+        await LevelServices.fetchLevels().then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];

@@ -11,7 +11,7 @@ import 'library_controller.dart';
 import 'student_result_controller.dart';
 
 class MainController extends GetxController {
-  RxInt selectedIndex = 2.obs;
+  RxInt selectedIndex = 1.obs;
   User? user;
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
