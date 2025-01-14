@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
+import 'package:ibb_university_students_services/app/models/lecture_model.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/lecture_table_tab_components/lecture_card.dart';
 
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
@@ -51,7 +55,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         width: width * 0.002,
                       ),
                       Container(
-                        height: height * 0.1,
+                        height: height * 0.08,
                         width: width * 0.14,
                         decoration: BoxDecoration(
                           color: AppColors.inverseIconColor,
@@ -81,7 +85,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         width: width * 0.002,
                       ),
                       Container(
-                        height: height * 0.1,
+                        height: height * 0.08,
                         width: width * 0.1,
                         decoration: BoxDecoration(
                           color: AppColors.inverseIconColor,
@@ -109,7 +113,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         width: width * 0.002,
                       ),
                       Container(
-                        height: height * 0.1,
+                        height: height * 0.08,
                         width: width * 0.13,
                         decoration: BoxDecoration(
                           color: AppColors.inverseIconColor,
@@ -137,7 +141,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         width: width * 0.002,
                       ),
                       Container(
-                        height: height * 0.1,
+                        height: height * 0.08,
                         width: width * 0.13,
                         decoration: BoxDecoration(
                           color: AppColors.inverseIconColor,
@@ -241,30 +245,14 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           padding: const EdgeInsets.only(left: 5),
                           decoration: BoxDecoration(
                               color:
-                                  AppColors.inverseCardColor.withOpacity(0.2),
+                                  AppColors.inverseCardColor.withOpacity(0.1),
                               border: Border.all(width: 1, color: Colors.black),
                               borderRadius: BorderRadius.circular(10)),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
                                 children: [
-                                  SecText(
-                                    "time ".tr,
-                                    fontSize: 16,
-                                  ),
-                                  const Text(
-                                    "\\",
-                                    style: TextStyle(
-                                      fontSize: 40,
-                                    ),
-                                  ),
-                                  SecText(
-                                    "Day".tr,
-                                    fontSize: 16,
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.03,
-                                  ),
                                   SecText(
                                     "Saturday".tr,
                                     fontSize: 18,
@@ -320,61 +308,14 @@ class WebLectureTableTabView extends GetView<LectureController> {
                                 children: [
                                   Column(
                                     children: [
-                                      SecText(
-                                        " 8 ".tr,
-                                        fontSize: 16,
-                                      ),
-                                      SecText(
-                                        " AM".tr,
-                                        fontSize: 16,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.002,
-                                  ),
-                                  // Column(
-                                  //   children: [
-                                  //     SecText(
-                                  //       " 00 ".tr,
-                                  //       fontSize: 16,
-                                  //     ),
-                                  //     SizedBox(
-                                  //       height: height * 0.02,
-                                  //     ),
-                                  //     SecText(
-                                  //       " 30".tr,
-                                  //       fontSize: 16,
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    width: width * 0.03,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Divider(
-                                thickness: 1.5,
-                                color: AppColors.inverseCardColor,
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      SecText(
-                                        " 9 ".tr,
-                                        fontSize: 16,
-                                      ),
-                                      SecText(
-                                        " AM".tr,
-                                        fontSize: 16,
-                                      ),
+                                      // SecText(
+                                      //   " 8 ".tr,
+                                      //   fontSize: 16,
+                                      // ),
+                                      // SecText(
+                                      //   " AM".tr,
+                                      //   fontSize: 16,
+                                      // ),
                                     ],
                                   ),
                                   SizedBox(
@@ -383,49 +324,61 @@ class WebLectureTableTabView extends GetView<LectureController> {
                                   SizedBox(
                                     width: width * 0.03,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Divider(
-                                thickness: 1.5,
-                                color: AppColors.inverseCardColor,
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      SecText(
-                                        " 10 ".tr,
-                                        fontSize: 16,
-                                      ),
-                                      SecText(
-                                        " AM".tr,
-                                        fontSize: 16,
-                                      ),
-                                    ],
-                                  ),
                                   SizedBox(
-                                    width: width * 0.002,
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.03,
+                                    width: width * 0.04,
+                                    child: Obx(() => Column(
+                                          children: [
+                                            SizedBox(height: height * 0.03),
+                                            if (controller
+                                                    .selectedDay(0)
+                                                    ?.isEmpty ??
+                                                true) ...[
+                                              SizedBox(
+                                                height: height * 0.08,
+                                              ),
+                                              Center(
+                                                  child: CustomText(
+                                                controller.fieldMessage.value,
+                                                style: AppTextStyles.secStyle(
+                                                    textHeader:
+                                                        AppTextHeaders.h2),
+                                              )),
+                                              IconButton(
+                                                  onPressed: () async =>
+                                                      controller.refresh(),
+                                                  icon: const Icon(
+                                                    Icons.refresh,
+                                                    size: 40,
+                                                  ))
+                                            ],
+                                            for (int i = 0;
+                                                i <
+                                                    (controller
+                                                            .selectedDay(0)
+                                                            ?.length ??
+                                                        0);
+                                                i++) ...[
+                                              LectureCard(
+                                                content: Rx(controller
+                                                    .selectedDay(0)
+                                                    ?.values
+                                                    .toList()[i]),
+                                                height: height * 0.56 * (1 / 2),
+                                              ),
+                                              if (i <
+                                                  ((controller
+                                                              .selectedDay(0)
+                                                              ?.length ??
+                                                          0) -
+                                                      1))
+                                                SizedBox(
+                                                  height: height * 0.03,
+                                                )
+                                            ]
+                                          ],
+                                        )),
                                   ),
                                 ],
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Divider(
-                                thickness: 1.5,
-                                color: AppColors.inverseCardColor,
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
                               ),
                             ],
                           ),
