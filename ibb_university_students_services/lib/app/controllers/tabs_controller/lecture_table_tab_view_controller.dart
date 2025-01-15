@@ -7,7 +7,10 @@ import 'package:ibb_university_students_services/app/models/section_model/sectio
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../components/custom_text.dart';
+import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/days_table.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/subject_model/subject_model.dart';
@@ -22,7 +25,7 @@ class LectureController extends GetxController {
   RxBool loadState = true.obs;
   TableDays? tableTime;
   RxInt selected = 3.obs;
-  String selectedDayName = "Sunday".tr;
+  RxString selectedDayName = "Sunday".obs;
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
@@ -55,7 +58,7 @@ class LectureController extends GetxController {
               fontSize: 12,
             ))),
   ];
-
+  Rx<Locale?> currentLocale = Get.locale.obs;
   //Lecture popCard variables
   Map<String, Subject>? subjects;
   Rx<String?> subjectId = Rx(null);
@@ -71,10 +74,13 @@ class LectureController extends GetxController {
   FocusNode phoneFocus = FocusNode();
   String mode = "Add";
   int? selectedLecture;
-  bool adding = false;
+  bool submitting = false;
 
   @override
   void onInit() async {
+    ever(LocaleListener.currentLocal, (local)async{
+      await initSectionDropdownMenuList();
+    });
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
@@ -89,8 +95,8 @@ class LectureController extends GetxController {
   }
 
   @override
-  void refresh() async {
-    await fetchTableData(force: true);
+  void refresh({bool force = true}) async {
+    await fetchTableData(force: force);
     loadState.value = false;
     super.refresh();
   }
@@ -116,7 +122,7 @@ class LectureController extends GetxController {
     Result res = await LectureServices.fetchTableTime(
         sectionId: selectedDepartment.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value ?? "2024",
+        year: selectedYear.value!,
         term: selectedTerm.value,
         hardFetch: force);
     if (res.statusCode == 200) {
@@ -163,27 +169,44 @@ class LectureController extends GetxController {
 
   void selectedDayChange(int index) {
     selected.value = index;
+    switch (index) {
+      case 0:
+        selectedDayName.value = "Saturday";
+        break;
+      case 1:
+        selectedDayName.value = "Sunday";
+        break;
+      case 2:
+        selectedDayName.value = "Monday";
+        break;
+      case 3:
+        selectedDayName.value = "Tuesday";
+        break;
+      case 4:
+        selectedDayName.value = "Wednesday";
+        break;
+      case 5:
+        selectedDayName.value = "Thursday";
+        break;
+      default:
+        selectedDayName.value = "";
+        break;
+    }
   }
 
   Map<int, Lecture>? selectedDay(int index) {
     switch (index) {
       case 0:
-        selectedDayName = "Saturday".tr;
         return tableTime?.sat;
       case 1:
-        selectedDayName = "Sunday".tr;
         return tableTime?.sun;
       case 2:
-        selectedDayName = "Monday".tr;
         return tableTime?.mon;
       case 3:
-        selectedDayName = "Tuesday".tr;
         return tableTime?.tue;
       case 4:
-        selectedDayName = "Wednesday".tr;
         return tableTime?.wed;
       case 5:
-        selectedDayName = "Thursday".tr;
         return tableTime?.thu;
       default:
         return null;
@@ -203,10 +226,11 @@ class LectureController extends GetxController {
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 5.5) * 0.6,
-              child: SecText(
+              child: CustomText(
                 section.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(
+                    textHeader: AppTextHeaders.h5
+                ),
               ),
             )),
       );
@@ -215,7 +239,6 @@ class LectureController extends GetxController {
       selectedDepartment.value = sectionsData.first.id;
     }
   }
-
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
         .then((e) => e.data ?? []);
@@ -228,10 +251,11 @@ class LectureController extends GetxController {
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 8) * 0.6,
-              child: SecText(
+              child: CustomText(
                 level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(
+                    textHeader: AppTextHeaders.h5
+                ),
               ),
             )),
       );
@@ -240,7 +264,6 @@ class LectureController extends GetxController {
       selectedLevel.value = levelsData.first.id;
     }
   }
-
   Future<void> initYearDropdownMenuList({bool force = false}) async {
     List<String> yearData =
         await LectureServices.fetchLectureYears(hardFetch: force)
@@ -254,15 +277,18 @@ class LectureController extends GetxController {
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 3.3) * 0.75
                   : (Get.width / 7) * 0.6,
-              child: SecText(
+              child: CustomText(
                 year,
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(
+                  textHeader: AppTextHeaders.h5
+                ),
               ),
             )),
       );
     }
-    selectedYear.value = yearData.first;
+    if(yearData.isNotEmpty){
+      selectedYear.value = yearData.first;
+    }
   }
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
@@ -289,7 +315,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
@@ -320,7 +346,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           id: selectedLecture!,
           action: 'confirm');
       Navigator.of(Get.overlayContext!).pop();
@@ -339,7 +365,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           id: selectedLecture!,
           action: 'cancel');
       Navigator.of(Get.overlayContext!).pop();
@@ -362,15 +388,15 @@ class LectureController extends GetxController {
   }
 
   void submit() async {
-    if (adding) return;
-    adding = true;
+    if (submitting) return;
+    submitting = true;
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
       jsData["lecture_section_id"] = selectedDepartment.value;
       jsData["lecture_level_id"] = selectedLevel.value;
       jsData["year"] = selectedYear.value ?? "2024";
       jsData["term"] = selectedTerm.value;
-      jsData["lecture_day"] = selectedDayName;
+      jsData["lecture_day"] = selectedDayName.value;
       ((subjectId.value?.isNotEmpty ?? false) &&
               subjectId.value != "Unknown".tr)
           ? jsData["subject_id"] = subjectId.value
@@ -397,7 +423,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value ?? "2024",
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           data: jsData);
 
       Navigator.of(Get.overlayContext!).pop();
@@ -415,7 +441,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           data: jsData,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
@@ -433,7 +459,7 @@ class LectureController extends GetxController {
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
-          day: selectedDayName,
+          day: selectedDayName.value,
           data: jsData,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
@@ -446,7 +472,8 @@ class LectureController extends GetxController {
         showSnakeBar(message: "Replace failed");
       }
     }
-    adding = false;
+    submitting = false;
+    popCardClear();
   }
 
   Future<void> getSubjects() async {

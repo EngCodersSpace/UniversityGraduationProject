@@ -42,7 +42,7 @@ class WebProfileView extends GetView<ProfileController> {
                       //     AppColors.linkTextColor.withOpacity(0.4),
                       //   ],
                       // ),
-                      color: AppColors.inverseCardColor.withOpacity(0.2),
+                      color: AppColors.inverseCardColor.withValues(alpha:0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Stack(

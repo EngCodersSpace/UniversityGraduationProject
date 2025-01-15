@@ -238,7 +238,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         Container(
                           decoration: BoxDecoration(
                               color:
-                                  AppColors.inverseCardColor.withOpacity(0.2),
+                                  AppColors.inverseCardColor.withValues(alpha:0.2),
                               border: Border.all(width: 1, color: Colors.black),
                               borderRadius: BorderRadius.circular(10)),
                           child: Column(

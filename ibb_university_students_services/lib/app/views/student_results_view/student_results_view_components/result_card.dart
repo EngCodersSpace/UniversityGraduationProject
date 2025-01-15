@@ -35,7 +35,7 @@ class ResultCard extends StatelessWidget {
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: (type == "even")?AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
+            color: (type == "even")?AppColors.inverseCardColor.withValues(alpha:0.6):AppColors.inverseCardColor,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black26,

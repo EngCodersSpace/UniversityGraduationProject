@@ -116,35 +116,35 @@ class LectureCard extends GetView<LectureController> {
                                         value: "TemporaryReplace",
                                         child: CustomText(
                                           "Temporary Replace".tr,
-                                          style: AppTextStyles.secStyle(
+                                          style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Edit",
                                         child: CustomText(
                                           "Edit".tr,
-                                          style: AppTextStyles.secStyle(
+                                          style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
-                                          style: AppTextStyles.secStyle(
+                                          style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Confirm",
                                         child: CustomText(
                                           "Confirm".tr,
-                                          style: AppTextStyles.secStyle(
+                                          style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
                                     PopupMenuItem(
                                         value: "Cancel",
                                         child: CustomText(
                                           "Cancel".tr,
-                                          style: AppTextStyles.secStyle(
+                                          style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3),
                                         )),
                                   ],

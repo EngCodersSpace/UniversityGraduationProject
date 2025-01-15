@@ -34,10 +34,10 @@ class WebLoginView extends GetView<LoginController> {
               fit: BoxFit.fill),
         ),
         Container(
-          color: AppColors.coverColor.withOpacity(0.0),
+          color: AppColors.coverColor.withValues(alpha:0.0),
         ),
         Container(
-          color: AppColors.coverColor.withOpacity(0.0),
+          color: AppColors.coverColor.withValues(alpha:0.0),
         ),
         SingleChildScrollView(
           child: Column(

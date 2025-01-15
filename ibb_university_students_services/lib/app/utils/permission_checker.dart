@@ -18,7 +18,7 @@ class PermissionUtils {
       "Assignments": ["add", "edit","delete", "view"],
     },
     "admin": {
-      "Lecturers": ["add", "delete", "view"],
+      "Lecturers": ["add", "delete", "view","showOldTables"],
       "Exams": ["add", "delete", "view"],
       "Assignments": ["add", "edit","delete", "doctorView"],
     }

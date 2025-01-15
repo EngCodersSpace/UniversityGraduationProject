@@ -7,7 +7,6 @@ import 'package:ibb_university_students_services/app/services/downloder/download
 import 'package:ibb_university_students_services/app/services/hive_services/hive_services.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/services/app_data_services.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

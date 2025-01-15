@@ -26,7 +26,7 @@ class NotificationCard extends StatelessWidget {
       alignment: Alignment.topRight,
       children: [
         Card(
-            color: AppColors.inverseCardColor.withOpacity(0.93),
+            color: AppColors.inverseCardColor.withValues(alpha:0.93),
             elevation: 6,
             child: Container(
               width: double.maxFinite,

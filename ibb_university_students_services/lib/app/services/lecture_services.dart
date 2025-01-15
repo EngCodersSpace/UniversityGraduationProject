@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
@@ -22,14 +23,12 @@ class LectureServices {
   static const int _changeStateError = 612;
   static const int _fetchYearsError = 619;
 
-  static Box<Map<String, Map<int, Lecture>>>? _lecturesBox;
+  static Box<LecturesCache>? _lecturesBox;
   static List<String>? _years;
 
   static Future<void> openBox() async {
-    _lecturesBox =
-        await Hive.openBox<Map<String, Map<int, Lecture>>>("lectureBox");
-    // await _lecturesBox?.clear();
-    // Box  = await Hive.openBox('');
+    _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
+    await _lecturesBox?.clear();
   }
 
   static Future<void> closeBox() async {
@@ -44,16 +43,11 @@ class LectureServices {
     required String term,
     bool hardFetch = false,
   }) async {
-    await openBox();
-    print("heree_____________________");
-    print("${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-    // var cachedDayLectures =  _lecturesBox!.get("${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-    var cachedDayLectures =  Map<String, Map<int, Lecture>>.from(_lecturesBox?.get("t1",defaultValue: {})??{});
-    print(cachedDayLectures);
-    if ((cachedDayLectures != null)&&
-        !hardFetch) {
+    LecturesCache? cachedDayLectures = _lecturesBox?.get(
+        "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
+    if ((cachedDayLectures != null) && !hardFetch) {
       return Result(
-          data: TableDays.fromJson(cachedDayLectures),
+          data: TableDays.fromJson(cachedDayLectures.data),
           hasError: false,
           statusCode: 200);
     }
@@ -62,27 +56,31 @@ class LectureServices {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
       if (response?.statusCode == 200) {
-        Map<String, Map<int, Lecture>> dayLectures = {};
+        LecturesCache dayLectures = LecturesCache(
+            key:
+                "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures",
+            data: {});
+
         for (String term in (response?.data["data"] as Map).keys) {
           for (String day in (response?.data["data"][term] as Map).keys) {
-              dayLectures[day] = {};
+            dayLectures.data[day] = {};
             for (Map<String, dynamic> jsLecture in response?.data["data"][term]
                 [day]) {
               Subject? subject = await SubjectServices.fetchSubject(
                       id: jsLecture["subject_id"])
                   .then((e) => e.data);
               Lecture lecture = Lecture.fromJson(jsLecture, subject: subject);
-              dayLectures[day]?[lecture.id] = lecture;
+              dayLectures.data[day]?[lecture.id] = lecture;
             }
           }
-          await _lecturesBox?.put(
-              "t1",
-              dayLectures);
 
-          closeBox();
+          await _lecturesBox?.put(
+            dayLectures.key,
+            dayLectures,
+          );
         }
         return Result(
-            data: TableDays.fromJson(dayLectures),
+            data: TableDays.fromJson(dayLectures.data),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -121,10 +119,13 @@ class LectureServices {
                 id: response?.data["data"]["subject_id"])
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["data"], subject: subject);
-        Map<String, Map<int, Lecture>>? dayLectures = await _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term}_Lectures");
-        if(dayLectures != null){
-          dayLectures[day]?[newLecture.id] = newLecture;
-          await _lecturesBox?.put("${sectionId}_${levelId}_${year}_${term}_Lectures", dayLectures);
+        LecturesCache? cachedDayLectures = _lecturesBox?.get(
+            "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
+        cachedDayLectures?.data[day]?[newLecture.id] = newLecture;
+        if (cachedDayLectures != null) {
+          await _lecturesBox?.put(
+              "${sectionId}_${levelId}_${year}_${term}_Lectures",
+              cachedDayLectures);
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -157,27 +158,31 @@ class LectureServices {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
-    Map<String, Map<int, Lecture>>? dayLectures = await _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term}_Lectures");
+    LecturesCache? cachedDayLectures = _lecturesBox?.get(
+        "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
     try {
       response = await HttpProvider.put("update-lecture?id=$id", data: data);
       if (response?.statusCode == 200) {
         Subject? subject;
-        if (dayLectures?[day]?[id]?.subject?.id !=
+        if (cachedDayLectures?.data[day]?[id]?.subject?.id !=
             data["subject_id"]) {
           subject = await SubjectServices.fetchSubject(id: data["subject_id"])
               .then((e) => e.data);
         }
 
-        dayLectures?[day]?[id]
+        cachedDayLectures?.data[day]?[id]
             ?.updateFromJson(data, subject: subject);
-        await _lecturesBox?.put("${sectionId}_${levelId}_${year}_${term}_Lectures", dayLectures??{});
-
+        if (cachedDayLectures != null) {
+          await _lecturesBox?.put(
+              "${sectionId}_${levelId}_${year}_${term}_Lectures",
+              cachedDayLectures);
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: dayLectures?[day]?[id],
+          data: cachedDayLectures?.data[day]?[id],
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
@@ -203,12 +208,17 @@ class LectureServices {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      Map<String, Map<int, Lecture>>? dayLectures = await _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term}_Lectures");
+      LecturesCache? cachedDayLectures = _lecturesBox?.get(
+          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
+
       response = await HttpProvider.delete("delete-lecture?id=$id");
       if (response?.statusCode == 200) {
-        dayLectures?[day]
-            ?.remove(id);
-        await _lecturesBox?.put("${sectionId}_${levelId}_${year}_${term}_Lectures", dayLectures??{});
+        cachedDayLectures?.data[day]?.remove(id);
+        if (cachedDayLectures != null) {
+          await _lecturesBox?.put(
+              "${sectionId}_${levelId}_${year}_${term}_Lectures",
+              cachedDayLectures);
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -240,17 +250,21 @@ class LectureServices {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      Map<String, Map<int, Lecture>>? dayLectures = await _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term}_Lectures");
+      LecturesCache? cachedDayLectures = _lecturesBox?.get(
+          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
       response = await HttpProvider.post("changeLecStatus-lecture",
           data: {"id": 7, "action": action});
       if (response?.statusCode == 200) {
-        dayLectures?[day]?[id]?.lectureStatus =
-            (action == "confirm")
-                ? true
-                : (action == "cancel")
-                    ? false
-                    : null;
-        await _lecturesBox?.put("${sectionId}_${levelId}_${year}_${term}_Lectures", dayLectures??{});
+        cachedDayLectures?.data[day]?[id]?.lectureStatus = (action == "confirm")
+            ? true
+            : (action == "cancel")
+                ? false
+                : null;
+        if (cachedDayLectures != null) {
+          await _lecturesBox?.put(
+              "${sectionId}_${levelId}_${year}_${term}_Lectures",
+              cachedDayLectures);
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -283,7 +297,7 @@ class LectureServices {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      Map<String, Map<int, Lecture>>? dayLectures = await _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term}_Lectures");
+      LecturesCache? cachedDayLectures = _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
       response =
           await HttpProvider.post("replaceOne-lecture?id=$id", data: data);
 
@@ -294,10 +308,14 @@ class LectureServices {
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["replacedLecture"],
             subject: subject);
-        dayLectures?[day]?[newLecture.id] = newLecture;
-        dayLectures?[day]
+        cachedDayLectures?.data[day]?[newLecture.id] = newLecture;
+        cachedDayLectures?.data[day]
             ?.remove(id);
-        await _lecturesBox?.put("${sectionId}_${levelId}_${year}_${term}_Lectures", dayLectures??{});
+        if (cachedDayLectures != null) {
+          await _lecturesBox?.put(
+              "${sectionId}_${levelId}_${year}_${term}_Lectures",
+              cachedDayLectures);
+        }
 
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -320,9 +338,10 @@ class LectureServices {
   static Future<Result<List<String>>> fetchLectureYears({
     bool hardFetch = false,
   }) async {
-    if (_years != null && !hardFetch) {
+    Box lecturesYearsBox = await Hive.openBox<List<String>>("YearsBox");
+    if (lecturesYearsBox.get("lectureYears") != null && !hardFetch) {
       return Result(
-        data: _years,
+        data: lecturesYearsBox.get("lectureYears"),
         statusCode: 200,
         hasError: false,
         message: "successful",
