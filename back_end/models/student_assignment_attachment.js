@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
     ],
     hooks:{
       beforeValidate:(record)=>{
-        record.attachment_hash=crypto.createHash('sha256').update(record.attachment).digest('hex');
+        record.attachment_hash=crypto.createHash('md5').update(record.attachment).digest('hex');
       },
     },
   });

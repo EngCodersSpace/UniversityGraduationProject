@@ -11,18 +11,9 @@ const createFolderIfNotExists = async (folderPath) => {
     }
 };
 
-// const validCategories = ["Lecture", "ExamForm", "Reference"];
-
-// Configure multer storage
 const storage = multer.diskStorage({
     destination: async (req, file, cb) => {
         console.log('Processing file:', file); 
-        // const {category}= req.body;
-
-        // if (!category || !validCategories.includes(category)) {
-        //     return cb(new Error("Invalid or missing category."), false);
-        // }
-        // const categoryFolder =  path.resolve(__dirname, '../storage/library', category, 'books');
         const categoryFolder =  path.resolve(__dirname, '../storage' ,'temp');
 
         await createFolderIfNotExists(categoryFolder);
@@ -37,7 +28,6 @@ const storage = multer.diskStorage({
     },
 });
 
-// Configure multer upload middleware
 const upload = multer({
     storage,
     fileFilter: (req, file, cb) => {
