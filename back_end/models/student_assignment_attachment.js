@@ -52,11 +52,11 @@ module.exports = (sequelize, DataTypes) => {
         fields: ['student_assignment_id', 'attachment_hash'],
       },
     ],
-    hooks:{
-      beforeValidate:(record)=>{
-        record.attachment_hash=crypto.createHash('md5').update(record.attachment).digest('hex');
-      },
-    },
+    // hooks:{
+    //   beforeValidate:(record)=>{
+    //     record.attachment_hash=crypto.createHash('md5').update(record.attachment).digest('hex');
+    //   },
+    // },
   });
   return student_assignment_attachment;
 };
