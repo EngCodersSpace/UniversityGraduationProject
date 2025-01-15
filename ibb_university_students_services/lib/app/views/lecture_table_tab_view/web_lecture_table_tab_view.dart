@@ -59,9 +59,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         child: Center(
                           child: Obx(
                             () => DropdownButton(
-                              items: controller.departments,
+                              items: controller.sections,
                               onChanged: controller.changeDepartment,
-                              value: controller.selectedDepartment.value,
+                              value: controller.selectedSection.value,
                               underline: const SizedBox(),
                               iconEnabledColor: AppColors.mainCardColor,
                               dropdownColor: AppColors.inverseCardColor,

@@ -44,7 +44,7 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomText("${controller.mode} Assignment",
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2)),
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -58,7 +58,7 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(
                                     width: 5,
                                   ),
@@ -93,7 +93,7 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                               width: Get.width * 0.28,
                                               child: CustomText(
                                                 subjectI.subjectName ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                                 softWrap: false,
                                               )),
                                         ));
@@ -106,7 +106,7 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                           value: subjectI.id,
                                           child:  Column(
                                             children: [
-                                              CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                              CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                               // Divider(color: AppColors.highlightTextColor,)
                                             ],
                                           )
@@ -130,13 +130,13 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Date".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Date".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 controller: controller.dateController,
                                 // validator: controller.validateDate,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dateFocus,
                                 readOnly: true,
@@ -161,12 +161,12 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 controller: controller.timeController,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 // validator: controller.validateTime,
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
@@ -192,7 +192,7 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Day".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Day".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               Container(
@@ -215,27 +215,27 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                     items: [
                                       DropdownMenuItem<String>(
                                         value: "Saturday",
-                                        child:  CustomText("Saturday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Saturday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                       DropdownMenuItem<String>(
                                         value: "Sunday",
-                                        child:  CustomText("Sunday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Sunday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                       DropdownMenuItem<String>(
                                         value: "Monday",
-                                        child:  CustomText("Monday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Monday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                       DropdownMenuItem<String>(
                                         value: "Tuesday",
-                                        child:  CustomText("Tuesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Tuesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                       DropdownMenuItem<String>(
                                         value: "Wednesday",
-                                        child:  CustomText("Wednesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Wednesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                       DropdownMenuItem<String>(
                                         value: "Thursday",
-                                        child:  CustomText("Thursday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                        child:  CustomText("Thursday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                       ),
                                     ],
                                   )),
@@ -256,12 +256,12 @@ class PopUpIAddAndUpdateAssignmentsCard extends GetView<ExamTableController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 controller: controller.hallController,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 // validator: controller.validateEntryYear,
                                 labelText: "Hall".tr,
                                 focusNode: controller.hallFocus,

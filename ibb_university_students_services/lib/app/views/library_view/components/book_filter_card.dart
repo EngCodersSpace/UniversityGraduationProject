@@ -48,7 +48,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   child: CustomText(
                                     "Filters",
                                     style: AppTextStyles.highlightStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                 ),
                                 Row(
@@ -60,7 +60,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         child: CustomText(
                                           "Section:",
                                           style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     Container(
                                       decoration: BoxDecoration(
@@ -97,7 +97,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         child: CustomText(
                                           "Level:",
                                           style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     Container(
                                       decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   child: CustomText(
                                     "Sort",
                                     style: AppTextStyles.highlightStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                 ),
                                 Obx(
@@ -220,7 +220,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   "",
                                               style:
                                                   AppTextStyles.customColorStyle(
-                                                textHeader: AppTextHeaders.h2,
+                                                textHeader: AppTextHeaders.h2Bold,
                                                 color: (controller.sortDirection
                                                             .value ==
                                                         0)
@@ -251,7 +251,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   "",
                                               style:
                                               AppTextStyles.secStyle(
-                                                textHeader: AppTextHeaders.h2,
+                                                textHeader: AppTextHeaders.h2Bold,
                                               ),
                                             ),
                                           ),
@@ -279,7 +279,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                     "",
                                                 style:
                                                 AppTextStyles.secStyle(
-                                                  textHeader: AppTextHeaders.h2,
+                                                  textHeader: AppTextHeaders.h2Bold,
                                                 ),
                                               ),
                                             ),
@@ -309,7 +309,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                     "",
                                                 style:
                                                 AppTextStyles.customColorStyle(
-                                                  textHeader: AppTextHeaders.h2,
+                                                  textHeader: AppTextHeaders.h2Bold,
                                                   color: (Colors.blueAccent)
                                                 ),
                                               ),

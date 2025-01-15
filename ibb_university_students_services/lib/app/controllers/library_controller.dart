@@ -131,7 +131,7 @@ class LibraryController extends GetxController
           width: (Get.width / 3.3) * 0.75,
           child: CustomText(
             section.name ?? "unknown".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
           ),
         ),
       ));
@@ -153,7 +153,7 @@ class LibraryController extends GetxController
               width: (Get.width / 3.3) * 0.75,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
               ),
             )),
       );

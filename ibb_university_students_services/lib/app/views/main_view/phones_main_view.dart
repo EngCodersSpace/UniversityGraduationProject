@@ -31,8 +31,8 @@ class PhoneMainView extends GetView<MainController> {
             "Notification".tr,
             style: AppTextStyles.mainStyle(
                 textHeader: (Get.locale?.languageCode == 'en')
-                    ? AppTextHeaders.h6
-                    : AppTextHeaders.h5),
+                    ? AppTextHeaders.h6Bold
+                    : AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -46,7 +46,7 @@ class PhoneMainView extends GetView<MainController> {
           ),
           CustomText(
             "Lecture\nTable".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -59,7 +59,7 @@ class PhoneMainView extends GetView<MainController> {
           ),
           CustomText(
             "Home".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -69,7 +69,7 @@ class PhoneMainView extends GetView<MainController> {
           Icon(Icons.assignment_outlined, color: AppColors.mainTextColor),
           CustomText(
             "Assignments".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
           )
         ],
       ),
@@ -79,7 +79,7 @@ class PhoneMainView extends GetView<MainController> {
           Icon(Icons.person_outline_sharp, color: AppColors.mainTextColor),
           CustomText(
             "Profile".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h7),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h7Bold),
           )
         ],
       ),
@@ -124,7 +124,7 @@ class PhoneMainView extends GetView<MainController> {
                                   : null),
                           CustomText("Notification".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 0)
                                       ? Colors.transparent
                                       : AppColors.secTextColor)),
@@ -149,7 +149,7 @@ class PhoneMainView extends GetView<MainController> {
                           ),
                           CustomText("Lecture\nTable".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 1)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -171,7 +171,7 @@ class PhoneMainView extends GetView<MainController> {
                           ),
                           CustomText("Home".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 2)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -194,7 +194,7 @@ class PhoneMainView extends GetView<MainController> {
                                   : null),
                           CustomText("Assignments".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 3)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -215,7 +215,7 @@ class PhoneMainView extends GetView<MainController> {
                           CustomText(
                             "Profile".tr,
                             style: AppTextStyles.customColorStyle(
-                                textHeader: AppTextHeaders.h5,
+                                textHeader: AppTextHeaders.h5Bold,
                                 color: (controller.selectedIndex.value == 4)
                                     ? Colors.transparent
                                     : AppColors.secTextColor),

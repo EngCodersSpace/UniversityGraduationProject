@@ -96,7 +96,7 @@ class PaymentsCard extends StatelessWidget {
                     CustomText(
                       "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
                       style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h2),
+                          textHeader: AppTextHeaders.h2Bold),
                     ),
                     const SizedBox(
                       height: 8,
@@ -117,12 +117,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Total Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.totalAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
 
                         ],
@@ -133,12 +133,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Payed Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.payedAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
@@ -148,12 +148,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Remain Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.remainAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),

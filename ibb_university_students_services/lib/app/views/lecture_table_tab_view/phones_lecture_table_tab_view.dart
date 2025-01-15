@@ -53,42 +53,43 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                           Row(
                             children: [
                               SizedBox(
-                                  width: ((Get.width - 16) / 7) * 3.5,
+                                  width: ((Get.width - 16) / 7) * 4,
                                   child: Row(
                                     children: [
                                       Expanded(
-                                        child: SecText(
-                                          "${"Section".tr}:",
+                                        child: CustomText(
+                                          "${"Program".tr}:",
                                           textAlign: TextAlign.start,
-                                          fontWeight: FontWeight.bold,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         ),
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
                                           borderRadius:
-                                              BorderRadius.circular(24),
+                                          BorderRadius.circular(24),
                                         ),
-                                        width: Get.width / 3.3,
+                                        width: (((Get.width - 16) / 7) * 4)*0.63,
                                         child: Center(
                                           child: Obx(
-                                            () => DropdownButton(
-                                              items: controller.departments,
+                                                () => DropdownButton(
+                                              items: controller.sections,
                                               onChanged:
-                                                  controller.changeDepartment,
+                                              controller.changeDepartment,
                                               value: controller
-                                                  .selectedDepartment.value,
+                                                  .selectedSection.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                                  AppColors.mainCardColor,
+                                              AppColors.mainCardColor,
                                               dropdownColor:
-                                                  AppColors.inverseCardColor,
+                                              AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
                                       ),
                                       SizedBox(
-                                        width: ((Get.width - 16) / 7) * 0.1,
+                                        width: (((Get.width - 16) / 7) * 4) * 0.04,
                                       ),
                                     ],
                                   )),
@@ -96,35 +97,37 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                 width: ((Get.width - 16) / 7) * 0.4,
                               ),
                               SizedBox(
-                                  width: ((Get.width - 16) / 7) * 3.1,
+                                  width: ((Get.width - 16) / 7) * 2.5,
                                   child: Row(
                                     children: [
                                       Expanded(
-                                        child: SecText(
+                                        child: CustomText(
                                           "${"Level".tr}:",
-                                          fontWeight: FontWeight.bold,
                                           textAlign: TextAlign.start,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         ),
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
                                           borderRadius:
-                                              BorderRadius.circular(24),
+                                          BorderRadius.circular(24),
                                         ),
-                                        width: Get.width / 3.3,
+                                        width: (((Get.width - 16) / 7) * 2.5)*0.6,
                                         child: Center(
                                           child: Obx(
-                                            () => DropdownButton(
+                                                () => DropdownButton(
                                               items: controller.levels,
-                                              onChanged: controller.changeLevel,
+                                              onChanged:
+                                              controller.changeLevel,
                                               value: controller
                                                   .selectedLevel.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                                  AppColors.mainCardColor,
+                                              AppColors.mainCardColor,
                                               dropdownColor:
-                                                  AppColors.inverseCardColor,
+                                              AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -353,7 +356,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                 child: CustomText(
                               controller.fieldMessage.value,
                               style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h2),
+                                  textHeader: AppTextHeaders.h2Bold),
                             )),
                             IconButton(
                                 onPressed: () async => controller.refresh(),

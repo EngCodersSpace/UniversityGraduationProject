@@ -73,7 +73,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           child: CustomText(
                             "Create Date".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ),
                         Row(
@@ -89,7 +89,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                               child: CustomText(
                                 "${content.value?.assignmentDate}".tr,
                                 style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3),
+                                    textHeader: AppTextHeaders.h3Bold),
                               ),
                             ),
                             if ((PermissionUtils.checkPermission(
@@ -110,14 +110,14 @@ class AssignmentsCard extends GetView<ExamTableController> {
                                         child: CustomText(
                                           "Edit".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                   ],
                                   child: Icon(Icons.more_vert_outlined,
@@ -148,7 +148,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             "${"Doctor".tr}:",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
@@ -156,7 +156,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             content.value?.doctor?.name ?? "unknown".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           )
                         ],
                       ),
@@ -168,7 +168,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             "${"Due Date".tr}:",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
@@ -176,7 +176,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             content.value?.dueDate ?? "00:00:00",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
@@ -184,7 +184,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             (content.value?.assignmentDay ?? "").tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),

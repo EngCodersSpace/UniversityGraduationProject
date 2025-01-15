@@ -35,7 +35,7 @@ class AddAttachmentsCard extends GetView<AssignmentsTabController> {
                         CustomText(
                           ("Selected Attachments").tr,
                           style: AppTextStyles.secStyle(
-                              textHeader: AppTextHeaders.h1),
+                              textHeader: AppTextHeaders.h1Bold),
                         ),
                         const SizedBox(
                           height: 8,
@@ -77,7 +77,7 @@ class AddAttachmentsCard extends GetView<AssignmentsTabController> {
                                                     child: CustomText(
                                                       "${i+1}",
                                                       style: AppTextStyles.mainStyle(
-                                                          textHeader: AppTextHeaders.h2),
+                                                          textHeader: AppTextHeaders.h2Bold),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4,),
@@ -89,7 +89,7 @@ class AddAttachmentsCard extends GetView<AssignmentsTabController> {
                                                           ""}",
                                                       textAlign: TextAlign.start,
                                                       style: AppTextStyles.secStyle(
-                                                          textHeader: AppTextHeaders.h3),
+                                                          textHeader: AppTextHeaders.h3Bold),
                                                     ),
                                                   ),
                                                   IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: AppColors.inverseCardColor,))

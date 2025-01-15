@@ -31,7 +31,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               CrossAxisAlignment.start,
               children: [
                 CustomText("Section".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)),
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold)),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -49,7 +49,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                               .section
                               ?.name ??
                               "Unknown".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold,height: 0)),
                     ),
                   ],
                 ),
@@ -73,7 +73,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               CrossAxisAlignment.start,
               children: [
                 CustomText("Academic Degree".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold)
                 ),
                 Row(
                   children: [
@@ -87,7 +87,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                         (controller.user as Doctor)
                             .academicDegree ??
                             "Unknown".tr,
-                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold,height: 0)),
                   ],
                 ),
               ],
@@ -111,7 +111,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
               children: [
                 CustomText(
                   "Administrative Position".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
+                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold)
                 ),
                 Row(
                   children: [
@@ -125,7 +125,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                         (controller.user as Doctor)
                             .administrativePosition ??
                             "Unknown".tr,
-                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold,height: 0)),
                   ],
                 ),
               ],

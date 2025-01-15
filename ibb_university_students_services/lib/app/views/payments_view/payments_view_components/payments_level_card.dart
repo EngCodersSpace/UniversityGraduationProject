@@ -18,7 +18,7 @@ class PaymentLevelCard extends GetView {
     return ExpansionTile(
       title: CustomText(
         title,
-        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2),
+        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2Bold),
       ),
       backgroundColor: AppColors.inverseCardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -30,15 +30,15 @@ class PaymentLevelCard extends GetView {
       children: [
         CustomText(
           title,
-          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2),
+          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2Bold),
         ),
         CustomText(
           title,
-          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2),
+          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2Bold),
         ),
         CustomText(
           title,
-          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2),
+          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2Bold),
         ),
       ],
     );

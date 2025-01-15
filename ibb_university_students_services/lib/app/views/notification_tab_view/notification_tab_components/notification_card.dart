@@ -38,7 +38,7 @@ class NotificationCard extends StatelessWidget {
                     child: CustomText(
                       " the title:",
                       style:
-                          AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1),
+                          AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -47,7 +47,7 @@ class NotificationCard extends StatelessWidget {
                     child: CustomText(
                       message,
                       style: AppTextStyles.mainStyle(
-                        textHeader: AppTextHeaders.h3,
+                        textHeader: AppTextHeaders.h3Bold,
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -68,7 +68,7 @@ class NotificationCard extends StatelessWidget {
                         child: CustomText(
                           "By: $author",
                           style: AppTextStyles.secStyle(
-                              textHeader: AppTextHeaders.h5),
+                              textHeader: AppTextHeaders.h5Bold),
                         ),
                       ),
                       Container(
@@ -81,7 +81,7 @@ class NotificationCard extends StatelessWidget {
                         child: CustomText(
                           "At: $time",
                           style: AppTextStyles.secStyle(
-                              textHeader: AppTextHeaders.h5),
+                              textHeader: AppTextHeaders.h5Bold),
                         ),
                       ),
                     ],

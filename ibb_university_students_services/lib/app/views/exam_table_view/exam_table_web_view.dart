@@ -7,6 +7,8 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/exam_card.dart';
 
 import '../../components/custom_text.dart';
+import '../../components/custom_text_v2.dart';
+import '../../styles/text_styles.dart';
 
 class ExamTableWebView extends GetView<ExamTableController> {
   double width = Get.width;
@@ -36,11 +38,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                           children: [
                             Row(
                               children: [
-                                SecText(
+                                CustomText(
                                   "Exams ",
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  textColor: AppColors.highlightTextColor,
+                                  style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
                                 ),
                               ],
                             ),
@@ -81,9 +81,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SecText(
+                        CustomText(
                           "Section".tr,
-                          fontWeight: FontWeight.bold,
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                         ),
                         SizedBox(
                           width: width * 0.008,
@@ -98,9 +98,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                           child: Center(
                             child: Obx(
                               () => DropdownButton(
-                                items: controller.departments,
+                                items: controller.sections,
                                 onChanged: controller.changeDepartment,
-                                value: controller.selectedDepartment.value,
+                                value: controller.selectedSection.value,
                                 underline: const SizedBox(),
                                 iconEnabledColor: AppColors.mainCardColor,
                                 dropdownColor: AppColors.inverseCardColor,
@@ -111,9 +111,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                         SizedBox(
                           width: width * 0.03,
                         ),
-                        SecText(
+                        CustomText(
                           "Level".tr,
-                          fontWeight: FontWeight.bold,
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                         ),
                         SizedBox(
                           width: width * 0.008,
@@ -139,9 +139,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                         SizedBox(
                           width: width * 0.03,
                         ),
-                        SecText(
+                        CustomText(
                           "Term".tr,
-                          fontWeight: FontWeight.bold,
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                         ),
                         SizedBox(
                           width: width * 0.008,
@@ -167,9 +167,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                         SizedBox(
                           width: width * 0.03,
                         ),
-                        SecText(
+                        CustomText(
                           "Year".tr,
-                          fontWeight: FontWeight.bold,
+                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                         ),
                         SizedBox(
                           width: width * 0.008,

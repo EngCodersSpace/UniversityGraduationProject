@@ -103,7 +103,7 @@ class Arabic {
     'Close':'إغلاق',
     'Level':'المستوى',
     'Division':'الشعبة',
-    'Section':'القسم',
+    'Program':'التخصص',
     'Year':'السنة',
     'Term':'الفصل',
     'Time':'الوقت',

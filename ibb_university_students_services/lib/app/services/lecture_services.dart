@@ -28,12 +28,10 @@ class LectureServices {
 
   static Future<void> openBox() async {
     _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
-    await _lecturesBox?.clear();
   }
 
   static Future<void> closeBox() async {
     await _lecturesBox?.close();
-    // Box  = await Hive.openBox('');
   }
 
   static Future<Result<TableDays>> fetchTableTime({

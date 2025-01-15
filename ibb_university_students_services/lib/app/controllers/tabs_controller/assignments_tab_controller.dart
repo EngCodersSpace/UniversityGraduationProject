@@ -160,7 +160,7 @@ class AssignmentsTabController extends GetxController {
               value: id,
               child: CustomText(
                 subject.subjectName ?? "unknown".tr,
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h4),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
               )),
         );
         selectedSubjectsItems.add(DropdownMenuItem<String>(
@@ -169,7 +169,7 @@ class AssignmentsTabController extends GetxController {
             width: (Get.width/3)-30,
             child: CustomText(
               subject.subjectName ?? "",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
               textAlign: TextAlign.center,
               softWrap: false,
             ),

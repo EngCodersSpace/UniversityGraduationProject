@@ -26,12 +26,12 @@ class LectureController extends GetxController {
   TableDays? tableTime;
   RxInt selected = 3.obs;
   RxString selectedDayName = "Sunday".obs;
-  Rx<int?> selectedDepartment = Rx(null);
+  Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
-  List<DropdownMenuItem<int>> departments = [];
+  List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
@@ -59,6 +59,7 @@ class LectureController extends GetxController {
             ))),
   ];
   Rx<Locale?> currentLocale = Get.locale.obs;
+
   //Lecture popCard variables
   Map<String, Subject>? subjects;
   Rx<String?> subjectId = Rx(null);
@@ -78,15 +79,15 @@ class LectureController extends GetxController {
 
   @override
   void onInit() async {
-    ever(LocaleListener.currentLocal, (local)async{
+    ever(LocaleListener.currentLocal, (local) async {
       await initSectionDropdownMenuList();
     });
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (departments.isNotEmpty)
-        ? selectedDepartment.value = departments.first.value
+    (sections.isNotEmpty)
+        ? selectedSection.value = sections.first.value
         : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchTableData();
@@ -96,31 +97,35 @@ class LectureController extends GetxController {
 
   @override
   void refresh({bool force = true}) async {
+    loadState.value = true;
     await fetchTableData(force: force);
-    loadState.value = false;
     super.refresh();
+    loadState.value = false;
   }
 
   Future<void> fetchTableData({bool force = false}) async {
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuList();
+      selectedLevel.value = levels.first.value;
     }
 
-    if (selectedDepartment.value == null) {
+    if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
+      selectedSection.value = sections.first.value;
     }
 
     if (selectedYear.value == null) {
       await initYearDropdownMenuList();
+      selectedYear.value = years.first.value;
     }
 
-    if (selectedDepartment.value == null ||
+    if (selectedSection.value == null ||
         selectedLevel.value == null ||
         selectedYear.value == null) {
       return;
     }
     Result res = await LectureServices.fetchTableTime(
-        sectionId: selectedDepartment.value!,
+        sectionId: selectedSection.value!,
         levelId: selectedLevel.value!,
         year: selectedYear.value!,
         term: selectedTerm.value,
@@ -144,7 +149,7 @@ class LectureController extends GetxController {
 
   void changeDepartment(int? val) async {
     if (val == null) return;
-    selectedDepartment.value = val;
+    selectedSection.value = val;
     await fetchTableData();
   }
 
@@ -215,54 +220,43 @@ class LectureController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-        await SectionServices.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? []);
-    departments = [];
+    await SectionServices.fetchSections(hardFetch: force).then((e) => e.data ?? []);
+    sections = [];
     for (Section section in sectionsData) {
-      departments.add(
+      sections.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 3.3) * 0.75
-                  : (Get.width / 5.5) * 0.6,
+              width: (((Get.width - 16) / 7) * 4)*0.48,
               child: CustomText(
                 section.name ?? "unknown",
-                style: AppTextStyles.mainStyle(
-                    textHeader: AppTextHeaders.h5
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
-    if (sectionsData.isNotEmpty) {
-      selectedDepartment.value = sectionsData.first.id;
-    }
+    selectedSection.value = sectionsData.first.id;
   }
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
-    List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+    List<Level> levelsData =
+    await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
+    // List<String> yearData =
+    //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 3.3) * 0.75
-                  : (Get.width / 8) * 0.6,
+              width: (((Get.width - 16) / 7) * 2.5)*0.35,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(
-                    textHeader: AppTextHeaders.h5
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
-    if (levelsData.isNotEmpty) {
-      selectedLevel.value = levelsData.first.id;
-    }
+    selectedLevel.value = levelsData.first.id;
   }
   Future<void> initYearDropdownMenuList({bool force = false}) async {
     List<String> yearData =
@@ -279,15 +273,10 @@ class LectureController extends GetxController {
                   : (Get.width / 7) * 0.6,
               child: CustomText(
                 year,
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
-    }
-    if(yearData.isNotEmpty){
-      selectedYear.value = yearData.first;
     }
   }
 
@@ -307,11 +296,11 @@ class LectureController extends GetxController {
       Get.dialog(const PopUpIAddAndUpdateLectureCard());
     } else if (val == "Delete") {
       if (selectedLevel.value == null) return;
-      if (selectedDepartment.value == null) return;
+      if (selectedSection.value == null) return;
       if (selectedYear.value == null) return;
       selectedLecture = data?["id"];
       Result<void> res = await LectureServices.deleteLecture(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
@@ -342,7 +331,7 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureServices.changeLectureState(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
@@ -361,7 +350,7 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureServices.changeLectureState(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
@@ -392,7 +381,7 @@ class LectureController extends GetxController {
     submitting = true;
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
-      jsData["lecture_section_id"] = selectedDepartment.value;
+      jsData["lecture_section_id"] = selectedSection.value;
       jsData["lecture_level_id"] = selectedLevel.value;
       jsData["year"] = selectedYear.value ?? "2024";
       jsData["term"] = selectedTerm.value;
@@ -419,7 +408,7 @@ class LectureController extends GetxController {
     }
     if (mode == "Add") {
       Result<Lecture> res = await LectureServices.createLecture(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value ?? "2024",
           term: selectedTerm.value,
@@ -437,7 +426,7 @@ class LectureController extends GetxController {
     } else if (mode == "Edit") {
       if (selectedLecture == null) return;
       Result<Lecture> res = await LectureServices.updateLecture(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,
@@ -455,7 +444,7 @@ class LectureController extends GetxController {
     } else if (mode == "Replace") {
       if (selectedLecture == null) return;
       Result<Lecture> res = await LectureServices.tempReplaceLecture(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
           term: selectedTerm.value,

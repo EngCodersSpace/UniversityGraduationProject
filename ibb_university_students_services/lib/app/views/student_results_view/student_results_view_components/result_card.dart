@@ -23,12 +23,12 @@ class ResultCard extends StatelessWidget {
     if(grad.value.isAbsent == true){
       subjectName = "|  ${grad.value.subject?.subjectName??""}";
     }
-    TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
+    TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold);
     if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
         48) {
-      style = AppTextStyles.failedAndErrorStyle(textHeader: AppTextHeaders.h5);
+      style = AppTextStyles.failedAndErrorStyle(textHeader: AppTextHeaders.h5Bold);
     } else {
-      style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
+      style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold);
     }
     return Obx(() => Container(
           width: double.maxFinite,

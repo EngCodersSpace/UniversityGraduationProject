@@ -16,7 +16,7 @@ class PaymentsPhoneView extends GetView<PaymentsController> {
       appBar: AppBar(
         backgroundColor: AppColors.tabBackColor,
         title: CustomText("Student Payments",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),),
       ),
       body: Container(
         color: AppColors.tabBackColor,

@@ -75,12 +75,12 @@ class PhoneLoginView extends GetView<LoginController> {
                           CustomText(
                             "IBB",
                             style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h1),
+                                textHeader: AppTextHeaders.h1Bold),
                           ),
                           CustomText(
                             "UNIVERSITY",
                             style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h1),
+                                textHeader: AppTextHeaders.h1Bold),
                           ),
                           SizedBox(
                             height: height * 0.05,
@@ -140,7 +140,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                             "English",
                                             style: AppTextStyles.secStyle(
                                                 textHeader:
-                                                AppTextHeaders.h3),
+                                                AppTextHeaders.h3Bold),
                                           ),
                                         ]
                                             : [
@@ -148,7 +148,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                           CustomText("العربية",
                                               style: AppTextStyles.secStyle(
                                                   textHeader:
-                                                  AppTextHeaders.h3)),
+                                                  AppTextHeaders.h3Bold)),
                                         ],
                                       ),
                                     ),
@@ -218,16 +218,16 @@ class PhoneLoginView extends GetView<LoginController> {
                                   onPressed: () => controller.forgotPassword,
                                   child: CustomText("Forgot Password?".tr,
                                       style: AppTextStyles.linkStyle(
-                                          textHeader: AppTextHeaders.h4)),
+                                          textHeader: AppTextHeaders.h3Normal)),
                                 ),
                               ),
                               if (controller.loggingFiled.value) ...[
                                 CustomText("Login Filed",
                                     style: AppTextStyles.failedAndErrorStyle(
-                                        textHeader: AppTextHeaders.h4)),
+                                        textHeader: AppTextHeaders.h3Normal)),
                                 CustomText(controller.loggingFiledMessage.value,
                                     style: AppTextStyles.failedAndErrorStyle(
-                                        textHeader: AppTextHeaders.h4)),
+                                        textHeader: AppTextHeaders.h3Normal)),
                               ],
                               SizedBox(
                                 height: height * 0.05,
@@ -268,7 +268,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 children: [
                                   CustomText("Remember me".tr,
                                       style: AppTextStyles.linkStyle(
-                                          textHeader: AppTextHeaders.h4)),
+                                          textHeader: AppTextHeaders.h3Normal)),
                                   Checkbox(
                                       value: controller.rememberMe.value,
                                       onChanged: controller.toggleRememberMe),

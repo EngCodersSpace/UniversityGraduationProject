@@ -45,7 +45,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomText("${controller.mode} Lecture",
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2)),
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -59,7 +59,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(
                                     width: 5,
                                   ),
@@ -95,7 +95,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                               width: Get.width * 0.28,
                                               child: CustomText(
                                                 subjectI.subjectName ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                                 softWrap: false,
                                               )),
                                         ));
@@ -108,7 +108,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                             value: subjectI.id,
                                             child:  Column(
                                               children: [
-                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
                                                 // Divider(color: AppColors.highlightTextColor,)
                                               ],
                                             )
@@ -132,7 +132,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Doctor".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Doctor".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(
                                     width: 5,
                                   ),
@@ -166,7 +166,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                               width: Get.width * 0.28,
                                               child: CustomText(
                                                 instructorI.name ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
+                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                                 softWrap: false,
                                               )),
                                         ));
@@ -177,7 +177,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                       for(Instructor instructorI in (controller.subjects?[controller.subjectId.value]?.instructors?.values.toList())??[])...[
                                         DropdownMenuItem<int?>(
                                             value: instructorI.id,
-                                            child:  CustomText(instructorI.name??"unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),)
+                                            child:  CustomText(instructorI.name??"unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),)
                                         ),
                                       ]
                                     ],
@@ -198,7 +198,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
@@ -229,7 +229,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Duration".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Duration".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
@@ -257,7 +257,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(

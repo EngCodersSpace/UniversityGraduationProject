@@ -60,7 +60,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   CustomText(
                                     "Subject".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
@@ -98,17 +98,17 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   CustomText(
                                     "Section".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                   CustomText(
                                     "Level".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                   CustomText(
                                     "Subject".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                 ],
                               ),
@@ -203,7 +203,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                           CustomText(
                             "Assignments".tr,
                             style: AppTextStyles.highlightStyle(
-                                textHeader: AppTextHeaders.h2),
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((PermissionUtils.checkPermission(
                               target: "Assignments", action: "add")))
@@ -244,7 +244,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                         child: CustomText(
                                       controller.fieldMessage.value,
                                       style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h2),
+                                          textHeader: AppTextHeaders.h2Bold),
                                     )),
                                     IconButton(
                                         onPressed: () async =>

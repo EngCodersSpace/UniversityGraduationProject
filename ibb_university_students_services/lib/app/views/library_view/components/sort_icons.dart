@@ -28,7 +28,7 @@ class SortIcon extends GetView {
           ),
           CustomText(
             title,
-            style: AppTextStyles.customColorStyle(textHeader: AppTextHeaders.h5, color: (selected)?Colors.blueAccent:AppColors.inverseCardColor,),
+            style: AppTextStyles.customColorStyle(textHeader: AppTextHeaders.h5Bold, color: (selected)?Colors.blueAccent:AppColors.inverseCardColor,),
           ),
         ],
       ),
