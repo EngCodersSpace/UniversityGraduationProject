@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/services/exam_services.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
@@ -50,7 +51,7 @@ class ExamTableController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
+    await ExamServices.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
@@ -64,8 +65,10 @@ class ExamTableController extends GetxController {
   }
 
   @override
-  void refresh() {
-    fetchExamsData(force: true);
+  void refresh() async{
+    Get.dialog(const PopUpLoadingCard());
+    await fetchExamsData(force: true);
+    Navigator.of(Get.overlayContext!).pop();
     super.refresh();
   }
 

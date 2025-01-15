@@ -106,17 +106,23 @@ class LectureController extends GetxController {
   Future<void> fetchTableData({bool force = false}) async {
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuList();
-      selectedLevel.value = levels.first.value;
+      if(levels.isNotEmpty) {
+        selectedLevel.value = levels.first.value;
+      }
     }
 
     if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
-      selectedSection.value = sections.first.value;
+      if(sections.isNotEmpty) {
+        selectedSection.value = sections.first.value;
+      }
     }
 
     if (selectedYear.value == null) {
       await initYearDropdownMenuList();
-      selectedYear.value = years.first.value;
+      if(years.isNotEmpty) {
+        selectedYear.value = years.first.value;
+      }
     }
 
     if (selectedSection.value == null ||

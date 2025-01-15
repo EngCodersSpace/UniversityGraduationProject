@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import '../models/helper_models/result.dart';
+import '../utils/internet_connection_cheker.dart';
 import 'http_provider/http_provider.dart';
 
 class SectionServices {
@@ -21,7 +22,7 @@ class SectionServices {
   static Future<Result<List<Section>>> fetchSections({
     bool hardFetch = false,
   }) async {
-    if ((_sectionsBox?.isNotEmpty ?? false) && !hardFetch) {
+    if ((_sectionsBox?.isNotEmpty ?? false) && !hardFetch &&!(await checkInternetConnection())) {
       return Result(
         data: _sectionsBox?.values.toList(),
         statusCode: 200,

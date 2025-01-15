@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import '../models/helper_models/result.dart';
+import '../utils/internet_connection_cheker.dart';
 import 'http_provider/http_provider.dart';
 
 
@@ -23,7 +24,7 @@ class LevelServices {
     bool hardFetch = false,
   }) async {
     if ((_levelBox?.values.isNotEmpty??true) &&
-        !hardFetch) {
+        !hardFetch &&!(await checkInternetConnection())) {
       return Result(
         data: _levelBox?.values.toList()??[],
         statusCode: 200,

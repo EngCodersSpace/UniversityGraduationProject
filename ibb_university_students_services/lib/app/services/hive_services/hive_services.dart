@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/exam_model/exam_model.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
@@ -35,6 +36,7 @@ class HiveServices{
     Hive.registerAdapter(StudyPlanElementAdapter());
     Hive.registerAdapter(StudyPlaneAdapter());
     Hive.registerAdapter(LecturesCacheAdapter());
+    Hive.registerAdapter(ExamsCacheAdapter());
   }
   static openGlobalBoxes()async{
     await UserServices.openBox();

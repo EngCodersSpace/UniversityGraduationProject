@@ -10,6 +10,7 @@ import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/days_table.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
+import '../utils/internet_connection_cheker.dart';
 import 'http_provider/http_provider.dart';
 
 class LectureServices {
@@ -24,7 +25,6 @@ class LectureServices {
   static const int _fetchYearsError = 619;
 
   static Box<LecturesCache>? _lecturesBox;
-  static List<String>? _years;
 
   static Future<void> openBox() async {
     _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
@@ -43,7 +43,7 @@ class LectureServices {
   }) async {
     LecturesCache? cachedDayLectures = _lecturesBox?.get(
         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-    if ((cachedDayLectures != null) && !hardFetch) {
+    if ((cachedDayLectures != null) && !hardFetch && !(await checkInternetConnection())) {
       return Result(
           data: TableDays.fromJson(cachedDayLectures.data),
           hasError: false,
@@ -337,9 +337,11 @@ class LectureServices {
     bool hardFetch = false,
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("YearsBox");
-    if (lecturesYearsBox.get("lectureYears") != null && !hardFetch) {
+    List<String>? years = lecturesYearsBox.get("lectureYears");
+    if (years != null && !hardFetch && !(await checkInternetConnection())) {
+      await lecturesYearsBox.close();
       return Result(
-        data: lecturesYearsBox.get("lectureYears"),
+        data: years,
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -349,19 +351,23 @@ class LectureServices {
     try {
       response = await HttpProvider.get("lecture/year");
       if (response?.statusCode == 200) {
-        _years = List<String>.from(response?.data["data"]);
+        List<String> years = List<String>.from(response?.data["data"]);
+        await lecturesYearsBox.put("lectureYears",years);
+        lecturesYearsBox.close();
         return Result(
-            data: _years,
+            data: years,
             hasError: true,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
       }
+      lecturesYearsBox.close();
       return Result(
           data: null,
           hasError: true,
           statusCode: response?.statusCode ?? _fetchYearsError,
           message: response?.data["message"] ?? "error");
     } catch (error) {
+      lecturesYearsBox.close();
       return Result(
           hasError: true,
           statusCode: _fetchYearsError,

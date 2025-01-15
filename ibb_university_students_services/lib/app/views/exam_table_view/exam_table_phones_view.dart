@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
@@ -188,7 +187,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           ? Get.height * 0.7
                           : Get.height * 0.73,
                       child: RefreshIndicator(
-                        onRefresh: () async => controller.refresh(),
+                        onRefresh: () async =>  controller.refresh(),
                         child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             padding: EdgeInsets.symmetric(

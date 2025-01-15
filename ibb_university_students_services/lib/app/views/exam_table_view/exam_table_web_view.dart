@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/exam_card.dart';
-
-import '../../components/custom_text.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/text_styles.dart';
 

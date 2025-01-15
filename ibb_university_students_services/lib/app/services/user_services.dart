@@ -6,6 +6,7 @@ import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
+import '../utils/internet_connection_cheker.dart';
 import 'http_provider/http_provider.dart';
 
 class UserServices {
@@ -137,7 +138,7 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    if (_userBox?.get('currentUser') != null && !hardFetch) {
+    if (_userBox?.get('currentUser') != null && !hardFetch && !(await checkInternetConnection())) {
       return Result(
         data: _userBox?.get('currentUser'),
         statusCode: 200,
