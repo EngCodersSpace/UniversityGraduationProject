@@ -1,5 +1,5 @@
 
-const {student,assignment, assignment_attachment,student_assignment,student_assignment_attachment} = require("../models");
+const {student,assignment, assignment_attachment,student_assignment,student_assignment_attachment,user} = require("../models");
 const { uploadFields  } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
@@ -77,6 +77,42 @@ exports.uploadAssignment = [
 
         fs.renameSync(tempFilePath, finalFilePath);
 
+        const Students = await student.findAll({
+          where: { student_level_id : req.body.level_id},
+          include:[
+            { model:user,as:'user',
+              where :{user_section_id : req.body.section_id},
+              attributes:[],
+            },
+          ]
+        });
+    
+        if (Students.length === 0) {
+          continue;;
+        }
+
+        const studentAssignments = [];
+        const studentAssignmentAttachments = [];
+
+        for (const student of Students) {
+          const studentAssignment = await student_assignment.create({
+            student_id: student.student_id,
+            assignment_id: assignmentRecord.id,
+            status: false,
+          });
+
+          studentAssignments.push(studentAssignment);
+
+          const studentAttachment = {
+            student_assignment_id: studentAssignment.id,
+            attachment: finalFilePath,
+            attachment_hash: hash,
+          };
+          studentAssignmentAttachments.push(studentAttachment);
+        }
+
+        await student_assignment_attachment.bulkCreate(studentAssignmentAttachments);
+
         uploadedAssignments.push(assignmentRecord);
         uploadAssignmentAttachment.push(assignAttach);
       }
@@ -95,6 +131,38 @@ exports.uploadAssignment = [
     }
   }
 ];
+
+
+
+
+
+
+// assign a task to some students      deleted 
+exports.assignTaskToStudents =async (req , res) => {
+  try {
+    const Students = await student.findAll({
+      where: {section_id : req.body.section_id, level_id : req.body.level_id},
+    });
+
+    if (Students.length === 0) {
+      console.log('');
+      return;
+    }
+
+    const assignments = Students.map((student) => ({
+      student_id: student.student_id,
+      assignment_id: req.body.assignment_id,
+      status: false, 
+    }));
+
+    await student_assignment.bulkCreate(assignments);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving student assignment", error: error.message });
+  }
+};
+
 
 
 
