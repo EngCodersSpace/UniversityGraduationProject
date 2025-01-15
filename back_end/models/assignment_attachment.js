@@ -1,9 +1,10 @@
 'use strict';
+const crypto = require('crypto');
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class student_assignment extends Model {
+  class assignment_attachment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,28 +12,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      student_assignment.hasMany(models.student_assignment_attachment, {
-        foreignKey: 'student_assignment_id',
+      assignment_attachment.belongsTo(models.assignment, {
+        foreignKey: 'assignment_id',
       });
     }
   }
-  student_assignment.init({
+  assignment_attachment.init({
+
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    student_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'students',
-        key: 'student_id',
-      },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
+
     assignment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -43,18 +36,31 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    attachment: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-
-
+    attachment_hash:{
+      type:DataTypes.STRING(64),
+      allowNull:false,
+    }
 
 
   }, {
     sequelize,
-    modelName: 'student_assignment',
+    modelName: 'assignment_attachment',
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['assignment_id', 'attachment_hash'],
+      },
+    ],
+    hooks:{
+      beforeValidate:(record)=>{
+        record.attachment_hash=crypto.createHash('sha256').update(record.attachment).digest('hex');
+      },
+    },
   });
-  return student_assignment;
+  return assignment_attachment;
 };
