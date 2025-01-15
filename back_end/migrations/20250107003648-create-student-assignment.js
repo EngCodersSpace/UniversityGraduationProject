@@ -34,10 +34,7 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
-      attachment: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
+
 
 
 
