@@ -85,11 +85,10 @@ exports.getAllSubject=async (req, res) => {
 exports.getSubjectByfilter = async (req,res) => {
 
   try {
-    const { section_id, level_id , study_plan_id} = req.query;
+    const { section_id, level_id } = req.query;
     const whereClause = {};
     if (section_id) whereClause.section_id = section_id;
     if (level_id) whereClause.level_id = level_id;
-    if (study_plan_id) whereClause.study_plan_id = study_plan_id;
 
     const Subjects= await study_plan_elment.findAll({
       where:whereClause,
