@@ -12,7 +12,6 @@ import '../../controllers/tabs_controller/lecture_table_tab_view_controller.dart
 import '../../styles/app_colors.dart';
 import 'lecture_table_tab_components/lecture_card.dart';
 
-
 class PhoneLectureTableTabView extends GetView<LectureController> {
   PhoneLectureTableTabView({super.key});
 
@@ -65,22 +64,23 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius:
+                                              BorderRadius.circular(24),
                                         ),
                                         width: Get.width / 3.3,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
+                                            () => DropdownButton(
                                               items: controller.departments,
                                               onChanged:
-                                              controller.changeDepartment,
+                                                  controller.changeDepartment,
                                               value: controller
                                                   .selectedDepartment.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                              AppColors.mainCardColor,
+                                                  AppColors.mainCardColor,
                                               dropdownColor:
-                                              AppColors.inverseCardColor,
+                                                  AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -107,20 +107,22 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius:
+                                              BorderRadius.circular(24),
                                         ),
                                         width: Get.width / 3.3,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
+                                            () => DropdownButton(
                                               items: controller.levels,
                                               onChanged: controller.changeLevel,
-                                              value: controller.selectedLevel.value,
+                                              value: controller
+                                                  .selectedLevel.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                              AppColors.mainCardColor,
+                                                  AppColors.mainCardColor,
                                               dropdownColor:
-                                              AppColors.inverseCardColor,
+                                                  AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -138,7 +140,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                   width: ((Get.width - 16) / 7) * 3.5,
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: SecText(
@@ -150,20 +152,22 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius:
+                                              BorderRadius.circular(24),
                                         ),
                                         width: Get.width / 3.3,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
+                                            () => DropdownButton(
                                               items: controller.years,
                                               onChanged: controller.changeYear,
-                                              value: controller.selectedYear.value,
+                                              value:
+                                                  controller.selectedYear.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                              AppColors.mainCardColor,
+                                                  AppColors.mainCardColor,
                                               dropdownColor:
-                                              AppColors.inverseCardColor,
+                                                  AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -190,20 +194,22 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
-                                          borderRadius: BorderRadius.circular(24),
+                                          borderRadius:
+                                              BorderRadius.circular(24),
                                         ),
                                         width: Get.width / 3.3,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
+                                            () => DropdownButton(
                                               items: controller.terms,
                                               onChanged: controller.changeTerm,
-                                              value: controller.selectedTerm.value,
+                                              value:
+                                                  controller.selectedTerm.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                              AppColors.mainCardColor,
+                                                  AppColors.mainCardColor,
                                               dropdownColor:
-                                              AppColors.inverseCardColor,
+                                                  AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -222,7 +228,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     onPressed: () {
                                       (controller.selected.value > 0)
                                           ? controller.selectedDayChange(
-                                          controller.selected.value - 1)
+                                              controller.selected.value - 1)
                                           : null;
                                     },
                                     icon: Icon(
@@ -230,19 +236,22 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                       color: AppColors.inverseIconColor,
                                     )),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     DayCard(
                                         height: height * 0.09,
                                         text: "sat".tr,
-                                        selected: (controller.selected.value == 0),
+                                        selected:
+                                            (controller.selected.value == 0),
                                         onPress: () {
                                           controller.selectedDayChange(0);
                                         }),
                                     DayCard(
                                       height: height * 0.09,
                                       text: "sun".tr,
-                                      selected: (controller.selected.value == 1),
+                                      selected:
+                                          (controller.selected.value == 1),
                                       onPress: () {
                                         controller.selectedDayChange(1);
                                       },
@@ -250,28 +259,32 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     DayCard(
                                         height: height * 0.09,
                                         text: "mon".tr,
-                                        selected: (controller.selected.value == 2),
+                                        selected:
+                                            (controller.selected.value == 2),
                                         onPress: () {
                                           controller.selectedDayChange(2);
                                         }),
                                     DayCard(
                                         height: height * 0.09,
                                         text: "tue".tr,
-                                        selected: (controller.selected.value == 3),
+                                        selected:
+                                            (controller.selected.value == 3),
                                         onPress: () {
                                           controller.selectedDayChange(3);
                                         }),
                                     DayCard(
                                         height: height * 0.09,
                                         text: "wed".tr,
-                                        selected: (controller.selected.value == 4),
+                                        selected:
+                                            (controller.selected.value == 4),
                                         onPress: () {
                                           controller.selectedDayChange(4);
                                         }),
                                     DayCard(
                                         height: height * 0.09,
                                         text: "thu".tr,
-                                        selected: (controller.selected.value == 5),
+                                        selected:
+                                            (controller.selected.value == 5),
                                         onPress: () {
                                           controller.selectedDayChange(5);
                                         }),
@@ -281,7 +294,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     onPressed: () {
                                       (controller.selected.value < 5)
                                           ? controller.selectedDayChange(
-                                          controller.selected.value + 1)
+                                              controller.selected.value + 1)
                                           : null;
                                     },
                                     icon: Icon(Icons.arrow_forward_ios,
@@ -299,8 +312,12 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                       children: [
                         SecText(controller.selectedDayName,
                             textColor: AppColors.highlightTextColor),
-                        if((PermissionUtils.checkPermission(target: "Lectures",action: "add")))
-                        CustomButton(onPress: controller.addButtonClick,text: "Add Lecture",),
+                        if ((PermissionUtils.checkPermission(
+                            target: "Lectures", action: "add")))
+                          CustomButton(
+                            onPress: controller.addButtonClick,
+                            text: "Add Lecture",
+                          ),
                       ],
                     ),
                   ),
@@ -310,35 +327,67 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
                     width: width,
-                    height: (PermissionUtils.checkPermission(target: "Lectures",action: "add"))?height * 0.58:height * 0.62,
+                    height: (PermissionUtils.checkPermission(
+                            target: "Lectures", action: "add"))
+                        ? height * 0.58
+                        : height * 0.62,
                     child: RefreshIndicator(
-                      onRefresh: ()async=>controller.refresh(),
+                      onRefresh: () async => controller.refresh(),
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: width * 0.05),
-                        child: Obx(()=>Column(
-                          children: [
-                            SizedBox(height: height * 0.03),
-                            if(controller.selectedDay(controller.selected.value)?.isEmpty??true)...[
-                              SizedBox(height: height*0.2,),
-                              Center(child: CustomText(controller.fieldMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
-                              IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
-                            ],
-                            for (int i = 0;
-                            i < (controller.selectedDay(controller.selected.value)?.length ?? 0);
-                            i++) ...[
-                              LectureCard(
-                                content: Rx(controller.selectedDay(controller.selected.value)?.values.toList()[i]),
-                                height: height * 0.56 * (1 / 2),
-                              ),
-                              if (i < ((controller.selectedDay(controller.selected.value)?.length ?? 0) - 1))
-                                SizedBox(
-                                  height: height * 0.03,
-                                )
-                            ]
-                          ],
-                        )),
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                        child: Obx(() => Column(
+                              children: [
+                                SizedBox(height: height * 0.03),
+                                if (controller
+                                        .selectedDay(controller.selected.value)
+                                        ?.isEmpty ??
+                                    true) ...[
+                                  SizedBox(
+                                    height: height * 0.2,
+                                  ),
+                                  Center(
+                                      child: CustomText(
+                                    controller.fieldMessage.value,
+                                    style: AppTextStyles.secStyle(
+                                        AppTextHeaders.h2),
+                                  )),
+                                  IconButton(
+                                      onPressed: () async =>
+                                          controller.refresh(),
+                                      icon: const Icon(
+                                        Icons.refresh,
+                                        size: 40,
+                                      ))
+                                ],
+                                for (int i = 0;
+                                    i <
+                                        (controller
+                                                .selectedDay(
+                                                    controller.selected.value)
+                                                ?.length ??
+                                            0);
+                                    i++) ...[
+                                  LectureCard(
+                                    content: Rx(controller
+                                        .selectedDay(controller.selected.value)
+                                        ?.values
+                                        .toList()[i]),
+                                    height: height * 0.56 * (1 / 2),
+                                  ),
+                                  if (i <
+                                      ((controller
+                                                  .selectedDay(
+                                                      controller.selected.value)
+                                                  ?.length ??
+                                              0) -
+                                          1))
+                                    SizedBox(
+                                      height: height * 0.03,
+                                    )
+                                ]
+                              ],
+                            )),
                       ),
                     )),
               ),

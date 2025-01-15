@@ -23,7 +23,7 @@ class PaymentsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Container(
           padding: const EdgeInsets.only(bottom: 10),
-          margin:  const EdgeInsets.symmetric(horizontal: 16),
+          margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: AppColors.mainCardColor,
             border: Border(
@@ -74,10 +74,12 @@ class PaymentsCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.mainCardColor,
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(32)),
+                                const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText("Level ${(studentFee.value.levelId??0)+1}".tr),
+                          child: SecText(
+                              "Level ${(studentFee.value.levelId ?? 0) + 1}"
+                                  .tr),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -116,15 +118,12 @@ class PaymentsCard extends StatelessWidget {
                         children: [
                           CustomText(
                             "Total Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
                           CustomText(
                             "${studentFee.value.totalAmount ?? "Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
-
                         ],
                       ),
                       Column(
@@ -132,13 +131,11 @@ class PaymentsCard extends StatelessWidget {
                         children: [
                           CustomText(
                             "Payed Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
                           CustomText(
                             "${studentFee.value.payedAmount ?? "Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
                         ],
                       ),
@@ -147,18 +144,15 @@ class PaymentsCard extends StatelessWidget {
                         children: [
                           CustomText(
                             "Remain Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
                           CustomText(
                             "${studentFee.value.remainAmount ?? "Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                            style: AppTextStyles.secStyle(AppTextHeaders.h3),
                           ),
                         ],
                       ),
-                    ]
-                ),
+                    ]),
               )
             ],
           ),

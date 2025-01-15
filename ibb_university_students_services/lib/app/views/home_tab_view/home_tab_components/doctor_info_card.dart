@@ -9,7 +9,6 @@ import '../../../styles/text_styles.dart';
 class DoctorInfoCard extends GetView<HomeTabController> {
   const DoctorInfoCard({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -21,35 +20,32 @@ class DoctorInfoCard extends GetView<HomeTabController> {
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth:(Get.width - 2) * 0.31,
+              maxWidth: (Get.width - 2) * 0.31,
               minWidth: (Get.width - 2) * 0.23,
             ),
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText("Department".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)),
+                    style: AppTextStyles.highlightStyle(
+                        textHeader: AppTextHeaders.h5)),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.groups_sharp,
-                        color:
-                        AppColors.secTextColor,
+                    Icon(
+                      Icons.groups_sharp,
+                      color: AppColors.secTextColor,
                     ),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
                     Flexible(
                       child: CustomText(
-                          (controller.user
-                          as Doctor)
-                              .section
-                              ?.name ??
+                          (controller.user as Doctor).section?.name ??
                               "Unknown".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                          style: AppTextStyles.secStyle(AppTextHeaders.h5,
+                              height: 0)),
                     ),
                   ],
                 ),
@@ -67,27 +63,23 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           SizedBox(
             width: (Get.width - 2) * 0.26,
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText("Academic Degree".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
-                ),
+                    style: AppTextStyles.highlightStyle(
+                        textHeader: AppTextHeaders.h5)),
                 Row(
                   children: [
-                    Icon(Icons.card_membership,
-                        color:
-                        AppColors.secTextColor),
+                    Icon(Icons.card_membership, color: AppColors.secTextColor),
                     SizedBox(
                       width: Get.width * 0.025,
                     ),
                     CustomText(
-                        (controller.user as Doctor)
-                            .academicDegree ??
+                        (controller.user as Doctor).academicDegree ??
                             "Unknown".tr,
-                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(AppTextHeaders.h5,
+                            height: 0)),
                   ],
                 ),
               ],
@@ -104,28 +96,23 @@ class DoctorInfoCard extends GetView<HomeTabController> {
           SizedBox(
             width: (Get.width - 2) * 0.26,
             child: Column(
-              mainAxisAlignment:
-              MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(
-                  "Academic Position".tr,
-                    style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5)
-                ),
+                CustomText("Academic Position".tr,
+                    style: AppTextStyles.highlightStyle(
+                        textHeader: AppTextHeaders.h5)),
                 Row(
                   children: [
-                    Icon(Icons.manage_accounts,
-                        color:
-                        AppColors.secTextColor),
+                    Icon(Icons.manage_accounts, color: AppColors.secTextColor),
                     SizedBox(
                       width: Get.width * 0.02,
                     ),
                     CustomText(
-                        (controller.user as Doctor)
-                            .administrativePosition ??
+                        (controller.user as Doctor).administrativePosition ??
                             "Unknown".tr,
-                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(AppTextHeaders.h5,
+                            height: 0)),
                   ],
                 ),
               ],

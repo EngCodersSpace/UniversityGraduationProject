@@ -42,8 +42,8 @@ class StudentInfoCard extends GetView<HomeTabController> {
                         child: CustomText(
                       (controller.user as Student).section?.name ??
                           "Unknown".tr,
-                          style: AppTextStyles.secStyle(
-                              textHeader: AppTextHeaders.h5,height: 0),
+                      style:
+                          AppTextStyles.secStyle(AppTextHeaders.h5, height: 0),
                     ))
                   ],
                 ),
@@ -75,8 +75,8 @@ class StudentInfoCard extends GetView<HomeTabController> {
                     ),
                     CustomText(
                         "${"Level".tr} ${(controller.user as Student).level?.name ?? "??".tr}",
-                        style: AppTextStyles.secStyle(
-                            textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(AppTextHeaders.h5,
+                            height: 0)),
                   ],
                 ),
               ],
@@ -108,8 +108,8 @@ class StudentInfoCard extends GetView<HomeTabController> {
                       width: Get.width * 0.025,
                     ),
                     CustomText("0/0",
-                        style: AppTextStyles.secStyle(
-                            textHeader: AppTextHeaders.h5,height: 0)),
+                        style: AppTextStyles.secStyle(AppTextHeaders.h5,
+                            height: 0)),
                   ],
                 ),
               ],

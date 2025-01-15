@@ -77,9 +77,12 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                           : CustomText(
                                               controller.user?.name?[0] ??
                                                   "".toUpperCase(),
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
-                                            ),
+                                              style: AppTextStyles.secStyle(
+                                                  TextHeaders(
+                                                      fontSize: 50,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  height: 0)),
                                     )
                                   ],
                                 ),
@@ -87,15 +90,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CustomText(
-                                      controller.user?.name ?? "",
+                                    CustomText(controller.user?.name ?? "",
                                         style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h1,height: 0)
-                                    ),
-                                    CustomText(
-                                      "ID : ${controller.user?.id}",
-                                        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                    )
+                                            AppTextHeaders.h1,
+                                            height: 0)),
+                                    CustomText("ID : ${controller.user?.id}",
+                                        style: AppTextStyles.secStyle(
+                                            AppTextHeaders.h3))
                                   ],
                                 ),
                               ],
@@ -120,13 +121,11 @@ class PhoneMainTab extends GetView<HomeTabController> {
                           height: height * 0.03,
                         ),
                         Padding(
-                          padding:  EdgeInsets.symmetric(
-                            horizontal: Get.width*0.02
-                          ),
-                          child: CustomText(
-                            "News".tr,
-                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2)
-                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Get.width * 0.02),
+                          child: CustomText("News".tr,
+                              style: AppTextStyles.highlightStyle(
+                                  textHeader: AppTextHeaders.h2)),
                         ),
                       ],
                     ),
@@ -174,10 +173,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomText(
-                          "Services".tr,
-                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2)
-                        ),
+                        CustomText("Services".tr,
+                            style: AppTextStyles.highlightStyle(
+                                textHeader: AppTextHeaders.h2)),
                         SizedBox(
                           height: height * 0.01,
                         ),
@@ -194,10 +192,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/book_6874557.png"),
                                 ),
-                                CustomText(
-                                  "Library".tr,
-                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                ),
+                                CustomText("Library".tr,
+                                    style: AppTextStyles.secStyle(
+                                        AppTextHeaders.h3)),
                               ],
                             ),
                             Column(
@@ -211,14 +208,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
                                   CustomText(
-                                    "${"Schedule".tr}\n${"Lectures".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                      "${"Schedule".tr}\n${"Lectures".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ] else ...[
                                   CustomText(
-                                    "${"Lectures".tr}\n${"Schedule".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                      "${"Lectures".tr}\n${"Schedule".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ]
                               ],
                             ),
@@ -231,10 +228,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/payment.png"),
                                 ),
-                                CustomText(
-                                  "Payments".tr,
-                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                ),
+                                CustomText("Payments".tr,
+                                    style: AppTextStyles.secStyle(
+                                        AppTextHeaders.h3)),
                               ],
                             ),
                             Column(
@@ -247,15 +243,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/credit-card.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  CustomText(
-                                    "${"Card".tr}\n${"Academic".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Card".tr}\n${"Academic".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ] else ...[
-                                  CustomText(
-                                    "${"Academic".tr}\n${"Card".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Academic".tr}\n${"Card".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ]
                               ],
                             ),
@@ -278,16 +272,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/a-.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  CustomText(
-                                      "${"Degrees".tr}\n${"Student".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
-
+                                  CustomText("${"Degrees".tr}\n${"Student".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ] else ...[
-                                  CustomText(
-                                      "${"Student".tr}\n${"Degrees".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Student".tr}\n${"Degrees".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ]
                               ],
                             ),
@@ -301,16 +292,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/result.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  CustomText(
-                                      "${"Degrees".tr}\n${"Student".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
-
+                                  CustomText("${"Degrees".tr}\n${"Student".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ] else ...[
-                                  CustomText(
-                                      "${"Student".tr}\n${"Degrees".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Student".tr}\n${"Degrees".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ]
                               ],
                             ),
@@ -324,15 +312,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       "assets/images/services_cards/exam_11776326.png"),
                                 ),
                                 if (Get.locale?.languageCode == "ar") ...[
-                                  CustomText(
-                                    "${"Schedule".tr}\n${"Exam".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Schedule".tr}\n${"Exam".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ] else ...[
-                                  CustomText(
-                                    "${"Exam".tr}\n${"Schedule".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                  ),
+                                  CustomText("${"Exam".tr}\n${"Schedule".tr}",
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ]
                               ],
                             ),
@@ -345,10 +331,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
-                                CustomText(
-                                  "Library".tr,
-                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)
-                                ),
+                                CustomText("Library".tr,
+                                    style: AppTextStyles.secStyle(
+                                        AppTextHeaders.h3)),
                               ],
                             ),
                           ],

@@ -54,7 +54,7 @@ class LectureCard extends GetView<LectureController> {
             children: [
               Container(
                 constraints: BoxConstraints(
-                  minHeight:height * 0.52,
+                  minHeight: height * 0.52,
                 ),
                 width: double.maxFinite,
                 padding: const EdgeInsets.all(20),
@@ -151,7 +151,9 @@ class LectureCard extends GetView<LectureController> {
                         // if(PermissionUtils.checkPermission("addLecture"))
                       ],
                     ),
-                    const SizedBox(height: 8,),
+                    const SizedBox(
+                      height: 8,
+                    ),
                     MainText(
                         content.value?.subject?.subjectName ?? "Unknown".tr),
                   ],

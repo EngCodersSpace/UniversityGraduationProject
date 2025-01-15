@@ -13,8 +13,6 @@ import '../../../utils/date_time_utils.dart';
 class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
   const PopUpIAddAndUpdateLectureCard({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -30,9 +28,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                 side: BorderSide(
                   color: AppColors.inverseCardColor,
                   width: 3,
-
-                )
-            ),
+                )),
             child: SizedBox(
                 height: Get.height * 0.6,
                 width: Get.width,
@@ -45,7 +41,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomText("${controller.mode} Lecture",
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2)),
+                              style: AppTextStyles.secStyle(AppTextHeaders.h2)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -59,64 +55,87 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Subject".tr,
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                   const SizedBox(
                                     width: 5,
                                   ),
                                 ],
                               ),
                               Container(
-                                width: Get.width*0.45,
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                width: Get.width * 0.45,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
                                     border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)
-                                ),
+                                    borderRadius: BorderRadius.circular(24)),
                                 child: Center(
-                                  child: Obx(()=>DropdownButton<String?>(
-                                    value: controller.subjectId.value,
-                                    icon: Icon(Icons.arrow_drop_down_sharp,
-                                        color: AppColors.inverseCardColor),
-                                    underline: const SizedBox(),
-                                    dropdownColor: AppColors.mainCardColor,
-                                    onChanged: (val) {
-                                      if(val == null)return;
-                                      controller.subjectId.value = val;
-                                      controller.doctorId.value = controller.subjects?[controller.subjectId.value]?.instructors?.values.first.id;
-                                    },
-                                    isExpanded: true,
-                                    menuWidth: Get.width*0.7,
-                                    selectedItemBuilder: (_){
-                                      List<Widget> items = [];
-                                      for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<String?>(
-                                          value: subjectI.id,
-                                          child: SizedBox(
-                                              width: Get.width * 0.28,
-                                              child: CustomText(
-                                                subjectI.subjectName ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
-                                                softWrap: false,
-                                              )),
-                                        ));
-                                      }
-                                      return items;
-                                    },
-                                    items: [
-                                      for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
-                                        DropdownMenuItem<String?>(
-                                            value: subjectI.id,
-                                            child:  Column(
-                                              children: [
-                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
-                                                // Divider(color: AppColors.highlightTextColor,)
-                                              ],
-                                            )
-                                        ),
-                                      ]
-                                    ],
-                                  )),
-                                ),)
+                                  child: Obx(() => DropdownButton<String?>(
+                                        value: controller.subjectId.value,
+                                        icon: Icon(Icons.arrow_drop_down_sharp,
+                                            color: AppColors.inverseCardColor),
+                                        underline: const SizedBox(),
+                                        dropdownColor: AppColors.mainCardColor,
+                                        onChanged: (val) {
+                                          if (val == null) return;
+                                          controller.subjectId.value = val;
+                                          controller.doctorId.value = controller
+                                              .subjects?[
+                                                  controller.subjectId.value]
+                                              ?.instructors
+                                              ?.values
+                                              .first
+                                              .id;
+                                        },
+                                        isExpanded: true,
+                                        menuWidth: Get.width * 0.7,
+                                        selectedItemBuilder: (_) {
+                                          List<Widget> items = [];
+                                          for (Subject subjectI in (controller
+                                                  .subjects?.values
+                                                  .toList()) ??
+                                              []) {
+                                            items.add(DropdownMenuItem<String?>(
+                                              value: subjectI.id,
+                                              child: SizedBox(
+                                                  width: Get.width * 0.28,
+                                                  child: CustomText(
+                                                    subjectI.subjectName ?? "",
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            AppTextHeaders.h3),
+                                                    softWrap: false,
+                                                  )),
+                                            ));
+                                          }
+                                          return items;
+                                        },
+                                        items: [
+                                          for (Subject subjectI in (controller
+                                                  .subjects?.values
+                                                  .toList()) ??
+                                              []) ...[
+                                            DropdownMenuItem<String?>(
+                                                value: subjectI.id,
+                                                child: Column(
+                                                  children: [
+                                                    CustomText(
+                                                      subjectI.subjectName ??
+                                                          "",
+                                                      style: AppTextStyles
+                                                          .secStyle(
+                                                              AppTextHeaders
+                                                                  .h3),
+                                                    ),
+                                                    // Divider(color: AppColors.highlightTextColor,)
+                                                  ],
+                                                )),
+                                          ]
+                                        ],
+                                      )),
+                                ),
+                              )
                             ],
                           ),
                           Row(
@@ -132,57 +151,80 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Doctor".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Doctor".tr,
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                   const SizedBox(
                                     width: 5,
                                   ),
                                 ],
                               ),
                               Container(
-                                width: Get.width*0.45,
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                width: Get.width * 0.45,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
                                     border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)
-                                ),
+                                    borderRadius: BorderRadius.circular(24)),
                                 child: Center(
-                                  child: Obx(()=>DropdownButton<int?>(
-                                    value: controller.doctorId.value,
-                                    icon: Icon(Icons.arrow_drop_down_sharp,
-                                        color: AppColors.inverseCardColor),
-                                    underline: const SizedBox(),
-                                    dropdownColor: AppColors.mainCardColor,
-                                    onChanged: (val) {
-                                      controller.doctorId.value = val;
-                                    },
-                                    isExpanded: true,
-                                    menuWidth: Get.width*0.7,
-                                    selectedItemBuilder: (_){
-                                      List<Widget> items = [];
-                                      for(Instructor instructorI in (controller.subjects?[controller.subjectId.value]?.instructors?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<int?>(
-                                          value: instructorI.id,
-                                          child: SizedBox(
-                                              width: Get.width * 0.28,
-                                              child: CustomText(
-                                                instructorI.name ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),
-                                                softWrap: false,
-                                              )),
-                                        ));
-                                      }
-                                      return items;
-                                    },
-                                    items: [
-                                      for(Instructor instructorI in (controller.subjects?[controller.subjectId.value]?.instructors?.values.toList())??[])...[
-                                        DropdownMenuItem<int?>(
-                                            value: instructorI.id,
-                                            child:  CustomText(instructorI.name??"unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),)
-                                        ),
-                                      ]
-                                    ],
-                                  )),
-                                ),)
+                                  child: Obx(() => DropdownButton<int?>(
+                                        value: controller.doctorId.value,
+                                        icon: Icon(Icons.arrow_drop_down_sharp,
+                                            color: AppColors.inverseCardColor),
+                                        underline: const SizedBox(),
+                                        dropdownColor: AppColors.mainCardColor,
+                                        onChanged: (val) {
+                                          controller.doctorId.value = val;
+                                        },
+                                        isExpanded: true,
+                                        menuWidth: Get.width * 0.7,
+                                        selectedItemBuilder: (_) {
+                                          List<Widget> items = [];
+                                          for (Instructor instructorI
+                                              in (controller
+                                                      .subjects?[controller
+                                                          .subjectId.value]
+                                                      ?.instructors
+                                                      ?.values
+                                                      .toList()) ??
+                                                  []) {
+                                            items.add(DropdownMenuItem<int?>(
+                                              value: instructorI.id,
+                                              child: SizedBox(
+                                                  width: Get.width * 0.28,
+                                                  child: CustomText(
+                                                    instructorI.name ?? "",
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            AppTextHeaders.h3),
+                                                    softWrap: false,
+                                                  )),
+                                            ));
+                                          }
+                                          return items;
+                                        },
+                                        items: [
+                                          for (Instructor instructorI
+                                              in (controller
+                                                      .subjects?[controller
+                                                          .subjectId.value]
+                                                      ?.instructors
+                                                      ?.values
+                                                      .toList()) ??
+                                                  []) ...[
+                                            DropdownMenuItem<int?>(
+                                                value: instructorI.id,
+                                                child: CustomText(
+                                                  instructorI.name ??
+                                                      "unknown".tr,
+                                                  style: AppTextStyles.secStyle(
+                                                      AppTextHeaders.h3),
+                                                )),
+                                          ]
+                                        ],
+                                      )),
+                                ),
+                              )
                             ],
                           ),
                           Row(
@@ -198,7 +240,9 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Time".tr,
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ],
                               ),
                               CustomTextFormField(
@@ -207,7 +251,8 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 labelText: "Time".tr,
                                 focusNode: controller.timeFocus,
                                 readOnly: true,
-                                onTap: () => DateTimeUtils.timePiker(context,controller.timeController),
+                                onTap: () => DateTimeUtils.timePiker(
+                                    context, controller.timeController),
                                 onFieldSubmitted: (e) {
                                   controller.durationFocus.requestFocus();
                                 },
@@ -215,7 +260,6 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                               ),
                             ],
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -229,7 +273,9 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Duration".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Duration".tr,
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ],
                               ),
                               CustomTextFormField(
@@ -240,7 +286,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 onFieldSubmitted: (e) {
                                   controller.entryYearFocus.requestFocus();
                                 },
-                                width: (Get.width-12)*0.46,
+                                width: (Get.width - 12) * 0.46,
                               ),
                             ],
                           ),
@@ -257,7 +303,9 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3)),
+                                  CustomText("Hall".tr,
+                                      style: AppTextStyles.secStyle(
+                                          AppTextHeaders.h3)),
                                 ],
                               ),
                               CustomTextFormField(
@@ -269,7 +317,7 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 onFieldSubmitted: (e) {
                                   controller.phoneFocus.requestFocus();
                                 },
-                                width: (Get.width-12)*0.46,
+                                width: (Get.width - 12) * 0.46,
                               ),
                             ],
                           ),
@@ -281,7 +329,8 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                 text: controller.mode,
                               ),
                               CustomButton(
-                                onPress: () => Navigator.of(Get.overlayContext!).pop(),
+                                onPress: () =>
+                                    Navigator.of(Get.overlayContext!).pop(),
                                 text: "Close",
                               ),
                             ],
@@ -294,6 +343,4 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
       ),
     );
   }
-
-
 }

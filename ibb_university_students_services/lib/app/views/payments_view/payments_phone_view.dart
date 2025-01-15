@@ -15,8 +15,10 @@ class PaymentsPhoneView extends GetView<PaymentsController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.tabBackColor,
-        title: CustomText("Student Payments",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),),
+        title: CustomText(
+          "Student Payments",
+          style: AppTextStyles.secStyle(AppTextHeaders.h2),
+        ),
       ),
       body: Container(
         color: AppColors.tabBackColor,
@@ -24,17 +26,21 @@ class PaymentsPhoneView extends GetView<PaymentsController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              for(int i = 0; i < 5; i++)...[
-                PaymentsCard(studentFee: Rx(StudentFee(id: 1,
-                    term: 2,
-                    levelId: i,
-                    payedAmount: 10000,
-                    totalAmount: 10000,
-                    paymentDate: "2024-10-10",
-                    paymentState: "Payed",
-                    receiptNumber: "1056896247",
-                    remainAmount: 0))),
-                const SizedBox(height: 24,)
+              for (int i = 0; i < 5; i++) ...[
+                PaymentsCard(
+                    studentFee: Rx(StudentFee(
+                        id: 1,
+                        term: 2,
+                        levelId: i,
+                        payedAmount: 10000,
+                        totalAmount: 10000,
+                        paymentDate: "2024-10-10",
+                        paymentState: "Payed",
+                        receiptNumber: "1056896247",
+                        remainAmount: 0))),
+                const SizedBox(
+                  height: 24,
+                )
               ]
             ],
           ),
