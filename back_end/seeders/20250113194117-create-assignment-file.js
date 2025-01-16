@@ -1,7 +1,7 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
-const { assignment_attachment, assignment } = require('../models');
+const { assignment_file, assignment } = require('../models');
 const crypto = require('crypto');
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
         const attachmentHash = crypto.createHash('sha256').update(attachment).digest('hex');
         
         
-        const existingAttachment = await assignment_attachment.findOne({
+        const existingAttachment = await assignment_file.findOne({
           where: {
             assignment_id: assignmentItem.id,
             attachment_hash: attachmentHash
@@ -37,13 +37,13 @@ module.exports = {
 
     
     if (attachments.length > 0) {
-      await assignment_attachment.bulkCreate(attachments);
+      await assignment_file.bulkCreate(attachments);
     }
   },
 
   down: async (queryInterface, Sequelize) => {
     
-    await assignment_attachment.destroy({ where: {}, truncate: false });
+    await assignment_file.destroy({ where: {}, truncate: false });
   }
 };
 

@@ -4,7 +4,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class assignment_attachment extends Model {
+  class student_assignment_file extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,25 +12,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      assignment_attachment.belongsTo(models.assignment, {
-        foreignKey: 'assignment_id',
+      student_assignment_file.belongsTo(models.student_assignment, {
+        foreignKey: 'student_assignment_id',
       });
     }
   }
-  assignment_attachment.init({
-
+  student_assignment_file.init({
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-
-    assignment_id: {
+    student_assignment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'assignments',
+        model: 'student_assignments',
         key: 'id',
       },
       onDelete: 'CASCADE',
@@ -44,16 +42,14 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING(64),
       allowNull:false,
     }
-
-
   }, {
     sequelize,
-    modelName: 'assignment_attachment',
+    modelName: 'student_assignment_file',
     timestamps: false,
     indexes: [
       {
         unique: true,
-        fields: ['assignment_id', 'attachment_hash'],
+        fields: ['student_assignment_id', 'attachment_hash'],
       },
     ],
     hooks:{
@@ -62,5 +58,5 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
-  return assignment_attachment;
+  return student_assignment_file;
 };
