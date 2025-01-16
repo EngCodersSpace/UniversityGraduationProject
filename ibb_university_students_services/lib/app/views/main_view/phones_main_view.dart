@@ -87,7 +87,20 @@ class PhoneMainView extends GetView<MainController> {
     return Obx(
       () => (!controller.loading.value)
           ? Scaffold(
-              body: screens[controller.selectedIndex.value],
+              body: Stack(
+                children: [
+                  screens[controller.selectedIndex.value],
+                  if(!controller.isConnect.value)...[
+                    Container(
+                      height: 35,
+                      width: double.maxFinite,
+                      color: Colors.grey,
+                      padding: const EdgeInsets.only(top: 8),
+                      child: CustomText("Offline Mode",style: AppTextStyles.mainStyle(),),
+                    )
+                  ],
+                ],
+              ),
               floatingActionButton: Container(
                 width: 70,
                 height: 70,

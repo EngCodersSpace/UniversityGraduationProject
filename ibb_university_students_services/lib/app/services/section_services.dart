@@ -22,7 +22,7 @@ class SectionServices {
   static Future<Result<List<Section>>> fetchSections({
     bool hardFetch = false,
   }) async {
-    if ((_sectionsBox?.isNotEmpty ?? false) && !hardFetch &&!(await checkInternetConnection())) {
+    if ((_sectionsBox?.isNotEmpty ?? false) && (!hardFetch|| !(await checkInternetConnection()))) {
       return Result(
         data: _sectionsBox?.values.toList(),
         statusCode: 200,

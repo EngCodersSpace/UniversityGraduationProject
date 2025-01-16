@@ -3,5 +3,5 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 Future<bool> checkInternetConnection() async {
   List<ConnectivityResult> connectivityResult =
   await (Connectivity().checkConnectivity());
-  return connectivityResult.contains(ConnectivityResult.none);
+  return !connectivityResult.contains(ConnectivityResult.none);
 }

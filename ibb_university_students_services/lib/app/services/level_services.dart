@@ -23,8 +23,7 @@ class LevelServices {
   static Future<Result<List<Level>>> fetchLevels({
     bool hardFetch = false,
   }) async {
-    if ((_levelBox?.values.isNotEmpty??true) &&
-        !hardFetch &&!(await checkInternetConnection())) {
+    if ((_levelBox?.values.isNotEmpty??true) &&(!hardFetch|| !(await checkInternetConnection())) ) {
       return Result(
         data: _levelBox?.values.toList()??[],
         statusCode: 200,

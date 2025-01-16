@@ -37,9 +37,8 @@ class ExamServices {
     bool hardFetch = false,
   }) async {
     ExamsCache? cachedExams = _examsBox?.get("${sectionId}_${levelId}_Exams");
-    if ((cachedExams != null) &&
-        !hardFetch &&
-        !(await checkInternetConnection())) {
+    if ((cachedExams != null) && (!hardFetch|| !(await checkInternetConnection())
+        )) {
       return Result(
         data: cachedExams.data,
         statusCode: 200,

@@ -27,8 +27,8 @@ class ProfileController extends GetxController {
     Get.find<MainController>().changeTabIndex(4);
   }
 
-  void logout() {
-    Get.offAllNamed("/login");
+  void logout() async{
+    await UserServices.userLogout();
   }
 
   @override

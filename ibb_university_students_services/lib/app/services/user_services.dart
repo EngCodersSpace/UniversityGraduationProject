@@ -108,37 +108,26 @@ class UserServices {
     }
   }
 
-  static Future<Result?> userLogout() async {
+  static Future<void> userLogout() async {
     Response? response;
     try {
-      response = await HttpProvider.post("auth/logout");
-      if (response?.statusCode == 200) {
+      response = await HttpProvider.post("logout");
+      if (response?.statusCode == 200 || true) {
         Box box = await Hive.openBox('rememberMe');
         await box.clear();
         await box.close();
         get_x.Get.offAllNamed("/login");
-        return null;
       }
-      return Result(
-        hasError: true,
-        statusCode: response?.statusCode ?? 603,
-        message: response?.data["message"] ?? "some thing wrong",
-        data: null,
-      );
+
     } catch (error) {
       if (kDebugMode) {
         print(error.toString());
       }
-      return Result(
-          hasError: true,
-          statusCode: 603,
-          message: error.toString(),
-          data: null);
     }
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    if (_userBox?.get('currentUser') != null && !hardFetch && !(await checkInternetConnection())) {
+    if (_userBox?.get('currentUser') != null && (!hardFetch|| !(await checkInternetConnection()))) {
       return Result(
         data: _userBox?.get('currentUser'),
         statusCode: 200,

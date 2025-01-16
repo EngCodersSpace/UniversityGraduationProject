@@ -138,7 +138,6 @@ class LectureController extends GetxController {
         hardFetch: force);
     if (res.statusCode == 200) {
       tableTime = res.data;
-      selected.refresh();
     } else if (res.statusCode == 404) {
       tableTime = null;
       fieldMessage.value = "this section and level not has Lectures";
@@ -146,11 +145,13 @@ class LectureController extends GetxController {
           title: "Not Found Lectures",
           message: "this section and level doesn't has Lectures ");
     } else {
+      tableTime = null;
       fieldMessage.value = "fetching lectures failed please check connection";
       showSnakeBar(
           title: "Fetch Lectures Failed",
           message: "fetching lectures failed please check connection ");
     }
+    selected.refresh();
   }
 
   void changeDepartment(int? val) async {

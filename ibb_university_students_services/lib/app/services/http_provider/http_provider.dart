@@ -42,9 +42,15 @@ class HttpProvider {
         //   print(connectivityResult);
         // }
         if (connectivityResult.contains(ConnectivityResult.none)) {
-          get_x.Get.dialog(PopUpAlertCard(
-              "no internet connection \n please check your connection ",
-              Icons.warning));
+          try{
+            get_x.Get.dialog(PopUpAlertCard(
+                "no internet connection \n please check your connection ",
+                Icons.warning));
+          }catch(e){
+            if (kDebugMode) {
+              print(error);
+            }
+          }
           return handler.resolve(
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
