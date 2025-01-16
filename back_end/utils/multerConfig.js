@@ -54,6 +54,7 @@ const upload = multer({
             'application/zip',
             'text/csv',        
         ];
+        // const allowedMimetypes = ['*/*'];
     
         if (!allowedMimetypes.includes(file.mimetype)) {
             return cb(new Error('File type not allowed.'), false);

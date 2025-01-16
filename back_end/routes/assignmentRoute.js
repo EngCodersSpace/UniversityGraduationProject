@@ -5,8 +5,11 @@ const { verifyToken } = require('../middleware/authMiddleware');
 const checkRole = require('../middleware/roleMiddleware');
 router.use(verifyToken);
 
-router.post('/upload-assignment',verifyToken,  CRUD.uploadAssignment);
+router.post('/upload-assignment-doctor',verifyToken, checkRole(['student_affairs', 'teacher','controller']), CRUD.uploadAssignmentByDoctor);
+router.post('/upload-assignment-student',verifyToken, checkRole('student'), CRUD.uploadReportByStudent);
+
 router.get('/get-assignment-student',checkRole(['student_affairs', 'teacher','controller','student']), CRUD.getAssignmentsBySubject);
-// router.delete('/delete-assignment', checkRole(['student_affairs', 'teacher','controller']), CRUD.);
+router.get('/get-student-attachments',checkRole(['student_affairs', 'teacher','controller','representative']), CRUD.getStudentAttachments);
+
 
 module.exports = router;
