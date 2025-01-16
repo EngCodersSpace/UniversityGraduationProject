@@ -41,6 +41,18 @@ module.exports = {
         type: Sequelize.JSON,
         allowNull: false,
       },
+      status: {
+        type: Sequelize.JSON,
+        allowNull: false,
+        defaultValue: 'Freshman',
+      },
+      repeat_years_count: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
