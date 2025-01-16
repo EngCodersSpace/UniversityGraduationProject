@@ -1,6 +1,6 @@
 'use strict';
 const { faker } = require('@faker-js/faker');
-const { student_assignment_attachment, student_assignment } = require('../models');
+const { student_assignment_file, student_assignment } = require('../models');
 const crypto = require('crypto');
 
 module.exports = {
@@ -28,13 +28,13 @@ module.exports = {
 
     
     if (studentAssignmentAttachments.length > 0) {
-      await student_assignment_attachment.bulkCreate(studentAssignmentAttachments);
+      await student_assignment_file.bulkCreate(studentAssignmentAttachments);
     }
   },
 
   down: async (queryInterface, Sequelize) => {
     
-    await student_assignment_attachment.destroy({ where: {}, truncate: false });
+    await student_assignment_file.destroy({ where: {}, truncate: false });
   }
 };
 

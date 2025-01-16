@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('assignment_attachments', {
+    await queryInterface.createTable('assignment_files', {
 
       id: {
         allowNull: false,
@@ -32,13 +32,13 @@ module.exports = {
 
 
     });
-    await queryInterface.addConstraint('assignment_attachments', {
+    await queryInterface.addConstraint('assignment_files', {
       fields: ['assignment_id', 'attachment_hash'],
       type: 'unique',
-      name: 'assignment_attachment_unique',
+      name: 'assignment_file_unique',
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('assignment_attachments');
+    await queryInterface.dropTable('assignment_files');
   }
 };
