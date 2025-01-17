@@ -55,8 +55,11 @@ class WebMainView extends GetView<MainController> {
                                       : null,
                                   child: (controller.user?.profileImage) != null
                                       ? null
-                                      : MainText(controller.user?.name?[0] ??
-                                          "".toUpperCase()),
+                                      : MainText(
+                                          controller.user?.name?[0] ??
+                                              "".toUpperCase(),
+                                          textColor: AppColors.mainTextColor,
+                                        ),
                                 ),
                               ],
                             ),
@@ -79,7 +82,7 @@ class WebMainView extends GetView<MainController> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       SecText(
-                                        "ID :${controller.user?.id ?? " "}",
+                                        "${controller.user?.id ?? " "}",
                                         textColor: AppColors.mainTextColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 10,
@@ -96,6 +99,8 @@ class WebMainView extends GetView<MainController> {
                       Divider(
                         thickness: 0.4,
                         color: AppColors.tabBackColor,
+                        // indent: 10,
+                        endIndent: 15,
                       ),
                       SizedBox(
                         height: Get.height * 0.01,

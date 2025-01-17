@@ -49,6 +49,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                                 i < controller.exams!.value.length;
                                 i++) ...[
                               ExamCard(content: Rx(controller.exams?.value[i])),
+                              SizedBox(
+                                height: height * 0.01,
+                              )
                             ]
                           ],
                         ),
