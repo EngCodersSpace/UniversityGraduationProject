@@ -30,6 +30,11 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       status: {
+        type: Sequelize.ENUM('accepted', 'rejected', 'not submitted', 'pending'),
+        allowNull: false,
+        defaultValue: 'not submitted',
+      },
+      is_completed: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,

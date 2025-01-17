@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'assignment_id',
       });
 
-      assignment.hasMany(models.assignment_attachment, {
+      assignment.hasMany(models.assignment_file, {
         foreignKey: 'assignment_id',
       });
 
