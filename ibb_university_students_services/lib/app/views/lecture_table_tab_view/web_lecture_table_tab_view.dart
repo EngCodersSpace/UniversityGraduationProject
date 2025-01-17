@@ -42,7 +42,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   WebSchedualContent(day: "Saturday", index: 0),
                                   SizedBox(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -133,6 +134,7 @@ class LectureController extends GetxController {
           title: "Fetch Lectures Failed",
           message: "fetching lectures failed please check connection ");
     }
+    if(kIsWeb)update(["WebContentBuilder"]);
   }
 
   void changeDepartment(int? val) async {
