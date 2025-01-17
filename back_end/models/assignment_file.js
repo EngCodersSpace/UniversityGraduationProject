@@ -4,7 +4,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class assignment_attachment extends Model {
+  class assignment_file extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      assignment_attachment.belongsTo(models.assignment, {
+      assignment_file.belongsTo(models.assignment, {
         foreignKey: 'assignment_id',
       });
     }
   }
-  assignment_attachment.init({
+  assignment_file.init({
 
     id: {
       allowNull: false,
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
 
   }, {
     sequelize,
-    modelName: 'assignment_attachment',
+    modelName: 'assignment_file',
     timestamps: false,
     indexes: [
       {
@@ -62,5 +62,5 @@ module.exports = (sequelize, DataTypes) => {
     //   },
     // },
   });
-  return assignment_attachment;
+  return assignment_file;
 };
