@@ -6,8 +6,8 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
 
 import '../components/custom_text_v2.dart';
-import '../models/level_model.dart';
-import '../models/section_model.dart';
+import '../models/level_model/level.dart';
+import '../models/section_model/section.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
 import '../styles/app_colors.dart';
@@ -122,7 +122,7 @@ class LibraryController extends GetxController
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData = await SectionServices.fetchSections()
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(DropdownMenuItem<int>(
@@ -131,7 +131,7 @@ class LibraryController extends GetxController
           width: (Get.width / 3.3) * 0.75,
           child: CustomText(
             section.name ?? "unknown".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
           ),
         ),
       ));
@@ -141,7 +141,7 @@ class LibraryController extends GetxController
 
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData = await LevelServices.fetchLevels()
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -153,7 +153,7 @@ class LibraryController extends GetxController
               width: (Get.width / 3.3) * 0.75,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
               ),
             )),
       );

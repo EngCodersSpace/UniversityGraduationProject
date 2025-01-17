@@ -7,14 +7,14 @@ import '../styles/app_colors.dart';
 import 'custom_text.dart';
 
 class DayCard extends StatelessWidget {
-  double height;
+  double heightScale;
   String text;
   bool selected;
   VoidCallback? onPress;
 
   DayCard({
     super.key,
-    required this.height,
+    this.heightScale = 0.085,
     required this.text,
     this.selected = false,
     this.onPress,
@@ -23,11 +23,11 @@ class DayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
-      padding: EdgeInsets.symmetric(horizontal: height*0.12),
+      height: Get.height * heightScale,
+      padding: EdgeInsets.symmetric(horizontal: Get.height * heightScale*0.11),
       decoration: BoxDecoration(
         color: (selected) ? AppColors.inverseCardColor : null,
-        borderRadius: BorderRadius.all(Radius.circular(height * 0.2)),
+        borderRadius: BorderRadius.all(Radius.circular(Get.height * heightScale * 0.2)),
       ),
       child: Center(
         child: InkWell(

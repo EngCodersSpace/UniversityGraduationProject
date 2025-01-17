@@ -6,8 +6,8 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/profile_tab_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/models/doctor_model.dart';
-import 'package:ibb_university_students_services/app/models/student_model.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
+import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 import '../../components/custom_text_v2.dart';
@@ -20,8 +20,8 @@ class PhoneProfileView extends GetView<ProfileController> {
   double height = Get.height;
   double width = Get.width;
   List<DropdownMenuItem<String>> dropdownMenuItems = [
-    DropdownMenuItem<String>(value: "en", child: CustomText("English",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),)),
-    DropdownMenuItem<String>(value: "ar", child: CustomText("العربية",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),)),
+    DropdownMenuItem<String>(value: "en", child: CustomText("English",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),)),
+    DropdownMenuItem<String>(value: "ar", child: CustomText("العربية",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),)),
   ];
 
   @override
@@ -83,7 +83,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                           CustomText(
                             controller.user.email ?? "Unknown".tr,
                             style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
@@ -115,12 +115,12 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 CustomText(
                                   "UserName".tr,
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                               ],
                             ),
                           ),
-                          CustomText(controller.user.name!,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                          CustomText(controller.user.name!,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                         ],
                       ),
                       Row(
@@ -136,12 +136,12 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 CustomText(
                                   "Email".tr,
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                               ],
                             ),
                           ),
-                          CustomText(controller.user.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                          CustomText(controller.user.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                         ],
                       ),
                       Row(
@@ -157,13 +157,13 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 CustomText(
                                   "Phone".tr,
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                               ],
                             ),
                           ),
                           CustomText(
-                              controller.user.phones?.first ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                              controller.user.phones?.first ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                         ],
                       ),
                       Row(
@@ -179,7 +179,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 CustomText(
                                   "Language".tr,
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                               ],
                             ),
@@ -208,7 +208,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   CustomText(
                                     "Section".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3),
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
                               ),
@@ -217,7 +217,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     .section
                                     ?.name
                                     ?.tr ??
-                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                           ],
                         ),
                         Row(
@@ -233,7 +233,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   CustomText(
                                     "Level".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3),
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
                               ),
@@ -242,7 +242,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                               (controller.user as Student).level?.name?.tr ??
                                   "Unknown".tr,
                               style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h4),
+                                  textHeader: AppTextHeaders.h3Normal),
                             ),
                           ],
                         )
@@ -260,7 +260,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   CustomText(
                                     "Academic Degree".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3),
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
                               ),
@@ -268,7 +268,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             CustomText((controller.user as Doctor)
                                     .academicDegree
                                     ?.tr ??
-                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                           ],
                         ),
                         Row(
@@ -285,7 +285,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     child: CustomText(
                                       "Administrative Position".tr,
                                       style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3),
+                                          textHeader: AppTextHeaders.h3Bold),
                                     ),
                                   )
                                 ],
@@ -294,7 +294,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             CustomText((controller.user as Doctor)
                                     .administrativePosition
                                     ?.tr ??
-                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h4),),
+                                "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
                           ],
                         )
                       ],

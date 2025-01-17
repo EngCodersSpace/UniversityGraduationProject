@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
 import 'package:ibb_university_students_services/app/services/user_services.dart';
+import '../models/helper_models/result.dart';
 
 
 class LoginController extends GetxController {
@@ -28,14 +28,10 @@ class LoginController extends GetxController {
   }
   @override
   void onInit() async{
-    List<String>? credentials = await UserServices.fetchCachedCredentials();
-    if (credentials != null) {
-      // Result res = await UserServices.userLogin(credentials[0], credentials[1]);
-      Result res = await UserServices.userLogin("1000", "1234pass@");
-      Get.updateLocale(const Locale("ar"));
-      if (res.statusCode == 200) {
+    id.text = "10";
+    password.text = "1234pass@";
+    if (await UserServices.isCredentialsCached()) {
         Get.offNamed("/main");
-      }
     }
     super.onInit();
     loading.value = false;

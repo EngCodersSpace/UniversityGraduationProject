@@ -4,7 +4,7 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/student_model.dart';
+import '../../../models/student_model/student.dart';
 
 class StudentInfoCard extends GetView<HomeTabController> {
   const StudentInfoCard({super.key});
@@ -31,7 +31,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               children: [
                 CustomText("Section".tr,
                     style: AppTextStyles.highlightStyle(
-                        textHeader: AppTextHeaders.h5)),
+                        textHeader: AppTextHeaders.h5Bold)),
                 Row(
                   children: [
                     Icon(Icons.groups_sharp, color: AppColors.secTextColor),
@@ -43,7 +43,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
                       (controller.user as Student).section?.name ??
                           "Unknown".tr,
                           style: AppTextStyles.secStyle(
-                              textHeader: AppTextHeaders.h5,height: 0),
+                              textHeader: AppTextHeaders.h5Bold,height: 0),
                     ))
                   ],
                 ),
@@ -66,7 +66,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
               children: [
                 CustomText("Level".tr,
                     style: AppTextStyles.highlightStyle(
-                        textHeader: AppTextHeaders.h5)),
+                        textHeader: AppTextHeaders.h5Bold)),
                 Row(
                   children: [
                     Icon(Icons.school, color: AppColors.secTextColor),
@@ -76,7 +76,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
                     CustomText(
                         "${"Level".tr} ${(controller.user as Student).level?.name ?? "??".tr}",
                         style: AppTextStyles.secStyle(
-                            textHeader: AppTextHeaders.h5,height: 0)),
+                            textHeader: AppTextHeaders.h5Bold,height: 0)),
                   ],
                 ),
               ],
@@ -99,7 +99,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
                 CustomText(
                   "Assignments".tr,
                   style: AppTextStyles.highlightStyle(
-                      textHeader: AppTextHeaders.h5),
+                      textHeader: AppTextHeaders.h5Bold),
                 ),
                 Row(
                   children: [
@@ -109,7 +109,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
                     ),
                     CustomText("0/0",
                         style: AppTextStyles.secStyle(
-                            textHeader: AppTextHeaders.h5,height: 0)),
+                            textHeader: AppTextHeaders.h5Bold,height: 0)),
                   ],
                 ),
               ],

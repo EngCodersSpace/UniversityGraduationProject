@@ -1,5 +1,11 @@
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
 
+
+import 'package:hive/hive.dart';
+
+import '../subject_model/subject_model.dart';
+part 'lecture_model.g.dart';
+
+@HiveType(typeId: 8)
 class Lecture {
   Lecture({
     required this.id,
@@ -12,13 +18,21 @@ class Lecture {
     this.lectureStatus,
   });
 
+  @HiveField(0)
   int id;
+  @HiveField(1)
   Subject? subject;
+  @HiveField(2)
   String? startTime;
+  @HiveField(3)
   int? duration;
+  @HiveField(4)
   String? hall;
+  @HiveField(5)
   String? description;
+  @HiveField(6)
   bool? lectureStatus = false;
+  @HiveField(7)
   int? instructorId;
 
   factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {

@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/services/exam_services.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
 import 'package:intl/intl.dart';
-import '../components/custom_text.dart';
-import '../styles/app_colors.dart';
-import '../models/exam_model.dart';
-import '../models/level_model.dart';
-import '../models/section_model.dart';
+import '../components/custom_text_v2.dart';
+import '../models/subject_model/subject_model.dart';
+import '../models/exam_model/exam_model.dart';
+import '../models/level_model/level.dart';
+import '../models/section_model/section.dart';
 import '../services/level_services.dart';
 import '../services/section_services.dart';
+import '../styles/text_styles.dart';
 import '../utils/date_time_utils.dart';
 
 class ExamTableController extends GetxController {
   RxBool loadingState = true.obs;
   RxInt selected = 3.obs;
   String selectedDayName = "Sunday".tr;
-  Rx<int?> selectedDepartment = Rx(null);
+  Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Rx<Map<int,Exam>>? exams = Rx({});
-  List<DropdownMenuItem<int>> departments = [];
+  List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [];
@@ -50,12 +51,12 @@ class ExamTableController extends GetxController {
 
   @override
   void onInit() async {
-    // TODO: implement onInit
+    await ExamServices.openBox();
     await initSectionDropdownMenuList();
-    await initLevelDropdownMenuLists();
+    await initLevelDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (departments.isNotEmpty)
-        ? selectedDepartment.value = departments.first.value
+    (sections.isNotEmpty)
+        ? selectedSection.value = sections.first.value
         : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
@@ -64,23 +65,25 @@ class ExamTableController extends GetxController {
   }
 
   @override
-  void refresh() {
-    fetchExamsData(force: true);
+  void refresh() async{
+    Get.dialog(const PopUpLoadingCard());
+    await fetchExamsData(force: true);
+    Navigator.of(Get.overlayContext!).pop();
     super.refresh();
   }
 
   Future<void> fetchExamsData({bool force = false}) async {
     if (selectedLevel.value == null) {
-      await initLevelDropdownMenuLists();
+      await initLevelDropdownMenuList();
     }
-    if (selectedDepartment.value == null) {
+    if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
     }
-    if (selectedDepartment.value == null || selectedLevel.value == null) {
+    if (selectedSection.value == null || selectedLevel.value == null) {
       return;
     }
     Result res = await ExamServices.fetchExamsGroup(
-      sectionId: selectedDepartment.value!,
+      sectionId: selectedSection.value!,
       levelId: selectedLevel.value!,
       hardFetch: force,
     );
@@ -94,6 +97,7 @@ class ExamTableController extends GetxController {
           title: "Not Found Exams ",
           message: "this section and level doesn't has exams ");
     }else{
+      exams?.value = res.data ?? {};
       fieldMessage.value = "fetching exam failed please check connection";
       showSnakeBar(
           title: "Fetch Exams Failed",
@@ -103,7 +107,7 @@ class ExamTableController extends GetxController {
 
   void changeDepartment(int? val) async {
     if (val == null) return;
-    selectedDepartment.value = val;
+    selectedSection.value = val;
     await fetchExamsData();
   }
 
@@ -128,27 +132,26 @@ class ExamTableController extends GetxController {
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData =
-    await SectionServices.fetchSections().then((e) => e.data?.values.toList() ?? []);
-    departments = [];
+    await SectionServices.fetchSections().then((e) => e.data ?? []);
+    sections = [];
     for (Section section in sectionsData) {
-      departments.add(
+      sections.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              width: (((Get.width - 16) / 7) * 4)*0.48,
+              child: CustomText(
                 section.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
-    selectedDepartment.value = sectionsData.first.id;
+    selectedSection.value = sectionsData.first.id;
   }
-  Future<void> initLevelDropdownMenuLists() async {
+  Future<void> initLevelDropdownMenuList() async {
     List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+        await LevelServices.fetchLevels().then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -157,52 +160,15 @@ class ExamTableController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              width: (((Get.width - 16) / 7) * 2.5)*0.35,
+              child: CustomText(
                 level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
     selectedLevel.value = levelsData.first.id;
-
-    // years = [];
-    // for (String year in yearData) {
-    //   years.add(
-    //     DropdownMenuItem(
-    //         value: year,
-    //         child: SizedBox(
-    //           width: (Get.width / 3.3) * 0.75,
-    //           child: SecText(
-    //             year,
-    //             textColor: AppColors.mainTextColor,
-    //             fontSize: 12,
-    //           ),
-    //         )),
-    //   );
-    // }
-    // terms = [
-    //   DropdownMenuItem<String>(
-    //       value: "Term 1",
-    //       child: SizedBox(
-    //           width: (Get.width / 3.3) * 0.75,
-    //           child: SecText(
-    //             "Term 1",
-    //             textColor: AppColors.mainTextColor,
-    //             fontSize: 12,
-    //           ))),
-    //   DropdownMenuItem<String>(
-    //       value: "Term 2",
-    //       child: SizedBox(
-    //           width: (Get.width / 3.3) * 0.75,
-    //           child: SecText(
-    //             "Term 2",
-    //             textColor: AppColors.mainTextColor,
-    //             fontSize: 12,
-    //           ))),
-    // ];
   }
 
   void more(String val, {Map<String, dynamic>? data}) async{
@@ -221,10 +187,10 @@ class ExamTableController extends GetxController {
       Get.dialog(const PopUpIAddAndUpdateExamCard());
     } else if (val == "Delete") {
       if (selectedLevel.value == null) return;
-      if (selectedDepartment.value == null) return;
+      if (selectedSection.value == null) return;
       selectedExam = data?["exam_id"];
       Result<void> res = await ExamServices.deleteExam(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           id: selectedExam
       );
@@ -254,7 +220,7 @@ class ExamTableController extends GetxController {
   void submit() async {
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
-      jsData["exam_section_id"] = selectedDepartment.value;
+      jsData["exam_section_id"] = selectedSection.value;
       jsData["exam_level_id"] = selectedLevel.value;
       (subject.value.isNotEmpty && subject.value != "Unknown".tr)
           ? jsData["subject_id"] = subject.value
@@ -274,11 +240,11 @@ class ExamTableController extends GetxController {
           : null;
     }
     if (selectedLevel.value == null) return;
-    if (selectedDepartment.value == null) return;
+    if (selectedSection.value == null) return;
 
     if (mode == "Add") {
       Result<Exam> res = await ExamServices.createExam(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           data: jsData);
       Navigator.of(Get.overlayContext!).pop();
@@ -291,7 +257,7 @@ class ExamTableController extends GetxController {
       }
     } else if (mode == "Edit") {
       Result<Exam> res = await ExamServices.updateExam(
-          sectionId: selectedDepartment.value!,
+          sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           data: jsData,
           id: selectedExam

@@ -1,10 +1,16 @@
 import 'package:get/get.dart';
-import '../utils/json_utils.dart';
-
+import 'package:hive/hive.dart';
+import '../../utils/json_utils.dart';
+part 'section.g.dart';
+@HiveType(typeId: 1)
 class Section {
+  @HiveField(0)
   int id;
+  @HiveField(1)
   Map<String,dynamic>? nameData;
+  @HiveField(2)
   String? createdAt;
+  @HiveField(3)
   String? updatedAt;
 
   Section({

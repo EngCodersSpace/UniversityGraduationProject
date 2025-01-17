@@ -1,18 +1,25 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/level_model.dart';
-import 'package:ibb_university_students_services/app/models/section_model.dart';
-import 'package:ibb_university_students_services/app/models/user_model.dart';
+import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/user_model/user.dart';
+import '../../utils/json_utils.dart';
+import '../section_model/section.dart';
 
-import '../utils/json_utils.dart';
+part 'student.g.dart';
 
+@HiveType(typeId: 3)
 class Student extends User {
+  @HiveField(11)
   int? studyPlaneId;
+  @HiveField(12)
   Level? level;
-  Map<String,dynamic>? systemData;
+  @HiveField(13)
+  Map<String, dynamic>? systemData;
+  @HiveField(14)
   String? enrollmentYear;
 
   String? get system {
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return systemData?[currentLang];
   }
 

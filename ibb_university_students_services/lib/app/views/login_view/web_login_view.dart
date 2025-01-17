@@ -34,7 +34,10 @@ class WebLoginView extends GetView<LoginController> {
               fit: BoxFit.fill),
         ),
         Container(
-          color: AppColors.coverColor.withOpacity(0.0),
+          color: AppColors.coverColor.withValues(alpha:0.0),
+        ),
+        Container(
+          color: AppColors.coverColor.withValues(alpha:0.0),
         ),
         Container(
           color: AppColors.coverColor.withOpacity(0.0),
@@ -145,7 +148,8 @@ class WebLoginView extends GetView<LoginController> {
 
                           controller: controller.id,
                           validator: (id) => Validators.validateID(id),
-                          labelText: 'studentid'.tr,
+                          labelText: "User ID".tr,
+                          //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
                         ),
@@ -156,7 +160,8 @@ class WebLoginView extends GetView<LoginController> {
                             controller: controller.password,
                             validator: (pwd) =>
                                 Validators.validatePassword(pwd),
-                            labelText: 'password'.tr,
+                            labelText: "Password".tr,
+                            //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             isPassword: true,
@@ -168,7 +173,7 @@ class WebLoginView extends GetView<LoginController> {
                           child: TextButton(
                             onPressed: () => controller.forgotPassword,
                             child: SecText(
-                              "forgotPassword?".tr,
+                              "Forgot Password?".tr,
                               fontSize: 10.0,
                               textColor: AppColors.linkTextColor,
                             ),

@@ -1,11 +1,17 @@
-
+import 'package:hive/hive.dart';
+part 'study_plan_elements.g.dart';
+@HiveType(typeId: 10)
 class StudyPlanElement {
+  @HiveField(0)
   int id;
   // int studyPlanId;
   // int subjectId;
   // int doctorId;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? createdAt;
+  @HiveField(3)
   String? updatedAt;
 
   StudyPlanElement({

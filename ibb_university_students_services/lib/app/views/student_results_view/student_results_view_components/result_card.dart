@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../components/custom_text_v2.dart';
-import '../../../models/grads_model.dart';
+import '../../../models/grads_model/grads_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
@@ -23,19 +23,19 @@ class ResultCard extends StatelessWidget {
     if(grad.value.isAbsent == true){
       subjectName = "|  ${grad.value.subject?.subjectName??""}";
     }
-    TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
+    TextStyle style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold);
     if (((grad.value.workGrad ?? -100) + (grad.value.examGrad ?? -100)) <
         48) {
-      style = AppTextStyles.failedGrads(textHeader: AppTextHeaders.h5);
+      style = AppTextStyles.failedAndErrorStyle(textHeader: AppTextHeaders.h5Bold);
     } else {
-      style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5);
+      style = AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold);
     }
     return Obx(() => Container(
           width: double.maxFinite,
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-            color: (type == "even")?AppColors.inverseCardColor.withOpacity(0.6):AppColors.inverseCardColor,
+            color: (type == "even")?AppColors.inverseCardColor.withValues(alpha:0.6):AppColors.inverseCardColor,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black26,

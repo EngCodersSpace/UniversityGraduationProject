@@ -59,9 +59,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         child: Center(
                           child: Obx(
                             () => DropdownButton(
-                              items: controller.departments,
+                              items: controller.sections,
                               onChanged: controller.changeDepartment,
-                              value: controller.selectedDepartment.value,
+                              value: controller.selectedSection.value,
                               underline: const SizedBox(),
                               iconEnabledColor: AppColors.mainCardColor,
                               dropdownColor: AppColors.inverseCardColor,
@@ -238,7 +238,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         Container(
                           decoration: BoxDecoration(
                               color:
-                                  AppColors.inverseCardColor.withOpacity(0.2),
+                                  AppColors.inverseCardColor.withValues(alpha:0.2),
                               border: Border.all(width: 1, color: Colors.black),
                               borderRadius: BorderRadius.circular(10)),
                           child: Column(

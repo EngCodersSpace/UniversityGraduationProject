@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/assignments_card.dart';
 import '../../components/buttons.dart';
@@ -29,7 +28,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                 Column(
                   children: [
                     Container(
-                        height: Get.height * 0.16,
+                        height: Get.height * 0.18,
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.mainCardColor,
@@ -51,41 +50,145 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                             SizedBox(
                               height: Get.height * 0.02,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SecText(
-                                  "Subject".tr,
-                                  fontWeight: FontWeight.bold,
-                                  textAlign: TextAlign.start,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.inverseCardColor,
-                                    borderRadius: BorderRadius.circular(24),
+                            if ((PermissionUtils.checkPermission(
+                                target: "Assignments",
+                                action: "studentView"))) ...[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CustomText(
+                                    "Subject".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
-                                  width: Get.width*0.65,
-                                  child: Center(
-                                    child: Obx(
-                                      () => DropdownButton<String>(
-                                        items: controller.subjectsItems,
-                                        selectedItemBuilder: (_) {
-                                          return controller
-                                              .selectedSubjectsItems;
-                                        },
-                                        onChanged: controller.changeSubject,
-                                        value: controller.selectedSubject.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                        dropdownColor:
-                                            AppColors.inverseCardColor,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width * 0.65,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton<String>(
+                                          items: controller.subjectsItems,
+                                          selectedItemBuilder: (_) {
+                                            return controller
+                                                .selectedSubjectsItems;
+                                          },
+                                          onChanged: controller.changeSubject,
+                                          value:
+                                              controller.selectedSubject.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ] else ...[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  CustomText(
+                                    "Section".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                  CustomText(
+                                    "Level".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                  CustomText(
+                                    "Subject".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width / 3,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton(
+                                          items: controller.sections,
+                                          onChanged:
+                                              controller.changeDepartment,
+                                          value: controller
+                                              .selectedDepartment.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width / 4,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton(
+                                          items: controller.levels,
+                                          onChanged: controller.changeLevel,
+                                          value: controller.selectedLevel.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width / 3,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton<String>(
+                                          items: controller.subjectsItems,
+                                          selectedItemBuilder: (_) {
+                                            return controller
+                                                .selectedSubjectsItems;
+                                          },
+                                          onChanged: controller.changeSubject,
+                                          value:
+                                              controller.selectedSubject.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                             SizedBox(
                               height: Get.height * 0.04,
                             ),
@@ -100,7 +203,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                           CustomText(
                             "Assignments".tr,
                             style: AppTextStyles.highlightStyle(
-                                textHeader: AppTextHeaders.h2),
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((PermissionUtils.checkPermission(
                               target: "Assignments", action: "add")))
@@ -119,8 +222,8 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                       width: width,
                       height: (PermissionUtils.checkPermission(
                               target: "Assignments", action: "add"))
-                          ? Get.height * 0.66
-                          : Get.height * 0.69,
+                          ? Get.height * 0.64
+                          : Get.height * 0.666,
                       child: RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(
@@ -132,7 +235,8 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                               () => Column(
                                 children: [
                                   SizedBox(height: Get.height * 0.01),
-                                  if (controller.assignments?.value.isEmpty ?? true) ...[
+                                  if (controller.assignments?.value.isEmpty ??
+                                      true) ...[
                                     SizedBox(
                                       height: Get.height * 0.2,
                                     ),
@@ -140,16 +244,28 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                         child: CustomText(
                                       controller.fieldMessage.value,
                                       style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h2),
+                                          textHeader: AppTextHeaders.h2Bold),
                                     )),
                                     IconButton(
                                         onPressed: () async =>
                                             controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
-                                  for (int i = 0; i < (controller.assignments?.value.length ?? 0); i++) ...[
-                                    AssignmentsCard(content: Rx(controller.assignments?.value.values.toList()[i])),
-                                    if (i < ((controller.assignments?.value.length ?? 0) - 1))
+                                  for (int i = 0;
+                                      i <
+                                          (controller
+                                                  .assignments?.value.length ??
+                                              0);
+                                      i++) ...[
+                                    AssignmentsCard(
+                                        content: Rx(controller
+                                            .assignments?.value.values
+                                            .toList()[i])),
+                                    if (i <
+                                        ((controller.assignments?.value
+                                                    .length ??
+                                                0) -
+                                            1))
                                       SizedBox(
                                         height: Get.height * 0.03,
                                       )

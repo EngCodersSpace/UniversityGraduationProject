@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/lecture_model.dart';
+import '../../../models/lecture_model/lecture_model.dart';
 import '../../../utils/date_time_utils.dart';
 import '../../../utils/permission_checker.dart';
 
@@ -116,36 +116,36 @@ class LectureCard extends GetView<LectureController> {
                                         value: "TemporaryReplace",
                                         child: CustomText(
                                           "Temporary Replace".tr,
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Edit",
                                         child: CustomText(
                                           "Edit".tr,
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Confirm",
                                         child: CustomText(
                                           "Confirm".tr,
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Cancel",
                                         child: CustomText(
                                           "Cancel".tr,
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                   ],
                                   child: Icon(Icons.more_vert_outlined,
@@ -181,12 +181,12 @@ class LectureCard extends GetView<LectureController> {
                               CustomText(
                                 "${"Doctor".tr}:   ",
                                 style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h2),
+                                    textHeader: AppTextHeaders.h2Bold),
                               ),
                               CustomText(
                                 "${"Dr".tr}.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}",
                                 style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3),
+                                    textHeader: AppTextHeaders.h3Bold),
                               )
                             ],
                           ),
@@ -195,12 +195,12 @@ class LectureCard extends GetView<LectureController> {
                               CustomText(
                                 "${"Hall".tr}:   ",
                                 style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h2),
+                                    textHeader: AppTextHeaders.h2Bold),
                               ),
                               CustomText(
                                 content.value?.hall ?? "unknown".tr,
                                 style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3),
+                                    textHeader: AppTextHeaders.h3Bold),
                               )
                             ],
                           ),
@@ -214,12 +214,12 @@ class LectureCard extends GetView<LectureController> {
                             CustomText(
                               "Description: ",
                               style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3),
+                                  textHeader: AppTextHeaders.h3Bold),
                             ),
                             CustomText(
                               content.value?.description ?? "unknown".tr,
                               style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3),
+                                  textHeader: AppTextHeaders.h3Bold),
                             )
                           ],
                         ),

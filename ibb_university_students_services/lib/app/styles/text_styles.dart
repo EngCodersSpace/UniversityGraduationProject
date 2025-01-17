@@ -12,13 +12,13 @@ class TextHeaders{
 }
 
 class AppTextHeaders{
-  static TextHeaders h1 = TextHeaders(fontSize: 24, fontWeight: FontWeight.bold);
-  static TextHeaders h2 = TextHeaders(fontSize: 18, fontWeight: FontWeight.bold);
-  static TextHeaders h3 = TextHeaders(fontSize: 14, fontWeight: FontWeight.bold);
-  static TextHeaders h4 = TextHeaders(fontSize: 14, fontWeight: FontWeight.normal);
-  static TextHeaders h5 = TextHeaders(fontSize: 12, fontWeight: FontWeight.bold);
-  static TextHeaders h6 = TextHeaders(fontSize: 10, fontWeight: FontWeight.bold);
-  static TextHeaders h7 = TextHeaders(fontSize: 8, fontWeight: FontWeight.bold);
+  static TextHeaders h1Bold = TextHeaders(fontSize: 24, fontWeight: FontWeight.bold);
+  static TextHeaders h2Bold = TextHeaders(fontSize: 18, fontWeight: FontWeight.bold);
+  static TextHeaders h3Bold = TextHeaders(fontSize: 14, fontWeight: FontWeight.bold);
+  static TextHeaders h3Normal = TextHeaders(fontSize: 14, fontWeight: FontWeight.normal);
+  static TextHeaders h5Bold = TextHeaders(fontSize: 12, fontWeight: FontWeight.bold);
+  static TextHeaders h6Bold = TextHeaders(fontSize: 10, fontWeight: FontWeight.bold);
+  static TextHeaders h7Bold = TextHeaders(fontSize: 8, fontWeight: FontWeight.bold);
 }
 class AppTextStyles {
 
@@ -27,7 +27,7 @@ class AppTextStyles {
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= AppTextHeaders.h2;
+    textHeader ??= AppTextHeaders.h2Bold;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
@@ -40,7 +40,7 @@ class AppTextStyles {
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= AppTextHeaders.h4;
+    textHeader ??= AppTextHeaders.h3Normal;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
@@ -53,7 +53,7 @@ class AppTextStyles {
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= AppTextHeaders.h4;
+    textHeader ??= AppTextHeaders.h3Normal;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
@@ -61,11 +61,23 @@ class AppTextStyles {
       height: height,
     );
   }
-  static TextStyle failedGrads({
+  static TextStyle linkStyle({
     TextHeaders? textHeader,
     double? height
   }) {
-    textHeader ??= AppTextHeaders.h2;
+    textHeader ??= AppTextHeaders.h3Normal;
+    return TextStyle(
+      fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
+      fontWeight: textHeader.fontWeight,
+      color: AppColors.linkTextColor,
+      height: height,
+    );
+  }
+  static TextStyle failedAndErrorStyle({
+    TextHeaders? textHeader,
+    double? height
+  }) {
+    textHeader ??= AppTextHeaders.h2Bold;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,
@@ -79,7 +91,7 @@ class AppTextStyles {
     required Color color,
     double? height
   }) {
-    textHeader ??= AppTextHeaders.h2;
+    textHeader ??= AppTextHeaders.h2Bold;
     return TextStyle(
       fontSize: Responsivity.fontSizeScale(textHeader.fontSize),
       fontWeight: textHeader.fontWeight,

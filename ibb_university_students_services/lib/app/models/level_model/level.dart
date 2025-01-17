@@ -1,21 +1,27 @@
-
-class StudyPlane {
+import 'package:hive/hive.dart';
+part 'level.g.dart';
+@HiveType(typeId: 0)
+class Level {
+  @HiveField(0)
   int id;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? createdAt;
+  @HiveField(3)
   String? updatedAt;
 
-  StudyPlane({
+  Level({
     required this.id,
     this.name,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory StudyPlane.fromJson(Map<String, dynamic> json) {
-    return StudyPlane(
+  factory Level.fromJson(Map<String, dynamic> json) {
+    return Level(
       id: json['id'],
-      name: json['name'],
+      name: json['level_name'].toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

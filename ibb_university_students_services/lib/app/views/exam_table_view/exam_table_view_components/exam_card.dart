@@ -2,12 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import '../../../components/custom_text_v2.dart';
+import '../../../models/exam_model/exam_model.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/exam_model.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/permission_checker.dart';
 
@@ -100,13 +99,17 @@ class ExamCard extends GetView<ExamTableController> {
                                         value: "Edit",
                                         child: CustomText(
                                           "Edit".tr,
-                                          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
-                                          style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3),
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
                                   ],
                                   child: Icon(Icons.more_vert_outlined,
@@ -121,8 +124,11 @@ class ExamCard extends GetView<ExamTableController> {
                     const SizedBox(
                       height: 8,
                     ),
-                    MainText(
-                        content.value?.subject?.subjectName ?? "Unknown".tr),
+                    CustomText(
+                      content.value?.subject?.subjectName ?? "Unknown".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h1Bold),
+                    ),
                   ],
                 ),
               ),
@@ -138,17 +144,32 @@ class ExamCard extends GetView<ExamTableController> {
                         children: [
                           Row(
                             children: [
-                              CustomText("${"Hall".tr}:   ",
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),),
-                              CustomText(content.value?.hall ?? "unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),)
+                              CustomText(
+                                "${"Hall".tr}:   ",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h2Bold),
+                              ),
+                              CustomText(
+                                content.value?.hall ?? "unknown".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              )
                             ],
                           ),
                           Row(
                             children: [
-                              CustomText("${"Time".tr}:   ",
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),),
-                              CustomText(DateTimeUtils.formatStringTime(
-                                  time: content.value?.examTime ?? "00:00:00"),style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3),),
+                              CustomText(
+                                "${"Time".tr}:   ",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h2Bold),
+                              ),
+                              CustomText(
+                                DateTimeUtils.formatStringTime(
+                                    time:
+                                        content.value?.examTime ?? "00:00:00"),
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
                             ],
                           ),
                         ],

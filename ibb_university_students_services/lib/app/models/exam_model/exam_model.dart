@@ -1,5 +1,10 @@
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
 
+
+import 'package:hive/hive.dart';
+
+import '../subject_model/subject_model.dart';
+part 'exam_model.g.dart';
+@HiveType(typeId: 6)
 class Exam {
   Exam({
     required this.id,
@@ -10,12 +15,17 @@ class Exam {
     this.hall,
   });
 
-
+  @HiveField(0)
   int id;
+  @HiveField(1)
   Subject? subject;
+  @HiveField(2)
   String? date;
+  @HiveField(3)
   String? day;
+  @HiveField(4)
   String? examTime;
+  @HiveField(5)
   String? hall;
 
 

@@ -1,9 +1,10 @@
 // ignore_for_file: unnecessary_null_comparison
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-import '../models/result.dart';
-import '../models/user_model.dart';
+import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
+import '../models/helper_models/result.dart';
+import '../models/user_model/user.dart';
 import '../services/user_services.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';
@@ -15,8 +16,18 @@ class MainController extends GetxController {
   User? user;
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
+  RxBool isConnect = false.obs;
   @override
   void onInit() async {
+     isConnect.value= await checkInternetConnection();
+     // Listen for connectivity changes
+     Connectivity().onConnectivityChanged.listen((result) {
+       if (result.contains(ConnectivityResult.none)) {
+         isConnect.value = false;
+       } else {
+         isConnect.value = true;
+       }
+     }) ;
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;

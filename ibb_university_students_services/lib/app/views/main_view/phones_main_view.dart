@@ -7,7 +7,6 @@ import 'package:ibb_university_students_services/app/views/assignments_tab_view/
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/phones_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/phones_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/phones_profile_view.dart';
-import '../../components/custom_text.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
@@ -32,8 +31,8 @@ class PhoneMainView extends GetView<MainController> {
             "Notification".tr,
             style: AppTextStyles.mainStyle(
                 textHeader: (Get.locale?.languageCode == 'en')
-                    ? AppTextHeaders.h6
-                    : AppTextHeaders.h5),
+                    ? AppTextHeaders.h6Bold
+                    : AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -47,7 +46,7 @@ class PhoneMainView extends GetView<MainController> {
           ),
           CustomText(
             "Lecture\nTable".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -60,7 +59,7 @@ class PhoneMainView extends GetView<MainController> {
           ),
           CustomText(
             "Home".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
           )
         ],
       ),
@@ -70,7 +69,7 @@ class PhoneMainView extends GetView<MainController> {
           Icon(Icons.assignment_outlined, color: AppColors.mainTextColor),
           CustomText(
             "Assignments".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
           )
         ],
       ),
@@ -80,7 +79,7 @@ class PhoneMainView extends GetView<MainController> {
           Icon(Icons.person_outline_sharp, color: AppColors.mainTextColor),
           CustomText(
             "Profile".tr,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h7),
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h7Bold),
           )
         ],
       ),
@@ -88,7 +87,20 @@ class PhoneMainView extends GetView<MainController> {
     return Obx(
       () => (!controller.loading.value)
           ? Scaffold(
-              body: screens[controller.selectedIndex.value],
+              body: Stack(
+                children: [
+                  screens[controller.selectedIndex.value],
+                  if(!controller.isConnect.value)...[
+                    Container(
+                      height: 35,
+                      width: double.maxFinite,
+                      color: Colors.grey,
+                      padding: const EdgeInsets.only(top: 8),
+                      child: CustomText("Offline Mode",style: AppTextStyles.mainStyle(),),
+                    )
+                  ],
+                ],
+              ),
               floatingActionButton: Container(
                 width: 70,
                 height: 70,
@@ -104,7 +116,7 @@ class PhoneMainView extends GetView<MainController> {
                 color: AppColors.backColor,
                 shadowColor: Colors.black,
                 elevation: 32,
-                height: height * 0.096,
+                // height: height * 0.096,
                 padding: EdgeInsets.symmetric(
                     vertical: height * 0.004, horizontal: width * 0.01),
                 notchMargin: 8,
@@ -116,7 +128,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(0);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.notifications_none,
@@ -125,7 +137,7 @@ class PhoneMainView extends GetView<MainController> {
                                   : null),
                           CustomText("Notification".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 0)
                                       ? Colors.transparent
                                       : AppColors.secTextColor)),
@@ -138,8 +150,8 @@ class PhoneMainView extends GetView<MainController> {
                       },
                       padding: (Get.locale?.languageCode == 'ar' &&
                               controller.selectedIndex.value == 0)
-                          ? const EdgeInsets.only(top: 8, right: 32)
-                          : const EdgeInsets.all(8),
+                          ? const EdgeInsets.only(top: 4, right: 32)
+                          : const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(
@@ -150,7 +162,7 @@ class PhoneMainView extends GetView<MainController> {
                           ),
                           CustomText("Lecture\nTable".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 1)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -161,7 +173,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(2);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(
@@ -172,7 +184,7 @@ class PhoneMainView extends GetView<MainController> {
                           ),
                           CustomText("Home".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 2)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -185,8 +197,8 @@ class PhoneMainView extends GetView<MainController> {
                       },
                       padding: (Get.locale?.languageCode == 'en' &&
                               controller.selectedIndex.value == 4)
-                          ? const EdgeInsets.only(top: 8, right: 32)
-                          : const EdgeInsets.all(8),
+                          ? const EdgeInsets.only(top: 4, right: 32)
+                          : const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.assignment_outlined,
@@ -195,7 +207,7 @@ class PhoneMainView extends GetView<MainController> {
                                   : null),
                           CustomText("Assignments".tr,
                               style: AppTextStyles.customColorStyle(
-                                  textHeader: AppTextHeaders.h5,
+                                  textHeader: AppTextHeaders.h5Bold,
                                   color: (controller.selectedIndex.value == 3)
                                       ? Colors.transparent
                                       : AppColors.secTextColor))
@@ -206,7 +218,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(4);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.person_outline_sharp,
@@ -216,7 +228,7 @@ class PhoneMainView extends GetView<MainController> {
                           CustomText(
                             "Profile".tr,
                             style: AppTextStyles.customColorStyle(
-                                textHeader: AppTextHeaders.h5,
+                                textHeader: AppTextHeaders.h5Bold,
                                 color: (controller.selectedIndex.value == 4)
                                     ? Colors.transparent
                                     : AppColors.secTextColor),

@@ -1,7 +1,7 @@
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
-import '../models/assignment_model.dart';
-import '../models/result.dart';
-import '../models/subject_model.dart';
+import '../models/assignment_model/assignment_model.dart';
+import '../models/helper_models/result.dart';
+import '../models/subject_model/subject_model.dart';
 
 class AssignmentsServices {
   // static const int _fetchAllError = 621;
@@ -83,11 +83,11 @@ class AssignmentsServices {
   }
 
   static Map<String, List<Map<String, dynamic>>> fakeAssignments = {
-    "aqua-volut": [
+    "acerbitas-": [
       {
         "id": 1,
-        "subject_id": "aqua-volut",
-        "doctor_id": 1,
+        "subject_id": "acerbitas-",
+        "doctor_id": 79,
         "title": "Renewable Energy Assignment 1",
         "assignment_day": "Monday",
         "assignment_date": "2024-02-01",
@@ -96,8 +96,8 @@ class AssignmentsServices {
       },
       {
         "id": 2,
-        "subject_id": "aqua-volut",
-        "doctor_id": 1,
+        "subject_id": "acerbitas-",
+        "doctor_id": 79,
         "title": "Renewable Energy Case Study",
         "assignment_day": "Tuesday",
         "assignment_date": "2024-02-02",
@@ -106,8 +106,8 @@ class AssignmentsServices {
       },
       {
         "id": 3,
-        "subject_id": "aqua-volut",
-        "doctor_id": 1,
+        "subject_id": "acerbitas-",
+        "doctor_id": 79,
         "title": "Renewable Energy Lab Task",
         "assignment_day": "Wednesday",
         "assignment_date": "2024-02-03",
@@ -115,11 +115,11 @@ class AssignmentsServices {
         "attachment": "renewable_lab_task.pdf"
       }
     ],
-    "arto-cura-": [
+    "adiuvo-lab": [
       {
         "id": 4,
-        "subject_id": "arto-cura-",
-        "doctor_id": 2,
+        "subject_id": "adiuvo-lab",
+        "doctor_id": 54,
         "title": "Materials Science Homework",
         "assignment_day": "Thursday",
         "assignment_date": "2024-02-04",
@@ -128,8 +128,8 @@ class AssignmentsServices {
       },
       {
         "id": 5,
-        "subject_id": "arto-cura-",
-        "doctor_id": 2,
+        "subject_id": "adiuvo-lab",
+        "doctor_id": 54,
         "title": "Materials Science Group Project",
         "assignment_day": "Saturday",
         "assignment_date": "2024-02-06",
@@ -137,11 +137,11 @@ class AssignmentsServices {
         "attachment": "materials_group_project.pdf"
       }
     ],
-    "cavus-inci": [
+    "aegre-assu": [
       {
         "id": 6,
-        "subject_id": "cavus-inci",
-        "doctor_id": 3,
+        "subject_id": "aegre-assu",
+        "doctor_id": 11,
         "title": "Embedded Systems Design Task",
         "assignment_day": "Sunday",
         "assignment_date": "2024-02-07",
@@ -149,11 +149,11 @@ class AssignmentsServices {
         "attachment": "embedded_design_task.pdf"
       }
     ],
-    "clementia-": [
+    "agnosco-vo": [
       {
         "id": 7,
-        "subject_id": "clementia-",
-        "doctor_id": 4,
+        "subject_id": "agnosco-vo",
+        "doctor_id": 0,
         "title": "Advanced Mechanics Problem Set",
         "assignment_day": "Monday",
         "assignment_date": "2024-02-08",
@@ -162,8 +162,8 @@ class AssignmentsServices {
       },
       {
         "id": 8,
-        "subject_id": "clementia-",
-        "doctor_id": 4,
+        "subject_id": "agnosco-vo",
+        "doctor_id": 0,
         "title": "Advanced Mechanics Lab Task",
         "assignment_day": "Tuesday",
         "assignment_date": "2024-02-09",
@@ -171,11 +171,11 @@ class AssignmentsServices {
         "attachment": "advanced_mechanics_lab_task.pdf"
       }
     ],
-    "creator-de": [
+    "ambitus-ca": [
       {
         "id": 9,
-        "subject_id": "creator-de",
-        "doctor_id": 5,
+        "subject_id": "ambitus-ca",
+        "doctor_id": 64,
         "title": "Fluid Mechanics Case Study",
         "assignment_day": "Wednesday",
         "assignment_date": "2024-02-10",
@@ -183,11 +183,11 @@ class AssignmentsServices {
         "attachment": "fluid_mechanics_case.pdf"
       }
     ],
-    "creptio-se": [
+    "amplitudo-": [
       {
         "id": 10,
-        "subject_id": "creptio-se",
-        "doctor_id": 6,
+        "subject_id": "amplitudo-",
+        "doctor_id": 32,
         "title": "Power Systems Analysis Report",
         "assignment_day": "Thursday",
         "assignment_date": "2024-02-11",
@@ -196,8 +196,8 @@ class AssignmentsServices {
       },
       {
         "id": 11,
-        "subject_id": "creptio-se",
-        "doctor_id": 6,
+        "subject_id": "amplitudo-",
+        "doctor_id": 32,
         "title": "Power Systems Simulation Task",
         "assignment_day": "Saturday",
         "assignment_date": "2024-02-12",
@@ -205,11 +205,11 @@ class AssignmentsServices {
         "attachment": "power_systems_simulation.pdf"
       }
     ],
-    "CS101": [
+    "apostolus-": [
       {
         "id": 12,
-        "subject_id": "CS101",
-        "doctor_id": 7,
+        "subject_id": "apostolus-",
+        "doctor_id": 23,
         "title": "Introduction to CS Assignment",
         "assignment_day": "Sunday",
         "assignment_date": "2024-02-13",
@@ -218,8 +218,8 @@ class AssignmentsServices {
       },
       {
         "id": 13,
-        "subject_id": "CS101",
-        "doctor_id": 7,
+        "subject_id": "apostolus-",
+        "doctor_id": 23,
         "title": "CS Group Discussion Task",
         "assignment_day": "Monday",
         "assignment_date": "2024-02-14",
@@ -228,8 +228,8 @@ class AssignmentsServices {
       },
       {
         "id": 14,
-        "subject_id": "CS101",
-        "doctor_id": 7,
+        "subject_id": "apostolus-",
+        "doctor_id": 23,
         "title": "CS Final Project",
         "assignment_day": "Tuesday",
         "assignment_date": "2024-02-15",
@@ -237,6 +237,5 @@ class AssignmentsServices {
         "attachment": "cs_final_project.pdf"
       }
     ]
-  }
-  ;
+  };
 }

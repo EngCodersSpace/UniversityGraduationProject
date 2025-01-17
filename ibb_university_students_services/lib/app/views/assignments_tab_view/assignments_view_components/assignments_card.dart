@@ -7,9 +7,10 @@ import 'package:ibb_university_students_services/app/components/custom_text.dart
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import '../../../models/assignment_model.dart';
+import '../../../models/assignment_model/assignment_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
+import 'add_attachments_card.dart';
 
 class AssignmentsCard extends GetView<ExamTableController> {
   Rx<Assignment?> content;
@@ -58,7 +59,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -69,8 +70,11 @@ class AssignmentsCard extends GetView<ExamTableController> {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child:
-                              CustomText(content.value?.assignmentDate ?? ""),
+                          child: CustomText(
+                            "Create Date".tr,
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
                         ),
                         Row(
                           children: [
@@ -83,10 +87,13 @@ class AssignmentsCard extends GetView<ExamTableController> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8),
                               child: CustomText(
-                                  "${content.value?.assignmentDay}".tr),
+                                "${content.value?.assignmentDate}".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
                             ),
                             if ((PermissionUtils.checkPermission(
-                                target: "Exams", action: "edit"))) ...[
+                                target: "Assignments", action: "edit"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),
@@ -103,14 +110,14 @@ class AssignmentsCard extends GetView<ExamTableController> {
                                         child: CustomText(
                                           "Edit".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                   ],
                                   child: Icon(Icons.more_vert_outlined,
@@ -141,7 +148,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             "${"Doctor".tr}:",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
@@ -149,7 +156,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             content.value?.doctor?.name ?? "unknown".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           )
                         ],
                       ),
@@ -161,7 +168,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             "${"Due Date".tr}:",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
@@ -169,15 +176,15 @@ class AssignmentsCard extends GetView<ExamTableController> {
                           CustomText(
                             content.value?.dueDate ?? "00:00:00",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           const SizedBox(
                             width: 8,
                           ),
                           CustomText(
-                            (content.value?.assignmentDay??"").tr,
+                            (content.value?.assignmentDay ?? "").tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
@@ -185,34 +192,35 @@ class AssignmentsCard extends GetView<ExamTableController> {
                         height: 16,
                       ),
                       if ((PermissionUtils.checkPermission(
-                          target: "Assignments", action: "doctorView")))
-                        ...[
-                          CustomButton(
-                            onPress: () {},
-                            text: "Add Attachments".tr,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          CustomButton(
-                            onPress: () {},
-                            text: "Show Students".tr,
-                          ),
-                        ]
-                      else
-                        ...[
-                          CustomButton(
-                            onPress: () {},
-                            text: "Show Attachments".tr,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          CustomButton(
-                            onPress: () {},
-                            text: "Upload Assignment".tr,
-                          ),
-                        ],
+                          target: "Assignments", action: "doctorView"))) ...[
+                        CustomButton(
+                          onPress: () {
+                            Get.dialog(const AddAttachmentsCard());
+                          },
+                          text: "Add Attachments".tr,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        CustomButton(
+                          onPress: () {
+                            // Get.toNamed("");
+                          },
+                          text: "Show Students".tr,
+                        ),
+                      ] else ...[
+                        CustomButton(
+                          onPress: () {},
+                          text: "Show Attachments".tr,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        CustomButton(
+                          onPress: () {},
+                          text: "Upload Assignment".tr,
+                        ),
+                      ],
                     ]),
               )
             ],

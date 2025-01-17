@@ -1,12 +1,17 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/section_model.dart';
-import 'package:ibb_university_students_services/app/models/user_model.dart';
+import 'package:hive/hive.dart';
+import '../section_model/section.dart';
+import '../user_model/user.dart';
+import '../../utils/json_utils.dart';
+part 'doctor.g.dart';
 
-import '../utils/json_utils.dart';
-
+@HiveType(typeId: 2)
 class Doctor extends User {
+  @HiveField(11)
   String? status;
+  @HiveField(12)
   Map<String,dynamic>? academicDegreeData;
+  @HiveField(13)
   Map<String,dynamic>? administrativePositionData;
 
   Doctor({

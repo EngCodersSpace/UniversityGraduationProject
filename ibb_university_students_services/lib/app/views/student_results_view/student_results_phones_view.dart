@@ -56,7 +56,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                             CustomText(
                               "Student Grads",
                               style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h2),
+                                  textHeader: AppTextHeaders.h2Bold),
                             ),
                           ],
                         ),
@@ -70,7 +70,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                       child: CustomText(
                                         "Level:",
                                         style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h3),
+                                            textHeader: AppTextHeaders.h3Bold),
                                       ),
                                     ),
                                     Container(
@@ -108,7 +108,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                       child: CustomText(
                                         "Term:",
                                         style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h3),
+                                            textHeader: AppTextHeaders.h3Bold),
                                       ),
                                     ),
                                     Container(
@@ -149,7 +149,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 CustomText(
                                   "GPA:",
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                                 const SizedBox(
                                   width: 4,
@@ -157,7 +157,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 Obx(()=>CustomText(
                                   "${controller.gpa.value.toStringAsFixed(2)}%",
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),)
                               ],
                             ),
@@ -167,7 +167,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 CustomText(
                                   "Summation:",
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                                 const SizedBox(
                                   width: 4,
@@ -175,7 +175,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 Obx(()=>CustomText(
                                   "${controller.summation.value}",
                                   style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),)
                               ],
                             ),
@@ -206,7 +206,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 SizedBox(height: Get.height * 0.015),
                                 if((controller.grads?.value.isEmpty??true) )...[
                                   SizedBox(height: Get.height*0.2,),
-                                  Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2),)),
+                                  Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),)),
                                   IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
                                 ],
                                 for (int i = 0;

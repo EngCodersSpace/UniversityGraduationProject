@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
 import '../user_services.dart';
@@ -31,19 +32,25 @@ class HttpProvider {
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
-        if (kDebugMode) {
-          print(error.requestOptions.uri);
-          print("HttpProviderError ------------------ ");
-          print("error: ${error.message}");
-          print("status code: ${error.response?.statusCode}");
-          print("status headers: ${error.response?.isRedirect}");
-          print("request headers: ${error.requestOptions.headers}");
-          print(connectivityResult);
-        }
+        // if (kDebugMode) {
+        //   print(error.requestOptions.uri);
+        //   print("HttpProviderError ------------------ ");
+        //   print("error: ${error.message}");
+        //   print("status code: ${error.response?.statusCode}");
+        //   print("status headers: ${error.response?.isRedirect}");
+        //   print("request headers: ${error.requestOptions.headers}");
+        //   print(connectivityResult);
+        // }
         if (connectivityResult.contains(ConnectivityResult.none)) {
-          get_x.Get.dialog(PopUpAlertCard(
-              "no internet connection \n please check your connection ",
-              Icons.warning));
+          try{
+            get_x.Get.dialog(PopUpAlertCard(
+                "no internet connection \n please check your connection ",
+                Icons.warning));
+          }catch(e){
+            if (kDebugMode) {
+              print(error);
+            }
+          }
           return handler.resolve(
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
@@ -145,10 +152,11 @@ class HttpProvider {
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      Box box = await Hive.openBox('Tokens');
       Response response = await _dio.post("refresh",data: {
-        "refreshToken":prefs.getString("refreshToken")??""
+        "refreshToken":box.get("refreshToken")??""
       });
+      await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -184,19 +192,22 @@ class HttpProvider {
     }
   }
 
-  static void storeRefreshToken(String refreshToken) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("refreshToken",refreshToken);
+  static void storeRefreshToken(String refreshToken) async {
+    Box box = await Hive.openBox('Tokens');
+    await box.put("refreshToken", refreshToken);
+    await box.close();
   }
 
   static void storeAccessToken(String accessToken) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("AccessToken",accessToken);
+    Box box = await Hive.openBox('Tokens');
+    await box.put("AccessToken",accessToken);
+    await box.close();
   }
 
   static Future<void> reSetAccessToken() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _dio.options.headers["Authorization"] = "Bearer ${prefs.getString("AccessToken")}";
+    Box box = await Hive.openBox('Tokens');
+    _dio.options.headers["Authorization"] = "Bearer ${box.get("AccessToken")}";
+    await box.close();
   }
 
   static void removeAccessTokenHeader() {

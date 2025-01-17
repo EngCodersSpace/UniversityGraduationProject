@@ -1,5 +1,10 @@
-import 'package:ibb_university_students_services/app/models/subject_model.dart';
 
+
+import 'package:hive/hive.dart';
+
+import '../subject_model/subject_model.dart';
+part 'grads_model.g.dart';
+@HiveType(typeId: 7)
 class Grad {
   Grad({
     required this.id,
@@ -12,13 +17,21 @@ class Grad {
     this.isAbsent,
   });
 
+  @HiveField(0)
   int id;
+  @HiveField(1)
   int? levelId;
+  @HiveField(2)
   String? term;
+  @HiveField(3)
   String? yearOfIssue;
+  @HiveField(4)
   bool? isAbsent;
+  @HiveField(5)
   Subject? subject;
+  @HiveField(6)
   int? examGrad;
+  @HiveField(7)
   int? workGrad;
 
   factory Grad.fromJson(Map<String, dynamic> json) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/models/student_fee.dart';
+import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:intl/intl.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
@@ -96,7 +96,7 @@ class PaymentsCard extends StatelessWidget {
                     CustomText(
                       "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
                       style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h2),
+                          textHeader: AppTextHeaders.h2Bold),
                     ),
                     const SizedBox(
                       height: 8,
@@ -117,12 +117,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Total Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.totalAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
 
                         ],
@@ -133,12 +133,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Payed Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.payedAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
@@ -148,12 +148,12 @@ class PaymentsCard extends StatelessWidget {
                           CustomText(
                             "Remain Amount",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
                             "${studentFee.value.remainAmount ?? "Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
