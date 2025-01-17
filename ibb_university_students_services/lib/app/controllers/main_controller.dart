@@ -1,7 +1,4 @@
 // ignore_for_file: unnecessary_null_comparison
-
-import 'dart:async';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
@@ -15,7 +12,6 @@ import 'library_controller.dart';
 import 'student_result_controller.dart';
 
 class MainController extends GetxController {
-  StreamSubscription<List<ConnectivityResult>>? _subscription;
   RxInt selectedIndex = 2.obs;
   User? user;
   late CustomFloatActionButtonLocation currentPos;
@@ -25,7 +21,7 @@ class MainController extends GetxController {
   void onInit() async {
      isConnect.value= await checkInternetConnection();
      // Listen for connectivity changes
-     _subscription = Connectivity().onConnectivityChanged.listen((result) {
+     Connectivity().onConnectivityChanged.listen((result) {
        if (result.contains(ConnectivityResult.none)) {
          isConnect.value = false;
        } else {

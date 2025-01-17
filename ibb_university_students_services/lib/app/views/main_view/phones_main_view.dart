@@ -116,7 +116,7 @@ class PhoneMainView extends GetView<MainController> {
                 color: AppColors.backColor,
                 shadowColor: Colors.black,
                 elevation: 32,
-                height: height * 0.096,
+                // height: height * 0.096,
                 padding: EdgeInsets.symmetric(
                     vertical: height * 0.004, horizontal: width * 0.01),
                 notchMargin: 8,
@@ -128,7 +128,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(0);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.notifications_none,
@@ -150,8 +150,8 @@ class PhoneMainView extends GetView<MainController> {
                       },
                       padding: (Get.locale?.languageCode == 'ar' &&
                               controller.selectedIndex.value == 0)
-                          ? const EdgeInsets.only(top: 8, right: 32)
-                          : const EdgeInsets.all(8),
+                          ? const EdgeInsets.only(top: 4, right: 32)
+                          : const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(
@@ -173,7 +173,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(2);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(
@@ -197,8 +197,8 @@ class PhoneMainView extends GetView<MainController> {
                       },
                       padding: (Get.locale?.languageCode == 'en' &&
                               controller.selectedIndex.value == 4)
-                          ? const EdgeInsets.only(top: 8, right: 32)
-                          : const EdgeInsets.all(8),
+                          ? const EdgeInsets.only(top: 4, right: 32)
+                          : const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.assignment_outlined,
@@ -218,7 +218,7 @@ class PhoneMainView extends GetView<MainController> {
                       onPressed: () {
                         controller.changeTabIndex(4);
                       },
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(4),
                       icon: Column(
                         children: [
                           Icon(Icons.person_outline_sharp,

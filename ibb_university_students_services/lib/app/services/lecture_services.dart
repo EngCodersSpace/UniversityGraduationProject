@@ -45,7 +45,7 @@ class LectureServices {
         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
     if ((cachedDayLectures != null) && (!hardFetch|| !(await checkInternetConnection()))) {
       return Result(
-          data: TableDays.fromJson(cachedDayLectures!.data),
+          data: TableDays.fromJson(cachedDayLectures.data),
           hasError: false,
           statusCode: 200);
     }

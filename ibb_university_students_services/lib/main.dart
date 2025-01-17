@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -8,8 +9,12 @@ import 'package:ibb_university_students_services/app/services/hive_services/hive
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/services/app_data_services.dart';
 
+import 'app/services/notification_services/notification_services.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await NotificationService().initialize();
   await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
   await Hive.initFlutter();
   HiveServices.registerAdapters();
