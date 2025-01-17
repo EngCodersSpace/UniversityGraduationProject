@@ -6,8 +6,8 @@ import 'package:ibb_university_students_services/app/components/custom_text.dart
 import 'package:intl/intl.dart';
 
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
+import '../../../models/lecture_model/lecture_model.dart';
 import '../../../styles/app_colors.dart';
-import '../../../models/lecture_model.dart';
 import '../../../utils/date_time_utils.dart';
 import '../../../utils/permission_checker.dart';
 

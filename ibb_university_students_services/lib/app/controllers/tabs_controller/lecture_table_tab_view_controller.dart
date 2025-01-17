@@ -2,16 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/models/level_model.dart';
-import 'package:ibb_university_students_services/app/models/lecture_model.dart';
-import 'package:ibb_university_students_services/app/models/section_model.dart';
 import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/services/section_services.dart';
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';
 import '../../components/custom_text.dart';
-import '../../models/days_table.dart';
-import '../../models/result.dart';
-import '../../models/subject_model.dart';
+import '../../models/helper_models/days_table.dart';
+import '../../models/helper_models/result.dart';
+import '../../models/lecture_model/lecture_model.dart';
+import '../../models/level_model/level.dart';
+import '../../models/section_model/section.dart';
+import '../../models/subject_model/subject_model.dart';
 import '../../services/subject_services.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/snake_bar.dart';
@@ -194,7 +194,7 @@ class LectureController extends GetxController {
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
         await SectionServices.fetchSections(hardFetch: force)
-            .then((e) => e.data?.values.toList() ?? []);
+            .then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(
@@ -216,7 +216,7 @@ class LectureController extends GetxController {
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(

@@ -33,7 +33,7 @@ class WebSchedualContent extends GetView<LectureController> {
                         CustomText(
                           day.tr,
                           style: AppTextStyles.customColorStyle(
-                              textHeader: AppTextHeaders.h2,
+                              textHeader: AppTextHeaders.h2Bold,
                               color: AppColors.secTextColor),
                         ),
                         SizedBox(
@@ -55,7 +55,7 @@ class WebSchedualContent extends GetView<LectureController> {
                         Center(
                             child: CustomText(
                           controller.fieldMessage.value,
-                          style: AppTextStyles.secStyle(AppTextHeaders.h2),
+                          style: AppTextStyles.secStyle(textHeader:AppTextHeaders.h2Bold),
                         )),
                         IconButton(
                             onPressed: () async => controller.refresh(),
