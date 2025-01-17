@@ -9,7 +9,6 @@ import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.d
 import '../../../styles/app_colors.dart';
 import '../../../models/lecture_model.dart';
 import '../../../utils/date_time_utils.dart';
-import '../../../utils/permission_checker.dart';
 
 class WebLectureCard extends GetView<LectureController> {
   Rx<Lecture?> content;
@@ -63,7 +62,7 @@ class WebLectureCard extends GetView<LectureController> {
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -75,14 +74,14 @@ class WebLectureCard extends GetView<LectureController> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: SecText(
                             "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(
                               time: content.value?.startTime ?? "00:00:00",
                               duration: Duration(
                                   minutes: content.value?.duration ?? 0),
                             )}",
-                            fontSize: 12,
+                            fontSize: 9,
                           ),
                         ),
                         // Row(
@@ -171,7 +170,7 @@ class WebLectureCard extends GetView<LectureController> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
+                    const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +184,9 @@ class WebLectureCard extends GetView<LectureController> {
                               SecText(
                                   "Dr.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}")
                             ],
+                          ),
+                          SizedBox(
+                            height: height * 0.2,
                           ),
                           Row(
                             children: [
