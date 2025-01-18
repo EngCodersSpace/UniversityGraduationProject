@@ -59,7 +59,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
             width: (Get.width - 2) * 0.04,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.25,
+            width: (Get.width - 2) * 0.22,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +91,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
             width: (Get.width - 2) * 0.03,
           ),
           SizedBox(
-            width: (Get.width - 2) * 0.2,
+            width: (Get.width - 2) * 0.25,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

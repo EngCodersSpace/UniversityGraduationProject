@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/services/grad_services.dart';
-import '../components/custom_text.dart';
+import '../components/custom_text_v2.dart';
 import '../models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
-import '../styles/app_colors.dart';
 import '../models/level_model/level.dart';
 import '../services/level_services.dart';
+import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
 
 class StudentResultController extends GetxController {
@@ -89,10 +89,9 @@ class StudentResultController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ),
             )),
       );
@@ -102,19 +101,17 @@ class StudentResultController extends GetxController {
           value: "Term 1",
           child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 "Term 1",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 "Term 2",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
     ];
   }

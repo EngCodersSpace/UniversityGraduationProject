@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 import '../buttons.dart';
-import '../custom_text.dart';
+import '../custom_text_v2.dart';
 
 // ignore: must_be_immutable
 class PopUpMessageCard extends StatelessWidget {
@@ -34,8 +35,8 @@ class PopUpMessageCard extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                MainText("Confirmation",
-                                    textColor: AppColors.secTextColor),
+                                CustomText("Confirmation",
+                                  style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                 Icon(
                                   Icons.info_outline,
                                   color: AppColors.inverseIconColor,
@@ -47,8 +48,8 @@ class PopUpMessageCard extends StatelessWidget {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: SecText(massage,
-                                  textColor: AppColors.secTextColor),
+                              child: CustomText(massage,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                             ),
                             const SizedBox(height: 20),
                             Row(

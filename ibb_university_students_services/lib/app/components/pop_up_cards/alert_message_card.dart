@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 import '../buttons.dart';
-import '../custom_text.dart';
+import '../custom_text_v2.dart';
 
 // ignore: must_be_immutable
 class PopUpAlertCard extends StatelessWidget {
@@ -36,8 +36,8 @@ class PopUpAlertCard extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                MainText("Alert",
-                                    textColor: AppColors.secTextColor),
+                                CustomText("Alert",
+                                  style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                 Icon(
                                   icon,
                                   color: AppColors.inverseIconColor,
@@ -49,8 +49,8 @@ class PopUpAlertCard extends StatelessWidget {
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: SecText(massage,
-                                  textColor: AppColors.secTextColor),
+                              child: CustomText(massage,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                             ),
                             const SizedBox(height: 20),
                             Row(
