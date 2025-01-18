@@ -18,7 +18,8 @@ class InitAppController extends GetxController {
 
   Future<void> _initializeApp() async {
     try {
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
       await NotificationService().initialize();
       await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
       await Hive.initFlutter();
@@ -27,16 +28,14 @@ class InitAppController extends GetxController {
       await HiveServices.openGlobalBoxes();
       await DownloadManager.initialize();
       // Set initialization complete
-
-      if (await UserServices.isCredentialsCached()) {
-        Get.offNamed("/main");
-      }else{
-        Get.offNamed("/login");
-      }
     } catch (e) {
       // Handle errors if needed
       print('Initialization error: $e');
     }
+    if (await UserServices.isCredentialsCached()) {
+      Get.offNamed("/main");
+    } else {
+      Get.offNamed("/login");
+    }
   }
 }
-
