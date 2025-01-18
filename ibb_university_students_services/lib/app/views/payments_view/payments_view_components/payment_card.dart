@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:intl/intl.dart';
@@ -68,7 +67,7 @@ class PaymentsCard extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText(studentFee.value.paymentDate ?? ""),
+                          child: CustomText(studentFee.value.paymentDate ?? "",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -77,7 +76,7 @@ class PaymentsCard extends StatelessWidget {
                             const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText("Level ${(studentFee.value.levelId??0)+1}".tr),
+                          child: CustomText("Level ${(studentFee.value.levelId??0)+1}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -86,7 +85,7 @@ class PaymentsCard extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: SecText("Term ${studentFee.value.term}".tr),
+                          child: CustomText("Term ${studentFee.value.term}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                       ],
                     ),

@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:intl/intl.dart';
-
 import '../../../components/custom_text_v2.dart';
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../../styles/app_colors.dart';
@@ -56,10 +54,10 @@ class LectureCard extends GetView<LectureController> {
             children: [
               Container(
                 constraints: BoxConstraints(
-                  minHeight: height * 0.52,
+                  minHeight: height * 0.42,
                 ),
                 width: double.maxFinite,
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.inverseCardColor,
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -159,10 +157,10 @@ class LectureCard extends GetView<LectureController> {
                       ],
                     ),
                     const SizedBox(
-                      height: 8,
+                      height: 12,
                     ),
-                    MainText(
-                        content.value?.subject?.subjectName ?? "Unknown".tr),
+                    CustomText(
+                        content.value?.subject?.subjectName ?? "Unknown".tr,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold,),textAlign: TextAlign.center,),
                   ],
                 ),
               ),

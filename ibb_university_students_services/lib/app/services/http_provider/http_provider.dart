@@ -11,7 +11,7 @@ class HttpProvider {
   static final Dio _dio = Dio();
 
   static Future<void> init({
-    String baseUrl = "",
+    String baseUrl = '',
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration connectTimeout = const Duration(seconds: 3),

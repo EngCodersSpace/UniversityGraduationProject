@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
-import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-
-import '../../../components/custom_text.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import '../../../components/custom_text_v2.dart';
 
 class BookContainer extends GetView<LibraryController> {
   BookContainer({required this.book, super.key});
@@ -36,9 +35,9 @@ class BookContainer extends GetView<LibraryController> {
               height: 3,
             ),
             Flexible(
-                child: SecText(
+                child: CustomText(
               book["name"] ?? "Unknown",
-              textColor: AppColors.mainTextColor,
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
             ))
           ],
         ),

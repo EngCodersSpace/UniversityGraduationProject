@@ -355,12 +355,9 @@ class LectureServices {
     late Response? response;
     try {
       response = await HttpProvider.get("lecture/year");
-      print(response?.statusCode);
       if (response?.statusCode == 200) {
         List<String> years = List<String>.from(response?.data["data"]);
         await lecturesYearsBox.put("lectureYears",years);
-        print(years);
-        print(lecturesYearsBox.values);
         lecturesYearsBox.close();
         return Result(
             data: years,

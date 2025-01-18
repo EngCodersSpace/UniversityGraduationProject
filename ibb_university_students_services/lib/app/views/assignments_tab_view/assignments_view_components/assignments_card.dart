@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -132,7 +131,7 @@ class AssignmentsCard extends GetView<ExamTableController> {
                     const SizedBox(
                       height: 8,
                     ),
-                    MainText(content.value?.title ?? "Unknown".tr),
+                    CustomText(content.value?.title ?? "Unknown".tr,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold,),),
                   ],
                 ),
               ),

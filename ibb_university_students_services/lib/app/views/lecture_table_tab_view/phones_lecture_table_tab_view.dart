@@ -6,7 +6,7 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
-import '../../components/day_cards.dart';
+import 'lecture_table_tab_components/day_cards.dart';
 import '../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
 import 'lecture_table_tab_components/lecture_card.dart';

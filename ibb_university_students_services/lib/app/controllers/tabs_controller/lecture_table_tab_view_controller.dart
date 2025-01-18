@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
@@ -10,7 +9,6 @@ import 'package:ibb_university_students_services/app/services/section_services.d
 import 'package:ibb_university_students_services/app/services/lecture_services.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
-import '../../components/custom_text.dart';
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/days_table.dart';
 import '../../models/helper_models/result.dart';
@@ -42,10 +40,9 @@ class LectureController extends GetxController {
             width: (ScreenUtils.isPhoneScreen())
                 ? (Get.width / 3.3) * 0.75
                 : (Get.width / 6) * 0.6,
-            child: SecText(
+            child: CustomText(
               "Term 1",
-              textColor: AppColors.mainTextColor,
-              fontSize: 12,
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
     DropdownMenuItem<String>(
         value: "Term 2",
@@ -53,10 +50,9 @@ class LectureController extends GetxController {
             width: (ScreenUtils.isPhoneScreen())
                 ? (Get.width / 3.3) * 0.75
                 : (Get.width / 6) * 0.6,
-            child: SecText(
+            child: CustomText(
               "Term 2",
-              textColor: AppColors.mainTextColor,
-              fontSize: 12,
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
   ];
   Rx<Locale?> currentLocale = Get.locale.obs;

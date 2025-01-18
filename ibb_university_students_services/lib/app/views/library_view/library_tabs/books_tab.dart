@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
-
-import '../../../components/custom_text.dart';
+import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
+import '../../../styles/text_styles.dart';
 import '../components/book_container.dart';
 
 class LecturesTab extends GetView<LibraryController> {
@@ -79,7 +79,7 @@ class LecturesTab extends GetView<LibraryController> {
                             color: AppColors.backColor,
                             iconSize: 40,
                           ),
-                          MainText("${(p ~/ 16) + 1}/${p + 1}"),
+                          CustomText("${(p ~/ 16) + 1}/${p + 1}",style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold,),),
                           IconButton(
                               onPressed: () {
                                 controller.booksPagesController.nextPage(

@@ -6,8 +6,9 @@ import 'package:ibb_university_students_services/app/views/home_tab_view/web_hom
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
-import '../../components/custom_text.dart';
+import '../../components/custom_text_v2.dart';
 import '../../controllers/main_controller.dart';
+import '../../styles/text_styles.dart';
 import '../acadime_card/academic_card_web_view.dart';
 import '../exam_table_view/exam_table_web_view.dart';
 import '../library_view/library_web_view.dart';
@@ -55,10 +56,10 @@ class WebMainView extends GetView<MainController> {
                                       : null,
                                   child: (controller.user?.profileImage) != null
                                       ? null
-                                      : MainText(
+                                      : CustomText(
                                           controller.user?.name?[0] ??
                                               "".toUpperCase(),
-                                          textColor: AppColors.mainTextColor,
+                                    style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold,),
                                         ),
                                 ),
                               ],
@@ -71,21 +72,17 @@ class WebMainView extends GetView<MainController> {
                                 Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      SecText(
-                                        controller.user?.name ?? " ",
-                                        textColor: AppColors.mainTextColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
+                                      CustomText(
+                                        controller.user?.name ?? " "
+                              ,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ]),
                                 Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      SecText(
-                                        "${controller.user?.id ?? " "}",
-                                        textColor: AppColors.mainTextColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
+                                      CustomText(
+                                        "${controller.user?.id ?? " "}"
+                                  ,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ]),
                               ],
@@ -140,18 +137,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Library".tr,
-                                        fontSize:
-                                            (Get.locale?.languageCode == "en")
-                                                ? 10
-                                                : 8,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    5)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -188,18 +179,12 @@ class WebMainView extends GetView<MainController> {
                                                 : AppColors.mainTextColor,
                                       ),
                                       SizedBox(width: Get.width * 0.005),
-                                      SecText(
+                                      CustomText(
                                         "Profile".tr,
-                                        fontSize:
-                                            (Get.locale?.languageCode == "en")
-                                                ? 10
-                                                : 8,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    4)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -238,16 +223,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Home".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    2)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),)
                                     ],
                                   ),
                                 ),
@@ -285,15 +266,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Notification".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    0)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -332,15 +310,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
-                                        "Lectur Table".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    1)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                      CustomText(
+                                        "Lecture Table".tr,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -379,16 +354,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Reports".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    3)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),)
                                     ],
                                   ),
                                 ),
@@ -426,15 +397,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Exam Table".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    6)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -473,15 +441,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Results".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    7)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -520,15 +485,12 @@ class WebMainView extends GetView<MainController> {
                                       SizedBox(
                                         width: Get.width * 0.005,
                                       ),
-                                      SecText(
+                                      CustomText(
                                         "Acadimic Card".tr,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                        textColor:
-                                            (controller.selectedIndex.value ==
-                                                    8)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
+                                        style: AppTextStyles.customColorStyle(color: (controller.selectedIndex.value ==
+                                            5)
+                                            ? AppColors.secTextColor
+                                            : AppColors.mainTextColor, textHeader: AppTextHeaders.h6Bold,),
                                       ),
                                     ],
                                   ),
@@ -556,9 +518,9 @@ class WebMainView extends GetView<MainController> {
     WebLectureTableTabView(),
     WebHomeTab(),
     Center(
-      child: MainText(
+      child: CustomText(
         "Main page 3",
-        textColor: Colors.black,
+        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold,),
       ),
     ),
     const WebProfileView(),

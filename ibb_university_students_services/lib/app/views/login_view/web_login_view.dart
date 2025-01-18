@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/utils/validators.dart';
-
 import '../../components/buttons.dart';
-import '../../components/custom_text.dart';
+import '../../components/custom_text_v2.dart';
 import '../../components/text_field.dart';
 import '../../controllers/login_controller.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 
 class WebLoginView extends GetView<LoginController> {
   WebLoginView({
@@ -19,8 +19,18 @@ class WebLoginView extends GetView<LoginController> {
   double width = Get.width;
 
   List<PopupMenuItem<String>> menuItems = [
-    PopupMenuItem<String>(value: "en", child: SecText("En")),
-    PopupMenuItem<String>(value: "ar", child: SecText("Ar")),
+    PopupMenuItem<String>(
+        value: "en",
+        child: CustomText("En",
+            style: AppTextStyles.secStyle(
+              textHeader: AppTextHeaders.h3Normal,
+            ))),
+    PopupMenuItem<String>(
+        value: "ar",
+        child: CustomText("Ar",
+            style: AppTextStyles.secStyle(
+              textHeader: AppTextHeaders.h3Normal,
+            ))),
   ];
 
   @override
@@ -34,10 +44,10 @@ class WebLoginView extends GetView<LoginController> {
               fit: BoxFit.fill),
         ),
         Container(
-          color: AppColors.coverColor.withValues(alpha:0.0),
+          color: AppColors.coverColor.withValues(alpha: 0.0),
         ),
         Container(
-          color: AppColors.coverColor.withValues(alpha:0.0),
+          color: AppColors.coverColor.withValues(alpha: 0.0),
         ),
         Container(
           color: AppColors.coverColor.withValues(alpha: 0.0),
@@ -65,15 +75,13 @@ class WebLoginView extends GetView<LoginController> {
                         focalRadius: 1)),
                 child: Column(
                   children: [
-                    MainText(
+                    CustomText(
                       "IBB",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      style: AppTextStyles.mainStyle(textHeader: TextHeaders(fontSize: 32, fontWeight: FontWeight.bold)),
                     ),
-                    MainText(
+                    CustomText(
                       "UNIVERSITY",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
+                      style: AppTextStyles.mainStyle(textHeader: TextHeaders(fontSize: 32, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -105,11 +113,10 @@ class WebLoginView extends GetView<LoginController> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SecText(
-                                      'login'.tr,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
+                                    CustomText('login'.tr,
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h2Bold,
+                                        )),
                                   ]),
                             ),
                             SizedBox(
@@ -129,10 +136,10 @@ class WebLoginView extends GetView<LoginController> {
                                               "en")
                                           ? [
                                               const Icon(Icons.language),
-                                              SecText("En"),
+                                              CustomText("En"),
                                             ]
                                           : [
-                                              SecText("Ar"),
+                                              CustomText("Ar"),
                                               const Icon(Icons.language),
                                             ],
                                 ),
@@ -149,8 +156,6 @@ class WebLoginView extends GetView<LoginController> {
                           controller: controller.id,
                           validator: (id) => Validators.validateID(id),
                           labelText: "User ID".tr,
-                          //icon: Icons.account_circle_outlined,
-                          //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
                         ),
                         SizedBox(
@@ -172,11 +177,10 @@ class WebLoginView extends GetView<LoginController> {
                           alignment: AlignmentDirectional.centerEnd,
                           child: TextButton(
                             onPressed: () => controller.forgotPassword,
-                            child: SecText(
-                              "Forgot Password?".tr,
-                              fontSize: 10.0,
-                              textColor: AppColors.linkTextColor,
-                            ),
+                            child: CustomText("Forgot Password?".tr,
+                                style: AppTextStyles.highlightStyle(
+                                  textHeader: AppTextHeaders.h6Bold,
+                                )),
                           ),
                         ),
                         SizedBox(
@@ -211,8 +215,10 @@ class WebLoginView extends GetView<LoginController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SecText("Remember me",
-                                textColor: AppColors.linkTextColor),
+                            CustomText("Remember me",
+                                style: AppTextStyles.linkStyle(
+                                  textHeader: AppTextHeaders.h3Normal,
+                                )),
                             Checkbox(
                                 value: controller.rememberMe.value,
                                 onChanged: controller.toggleRememberMe),

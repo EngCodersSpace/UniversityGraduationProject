@@ -5,7 +5,6 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/services/assignments_services.dart';
 import 'package:ibb_university_students_services/app/services/subject_services.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import '../../components/custom_text.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/level_model/level.dart';
@@ -13,7 +12,6 @@ import '../../models/section_model/section.dart';
 import '../../models/subject_model/subject_model.dart';
 import '../../services/level_services.dart';
 import '../../services/section_services.dart';
-import '../../styles/app_colors.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
 
@@ -111,10 +109,9 @@ class AssignmentsTabController extends GetxController {
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width/3)-30
                   : (Get.width / 5.5) * 0.6,
-              child: SecText(
+              child: CustomText(
                 section.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ),
             )),
       );
@@ -134,10 +131,9 @@ class AssignmentsTabController extends GetxController {
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 4)-30
                   : (Get.width / 8) * 0.6,
-              child: SecText(
+              child: CustomText(
                 level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ),
             )),
       );
