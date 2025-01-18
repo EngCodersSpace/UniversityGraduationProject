@@ -20,6 +20,7 @@ class ExamServices {
   static const int _createError = 623;
   static const int _updateError = 624;
   static const int _deleteError = 625;
+  static const int _fetchYearsError = 629;
 
   static Box<ExamsCache>? _examsBox;
 
@@ -193,4 +194,54 @@ class ExamServices {
           data: null);
     }
   }
+
+  static Future<Result<List<String>>> fetchLectureYears({
+    bool hardFetch = false,
+  }) async {
+    Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
+    List<String>? years;
+    try{
+      years = lecturesYearsBox.get("lectureYears");
+    }catch(e){
+      //
+    }
+    if (years != null && !hardFetch && !(await checkInternetConnection())) {
+      await lecturesYearsBox.close();
+      return Result(
+        data: years,
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("lecture/year");
+      if (response?.statusCode == 200) {
+        List<String> years = List<String>.from(response?.data["data"]);
+        await lecturesYearsBox.put("lectureYears",years);
+        lecturesYearsBox.close();
+        return Result(
+            data: years,
+            hasError: true,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+      lecturesYearsBox.close();
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchYearsError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      lecturesYearsBox.close();
+      return Result(
+          hasError: true,
+          statusCode: _fetchYearsError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
 }

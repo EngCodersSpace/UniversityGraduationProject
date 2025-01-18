@@ -38,20 +38,20 @@ class LectureController extends GetxController {
         value: "Term 1",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (Get.width / 3.3) * 0.75
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
-              "Term 1",
+              "1st",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (Get.width / 3.3) * 0.75
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
-              "Term 2",
+              "2ec",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
   ];
@@ -232,7 +232,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 4)*0.48,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? (((Get.width - 16) / 7) * 4)*0.48
+                  : (Get.width / 7) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
                 style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
@@ -253,7 +255,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 2.5)*0.35,
+              width: (ScreenUtils.isPhoneScreen())
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
+                : (Get.width / 7) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
@@ -274,7 +278,7 @@ class LectureController extends GetxController {
             value: year,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 3.3) * 0.75
+                  ? (((Get.width - 16) / 7) * 4)*0.48
                   : (Get.width / 7) * 0.6,
               child: CustomText(
                 year,

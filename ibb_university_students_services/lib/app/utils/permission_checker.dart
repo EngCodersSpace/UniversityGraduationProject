@@ -3,8 +3,8 @@ import 'package:ibb_university_students_services/app/services/user_services.dart
 class PermissionUtils {
   static Map<String, Map<String, List<String>>> permissionsMap = {
     "controller": {
-      "Lectures": ["add","edit" "delete", "view"],
-      "Exams": ["add", "edit","delete", "view"],
+      "Lectures": ["add","edit" "delete", "view","accessOldTables"],
+      "Exams": ["add", "edit","delete", "view","accessOldTables"],
       "Assignments": ["add", "edit","delete", "doctorView"],
     },
     "student": {
@@ -18,8 +18,8 @@ class PermissionUtils {
       "Assignments": ["add", "edit","delete", "view"],
     },
     "admin": {
-      "Lecturers": ["add", "delete", "view","showOldTables"],
-      "Exams": ["add", "delete", "view"],
+      "Lecturers": ["add", "delete", "view","accessOldTables"],
+      "Exams": ["add", "delete", "view","accessOldTables"],
       "Assignments": ["add", "edit","delete", "doctorView"],
     }
   };
