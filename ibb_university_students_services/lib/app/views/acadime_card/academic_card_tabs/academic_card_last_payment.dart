@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
-
-import '../../../components/custom_text.dart';
-import '../../../styles/app_colors.dart';
+import '../../../components/custom_text_v2.dart';
+import '../../../styles/text_styles.dart';
 
 class AcademicCardLastPayment extends GetView<AcademicCardController> {
   const AcademicCardLastPayment({super.key});
@@ -41,17 +40,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   "10,000 YR",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :المبلغ",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -61,17 +56,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   "الثاني",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :القسط",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -86,17 +77,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   "مستجد",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :الحالة الدراسية",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -106,17 +93,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   controller.user?.value.section?.nameData?["ar"]??"??",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :التخصص",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -127,20 +110,16 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 if(controller.user?.value is Student)...[
-                                  SecText(
+                                  CustomText(
                                     (controller.user?.value as Student).level?.name??"??",
-                                    textColor: AppColors.inverseCardColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                   ),
                                 ]else...[
-                                  SecText("??")
+                                  CustomText("??")
                                 ],                                 
-                                SecText(
+                                CustomText(
                                   "  :المستوى",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -155,17 +134,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   "2024 / 10 / 25",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :تاريخ الاصدار",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),
@@ -175,17 +150,13 @@ class AcademicCardLastPayment extends GetView<AcademicCardController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SecText(
+                                CustomText(
                                   "2024 / 2023",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
-                                SecText(
+                                CustomText(
                                   "  :العام الجامعي",
-                                  textColor: AppColors.inverseCardColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)
                                 ),
                               ],
                             ),

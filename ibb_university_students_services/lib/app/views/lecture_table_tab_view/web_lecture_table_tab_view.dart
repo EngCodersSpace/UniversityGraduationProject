@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/lecture_table_tab_components/web_schedual_content.dart';
-
-import '../../components/custom_text.dart';
+import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 
 // ignore: must_be_immutable
 class WebLectureTableTabView extends GetView<LectureController> {
@@ -103,9 +103,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SecText(
+                          CustomText(
                             "Section".tr,
-                            fontWeight: FontWeight.bold,
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -120,9 +120,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             child: Center(
                               child: Obx(
                                 () => DropdownButton(
-                                  items: controller.departments,
+                                  items: controller.sections,
                                   onChanged: controller.changeDepartment,
-                                  value: controller.selectedDepartment.value,
+                                  value: controller.selectedSection.value,
                                   underline: const SizedBox(),
                                   iconEnabledColor: AppColors.mainCardColor,
                                   dropdownColor: AppColors.inverseCardColor,
@@ -133,9 +133,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           SizedBox(
                             width: width * 0.02,
                           ),
-                          SecText(
+                          CustomText(
                             "Level".tr,
-                            fontWeight: FontWeight.bold,
+                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -161,9 +161,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           SizedBox(
                             width: width * 0.02,
                           ),
-                          SecText(
+                          CustomText(
                             "Term".tr,
-                            fontWeight: FontWeight.bold,
+                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -189,9 +189,9 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           SizedBox(
                             width: width * 0.02,
                           ),
-                          SecText(
+                          CustomText(
                             "Year".tr,
-                            fontWeight: FontWeight.bold,
+                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,

@@ -336,8 +336,8 @@ class LectureServices {
   static Future<Result<List<String>>> fetchLectureYears({
     bool hardFetch = false,
   }) async {
-    Box lecturesYearsBox = await Hive.openBox<List<String>>("YearsBox");
-    List<String>? years = lecturesYearsBox.get("lectureYears");
+    Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYears");
+    List<String>? years = lecturesYearsBox.get("lectureYears") ;
     if (years != null && !hardFetch && !(await checkInternetConnection())) {
       await lecturesYearsBox.close();
       return Result(
