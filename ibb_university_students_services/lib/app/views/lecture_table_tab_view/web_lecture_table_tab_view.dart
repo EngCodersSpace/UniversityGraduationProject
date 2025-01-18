@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
+import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/lecture_table_tab_components/web_schedual_content.dart';
+
 import '../../components/custom_text.dart';
 import '../../styles/app_colors.dart';
 
@@ -17,323 +19,54 @@ class WebLectureTableTabView extends GetView<LectureController> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Container(
-            color: AppColors.tabBackColor,
-            child: Column(
-              children: [
-                Container(
+        : Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
                   width: width,
-                  height: height * 0.2,
-                  decoration: BoxDecoration(
-                    color: AppColors.backColor,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 8,
-                        offset: Offset(0, 5),
-                      )
-                    ],
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SecText(
-                        "Section".tr,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        width: width * 0.002,
-                      ),
-                      Container(
-                        height: height * 0.1,
-                        width: width * 0.14,
-                        decoration: BoxDecoration(
-                          color: AppColors.inverseIconColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Obx(
-                            () => DropdownButton(
-                              items: controller.sections,
-                              onChanged: controller.changeDepartment,
-                              value: controller.selectedSection.value,
-                              underline: const SizedBox(),
-                              iconEnabledColor: AppColors.mainCardColor,
-                              dropdownColor: AppColors.inverseCardColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width * 0.03,
-                      ),
-                      SecText(
-                        "Level".tr,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        width: width * 0.002,
-                      ),
-                      Container(
-                        height: height * 0.1,
-                        width: width * 0.1,
-                        decoration: BoxDecoration(
-                          color: AppColors.inverseIconColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Obx(() => DropdownButton(
-                                items: controller.levels,
-                                onChanged: controller.changeLevel,
-                                value: controller.selectedLevel.value,
-                                underline: const SizedBox(),
-                                iconEnabledColor: AppColors.mainCardColor,
-                                dropdownColor: AppColors.inverseCardColor,
-                              )),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width * 0.03,
-                      ),
-                      SecText(
-                        "Term".tr,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        width: width * 0.002,
-                      ),
-                      Container(
-                        height: height * 0.1,
-                        width: width * 0.13,
-                        decoration: BoxDecoration(
-                          color: AppColors.inverseIconColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Obx(() => DropdownButton(
-                                items: controller.terms,
-                                onChanged: controller.changeTerm,
-                                value: controller.selectedTerm.value,
-                                underline: const SizedBox(),
-                                iconEnabledColor: AppColors.mainCardColor,
-                                dropdownColor: AppColors.inverseCardColor,
-                              )),
-                        ),
-                      ),
-                      SizedBox(
-                        width: width * 0.03,
-                      ),
-                      SecText(
-                        "Year".tr,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      SizedBox(
-                        width: width * 0.002,
-                      ),
-                      Container(
-                        height: height * 0.1,
-                        width: width * 0.13,
-                        decoration: BoxDecoration(
-                          color: AppColors.inverseIconColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Obx(() => DropdownButton(
-                                items: controller.years,
-                                onChanged: controller.changeYear,
-                                value: controller.selectedYear.value,
-                                underline: const SizedBox(),
-                                iconEnabledColor: AppColors.mainCardColor,
-                                dropdownColor: AppColors.inverseCardColor,
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.05,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 15, right: 10),
+                  height: height * 0.8,
+                  padding: const EdgeInsets.only(left: 2, right: 2, top: 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        // Table(
-
-                        //   border: TableBorder.all(
-                        //     width: 1,
-                        //     color: Colors.black,
-                        //     style: BorderStyle.solid,
-                        //   ),
-                        //   children: [
-                        //     TableRow(
-                        //         decoration: BoxDecoration(
-                        //             color: AppColors.inverseCardColor
-                        //                 .withOpacity(0.2)),
-                        //         children: [
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Day \\ Level",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Level 1",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Level   2",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Level 3",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Level 4",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: width * 0.2,
-                        //             child: TableCell(
-                        //               child: SecText(
-                        //                 "Level 5",
-                        //                 fontSize: 18,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ])
-                        //   ],
-                        // ),
                         Container(
+                          padding: const EdgeInsets.only(left: 6, top: 10),
                           decoration: BoxDecoration(
-                              color:
-                                  AppColors.inverseCardColor.withValues(alpha:0.2),
+                              color: AppColors.backColor,
                               border: Border.all(width: 1, color: Colors.black),
                               borderRadius: BorderRadius.circular(10)),
+                          alignment: Alignment.topCenter,
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SecText(
-                                    "time ".tr,
-                                    fontSize: 16,
-                                  ),
-                                  const Text(
-                                    "\\",
-                                    style: TextStyle(
-                                      fontSize: 40,
-                                    ),
-                                  ),
-                                  SecText(
-                                    "Day".tr,
-                                    fontSize: 16,
-                                  ),
+                                  WebSchedualContent(day: "Saturday", index: 0),
                                   SizedBox(
-                                    width: width * 0.06,
+                                    width: width * 0.02,
                                   ),
-                                  SecText(
-                                    "Saturday".tr,
-                                    fontSize: 18,
-                                  ),
+                                  WebSchedualContent(day: "Sunday", index: 1),
                                   SizedBox(
-                                    width: width * 0.06,
+                                    width: width * 0.02,
                                   ),
-                                  SecText(
-                                    "Sunday".tr,
-                                    fontSize: 18,
-                                  ),
+                                  WebSchedualContent(day: "Monday", index: 2),
                                   SizedBox(
-                                    width: width * 0.06,
+                                    width: width * 0.02,
                                   ),
-                                  SecText(
-                                    "Monday".tr,
-                                    fontSize: 18,
-                                  ),
+                                  WebSchedualContent(day: "Tuseday", index: 3),
                                   SizedBox(
-                                    width: width * 0.06,
+                                    width: width * 0.02,
                                   ),
-                                  SecText(
-                                    "Tuesday".tr,
-                                    fontSize: 18,
-                                  ),
+                                  WebSchedualContent(
+                                      day: "Wednesday", index: 4),
                                   SizedBox(
-                                    width: width * 0.06,
+                                    width: width * 0.02,
                                   ),
-                                  SecText(
-                                    "Wednesday".tr,
-                                    fontSize: 18,
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.06,
-                                  ),
-                                  SecText(
-                                    "Thursday".tr,
-                                    fontSize: 18,
-                                  ),
+                                  WebSchedualContent(day: "Thursday", index: 5),
                                 ],
-                              ),
-                              SizedBox(
-                                height: height * 0.0,
-                              ),
-                              Divider(
-                                thickness: 1.5,
-                                color: AppColors.inverseCardColor,
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SecText(
-                                    "8 AM".tr,
-                                    fontSize: 18,
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.06,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
-                              ),
-                              Divider(
-                                thickness: 1.5,
-                                color: AppColors.inverseCardColor,
-                              ),
-                              SizedBox(
-                                height: height * 0.02,
                               ),
                             ],
                           ),
@@ -342,8 +75,152 @@ class WebLectureTableTabView extends GetView<LectureController> {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                width: width,
+                height: height * 0.2,
+                color: AppColors.tabBackColor,
+                child: Column(
+                  children: [
+                    Container(
+                      width: width,
+                      height: height * 0.2,
+                      decoration: BoxDecoration(
+                        color: AppColors.backColor,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 5),
+                          )
+                        ],
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(24),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SecText(
+                            "Section".tr,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: width * 0.002,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.14,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => DropdownButton(
+                                  items: controller.departments,
+                                  onChanged: controller.changeDepartment,
+                                  value: controller.selectedDepartment.value,
+                                  underline: const SizedBox(),
+                                  iconEnabledColor: AppColors.mainCardColor,
+                                  dropdownColor: AppColors.inverseCardColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.02,
+                          ),
+                          SecText(
+                            "Level".tr,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: width * 0.002,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.1,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.levels,
+                                    onChanged: controller.changeLevel,
+                                    value: controller.selectedLevel.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.02,
+                          ),
+                          SecText(
+                            "Term".tr,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: width * 0.002,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.13,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.terms,
+                                    onChanged: controller.changeTerm,
+                                    value: controller.selectedTerm.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.02,
+                          ),
+                          SecText(
+                            "Year".tr,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(
+                            width: width * 0.002,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.13,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.years,
+                                    onChanged: controller.changeYear,
+                                    value: controller.selectedYear.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ));
   }
 }

@@ -74,11 +74,11 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                         child: Center(
                                           child: Obx(
                                                 () => DropdownButton(
-                                              items: controller.sections,
+                                              items: controller.departments,
                                               onChanged:
                                               controller.changeDepartment,
                                               value: controller
-                                                  .selectedSection.value,
+                                                  .selectedDepartment.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
                                               AppColors.mainCardColor,
@@ -322,7 +322,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Obx(
-                          () => SecText(controller.selectedDayName.value.tr,
+                          () => SecText(controller.selectedDayName.tr,
                               textColor: AppColors.highlightTextColor),
                         ),
                         if ((PermissionUtils.checkPermission(

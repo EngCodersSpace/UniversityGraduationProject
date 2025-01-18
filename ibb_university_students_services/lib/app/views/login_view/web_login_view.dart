@@ -39,6 +39,9 @@ class WebLoginView extends GetView<LoginController> {
         Container(
           color: AppColors.coverColor.withValues(alpha:0.0),
         ),
+        Container(
+          color: AppColors.coverColor.withValues(alpha: 0.0),
+        ),
         SingleChildScrollView(
           child: Column(
             children: [
@@ -148,6 +151,7 @@ class WebLoginView extends GetView<LoginController> {
                           labelText: "User ID".tr,
                           //icon: Icons.account_circle_outlined,
                           //icon: Icons.account_circle_outlined,
+                          //icon: Icons.account_circle_outlined,
                         ),
                         SizedBox(
                           height: height * 0.6 * 0.05,
@@ -157,6 +161,7 @@ class WebLoginView extends GetView<LoginController> {
                             validator: (pwd) =>
                                 Validators.validatePassword(pwd),
                             labelText: "Password".tr,
+                            //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             //icon: Icons.key_sharp,
                             isPassword: true,
