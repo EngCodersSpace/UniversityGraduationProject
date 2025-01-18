@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231712318834",
+    "project_id": "unversity-project-2a9e4",
+    "storage_bucket": "unversity-project-2a9e4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231712318834:android:959c0bbbc05769ae4e69eb",
+        "android_client_info": {
+          "package_name": "com.example.ibb_university_students_services"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgajg2fSHoq53LoVk8z-8E0hCbQpiaoXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- flutter_local_notifications  setting -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- end of flutter_local_notifications  setting -->
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -34,5 +38,8 @@
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2"/>
+        <!-- start flutter_local_notifications in application  setting -->
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
+        <!-- end of flutter_local_notifications in application  setting -->
     </application>
 </manifest>
