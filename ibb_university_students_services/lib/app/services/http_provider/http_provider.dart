@@ -155,7 +155,6 @@ class HttpProvider {
       Response response = await _dio.post("refresh",data: {
         "refreshToken":box.get("refreshToken")??""
       });
-      print(response.data);
       await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
