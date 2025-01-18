@@ -1,10 +1,12 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+
+import '../../../components/custom_text_v2.dart';
+import '../../../styles/text_styles.dart';
 
 class AcademicCardInfo extends GetView<AcademicCardController> {
   const AcademicCardInfo({super.key});
@@ -61,11 +63,9 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                                 ),
                               ],
                             ),
-                            SecText(
+                            CustomText(
                               (controller.user?.value.id??-99999).toString(),
-                              textColor: AppColors.inverseCardColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
                             )
                           ],
                         ),
@@ -86,29 +86,23 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                                 child: Column(
                                   children: [
                                     Center(
-                                      child: SecText(
+                                      child: CustomText(
                                         "بطاقة جامعية",
-                                        textColor: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                          style: AppTextStyles.customColorStyle(color: Colors.black, textHeader: AppTextHeaders.h2Bold)
                                       ),
                                     ),
                                     const SizedBox(height: 8,),
                                     Center(
-                                      child: SecText(
+                                      child: CustomText(
                                         "النظام ال${((controller.user?.value as Student).systemData?["ar"])}",
-                                        textColor: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                          style: AppTextStyles.customColorStyle(color: Colors.black, textHeader: AppTextHeaders.h2Bold)
                                       ),
                                     ),
                                     const SizedBox(height: 24,),
                                     Center(
-                                      child: SecText(
+                                      child: CustomText(
                                         controller.user?.value.nameData?["ar"]??"unknown",
-                                        textColor: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                          style: AppTextStyles.customColorStyle(color: Colors.black, textHeader: AppTextHeaders.h2Bold)
                                       ),
                                     ),
                                   ],
@@ -129,21 +123,18 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                               color: AppColors.inverseCardColor,
                               borderRadius: BorderRadius.circular(8)),
                           child: Center(
-                            child: SecText(
+                            child: CustomText(
                               "كلية ${controller.user?.value.collegeNameData?["ar"]??"??"} - كهربائية - ${controller.user?.value.section?.nameData?["ar"]}",
-                              textColor: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                                style: AppTextStyles.customColorStyle(color: Colors.white, textHeader: AppTextHeaders.h2Bold)
                             ),
                           ),
                         ),
                       ),
                       RotatedBox(
                         quarterTurns: 1,
-                        child: SecText(
+                        child: CustomText(
                           "   جامعة إب    ",
-                          textColor: Colors.black,
-                          fontWeight: FontWeight.bold,
+                            style: AppTextStyles.customColorStyle(color: Colors.black, textHeader: AppTextHeaders.h2Bold)
                         ),
                       ),
                       const SizedBox(
@@ -164,7 +155,9 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                             color: AppColors.inverseCardColor,
                             borderRadius: BorderRadius.circular(8)),
                         child: Center(
-                          child: MainText((controller.user?.value as Student).enrollmentYear??"??"),
+                          child: CustomText((controller.user?.value as Student).enrollmentYear??"??",
+                              style: AppTextStyles.customColorStyle(color: Colors.white, textHeader: AppTextHeaders.h2Bold)
+                          ),
                         ),
                       ),
                     ),

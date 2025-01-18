@@ -20,7 +20,6 @@ class NotificationService {
 
     await FirebaseMessaging.instance.getToken().then((token) {
       this.token = token;
-      print("Device Token: $token");
     });
 
     // Handle foreground messages
@@ -35,13 +34,15 @@ class NotificationService {
 
     // Handle background messages (important for when the app is in the background)
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
-    _showNotification(title: "Test", body: "Just test notifications");
-    Future.delayed(const Duration(seconds: 10), () {
-      _showNotification(
-        title: "Test Notification",
-        body: "This is a test notification sent after 10 seconds.",
-      );
-    });
+
+    //Testing
+    // _showNotification(title: "Test", body: "Just test notifications");
+    // Future.delayed(const Duration(seconds: 10), () {
+    //   _showNotification(
+    //     title: "Test Notification",
+    //     body: "This is a test notification sent after 10 seconds.",
+    //   );
+    // });
   }
 
 

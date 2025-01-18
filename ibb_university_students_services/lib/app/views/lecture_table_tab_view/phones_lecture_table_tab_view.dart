@@ -6,7 +6,6 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
-import '../../components/custom_text.dart';
 import '../../components/day_cards.dart';
 import '../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
@@ -74,11 +73,11 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                         child: Center(
                                           child: Obx(
                                                 () => DropdownButton(
-                                              items: controller.departments,
+                                              items: controller.sections,
                                               onChanged:
                                               controller.changeDepartment,
                                               value: controller
-                                                  .selectedDepartment.value,
+                                                  .selectedSection.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
                                               AppColors.mainCardColor,
@@ -150,10 +149,9 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
-                                          child: SecText(
+                                          child: CustomText(
                                             "${"Year".tr}:",
-                                            fontWeight: FontWeight.bold,
-                                            textAlign: TextAlign.start,
+                                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
                                           ),
                                         ),
                                         Container(
@@ -193,10 +191,9 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: SecText(
+                                          child: CustomText(
                                             "${"Term".tr}:",
-                                            textAlign: TextAlign.start,
-                                            fontWeight: FontWeight.bold,
+                                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
                                           ),
                                         ),
                                         Container(
@@ -321,10 +318,8 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Obx(
-                          () => SecText(controller.selectedDayName.tr,
-                              textColor: AppColors.highlightTextColor),
-                        ),
+                          CustomText(controller.selectedDayName.value.tr,
+                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),),
                         if ((PermissionUtils.checkPermission(
                             target: "Lectures", action: "add")))
                           CustomButton(
