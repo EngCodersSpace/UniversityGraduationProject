@@ -21,7 +21,7 @@ class AcademicCardPhoneView extends GetView<AcademicCardController> {
           appBar: AppBar(
             title: CustomText(
               "Academic Card",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h2Bold),
+              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
             ),
             backgroundColor: AppColors.tabBackColor,
           ),

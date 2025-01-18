@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
 import '../user_services.dart';
 
@@ -32,15 +31,15 @@ class HttpProvider {
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
-        // if (kDebugMode) {
-        //   print(error.requestOptions.uri);
-        //   print("HttpProviderError ------------------ ");
-        //   print("error: ${error.message}");
-        //   print("status code: ${error.response?.statusCode}");
-        //   print("status headers: ${error.response?.isRedirect}");
-        //   print("request headers: ${error.requestOptions.headers}");
-        //   print(connectivityResult);
-        // }
+        if (kDebugMode) {
+          print(error.requestOptions.uri);
+          print("HttpProviderError ------------------ ");
+          print("error: ${error.message}");
+          print("status code: ${error.response?.statusCode}");
+          print("status headers: ${error.response?.isRedirect}");
+          print("request headers: ${error.requestOptions.headers}");
+          print(connectivityResult);
+        }
         if (connectivityResult.contains(ConnectivityResult.none)) {
           try{
             get_x.Get.dialog(PopUpAlertCard(
@@ -156,11 +155,11 @@ class HttpProvider {
       Response response = await _dio.post("refresh",data: {
         "refreshToken":box.get("refreshToken")??""
       });
+      print(response.data);
       await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        List<String>? credentials = prefs.getStringList("credentials");
+        List<String>? credentials = await  UserServices.fetchCachedCredentials();
         if (credentials != null) {
           UserServices.userLogin(credentials[0], credentials[1]);
         } else {
