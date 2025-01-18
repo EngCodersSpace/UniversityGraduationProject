@@ -207,6 +207,12 @@ exports.getAllDoctors = async (req, res) => {
     }
 };
 
+
+
+
+
+
+
 // exports.getAllDoctors = async (req, res) => {
 //     const { language } = req.query;
 

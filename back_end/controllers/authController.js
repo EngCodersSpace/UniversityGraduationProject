@@ -29,6 +29,7 @@ exports.welcome = (req, res) => {
   });
 };
 ///////////////////////////
+// for doctor brings all subjects of doctor
 exports.login = async (req, res) => {
   const { user_id, password } = req.body;
   try {
