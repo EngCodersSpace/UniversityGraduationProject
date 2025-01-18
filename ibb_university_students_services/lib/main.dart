@@ -1,27 +1,13 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
-import 'package:ibb_university_students_services/app/services/downloder/download_manager.dart';
-import 'package:ibb_university_students_services/app/services/hive_services/hive_services.dart';
-import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
-import 'package:ibb_university_students_services/app/services/app_data_services.dart';
-import 'package:ibb_university_students_services/firebase_options.dart';
-import 'app/services/notification_services/notification_services.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await NotificationService().initialize();
-  await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-  await Hive.initFlutter();
-  HiveServices.registerAdapters();
-  // HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
-  await AppDataServices.fetchAppData();
-  DownloadManager.initialize();
-  await HiveServices.openGlobalBoxes();
   runApp(const MyApp());
 }
 
@@ -34,22 +20,18 @@ class MyApp extends StatelessWidget {
         //IOS UI
         ? GetCupertinoApp(
             title: "StudentServices",
-            initialRoute: "/login",
+            initialRoute: "/splash_screen",
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
-            onReady: () async {
-              DownloadManager.initialize();
-              await HiveServices.openGlobalBoxes();
-            },
           )
         // Android and web UI
         : GetMaterialApp(
             title: "StudentServices",
-            initialRoute: "/login",
+            initialRoute: "/splash_screen",
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
@@ -57,8 +39,6 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             onDispose: () async {
               await Hive.close();
-            },
-            onReady: () async {
             },
           );
   }
