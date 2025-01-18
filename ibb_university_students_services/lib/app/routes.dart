@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/bindings/exam_table_binding.dart';
+import 'package:ibb_university_students_services/app/bindings/init_app_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/library_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
@@ -10,6 +11,7 @@ import 'package:ibb_university_students_services/app/views/login_view/forgot_pas
 import 'package:ibb_university_students_services/app/views/login_view/login_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/payments_view/payments_view_loder.dart';
+import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 
 import 'bindings/academic_card_binding.dart';
@@ -18,6 +20,13 @@ import 'bindings/payments_binding.dart';
 
 class AppRoutes {
   static final routes = [
+
+    GetPage(
+      name: '/splash_screen',
+      page: () => const SplashScreen(),
+      binding:  InitAppBinding(),
+    ),
+
     GetPage(
       name: '/login',
       page: () => const LoginViewLoader(),

@@ -30,9 +30,6 @@ class LoginController extends GetxController {
   void onInit() async{
     id.text = "10";
     password.text = "1234pass@";
-    if (await UserServices.isCredentialsCached()) {
-        Get.offNamed("/main");
-    }
     super.onInit();
     loading.value = false;
   }
