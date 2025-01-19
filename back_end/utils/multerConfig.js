@@ -85,12 +85,7 @@ const upload = multer({
         'application/sql',      
     ];
     if (!allowedMimetypes.includes(file.mimetype)) {
-      const io = getIO();
-      io.emit('file-upload-error', {
-        message: 'File type not allowed.',
-        file: file.originalname,
-      });
-      return cb(new Error('File type not allowed.'), false);
+      return cb(new Error('File type not allowed.'), false , file.filename);
     }
     cb(null, true);
   },
