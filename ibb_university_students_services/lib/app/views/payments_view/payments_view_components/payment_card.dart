@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/controllers/payments_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:intl/intl.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/permission_checker.dart';
 
-class PaymentsCard extends StatelessWidget {
+class PaymentsCard extends GetView<PaymentsController> {
   Rx<StudentFee> studentFee;
 
   PaymentsCard({
@@ -22,7 +24,7 @@ class PaymentsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Container(
           padding: const EdgeInsets.only(bottom: 10),
-          margin:  const EdgeInsets.symmetric(horizontal: 16),
+          margin:  const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             color: AppColors.mainCardColor,
             border: Border(
@@ -87,6 +89,41 @@ class PaymentsCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: CustomText("Term ${studentFee.value.term}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
+                        if ((PermissionUtils.checkPermission(
+                            target: "Payments", action: "edit"))) ...[
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: PopupMenuButton<String>(
+                              onSelected: (val) => controller.more(val,
+                                  data: {}),
+                              color: AppColors.inverseCardColor,
+                              itemBuilder: (ctx) => [
+                                PopupMenuItem(
+                                    value: "Edit",
+                                    child: CustomText(
+                                      "Edit".tr,
+                                      style: AppTextStyles.mainStyle(
+                                          textHeader:
+                                          AppTextHeaders.h3Bold),
+                                    )),
+                                PopupMenuItem(
+                                    value: "Delete",
+                                    child: CustomText(
+                                      "Delete".tr,
+                                      style: AppTextStyles.mainStyle(
+                                          textHeader:
+                                          AppTextHeaders.h3Bold),
+                                    )),
+                              ],
+                              child: Icon(Icons.more_vert_outlined,
+                                  color: AppColors.mainTextColor),
+                            ),
+                          )
+                        ]
                       ],
                     ),
                     const SizedBox(

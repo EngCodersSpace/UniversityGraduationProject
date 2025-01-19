@@ -5,6 +5,7 @@ class PermissionUtils {
     "controller": {
       "Lectures": ["add","edit" "delete", "view","accessOldTables"],
       "Exams": ["add", "edit","delete", "view","accessOldTables"],
+      "Payments": ["add", "edit","delete", "studentSearch"],
       "Assignments": ["add", "edit","delete", "doctorView"],
     },
     "student": {
@@ -28,7 +29,7 @@ class PermissionUtils {
     required String target,
     required String action,
   }) {
-    return permissionsMap[UserServices.permission]?[target]?.contains(
+    return permissionsMap[UserServices.userRule]?[target]?.contains(
         action)??false;
   }
 }

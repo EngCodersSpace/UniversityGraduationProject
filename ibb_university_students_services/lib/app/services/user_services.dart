@@ -11,7 +11,7 @@ import 'http_provider/http_provider.dart';
 
 class UserServices {
   static Box<User>? _userBox;
-  static get permission  => _userBox?.get('currentUser')?.permission;
+  static get userRule  => _userBox?.get('currentUser')?.permission;
 
   static Future<void> openBox() async {
     _userBox = await Hive.openBox<User>('userBox');

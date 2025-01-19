@@ -194,6 +194,41 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  void more(String val, {Map<String, dynamic>? data}) async {
+    if (val == "Edit") {
+      // mode = "Edit";
+      // if (data != null) {
+      //   selectedExam = data["exam_id"];
+      //   subjects = {};
+      //   subjects =
+      //   await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+      //   subject = RxString(data["subject"]["subject_id"]);
+      //   dateController.text = data["exam_date"].toString();
+      //   timeController.text =
+      //       DateTimeUtils.formatStringTime(time: data["exam_time"]);
+      //   day.value = data["exam_day"].toString();
+      //   hallController.text = data["exam_room"].toString();
+      // }
+      // Get.dialog(const PopUpIAddAndUpdateExamCard());
+    } else if (val == "Delete") {
+      // if (selectedLevel.value == null) return;
+      // if (selectedSection.value == null) return;
+      // selectedExam = data?["exam_id"];
+      // Result<void> res = await ExamServices.deleteExam(
+      //     sectionId: selectedSection.value!,
+      //     levelId: selectedLevel.value!,
+      //     id: selectedExam);
+      // Get.back();
+      // if (res.statusCode == 200) {
+      //   exams?.value.remove(selectedExam);
+      //   exams?.refresh();
+      //   showSnakeBar(message: "Delete successfully");
+      // } else {
+      //   showSnakeBar(message: "Delete failed");
+      // }
+    }
+  }
+
   void addButtonClick() async {
     // mode = "Add";
     // dateController.text = DateTime.now().toString().split(" ")[0];

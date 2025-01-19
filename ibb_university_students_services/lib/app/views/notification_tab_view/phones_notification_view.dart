@@ -32,7 +32,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             "Notifications".tr,
                             style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold,),
                           ),
-                          if(["teacher","doctor"].contains(UserServices.permission))...[
+                          if(["teacher","doctor"].contains(UserServices.userRule))...[
                             IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
                           ]
 
