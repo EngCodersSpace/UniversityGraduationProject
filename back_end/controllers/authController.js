@@ -115,7 +115,7 @@ exports.refreshToken = async (req, res) => {
   jwt.verify(refreshToken, REFRESH_SECRET_KEY, async (err, decoded) => {
     if (err) {
       console.log("Token verification error:", err.message);
-      return res.status(403).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
     try {
       const foundUser = await user.findOne({
@@ -128,7 +128,7 @@ exports.refreshToken = async (req, res) => {
 
       if (foundUser.refreshToken !== refreshToken) {
         return res
-          .status(403)
+          .status(401)
           .json({ message: "Refresh token does not match" });
       }
 
