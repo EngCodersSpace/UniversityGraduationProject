@@ -1,6 +1,6 @@
 
 const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,study_plan, level} = require("../models");
-const { uploadFields  } = require('../utils/multerConfig');
+const { uploadFields, createFolderIfNotExists } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
 const crypto = require('crypto');
@@ -187,240 +187,25 @@ exports.getStudentFiles = async (req, res) => {
 // download files of student_assignment 
 
 
-// 
-exports.createAssignmentشششش = [
-  uploadFields, 
-  async (req, res) => {
-    try {
-      let assignmentRecord;
-      if (!req.body.assignment_id) {
-        assignmentRecord = await assignment.create({
-          subject_id: req.body.subject_id,
-          doctor_id: req.user.user_id,
-          title: req.body.title,
-          assignment_due_day: req.body.assignment_due_day,
-          assignment_date: req.body.assignment_date,
-          assignments_due_date: req.body.assignments_due_date,
-        });
-
-        const students = await student.findAll({
-          where: { student_level_id: req.body.level_id },
-          include: [{
-            model: user,
-            as: 'user',
-            where: { user_section_id: req.body.section_id },
-            attributes: [],
-          }],
-        });
-
-        const studentAssignments = students.map((student) => ({
-          student_id: student.student_id,
-          assignment_id: assignmentRecord.id,
-          status: 'not submitted',
-          is_completed: false,
-        }));
-
-        await student_assignment.bulkCreate(studentAssignments);
-      } else {
-        assignmentRecord = await assignment.findOne({
-          where: { id: req.body.assignment_id },
-        });
-
-        if (!assignmentRecord) {
-          return res.status(404).json({ message: 'Assignment not found.' });
-        }
-      }
-
-      const assignmentFiles = [];
-      if (req.files && req.files['files'] && req.files['files'].length > 0) {
-        for (const file of req.files['files']) {
-          const tempFilePath = file.path;
-          const hash = crypto.createHash('md5').update(
-            `${assignmentRecord.id}-${file.originalname}-${req.user.user_id}-${Date.now()}`
-          ).digest('hex');
-
-          const fileExtension = path.extname(tempFilePath);
-          const fileName = `${hash}${fileExtension}`;
-          const finalFilePath = path.join(__dirname, '../storage/assignments', 'doctors', fileName);
-
-          const directory = path.dirname(finalFilePath);
-          if (!fs.existsSync(directory)) {
-            await fs.promises.mkdir(directory, { recursive: true });
-          }
-
-          fs.renameSync(tempFilePath, finalFilePath);
-
-          assignmentFiles.push({
-            assignment_id: assignmentRecord.id,
-            attachment: finalFilePath,
-            attachment_hash: hash,
-          });
-        }
-
-        await assignment_file.bulkCreate(assignmentFiles);
-      }
-
-      res.status(200).json({
-        message: `Assignment ${assignmentRecord.id} created/updated successfully.`,
-        data: {
-          assignment: assignmentRecord,
-          uploadedFiles: assignmentFiles,
-        },
-      });
-    } catch (error) {
-      console.error('Error creating or uploading assignment:', error);
-      res.status(500).json({ message: 'Error creating or uploading assignment.', error: error.message });
-    }
-  },
-];
-
-
-exports.createAssignment = [
-  uploadFields, 
-  async (req, res) => {
-    try {
-      let assignmentRecord;
-      if (!req.body.assignment_id) {
-        assignmentRecord = await assignment.create({
-          subject_id: req.body.subject_id,
-          doctor_id: req.user.user_id,
-          title: req.body.title,
-          assignment_due_day: req.body.assignment_due_day,
-          assignment_date: req.body.assignment_date,
-          assignments_due_date: req.body.assignments_due_date,
-        });
-
-        const students = await student.findAll({
-          where: { student_level_id: req.body.level_id },
-          include: [{
-            model: user,
-            as: 'user',
-            where: { user_section_id: req.body.section_id },
-            attributes: [],
-          }],
-        });
-
-        const studentAssignments = students.map((student) => ({
-          student_id: student.student_id,
-          assignment_id: assignmentRecord.id,
-          status: 'not submitted',
-          is_completed: false,
-        }));
-
-        await student_assignment.bulkCreate(studentAssignments);
-      } else {
-        assignmentRecord = await assignment.findOne({
-          where: { id: req.body.assignment_id },
-        });
-
-        if (!assignmentRecord) {
-          return res.status(404).json({ message: 'Assignment not found.' });
-        }
-      }
-
-      const assignmentFiles = [];
-      const failedFiles = []; 
-
-      if (req.files && req.files['files'] && req.files['files'].length > 0) {
-        for (const file of req.files['files']) {
-          const tempFilePath = file.path;
-
-          try {
-            const hash = crypto.createHash('md5').update(
-              `${assignmentRecord.id}-${file.originalname}-${req.user.user_id}-${Date.now()}`
-            ).digest('hex');
-
-            const fileExtension = path.extname(tempFilePath);
-            const fileName = `${hash}${fileExtension}`;
-            const finalFilePath = path.join(__dirname, '../storage/assignments', 'doctors', fileName);
-
-            const directory = path.dirname(finalFilePath);
-            if (!fs.existsSync(directory)) {
-              await fs.promises.mkdir(directory, { recursive: true });
-            }
-
-            fs.renameSync(tempFilePath, finalFilePath);
-
-            assignmentFiles.push({
-              assignment_id: assignmentRecord.id,
-              attachment: finalFilePath,
-              attachment_hash: hash,
-            });
-          } catch (fileError) {
-            console.error(`Failed to upload file ${file.originalname}: ${fileError.message}`);
-            failedFiles.push({
-              fileName: file.originalname,
-              error: fileError.message,
-            });
-          }
-        }
-
-        if (assignmentFiles.length > 0) {
-          await assignment_file.bulkCreate(assignmentFiles);
-        }
-      }
-
-      res.status(200).json({
-        message: `Assignment ${assignmentRecord.id} created/updated successfully.`,
-        data: {
-          assignment: assignmentRecord,
-          uploadedFiles: assignmentFiles,
-          failedFiles: failedFiles, 
-        },
-      });
-    } catch (error) {
-      console.error('Error creating or uploading assignment:', error);
-      res.status(500).json({ 
-        message: 'Error creating or uploading assignment.', 
-        error: error.message 
-      });
-    }
-  },
-];
-
-
-
-
-
-// for doctor upload
+//when doctor upload files of specific assignment (req.body=assignment_id)
 exports.uploadFilesForAssignment = [
-  uploadFields,
+  uploadFields('assignments/doctors').array('files'), 
   async (req, res) => {
     try {
-      if (!req.files || !req.files['files'] || req.files['files'].length === 0) {
+      if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: 'No files uploaded.' });
       }
 
-      const assignmentFiles = [];
-      for (const file of req.files['files']) {
-        const tempFilePath = file.path;
-        const hash = crypto.createHash('md5').update(
-          `${req.body.subject_id}-${file.originalname}-${req.user.user_id}-${Date.now()}`
-        ).digest('hex');
-
-        const fileExtension = path.extname(tempFilePath);
-        const fileName = `${hash}${fileExtension}`;
-        const finalFilePath = path.join(__dirname, '../storage/assignments', 'doctors', fileName);
-
-        const directory = path.dirname(finalFilePath);
-        if (!fs.existsSync(directory)) {
-          await fs.promises.mkdir(directory, { recursive: true });
-        }
-
-        fs.renameSync(tempFilePath, finalFilePath);
-
-        assignmentFiles.push({
-          assignment_id: req.body.assignment_id,
-          attachment: finalFilePath,
-          attachment_hash: hash,
-        });
-      }
-
+      const assignmentFiles = req.files.map((file) => ({
+        assignment_id: req.body.assignment_id,
+        attachment: file.path,
+        attachment_hash: file.hash,
+      }));
+  
       await assignment_file.bulkCreate(assignmentFiles);
-
       res.status(200).json({
         message: `Files uploaded successfully for assignment ${req.body.assignment_id}`,
-        data: { files: assignmentFiles },
+        data:  assignmentFiles,
       });
     } catch (error) {
       console.error(error);
@@ -431,7 +216,7 @@ exports.uploadFilesForAssignment = [
 
 
 // Doctor creates an assignment
-exports.createAssignmentضضضضضضضضضضضضض = async (req, res) => {
+exports.createAssignment= async (req, res) => {
   try {
     const assignmentRecord = await assignment.create({
       subject_id: req.body.subject_id,
@@ -463,62 +248,10 @@ exports.createAssignmentضضضضضضضضضضضضض = async (req, res) => {
       studentAssignments.push(studentAssignment);
     };
 
-
-    uploadFields(req, res, async (err) => {
-      try {
-        if (err) {
-          return res.status(500).json({ message: 'Error uploading files.', error: err.message });
-        }
-    
-        const assignmentFiles = [];
-        const failedFiles = [];
-    
-        if (req.files['files'] && req.files['files'].length > 0) {
-          for (const file of req.files['files']) {
-            try{ 
-            const tempFilePath = file.path;
-            const hash = crypto.createHash('md5').update(
-              `${req.body.assignment_id}-${req.user.user_id}-${file.originalname}-${Date.now()}`
-            ).digest('hex');
-    
-            const fileExtension = path.extname(tempFilePath);
-            const fileName = `${hash}${fileExtension}`;
-            const finalFilePath = path.join(__dirname, '../storage/assignments', 'students', fileName);
-    
-            const directory = path.dirname(finalFilePath);
-            if (!fs.existsSync(directory)) {
-              await fs.promises.mkdir(directory, { recursive: true });
-            }
-    
-            fs.renameSync(tempFilePath, finalFilePath);
-    
-            assignmentFiles.push({
-              student_assignment_id: assignmentRecord.id,
-              attachment: finalFilePath,
-              attachment_hash: hash,
-            });
-
-            } catch (error) {
-              failedFiles.push({ fileName: file.originalname, error: error.message });
-            }
-          }
-        }
-        
-    
-        if (assignmentFiles.length > 0) {
-          await assignment_file.bulkCreate(assignmentFiles);
-        }
-    
-        res.status(200).json({
-          message: 'Assignment created successfully with uploading files.',
-          data: { assignment: assignmentRecord, assignmentFiles, failedFiles },
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error creating assignment or uploading files.', error: error.message });
-      }
+    res.status(200).json({
+      message: 'Assignment created successfully with uploading files.',
+      data: { assignment: assignmentRecord},
     });
-    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error creating assignment.', error: error.message });
@@ -526,15 +259,14 @@ exports.createAssignmentضضضضضضضضضضضضض = async (req, res) => {
 };
 
 
-// for student upload
-exports.uploadStudentFiles = [
-  uploadFields,
+// when student upload files of specific assignment attachement
+exports.uploadFilesAttachment = [
+  uploadFields('assignments/students').array('files'), 
   async (req, res) => {
     try {
-      if (!req.files || !req.files['files'] || req.files['files'].length === 0) {
+      if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: 'No files uploaded.' });
       }
-
       const studentAssignment = await student_assignment.findOne({
         where: {
           student_id: req.user.user_id,
@@ -547,48 +279,37 @@ exports.uploadStudentFiles = [
       }
 
       const studentFiles = [];
-      for (const file of req.files['files']) {
-        const tempFilePath = file.path;
+      for (const file of req.files) {
         const hash = crypto.createHash('md5').update(
-          `${req.body.assignment_id}-${req.user.user_id}-${file.originalname}-${Date.now()}`
+          `${file.originalname}-${Date.now()}`
         ).digest('hex');
 
-        const fileExtension = path.extname(tempFilePath);
+        const fileExtension = path.extname(file.originalname);
         const fileName = `${hash}${fileExtension}`;
-        const finalFilePath = path.join(__dirname, '../storage/assignments', 'students', fileName);
+        const finalFilePath = path.join(__dirname,'../storage/assignments', 'students', fileName);
 
-        const directory = path.dirname(finalFilePath);
-        if (!fs.existsSync(directory)) {
-          await fs.promises.mkdir(directory, { recursive: true });
-        }
-
-        fs.renameSync(tempFilePath, finalFilePath);
+        await createFolderIfNotExists(path.dirname(finalFilePath));
 
         studentFiles.push({
           student_assignment_id: studentAssignment.id,
           attachment: finalFilePath,
           attachment_hash: hash,
         });
+       
       }
 
       await student_assignment_file.bulkCreate(studentFiles);
 
-      await student_assignment.update(
-        {is_completed: req.query.is_completed },
-        { where: { id: studentAssignment.id } }
-      );
-
       res.status(200).json({
-        message: `Files uploaded successfully for student assignment ${studentAssignment.id}`,
-        data: { files: studentFiles },
+        message: `Files uploaded successfully for assignment ${req.body.assignment_id}`,
+        data:  studentFiles,
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Error uploading student files.', error: error.message });
+      res.status(500).json({ message: 'Error uploading files for assignment.', error: error.message });
     }
   },
 ];
-
 
 
 // Doctor updates the status of a student's assignment (4)
@@ -643,17 +364,25 @@ exports.updateStudentComplete = async (req, res) => {
 // for doctor
 exports.updateAssigment=async(req,res)=>{
   try {
-    const Assignment = await assignment.findByPk({id:req.query.assignment_id});
+    const Assignment = await assignment.findOne({
+      where:{id:req.body.assignment_id},
+    });
+
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
 
-    Assignment.subject_id=req.body.subject_id || Assignment.subject_id;
-    Assignment.assignment_due_day=  req.body.assignment_due_day || Assignment.assignment_due_day ;
-    Assignment.assignment_date=  req.body.assignment_date || Assignment.assignment_date;
-    Assignment.assignments_due_date= req.body.assignments_due_date || Assignment.assignments_due_date;
-    Assignment.title=  req.body.title || Assignment.title;
-    await Assignment.save();
+    const updatedFields = {
+      subject_id: req.body.subject_id || Assignment.subject_id,
+      assignment_due_day: req.body.assignment_due_day || Assignment.assignment_due_day,
+      assignment_date: req.body.assignment_date || Assignment.assignment_date,
+      assignments_due_date: req.body.assignments_due_date || Assignment.assignments_due_date,
+      title: req.body.title || Assignment.title,
+      section_id: req.body.section_id || Assignment.section_id,
+      level_id: req.body.level_id || Assignment.level_id,
+    };
+
+    await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
 
     res.status(200).json({
       message: `Assignment is updated successfully to `,
@@ -672,12 +401,12 @@ exports.updateAssigment=async(req,res)=>{
 // Doctor  deletes an assignment with thier files  
 exports.deleteAssignment = async (req, res) => {
   try {
-    const Assignment = await assignment.findByPk({id:req.query.assignment_id});
+    const Assignment = await assignment.findByPk(req.query.assignment_id);
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
     const AssignFiles= await assignment_file.findAll({
-      where:{assignment_id: Assignment.assignment_id},
+      where:{assignment_id: Assignment.id},
     });
 
     for (const file of AssignFiles) {
@@ -714,7 +443,6 @@ exports.deleteAssigmentFiles=async(req,res)=>{
       } else {
         console.warn(`File not found: ${attachmentPath}`);
       }
-      await file.destroy();
     }
 
     res.status(200).json({ message: 'Assignment files deleted successfully.' });
