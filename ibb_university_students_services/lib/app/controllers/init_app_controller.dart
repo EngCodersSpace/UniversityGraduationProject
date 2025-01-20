@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -18,19 +19,21 @@ class InitAppController extends GetxController {
 
   Future<void> _initializeApp() async {
     try {
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
-      await NotificationService().initialize();
       await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
-      await AppDataServices.fetchAppData();
       await HiveServices.openGlobalBoxes();
+      await AppDataServices.fetchAppData();
       await DownloadManager.initialize();
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+      await NotificationService().initialize();
       // Set initialization complete
     } catch (e) {
       // Handle errors if needed
-      print('Initialization error: $e');
+      if (kDebugMode) {
+        print('Initialization error: $e');
+      }
     }
     if (await UserServices.isCredentialsCached()) {
       Get.offNamed("/main");

@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import '../models/helper_models/result.dart';
-import '../models/user_model/user.dart';
 import '../services/user_services.dart';
 import '../views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
 

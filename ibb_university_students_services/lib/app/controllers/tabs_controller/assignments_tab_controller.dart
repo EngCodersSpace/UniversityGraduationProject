@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
@@ -190,7 +191,9 @@ class AssignmentsTabController extends GetxController {
       selectedAttachments?.value.addAll(result.files);
     } else {
       // User canceled the picker
-      print('No file selected');
+      if (kDebugMode) {
+        print('No file selected');
+      }
     }
   }
 

@@ -11,7 +11,8 @@ import 'http_provider/http_provider.dart';
 
 class UserServices {
   static Box<User>? _userBox;
-  static get userRule  => _userBox?.get('currentUser')?.permission;
+
+  static get userRule => _userBox?.get('currentUser')?.permission;
 
   static Future<void> openBox() async {
     _userBox = await Hive.openBox<User>('userBox');
@@ -32,17 +33,19 @@ class UserServices {
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
-          _userBox?.put('currentUser',user);
+          _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
-          _userBox?.put('currentUser',user);
+          _userBox?.put('currentUser', user);
         }
         HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
         if (rememberMe) {
           // List<int> encryptionKey = Hive.generateSecureKey();
-          Box box = await Hive.openBox('rememberMe',);
+          Box box = await Hive.openBox(
+            'rememberMe',
+          );
           await box.put("credentials", <String>[id, password]);
           await box.close();
         }
@@ -85,10 +88,10 @@ class UserServices {
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
-          await _userBox?.put('currentUser',user);
+          await _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
-          await _userBox?.put('currentUser',user);
+          await _userBox?.put('currentUser', user);
         }
         HttpProvider.addAccessTokenHeader(response?.data["token"]);
         return Result(
@@ -118,7 +121,6 @@ class UserServices {
         await box.close();
         get_x.Get.offAllNamed("/login");
       }
-
     } catch (error) {
       if (kDebugMode) {
         print(error.toString());
@@ -127,7 +129,8 @@ class UserServices {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    if (_userBox?.get('currentUser') != null && (!hardFetch|| !(await checkInternetConnection()))) {
+    if (_userBox?.get('currentUser') != null &&
+        (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
         data: _userBox?.get('currentUser'),
         statusCode: 200,
@@ -141,7 +144,7 @@ class UserServices {
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
-          await _userBox?.put('currentUser',user);
+          await _userBox?.put('currentUser', user);
           return Result(
               data: user,
               hasError: false,
@@ -149,7 +152,7 @@ class UserServices {
               message: "successful");
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
-          await _userBox?.put('currentUser',user);
+          await _userBox?.put('currentUser', user);
           return Result(
               data: user,
               hasError: false,
@@ -171,9 +174,9 @@ class UserServices {
     }
   }
 
-  static Future<bool> isCredentialsCached()async{
+  static Future<bool> isCredentialsCached() async {
     Box box = await Hive.openBox('rememberMe');
-     bool isCredentialsCached = box.containsKey("credentials");
+    bool isCredentialsCached = box.containsKey("credentials");
     await box.close();
     return isCredentialsCached;
   }
