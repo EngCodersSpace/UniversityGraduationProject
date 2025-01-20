@@ -99,7 +99,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                             width: 24,
                             child: PopupMenuButton<String>(
                               onSelected: (val) => controller.more(val,
-                                  data: {}),
+                                  data: studentFee.toJson()),
                               color: AppColors.inverseCardColor,
                               itemBuilder: (ctx) => [
                                 PopupMenuItem(

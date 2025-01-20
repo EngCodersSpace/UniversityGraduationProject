@@ -51,7 +51,7 @@ class PaymentsPhoneView extends GetView<PaymentsController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomTextFormField(
-                  controller: controller.id,
+                  controller: controller.idController,
                   validator: (id) => Validators.validateID(id),
                   labelText: "Student ID".tr,
                   icon: Icons.account_circle_outlined,
