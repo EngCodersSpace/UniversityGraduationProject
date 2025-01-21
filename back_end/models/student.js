@@ -82,11 +82,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       allowNull: false,
     },
-    status: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: 'Freshman',
-    },
+    // status: {
+    //   type: DataTypes.JSON,
+    //   allowNull: false,
+    //   defaultValue: 'Freshman',
+    // },
     repeat_years_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
