@@ -30,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
       });
 
 
+      assignment.belongsTo(models.section, {
+        foreignKey: 'section_id',
+      });
+
+      assignment.belongsTo(models.level, {
+        foreignKey: 'level_id',
+      });
+
+
     }
   }
   assignment.init({
@@ -57,6 +66,26 @@ module.exports = (sequelize, DataTypes) => {
         key: 'doctor_id',
       },
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    section_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
+    },
+    level_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
     title: {
