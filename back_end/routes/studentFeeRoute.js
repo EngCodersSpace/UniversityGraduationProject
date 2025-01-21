@@ -4,14 +4,14 @@ const router = express.Router();
 const CRUD = require('../controllers/studentfeeController');
 // const vali = require('../validations/studentFeeValidation');
 const { verifyToken  } = require('../middleware/authMiddleware');
+router.use(verifyToken);
 
-// router.post('/create-student-fee', vali.createStudentFee,   CRUD.createStudentFee);
-
-router.get('/get-all-fee', verifyToken, CRUD.getAllFees);
-
-router.get('/get-allFee-controll', CRUD.getAllFeesDoc);
-
-// router.put('/update-fee',vali.updateFee, CRUD.updateFee);
-// router.delete('/delete-fee',     CRUD.deleteFee);
+router.post('/create-student-fee',  CRUD.createStudentFee);
+router.get('/get-all-fee', CRUD.getAllFees);
+router.get('/get-allFeeOfStudent', CRUD.getAllFeesOfStudent);
+router.put('/update-fee', CRUD.updateFee);
+router.delete('/delete-fee',  CRUD.deleteFee);
  
+
 module.exports = router;
+

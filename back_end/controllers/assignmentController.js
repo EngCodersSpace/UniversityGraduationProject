@@ -1,22 +1,13 @@
 
-const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,study_plan, level} = require("../models");
+const {student,assignment, assignment_file,student_assignment,student_assignment_file,user} = require("../models");
 const { uploadFields, createFolderIfNotExists } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
 const crypto = require('crypto');
 
 // Fetch all assignments of specific subject for a student based on level and section
-// query (  level_id  and  subject_id)   get section_id from user  and counts which done
 exports.getStudentAssignments = async (req, res) => {
   try {
-    const userData = await user.findOne({
-      where: { user_id: req.user.user_id },
-    });
-
-    if (!userData) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
     const assignments = await assignment.findAll({
       where: { subject_id: req.query.subject_id },
       include: [
@@ -25,33 +16,15 @@ exports.getStudentAssignments = async (req, res) => {
           attributes: ['student_id'],
           through: { attributes: ['assignment_id', 'status', 'is_completed'] },
           where: {
-            student_id: req.user.user_id,
+            student_id: req.query.user_id,
             student_level_id: req.query.level_id,
           },
-          include: [
-            {
-              model: user,
-              as: 'user',
-              attributes: ['user_name'],
-              where: { user_section_id: userData.user_section_id },
-            },
-          ],
         },
       ],
     });
 
-    const studentAssignments = await assignment.findAll({
-      where: { subject_id: req.query.subject_id },
-      include: [
-        {
-          model: student,
-          where: { student_id: req.user.user_id },
-          through:{
-            attributes:['assignment_id','status','is_completed'],
-          },
-          include:[],
-        },
-      ],
+    const studentAssignments = await student_assignment.findAll({
+      where: { student_id: req.query.user_id },
     });
 
     if (!studentAssignments || studentAssignments.length === 0) {
