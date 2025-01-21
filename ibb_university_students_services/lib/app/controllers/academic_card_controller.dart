@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
-import '../services/user_services.dart';
+import '../repositories/user_repository.dart';
 
 class AcademicCardController extends GetxController {
   RxBool loadingState = true.obs;
@@ -9,7 +9,7 @@ class AcademicCardController extends GetxController {
   @override
   void onInit() async {
     // TODO: implement onInit
-    Result res = await UserServices.fetchUser();
+    Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = Rx(res.data);
     }

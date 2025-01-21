@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
-import '../user_services.dart';
+import '../notification_services/notification_services.dart';
+import '../../repositories/user_repository.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
@@ -14,9 +18,9 @@ class HttpProvider {
     String baseUrl = '',
     String accept = 'application/json',
     String contentType = 'application/json',
-    Duration connectTimeout = const Duration(seconds: 3),
-    Duration sendTimeout = const Duration(seconds: 3),
-    Duration receiveTimeout = const Duration(seconds: 3),
+    Duration? connectTimeout,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
   }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
@@ -24,8 +28,8 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
-    if(kIsWeb){
-     await reSetAccessToken();
+    if (kIsWeb) {
+      await reSetAccessToken();
     }
     _dio.interceptors.add(InterceptorsWrapper(
       onError: (DioException error, ErrorInterceptorHandler handler) async {
@@ -41,11 +45,11 @@ class HttpProvider {
           print(connectivityResult);
         }
         if (connectivityResult.contains(ConnectivityResult.none)) {
-          try{
+          try {
             get_x.Get.dialog(PopUpAlertCard(
                 "no internet connection \n please check your connection ",
                 Icons.warning));
-          }catch(e){
+          } catch (e) {
             if (kDebugMode) {
               print(error);
             }
@@ -72,7 +76,7 @@ class HttpProvider {
         }
 
         if (error.response?.statusCode == 401 &&
-            error.requestOptions.path == "refresh"){
+            error.requestOptions.path == "refresh") {
           return handler.resolve(error.response!);
         }
         return handler.next(error);
@@ -148,19 +152,74 @@ class HttpProvider {
     return null;
   }
 
+  static Future<Response?> uploadFileWithProgress({
+    required PlatformFile file,
+    required String uploadUrl,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      // Show initial notification with 0% progress
+      NotificationHandler().showProgressNotification(
+          uniqueId: file.identifier ?? file.name,
+          progress: 0,
+          message: "Uploading ${file.name}");
+      final response = await _dio.post(
+        uploadUrl,
+        data:FormData.fromMap({
+          'files': [
+            await MultipartFile.fromFile(file.xFile.path, filename: file.name)
+          ],
+          'assignment_id': '45'
+        }),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': file.size.toString(),
+          },
+        ),
+        onSendProgress: (sent, total) {
+          print(file.size.toString());
+          print(sent);
+          print(total);
+          double progress = (sent / total) * 100;
+          print('Upload progress: ${progress.toStringAsFixed(2)}%');
+          // Show updated progress (same notification ID for progress updates)
+          NotificationHandler().showProgressNotification(
+              uniqueId: file.identifier ?? file.name,
+              progress: progress.toInt(),
+              message: "Uploading ${file.name}");
+        },
+      );
+      NotificationHandler().showProgressNotification(
+          uniqueId: file.identifier ?? file.name,
+          progress: 200,
+          message: "${file.name} uploaded successfully!");
+      print('Upload successful: ${response.data}');
+    } on DioException catch (error) {
+      if (error.response != null) {
+        if (kDebugMode) {
+          print(error.response?.statusCode);
+        }
+        return error.response;
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
       Box box = await Hive.openBox('Tokens');
-      Response response = await _dio.post("refresh",data: {
-        "refreshToken":box.get("refreshToken")??""
-      });
+      Response response = await _dio.post("refresh",
+          data: {"refreshToken": box.get("refreshToken") ?? ""});
       await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
-        List<String>? credentials = await  UserServices.fetchCachedCredentials();
+        List<String>? credentials = await UserRepository.fetchCachedCredentials();
         if (credentials != null) {
-          UserServices.userLogin(credentials[0], credentials[1]);
+          UserRepository.userLogin(credentials[0], credentials[1]);
         } else {
           get_x.Get.offAllNamed("/login");
         }
@@ -185,8 +244,8 @@ class HttpProvider {
 
   static void addAccessTokenHeader(String? accessToken) {
     _dio.options.headers["Authorization"] = "Bearer $accessToken";
-    if(kIsWeb){
-      storeAccessToken(accessToken??"");
+    if (kIsWeb) {
+      storeAccessToken(accessToken ?? "");
     }
   }
 
@@ -196,13 +255,13 @@ class HttpProvider {
     await box.close();
   }
 
-  static void storeAccessToken(String accessToken) async{
+  static void storeAccessToken(String accessToken) async {
     Box box = await Hive.openBox('Tokens');
-    await box.put("AccessToken",accessToken);
+    await box.put("AccessToken", accessToken);
     await box.close();
   }
 
-  static Future<void> reSetAccessToken() async{
+  static Future<void> reSetAccessToken() async {
     Box box = await Hive.openBox('Tokens');
     _dio.options.headers["Authorization"] = "Bearer ${box.get("AccessToken")}";
     await box.close();

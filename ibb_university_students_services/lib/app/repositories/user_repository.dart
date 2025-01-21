@@ -7,9 +7,9 @@ import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
 import '../utils/internet_connection_cheker.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
-class UserServices {
+class UserRepository {
   static Box<User>? _userBox;
 
   static get userRule => _userBox?.get('currentUser')?.permission;

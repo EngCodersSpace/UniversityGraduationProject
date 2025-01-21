@@ -1,9 +1,10 @@
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+
 import '../models/assignment_model/assignment_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 
-class AssignmentsServices {
+class AssignmentsRepository {
   // static const int _fetchAllError = 621;
   // static const int _fetchError = 622;
   // static const int _createError = 623;
@@ -31,7 +32,7 @@ class AssignmentsServices {
     }
     for (String jsSubjectId in fakeAssignments.keys) {
       Subject? subject =
-          await SubjectServices.fetchSubject(id: jsSubjectId).then((e) {
+          await SubjectRepository.fetchSubject(id: jsSubjectId).then((e) {
         return e.data;
       });
 
@@ -63,7 +64,7 @@ class AssignmentsServices {
     _assignments = {};
     for (String jsSubjectId in fakeAssignments.keys) {
       Subject? subject =
-          await SubjectServices.fetchSubject(id: jsSubjectId).then((e) {
+          await SubjectRepository.fetchSubject(id: jsSubjectId).then((e) {
         return e.data;
       });
       _assignments?[jsSubjectId] = {};

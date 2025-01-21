@@ -3,16 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/services/assignments_services.dart';
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
+import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/level_model/level.dart';
 import '../../models/section_model/section.dart';
 import '../../models/subject_model/subject_model.dart';
-import '../../services/level_services.dart';
-import '../../services/section_services.dart';
+import '../../repositories/level_repository.dart';
+import '../../repositories/section_repository.dart';
+import '../../repositories/subject_repository.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
 
@@ -58,7 +59,7 @@ class AssignmentsTabController extends GetxController {
     if (selectedSubject.value == null) {
       return;
     }
-    Result res = await AssignmentsServices.fetchFakeAssignments(
+    Result res = await AssignmentsRepository.fetchFakeAssignments(
         subjectId: selectedSubject.value!, hardFetch: force);
     if (res.statusCode == 200) {
       assignments?.value = {};
@@ -99,7 +100,7 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-    await SectionServices.fetchSections(hardFetch: force)
+    await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? []);
     sections = [];
     for (Section section in sectionsData) {
@@ -121,7 +122,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
-    List<Level> levelsData = await LevelServices.fetchLevels(hardFetch: force)
+    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
         .then((e) => e.data?? []);
     levels = [];
     for (Level level in levelsData) {
@@ -144,13 +145,13 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> initSubjectDropdownMenuList() async {
     List<String> subjectsIds =
-        await AssignmentsServices.fetchFakeAssignmentsSubjects()
+        await AssignmentsRepository.fetchFakeAssignmentsSubjects()
             .then((e) => e.data ?? []);
     subjectsItems = [];
     selectedSubjectsItems = [];
     for (String id in subjectsIds) {
       Subject? subject =
-          await SubjectServices.fetchSubject(id: id).then((e) => e.data);
+          await SubjectRepository.fetchSubject(id: id).then((e) => e.data);
       if (subject != null) {
         subjectsItems.add(
           DropdownMenuItem<String>(
@@ -179,7 +180,11 @@ class AssignmentsTabController extends GetxController {
   }
 
   void uploadAttachments(){
-
+    for(PlatformFile file in (selectedAttachments?.value??[])){
+     HttpProvider.uploadFileWithProgress(file: file, uploadUrl: "upload-files-assignment-student").then((val){
+       print(val?.data);
+     });
+    }
   }
 
   Future<void> pickFiles() async {
@@ -189,6 +194,7 @@ class AssignmentsTabController extends GetxController {
     );
     if (result != null) {
       selectedAttachments?.value.addAll(result.files);
+      selectedAttachments?.refresh();
     } else {
       // User canceled the picker
       if (kDebugMode) {

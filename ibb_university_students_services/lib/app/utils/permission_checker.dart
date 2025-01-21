@@ -1,4 +1,4 @@
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 
 class PermissionUtils {
   static Map<String, Map<String, List<String>>> permissionsMap = {
@@ -29,7 +29,7 @@ class PermissionUtils {
     required String target,
     required String action,
   }) {
-    return permissionsMap[UserServices.userRule]?[target]?.contains(
+    return permissionsMap[UserRepository.userRule]?[target]?.contains(
         action)??false;
   }
 }

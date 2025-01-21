@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
-import 'package:ibb_university_students_services/app/services/exam_services.dart';
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
 import 'package:intl/intl.dart';
@@ -12,8 +11,9 @@ import '../models/subject_model/subject_model.dart';
 import '../models/exam_model/exam_model.dart';
 import '../models/level_model/level.dart';
 import '../models/section_model/section.dart';
-import '../services/level_services.dart';
-import '../services/section_services.dart';
+import '../repositories/level_repository.dart';
+import '../repositories/section_repository.dart';
+import '../repositories/subject_repository.dart';
 import '../styles/text_styles.dart';
 import '../utils/date_time_utils.dart';
 import '../utils/screen_utils.dart';
@@ -77,7 +77,7 @@ class ExamTableController extends GetxController {
 
   @override
   void onInit() async {
-    await ExamServices.openBox();
+    await ExamRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
@@ -107,7 +107,7 @@ class ExamTableController extends GetxController {
     if (selectedSection.value == null || selectedLevel.value == null) {
       return;
     }
-    Result res = await ExamServices.fetchExamsGroup(
+    Result res = await ExamRepository.fetchExamsGroup(
       sectionId: selectedSection.value!,
       levelId: selectedLevel.value!,
       hardFetch: force,
@@ -156,7 +156,7 @@ class ExamTableController extends GetxController {
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData =
-        await SectionServices.fetchSections().then((e) => e.data ?? []);
+        await SectionRepository.fetchSections().then((e) => e.data ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
@@ -177,7 +177,7 @@ class ExamTableController extends GetxController {
 
   Future<void> initLevelDropdownMenuList() async {
     List<Level> levelsData =
-        await LevelServices.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -200,7 +200,7 @@ class ExamTableController extends GetxController {
 
   Future<void> initYearDropdownMenuList({bool force = false}) async {
     List<String> yearData =
-        await ExamServices.fetchLectureYears(hardFetch: force)
+        await ExamRepository.fetchLectureYears(hardFetch: force)
             .then((e) => e.data ?? []);
     years = [];
     for (String year in yearData) {
@@ -228,7 +228,7 @@ class ExamTableController extends GetxController {
         selectedExam = data["exam_id"];
         subjects = {};
         subjects =
-            await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+            await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
         subject = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
         timeController.text =
@@ -241,7 +241,7 @@ class ExamTableController extends GetxController {
       if (selectedLevel.value == null) return;
       if (selectedSection.value == null) return;
       selectedExam = data?["exam_id"];
-      Result<void> res = await ExamServices.deleteExam(
+      Result<void> res = await ExamRepository.deleteExam(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           id: selectedExam);
@@ -261,7 +261,7 @@ class ExamTableController extends GetxController {
     dateController.text = DateTime.now().toString().split(" ")[0];
     timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
     subjects = {};
-    subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+    subjects = await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {
       subject = RxString(subjects!.values.first.id);
     }
@@ -294,7 +294,7 @@ class ExamTableController extends GetxController {
     if (selectedSection.value == null) return;
 
     if (mode == "Add") {
-      Result<Exam> res = await ExamServices.createExam(
+      Result<Exam> res = await ExamRepository.createExam(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           data: jsData);
@@ -307,7 +307,7 @@ class ExamTableController extends GetxController {
         showSnakeBar(message: "Add failed");
       }
     } else if (mode == "Edit") {
-      Result<Exam> res = await ExamServices.updateExam(
+      Result<Exam> res = await ExamRepository.updateExam(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           data: jsData,

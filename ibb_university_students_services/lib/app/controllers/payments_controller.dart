@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
-import 'package:ibb_university_students_services/app/services/level_services.dart';
 import 'package:ibb_university_students_services/app/views/payments_view/payments_view_components/add_and_update_payment_card.dart';
-import '../services/user_services.dart';
-import '../utils/date_time_utils.dart';
-import '../views/exam_table_view/exam_table_view_components/add_and_update_exam_card.dart';
+import '../repositories/level_repository.dart';
+import '../repositories/user_repository.dart';
 
 class PaymentsController extends GetxController {
   RxBool loadingState = true.obs;
@@ -29,7 +27,7 @@ class PaymentsController extends GetxController {
 
   @override
   void onInit() async {
-    if(UserServices.userRule == "student"){
+    if(UserRepository.userRule == "student"){
 
       // Result res = await UserServices.fetchUser();
       // if (res.statusCode == 200) {
@@ -37,7 +35,7 @@ class PaymentsController extends GetxController {
       // }
     }
     levels = [];
-    levels = await LevelServices.fetchLevels().then((e) => e.data);
+    levels = await LevelRepository.fetchLevels().then((e) => e.data);
     if (levels?.first != null) {
       level = RxInt(levels!.first.id);
     }

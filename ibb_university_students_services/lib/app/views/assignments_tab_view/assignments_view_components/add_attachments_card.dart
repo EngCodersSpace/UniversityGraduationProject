@@ -6,8 +6,8 @@ import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
-class AddAttachmentsCard extends GetView<AssignmentsTabController> {
-  const AddAttachmentsCard({super.key});
+class FilesPickerCard extends GetView<AssignmentsTabController> {
+  const FilesPickerCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +57,15 @@ class AddAttachmentsCard extends GetView<AssignmentsTabController> {
                               child: Column(
                                 children: [
                                   Expanded(
-                                      child: Column(
+                                      child: Obx(()=>Column(
                                         children: [
                                           const SizedBox(height: 16,),
                                           for (int i = 0;
-                                              i <
-                                                  (controller.selectedAttachments
-                                                          ?.value.length ??
-                                                      0);
-                                              i++) ...[
+                                          i <
+                                              (controller.selectedAttachments
+                                                  ?.value.length ??
+                                                  0);
+                                          i++) ...[
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 4,right: 4, bottom: 4),
@@ -102,7 +102,7 @@ class AddAttachmentsCard extends GetView<AssignmentsTabController> {
                                             ),
                                           ]
                                         ],
-                                      )),
+                                      ))),
                                   CustomButton(
                                     onPress: () async => controller.pickFiles(),
                                     text: "Browse".tr,

@@ -3,7 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
 import '../models/helper_models/result.dart';
 
-class NotificationServices {
+class NotificationRepository {
   // static List<Notifications> _notifications;
   static final Map<String,List<Notification>> _notifications = {};
 

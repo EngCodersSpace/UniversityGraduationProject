@@ -4,15 +4,15 @@ import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/exam_model/exam_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../utils/internet_connection_cheker.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
-class ExamServices {
+class ExamRepository {
   static const int _fetchAllError = 621;
 
   // ignore: unused_field
@@ -56,7 +56,7 @@ class ExamServices {
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         for (Map<String, dynamic> jsExam in response?.data["data"]) {
           Subject? subject =
-              await SubjectServices.fetchSubject(id: jsExam["subject_id"])
+              await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
                   .then((e) {
             return e.data;
           });
@@ -104,7 +104,7 @@ class ExamServices {
             _examsBox?.get("${sectionId}_${levelId}_Exams");
         cachedExams ??=
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
@@ -143,7 +143,7 @@ class ExamServices {
       if (response?.statusCode == 200) {
         ExamsCache? cachedExams =
             _examsBox?.get("${sectionId}_${levelId}_Exams");
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);

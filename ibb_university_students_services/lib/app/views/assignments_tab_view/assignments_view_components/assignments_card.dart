@@ -194,7 +194,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           target: "Assignments", action: "doctorView"))) ...[
                         CustomButton(
                           onPress: () {
-                            Get.dialog(const AddAttachmentsCard());
+                            Get.dialog(const FilesPickerCard());
                           },
                           text: "Add Attachments".tr,
                         ),
@@ -216,7 +216,9 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           height: 8,
                         ),
                         CustomButton(
-                          onPress: () {},
+                          onPress: () {
+                            Get.dialog(const FilesPickerCard());
+                          },
                           text: "Upload Assignment".tr,
                         ),
                       ],

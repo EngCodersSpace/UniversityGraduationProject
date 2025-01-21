@@ -1,12 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:ibb_university_students_services/app/models/section_model/section.dart';
-import 'package:ibb_university_students_services/app/services/level_services.dart';
-import 'package:ibb_university_students_services/app/services/section_services.dart';
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../models/helper_models/result.dart';
-import '../models/level_model/level.dart';
 import '../models/subject_model/subject_model.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
 class AppDataServices {
   static const int _fetchError = 611;
@@ -23,20 +19,22 @@ class AppDataServices {
         for (Map<String, dynamic> jsSubject in response?.data["data"]["subjects"]) {
           subjects[jsSubject["subject_id"]]=Subject.fromJson(jsSubject);
         }
-        SubjectServices.cacheSubjects(subjects);
+        SubjectRepository.cacheSubjects(subjects);
+
+        //
+        // Map<int,Section> sections = {};
+        // for (Map<String, dynamic> jsSection in response?.data["data"]["sections"]) {
+        //   sections[jsSection["id"]]=Section.fromJson(jsSection);
+        // }
+        // SectionServices.cacheSections(sections);
+        // Map<int,Level> levels = {};
+        // for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
+        //
+        //   levels[jsLevel["id"]]= Level.fromJson(jsLevel);
+        // }
+        // LevelServices.cacheLevels(levels);
 
 
-        Map<int,Section> sections = {};
-        for (Map<String, dynamic> jsSection in response?.data["data"]["sections"]) {
-          sections[jsSection["id"]]=Section.fromJson(jsSection);
-        }
-        SectionServices.cacheSections(sections);
-        Map<int,Level> levels = {};
-        for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
-
-          levels[jsLevel["id"]]= Level.fromJson(jsLevel);
-        }
-        LevelServices.cacheLevels(levels);
         return Result(
             data: true,
             hasError: true,

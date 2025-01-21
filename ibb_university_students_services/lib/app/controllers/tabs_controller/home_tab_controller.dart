@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import '../../models/helper_models/result.dart';
-import '../../services/user_services.dart';
+import '../../repositories/user_repository.dart';
 import '../../models/user_model/user.dart';
 import '../main_controller.dart';
 
@@ -19,7 +19,7 @@ class HomeTabController extends GetxController
 
   @override
   void onInit() async {
-    Result res = await UserServices.fetchUser();
+    Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }

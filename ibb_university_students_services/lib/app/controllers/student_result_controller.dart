@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/services/grad_services.dart';
+import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import '../components/custom_text_v2.dart';
 import '../models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
-import '../services/level_services.dart';
+import '../repositories/level_repository.dart';
 import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
 
@@ -41,7 +41,7 @@ class StudentResultController extends GetxController {
     gpa.value = 0.0;
     summation.value = 0;
     if (selectedLevel.value == null) return;
-    Result res = await GradServices.fetchStudentGrads(
+    Result res = await GradRepository.fetchStudentGrads(
         levelId: selectedLevel.value!, term: selectedTerm.value);
     if (res.statusCode == 200) {
       int unitSum = 0;
@@ -80,7 +80,7 @@ class StudentResultController extends GetxController {
   }
 
   Future<void> initDropdownMenuLists() async {
-    List<Level> levelsData = await LevelServices.fetchLevels()
+    List<Level> levelsData = await LevelRepository.fetchLevels()
         .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {

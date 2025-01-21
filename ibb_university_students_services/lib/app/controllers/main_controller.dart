@@ -5,7 +5,7 @@ import 'package:ibb_university_students_services/app/components/custom_float_act
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
 import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
-import '../services/user_services.dart';
+import '../repositories/user_repository.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';
 import 'library_controller.dart';
@@ -31,7 +31,7 @@ class MainController extends GetxController {
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
-    Result res = await UserServices.fetchUser();
+    Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }

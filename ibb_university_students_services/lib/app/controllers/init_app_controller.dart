@@ -3,12 +3,11 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../firebase_options.dart';
-import '../services/app_data_services.dart';
 import '../services/downloder/download_manager.dart';
 import '../services/hive_services/hive_services.dart';
 import '../services/http_provider/http_provider.dart';
 import '../services/notification_services/notification_services.dart';
-import '../services/user_services.dart';
+import '../repositories/user_repository.dart';
 
 class InitAppController extends GetxController {
   @override
@@ -23,11 +22,11 @@ class InitAppController extends GetxController {
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
-      await AppDataServices.fetchAppData();
+      // await AppDataServices.fetchAppData();
       await DownloadManager.initialize();
       await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform);
-      await NotificationService().initialize();
+      await NotificationHandler().initialize();
       // Set initialization complete
     } catch (e) {
       // Handle errors if needed
@@ -35,7 +34,7 @@ class InitAppController extends GetxController {
         print('Initialization error: $e');
       }
     }
-    if (await UserServices.isCredentialsCached()) {
+    if (await UserRepository.isCredentialsCached()) {
       Get.offNamed("/main");
     } else {
       Get.offNamed("/login");

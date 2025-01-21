@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/text_styles.dart';
 import 'notification_tab_components/notification_card.dart';
@@ -32,7 +32,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                             "Notifications".tr,
                             style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold,),
                           ),
-                          if(["teacher","doctor"].contains(UserServices.userRule))...[
+                          if(["teacher","doctor"].contains(UserRepository.userRule))...[
                             IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
                           ]
 
