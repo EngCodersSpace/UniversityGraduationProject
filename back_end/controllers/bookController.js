@@ -10,9 +10,18 @@ const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtracto
 
 
 exports.uploadFile = [
-  uploadFields, 
+  (req, res, next) => {
+    const upload = uploadFields(`library/${req.body.category}/books`).array('files');
+    upload(req, res, (err) => {
+      if (err) {
+        return res.status(500).json({ message: 'File upload failed', error: err.message });
+      }
+      next();
+    });
+  },
   async (req, res) => {
     try {
+
       if (!req.files || !req.files['files'] || req.files['files'].length === 0) {
         return res.status(400).json({ message: "No files uploaded." });
       }
@@ -168,6 +177,49 @@ exports.deleteBook = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
   }
 };
+
+
+
+// const uploadData = {
+//   fileData: {
+//     fileName: "example.txt",
+//     content: Buffer.from("This is a test upload").toString("base64"), // Mock file content
+//   },
+//   uploadPath: path.join(__dirname, "../uploads"),
+// };
+
+// const uploadWorker = new Worker("./utils/uploadWorker.js", {
+//   workerData: uploadData,
+// });
+
+// uploadWorker.on("message", (message) => {
+//   console.log("Worker Message:", message);
+//   if (message.status === "success") {
+//     console.log("Uploaded file path:", message.filePath);
+//   }
+// });
+
+// uploadWorker.on("error", (err) => {
+//   console.error("Worker Error:", err);
+// });
+
+// uploadWorker.on("exit", (code) => {
+//   if (code !== 0) {
+//     console.error(`Worker exited with error code ${code}`);
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
