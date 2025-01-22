@@ -6,6 +6,7 @@ const {
   user,
   student,
   section,
+  assignment,
   level,
   study_plan,
 } = require("../models");
@@ -37,7 +38,17 @@ exports.login = async (req, res) => {
       where: { user_id },
       include: [
         { model: doctor, as: "doctor" },
-        { model: student, as: "student" },
+        {
+          model: student,
+          as: "student",
+          include: [
+            {
+              model: assignment,
+              as: "assignments", 
+              through: { attributes: ['assignment_id','status','is_completed'] }, 
+            },
+          ],
+        },
         { model: section, as: "section" },
       ],
     });
