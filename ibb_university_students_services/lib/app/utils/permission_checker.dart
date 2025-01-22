@@ -8,6 +8,12 @@ class PermissionUtils {
       "Payments": ["add", "edit","delete", "studentSearch"],
       "Assignments": ["add", "edit","delete", "doctorView"],
     },
+    "dean": {
+      "Lectures": ["add","edit" "delete", "view","accessOldTables"],
+      "Exams": ["add", "edit","delete", "view","accessOldTables"],
+      "Payments": ["add", "edit","delete", "studentSearch"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
+    },
     "student": {
       "Lecturers": ["studentView"],
       "Exams": ["studentView"],
@@ -29,6 +35,7 @@ class PermissionUtils {
     required String target,
     required String action,
   }) {
+    print(UserRepository.userRule);
     return permissionsMap[UserRepository.userRule]?[target]?.contains(
         action)??false;
   }

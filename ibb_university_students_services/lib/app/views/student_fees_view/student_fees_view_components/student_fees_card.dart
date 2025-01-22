@@ -3,17 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/payments_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
+import 'package:ibb_university_students_services/app/utils/dobule_digits_parse.dart';
 import 'package:intl/intl.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/maping_term_data.dart';
 import '../../../utils/permission_checker.dart';
 
-class PaymentsCard extends GetView<PaymentsController> {
+class StudentFeeCard extends GetView<StudentFeeController> {
   Rx<StudentFee> studentFee;
 
-  PaymentsCard({
+  StudentFeeCard({
     required this.studentFee,
     super.key,
   });
@@ -69,7 +71,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText(studentFee.value.paymentDate ?? "",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                          child: CustomText(studentFee.value.paymentDate??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -78,7 +80,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                             const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText("Level ${(studentFee.value.levelId??0)+1}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                          child: CustomText("Level ${(studentFee.value.levelId??0)}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -87,7 +89,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                                 const BorderRadius.all(Radius.circular(32)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText("Term ${studentFee.value.term}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                          child: CustomText("${mappingTerms(studentFee.value.term)} Semester".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         if ((PermissionUtils.checkPermission(
                             target: "Payments", action: "edit"))) ...[
@@ -133,6 +135,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                       "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
                       style: AppTextStyles.mainStyle(
                           textHeader: AppTextHeaders.h2Bold),
+                      textAlign: TextAlign.start,
                     ),
                     const SizedBox(
                       height: 8,
@@ -156,7 +159,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
-                            "${studentFee.value.totalAmount ?? "Unknown".tr} YR",
+                            "${DoubleDigitParse.twoDigit(studentFee.value.totalAmount)??"Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
@@ -172,7 +175,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
-                            "${studentFee.value.payedAmount ?? "Unknown".tr} YR",
+                            "${DoubleDigitParse.twoDigit(studentFee.value.payedAmount)??"Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
@@ -187,7 +190,7 @@ class PaymentsCard extends GetView<PaymentsController> {
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
                           CustomText(
-                            "${studentFee.value.remainAmount ?? "Unknown".tr} YR",
+                            "${DoubleDigitParse.twoDigit((studentFee.value.totalAmount ?? -9999) - (studentFee.value.payedAmount??0))??"Unknown".tr} YR",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),

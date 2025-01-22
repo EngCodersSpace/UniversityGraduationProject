@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/payments_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../models/level_model/level.dart';
@@ -9,8 +9,8 @@ import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/date_time_utils.dart';
 
-class PopUpIAddAndUpdatePaymentCard extends GetView<PaymentsController> {
-  const PopUpIAddAndUpdatePaymentCard({super.key});
+class PopUpIAddAndUpdateStudentFeeCard extends GetView<StudentFeeController> {
+  const PopUpIAddAndUpdateStudentFeeCard({super.key});
 
   @override
   Widget build(BuildContext context) {

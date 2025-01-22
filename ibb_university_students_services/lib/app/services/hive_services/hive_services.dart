@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/models/exam_model/exam_mode
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/students_fee_cache/student_fee_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
@@ -38,6 +39,7 @@ class HiveServices{
     Hive.registerAdapter(StudyPlaneAdapter());
     Hive.registerAdapter(LecturesCacheAdapter());
     Hive.registerAdapter(ExamsCacheAdapter());
+    Hive.registerAdapter(StudentFeeCacheAdapter());
   }
   static openGlobalBoxes()async{
     await UserRepository.openBox();

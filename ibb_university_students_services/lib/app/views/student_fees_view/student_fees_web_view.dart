@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class PaymentsWebView extends GetView {
-  const PaymentsWebView({super.key});
+class StudentFeesWebView extends GetView {
+  const StudentFeesWebView({super.key});
 
   @override
   Widget build(BuildContext context) {

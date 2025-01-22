@@ -18,7 +18,7 @@ class HttpProvider {
     String baseUrl = '',
     String accept = 'application/json',
     String contentType = 'application/json',
-    Duration? connectTimeout,
+    Duration? connectTimeout = const Duration(seconds: 10),
     Duration? sendTimeout,
     Duration? receiveTimeout,
   }) async {
