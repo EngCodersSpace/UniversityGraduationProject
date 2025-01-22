@@ -1,12 +1,14 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
-const { assignment, subject, doctor } = require('../models');
+const { assignment, subject, doctor,section, level} = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const subjects = await subject.findAll();
     const doctors = await doctor.findAll();
+    const sections = await section.findAll();
+    const levels = await level.findAll();
 
     const assignments = [];
 
@@ -31,6 +33,8 @@ module.exports = {
       assignments.push({
         subject_id: subjectItem.subject_id,
         doctor_id: doctorItem.doctor_id,
+        section_id: sections[i % sections.length].id,
+        level_id: levels[i % levels.length].id,
         title: title,
         assignment_due_day: faker.helpers.arrayElement(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']),
         assignment_date: faker.date.past(),
