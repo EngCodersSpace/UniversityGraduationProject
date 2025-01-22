@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
-class SubjectServices {
+class SubjectRepository {
   static const int _fetchAllError = 681;
   static const int _fetchError = 682;
 

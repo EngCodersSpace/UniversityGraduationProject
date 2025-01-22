@@ -52,7 +52,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                           Row(
                             children: [
                               SizedBox(
-                                  width: ((Get.width - 16) / 7) * 4,
+                                  width: ((Get.width - 16) / 7) * 3.9,
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -139,83 +139,85 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                             height: height * 0.004,
                           ),
                           if (PermissionUtils.checkPermission(
-                              target: "Lectures", action: "showOldTables")) ...[
+                              target: "Lectures", action: "accessOldTables")) ...[
                             Row(
                               children: [
                                 SizedBox(
-                                    width: ((Get.width - 16) / 7) * 3.5,
+                                    width: ((Get.width - 16) / 7) * 3.9,
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: CustomText(
                                             "${"Year".tr}:",
-                                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
+                                            textAlign: TextAlign.start,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
                                             color: AppColors.inverseCardColor,
                                             borderRadius:
-                                                BorderRadius.circular(24),
+                                            BorderRadius.circular(24),
                                           ),
-                                          width: Get.width / 3.3,
+                                          width: (((Get.width - 16) / 7) * 4)*0.63,
                                           child: Center(
                                             child: Obx(
-                                              () => DropdownButton(
+                                                  () => DropdownButton(
                                                 items: controller.years,
                                                 onChanged:
-                                                    controller.changeYear,
+                                                controller.changeYear,
                                                 value: controller
                                                     .selectedYear.value,
                                                 underline: const SizedBox(),
                                                 iconEnabledColor:
-                                                    AppColors.mainCardColor,
+                                                AppColors.mainCardColor,
                                                 dropdownColor:
-                                                    AppColors.inverseCardColor,
+                                                AppColors.inverseCardColor,
                                               ),
                                             ),
                                           ),
                                         ),
                                         SizedBox(
-                                          width: ((Get.width - 16) / 7) * 0.1,
+                                          width: (((Get.width - 16) / 7) * 4) * 0.04,
                                         ),
                                       ],
                                     )),
                                 SizedBox(
-                                  width: ((Get.width - 16) / 7) * 0.4,
+                                  width: ((Get.width - 16) / 7) * 0.1,
                                 ),
                                 SizedBox(
-                                    width: ((Get.width - 16) / 7) * 3.1,
+                                    width: ((Get.width - 16) / 7) * 2.8,
                                     child: Row(
                                       children: [
                                         Expanded(
                                           child: CustomText(
-                                            "${"Term".tr}:",
-                                            style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
+                                            "${"Semester".tr}:",
+                                            textAlign: TextAlign.start,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
                                             color: AppColors.inverseCardColor,
                                             borderRadius:
-                                                BorderRadius.circular(24),
+                                            BorderRadius.circular(24),
                                           ),
-                                          width: Get.width / 3.3,
+                                          width: (((Get.width - 16) / 7) * 2.5)*0.6,
                                           child: Center(
                                             child: Obx(
-                                              () => DropdownButton(
+                                                  () => DropdownButton(
                                                 items: controller.terms,
                                                 onChanged:
-                                                    controller.changeTerm,
+                                                controller.changeTerm,
                                                 value: controller
                                                     .selectedTerm.value,
                                                 underline: const SizedBox(),
                                                 iconEnabledColor:
-                                                    AppColors.mainCardColor,
+                                                AppColors.mainCardColor,
                                                 dropdownColor:
-                                                    AppColors.inverseCardColor,
+                                                AppColors.inverseCardColor,
                                               ),
                                             ),
                                           ),

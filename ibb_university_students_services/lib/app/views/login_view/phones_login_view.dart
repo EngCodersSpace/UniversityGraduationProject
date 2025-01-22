@@ -16,8 +16,7 @@ class PhoneLoginView extends GetView<LoginController> {
     super.key,
   });
 
-  double height = Get.height;
-  double width = (Get.width - 20);
+final double width = (Get.width - 20);
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: CustomText("English")),
@@ -36,28 +35,28 @@ class PhoneLoginView extends GetView<LoginController> {
               Column(
                 children: [
                   SizedBox(
-                    height: (height * 0.5),
-                    width: width,
+                    height: (Get.height * 0.5),
+                    width: Get.width,
                     child: Image.asset("assets/images/login_background_1.jpeg",
                         fit: BoxFit.fill),
                   ),
                   SizedBox(
-                    height: (height * 0.5),
+                    height: (Get.height * 0.5),
                     width: width,
                   ),
                 ],
               ),
               Container(color: AppColors.coverColor),
               SizedBox(
-                height: height,
+                height: Get.height,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: height * 0.02,
+                      height: Get.height * 0.02,
                     ),
                     SizedBox(
-                      height: height * 0.25,
+                      height: Get.height * 0.25,
                       child: Image.asset(
                           "assets/images/ibb_university_logo.png",
                           fit: BoxFit.fill),
@@ -83,7 +82,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 textHeader: AppTextHeaders.h1Bold),
                           ),
                           SizedBox(
-                            height: height * 0.05,
+                            height: Get.height * 0.05,
                           )
                         ],
                       ),
@@ -98,8 +97,7 @@ class PhoneLoginView extends GetView<LoginController> {
                     () => Container(
                         width: Get.width,
                         constraints: BoxConstraints(
-                          minHeight: height * controller.heightScale.value,
-                          maxHeight: height *0.62
+                          minHeight: Get.height * 0.62,
                         ),
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -111,6 +109,7 @@ class PhoneLoginView extends GetView<LoginController> {
                           key: controller.formKey,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
                                 mainAxisAlignment:
@@ -166,7 +165,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 ],
                               ),
                               SizedBox(
-                                height: height * 0.6 * 0.1,
+                                height: Get.height * 0.6 * 0.1,
                               ),
                               CustomTextFormField(
                                 controller: controller.id,
@@ -189,7 +188,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 },
                               ),
                               SizedBox(
-                                height: height * 0.6 * 0.05,
+                                height: Get.height * 0.6 * 0.05,
                               ),
                               CustomTextFormField(
                                 controller: controller.password,
@@ -230,7 +229,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                         textHeader: AppTextHeaders.h3Normal)),
                               ],
                               SizedBox(
-                                height: height * 0.05,
+                                height: Get.height * 0.05,
                               ),
                               Obx(() => (controller.logging.value)
                                   ? CustomButton(
@@ -260,7 +259,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                                       AppColors.mainTextColor)),
                                       size: Size(width * 0.8, 50))),
                               SizedBox(
-                                height: height * 0.03,
+                                height: Get.height * 0.03,
                               ),
                               Row(
                                 mainAxisAlignment:
@@ -275,7 +274,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 ],
                               ),
                               SizedBox(
-                                height: height * 0.01,
+                                height: Get.height * 0.01,
                               ),
                             ],
                           ),

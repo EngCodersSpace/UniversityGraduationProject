@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
 
 
@@ -28,7 +28,7 @@ class LoginController extends GetxController {
   }
   @override
   void onInit() async{
-    id.text = "10";
+    id.text = "30";
     password.text = "1234pass@";
     super.onInit();
     loading.value = false;
@@ -47,7 +47,7 @@ class LoginController extends GetxController {
   Future<void> onLogin() async {
     logging.value = true;
     if (formKey.currentState!.validate()) {
-      Result res = await UserServices.userLogin(id.text, password.text,rememberMe: rememberMe.value);
+      Result res = await UserRepository.userLogin(id.text, password.text,rememberMe: rememberMe.value);
       if (res.statusCode == 200) {
         Get.offNamed("/main");
       } else if (res.statusCode == 900) {

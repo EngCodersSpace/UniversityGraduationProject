@@ -4,16 +4,16 @@ import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:get/get.dart' as get_x;
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/days_table.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../utils/internet_connection_cheker.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
-class LectureServices {
+class LectureRepository {
   static const int _fetchAllError = 611;
 
   // ignore: unused_field
@@ -64,7 +64,7 @@ class LectureServices {
             dayLectures.data[day] = {};
             for (Map<String, dynamic> jsLecture in response?.data["data"][term]
                 [day]) {
-              Subject? subject = await SubjectServices.fetchSubject(
+              Subject? subject = await SubjectRepository.fetchSubject(
                       id: jsLecture["subject_id"])
                   .then((e) => e.data);
               Lecture lecture = Lecture.fromJson(jsLecture, subject: subject);
@@ -113,7 +113,7 @@ class LectureServices {
       response = await HttpProvider.post("create-lecture", data: data);
       Lecture? newLecture;
       if (response?.statusCode == 201) {
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["data"]["subject_id"])
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["data"], subject: subject);
@@ -164,7 +164,7 @@ class LectureServices {
         Subject? subject;
         if (cachedDayLectures?.data[day]?[id]?.subject?.id !=
             data["subject_id"]) {
-          subject = await SubjectServices.fetchSubject(id: data["subject_id"])
+          subject = await SubjectRepository.fetchSubject(id: data["subject_id"])
               .then((e) => e.data);
         }
 
@@ -301,7 +301,7 @@ class LectureServices {
 
       Lecture? newLecture;
       if (response?.statusCode == 200) {
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["replacedLecture"]["subject_id"])
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["replacedLecture"],

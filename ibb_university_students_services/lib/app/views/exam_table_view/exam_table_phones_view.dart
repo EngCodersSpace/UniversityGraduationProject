@@ -28,7 +28,6 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                 Column(
                   children: [
                     Container(
-                        height: Get.height * 0.22,
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.mainCardColor,
@@ -43,10 +42,13 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           borderRadius: const BorderRadius.vertical(
                               bottom: Radius.circular(32)),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 20),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: Get.height * 0.015,
+                            ),
                             Row(
                               children: [
                                 IconButton(
@@ -61,9 +63,6 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                       textHeader: AppTextHeaders.h2Bold),
                                 ),
                               ],
-                            ),
-                            SizedBox(
-                              height: Get.height * 0.02,
                             ),
                             Row(
                               children: [
@@ -149,11 +148,101 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                         ),
                                       ],
                                     )),
+
                               ],
                             ),
-                            SizedBox(
-                              height: Get.height * 0.04,
+                            const SizedBox(
+                              height: 16,
                             ),
+                            if (PermissionUtils.checkPermission(
+                                target: "Exams", action: "accessOldTables")) ...[
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: ((Get.width - 16) / 7) * 3.9,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CustomText(
+                                              "${"Year".tr}:",
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: AppTextHeaders.h3Bold),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.inverseCardColor,
+                                              borderRadius:
+                                              BorderRadius.circular(24),
+                                            ),
+                                            width: (((Get.width - 16) / 7) * 4)*0.63,
+                                            child: Center(
+                                              child: Obx(
+                                                    () => DropdownButton(
+                                                  items: controller.years,
+                                                  onChanged:
+                                                  controller.changeYear,
+                                                  value: controller
+                                                      .selectedYear.value,
+                                                  underline: const SizedBox(),
+                                                  iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                                  dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: (((Get.width - 16) / 7) * 4) * 0.04,
+                                          ),
+                                        ],
+                                      )),
+                                  SizedBox(
+                                    width: ((Get.width - 16) / 7) * 0.1,
+                                  ),
+                                  SizedBox(
+                                      width: ((Get.width - 16) / 7) * 2.8,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CustomText(
+                                              "${"Semester".tr}:",
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: AppTextHeaders.h3Bold),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.inverseCardColor,
+                                              borderRadius:
+                                              BorderRadius.circular(24),
+                                            ),
+                                            width: (((Get.width - 16) / 7) * 2.5)*0.6,
+                                            child: Center(
+                                              child: Obx(
+                                                    () => DropdownButton(
+                                                  items: controller.terms,
+                                                  onChanged:
+                                                  controller.changeTerm,
+                                                  value: controller
+                                                      .selectedTerm.value,
+                                                  underline: const SizedBox(),
+                                                  iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                                  dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            ],
                           ],
                         )),
                     const SizedBox(height: 16),
@@ -178,59 +267,52 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                      width: width,
-                      height: (PermissionUtils.checkPermission(
-                              target: "Exams", action: "add"))
-                          ? Get.height * 0.7
-                          : Get.height * 0.73,
-                      child: RefreshIndicator(
-                        onRefresh: () async =>  controller.refresh(),
-                        child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width * 0.05,
-                                vertical: Get.height * 0.01),
-                            child: Obx(
-                              () => Column(
-                                children: [
-                                  SizedBox(height: Get.height * 0.01),
-                                  if (controller.exams?.value.isEmpty ??
-                                      true) ...[
-                                    SizedBox(
-                                      height: Get.height * 0.2,
-                                    ),
-                                    Center(
-                                        child: CustomText(
-                                      controller.fieldMessage.value,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h2Bold),
-                                    )),
-                                    IconButton(
-                                        onPressed: () async =>
-                                            controller.refresh(),
-                                        icon: const Icon(Icons.refresh))
-                                  ],
-                                  for (int i = 0;
-                                      i < (controller.exams?.value.length ?? 0);
-                                      i++) ...[
-                                    ExamCard(
-                                      content: Rx(controller.exams?.value.values
-                                          .toList()[i]),
-                                    ),
-                                    if (i <
-                                        ((controller.exams?.value.length ?? 0) -
-                                            1))
-                                      SizedBox(
-                                        height: Get.height * 0.03,
-                                      )
-                                  ]
-                                ],
-                              ),
-                            )),
-                      )),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async =>  controller.refresh(),
+                    child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05,
+                            vertical: Get.height * 0.01),
+                        child: Obx(
+                          () => Column(
+                            children: [
+                              SizedBox(height: Get.height * 0.01),
+                              if (controller.exams?.value.isEmpty ??
+                                  true) ...[
+                                SizedBox(
+                                  height: Get.height * 0.2,
+                                ),
+                                Center(
+                                    child: CustomText(
+                                  controller.fieldMessage.value,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
+                                )),
+                                IconButton(
+                                    onPressed: () async =>
+                                        controller.refresh(),
+                                    icon: const Icon(Icons.refresh))
+                              ],
+                              for (int i = 0;
+                                  i < (controller.exams?.value.length ?? 0);
+                                  i++) ...[
+                                ExamCard(
+                                  content: Rx(controller.exams?.value.values
+                                      .toList()[i]),
+                                ),
+                                if (i <
+                                    ((controller.exams?.value.length ?? 0) -
+                                        1))
+                                  SizedBox(
+                                    height: Get.height * 0.03,
+                                  )
+                              ]
+                            ],
+                          ),
+                        )),
+                  ),
                 ),
               ],
             ),

@@ -4,15 +4,15 @@ import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
-import 'package:ibb_university_students_services/app/services/subject_services.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/exam_model/exam_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../utils/internet_connection_cheker.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
-class ExamServices {
+class ExamRepository {
   static const int _fetchAllError = 621;
 
   // ignore: unused_field
@@ -20,6 +20,7 @@ class ExamServices {
   static const int _createError = 623;
   static const int _updateError = 624;
   static const int _deleteError = 625;
+  static const int _fetchYearsError = 629;
 
   static Box<ExamsCache>? _examsBox;
 
@@ -55,7 +56,7 @@ class ExamServices {
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         for (Map<String, dynamic> jsExam in response?.data["data"]) {
           Subject? subject =
-              await SubjectServices.fetchSubject(id: jsExam["subject_id"])
+              await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
                   .then((e) {
             return e.data;
           });
@@ -103,7 +104,7 @@ class ExamServices {
             _examsBox?.get("${sectionId}_${levelId}_Exams");
         cachedExams ??=
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
@@ -142,7 +143,7 @@ class ExamServices {
       if (response?.statusCode == 200) {
         ExamsCache? cachedExams =
             _examsBox?.get("${sectionId}_${levelId}_Exams");
-        Subject? subject = await SubjectServices.fetchSubject(
+        Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
@@ -193,4 +194,54 @@ class ExamServices {
           data: null);
     }
   }
+
+  static Future<Result<List<String>>> fetchLectureYears({
+    bool hardFetch = false,
+  }) async {
+    Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
+    List<String>? years;
+    try{
+      years = lecturesYearsBox.get("lectureYears");
+    }catch(e){
+      //
+    }
+    if (years != null && !hardFetch && !(await checkInternetConnection())) {
+      await lecturesYearsBox.close();
+      return Result(
+        data: years,
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("lecture/year");
+      if (response?.statusCode == 200) {
+        List<String> years = List<String>.from(response?.data["data"]);
+        await lecturesYearsBox.put("lectureYears",years);
+        lecturesYearsBox.close();
+        return Result(
+            data: years,
+            hasError: true,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+      lecturesYearsBox.close();
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchYearsError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      lecturesYearsBox.close();
+      return Result(
+          hasError: true,
+          statusCode: _fetchYearsError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
 }

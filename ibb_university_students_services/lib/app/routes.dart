@@ -10,13 +10,13 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/login_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
-import 'package:ibb_university_students_services/app/views/payments_view/payments_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
+import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 
 import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
-import 'bindings/payments_binding.dart';
+import 'bindings/student_fees_binding.dart';
 
 class AppRoutes {
   static final routes = [
@@ -67,7 +67,7 @@ class AppRoutes {
     GetPage(
       name: '/student_payments',
       page: () => const PaymentsViewLoader(),
-      binding: PaymentsBinding(),
+      binding: StudentFeesBinding(),
     ),
 
     // Add more routes here

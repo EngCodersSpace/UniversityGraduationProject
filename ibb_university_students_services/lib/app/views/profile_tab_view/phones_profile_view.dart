@@ -91,11 +91,6 @@ class PhoneProfileView extends GetView<ProfileController> {
                           SizedBox(
                             height: height * 0.01,
                           ),
-                          // CustomText(
-                          //   controller.user.name ?? "Unknown".tr,
-                          //   style: AppTextStyles.mainStyle(
-                          //       textHeader: AppTextHeaders.h3Bold),
-                          // ),
                           CustomText(
                             "User ID: ${controller.user.id}",
                             style: AppTextStyles.mainStyle(
@@ -128,10 +123,12 @@ class PhoneProfileView extends GetView<ProfileController> {
                                 SizedBox(
                                   width: width * 0.02,
                                 ),
-                                CustomText(
-                                  "UserName".tr,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
+                                Flexible(
+                                  child: CustomText(
+                                    "UserName".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
                                 ),
                               ],
                             ),
@@ -161,10 +158,12 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ],
                             ),
                           ),
-                          CustomText(
-                            controller.user.email ?? "Unknown".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Normal),
+                          Flexible(
+                            child: CustomText(
+                              controller.user.email ?? "Unknown".tr,
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Normal),
+                            ),
                           ),
                         ],
                       ),

@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/models/exam_model/exam_mode
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/students_fee_cache/student_fee_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
@@ -13,11 +14,12 @@ import 'package:ibb_university_students_services/app/models/student_model/studen
 import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
-import 'package:ibb_university_students_services/app/services/lecture_services.dart';
-import 'package:ibb_university_students_services/app/services/section_services.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 
-import '../level_services.dart';
+import '../../repositories/level_repository.dart';
+import '../../repositories/section_repository.dart';
+
 
 
 class HiveServices{
@@ -37,11 +39,12 @@ class HiveServices{
     Hive.registerAdapter(StudyPlaneAdapter());
     Hive.registerAdapter(LecturesCacheAdapter());
     Hive.registerAdapter(ExamsCacheAdapter());
+    Hive.registerAdapter(StudentFeeCacheAdapter());
   }
   static openGlobalBoxes()async{
-    await UserServices.openBox();
-    await LevelServices.openBox();
-    await SectionServices.openBox();
-    await LectureServices.openBox();
+    await UserRepository.openBox();
+    await LevelRepository.openBox();
+    await SectionRepository.openBox();
+    await LectureRepository.openBox();
   }
 }

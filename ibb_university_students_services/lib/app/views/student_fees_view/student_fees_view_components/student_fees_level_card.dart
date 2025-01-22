@@ -7,11 +7,11 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/text_styles.dart';
 
-class PaymentLevelCard extends GetView {
+class StudentFeeLevelCard extends GetView {
   String title;
   List<StudentFee> payments;
 
-  PaymentLevelCard({required this.title, required this.payments, super.key});
+  StudentFeeLevelCard({required this.title, required this.payments, super.key});
 
   @override
   Widget build(BuildContext context) {

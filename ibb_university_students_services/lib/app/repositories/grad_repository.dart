@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
-import 'http_provider/http_provider.dart';
+import '../services/http_provider/http_provider.dart';
 
 
-class GradServices {
+class GradRepository {
   static const int  _fetchError = 611;
 
   static Map<int,Map<int,Grad>>? _gradsByLevels;

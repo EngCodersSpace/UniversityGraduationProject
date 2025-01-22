@@ -1,31 +1,30 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
-import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import '../models/helper_models/result.dart';
+import '../services/http_provider/http_provider.dart';
 import '../utils/internet_connection_cheker.dart';
-import 'http_provider/http_provider.dart';
 
-
-class LevelServices {
+class SectionRepository {
   static const int _fetchError = 611;
 
-  static Box<Level>? _levelBox;
+  static Box<Section>? _sectionsBox;
 
   static Future<void> openBox() async {
-    _levelBox = await Hive.openBox<Level>('levelBox');
+    _sectionsBox = await Hive.openBox<Section>('sectionBox');
     // Box  = await Hive.openBox('');
   }
 
   static Future<void> closeBox() async {
-    await _levelBox?.close();
+    await _sectionsBox?.close();
   }
 
-  static Future<Result<List<Level>>> fetchLevels({
+  static Future<Result<List<Section>>> fetchSections({
     bool hardFetch = false,
   }) async {
-    if ((_levelBox?.values.isNotEmpty??true) &&(!hardFetch|| !(await checkInternetConnection())) ) {
+    if ((_sectionsBox?.isNotEmpty ?? false) && (!hardFetch|| !(await checkInternetConnection()))) {
       return Result(
-        data: _levelBox?.values.toList()??[],
+        data: _sectionsBox?.values.toList(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -33,14 +32,15 @@ class LevelServices {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("get-all-levels");
+      response = await HttpProvider.get("get-all-sections");
       if (response?.statusCode == 200) {
-        for (Map<String, dynamic> jsLevel in response?.data["data"]["levels"]) {
-          Level level = Level.fromJson(jsLevel);
-          await _levelBox?.put(level.id, level) ;
+        for (Map<String, dynamic> jsSection in response?.data["data"]
+            ["sections"]) {
+          Section section = Section.fromJson(jsSection);
+          await _sectionsBox?.put(section.id, section);
         }
         return Result(
-            data:  _levelBox?.values.toList()??[],
+            data: _sectionsBox?.values.toList(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -60,9 +60,7 @@ class LevelServices {
     }
   }
 
-
-  static void cacheLevels(Map<int,Level> levels){
-    _levelBox?.putAll(levels)  ;
+  static void cacheSections(Map<int, Section> sections) async {
+    await _sectionsBox?.putAll(sections);
   }
-
 }

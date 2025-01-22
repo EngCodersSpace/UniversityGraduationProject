@@ -4,16 +4,16 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
-import 'package:ibb_university_students_services/app/services/level_services.dart';
-import 'package:ibb_university_students_services/app/services/section_services.dart';
-import 'package:ibb_university_students_services/app/services/lecture_services.dart';
+import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/days_table.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/subject_model/subject_model.dart';
-import '../../services/subject_services.dart';
+import '../../repositories/level_repository.dart';
+import '../../repositories/section_repository.dart';
+import '../../repositories/subject_repository.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
@@ -38,20 +38,20 @@ class LectureController extends GetxController {
         value: "Term 1",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (Get.width / 3.3) * 0.75
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
-              "Term 1",
+              "1st",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (Get.width / 3.3) * 0.75
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
-              "Term 2",
+              "2ec",
               style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
             ))),
   ];
@@ -127,7 +127,7 @@ class LectureController extends GetxController {
         selectedYear.value == null) {
       return;
     }
-    Result res = await LectureServices.fetchTableTime(
+    Result res = await LectureRepository.fetchTableTime(
         sectionId: selectedSection.value!,
         levelId: selectedLevel.value!,
         year: selectedYear.value!,
@@ -225,14 +225,16 @@ class LectureController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-    await SectionServices.fetchSections(hardFetch: force).then((e) => e.data ?? []);
+    await SectionRepository.fetchSections(hardFetch: force).then((e) => e.data ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 4)*0.48,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? (((Get.width - 16) / 7) * 4)*0.48
+                  : (Get.width / 7) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
                 style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
@@ -244,7 +246,7 @@ class LectureController extends GetxController {
   }
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData =
-    await LevelServices.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
+    await LevelRepository.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -253,7 +255,9 @@ class LectureController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 2.5)*0.35,
+              width: (ScreenUtils.isPhoneScreen())
+                ? (((Get.width - 16) / 7) * 2.5)*0.35
+                : (Get.width / 7) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
@@ -265,7 +269,7 @@ class LectureController extends GetxController {
   }
   Future<void> initYearDropdownMenuList({bool force = false}) async {
     List<String> yearData =
-    await LectureServices.fetchLectureYears(hardFetch: force)
+    await LectureRepository.fetchLectureYears(hardFetch: force)
         .then((e) => e.data ?? []);
     years = [];
     for (String year in yearData) {
@@ -274,7 +278,7 @@ class LectureController extends GetxController {
             value: year,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 3.3) * 0.75
+                  ? (((Get.width - 16) / 7) * 4)*0.48
                   : (Get.width / 7) * 0.6,
               child: CustomText(
                 year,
@@ -304,7 +308,7 @@ class LectureController extends GetxController {
       if (selectedSection.value == null) return;
       if (selectedYear.value == null) return;
       selectedLecture = data?["id"];
-      Result<void> res = await LectureServices.deleteLecture(
+      Result<void> res = await LectureRepository.deleteLecture(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
@@ -335,7 +339,7 @@ class LectureController extends GetxController {
     } else if (val == "Confirm") {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
-      Result<void> res = await LectureServices.changeLectureState(
+      Result<void> res = await LectureRepository.changeLectureState(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
@@ -354,7 +358,7 @@ class LectureController extends GetxController {
     } else if (val == "Cancel") {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
-      Result<void> res = await LectureServices.changeLectureState(
+      Result<void> res = await LectureRepository.changeLectureState(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
@@ -412,7 +416,7 @@ class LectureController extends GetxController {
           : null;
     }
     if (mode == "Add") {
-      Result<Lecture> res = await LectureServices.createLecture(
+      Result<Lecture> res = await LectureRepository.createLecture(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value ?? "2024",
@@ -430,7 +434,7 @@ class LectureController extends GetxController {
       }
     } else if (mode == "Edit") {
       if (selectedLecture == null) return;
-      Result<Lecture> res = await LectureServices.updateLecture(
+      Result<Lecture> res = await LectureRepository.updateLecture(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
@@ -448,7 +452,7 @@ class LectureController extends GetxController {
       }
     } else if (mode == "Replace") {
       if (selectedLecture == null) return;
-      Result<Lecture> res = await LectureServices.tempReplaceLecture(
+      Result<Lecture> res = await LectureRepository.tempReplaceLecture(
           sectionId: selectedSection.value!,
           levelId: selectedLevel.value!,
           year: selectedYear.value!,
@@ -472,7 +476,7 @@ class LectureController extends GetxController {
 
   Future<void> getSubjects() async {
     subjects = {};
-    subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
+    subjects = await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       subjectId = RxString(subjects!.values.first.id);
       if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&

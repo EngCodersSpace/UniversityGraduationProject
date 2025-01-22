@@ -8,8 +8,8 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import '../components/custom_text_v2.dart';
 import '../models/level_model/level.dart';
 import '../models/section_model/section.dart';
-import '../services/level_services.dart';
-import '../services/section_services.dart';
+import '../repositories/level_repository.dart';
+import '../repositories/section_repository.dart';
 import '../styles/app_colors.dart';
 import '../styles/text_styles.dart';
 import '../views/library_view/components/book_info_card.dart';
@@ -121,7 +121,7 @@ class LibraryController extends GetxController
   }
 
   Future<void> initSectionDropdownMenuList() async {
-    List<Section> sectionsData = await SectionServices.fetchSections()
+    List<Section> sectionsData = await SectionRepository.fetchSections()
         .then((e) => e.data ?? []);
     departments = [];
     for (Section section in sectionsData) {
@@ -140,7 +140,7 @@ class LibraryController extends GetxController
   }
 
   Future<void> initLevelDropdownMenuLists() async {
-    List<Level> levelsData = await LevelServices.fetchLevels()
+    List<Level> levelsData = await LevelRepository.fetchLevels()
         .then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);

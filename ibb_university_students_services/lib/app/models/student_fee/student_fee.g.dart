@@ -18,44 +18,35 @@ class StudentFeeAdapter extends TypeAdapter<StudentFee> {
     };
     return StudentFee(
       id: fields[0] as int,
-      levelId: fields[3] as int?,
-      sectionId: fields[2] as int?,
-      term: fields[4] as int?,
+      levelId: fields[2] as int?,
+      term: fields[3] as String?,
       studentId: fields[1] as int?,
-      totalAmount: fields[5] as int?,
-      payedAmount: fields[6] as int?,
-      remainAmount: fields[7] as int?,
-      paymentState: fields[8] as String?,
-      paymentDate: fields[9] as String?,
-      receiptNumber: fields[10] as String?,
+      totalAmount: fields[4] as double?,
+      payedAmount: fields[5] as double?,
+      paymentDate: fields[6] as String?,
+      receiptNumber: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, StudentFee obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.studentId)
       ..writeByte(2)
-      ..write(obj.sectionId)
-      ..writeByte(3)
       ..write(obj.levelId)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.term)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.totalAmount)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.payedAmount)
-      ..writeByte(7)
-      ..write(obj.remainAmount)
-      ..writeByte(8)
-      ..write(obj.paymentState)
-      ..writeByte(9)
+      ..writeByte(6)
       ..write(obj.paymentDate)
-      ..writeByte(10)
+      ..writeByte(7)
       ..write(obj.receiptNumber);
   }
 
