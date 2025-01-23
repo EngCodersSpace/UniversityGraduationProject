@@ -5,82 +5,17 @@ const path = require('path');
 const fs = require("fs");
 const crypto = require('crypto');
 
-// Fetch all assignments of specific subject for a student based on level and section
-exports.getStudentAssignments = async (req, res) => {
-  try {
-    const assignments = await assignment.findAll({
-      where: { subject_id: req.query.subject_id },
-      include: [
-        {
-          model: student,
-          attributes: ['student_id'],
-          through: { attributes: ['assignment_id', 'status', 'is_completed'] },
-          where: {
-            student_id: req.query.user_id,
-            student_level_id: req.query.level_id,
-          },
-        },
-      ],
-    });
-
-    const studentAssignments = await student_assignment.findAll({
-      where: { student_id: req.query.user_id },
-    });
-
-    if (!studentAssignments || studentAssignments.length === 0) {
-      return res.status(404).json({
-        message: 'No assignments found for the specified student and subject.',
-      });
-    }
-
-    let completedCount = 0;
-    let totalCount = studentAssignments.length;
-
-    for (const assignment of studentAssignments) {
-      if (assignment.is_completed === true) {
-        completedCount++;
-      }
-    }
-
-    res.status(200).json({
-      message: 'Assignments retrieved successfully with their counts.',
-      assignments: assignments,
-      stats: {
-        completedCount,
-        totalCount,
-      },
-    });
-  } catch (error) {
-    console.error('Error fetching assignments and stats:', error);
-    res.status(500).json({
-      message: 'Error fetching assignments and stats.',
-      error: error.message,
-    });
-  }
-};
-
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject=async (req,res)=>{
   try {
     const AllAssignmentSub=await assignment.findAll({
-      where:{ subject_id :req.query.subject_id},
+      where:{ subject_id :req.query.subject_id,level_id: req.query.level_id,section_id:req.query.section_id},
       include:[
         {
           model: student,
           attributes: ['student_id'],
           through: { attributes: ['assignment_id', 'status', 'is_completed'] },
-          where: {
-            student_level_id: req.query.level_id,
-          },
-          include: [
-            {
-              model: user,
-              as: 'user',
-              attributes: ['user_name'],
-              where: { user_section_id: req.query.section_id },
-            },
-          ],
         },
       ],
     });
@@ -210,16 +145,15 @@ exports.createAssignment= async (req, res) => {
       }],
     });
 
-    const studentAssignments = [];
-    for (const student of Students) {
-      const studentAssignment = await student_assignment.create({
-        student_id: student.student_id,
-        assignment_id: assignmentRecord.id,
-        status: 'not submitted',
-        is_completed: false,
-      });
-      studentAssignments.push(studentAssignment);
-    };
+    const studentAssignments = Students.map((student) => ({
+      student_id: student.student_id,
+      assignment_id: assignmentRecord.id,
+      status: 'not submitted',
+      is_completed: false,
+    }));
+    
+    await student_assignment.bulkCreate(studentAssignments);
+    
 
     res.status(200).json({
       message: 'Assignment created successfully with uploading files.',
