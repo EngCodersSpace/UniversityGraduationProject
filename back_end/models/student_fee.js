@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
     //   allowNull: false,
     // },
     payment_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     receipt_number: {
