@@ -53,6 +53,34 @@ exports.getAllFeesOfStudent = async (req, res) => {
     }
 };
 
+exports.getLastPayment = async (req, res) => {
+    try {
+        const lastPayment = await student_fee.findOne({
+            where: { student_id: req.user.user_id },
+            order: [['payment_date', 'DESC']]
+        });
+
+        if (lastPayment) {
+            res.status(200).json({
+                message: 'This is your most recent payment.',
+                lastPayment,
+            });
+        } else {
+            res.status(404).json({
+                message: 'No payment records found for this student.',
+            });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+
+
+
+
 exports.updateFee = async (req, res) => {
     try {
         await student_fee.update(req.body,

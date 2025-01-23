@@ -6,15 +6,17 @@ const {
   user,
   student,
   section,
+  student_assignment,
   assignment,
   level,
   study_plan,
 } = require("../models");
 // const crypto = require('crypto');
 const nodemailer = require("nodemailer");
-const { Op } = require("sequelize");
+// const { Op, where } = require("sequelize");
 const { validationResult } = require("express-validator");
 // const { sequelize} = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 const {  translateText } = require('../middleware/translationServices');
 
@@ -30,23 +32,22 @@ exports.welcome = (req, res) => {
   });
 };
 ///////////////////////////
-// for doctor brings all subjects of doctor
+
 exports.login = async (req, res) => {
   const { user_id, password } = req.body;
+
   try {
     const foundUser = await user.scope("with_hidden_data").findOne({
       where: { user_id },
       include: [
         { model: doctor, as: "doctor" },
-        {
-          model: student,
-          as: "student",
-          include: [
+        { 
+          model: student, as: "student",
+          include:[
             {
-              model: assignment,
-              as: "assignments", 
-              through: { attributes: ['assignment_id','status','is_completed'] }, 
-            },
+              model:level, as:'level',
+
+            }
           ],
         },
         { model: section, as: "section" },
@@ -56,10 +57,12 @@ exports.login = async (req, res) => {
     if (!foundUser) {
       return res.status(401).json({ message: "User ID is not correct" });
     }
+
     const isMatch = await bcrypt.compare(password, foundUser.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Password is not correct" });
     }
+
     const accessToken = jwt.sign(
       {
         user_id: foundUser.user_id,
@@ -77,26 +80,52 @@ exports.login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    if (foundUser.doctor == null) {
-      delete foundUser.doctor;
-    } else if (foundUser.student === null) {
-      delete foundUser.student;
-    }
-
     foundUser.refreshToken = refreshToken;
     await foundUser.save();
+
+    let responseUser = {};
+    let user_type = null;
+   
 
     if (foundUser.doctor == null) {
       responseUser = foundUser.toJSON();
       user_type = "student";
-      tempStudent = responseUser.student;
+      const tempStudent = responseUser.student;
       delete responseUser.student;
       delete responseUser.doctor;
       responseUser = { ...responseUser, ...tempStudent };
+
+      const studentAssignments = await assignment.findAll({
+        where: {level_id:foundUser.student.level.id,section_id:foundUser.user_section_id},
+        include: [
+          {
+            model: student,
+            through:{
+                attributes:[],
+                where:{student_id: foundUser.user_id},
+            }
+          },
+        ],
+      });
+
+      totalAssignmentsCount = studentAssignments.length;
+      completedAssignmentsCount = studentAssignments.filter(
+        (assign) => assign.is_completed === true
+      ).length;
+
+
+      // const { totalAssignmentsCount, completedAssignmentsCount } = await getStudentAssignments(foundUser);
+
+
+      responseUser = {
+        ...responseUser,
+        completedAssignmentsCount,
+        totalAssignmentsCount,
+      };
     } else if (foundUser.student == null) {
       responseUser = foundUser.toJSON();
       user_type = "doctor";
-      tempDoctor = responseUser.doctor;
+      const tempDoctor = responseUser.doctor;
       delete responseUser.student;
       delete responseUser.doctor;
       responseUser = { ...responseUser, ...tempDoctor };
@@ -116,6 +145,64 @@ exports.login = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
+
+
+// async function getStudentAssignments(foundUser) {
+//   try {
+//     const studentAssignments = await student_assignment.findOne({
+//       attributes: [
+//         [Sequelize.fn('COUNT', Sequelize.col('student_assignment.id')), 'totalAssignments'],        
+//         [Sequelize.fn('SUM', Sequelize.literal('CASE WHEN `student_assignment`.`is_completed` = true THEN 1 ELSE 0 END')), 'completedAssignments'],
+//       ],
+//       where: {
+//         student_id: foundUser.user_id, 
+//       },
+//       include: [
+//         {
+//           model: assignment,
+//           Through:{attributes: []},
+//           attributes: [],
+//           where: {
+//             level_id: foundUser.student.level.id, 
+//             section_id: foundUser.user_section_id, 
+//           },
+//         },
+//       ],
+//       raw: true, 
+//       group: ['student_assignment.student_id'],
+//     });
+
+//     if (studentAssignments.length > 0) {
+//       const totalAssignmentsCount = parseInt(studentAssignments[0].totalAssignments, 10);
+//       const completedAssignmentsCount = parseInt(studentAssignments[0].completedAssignments, 10);
+
+//       console.log(`Total assignments: ${totalAssignmentsCount}`);
+//       console.log(`Completed assignments: ${completedAssignmentsCount}`);
+
+//       return { totalAssignmentsCount, completedAssignmentsCount };
+//     } else {
+//       console.log('No assignments found for the student.');
+//       return { totalAssignmentsCount: 0, completedAssignmentsCount: 0 };
+//     }
+//   } catch (error) {
+//     console.error('Error fetching assignments:', error.message);
+//     throw error;
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 exports.refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
 
