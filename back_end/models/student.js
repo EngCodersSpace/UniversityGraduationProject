@@ -36,8 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         through: 'student_assignment',
         foreignKey: 'student_id',
       });
-
-
+      student.hasMany(models.student_assignment, {
+        foreignKey: 'student_id',
+      });
 
 
     }
