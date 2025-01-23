@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      student_assignment.belongsTo(models.assignment, {
+        foreignKey: 'assignment_id',
+      });
+
+      student_assignment.belongsTo(models.student, {
+        foreignKey: 'student_id',
+      });
+
       student_assignment.hasMany(models.student_assignment_file, {
         foreignKey: 'student_assignment_id',
       });
