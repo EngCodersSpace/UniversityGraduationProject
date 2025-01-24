@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,6 +11,7 @@ import '../../repositories/user_repository.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
+  static int _refreshTries = 5;
 
   static Future<void> init({
     String baseUrl = '',
@@ -36,13 +35,14 @@ class HttpProvider {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
         if (kDebugMode) {
-          print(error.requestOptions.uri);
-          print("HttpProviderError ------------------ ");
-          print("error: ${error.message}");
-          print("status code: ${error.response?.statusCode}");
-          print("status headers: ${error.response?.isRedirect}");
-          print("request headers: ${error.requestOptions.headers}");
-          print(connectivityResult);
+          // print(error.requestOptions.uri);
+          // print("HttpProviderError ------------------ ");
+          // print("error: ${error.message}");
+          // print("status code: ${error.response?.statusCode}");
+          // print("res data: ${error.response?.data}");
+          // print("status headers: ${error.response?.isRedirect}");
+          // print("request headers: ${error.requestOptions.headers}");
+          // print(connectivityResult);
         }
         if (connectivityResult.contains(ConnectivityResult.none)) {
           try {
@@ -63,12 +63,25 @@ class HttpProvider {
             error.requestOptions.path != "login") {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
+            print("________________________________________________");
+            print("________________________________________________");
+            print(response?.statusCode);
+            print(response?.data);
+            print(_dio.options.headers);
+            print("________________________________________________");
+            print("________________________________________________");
             if (response != null) {
               return handler.resolve(response);
             }
           } catch (e) {
             if (kDebugMode) {
-              print(e);
+              print("________________________________________________");
+              print("________________________________________________");
+              // print(e?.statusCode);
+              // print(response?.data);
+              print(_dio.options.headers);
+              print("________________________________________________");
+              print("________________________________________________");
             }
           }
         } else if (((error.response?.statusCode) ?? 0) == 422) {
@@ -77,8 +90,14 @@ class HttpProvider {
 
         if (error.response?.statusCode == 401 &&
             error.requestOptions.path == "refresh") {
+          print("________________________________________________");
+          print("________________________________________________");
+          print(_dio.options.headers);
+          print("________________________________________________");
+          print("________________________________________________");
           return handler.resolve(error.response!);
         }
+
         return handler.next(error);
       },
     ));
@@ -90,9 +109,6 @@ class HttpProvider {
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
-        if (kDebugMode) {
-          print(error.response?.statusCode);
-        }
         return error.response;
       }
     } catch (e) {
@@ -107,9 +123,6 @@ class HttpProvider {
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
-        if (kDebugMode) {
-          print(error.response?.statusCode);
-        }
         return error.response;
       }
     } catch (e) {
@@ -124,9 +137,6 @@ class HttpProvider {
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
-        if (kDebugMode) {
-          print(error.response?.statusCode);
-        }
         return error.response;
       }
     } catch (e) {
@@ -141,9 +151,6 @@ class HttpProvider {
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
-        if (kDebugMode) {
-          print(error.response?.statusCode);
-        }
         return error.response;
       }
     } catch (e) {
@@ -160,14 +167,15 @@ class HttpProvider {
     try {
       // Show initial notification with 0% progress
       NotificationHandler().showProgressNotification(
-          uniqueId: file.identifier ?? file.name,
+          uniqueId: file.identifier.hashCode,
           progress: 0,
           message: "Uploading ${file.name}");
       final response = await _dio.post(
         uploadUrl,
-        data:FormData.fromMap({
+        data: FormData.fromMap({
           'files': [
-            await MultipartFile.fromFile(file.xFile.path, filename: file.name)
+            MultipartFile.fromStream(() => file.xFile.openRead(), file.size,
+                filename: file.name)
           ],
           'assignment_id': '45'
         }),
@@ -178,28 +186,17 @@ class HttpProvider {
           },
         ),
         onSendProgress: (sent, total) {
-          print(file.size.toString());
-          print(sent);
-          print(total);
           double progress = (sent / total) * 100;
-          print('Upload progress: ${progress.toStringAsFixed(2)}%');
           // Show updated progress (same notification ID for progress updates)
           NotificationHandler().showProgressNotification(
-              uniqueId: file.identifier ?? file.name,
+              uniqueId: file.identifier.hashCode,
               progress: progress.toInt(),
               message: "Uploading ${file.name}");
         },
       );
-      NotificationHandler().showProgressNotification(
-          uniqueId: file.identifier ?? file.name,
-          progress: 200,
-          message: "${file.name} uploaded successfully!");
-      print('Upload successful: ${response.data}');
+      return response;
     } on DioException catch (error) {
       if (error.response != null) {
-        if (kDebugMode) {
-          print(error.response?.statusCode);
-        }
         return error.response;
       }
     } catch (e) {
@@ -211,17 +208,23 @@ class HttpProvider {
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {
     try {
+      _refreshTries--;
+      if (_refreshTries < 0) {
+        get_x.Get.offAllNamed("login");
+        _refreshTries = 5;
+        return null;
+      }
+
       Box box = await Hive.openBox('Tokens');
       Response response = await _dio.post("refresh",
-          data: {"refreshToken": box.get("refreshToken") ?? ""});
+          data: {"refreshToken": await box.get("refreshToken") ?? ""});
       await box.close();
       if (response.statusCode == 401) {
         // re login if remember me data available
-        List<String>? credentials = await UserRepository.fetchCachedCredentials();
+        List<String>? credentials =
+            await UserRepository.fetchCachedCredentials();
         if (credentials != null) {
-          UserRepository.userLogin(credentials[0], credentials[1]);
-        } else {
-          get_x.Get.offAllNamed("/login");
+          await UserRepository.userLogin(credentials[0], credentials[1]);
         }
       } else if (response.statusCode == 200) {
         addAccessTokenHeader(

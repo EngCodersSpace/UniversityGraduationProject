@@ -22,7 +22,7 @@ class PermissionUtils {
     "lecturer": {
       "Lectures": ["add","edit" "delete", "view"],
       "Exams": ["add", "edit","delete", "view"],
-      "Assignments": ["add", "edit","delete", "view"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     },
     "admin": {
       "Lecturers": ["add", "delete", "view","accessOldTables"],

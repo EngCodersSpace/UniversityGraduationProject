@@ -15,9 +15,15 @@ class LevelRepository {
     _levelBox = await Hive.openBox<Level>('levelBox');
     // Box  = await Hive.openBox('');
   }
+  static Future<void> clearBox() async {
+    _levelBox = await Hive.openBox<Level>('levelBox');
+    _levelBox?.clear();
+  }
 
   static Future<void> closeBox() async {
-    await _levelBox?.close();
+    if(_levelBox?.isOpen??false) {
+      await _levelBox?.close();
+    }
   }
 
   static Future<Result<List<Level>>> fetchLevels({

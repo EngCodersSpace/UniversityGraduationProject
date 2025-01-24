@@ -14,6 +14,7 @@ import '../../models/subject_model/subject_model.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../repositories/subject_repository.dart';
+import '../../services/notification_services/notification_services.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
 
@@ -44,10 +45,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   @override
-  void refresh() async{
-    await initSectionDropdownMenuList();
-    await initLevelDropdownMenuList();
-    await initSubjectDropdownMenuList();
+  void refresh() async {
     await fetchAssignmentsData(force: true);
     super.refresh();
   }
@@ -56,11 +54,42 @@ class AssignmentsTabController extends GetxController {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
     }
-    if (selectedSubject.value == null) {
+    if (selectedLevel.value == null) {
+      await initLevelDropdownMenuList();
+      if (levels.isNotEmpty) {
+        selectedLevel.value = levels.first.value;
+      }
+    }
+    if (selectedDepartment.value == null) {
+      await initSectionDropdownMenuList();
+      if (sections.isNotEmpty) {
+        selectedDepartment.value = sections.first.value;
+      }
+    }
+
+    // if (selectedYear.value == null) {
+    //   await initYearDropdownMenuList();
+    //   if(years.isNotEmpty) {
+    //     selectedYear.value = years.first.value;
+    //   }
+    // }
+
+    if (selectedDepartment.value == null ||
+        selectedLevel.value == null ||
+        selectedSubject.value == null) {
       return;
     }
-    Result res = await AssignmentsRepository.fetchFakeAssignments(
-        subjectId: selectedSubject.value!, hardFetch: force);
+
+    print(selectedSubject.value);
+    Result res = await AssignmentsRepository.fetchAssignmentsGroup(
+      subjectId: selectedSubject.value!,
+      sectionId: selectedDepartment.value!,
+      levelId: selectedLevel.value!,
+      year: '',
+      hardFetch: force,);
+    print(res.data);
+    print(res.statusCode);
+    print(res.message);
     if (res.statusCode == 200) {
       assignments?.value = {};
       assignments?.value = res.data ?? {};
@@ -71,13 +100,13 @@ class AssignmentsTabController extends GetxController {
           title: "Not Found Assignments ",
           message: "this section and level doesn't has assignments ");
     } else {
-      fieldMessage.value = "fetching assignments failed please check connection";
+      fieldMessage.value =
+      "fetching assignments failed please check connection";
       showSnakeBar(
           title: "Fetch Assignments Failed",
           message: "fetching assignments failed please check connection ");
     }
   }
-
 
   void changeDepartment(int? val) async {
     if (val == null) return;
@@ -97,7 +126,6 @@ class AssignmentsTabController extends GetxController {
     await fetchAssignmentsData();
   }
 
-
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
     await SectionRepository.fetchSections(hardFetch: force)
@@ -109,11 +137,13 @@ class AssignmentsTabController extends GetxController {
             value: section.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width/3)-30
+                  ? (Get.width / 3) - 30
                   : (Get.width / 5.5) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
+                style: AppTextStyles.mainStyle(
+                  textHeader: AppTextHeaders.h5Bold,
+                ),
               ),
             )),
       );
@@ -123,7 +153,7 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data?? []);
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -131,11 +161,13 @@ class AssignmentsTabController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 4)-30
+                  ? (Get.width / 4) - 30
                   : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
+                style: AppTextStyles.mainStyle(
+                  textHeader: AppTextHeaders.h5Bold,
+                ),
               ),
             )),
       );
@@ -144,46 +176,54 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initSubjectDropdownMenuList() async {
-    List<String> subjectsIds =
-        await AssignmentsRepository.fetchFakeAssignmentsSubjects()
-            .then((e) => e.data ?? []);
+    List<Subject> subjects = await SubjectRepository.fetchSubjects()
+        .then((e) => e.data?.values.toList() ?? []);
     subjectsItems = [];
     selectedSubjectsItems = [];
-    for (String id in subjectsIds) {
-      Subject? subject =
-          await SubjectRepository.fetchSubject(id: id).then((e) => e.data);
-      if (subject != null) {
-        subjectsItems.add(
-          DropdownMenuItem<String>(
-              value: id,
-              child: CustomText(
-                subject.subjectName ?? "unknown".tr,
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
-              )),
-        );
-        selectedSubjectsItems.add(DropdownMenuItem<String>(
-          value: id,
-          child: SizedBox(
-            width: (Get.width/3)-30,
+    for (Subject subj in subjects) {
+      subjectsItems.add(
+        DropdownMenuItem<String>(
+            value: subj.id,
             child: CustomText(
-              subject.subjectName ?? "",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-              textAlign: TextAlign.center,
-              softWrap: false,
-            ),
+              subj.subjectName ?? "unknown".tr,
+              style:
+              AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
+            )),
+      );
+      selectedSubjectsItems.add(DropdownMenuItem<String>(
+        value: subj.id,
+        child: SizedBox(
+          width: (Get.width / 3) - 30,
+          child: CustomText(
+            subj.subjectName ?? "",
+            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+            textAlign: TextAlign.center,
+            softWrap: false,
           ),
-        ));
-      }
+        ),
+      ));
     }
-
-    selectedSubject = RxString(subjectsIds.first);
+    if (subjects.isNotEmpty) {
+      selectedSubject = RxString(subjects.first.id);
+    }
   }
 
-  void uploadAttachments(){
-    for(PlatformFile file in (selectedAttachments?.value??[])){
-     HttpProvider.uploadFileWithProgress(file: file, uploadUrl: "upload-files-assignment-student").then((val){
-       print(val?.data);
-     });
+  void uploadAttachments() {
+    for (PlatformFile file in (selectedAttachments?.value ?? [])) {
+      HttpProvider.uploadFileWithProgress(
+          file: file, uploadUrl: "upload-files-assignment-doctor")
+          .then((val) {
+        if (val?.statusCode == 200) {
+          NotificationHandler().showNotification(
+              uniqueId: file.identifier.hashCode,
+              title: "${file.name} uploaded successfully!");
+        } else {
+          NotificationHandler().showNotification(
+              uniqueId: file.identifier.hashCode,
+              title: "${file.name} upload failed!",
+              body: '');
+        }
+      });
     }
   }
 

@@ -34,6 +34,7 @@ class InitAppController extends GetxController {
         print('Initialization error: $e');
       }
     }
+    print(await UserRepository.isCredentialsCached());
     if (await UserRepository.isCredentialsCached()) {
       Get.offNamed("/main");
     } else {

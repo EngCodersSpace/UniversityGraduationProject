@@ -30,8 +30,15 @@ class LectureRepository {
     _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
   }
 
+  static Future<void> clearBox() async {
+    _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
+    _lecturesBox?.clear();
+  }
+
   static Future<void> closeBox() async {
-    await _lecturesBox?.close();
+    if(_lecturesBox?.isOpen??false) {
+      await _lecturesBox?.close();
+    }
   }
 
   static Future<Result<TableDays>> fetchTableTime({
@@ -43,7 +50,8 @@ class LectureRepository {
   }) async {
     LecturesCache? cachedDayLectures = _lecturesBox?.get(
         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-    if ((cachedDayLectures != null) && (!hardFetch|| !(await checkInternetConnection()))) {
+    if ((cachedDayLectures != null) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
           data: TableDays.fromJson(cachedDayLectures.data),
           hasError: false,
@@ -295,7 +303,8 @@ class LectureRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      LecturesCache? cachedDayLectures = _lecturesBox?.get("${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
+      LecturesCache? cachedDayLectures = _lecturesBox?.get(
+          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
       response =
           await HttpProvider.post("replaceOne-lecture?id=$id", data: data);
 
@@ -307,14 +316,12 @@ class LectureRepository {
         newLecture = Lecture.fromJson(response?.data["replacedLecture"],
             subject: subject);
         cachedDayLectures?.data[day]?[newLecture.id] = newLecture;
-        cachedDayLectures?.data[day]
-            ?.remove(id);
+        cachedDayLectures?.data[day]?.remove(id);
         if (cachedDayLectures != null) {
           await _lecturesBox?.put(
               "${sectionId}_${levelId}_${year}_${term}_Lectures",
               cachedDayLectures);
         }
-
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -338,9 +345,9 @@ class LectureRepository {
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
     List<String>? years;
-    try{
+    try {
       years = lecturesYearsBox.get("lectureYears");
-    }catch(e){
+    } catch (e) {
       //
     }
     if (years != null && !hardFetch && !(await checkInternetConnection())) {
@@ -357,7 +364,7 @@ class LectureRepository {
       response = await HttpProvider.get("lecture/year");
       if (response?.statusCode == 200) {
         List<String> years = List<String>.from(response?.data["data"]);
-        await lecturesYearsBox.put("lectureYears",years);
+        await lecturesYearsBox.put("lectureYears", years);
         lecturesYearsBox.close();
         return Result(
             data: years,

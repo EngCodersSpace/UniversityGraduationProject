@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/services/hive_services/hive_services.dart';
 import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
@@ -19,8 +20,15 @@ class UserRepository {
     // Box  = await Hive.openBox('');
   }
 
+  static Future<void> clearBox() async {
+    _userBox = await Hive.openBox<User>('userBox');
+    _userBox?.clear();
+  }
+
   static Future<void> closeBox() async {
-    await _userBox?.close();
+    if(_userBox?.isOpen??false) {
+      await _userBox?.close();
+    }
     // Box  = await Hive.openBox('');
   }
 
@@ -117,8 +125,9 @@ class UserRepository {
       response = await HttpProvider.post("logout");
       if (response?.statusCode == 200 || true) {
         Box box = await Hive.openBox('rememberMe');
-        await box.clear();
-        await box.close();
+        box.clear();
+        box.close();
+        await HiveServices.clearAllBox();
         get_x.Get.offAllNamed("/login");
       }
     } catch (error) {
@@ -176,7 +185,7 @@ class UserRepository {
 
   static Future<bool> isCredentialsCached() async {
     Box box = await Hive.openBox('rememberMe');
-    bool isCredentialsCached = box.containsKey("credentials");
+    bool isCredentialsCached = box.containsKey("credentials")&&(box.get("credentials") != null) ;
     await box.close();
     return isCredentialsCached;
   }
