@@ -33,7 +33,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                     child: Column(
                       children: [
                         CustomText(
-                          ("Selected Attachments").tr,
+                          ("Attachments").tr,
                           style: AppTextStyles.secStyle(
                               textHeader: AppTextHeaders.h1Bold),
                         ),
@@ -62,7 +62,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                           const SizedBox(height: 16,),
                                           for (int i = 0;
                                           i <
-                                              (controller.selectedAttachments
+                                              (controller.attachmentsFiles
                                                   ?.value.length ??
                                                   0);
                                           i++) ...[
@@ -80,19 +80,57 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                           textHeader: AppTextHeaders.h2Bold),
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 4,),
-                                                  SizedBox(
-                                                    width: Get.width * 0.6,
-                                                    child: CustomText(
-                                                      " ${controller.selectedAttachments
-                                                          ?.value[i].name ??
-                                                          ""}",
-                                                      textAlign: TextAlign.start,
-                                                      style: AppTextStyles.secStyle(
-                                                          textHeader: AppTextHeaders.h3Bold),
-                                                    ),
+                                                  const SizedBox(width:8,),
+                                                  Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: Get.width * 0.6,
+                                                        child: CustomText(
+                                                          controller.attachmentsFiles
+                                                              ?.value[i].name ??
+                                                              "",
+                                                          textAlign: TextAlign.start,
+                                                          style: AppTextStyles.secStyle(
+                                                              textHeader: AppTextHeaders.h3Bold),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: Get.width * 0.6,
+                                                        child: CustomText(
+                                                          "Status: Not Uploaded",
+                                                          textAlign: TextAlign.start,
+                                                          style: AppTextStyles.highlightStyle(
+                                                              textHeader: AppTextHeaders.h5Bold),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: AppColors.inverseCardColor,))
+                                                  SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                    child: PopupMenuButton<String>(
+                                                      onSelected: (val) => controller.more(val,data: {"index":i}),
+                                                      color: AppColors.inverseCardColor,
+                                                      itemBuilder: (ctx) => [
+                                                        PopupMenuItem(
+                                                            value: "DeleteFile",
+                                                            child: CustomText(
+                                                              "Delete".tr,
+                                                              style: AppTextStyles.mainStyle(
+                                                                  textHeader: AppTextHeaders.h3Bold),
+                                                            )),
+                                                        PopupMenuItem(
+                                                            value: "reUploadFile",
+                                                            child: CustomText(
+                                                              "ReUpload".tr,
+                                                              style: AppTextStyles.mainStyle(
+                                                                  textHeader: AppTextHeaders.h3Bold),
+                                                            )),
+                                                      ],
+                                                      child: Icon(Icons.more_horiz,
+                                                          color: AppColors.inverseCardColor),
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -105,7 +143,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                       ))),
                                   CustomButton(
                                     onPress: () async => controller.pickFiles(),
-                                    text: "Browse".tr,
+                                    text: "Add".tr,
                                     size: Size(Get.width * 0.86, 40),
                                   ),
                                   const SizedBox(
@@ -124,7 +162,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                           children: [
                             CustomButton(
                               onPress: controller.uploadAttachments,
-                              text: "Upload".tr,
+                              text: "Upload All".tr,
                             ),
                             CustomButton(
                               onPress: () => Get.back(result: null),

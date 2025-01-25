@@ -15,8 +15,15 @@ class SectionRepository {
     // Box  = await Hive.openBox('');
   }
 
+  static Future<void> clearBox() async {
+    _sectionsBox = await Hive.openBox<Section>('sectionBox');
+    _sectionsBox?.clear();
+  }
+
   static Future<void> closeBox() async {
-    await _sectionsBox?.close();
+    if(_sectionsBox?.isOpen??false) {
+      await _sectionsBox?.close();
+    }
   }
 
   static Future<Result<List<Section>>> fetchSections({

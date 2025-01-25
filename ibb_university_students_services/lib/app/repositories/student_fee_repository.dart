@@ -28,8 +28,15 @@ class StudentFeeRepository {
     _studentFeeBox?.clear();
   }
 
+  static Future<void> clearBox() async {
+    _studentFeeBox = await Hive.openBox<StudentFeeCache>("studentFeeBox");
+    _studentFeeBox?.clear();
+  }
+
   static Future<void> closeBox() async {
-    await _studentFeeBox?.close();
+    if(_studentFeeBox?.isOpen??false) {
+      await _studentFeeBox?.close();
+    }
   }
 
   static Future<Result<Map<int, StudentFee>>> fetchStudentFees({

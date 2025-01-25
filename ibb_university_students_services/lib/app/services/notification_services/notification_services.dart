@@ -49,7 +49,7 @@ class NotificationHandler {
 
   void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'info') {
-      _showNotification(
+      showNotification(
         title: message.notification?.title ?? "Info",
         body: message.notification?.body ?? "Notification received",
       );
@@ -80,8 +80,8 @@ class NotificationHandler {
     }
   }
 
-  Future<void> _showNotification(
-      {required String title, required String body}) async {
+  Future<void> showNotification(
+      {required String title,String? body,int? uniqueId}) async {
     const NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         'default_channel',
@@ -91,7 +91,7 @@ class NotificationHandler {
       ),
     );
     await _localNotificationsPlugin.show(
-      DateTime
+       uniqueId??DateTime
           .now()
           .millisecondsSinceEpoch ~/ 1000,
       title,
@@ -101,7 +101,7 @@ class NotificationHandler {
   }
 
   // Show progress for an upload
-  Future<void> showProgressNotification({required String uniqueId, required int progress,String? message}) async {
+  Future<void> showProgressNotification({required int uniqueId, required int progress,String? message}) async {
     NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         'upload_channel',
@@ -115,14 +115,6 @@ class NotificationHandler {
       ),
     );
 
-    if (progress == 200) {
-      await _localNotificationsPlugin.show(
-        uniqueId.hashCode, // Same unique ID to update the notification
-        'Upload Complete',
-        "${message??'File uploaded successfully!'}\n",
-        notificationDetails,
-      );
-    } else {
       // Update the progress in the notification
       await _localNotificationsPlugin.show(
         uniqueId.hashCode,
@@ -131,8 +123,5 @@ class NotificationHandler {
         "$progress%",
         notificationDetails,
       );
-    }
   }
-
-
 }

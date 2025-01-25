@@ -28,8 +28,15 @@ class ExamRepository {
     _examsBox = await Hive.openBox<ExamsCache>("ExamBox");
   }
 
+  static Future<void> clearBox() async {
+    _examsBox = await Hive.openBox<ExamsCache>("ExamBox");
+    _examsBox?.clear();
+  }
+
   static Future<void> closeBox() async {
-    await _examsBox?.close();
+    if(_examsBox?.isOpen??false) {
+      await _examsBox?.close();
+    }
   }
 
   static Future<Result<Map<int, Exam>>> fetchExamsGroup({
