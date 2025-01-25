@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_section_id',//the foreign Key in the user table refers to section table
       });
 
+      user.belongsTo(models.role, {
+        foreignKey: 'roleId',
+      });
+
 
     }
   }
@@ -96,10 +100,20 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: { isEmail: true, },
     },
-    permission: {
-      type: DataTypes.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
+    // permission: {
+    //   type: DataTypes.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
+    //   allowNull: false,
+    //   defaultValue: 'student',
+    // },
+    roleId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 'student',
+      references: {
+        model: 'roles',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     password: {
       type: DataTypes.STRING(100),
