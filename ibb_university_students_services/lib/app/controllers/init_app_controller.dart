@@ -18,8 +18,8 @@ class InitAppController extends GetxController {
 
   Future<void> _initializeApp() async {
     try {
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
+      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
