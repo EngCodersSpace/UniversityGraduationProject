@@ -67,7 +67,7 @@ class NewsCard extends StatelessWidget {
                     right: width * 0.2),
                 child:
                 CustomText(text,style: AppTextStyles.mainStyle(
-                    textHeader: AppTextHeaders.h1,height: 0)),
+                    textHeader: AppTextHeaders.h1Bold,height: 0)),
               )),
         ],
       ),

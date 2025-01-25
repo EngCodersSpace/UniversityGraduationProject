@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/notification_model.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
-import 'package:ibb_university_students_services/app/services/notifictaion_services.dart';
+import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
+import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
+import '../../models/helper_models/result.dart';
 
 class NotificationTabController extends GetxController {
   Map<String, List<Notification>> notificationGroups = {};
@@ -9,7 +9,7 @@ class NotificationTabController extends GetxController {
   String today = "";
   @override
   void onInit() async{
-    Result res = await NotificationServices.fetchNotifications();
+    Result res = await NotificationRepository.fetchNotifications();
     if(res.statusCode == 200){
       notificationGroups = res.data;
     }
@@ -22,6 +22,6 @@ class NotificationTabController extends GetxController {
 
   @override
   void onReady() {
-    NotificationServices.setNotificationsReadState();
+    NotificationRepository.setNotificationsReadState();
   }
 }

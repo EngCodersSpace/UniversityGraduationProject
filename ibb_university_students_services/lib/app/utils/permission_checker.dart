@@ -1,22 +1,33 @@
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 
 class PermissionUtils {
   static Map<String, Map<String, List<String>>> permissionsMap = {
     "controller": {
-      "Lectures": ["add", "edit" "delete", "view"],
-      "Exams": ["add", "edit", "delete", "view"],
+      "Lectures": ["add","edit" "delete", "view","accessOldTables"],
+      "Exams": ["add", "edit","delete", "view","accessOldTables"],
+      "Payments": ["add", "edit","delete", "studentSearch"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     },
-    "lecturer": {
-      "Lectures": ["add", "edit" "delete", "view"],
-      "Exams": ["add", "edit", "delete", "view"],
+    "dean": {
+      "Lectures": ["add","edit" "delete", "view","accessOldTables"],
+      "Exams": ["add", "edit","delete", "view","accessOldTables"],
+      "Payments": ["add", "edit","delete", "studentSearch"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     },
     "student": {
-      "Lecturers": ["add", "delete", "view"],
-      "Exams": ["add", "delete", "view"],
+      "Lecturers": ["studentView"],
+      "Exams": ["studentView"],
+      "Assignments": ["studentView"],
+    },
+    "lecturer": {
+      "Lectures": ["add","edit" "delete", "view"],
+      "Exams": ["add", "edit","delete", "view"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     },
     "admin": {
-      "Lecturers": ["add", "delete", "view"],
-      "Exams": ["add", "delete", "view"],
+      "Lecturers": ["add", "delete", "view","accessOldTables"],
+      "Exams": ["add", "delete", "view","accessOldTables"],
+      "Assignments": ["add", "edit","delete", "doctorView"],
     }
   };
 
@@ -24,7 +35,8 @@ class PermissionUtils {
     required String target,
     required String action,
   }) {
-    return permissionsMap[UserServices.permission]?[target]?.contains(action) ??
-        false;
+    print(UserRepository.userRule);
+    return permissionsMap[UserRepository.userRule]?[target]?.contains(
+        action)??false;
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/services/grad_services.dart';
-import '../components/custom_text.dart';
-import '../models/grads_model.dart';
-import '../models/result.dart';
-import '../styles/app_colors.dart';
-import '../models/level_model.dart';
-import '../services/level_services.dart';
+import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
+import '../components/custom_text_v2.dart';
+import '../models/grads_model/grads_model.dart';
+import '../models/helper_models/result.dart';
+import '../models/level_model/level.dart';
+import '../repositories/level_repository.dart';
+import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
 
 class StudentResultController extends GetxController {
@@ -23,6 +23,7 @@ class StudentResultController extends GetxController {
 
   @override
   void onInit() async {
+    // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     await fetchStudentGrads();
@@ -40,7 +41,7 @@ class StudentResultController extends GetxController {
     gpa.value = 0.0;
     summation.value = 0;
     if (selectedLevel.value == null) return;
-    Result res = await GradServices.fetchStudentGrads(
+    Result res = await GradRepository.fetchStudentGrads(
         levelId: selectedLevel.value!, term: selectedTerm.value);
     if (res.statusCode == 200) {
       int unitSum = 0;
@@ -79,8 +80,8 @@ class StudentResultController extends GetxController {
   }
 
   Future<void> initDropdownMenuLists() async {
-    List<Level> levelsData = await LevelServices.fetchLevels()
-        .then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels()
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -88,10 +89,9 @@ class StudentResultController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 level.name ?? "unknown",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ),
             )),
       );
@@ -101,19 +101,17 @@ class StudentResultController extends GetxController {
           value: "Term 1",
           child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 "Term 1",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
               width: (Get.width / 3.3) * 0.75,
-              child: SecText(
+              child: CustomText(
                 "Term 2",
-                textColor: AppColors.mainTextColor,
-                fontSize: 12,
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
     ];
   }

@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "unversity-project-2a9e4",
-    "studentServices": "unversity-project-2a9e4"
+    "studentServices": "unversity-project-2a9e4",
+    "student Services app": "email-singin-andstorge"
   },
   "targets": {},
   "etags": {}

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/notification_tab_controller.dart';
 
+import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 
 class WebNotificationView extends GetView<NotificationTabController> {
   const WebNotificationView({super.key});
@@ -25,7 +26,7 @@ class WebNotificationView extends GetView<NotificationTabController> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MainText("Notification".tr),
+                        CustomText("Notification".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold,),),
                       ],
                     ),
                   ),

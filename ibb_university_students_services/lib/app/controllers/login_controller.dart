@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/result.dart';
-import 'package:ibb_university_students_services/app/services/user_services.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
+import '../models/helper_models/result.dart';
+import '../services/hive_services/hive_services.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -15,6 +16,8 @@ class LoginController extends GetxController {
   RxString loggingFiledMessage = "".obs;
   RxDouble heightScale = 0.6.obs;
   RxBool rememberMe = false.obs;
+  RxBool loading = true.obs;
+
 
   @override
   void onClose() {
@@ -23,19 +26,12 @@ class LoginController extends GetxController {
     idFocus.dispose();
     passwordFocus.dispose();
   }
-
   @override
-  void onInit() async {
-    List<String>? credentials = await UserServices.fetchCachedCredentials();
-    if (credentials != null) {
-      id.text = credentials[0];
-      password.text = credentials[1];
-      // id.text = "1000";
-      // password.text = "1234pass@";
-      // password.text = "1111aaaa@";
-      onLogin();
-    }
+  void onInit() async{
+    id.text = "1000";
+    password.text = "1234pass@";
     super.onInit();
+    loading.value = false;
   }
 
   @override
@@ -44,20 +40,20 @@ class LoginController extends GetxController {
     super.onReady();
   }
 
-  void forgotPassword() {
+  void forgotPassword(){
     Get.toNamed("/forgotPassword");
   }
 
   Future<void> onLogin() async {
     logging.value = true;
     if (formKey.currentState!.validate()) {
-      Result res = await UserServices.userLogin(id.text, password.text,
-          rememberMe: rememberMe.value);
+      Result res = await UserRepository.userLogin(id.text, password.text,rememberMe: rememberMe.value);
       if (res.statusCode == 200) {
+        await HiveServices.openGlobalBoxes();
         Get.offNamed("/main");
       } else if (res.statusCode == 900) {
         loggingFiledMessage.value =
-            "no internet connection \n please check your connection ";
+        "no internet connection \n please check your connection ";
         loggingFiled.value = true;
       } else if (res.statusCode == 401) {
         loggingFiledMessage.value = "password or id is wrong";
@@ -67,14 +63,14 @@ class LoginController extends GetxController {
         loggingFiled.value = true;
       } else {
         loggingFiledMessage.value =
-            "something get wrong \n please check your connection ";
+        "something get wrong \n please check your connection ";
         loggingFiled.value = true;
       }
     }
     logging.value = false;
   }
 
-  void toggleRememberMe(bool? val) async {
+  void toggleRememberMe(bool? val) async{
     // if(val == true){
     //   await HttpProvider.init(baseUrl: "https://ibbuniversity.helioho.st/");
     //   await AppDataServices.fetchAppData();
@@ -85,7 +81,7 @@ class LoginController extends GetxController {
     rememberMe.value = val ?? false;
   }
 
-  void changeLang(String lang) {
+  void changeLang(String lang){
     Get.updateLocale(Locale(lang));
   }
 }

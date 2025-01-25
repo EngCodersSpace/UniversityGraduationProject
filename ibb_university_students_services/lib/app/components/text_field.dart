@@ -29,7 +29,7 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.prefixIcon,
   }){
-    labelStyle??=AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h4);
+    labelStyle??=AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h3Normal);
   }
 
   bool isPassword;

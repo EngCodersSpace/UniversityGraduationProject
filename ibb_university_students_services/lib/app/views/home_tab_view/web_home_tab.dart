@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
+import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/text_styles.dart';
 
 // ignore: must_be_immutable
 class WebHomeTab extends GetView<HomeTabController> {
@@ -35,13 +36,13 @@ class WebHomeTab extends GetView<HomeTabController> {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MainText(
+                CustomText(
                   "IBB",
-                  textColor: AppColors.inverseMainTextColor,
+                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),
                 ),
-                MainText(
+                CustomText(
                   "UNIVERCITY",
-                  textColor: AppColors.inverseMainTextColor,
+                  style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),
                 ),
                 Divider(
                   thickness: 0.2,
@@ -81,7 +82,7 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                 : null,
       //             child: (controller.user?.profileImage) != ""
       //                 ? null
-      //                 : MainText(controller.user?.name?[0] ??
+      //                 : CustomText(controller.user?.name?[0] ??
       //                     "".toUpperCase()),
       //           ),
       //         ],
@@ -207,7 +208,7 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   height: hight * 1 / 10,
       //                                   alignment: const Alignment(-0.4, 0.0),
       //                                 ),
-      //                                 MainText(
+      //                                 CustomText(
       //                                   "Library",
       //                                   textColor: AppColors.tabBackColor,
       //                                 ),
@@ -259,12 +260,12 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   mainAxisAlignment:
       //                                       MainAxisAlignment.center,
       //                                   children: [
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "lecture",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
       //                                     ),
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "schedual",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
@@ -315,7 +316,7 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   height: hight * 1 / 10,
       //                                   alignment: const Alignment(-0.4, 0.0),
       //                                 ),
-      //                                 MainText(
+      //                                 CustomText(
       //                                   "Payment",
       //                                   textColor: AppColors.tabBackColor,
       //                                   fontSize: 22,
@@ -373,12 +374,12 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   mainAxisAlignment:
       //                                       MainAxisAlignment.center,
       //                                   children: [
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Academic",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
       //                                     ),
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Card",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
@@ -433,12 +434,12 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   mainAxisAlignment:
       //                                       MainAxisAlignment.center,
       //                                   children: [
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Student",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
       //                                     ),
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Degrees",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
@@ -493,12 +494,12 @@ class WebHomeTab extends GetView<HomeTabController> {
       //                                   mainAxisAlignment:
       //                                       MainAxisAlignment.center,
       //                                   children: [
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Exam",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,
       //                                     ),
-      //                                     MainText(
+      //                                     CustomText(
       //                                       "Schedule",
       //                                       textColor: AppColors.tabBackColor,
       //                                       fontSize: 22,

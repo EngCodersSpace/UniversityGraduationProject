@@ -80,7 +80,7 @@ class ExamFormsTab extends GetView<LibraryController> {
                         color: AppColors.backColor,
                         iconSize: 40,
                       ),
-                      CustomText("${(p ~/ 16) + 1}/${p + 1}",style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1),),
+                      CustomText("${(p ~/ 16) + 1}/${p + 1}",style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),),
                       IconButton(
                           onPressed: () {
                             controller.booksPagesController.nextPage(

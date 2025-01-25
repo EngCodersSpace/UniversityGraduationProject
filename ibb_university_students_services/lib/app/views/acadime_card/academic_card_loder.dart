@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_phone_view.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_web_view.dart';
 
+import '../../utils/screen_utils.dart';
+
 class AcademicCardViewLoader extends StatelessWidget {
   const AcademicCardViewLoader({super.key});
 
@@ -16,7 +18,7 @@ class AcademicCardViewLoader extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
+          if (ScreenUtils.isPhoneScreen()) {
             return   AcademicCardPhoneView();
           } else {
             return   AcademicCardWebView();

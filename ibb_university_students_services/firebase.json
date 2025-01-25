@@ -1,16 +1,1 @@
-{
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
-}
+{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]},"flutter":{"platforms":{"android":{"default":{"projectId":"unversity-project-2a9e4","appId":"1:231712318834:android:959c0bbbc05769ae4e69eb","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"unversity-project-2a9e4","configurations":{"android":"1:231712318834:android:959c0bbbc05769ae4e69eb","ios":"1:231712318834:ios:77a4a2f8bb6e422a4e69eb","web":"1:231712318834:web:6b2733231bfc5e654e69eb"}}}}}}

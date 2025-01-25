@@ -48,7 +48,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   child: CustomText(
                                     "Filters",
                                     style: AppTextStyles.highlightStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                 ),
                                 Row(
@@ -60,7 +60,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         child: CustomText(
                                           "Section:",
                                           style: AppTextStyles.secStyle(
-                                              AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     Container(
                                       decoration: BoxDecoration(
@@ -97,7 +97,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         child: CustomText(
                                           "Level:",
                                           style: AppTextStyles.secStyle(
-                                              AppTextHeaders.h3),
+                                              textHeader: AppTextHeaders.h3Bold),
                                         )),
                                     Container(
                                       decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   child: CustomText(
                                     "Sort",
                                     style: AppTextStyles.highlightStyle(
-                                        textHeader: AppTextHeaders.h2),
+                                        textHeader: AppTextHeaders.h2Bold),
                                   ),
                                 ),
                                 Obx(
@@ -196,8 +196,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                       if (controller.sortDirection.value ==
                                           0) ...[
                                         InkWell(
-                                          onTap: () => controller
-                                              .changeSelectedSortDirection(0),
+                                          onTap: ()=>controller.changeSelectedSortDirection(0),
                                           child: Container(
                                             height: 30,
                                             width: 100,
@@ -207,130 +206,116 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                 width: 1.0,
                                                 // Right side is intentionally left out
                                               ),
-                                              borderRadius:
-                                                  const BorderRadius.only(
+                                              borderRadius: const BorderRadius.only(
                                                 topLeft: Radius.circular(8.0),
-                                                bottomLeft:
-                                                    Radius.circular(8.0),
+                                                bottomLeft: Radius.circular(8.0),
                                               ),
                                             ),
                                             child: CustomText(
                                               controller.sortOptions[controller
                                                           .selectedSortOption
                                                           .value]?[
-                                                      controller.sortDirection
-                                                          .value] ??
+                                                      controller
+                                                          .sortDirection.value] ??
                                                   "",
-                                              style: AppTextStyles
-                                                  .customColorStyle(
-                                                textHeader: AppTextHeaders.h2,
+                                              style:
+                                                  AppTextStyles.customColorStyle(
+                                                textHeader: AppTextHeaders.h2Bold,
                                                 color: (controller.sortDirection
                                                             .value ==
                                                         0)
                                                     ? Colors.blueAccent
-                                                    : AppColors
-                                                        .inverseCardColor,
+                                                    : AppColors.inverseCardColor,
                                               ),
                                             ),
                                           ),
                                         ),
                                         InkWell(
-                                          onTap: () => controller
-                                              .changeSelectedSortDirection(1),
+                                          onTap: ()=>controller.changeSelectedSortDirection(1),
                                           child: Container(
                                             height: 30,
                                             width: 100,
                                             decoration: BoxDecoration(
                                               border: controller.borders[0],
-                                              borderRadius:
-                                                  const BorderRadius.only(
+                                              borderRadius: const BorderRadius.only(
                                                 topRight: Radius.circular(8.0),
-                                                bottomRight:
-                                                    Radius.circular(8.0),
+                                                bottomRight: Radius.circular(8.0),
                                               ),
                                             ),
                                             child: CustomText(
                                               controller.sortOptions[controller
-                                                          .selectedSortOption
-                                                          .value]?[
-                                                      1 -
-                                                          controller
-                                                              .sortDirection
-                                                              .value] ??
+                                                  .selectedSortOption
+                                                  .value]?[1-
+                                              controller
+                                                  .sortDirection.value] ??
                                                   "",
-                                              style: AppTextStyles.secStyle(
-                                                AppTextHeaders.h2,
+                                              style:
+                                              AppTextStyles.secStyle(
+                                                textHeader: AppTextHeaders.h2Bold,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ] else ...[
-                                        InkWell(
-                                          onTap: () => controller
-                                              .changeSelectedSortDirection(0),
-                                          child: Container(
-                                            height: 30,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              border: controller.borders[1],
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(8.0),
-                                                bottomLeft:
-                                                    Radius.circular(8.0),
+                                      ] else
+                                        ...[
+                                          InkWell(
+                                            onTap: ()=>controller.changeSelectedSortDirection(0),
+                                            child: Container(
+                                              height: 30,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                border: controller.borders[1],
+                                                borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(8.0),
+                                                  bottomLeft: Radius.circular(8.0),
+                                                ),
                                               ),
-                                            ),
-                                            child: CustomText(
-                                              controller.sortOptions[controller
-                                                          .selectedSortOption
-                                                          .value]?[
-                                                      1 -
-                                                          controller
-                                                              .sortDirection
-                                                              .value] ??
-                                                  "",
-                                              style: AppTextStyles.secStyle(
-                                                AppTextHeaders.h2,
+                                              child: CustomText(
+                                                controller.sortOptions[controller
+                                                    .selectedSortOption
+                                                    .value]?[1-
+                                                    controller
+                                                        .sortDirection.value] ??
+                                                    "",
+                                                style:
+                                                AppTextStyles.secStyle(
+                                                  textHeader: AppTextHeaders.h2Bold,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        InkWell(
-                                          onTap: () => controller
-                                              .changeSelectedSortDirection(1),
-                                          child: Container(
-                                            height: 30,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.blueAccent,
-                                                width: 1.0,
-                                                // Right side is intentionally left out
+                                          InkWell(
+                                            onTap: ()=>controller.changeSelectedSortDirection(1),
+                                            child: Container(
+                                              height: 30,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.blueAccent,
+                                                  width: 1.0,
+                                                  // Right side is intentionally left out
+                                                ),
+                                                borderRadius: const BorderRadius.only(
+                                                  topRight: Radius.circular(8.0),
+                                                  bottomRight: Radius.circular(8.0),
+                                                ),
                                               ),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topRight: Radius.circular(8.0),
-                                                bottomRight:
-                                                    Radius.circular(8.0),
+                                              child: CustomText(
+                                                controller.sortOptions[controller
+                                                    .selectedSortOption
+                                                    .value]?[
+                                                controller
+                                                    .sortDirection.value] ??
+                                                    "",
+                                                style:
+                                                AppTextStyles.customColorStyle(
+                                                  textHeader: AppTextHeaders.h2Bold,
+                                                  color: (Colors.blueAccent)
+                                                ),
                                               ),
-                                            ),
-                                            child: CustomText(
-                                              controller.sortOptions[controller
-                                                          .selectedSortOption
-                                                          .value]?[
-                                                      controller.sortDirection
-                                                          .value] ??
-                                                  "",
-                                              style: AppTextStyles
-                                                  .customColorStyle(
-                                                      textHeader:
-                                                          AppTextHeaders.h2,
-                                                      color:
-                                                          (Colors.blueAccent)),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
                                     ],
                                   ),
                                 ),

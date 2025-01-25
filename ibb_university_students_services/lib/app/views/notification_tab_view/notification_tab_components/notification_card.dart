@@ -26,7 +26,7 @@ class NotificationCard extends StatelessWidget {
       alignment: Alignment.topRight,
       children: [
         Card(
-            color: AppColors.inverseCardColor.withOpacity(0.93),
+            color: AppColors.inverseCardColor.withValues(alpha:0.93),
             elevation: 6,
             child: Container(
               width: double.maxFinite,
@@ -37,8 +37,8 @@ class NotificationCard extends StatelessWidget {
                     width: double.maxFinite,
                     child: CustomText(
                       " the title:",
-                      style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h1),
+                      style:
+                          AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -47,7 +47,7 @@ class NotificationCard extends StatelessWidget {
                     child: CustomText(
                       message,
                       style: AppTextStyles.mainStyle(
-                        textHeader: AppTextHeaders.h3,
+                        textHeader: AppTextHeaders.h3Bold,
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -67,7 +67,8 @@ class NotificationCard extends StatelessWidget {
                         ),
                         child: CustomText(
                           "By: $author",
-                          style: AppTextStyles.secStyle(AppTextHeaders.h5),
+                          style: AppTextStyles.secStyle(
+                              textHeader: AppTextHeaders.h5Bold),
                         ),
                       ),
                       Container(
@@ -79,7 +80,8 @@ class NotificationCard extends StatelessWidget {
                         ),
                         child: CustomText(
                           "At: $time",
-                          style: AppTextStyles.secStyle(AppTextHeaders.h5),
+                          style: AppTextStyles.secStyle(
+                              textHeader: AppTextHeaders.h5Bold),
                         ),
                       ),
                     ],

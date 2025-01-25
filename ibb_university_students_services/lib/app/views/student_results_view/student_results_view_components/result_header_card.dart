@@ -41,35 +41,35 @@ class ResultHeaderCard extends StatelessWidget {
             width: ((Get.width-16)*2.5)/7,
             child: CustomText(
               "Subject Name",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "Units",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.25)/7,
             child: CustomText(
               "Practicality\n(30)",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*1.25)/7,
             child: CustomText(
               "Final Exam\n(70)",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
             ),
           ),
           SizedBox(
             width: ((Get.width-16)*0.55)/7,
             child: CustomText(
               "Sum\n(100)",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
             ),
           ),
         ],

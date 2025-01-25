@@ -44,9 +44,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(
-                          height: 8,
-                        ),
+                        const SizedBox(height: 8,),
                         Row(
                           children: [
                             IconButton(
@@ -57,7 +55,8 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 )),
                             CustomText(
                               "Student Grads",
-                              style: AppTextStyles.secStyle(AppTextHeaders.h2),
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h2Bold),
                             ),
                           ],
                         ),
@@ -71,7 +70,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                       child: CustomText(
                                         "Level:",
                                         style: AppTextStyles.secStyle(
-                                            AppTextHeaders.h3),
+                                            textHeader: AppTextHeaders.h3Bold),
                                       ),
                                     ),
                                     Container(
@@ -109,7 +108,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                       child: CustomText(
                                         "Term:",
                                         style: AppTextStyles.secStyle(
-                                            AppTextHeaders.h3),
+                                            textHeader: AppTextHeaders.h3Bold),
                                       ),
                                     ),
                                     Container(
@@ -149,19 +148,17 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                               children: [
                                 CustomText(
                                   "GPA:",
-                                  style:
-                                      AppTextStyles.secStyle(AppTextHeaders.h3),
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                                 const SizedBox(
                                   width: 4,
                                 ),
-                                Obx(
-                                  () => CustomText(
-                                    "${controller.gpa.value.toStringAsFixed(2)}%",
-                                    style: AppTextStyles.secStyle(
-                                        AppTextHeaders.h3),
-                                  ),
-                                )
+                                Obx(()=>CustomText(
+                                  "${controller.gpa.value.toStringAsFixed(2)}%",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
+                                ),)
                               ],
                             ),
                             Row(
@@ -169,28 +166,24 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                               children: [
                                 CustomText(
                                   "Summation:",
-                                  style:
-                                      AppTextStyles.secStyle(AppTextHeaders.h3),
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                                 const SizedBox(
                                   width: 4,
                                 ),
-                                Obx(
-                                  () => CustomText(
-                                    "${controller.summation.value}",
-                                    style: AppTextStyles.secStyle(
-                                        AppTextHeaders.h3),
-                                  ),
-                                )
+                                Obx(()=>CustomText(
+                                  "${controller.summation.value}",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
+                                ),)
                               ],
                             ),
                           ],
                         ),
                       ],
                     )),
-                const SizedBox(
-                  height: 32,
-                ),
+                const SizedBox(height: 32,),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -205,40 +198,29 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                           onRefresh: () async => controller.refresh(),
                           child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 6),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(height: Get.height * 0.015),
-                                if ((controller.grads?.value.isEmpty ??
-                                    true)) ...[
-                                  SizedBox(
-                                    height: Get.height * 0.2,
-                                  ),
-                                  Center(
-                                      child: CustomText(
-                                    controller.failedMessage.value,
-                                    style: AppTextStyles.secStyle(
-                                        AppTextHeaders.h2),
-                                  )),
-                                  IconButton(
-                                      onPressed: () async =>
-                                          controller.refresh(),
-                                      icon: const Icon(
-                                        Icons.refresh,
-                                        size: 40,
-                                      ))
+                                if((controller.grads?.value.isEmpty??true) )...[
+                                  SizedBox(height: Get.height*0.2,),
+                                  Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),)),
+                                  IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
                                 ],
                                 for (int i = 0;
-                                    i < (controller.grads?.value.length ?? 0);
-                                    i++) ...[
+                                i < (controller.grads?.value.length ?? 0);
+                                i++) ...[
                                   (i % 2 == 0)
                                       ? ResultCard(
-                                          grad: Rx(controller.grads!.value[i]))
+                                      grad:
+                                      Rx(controller.grads!.value[i]))
                                       : ResultCard(
-                                          grad: Rx(controller.grads!.value[i]),
-                                          type: "odd",
-                                        ),
+                                    grad:
+                                    Rx(controller.grads!.value[i]),
+                                    type: "odd",
+                                  ),
                                   if (i <
                                       ((controller.grads?.value.length ?? 0) -
                                           1))

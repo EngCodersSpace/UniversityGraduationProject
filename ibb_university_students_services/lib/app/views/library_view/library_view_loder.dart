@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../utils/screen_utils.dart';
 import 'library_phones_view.dart';
 import 'library_web_view.dart';
 
@@ -16,7 +17,7 @@ class LibraryViewLoader extends StatelessWidget {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth <= 768 && constraints.maxHeight <= 1025) {
+          if (ScreenUtils.isPhoneScreen()) {
             return   LibraryPhonesView();
           } else {
             return   LibraryWebView();

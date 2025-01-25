@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
@@ -29,7 +28,6 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                 Column(
                   children: [
                     Container(
-                        height: Get.height * 0.22,
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.mainCardColor,
@@ -44,10 +42,13 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           borderRadius: const BorderRadius.vertical(
                               bottom: Radius.circular(32)),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 20),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: Get.height * 0.015,
+                            ),
                             Row(
                               children: [
                                 IconButton(
@@ -57,26 +58,24 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                       color: AppColors.inverseIconColor,
                                     )),
                                 CustomText(
-                                  "Exams Table",
-                                  style:
-                                      AppTextStyles.secStyle(AppTextHeaders.h2),
+                                  "Exams Table".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
                                 ),
                               ],
-                            ),
-                            SizedBox(
-                              height: Get.height * 0.02,
                             ),
                             Row(
                               children: [
                                 SizedBox(
-                                    width: ((Get.width - 16) / 7) * 3.5,
+                                    width: ((Get.width - 16) / 7) * 4,
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: SecText(
-                                            "Section:",
+                                          child: CustomText(
+                                            "${"Program".tr}:",
                                             textAlign: TextAlign.start,
-                                            fontWeight: FontWeight.bold,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
@@ -85,15 +84,15 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             borderRadius:
                                                 BorderRadius.circular(24),
                                           ),
-                                          width: Get.width / 3.3,
+                                          width: (((Get.width - 16) / 7) * 4)*0.63,
                                           child: Center(
                                             child: Obx(
                                               () => DropdownButton(
-                                                items: controller.departments,
+                                                items: controller.sections,
                                                 onChanged:
                                                     controller.changeDepartment,
                                                 value: controller
-                                                    .selectedDepartment.value,
+                                                    .selectedSection.value,
                                                 underline: const SizedBox(),
                                                 iconEnabledColor:
                                                     AppColors.mainCardColor,
@@ -104,7 +103,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: ((Get.width - 16) / 7) * 0.1,
+                                          width: (((Get.width - 16) / 7) * 4) * 0.04,
                                         ),
                                       ],
                                     )),
@@ -112,14 +111,15 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                   width: ((Get.width - 16) / 7) * 0.4,
                                 ),
                                 SizedBox(
-                                    width: ((Get.width - 16) / 7) * 3.1,
+                                    width: ((Get.width - 16) / 7) * 2.5,
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: SecText(
-                                            "Level:",
-                                            fontWeight: FontWeight.bold,
+                                          child: CustomText(
+                                            "${"Level".tr}:",
                                             textAlign: TextAlign.start,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
@@ -128,7 +128,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             borderRadius:
                                                 BorderRadius.circular(24),
                                           ),
-                                          width: Get.width / 3.3,
+                                          width: (((Get.width - 16) / 7) * 2.5)*0.6,
                                           child: Center(
                                             child: Obx(
                                               () => DropdownButton(
@@ -148,84 +148,101 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                         ),
                                       ],
                                     )),
+
                               ],
                             ),
-                            SizedBox(
-                              height: Get.height * 0.04,
+                            const SizedBox(
+                              height: 16,
                             ),
-                            // Row(
-                            //   children: [
-                            //     SizedBox(
-                            //         width: ((Get.width-16) / 7)*3.5,
-                            //         child: Row(
-                            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //           children: [
-                            //             Expanded(
-                            //               child: SecText(
-                            //                 "     Year:",
-                            //                 fontWeight: FontWeight.bold,
-                            //                 textAlign: TextAlign.start,
-                            //               ),
-                            //             ),
-                            //             Container(
-                            //               decoration: BoxDecoration(
-                            //                 color: AppColors.inverseCardColor,
-                            //                 borderRadius: BorderRadius.circular(24),
-                            //               ),
-                            //               width: Get.width / 3.3,
-                            //               child: Center(
-                            //                 child: Obx(
-                            //                       () => DropdownButton(
-                            //                     items: controller.years,
-                            //                     onChanged: controller.changeYear,
-                            //                     value:
-                            //                     controller.selectedYear.value,
-                            //                     underline: const SizedBox(),
-                            //                     iconEnabledColor: AppColors.mainCardColor,
-                            //                     dropdownColor:
-                            //                     AppColors.inverseCardColor,
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //             SizedBox(width: ((Get.width-16) / 7)*0.1,),
-                            //           ],
-                            //         )),
-                            //     SizedBox(width: ((Get.width-16) / 7)*0.4,),
-                            //     SizedBox(
-                            //         width: ((Get.width-16) / 7)*3.1,
-                            //         child: Row(
-                            //           children: [
-                            //             Expanded(child: SecText(
-                            //               "Term:",
-                            //               textAlign: TextAlign.start,
-                            //               fontWeight: FontWeight.bold,
-                            //             ),),
-                            //             Container(
-                            //               decoration: BoxDecoration(
-                            //                 color: AppColors.inverseCardColor,
-                            //                 borderRadius: BorderRadius.circular(24),
-                            //               ),
-                            //               width: Get.width / 3.3,
-                            //               child: Center(
-                            //                 child: Obx(
-                            //                       () => DropdownButton(
-                            //                     items: controller.terms,
-                            //                     onChanged: controller.changeTerm,
-                            //                     value:
-                            //                     controller.selectedTerm.value,
-                            //                     underline: const SizedBox(),
-                            //                     iconEnabledColor: AppColors.mainCardColor,
-                            //                     dropdownColor:
-                            //                     AppColors.inverseCardColor,
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         )),
-                            //   ],
-                            // ),
+                            if (PermissionUtils.checkPermission(
+                                target: "Exams", action: "accessOldTables")) ...[
+                              Row(
+                                children: [
+                                  SizedBox(
+                                      width: ((Get.width - 16) / 7) * 3.9,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CustomText(
+                                              "${"Year".tr}:",
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: AppTextHeaders.h3Bold),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.inverseCardColor,
+                                              borderRadius:
+                                              BorderRadius.circular(24),
+                                            ),
+                                            width: (((Get.width - 16) / 7) * 4)*0.63,
+                                            child: Center(
+                                              child: Obx(
+                                                    () => DropdownButton(
+                                                  items: controller.years,
+                                                  onChanged:
+                                                  controller.changeYear,
+                                                  value: controller
+                                                      .selectedYear.value,
+                                                  underline: const SizedBox(),
+                                                  iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                                  dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: (((Get.width - 16) / 7) * 4) * 0.04,
+                                          ),
+                                        ],
+                                      )),
+                                  SizedBox(
+                                    width: ((Get.width - 16) / 7) * 0.1,
+                                  ),
+                                  SizedBox(
+                                      width: ((Get.width - 16) / 7) * 2.8,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CustomText(
+                                              "${"Semester".tr}:",
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: AppTextHeaders.h3Bold),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.inverseCardColor,
+                                              borderRadius:
+                                              BorderRadius.circular(24),
+                                            ),
+                                            width: (((Get.width - 16) / 7) * 2.5)*0.6,
+                                            child: Center(
+                                              child: Obx(
+                                                    () => DropdownButton(
+                                                  items: controller.terms,
+                                                  onChanged:
+                                                  controller.changeTerm,
+                                                  value: controller
+                                                      .selectedTerm.value,
+                                                  underline: const SizedBox(),
+                                                  iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                                  dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            ],
                           ],
                         )),
                     const SizedBox(height: 16),
@@ -235,74 +252,67 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomText(
-                            "Exams",
+                            "Exams".tr,
                             style: AppTextStyles.highlightStyle(
-                                textHeader: AppTextHeaders.h2),
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((PermissionUtils.checkPermission(
                               target: "Exams", action: "add")))
                             CustomButton(
                               onPress: controller.addButtonClick,
-                              text: "Add Exam",
+                              text: "Add Exam".tr,
                             ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                      width: width,
-                      height: (PermissionUtils.checkPermission(
-                              target: "Exams", action: "add"))
-                          ? Get.height * 0.7
-                          : Get.height * 0.73,
-                      child: RefreshIndicator(
-                        onRefresh: () async => controller.refresh(),
-                        child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width * 0.05,
-                                vertical: Get.height * 0.01),
-                            child: Obx(
-                              () => Column(
-                                children: [
-                                  SizedBox(height: Get.height * 0.01),
-                                  if (controller.exams?.value.isEmpty ??
-                                      true) ...[
-                                    SizedBox(
-                                      height: Get.height * 0.2,
-                                    ),
-                                    Center(
-                                        child: CustomText(
-                                      controller.fieldMessage.value,
-                                      style: AppTextStyles.secStyle(
-                                          AppTextHeaders.h2),
-                                    )),
-                                    IconButton(
-                                        onPressed: () async =>
-                                            controller.refresh(),
-                                        icon: const Icon(Icons.refresh))
-                                  ],
-                                  for (int i = 0;
-                                      i < (controller.exams?.value.length ?? 0);
-                                      i++) ...[
-                                    ExamCard(
-                                      content: Rx(controller.exams?.value.values
-                                          .toList()[i]),
-                                    ),
-                                    if (i <
-                                        ((controller.exams?.value.length ?? 0) -
-                                            1))
-                                      SizedBox(
-                                        height: Get.height * 0.03,
-                                      )
-                                  ]
-                                ],
-                              ),
-                            )),
-                      )),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async =>  controller.refresh(),
+                    child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.05,
+                            vertical: Get.height * 0.01),
+                        child: Obx(
+                          () => Column(
+                            children: [
+                              SizedBox(height: Get.height * 0.01),
+                              if (controller.exams?.value.isEmpty ??
+                                  true) ...[
+                                SizedBox(
+                                  height: Get.height * 0.2,
+                                ),
+                                Center(
+                                    child: CustomText(
+                                  controller.fieldMessage.value,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
+                                )),
+                                IconButton(
+                                    onPressed: () async =>
+                                        controller.refresh(),
+                                    icon: const Icon(Icons.refresh))
+                              ],
+                              for (int i = 0;
+                                  i < (controller.exams?.value.length ?? 0);
+                                  i++) ...[
+                                ExamCard(
+                                  content: Rx(controller.exams?.value.values
+                                      .toList()[i]),
+                                ),
+                                if (i <
+                                    ((controller.exams?.value.length ?? 0) -
+                                        1))
+                                  SizedBox(
+                                    height: Get.height * 0.03,
+                                  )
+                              ]
+                            ],
+                          ),
+                        )),
+                  ),
                 ),
               ],
             ),

@@ -37,7 +37,7 @@ class ServicesCard extends GetView {
                 borderRadius: BorderRadius.circular(10),
                   boxShadow:  [
                     BoxShadow(
-                      color: AppColors.tabBackColor.withOpacity(1),
+                      color: AppColors.tabBackColor,
                         spreadRadius: 8,
                         blurRadius: 5,
 

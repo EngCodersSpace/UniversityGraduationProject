@@ -1,8 +1,11 @@
+// ignore_for_file: unnecessary_null_comparison
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
-import '../models/result.dart';
-import '../models/user_model.dart';
-import '../services/user_services.dart';
+import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
+import '../models/helper_models/result.dart';
+import '../models/user_model/user.dart';
+import '../repositories/user_repository.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';
 import 'library_controller.dart';
@@ -13,12 +16,22 @@ class MainController extends GetxController {
   User? user;
   late CustomFloatActionButtonLocation currentPos;
   RxBool loading = true.obs;
+  RxBool isConnect = false.obs;
   @override
   void onInit() async {
+     isConnect.value= await checkInternetConnection();
+     // Listen for connectivity changes
+     Connectivity().onConnectivityChanged.listen((result) {
+       if (result.contains(ConnectivityResult.none)) {
+         isConnect.value = false;
+       } else {
+         isConnect.value = true;
+       }
+     }) ;
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
-    Result res = await UserServices.fetchUser();
+    Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }
@@ -29,30 +42,30 @@ class MainController extends GetxController {
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.85) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 1) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.32) - 36, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.71) - 28, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.71) - 36, y: Get.height - (Get.height * 0.1));
     } else if (index == 2) {
       currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.45), y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.45)-12, y: Get.height - (Get.height * 0.1));
     } else if (index == 3) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.71) - 8, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.71) - 32, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.32) - 23, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.31) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 4) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.9) - 28, y: Get.height - (Get.height * 0.1))
+          x: (Get.width * 0.9) - 48, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-              x: (Get.width * 0.1) - 16, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1));
     }
 
     if (!(Get.width <= 768 && Get.height <= 1025)) {
@@ -66,7 +79,6 @@ class MainController extends GetxController {
     GetxController? controller;
     switch (index) {
       case 5:
-        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -75,7 +87,6 @@ class MainController extends GetxController {
         );
         break;
       case 6:
-        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -84,7 +95,6 @@ class MainController extends GetxController {
         );
         break;
       case 7:
-        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
@@ -93,7 +103,6 @@ class MainController extends GetxController {
         );
         break;
       case 8:
-        // ignore: unnecessary_null_comparison
         if (controller != null) {
           controller.dispose();
         }
