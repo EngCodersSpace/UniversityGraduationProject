@@ -24,7 +24,7 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       assignmentDay: fields[4] as String?,
       assignmentDate: fields[5] as String?,
       dueDate: fields[6] as String?,
-      attachment: fields[7] as String?,
+      attachment: (fields[7] as List?)?.cast<AttachmentFile>(),
     );
   }
 

@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
-import 'package:ibb_university_students_services/app/utils/json_utils.dart';
+import '../attachment_file_model/attachment_file_model.dart';
 import '../subject_model/subject_model.dart';
 
 part 'assignment_model.g.dart';
@@ -35,7 +34,7 @@ class Assignment {
   @HiveField(6)
   String? dueDate;
   @HiveField(7)
-  String? attachment;
+  List<AttachmentFile>? attachment;
 
   String? get title {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -50,9 +49,12 @@ class Assignment {
         "doctor_id": json['doctor_id'],
         "user": {"user_name": "{\"en\":\"Doctor name\",\"ar\":\"اسم الدكتور\"}"}
       }),
-      titleData: JsonUtils.tryJsonDecode(
-        json['title'],
-      ),
+      // titleData: JsonUtils.tryJsonDecode(
+      //   json['title'],
+      // ),
+      titleData: {
+        "en":json['title'],
+      },
       assignmentDay: json['assignment_due_day'],
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],
@@ -65,7 +67,7 @@ class Assignment {
       "assignment_id": id,
       "subject": subject?.toJson(),
       "doctor": doctor?.toJson(),
-      "title": title,
+      "title": titleData,
       "assignment_day": assignmentDay,
       "assignment_date": assignmentDate,
       "assignments_due_date": dueDate,

@@ -165,7 +165,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       Row(
                         children: [
                           CustomText(
-                            "${"Due 1".tr}:",
+                            "${"Due Date".tr}:",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
@@ -196,7 +196,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           onPress: () {
                             Get.dialog(const FilesPickerCard());
                           },
-                          text: "Add Attachments".tr,
+                          text: "Attachments".tr,
                         ),
                         const SizedBox(
                           height: 8,
@@ -205,12 +205,12 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           onPress: () {
                             // Get.toNamed("");
                           },
-                          text: "Show Students".tr,
+                          text: "Students".tr,
                         ),
                       ] else ...[
                         CustomButton(
                           onPress: () {},
-                          text: "Show Attachments".tr,
+                          text: "Attachments".tr,
                         ),
                         const SizedBox(
                           height: 8,
@@ -219,7 +219,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           onPress: () {
                             Get.dialog(const FilesPickerCard());
                           },
-                          text: "Upload Assignment".tr,
+                          text: "Assignment Files".tr,
                         ),
                       ],
                     ]),

@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/assignment_model/assignment_model.dart';
+import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/exam_model/exam_model.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
@@ -52,6 +53,7 @@ class HiveServices{
     Hive.registerAdapter(AssignmentsCacheAdapter());
     Hive.registerAdapter(SubjectsCacheAdapter());
     Hive.registerAdapter(AssignmentAdapter());
+    Hive.registerAdapter(AttachmentFileAdapter());
   }
   static openGlobalBoxes()async{
     await UserRepository.openBox();
