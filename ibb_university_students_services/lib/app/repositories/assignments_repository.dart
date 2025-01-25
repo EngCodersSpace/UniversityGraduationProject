@@ -25,7 +25,7 @@ class AssignmentsRepository {
 
   static Future<void> clearBox() async {
     _assignmentsBox = await Hive.openBox<AssignmentsCache>("assignmentsBox");
-    _assignments?.clear();
+     _assignments?.clear();
   }
 
   static Future<void> closeBox() async {
@@ -53,19 +53,20 @@ class AssignmentsRepository {
       response = await HttpProvider.get(
           "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
-        cachedAssignments?.data = {};
+        cachedAssignments =
+            AssignmentsCache(
+                key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                data: {});
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
             Assignment assignment = Assignment.fromJson(jsAssignments);
-            cachedAssignments?.data[assignment.id] = assignment;
+            cachedAssignments.data[assignment.id] = assignment;
           }
-          if (cachedAssignments != null) {
-            await _assignmentsBox?.put(
-              cachedAssignments.key,
-              cachedAssignments,
-            );
-          }
-        }
+          await _assignmentsBox?.put(
+            cachedAssignments.key,
+            cachedAssignments,
+          );
+                }
         print("data ${cachedAssignments?.data}");
         return Result(
             data: cachedAssignments?.data,

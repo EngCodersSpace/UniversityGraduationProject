@@ -165,7 +165,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       Row(
                         children: [
                           CustomText(
-                            "${"Due Date".tr}:",
+                            "${"Due 1".tr}:",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),

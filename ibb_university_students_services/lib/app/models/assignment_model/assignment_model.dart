@@ -1,19 +1,25 @@
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 import '../subject_model/subject_model.dart';
+
 part 'assignment_model.g.dart';
+
 @HiveType(typeId: 15)
 class Assignment {
   Assignment({
     required this.id,
     this.subject,
     this.doctor,
-    this.title,
+    this.titleData,
     this.assignmentDay,
     this.assignmentDate,
     this.dueDate,
     this.attachment,
   });
+
   @HiveField(0)
   int id;
   @HiveField(1)
@@ -21,7 +27,7 @@ class Assignment {
   @HiveField(2)
   Instructor? doctor;
   @HiveField(3)
-  String? title;
+  Map<String, dynamic>? titleData;
   @HiveField(4)
   String? assignmentDay;
   @HiveField(5)
@@ -31,8 +37,12 @@ class Assignment {
   @HiveField(7)
   String? attachment;
 
+  String? get title {
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
+    return titleData?[currentLang];
+  }
+
   factory Assignment.fromJson(Map<String, dynamic> json, {Subject? subject}) {
-    print(json);
     return Assignment(
       id: json['id'],
       subject: subject,
@@ -40,7 +50,9 @@ class Assignment {
         "doctor_id": json['doctor_id'],
         "user": {"user_name": "{\"en\":\"Doctor name\",\"ar\":\"اسم الدكتور\"}"}
       }),
-      title: json['title'],
+      titleData: JsonUtils.tryJsonDecode(
+        json['title'],
+      ),
       assignmentDay: json['assignment_due_day'],
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],

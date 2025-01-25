@@ -20,7 +20,7 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       id: fields[0] as int,
       subject: fields[1] as Subject?,
       doctor: fields[2] as Instructor?,
-      title: fields[3] as String?,
+      titleData: (fields[3] as Map?)?.cast<String, dynamic>(),
       assignmentDay: fields[4] as String?,
       assignmentDate: fields[5] as String?,
       dueDate: fields[6] as String?,
@@ -39,7 +39,7 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       ..writeByte(2)
       ..write(obj.doctor)
       ..writeByte(3)
-      ..write(obj.title)
+      ..write(obj.titleData)
       ..writeByte(4)
       ..write(obj.assignmentDay)
       ..writeByte(5)

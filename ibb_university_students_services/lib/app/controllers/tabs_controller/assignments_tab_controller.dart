@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/level_model/level.dart';
@@ -31,6 +32,7 @@ class AssignmentsTabController extends GetxController {
   List<DropdownMenuItem<int>> levels = [];
   Rx<Map<int, Assignment>>? assignments = Rx({});
   Rx<List<PlatformFile>>? selectedAttachments = Rx([]);
+  String mode = "Add";
 
   @override
   void onInit() async {
@@ -80,7 +82,6 @@ class AssignmentsTabController extends GetxController {
       return;
     }
 
-    print(selectedSubject.value);
     Result res = await AssignmentsRepository.fetchAssignmentsGroup(
       subjectId: selectedSubject.value!,
       sectionId: selectedDepartment.value!,
@@ -88,10 +89,7 @@ class AssignmentsTabController extends GetxController {
       year: '',
       hardFetch: force,);
     print(res.data);
-    print(res.statusCode);
-    print(res.message);
     if (res.statusCode == 200) {
-      assignments?.value = {};
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
       assignments?.value = res.data ?? {};
@@ -279,7 +277,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   void addButtonClick() async {
-    // mode = "Add";
+    mode = "Add";
     // dateController.text = DateTime.now().toString().split(" ")[0];
     // timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
     // subjects = {};
@@ -287,6 +285,6 @@ class AssignmentsTabController extends GetxController {
     // if (subjects?.values.first != null) {
     //   subject = RxString(subjects!.values.first.id);
     // }
-    // Get.dialog(const PopUpIAddAndUpdateExamCard());
+    Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
   }
 }
