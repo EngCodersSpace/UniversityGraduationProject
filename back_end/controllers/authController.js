@@ -114,9 +114,6 @@ exports.login = async (req, res) => {
       ).length;
 
 
-      // const { totalAssignmentsCount, completedAssignmentsCount } = await getStudentAssignments(foundUser);
-
-
       responseUser = {
         ...responseUser,
         completedAssignmentsCount,
@@ -146,50 +143,6 @@ exports.login = async (req, res) => {
   }
 };
 
-
-
-// async function getStudentAssignments(foundUser) {
-//   try {
-//     const studentAssignments = await student_assignment.findOne({
-//       attributes: [
-//         [Sequelize.fn('COUNT', Sequelize.col('student_assignment.id')), 'totalAssignments'],        
-//         [Sequelize.fn('SUM', Sequelize.literal('CASE WHEN `student_assignment`.`is_completed` = true THEN 1 ELSE 0 END')), 'completedAssignments'],
-//       ],
-//       where: {
-//         student_id: foundUser.user_id, 
-//       },
-//       include: [
-//         {
-//           model: assignment,
-//           Through:{attributes: []},
-//           attributes: [],
-//           where: {
-//             level_id: foundUser.student.level.id, 
-//             section_id: foundUser.user_section_id, 
-//           },
-//         },
-//       ],
-//       raw: true, 
-//       group: ['student_assignment.student_id'],
-//     });
-
-//     if (studentAssignments.length > 0) {
-//       const totalAssignmentsCount = parseInt(studentAssignments[0].totalAssignments, 10);
-//       const completedAssignmentsCount = parseInt(studentAssignments[0].completedAssignments, 10);
-
-//       console.log(`Total assignments: ${totalAssignmentsCount}`);
-//       console.log(`Completed assignments: ${completedAssignmentsCount}`);
-
-//       return { totalAssignmentsCount, completedAssignmentsCount };
-//     } else {
-//       console.log('No assignments found for the student.');
-//       return { totalAssignmentsCount: 0, completedAssignmentsCount: 0 };
-//     }
-//   } catch (error) {
-//     console.error('Error fetching assignments:', error.message);
-//     throw error;
-//   }
-// }
 
 
 

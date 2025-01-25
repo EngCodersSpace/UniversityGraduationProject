@@ -6,12 +6,14 @@ const checkRole = require('../middleware/roleMiddleware');
 router.use(verifyToken);
 
 router.post('/upload-assignment-doctor', checkRole(['student_affairs','controller','lecturer']), CRUD.createAssignment);
-router.post('/upload-files-assignment-doctor', checkRole(['student_affairs','controller','lecturer']), CRUD.uploadFilesForAssignment);
+router.post('/upload-files-assignment-doctor', checkRole(['student_affairs','controller','lecturer']),CRUD.uploadFilesForAssignment);
 router.post('/upload-files-assignment-student', checkRole(['student','representative']), CRUD.uploadFilesAttachment);
 
-// router.get('/get-student-assignments',checkRole(['teacher','controller','representative','student']), CRUD.getStudentAssignments);
-router.get('/get-assignments-subject',checkRole(['representative','student']), CRUD.getAssignmentsOfSubject);
-router.get('/get-all-students-assignment',checkRole(['lecturer','controller']), CRUD.getAllStudentsOfAssignment);
+router.post('/check-files', CRUD.getFileDetails);
+
+
+router.get('/get-assignments-subject',checkRole(['representative','student','lecturer']), CRUD.getAssignmentsOfSubject);
+router.get('/get-all-students-assignment',checkRole(['lecturer','controller','lecturer']), CRUD.getStudentsAndFilesByAssignment);
 router.get('/get-students-assignment-files',checkRole(['lecturer','controller','representative']), CRUD.getStudentFiles);
 
 router.put('/update-assignment',checkRole(['lecturer','controller']), CRUD.updateAssigment);

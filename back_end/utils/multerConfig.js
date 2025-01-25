@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const {assignment, assignment_file} = require("../models");
 
 const createFolderIfNotExists = async (folderPath) => {
   try {
@@ -12,19 +13,100 @@ const createFolderIfNotExists = async (folderPath) => {
   }
 };
 
+// const getStorageForPath = (baseFolder = 'temp') => {
+//   return {
+//     _handleFile: async (req, file, cb) => {
+//       if (!req.query.assignment_id) {
+//         return cb(new Error('Assignment ID is required.'));
+//       }
+
+//       const assignmentExists = await assignment.findByPk(req.query.assignment_id);
+//       if (!assignmentExists) {
+//         return cb(new Error('Assignment not found.'));
+//       }
+
+//       const folderPath = path.join(__dirname, '../storage', baseFolder);
+//       const hash = crypto.createHash('md5').update(file.originalname + file.size).digest('hex');
+//       const fileExtension = path.extname(file.originalname);
+//       const hashedFileName = `${hash}${fileExtension}`;
+//       const finalFilePath = path.join(folderPath, hashedFileName);
+
+//       try {
+//         const existingFile = await assignment_file.findOne({
+//           where: {
+//             assignment_id: req.query.assignment_id,
+//             attachment_hash: hash,
+//           },
+//         });
+
+//         req.duplicateFiles = req.duplicateFiles || [];
+//         req.newFiles = req.newFiles || [];
+
+//         if (existingFile) {
+//           req.duplicateFiles.push({
+//             originalName: file.originalname,
+//             reason: 'Duplicate file detected.',
+//           });
+//           return cb(null, null); 
+//         }
+
+//         createFolderIfNotExists(folderPath)
+//           .then(() => {
+//             const writeStream = fs.createWriteStream(finalFilePath);
+//             file.stream.pipe(writeStream);
+
+//             writeStream.on('finish', async () => {
+//               try {
+//                 const fileMetadata = {
+//                   originalName: file.originalname,
+//                   mimeType: file.mimetype,
+//                   size: writeStream.bytesWritten,
+//                   path: finalFilePath,
+//                   hash,
+//                 };
+
+//                 req.newFiles.push({
+//                   originalName: file.originalname,
+//                   status: 'Uploaded successfully.',
+//                 });
+
+//                 cb(null, fileMetadata);
+//               } catch (error) {
+//                 cb(error);
+//               }
+//             });
+
+//             writeStream.on('error', (err) => {
+//               console.error('Error writing file:', err.message);
+//               cb(err);
+//             });
+//           })
+//           .catch((err) => {
+//             cb(err);
+//           });
+//       } catch (error) {
+//         console.error('Error during file processing:', error.message);
+//         cb(error);
+//       }
+//     },
+
+//     _removeFile(req, file, cb) {
+//       const filePath = file.path;
+
+//       fs.unlink(filePath, (err) => {
+//         if (err) return cb(err);
+//         cb(null);
+//       });
+//     },
+//   };
+// };
+
+
+
 const getStorageForPath = (baseFolder = 'temp') => {
   return {
     _handleFile(req, file, cb) {
       const folderPath = path.join(__dirname, '../storage', baseFolder);
-
-      const hash = crypto
-        .createHash('md5')
-        .update(`${file.originalname}-${Date.now()}`)
-        .digest('hex');
-      const fileExtension = path.extname(file.originalname);
-      const hashedFileName = `${hash}${fileExtension}`;
-      const finalFilePath = path.join(folderPath, hashedFileName);
-
       createFolderIfNotExists(folderPath)
         .then(() => {
           const writeStream = fs.createWriteStream(finalFilePath);
@@ -37,7 +119,6 @@ const getStorageForPath = (baseFolder = 'temp') => {
                 mimeType: file.mimetype,
                 size: writeStream.bytesWritten,
                 path: finalFilePath, 
-                hash, 
               };
 
               console.log(`File successfully uploaded: ${finalFilePath}`);
@@ -133,7 +214,9 @@ const createUploadMiddleware = (baseFolder) => {
   });
 };
 
+
 module.exports = {
   uploadFields: createUploadMiddleware,
   createFolderIfNotExists,
 };
+
