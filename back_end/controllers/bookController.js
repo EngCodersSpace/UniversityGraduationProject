@@ -1,7 +1,7 @@
 // controllers/bookController.js
 const path = require('path');
 const fs = require("fs");
-const { book } = require('../models');
+const { book,student_assignment,student_assignment_file} = require('../models');
 const { Worker } = require("worker_threads");
 const crypto = require('crypto');
 
@@ -9,89 +9,103 @@ const { uploadFields  } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 
 
-exports.uploadFile = [
-  (req, res, next) => {
-    const upload = uploadFields(`library/${req.body.category}/books`).array('files');
-    upload(req, res, (err) => {
+exports.uploadFile = async (req, res) => {
+  try {
+    uploadFields(`library/${req.body.category}`,'books').single('file')(req, res, async (err) => {
       if (err) {
-        return res.status(500).json({ message: 'File upload failed', error: err.message });
+        return res.status(400).json({ message: 'File upload failed', error: err.message });
       }
-      next();
-    });
-  },
-  async (req, res) => {
-    try {
-
-      if (!req.files || !req.files['files'] || req.files['files'].length === 0) {
-        return res.status(400).json({ message: "No files uploaded." });
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file provided for upload.' });
       }
+      const bookDetails = await extractBookDetails(file.path);
+      const hash = crypto.createHash('md5').update(
+        `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
+      ).digest('hex');
 
-      const uploadedBooks = [];
+      const fileName = `${hash}${path.extname(file.path)}`;
+      const finalFilePath = path.join(__dirname, '../storage/library', req.body.category, 'books', fileName);
+      const displayImagePath = path.join(__dirname, '../storage/library', req.body.category, 'photos', `${hash}.jpg`);
 
-      for (const file of req.files['files']) {
-        const tempFilePath = file.path;
-        const bookDetails = await extractBookDetails(tempFilePath);
-
-        if (!bookDetails) {
-          fs.unlinkSync(tempFilePath);
-          continue; 
-        }
-
-        const hash = crypto.createHash('md5').update(
-          `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
-        ).digest('hex');
-
-        const fileExtension = path.extname(tempFilePath);
-        const fileName = `${hash}${fileExtension}`;
-        const finalFilePath = path.join(__dirname, '../storage/library', req.body.category, 'books', fileName);
-        const displayImagePath = path.join(__dirname, '../storage/library', req.body.category, 'photos', `${hash}.jpg`);
-
-        const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
-
-        if (existingBook) {
-          fs.unlinkSync(tempFilePath); 
-          continue; 
-        }
-
-        const newBook = await book.create({
-          title: bookDetails.title || path.parse(file.originalname).name,
-          category: req.body.category,
-          subject_id: req.body.subject_id,
-          added_by: req.user.user_id,
-          file_path: finalFilePath,
-          author: bookDetails.author,
-          edition: bookDetails.edition,
-          numberOfPages: bookDetails.totalPages,
-          file_size: bookDetails.file_size,
-        });
-
-        const directory = path.dirname(finalFilePath);
-        if (!fs.existsSync(directory)) {
-          fs.mkdirSync(directory, { recursive: true });
-        }
-        fs.renameSync(tempFilePath, finalFilePath);
-
-        await extractDisplayImage(finalFilePath, displayImagePath);
-        newBook.display_image = displayImagePath;
-        await newBook.save();
-
-        uploadedBooks.push(newBook);
+      const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
+      if (existingBook) {
+        fs.unlinkSync(file.path); 
+        continue; 
       }
 
-      if (uploadedBooks.length === 0) {
-        return res.status(400).json({ message: "No valid books were uploaded." });
+
+      const newBook = await book.create({
+        title: bookDetails.title || path.parse(file.originalname).name,
+        category: req.body.category,
+        subject_id: req.body.subject_id,
+        added_by: req.user.user_id,
+        file_path: finalFilePath,
+        author: bookDetails.author,
+        edition: bookDetails.edition,
+        numberOfPages: bookDetails.totalPages,
+        file_size: bookDetails.file_size,
+      });
+
+      const directory = path.dirname(finalFilePath);
+      if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
       }
+      await extractDisplayImage(finalFilePath, displayImagePath);
+      newBook.display_image = displayImagePath;
+      await newBook.save();
 
       return res.status(201).json({
         message: "Books uploaded successfully.",
         books: uploadedBooks,
       });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error.", error: error.message });
-    }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error.", error: error.message });
   }
-];
+};  
+
+exports.uploadFilesAttachment = async (req, res) => {
+  try {
+    uploadFields('assignments/students', `${req.body.section_id}/${req.body.level_id}`).single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: 'Error during file upload.', error: err.message });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file provided for upload.' });
+      }
+      const studentAssignment = await student_assignment.findOne({
+        where: {
+          student_id: req.user.user_id,
+          assignment_id: req.body.assignment_id,
+        },
+      });
+
+      const newFile = await student_assignment_file.create({
+        student_assignment_id: studentAssignment.id,
+        attachment: req.file.path,
+        attachment_hash: req.file.hash,
+      });
+
+      res.status(201).json({
+        message: 'File uploaded successfully.',
+        file: {
+          id: newFile.id,
+          student_assignment_id:newFile.student_assignment_id,
+          path: newFile.attachment,
+          hash: newFile.attachment_hash,
+        },
+      });
+    });
+
+    
+  } catch (error) {
+    console.error('Error while uploading file:', error.message);
+    res.status(500).json({ message: 'Internal server error.', error: error.message });
+  }
+
+};
 
 exports.downloadFile = async (req, res) => {
   try {
@@ -126,7 +140,6 @@ exports.downloadFile = async (req, res) => {
     res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
-
 
 exports.getBooksByCategory = async (req, res) => {
   try {
@@ -178,63 +191,3 @@ exports.deleteBook = async (req, res) => {
   }
 };
 
-
-
-// const uploadData = {
-//   fileData: {
-//     fileName: "example.txt",
-//     content: Buffer.from("This is a test upload").toString("base64"), // Mock file content
-//   },
-//   uploadPath: path.join(__dirname, "../uploads"),
-// };
-
-// const uploadWorker = new Worker("./utils/uploadWorker.js", {
-//   workerData: uploadData,
-// });
-
-// uploadWorker.on("message", (message) => {
-//   console.log("Worker Message:", message);
-//   if (message.status === "success") {
-//     console.log("Uploaded file path:", message.filePath);
-//   }
-// });
-
-// uploadWorker.on("error", (err) => {
-//   console.error("Worker Error:", err);
-// });
-
-// uploadWorker.on("exit", (code) => {
-//   if (code !== 0) {
-//     console.error(`Worker exited with error code ${code}`);
-//   }
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  for storage 
-//  const >> from  path of hostage to file of local storage 
-//  var   >> depends on each path of (image,....file path)
-// file_path when you storing books ,storing it as uniqe in local storage 
-// and display_image path >> extract from pdf file of book ( bit map )  first time download the displaye_image and storage
-// inside  storage 3 files for all category 
-// download and >> upload (streeming) with create (threading) [download on backgraund dont stop app] 
-// CRUD  >>  CREATE with upload,    Get the only data with filter by category, 
-// 
-// 
-// 
-// const BASE_URL = process.env.BASE_URL;
-// const UPLOAD_DIR = process.env.UPLOAD_DIR;
-// const uniqueName = `${Date.now()}_${file.originalname}`;
-// const fileUrl = `${BASE_URL}/${category}/${uniqueName}`;
