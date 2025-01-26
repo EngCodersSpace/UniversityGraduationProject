@@ -14,7 +14,7 @@ router.post('/check-files', CRUD.getFileDetails);
 
 router.get('/get-assignments-subject',checkRole(['representative','student','lecturer']), CRUD.getAssignmentsOfSubject);
 router.get('/get-all-students-assignment',checkRole(['lecturer','controller','lecturer']), CRUD.getStudentsAndFilesByAssignment);
-router.get('/get-students-assignment-files',checkRole(['lecturer','controller','representative']), CRUD.getStudentFiles);
+// router.get('/get-students-assignment-files',checkRole(['lecturer','controller','representative']), CRUD.getStudentFiles);
 
 router.put('/update-assignment',checkRole(['lecturer','controller']), CRUD.updateAssigment);
 router.put('/update-student-assignment-status',checkRole(['lecturer','controller']), CRUD.updateAssignmentStatus);
