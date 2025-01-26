@@ -63,13 +63,6 @@ class HttpProvider {
             error.requestOptions.path != "login") {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
-            print("________________________________________________");
-            print("________________________________________________");
-            print(response?.statusCode);
-            print(response?.data);
-            print(_dio.options.headers);
-            print("________________________________________________");
-            print("________________________________________________");
             if (response != null) {
               return handler.resolve(response);
             }
@@ -90,11 +83,6 @@ class HttpProvider {
 
         if (error.response?.statusCode == 401 &&
             error.requestOptions.path == "refresh") {
-          print("________________________________________________");
-          print("________________________________________________");
-          print(_dio.options.headers);
-          print("________________________________________________");
-          print("________________________________________________");
           return handler.resolve(error.response!);
         }
 

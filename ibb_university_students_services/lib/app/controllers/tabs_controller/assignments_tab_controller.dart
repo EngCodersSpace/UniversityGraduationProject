@@ -6,7 +6,6 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
@@ -97,7 +96,6 @@ class AssignmentsTabController extends GetxController {
       year: '',
       hardFetch: force,
     );
-    print(res.data);
     if (res.statusCode == 200) {
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
@@ -252,7 +250,6 @@ class AssignmentsTabController extends GetxController {
 
   void more(String val, {Map<String, dynamic>? data}) async {
     selectedAssignment = data?["assignment_id"];
-    print(selectedAssignment);
     if (val == "Edit") {
       // mode = "Edit";
       // if (data != null) {
@@ -347,9 +344,9 @@ class AssignmentsTabController extends GetxController {
           subjectId: selectedSubject.value!,
           data: jsData);
       Navigator.of(Get.overlayContext!).pop();
-      print(res?.data);
-      print(res?.statusCode);
-      print(res?.message);
+      // print(res.data);
+      // print(res.statusCode);
+      // print(res.message);
       if (res.statusCode == 201 && res.data != null) {
         assignments?.value[res.data!.id] = res.data!;
         assignments?.refresh();

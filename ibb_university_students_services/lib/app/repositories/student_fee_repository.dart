@@ -94,7 +94,6 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.post("create-student-fee", data: data);
       StudentFee? newStudentFee;
-      print(response?.data);
       if (response?.statusCode == 201) {
         newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
         StudentFeeCache? cachedFees = _studentFeeBox?.get(studentId);

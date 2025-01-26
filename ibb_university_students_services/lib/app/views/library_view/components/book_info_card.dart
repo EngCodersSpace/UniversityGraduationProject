@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../../components/buttons.dart';
@@ -28,11 +29,12 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                       border: Border.all(
                           color: AppColors.inverseCardColor, width: 4),
                       borderRadius: BorderRadius.circular(32)),
-                  height: Get.height * 0.4,
-                  width: Get.width - 32,
+                  // height: Get.height * 0.4,
+                  // width: Get.width - 32,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 8),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
@@ -68,41 +70,54 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                                 ))
                           ],
                         ),
-                        // Divider(
-                        //   color: AppColors.inverseCardColor,
-                        //   thickness: 0.3,
-                        // ),
-                        Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Image(
-                                  image: AssetImage(
-                                      controller.selectedBook["image"] ?? ""),
-                                  width: 120,
-                                ),
+                        const SizedBox(height: 16,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Image(
+                                image: AssetImage(
+                                    controller.selectedBook["image"] ?? ""),
+                                width: 120,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: OverflowBox(
+                                fit: OverflowBoxFit.deferToChild,
+                                maxWidth: Get.width * 0.4,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     CustomText(
-                                        "Title :${controller.selectedBook["name"]}",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),),
-                                    CustomText("Authors :",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal)),
-                                    CustomText("Pages : ",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal)),
-                                    CustomText("Size :",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal)),
+                                      "Title :${controller.selectedBook["name"]}",
+                                      style: AppTextStyles.secStyle(
+                                          textHeader:
+                                              AppTextHeaders.h3Normal),
+                                    ),
+                                    CustomText("Authors :",
+                                        style: AppTextStyles.secStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                    CustomText("Pages : ",
+                                        style: AppTextStyles.secStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                    CustomText("Size :",
+                                        style: AppTextStyles.secStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Normal)),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        )),
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 32,),
                         Column(
                           children: [
                             const SizedBox(

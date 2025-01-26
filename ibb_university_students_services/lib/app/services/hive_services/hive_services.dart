@@ -19,9 +19,7 @@ import 'package:ibb_university_students_services/app/models/study_plan_model/stu
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';

@@ -60,7 +60,7 @@ class NotificationHandler {
   }
 
   static Future<void> _backgroundHandler(RemoteMessage message) async {
-    print("Handling background message: ${message.notification?.title}");
+    // print("Handling background message: ${message.notification?.title}");
     // Similar to the foreground handler, process the message here
     if (message.data['type'] == 'info') {
       // Process info notification in the background
@@ -74,8 +74,7 @@ class NotificationHandler {
   static void _processCommand(Map<String, dynamic> data) {
     String action = data['action'] ?? '';
     if (action == 'refresh_data') {
-      String module = data['module'] ?? '';
-      print("Refreshing data for module: $module");
+      // String module = data['module'] ?? '';
       // Add logic to refresh data (e.g., call a service to update cache)
     }
   }
