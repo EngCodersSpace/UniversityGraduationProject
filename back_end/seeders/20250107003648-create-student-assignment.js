@@ -29,9 +29,11 @@ module.exports = {
       }
     }
 
+    const chunkSize = 500;
+    for (let i = 0; i < studentAssignments.length; i += chunkSize) {
+      const chunk = studentAssignments.slice(i, i + chunkSize);
 
-    if (studentAssignments.length > 0) {
-      await student_assignment.bulkCreate(studentAssignments);
+      await student_assignment.bulkCreate(chunk);
     }
   },
 
