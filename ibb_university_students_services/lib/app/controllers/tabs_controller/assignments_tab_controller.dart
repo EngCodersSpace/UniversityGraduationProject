@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -31,7 +32,7 @@ class AssignmentsTabController extends GetxController {
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   Rx<Map<int, Assignment>>? assignments = Rx({});
-  Rx<List<PlatformFile>>? attachmentsFiles = Rx([]);
+  Rx<List<AttachmentFile>>? attachmentsFiles = Rx([]);
 
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
@@ -214,18 +215,19 @@ class AssignmentsTabController extends GetxController {
   }
 
   void uploadAttachments() {
-    for (PlatformFile file in (attachmentsFiles?.value ?? [])) {
+    for (AttachmentFile file in (attachmentsFiles?.value ?? [])) {
+      if (file.path == null) continue;
       HttpProvider.uploadFileWithProgress(
-              file: file, uploadUrl: "upload-files-assignment-doctor")
+              uploadUrl: "upload-files-assignment-doctor", filePath: file.path!)
           .then((val) {
         if (val?.statusCode == 200) {
           NotificationHandler().showNotification(
-              uniqueId: file.identifier.hashCode,
-              title: "${file.name} uploaded successfully!");
+              uniqueId: file.hashCode,
+              title: "${file.path?.split("/").last} uploaded successfully!");
         } else {
           NotificationHandler().showNotification(
-              uniqueId: file.identifier.hashCode,
-              title: "${file.name} upload failed!",
+              uniqueId: file.hashCode,
+              title: "${file.path?.split("/").last} upload failed!",
               body: '');
         }
       });
@@ -238,7 +240,18 @@ class AssignmentsTabController extends GetxController {
       allowMultiple: true,
     );
     if (result != null) {
-      attachmentsFiles?.value.addAll(result.files);
+      bool exist = false;
+      for (int i = 0; i < result.count; i++) {
+        AttachmentFile file = AttachmentFile(path: result.files[i].path);
+        attachmentsFiles?.value.forEach((e) {
+          exist = (e.path?.split("/").last == file.path?.split("/").last);
+        });
+        if (!exist) {
+          attachmentsFiles?.value.add(file);
+        }else{
+          showSnakeBar(message: "This File Already Exist");
+        }
+      }
       attachmentsFiles?.refresh();
     } else {
       // User canceled the picker
@@ -281,7 +294,7 @@ class AssignmentsTabController extends GetxController {
         showSnakeBar(message: "Delete failed");
       }
     } else if (val == "DeleteFile") {
-      if(data == null)return;
+      if (data == null) return;
       attachmentsFiles?.value.removeAt(data["index"]);
       attachmentsFiles?.refresh();
       // assignments?.value[selectedAssignment];

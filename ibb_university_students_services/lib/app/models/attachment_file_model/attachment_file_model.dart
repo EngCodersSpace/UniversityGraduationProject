@@ -6,19 +6,19 @@ part 'attachment_file_model.g.dart';
 @HiveType(typeId: 16)
 class AttachmentFile {
   AttachmentFile({
-    required this.id,
+    this.id,
     this.assignmentId,
     this.path,
   });
 
   @HiveField(0)
-  int id;
+  int? id;
   @HiveField(1)
   int? assignmentId;
   @HiveField(2)
   String? path;
-  // @HiveField(3)
-  // String? Status;
+  @HiveField(3)
+  String? status;
 
 
   factory AttachmentFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {

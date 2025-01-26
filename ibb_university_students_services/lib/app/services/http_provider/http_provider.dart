@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -148,38 +150,40 @@ class HttpProvider {
   }
 
   static Future<Response?> uploadFileWithProgress({
-    required PlatformFile file,
+    required String filePath,
     required String uploadUrl,
     Map<String, dynamic>? data,
   }) async {
     try {
+      File file = File(filePath);
+      int fileSize = await file.length();
       // Show initial notification with 0% progress
       NotificationHandler().showProgressNotification(
-          uniqueId: file.identifier.hashCode,
+          uniqueId: file.hashCode,
           progress: 0,
-          message: "Uploading ${file.name}");
+          message: "Uploading ${file.path.split("/").last}");
       final response = await _dio.post(
         uploadUrl,
         data: FormData.fromMap({
           'files': [
-            MultipartFile.fromStream(() => file.xFile.openRead(), file.size,
-                filename: file.name)
+            MultipartFile.fromStream(() => file.openRead(),fileSize ,
+                filename: file.path.split("/").last)
           ],
           'assignment_id': '45'
         }),
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',
-            'Content-Length': file.size.toString(),
+            'Content-Length':  fileSize,
           },
         ),
         onSendProgress: (sent, total) {
           double progress = (sent / total) * 100;
           // Show updated progress (same notification ID for progress updates)
           NotificationHandler().showProgressNotification(
-              uniqueId: file.identifier.hashCode,
+              uniqueId: file.hashCode,
               progress: progress.toInt(),
-              message: "Uploading ${file.name}");
+              message: "Uploading ${file.path.split("/").last}");
         },
       );
       return response;

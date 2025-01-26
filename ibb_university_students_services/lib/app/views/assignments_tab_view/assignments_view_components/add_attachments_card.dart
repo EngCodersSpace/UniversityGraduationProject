@@ -87,7 +87,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                         width: Get.width * 0.6,
                                                         child: CustomText(
                                                           controller.attachmentsFiles
-                                                              ?.value[i].name ??
+                                                              ?.value[i].path?.split("/").last ??
                                                               "",
                                                           textAlign: TextAlign.start,
                                                           style: AppTextStyles.secStyle(
