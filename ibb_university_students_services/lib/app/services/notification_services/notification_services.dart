@@ -3,21 +3,21 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   String? token;
 
   Future<void> initialize() async {
     // Request notification permissions
     await _firebaseMessaging.requestPermission();
     // Initialize local notifications
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings(
-        '@mipmap/ic_launcher');
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
     );
 
     await _localNotificationsPlugin.initialize(initSettings);
-
 
     await FirebaseMessaging.instance.getToken().then((token) {
       this.token = token;
@@ -46,7 +46,6 @@ class NotificationHandler {
     // });
   }
 
-
   void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'info') {
       showNotification(
@@ -60,6 +59,7 @@ class NotificationHandler {
   }
 
   static Future<void> _backgroundHandler(RemoteMessage message) async {
+    // ignore: avoid_print
     print("Handling background message: ${message.notification?.title}");
     // Similar to the foreground handler, process the message here
     if (message.data['type'] == 'info') {
@@ -75,13 +75,14 @@ class NotificationHandler {
     String action = data['action'] ?? '';
     if (action == 'refresh_data') {
       String module = data['module'] ?? '';
+      // ignore: avoid_print
       print("Refreshing data for module: $module");
       // Add logic to refresh data (e.g., call a service to update cache)
     }
   }
 
   Future<void> showNotification(
-      {required String title,String? body,int? uniqueId}) async {
+      {required String title, String? body, int? uniqueId}) async {
     const NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         'default_channel',
@@ -91,9 +92,7 @@ class NotificationHandler {
       ),
     );
     await _localNotificationsPlugin.show(
-       uniqueId??DateTime
-          .now()
-          .millisecondsSinceEpoch ~/ 1000,
+      uniqueId ?? DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
       body,
       notificationDetails,
@@ -101,7 +100,8 @@ class NotificationHandler {
   }
 
   // Show progress for an upload
-  Future<void> showProgressNotification({required int uniqueId, required int progress,String? message}) async {
+  Future<void> showProgressNotification(
+      {required int uniqueId, required int progress, String? message}) async {
     NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         'upload_channel',
@@ -115,13 +115,13 @@ class NotificationHandler {
       ),
     );
 
-      // Update the progress in the notification
-      await _localNotificationsPlugin.show(
-        uniqueId.hashCode,
-        // Use the unique ID hash to identify the notification
-        "${message??"Uploading File"}\n",
-        "$progress%",
-        notificationDetails,
-      );
+    // Update the progress in the notification
+    await _localNotificationsPlugin.show(
+      uniqueId.hashCode,
+      // Use the unique ID hash to identify the notification
+      "${message ?? "Uploading File"}\n",
+      "$progress%",
+      notificationDetails,
+    );
   }
 }

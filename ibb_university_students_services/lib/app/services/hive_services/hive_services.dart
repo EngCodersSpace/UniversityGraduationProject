@@ -19,9 +19,7 @@ import 'package:ibb_university_students_services/app/models/study_plan_model/stu
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
@@ -30,10 +28,7 @@ import '../../models/helper_models/subjects_cache/subjects_cache.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 
-
-
-class HiveServices{
-
+class HiveServices {
   static registerAdapters() {
     Hive.registerAdapter(LevelAdapter());
     Hive.registerAdapter(SectionAdapter());
@@ -55,7 +50,8 @@ class HiveServices{
     Hive.registerAdapter(AssignmentAdapter());
     Hive.registerAdapter(AttachmentFileAdapter());
   }
-  static openGlobalBoxes()async{
+
+  static openGlobalBoxes() async {
     await UserRepository.openBox();
     await LevelRepository.openBox();
     await SectionRepository.openBox();
@@ -63,7 +59,7 @@ class HiveServices{
     await AssignmentsRepository.openBox();
   }
 
-  static clearAllBox() async{
+  static clearAllBox() async {
     await AssignmentsRepository.clearBox();
     await ExamRepository.clearBox();
     // await GradRepository.clearBox();
@@ -76,7 +72,7 @@ class HiveServices{
     await UserRepository.clearBox();
   }
 
-  static closeAllBoxes() async{
+  static closeAllBoxes() async {
     await AssignmentsRepository.closeBox();
     await ExamRepository.closeBox();
     // await GradRepository.closeBox();

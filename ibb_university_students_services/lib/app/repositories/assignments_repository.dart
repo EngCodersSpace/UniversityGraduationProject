@@ -12,8 +12,10 @@ import '../utils/internet_connection_cheker.dart';
 
 class AssignmentsRepository {
   static const int _fetchAllError = 621;
+  // ignore: unused_field
   static const int _fetchError = 622;
   static const int _createError = 623;
+  // ignore: unused_field
   static const int _updateError = 624;
   static const int _deleteError = 625;
 
@@ -27,7 +29,7 @@ class AssignmentsRepository {
 
   static Future<void> clearBox() async {
     _assignmentsBox = await Hive.openBox<AssignmentsCache>("assignmentsBox");
-     _assignments?.clear();
+    _assignments?.clear();
   }
 
   static Future<void> closeBox() async {
@@ -55,10 +57,9 @@ class AssignmentsRepository {
       response = await HttpProvider.get(
           "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
-        cachedAssignments =
-            AssignmentsCache(
-                key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
-                data: {});
+        cachedAssignments = AssignmentsCache(
+            key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+            data: {});
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
             Assignment assignment = Assignment.fromJson(jsAssignments);
@@ -68,7 +69,7 @@ class AssignmentsRepository {
             "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
             cachedAssignments,
           );
-                }
+        }
         return Result(
             data: cachedAssignments.data,
             hasError: false,
@@ -101,13 +102,18 @@ class AssignmentsRepository {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.post("upload-assignment-doctor", data: data);
+      response =
+          await HttpProvider.post("upload-assignment-doctor", data: data);
       Assignment? newAssignment;
       if (response?.statusCode == 201) {
-        newAssignment = Assignment.fromJson(response?.data["data"]["assignment"]);
+        newAssignment =
+            Assignment.fromJson(response?.data["data"]["assignment"]);
         AssignmentsCache? cachedAssignments = _assignmentsBox
             ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
-        cachedAssignments?? AssignmentsCache(key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments", data: {});
+        cachedAssignments ??
+            AssignmentsCache(
+                key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                data: {});
         cachedAssignments?.data[newAssignment.id] = newAssignment;
         if (cachedAssignments != null) {
           await _assignmentsBox?.put(
@@ -194,17 +200,14 @@ class AssignmentsRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-
-
-      response = await HttpProvider.delete("delete-assignment?assignment_id=$id");
+      response =
+          await HttpProvider.delete("delete-assignment?assignment_id=$id");
       if (response?.statusCode == 200) {
         AssignmentsCache? cachedAssignments = _assignmentsBox
             ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
         cachedAssignments?.data.remove(id);
         if (cachedAssignments != null) {
-          await _assignmentsBox?.put(
-              cachedAssignments.key,
-              cachedAssignments);
+          await _assignmentsBox?.put(cachedAssignments.key, cachedAssignments);
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(

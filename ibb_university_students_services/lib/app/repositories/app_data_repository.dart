@@ -1,13 +1,6 @@
-import 'package:dio/dio.dart';
-import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-import '../models/helper_models/result.dart';
-import '../models/subject_model/subject_model.dart';
-import '../services/http_provider/http_provider.dart';
-
 class AppDataServices {
+  // ignore: unused_field
   static const int _fetchError = 611;
-
-
 
   // static Future<Result<bool>> fetchAppData() async {
   //   late Response? response;
@@ -55,6 +48,4 @@ class AppDataServices {
   //         data: null);
   //   }
   // }
-
-
 }

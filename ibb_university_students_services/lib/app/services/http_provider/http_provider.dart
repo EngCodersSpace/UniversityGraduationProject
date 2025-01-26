@@ -63,13 +63,27 @@ class HttpProvider {
             error.requestOptions.path != "login") {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
-            print("________________________________________________");
-            print("________________________________________________");
-            print(response?.statusCode);
-            print(response?.data);
-            print(_dio.options.headers);
-            print("________________________________________________");
-            print("________________________________________________");
+            if (kDebugMode) {
+              print("________________________________________________");
+            }
+            if (kDebugMode) {
+              print("________________________________________________");
+            }
+            if (kDebugMode) {
+              print(response?.statusCode);
+            }
+            if (kDebugMode) {
+              print(response?.data);
+            }
+            if (kDebugMode) {
+              print(_dio.options.headers);
+            }
+            if (kDebugMode) {
+              print("________________________________________________");
+            }
+            if (kDebugMode) {
+              print("________________________________________________");
+            }
             if (response != null) {
               return handler.resolve(response);
             }
@@ -90,11 +104,21 @@ class HttpProvider {
 
         if (error.response?.statusCode == 401 &&
             error.requestOptions.path == "refresh") {
-          print("________________________________________________");
-          print("________________________________________________");
-          print(_dio.options.headers);
-          print("________________________________________________");
-          print("________________________________________________");
+          if (kDebugMode) {
+            print("________________________________________________");
+          }
+          if (kDebugMode) {
+            print("________________________________________________");
+          }
+          if (kDebugMode) {
+            print(_dio.options.headers);
+          }
+          if (kDebugMode) {
+            print("________________________________________________");
+          }
+          if (kDebugMode) {
+            print("________________________________________________");
+          }
           return handler.resolve(error.response!);
         }
 

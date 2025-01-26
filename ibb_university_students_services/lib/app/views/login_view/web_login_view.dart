@@ -77,11 +77,15 @@ class WebLoginView extends GetView<LoginController> {
                   children: [
                     CustomText(
                       "IBB",
-                      style: AppTextStyles.mainStyle(textHeader: TextHeaders(fontSize: 32, fontWeight: FontWeight.bold)),
+                      style: AppTextStyles.mainStyle(
+                          textHeader: TextHeaders(
+                              fontSize: 32, fontWeight: FontWeight.bold)),
                     ),
                     CustomText(
                       "UNIVERSITY",
-                      style: AppTextStyles.mainStyle(textHeader: TextHeaders(fontSize: 32, fontWeight: FontWeight.bold)),
+                      style: AppTextStyles.mainStyle(
+                          textHeader: TextHeaders(
+                              fontSize: 32, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -183,6 +187,14 @@ class WebLoginView extends GetView<LoginController> {
                                 )),
                           ),
                         ),
+                        if (controller.loggingFiled.value) ...[
+                          CustomText("Login Filed",
+                              style: AppTextStyles.failedAndErrorStyle(
+                                  textHeader: AppTextHeaders.h3Normal)),
+                          CustomText(controller.loggingFiledMessage.value,
+                              style: AppTextStyles.failedAndErrorStyle(
+                                  textHeader: AppTextHeaders.h3Normal)),
+                        ],
                         SizedBox(
                           height: height * 0.6 * 0.1,
                         ),
@@ -219,9 +231,11 @@ class WebLoginView extends GetView<LoginController> {
                                 style: AppTextStyles.linkStyle(
                                   textHeader: AppTextHeaders.h3Normal,
                                 )),
-                            Checkbox(
-                                value: controller.rememberMe.value,
-                                onChanged: controller.toggleRememberMe),
+                            Obx(
+                              () => Checkbox(
+                                  value: controller.rememberMe.value,
+                                  onChanged: controller.toggleRememberMe),
+                            ),
                           ],
                         ),
                         SizedBox(

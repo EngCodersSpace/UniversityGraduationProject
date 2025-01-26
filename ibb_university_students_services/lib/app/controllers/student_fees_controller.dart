@@ -127,6 +127,7 @@ class StudentFeeController extends GetxController {
   void submit() async {
     Map<String, dynamic> jsData = {};
     if (studentId == null) return;
+    // ignore: avoid_print
     print(selectedFee);
     jsData["id"] = selectedFee;
     jsData["student_id"] = studentId;
@@ -165,6 +166,7 @@ class StudentFeeController extends GetxController {
     } else if (mode == "Edit") {
       Result<StudentFee> res = await StudentFeeRepository.updateStudentFee(
           studentId: studentId!, data: jsData, id: selectedFee);
+      // ignore: avoid_print
       print(res.statusCode);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200 && res.data != null) {

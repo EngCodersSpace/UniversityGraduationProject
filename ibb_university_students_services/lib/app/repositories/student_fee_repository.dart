@@ -18,7 +18,9 @@ class StudentFeeRepository {
   static const int _createError = 612;
   static const int _updateError = 612;
   static const int _deleteError = 612;
+  // ignore: unused_field
   static const int _changeStateError = 612;
+  // ignore: unused_field
   static const int _fetchYearsError = 619;
 
   static Box<StudentFeeCache>? _studentFeeBox;
@@ -34,7 +36,7 @@ class StudentFeeRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_studentFeeBox?.isOpen??false) {
+    if (_studentFeeBox?.isOpen ?? false) {
       await _studentFeeBox?.close();
     }
   }
@@ -94,6 +96,7 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.post("create-student-fee", data: data);
       StudentFee? newStudentFee;
+      // ignore: avoid_print
       print(response?.data);
       if (response?.statusCode == 201) {
         newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
@@ -133,7 +136,7 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.put("update-fee", data: data);
       if (response?.statusCode == 200) {
-        cachedFees?.data[id] = StudentFee.fromJson( response?.data["data"]);
+        cachedFees?.data[id] = StudentFee.fromJson(response?.data["data"]);
         if (cachedFees != null) {
           await _studentFeeBox?.put(studentId, cachedFees);
         }

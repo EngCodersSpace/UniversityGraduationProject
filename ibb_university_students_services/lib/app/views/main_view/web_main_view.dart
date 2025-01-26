@@ -238,7 +238,7 @@ class WebMainView extends GetView<MainController> {
                                         width: Get.width * 0.005,
                                       ),
                                       CustomText(
-                                        "Home".tr,
+                                        "Dashboard".tr,
                                         style: AppTextStyles.customColorStyle(
                                           color:
                                               (controller.selectedIndex.value ==
