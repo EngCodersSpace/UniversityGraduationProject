@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
@@ -19,15 +18,16 @@ class WebHomeTab extends GetView<HomeTabController> {
     return Scaffold(
         // ignore: sized_box_for_whitespace
         body: Container(
+      color: AppColors.tabBackColor,
       width: width,
       height: hight,
       child: Column(
         children: [
           Container(
             width: width,
-            height: hight * 0.3,
+            height: hight * 0.25,
             decoration: BoxDecoration(
-              color: AppColors.mainTextColor,
+              color: AppColors.inverseMainTextColor,
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
@@ -40,86 +40,151 @@ class WebHomeTab extends GetView<HomeTabController> {
                 bottom: Radius.circular(24),
               ),
             ),
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircleAvatar(
-                            radius: Get.width * 0.03,
-                            backgroundColor: AppColors.mainCardColor),
-                        CircleAvatar(
-                          backgroundColor:
-                              (controller.user?.profileImage) != null
-                                  ? AppColors.inverseCardColor
-                                  : AppColors.inverseMainTextColor,
-                          maxRadius: Get.width * 0.03 - 2,
-                          backgroundImage: (controller.user?.profileImage) !=
-                                  null
-                              ? AssetImage(controller.user?.profileImage ?? "")
-                              : null,
-                          child: (controller.user?.profileImage) != null
-                              ? null
-                              : CustomText(
-                                  controller.user?.name?[0] ?? "".toUpperCase(),
+                    SizedBox(
+                      width: width * 0.4,
+                      child: Row(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircleAvatar(
+                                  radius: Get.width * 0.03,
+                                  backgroundColor: AppColors.mainCardColor),
+                              CircleAvatar(
+                                backgroundColor:
+                                    (controller.user?.profileImage) != null
+                                        ? AppColors.inverseCardColor
+                                        : AppColors.inverseMainTextColor,
+                                maxRadius: Get.width * 0.03 - 2,
+                                backgroundImage:
+                                    (controller.user?.profileImage) != null
+                                        ? AssetImage(
+                                            controller.user?.profileImage ?? "")
+                                        : null,
+                                child: (controller.user?.profileImage) != null
+                                    ? null
+                                    : CustomText(
+                                        controller.user?.name?[0] ??
+                                            "".toUpperCase(),
+                                        style: AppTextStyles.mainStyle(
+                                          textHeader: AppTextHeaders.h3Bold,
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: width * 0.002,
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  "Hi! ${controller.user?.name ?? " "}",
                                   style: AppTextStyles.mainStyle(
-                                    textHeader: AppTextHeaders.h3Bold,
+                                    textHeader: AppTextHeaders.h6Bold,
                                   ),
                                 ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: width * 0.02,
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                      CustomText(
-                        "Hi! ${controller.user?.name ?? " "}",
-                        style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h6Bold,
-                        ),
+                              ]),
+                        ],
                       ),
-                    ]),
-                    SizedBox(
-                      width: width * 0.03,
-                    ),
-                    CustomButton(
-                      onPress: () {},
-                      icon: const Icon(Icons.file_upload_outlined),
-                      iconColor: AppColors.mainIconColor,
-                      text: "Upload",
-                      textColor: AppColors.mainTextColor,
                     ),
                     SizedBox(
-                      width: width * 0.005,
-                    ),
-                    CustomButton(
-                      onPress: () {},
-                      icon: const Icon(Icons.file_download_outlined),
-                      iconColor: AppColors.mainIconColor,
-                      text: "Download",
-                      textColor: AppColors.mainTextColor,
+                      width: width * 0.3,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: width * 0.1,
+                            decoration: BoxDecoration(
+                              color: AppColors.backColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: InkWell(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Upload",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: AppColors.inverseMainTextColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.003,
+                                  ),
+                                  const Icon(Icons.file_upload_outlined),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.01,
+                          ),
+                          Container(
+                            width: width * 0.1,
+                            decoration: BoxDecoration(
+                              color: AppColors.backColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: InkWell(
+                              onTap: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Download",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: AppColors.inverseMainTextColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.003,
+                                  ),
+                                  const Icon(
+                                    Icons.file_download_outlined,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.backColor,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const TextField(
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  height: hight * 0.05,
+                ),
+                Container(
+                  // width: width*0.3,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        hintText: "Search",
+                        fillColor: AppColors.backColor,
+                        filled: true,
+                        suffixIcon: const Icon(
+                          Icons.search_outlined,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        )),
+                  ),
                 ),
               ],
             ),
