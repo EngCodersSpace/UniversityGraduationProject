@@ -2,7 +2,7 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
-const { user, student, doctor, study_plan, level, section } = require('../models');
+const { user, student, doctor, study_plan, level, section, role } = require('../models');
 const bcrypt = require("bcrypt");
 
 module.exports = {
@@ -10,6 +10,7 @@ module.exports = {
     const studyPlans = await study_plan.findAll(); // Get all study plans
     const levels = await level.findAll(); // Get all levels
     const sections = await section.findAll(); // Get all sections
+    const roles = await role.findAll();
 
     const users = [];
     const students = [];
@@ -32,13 +33,28 @@ module.exports = {
         en: userName,
         ar: userName.split(' ').reverse().join(' '), // عكس الاسم كطريقة عشوائية لترجمته
       };
-      let permissionn
-      if (i < 20) {
-        permissionn = faker.helpers.arrayElement(['dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary']);
+    // const  rol = roles.find(r => r.roleName === 'Dean').id;
+    //   console.log('roles:', rol);
+      // const ro =
+      //   i === 0
+      //     ? roles.
+      let rol
+      if (i === 0) {
+        rol = roles.find(r => r.roleName === 'Dean').id;
+       // console.log('roles:',rol);
+      } else if (i >= 1 && i < 20) {
+        rol=faker.helpers.arrayElement([
+          roles.find(r => r.roleName === 'Controller').id,
+          roles.find(r => r.roleName === 'Instructor').id,
+          
+        ]);
+       // console.log('roles 1 -20:',rol);
       } else if (i >= 20 && i < 25) {
-        permissionn = 'representative';
+        rol =roles.find(r => r.roleName === 'Student Representative').id;
+       // console.log('roles 20 -25:',rol);
       } else {
-        permissionn = 'student';
+        rol = roles.find(r => r.roleName === 'Student').id;
+       // console.log('roles 25 -40:',rol);
       }
       const userData = {
         user_id: i + 1,
@@ -49,7 +65,7 @@ module.exports = {
         email: faker.internet.email(),
         password: '1234pass@',
         collegeName: college, // Assign college name in JSON format
-        permission: permissionn,
+        roleId: rol,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -93,6 +109,7 @@ module.exports = {
           enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
           student_level_id: levels[i % levels.length].id, // Assign level cyclically
           student_system: system,
+          repeat_years_count:faker.number.int({ min: 0, max: 3}),
           createdAt: new Date(),
           updatedAt: new Date(),
         });

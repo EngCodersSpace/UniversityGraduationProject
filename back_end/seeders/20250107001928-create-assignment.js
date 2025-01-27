@@ -1,7 +1,7 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
-const { assignment, subject, doctor,section, level} = require('../models');
+const { assignment, subject, doctor, section, level } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -13,7 +13,7 @@ module.exports = {
     const assignments = [];
 
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 1500; i++) {
       const subjectItem = faker.helpers.arrayElement(subjects);
       const doctorItem = faker.helpers.arrayElement(doctors);
 

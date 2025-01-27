@@ -8,7 +8,7 @@ module.exports = {
     
     const studentAssignments = await student_assignment.findAll();
 
-    const studentAssignmentAttachments = [];
+    const student_assignment_files = [];
 
     for (const studentAssignment of studentAssignments) {
       
@@ -18,7 +18,7 @@ module.exports = {
         const attachmentUrl = faker.internet.url(); 
         const attachmentHash = crypto.createHash('sha256').update(attachmentUrl).digest('hex'); 
 
-        studentAssignmentAttachments.push({
+        student_assignment_files.push({
           student_assignment_id: studentAssignment.id, 
           attachment: attachmentUrl, 
           attachment_hash: attachmentHash, 
@@ -27,9 +27,13 @@ module.exports = {
     }
 
     
-    if (studentAssignmentAttachments.length > 0) {
-      await student_assignment_file.bulkCreate(studentAssignmentAttachments);
+    const chunkSize = 500;
+    for (let i = 0; i < student_assignment_files.length; i += chunkSize) {
+      const chunk = student_assignment_files.slice(i, i + chunkSize);
+
+      await student_assignment_file.bulkCreate(chunk);
     }
+
   },
 
   down: async (queryInterface, Sequelize) => {
