@@ -12,7 +12,7 @@ const createFolderIfNotExists = async (folderPath) => {
   }
 };
 
-const getStorageForPath = (baseFolder = 'temp',subFolder= '') => {
+const getStorageForPath = (baseFolder = 'temp',subFolder) => {
   return {
     _handleFile(req, file, cb) {
       const folderPath = path.join(__dirname, '../storage', baseFolder, subFolder);
@@ -61,7 +61,7 @@ const getStorageForPath = (baseFolder = 'temp',subFolder= '') => {
   };
 };
 
-const createUploadMiddleware = (baseFolder,subFolder='') => {
+const createUploadMiddleware = (baseFolder,subFolder) => {
   const storage = getStorageForPath(baseFolder,subFolder);
   // const allowedMimetypes = [
   //   'image/jpeg',
