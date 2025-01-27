@@ -30,7 +30,6 @@ exports.uploadFile = async (req, res) => {
       const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
       if (existingBook) {
         fs.unlinkSync(file.path); 
-        continue; 
       }
 
 

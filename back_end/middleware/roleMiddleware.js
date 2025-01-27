@@ -1,12 +1,12 @@
 
 const checkRole = (requiredRoles) => (req, res, next) => {
-    if (!req.user || !req.user.permission) {
+    if (!req.user || !req.user.role.roleName) {
         return res.status(403).json({ error: 'Permission denied or user not authenticated' });
     }
 
     const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
 
-    if (!roles.includes(req.user.permission)) {
+    if (!roles.includes(req.user.role.roleName)) {
         return res.status(403).json({ error: 'You do not have the required permissions' });
     }
 

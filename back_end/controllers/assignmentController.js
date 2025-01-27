@@ -12,7 +12,7 @@ const { Worker } = require("worker_threads");
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
-    if (req.user.role.roleName === 'student' || 'representative') {
+    if (req.user.permission=='student' ){
       const AllAssignmentSub = await assignment.findAll({
         where: {
           subject_id: req.query.subject_id,
@@ -35,7 +35,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         message: 'Assignments retrieved successfully for student.',
         data: AllAssignmentSub,
       });
-    } else if (req.user.role.roleName === 'doctor' || 'lecturer') {
+    } else if (req.user.permission === 'doctor' || 'dean') {
       const AllAssignmentSub = await assignment.findAll({
         where: {
           subject_id: req.query.subject_id,
@@ -132,14 +132,15 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
           attributes: ['student_id'], 
           through: {
             attributes: ['assignment_id','status', 'is_completed'], 
+            
           },
-          model:student_assignment,
-          include: [
-            {
-              model: student_assignment_file, 
-              attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
-            },
-          ],
+          // model:student_assignment,
+          // include: [
+          //   {
+          //     model: student_assignment_file, 
+          //     attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
+          //   },
+          // ],
         },
       ],
     });
@@ -225,8 +226,9 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-
-    uploadFields('assignments/doctors', `${req.body.section_id}/${req.body.level_id}`).single('file')(req, res, async (err) => {
+    const request=`${req.query.section_id}/${req.query.level_id}`
+    console.log('\n \n \n request=', request,'\n \n \n ')
+    uploadFields('assignments/doctors',request ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
