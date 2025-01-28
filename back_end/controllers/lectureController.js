@@ -265,18 +265,13 @@ const getLecturesGroupedByCriteria = async (req, res) => {
     const organizedLectures = {};
 
     lectures.forEach((lec) => {
-      const term = lec.term;
       const day = lec.lecture_day;
 
-      if (!organizedLectures[term]) {
-        organizedLectures[term] = {};
+      if (!organizedLectures[day]) {
+        organizedLectures[day] = [];
       }
 
-      if (!organizedLectures[term][day]) {
-        organizedLectures[term][day] = [];
-      }
-
-      organizedLectures[term][day].push({
+      organizedLectures[day].push({
         id: lec.id,
         subject_id: lec.subject_id,
         lecture_time: lec.lecture_time,
@@ -290,7 +285,7 @@ const getLecturesGroupedByCriteria = async (req, res) => {
     res
       .status(200)
       .json({
-        message: "Lectures retrieved successfully",
+        message: `Lectures of section: ${req.query.section_id}, & level: ${req.query.level_id}, & ${req.query.term} & ${req.query.year} retrieved successfully   `,
         data: organizedLectures,
       });
   } catch (error) {
@@ -379,12 +374,77 @@ const getDoctorLectures = async (req, res) => {
   }
 };
 
+
+const getLecturesByCriteriaPanle = async (req, res) => {
+  try {
+    const { section_id, level_id, year, term, day, page = 1, limit = 10 } = req.query;
+
+    const whereClause = {};
+    if (section_id) whereClause.lecture_section_id = section_id;
+    if (level_id) whereClause.lecture_level_id = level_id;
+    if (year) whereClause.year = year;
+    if (term) whereClause.Term = term;
+    if (day) whereClause.lecture_day = day;
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const { count, rows: lectures } = await lecture.findAndCountAll({
+      where: {
+        [Op.and]: [
+          whereClause,
+          { isReplaced: { [Op.ne]: true } },
+        ],
+      },
+      include: [
+        { model: subject, as: "subject" },
+        { model: section, as: "section" },
+        { model: level, as: "level" },
+      ],
+      limit: limitNumber,
+      offset: offset,
+      order: [["lecture_time", "ASC"]], 
+    });
+
+    if (!lectures.length) {
+      return res.status(404).json({ message: "No lectures found for the specified criteria" });
+    }
+
+    const lectureList = lectures.map((lec) => ({
+      id: lec.id,
+      subject_id: lec.subject_id,
+      lecture_time: lec.lecture_time,
+      lecture_duration: lec.lecture_duration,
+      doctor_id: lec.doctor_id,
+      lecture_room: lec.lecture_room,
+      lectureStatus: lec.lectureStatus,
+    }));
+
+    res.status(200).json({
+      message: "Lectures retrieved successfully",
+      data: lectureList,
+      pagination: {
+        totalLectures: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving lectures", error: error.message });
+  }
+};
+
+
 module.exports = {
   createLecture,
   getLectures,
   updateLecture,
   deleteLecture,
   getLecturesGroupedByCriteria,
+  getLecturesByCriteriaPanle,
   getLectureYear,
   getDoctorLectures,
   replaceOne,
