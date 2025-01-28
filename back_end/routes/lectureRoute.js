@@ -17,6 +17,10 @@ router.delete('/delete-lecture', checkRole(['student_affairs', 'teacher','contro
 
 router.get('/get-all-lecture', CRUD.getLectures);
 router.get('/lectures/grouped', CRUD.getLecturesGroupedByCriteria);
+router.get('/lectures/panle', CRUD.getLecturesByCriteriaPanle);
+
+
+
 router.get('/lecture/year', CRUD.getLectureYear);
 router.get('/lecture/doctor', verifyToken , CRUD.getDoctorLectures );
 
