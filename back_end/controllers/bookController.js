@@ -1,41 +1,52 @@
 // controllers/bookController.js
 const path = require('path');
 const fs = require("fs");
-const { book,student_assignment,student_assignment_file} = require('../models');
+const { book} = require('../models');
 const { Worker } = require("worker_threads");
 const crypto = require('crypto');
 
-const { uploadFields  } = require('../utils/multerConfig');
+const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
-
 
 exports.uploadFile = async (req, res) => {
   try {
-    uploadFields(`library/${req.body.category}`,'books').single('file')(req, res, async (err) => {
+    const folder=`library/${req.query.category}`;
+    const subfolder='books';
+
+    console.log('\n \n \n folder=', folder,'\n \n \n ')
+    console.log('\n \n \n subfolder=', subfolder,'\n \n \n ')
+
+
+    uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'File upload failed', error: err.message });
       }
       if (!req.file) {
         return res.status(400).json({ message: 'No file provided for upload.' });
       }
-      const bookDetails = await extractBookDetails(file.path);
-      const hash = crypto.createHash('md5').update(
-        `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
-      ).digest('hex');
+      const bookDetails = await extractBookDetails(req.file.path);
+      // const hash = crypto.createHash('md5').update(
+      //   `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
+      // ).digest('hex');
 
-      const fileName = `${hash}${path.extname(file.path)}`;
-      const finalFilePath = path.join(__dirname, '../storage/library', req.body.category, 'books', fileName);
-      const displayImagePath = path.join(__dirname, '../storage/library', req.body.category, 'photos', `${hash}.jpg`);
+      const fileName = `${req.file.hash}${path.extname(req.file.path)}`;
+      // const fileName=`${hash}$`
+      // console.log('\n \n \n fileName=', fileName,'\n \n \n ')
+      // console.log('\n \n \n req.file.path=', req.file.path,'\n \n \n ')
+
+
+      const finalFilePath = path.join(__dirname, '../storage/library', req.query.category, 'books', fileName);
+      const displayImagePath = path.join(__dirname, '../storage/library', req.query.category, 'photos', `${req.file.hash}.jpg`);
 
       const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
       if (existingBook) {
-        fs.unlinkSync(file.path); 
+        fs.unlinkSync(req.file.path); 
       }
 
 
       const newBook = await book.create({
         title: bookDetails.title || path.parse(file.originalname).name,
-        category: req.body.category,
+        category: req.query.category,
         subject_id: req.body.subject_id,
         added_by: req.user.user_id,
         file_path: finalFilePath,
@@ -45,17 +56,15 @@ exports.uploadFile = async (req, res) => {
         file_size: bookDetails.file_size,
       });
 
-      const directory = path.dirname(finalFilePath);
-      if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory, { recursive: true });
-      }
+      await createFolderIfNotExists(finalFilePath);
+
       await extractDisplayImage(finalFilePath, displayImagePath);
       newBook.display_image = displayImagePath;
       await newBook.save();
 
       return res.status(201).json({
         message: "Books uploaded successfully.",
-        books: uploadedBooks,
+        books: newBook,
       });
     });
   } catch (error) {
@@ -63,48 +72,6 @@ exports.uploadFile = async (req, res) => {
     return res.status(500).json({ message: "Internal server error.", error: error.message });
   }
 };  
-
-exports.uploadFilesAttachment = async (req, res) => {
-  try {
-    uploadFields('assignments/students', `${req.body.section_id}/${req.body.level_id}`).single('file')(req, res, async (err) => {
-      if (err) {
-        return res.status(400).json({ message: 'Error during file upload.', error: err.message });
-      }
-
-      if (!req.file) {
-        return res.status(400).json({ message: 'No file provided for upload.' });
-      }
-      const studentAssignment = await student_assignment.findOne({
-        where: {
-          student_id: req.user.user_id,
-          assignment_id: req.body.assignment_id,
-        },
-      });
-
-      const newFile = await student_assignment_file.create({
-        student_assignment_id: studentAssignment.id,
-        attachment: req.file.path,
-        attachment_hash: req.file.hash,
-      });
-
-      res.status(201).json({
-        message: 'File uploaded successfully.',
-        file: {
-          id: newFile.id,
-          student_assignment_id:newFile.student_assignment_id,
-          path: newFile.attachment,
-          hash: newFile.attachment_hash,
-        },
-      });
-    });
-
-    
-  } catch (error) {
-    console.error('Error while uploading file:', error.message);
-    res.status(500).json({ message: 'Internal server error.', error: error.message });
-  }
-
-};
 
 exports.downloadFile = async (req, res) => {
   try {
@@ -189,4 +156,3 @@ exports.deleteBook = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
   }
 };
-

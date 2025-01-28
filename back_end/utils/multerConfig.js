@@ -18,6 +18,7 @@ const getStorageForPath = (baseFolder = 'temp',subFolder) => {
       const folderPath = path.join(__dirname, '../storage', baseFolder, subFolder);
       const hash = crypto.createHash('md5').update(file.originalname + file.size + file.mimetype).digest('hex');
       const finalFilePath = path.join(folderPath,  `${hash}${path.extname(file.originalname)}`);
+      const bookpath=path.join(folderPath);
       createFolderIfNotExists(folderPath)
         .then(() => {
           const writeStream = fs.createWriteStream(finalFilePath);
@@ -30,6 +31,7 @@ const getStorageForPath = (baseFolder = 'temp',subFolder) => {
                 mimeType: file.mimetype,
                 size: writeStream.bytesWritten,
                 path: finalFilePath, 
+                book:bookpath,
                 hash
               };
 
