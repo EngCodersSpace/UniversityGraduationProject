@@ -130,19 +130,17 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
         {
           model: student, 
           attributes: ['student_id'], 
-          through: {
-            attributes: ['assignment_id','status', 'is_completed'], 
-            
-          },
-          // model:student_assignment,
-          // include: [
-          //   {
-          //     model: student_assignment_file, 
-          //     attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
-          //   },
-          // ],
         },
       ],
+    });
+    const fileDetail=await student_assignment.findAll({
+      where:{assignment_id:assignmentDetails.id},
+       include: [
+          {
+            model: student_assignment_file, 
+            attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
+          },
+        ],
     });
 
     if (!assignmentDetails) {
@@ -154,6 +152,7 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
     res.status(200).json({
       message: "Students and files retrieved successfully.",
       data: assignmentDetails,
+      filedata:fileDetail,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -326,7 +325,7 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    uploadFields('assignments/students', `${req.body.section_id}/${req.body.level_id}`).single('file')(req, res, async (err) => {
+    uploadFields('assignments/students', `${req.query.section_id}/${req.query.level_id}`).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -337,7 +336,7 @@ exports.uploadFilesAttachment = async (req, res) => {
       const studentAssignment = await student_assignment.findOne({
         where: {
           student_id: req.user.user_id,
-          assignment_id: req.body.assignment_id,
+          assignment_id: req.query.assignment_id,
         },
       });
 
@@ -369,21 +368,19 @@ exports.uploadFilesAttachment = async (req, res) => {
 // Doctor updates the status of a student's assignment (4)
 exports.updateAssignmentStatus = async (req, res) => {
   try {
-    const { studentAssignmentId, status } = req.query;
-
     const studentAssignment = await student_assignment.findOne({
-      where: { id: studentAssignmentId },
+      where: { id: req.query.id, student_id : req.query.student_id },
     });
 
     if (!studentAssignment) {
       return res.status(404).json({ message: 'Student assignment not found.' });
     }
 
-    studentAssignment.status = status;
+    studentAssignment.status = req.query.status;
     await studentAssignment.save();
 
     res.status(200).json({
-      message: `Assignment status updated to "${status}" successfully.`,
+      message: `Assignment status updated to "${req.query.status}" successfully.`,
       data: { studentAssignment },
     });
   } catch (error) {
@@ -396,7 +393,7 @@ exports.updateAssignmentStatus = async (req, res) => {
 exports.updateStudentComplete = async (req, res) => {
   try {
     const studentAssignment = await student_assignment.findOne({
-      where: { id: req.query.student_assignment_id , student_id : req.query.student_id },
+      where: { id: req.query.id , student_id : req.query.student_id },
     });
 
     studentAssignment.is_completed = req.query.is_completed;
@@ -425,13 +422,15 @@ exports.updateAssigment=async(req,res)=>{
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
+    const targetLanguage = req.body.language === 'en'?'ar':'en';
+    const translatedTitle = await translateText(req.body.title, req.body.language, targetLanguage);
 
     const updatedFields = {
       subject_id: req.body.subject_id || Assignment.subject_id,
       assignment_due_day: req.body.assignment_due_day || Assignment.assignment_due_day,
       assignment_date: req.body.assignment_date || Assignment.assignment_date,
       assignments_due_date: req.body.assignments_due_date || Assignment.assignments_due_date,
-      title: req.body.title || Assignment.title,
+      title:{[req.body.language] : req.body.title, [targetLanguage] : translatedTitle } || Assignment.title,
       section_id: req.body.section_id || Assignment.section_id,
       level_id: req.body.level_id || Assignment.level_id,
     };
@@ -481,7 +480,7 @@ exports.deleteAssignment = async (req, res) => {
   }
 };
 
-// doctor or student only deletes file's assignment 
+// doctor  only deletes file's assignment 
 exports.deleteAssigmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await assignment_file.findAll({
@@ -497,7 +496,6 @@ exports.deleteAssigmentFiles=async(req,res)=>{
         console.warn(`File not found: ${attachmentPath}`);
       }
     }
-
     res.status(200).json({ message: 'Assignment files deleted successfully.' });
   } catch (error) {
     console.error(error);
@@ -506,6 +504,28 @@ exports.deleteAssigmentFiles=async(req,res)=>{
 };
 
 
+exports.deleteAttachmentFiles=async(req,res)=>{
+  try {
+    const AssignFiles= await student_assignment_file.findAll({
+      where:{student_assignment_id: req.query.id},
+    });
+ 
+    for (const file of AssignFiles) {
+      const attachmentPath = path.resolve(file.attachment);
+      if (fs.existsSync(attachmentPath)) {
+        await fs.promises.unlink(attachmentPath);
+        console.log(`Deleted file: ${attachmentPath}`);
+      } else {
+        console.warn(`File not found: ${attachmentPath}`);
+      }
+      await file.destroy();
+    }
 
+    res.status(200).json({ message: 'Assignment files deleted successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deleting assignment files.', error: error.message });
+  }
+};
 
 
