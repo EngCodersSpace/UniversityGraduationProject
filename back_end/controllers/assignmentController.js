@@ -124,17 +124,8 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 // 
 exports.getStudentsAndFilesByAssignment = async (req, res) => {
   try {
-    const assignmentDetails = await assignment.findOne({
-      where: { id: req.query.assignment_id }, 
-      include: [
-        {
-          model: student, 
-          attributes: ['student_id'], 
-        },
-      ],
-    });
     const fileDetail=await student_assignment.findAll({
-      where:{assignment_id:assignmentDetails.id},
+      where:{assignment_id:req.query.assignment_id},
        include: [
           {
             model: student_assignment_file, 
@@ -143,7 +134,7 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
         ],
     });
 
-    if (!assignmentDetails) {
+    if (!fileDetail) {
       return res.status(404).json({
         message: "No assignment found with the provided ID.",
       });
@@ -151,8 +142,7 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
 
     res.status(200).json({
       message: "Students and files retrieved successfully.",
-      data: assignmentDetails,
-      filedata:fileDetail,
+      data:fileDetail,
     });
   } catch (error) {
     console.error("Error fetching data:", error);
