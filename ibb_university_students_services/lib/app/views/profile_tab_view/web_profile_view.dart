@@ -13,6 +13,7 @@ class WebProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    if(controller.user == null)controller.refresh();
     return Obx(() => (controller.initState.value)
         ? Container(
             padding: const EdgeInsets.only(top: 18.0),
@@ -57,18 +58,18 @@ class WebProfileView extends GetView<ProfileController> {
                                   backgroundColor: AppColors.inverseCardColor),
                               CircleAvatar(
                                 backgroundColor:
-                                    (controller.user.profileImage) != null
+                                    (controller.user?.profileImage) != null
                                         ? AppColors.inverseCardColor
                                         : AppColors.inverseMainTextColor,
                                 maxRadius: Get.width * 0.07 - 2,
                                 backgroundImage:
-                                    (controller.user.profileImage) != null
+                                    (controller.user?.profileImage) != null
                                         ? AssetImage(
-                                            controller.user.profileImage ?? "")
+                                            controller.user?.profileImage ?? "")
                                         : null,
-                                child: (controller.user.profileImage) != ""
+                                child: (controller.user?.profileImage) != ""
                                     ? null
-                                    : CustomText(controller.user.name?[0] ??
+                                    : CustomText(controller.user?.name?[0] ??
                                         "".toUpperCase()),
                               ),
                             ],
@@ -82,23 +83,23 @@ class WebProfileView extends GetView<ProfileController> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    CustomText(controller.user.name!,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(controller.user?.name??"Unknown",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    CustomText(controller.user.id.toString(),style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(controller.user?.id.toString()??"Unknown",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     CustomText(
-                                        controller.user.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                        controller.user?.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    CustomText(controller.user.phones?.first ??
+                                    CustomText(controller.user?.phones?.first ??
                                         "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),

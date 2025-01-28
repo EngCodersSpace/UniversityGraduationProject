@@ -3,10 +3,12 @@ import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../models/helper_models/result.dart';
+import '../../models/student_fee/student_fee.dart';
+import '../../repositories/student_fee_repository.dart';
 import '../main_controller.dart';
 
 class ProfileController extends GetxController {
-  late User user;
+  User? user;
   RxString language = (Get.locale?.languageCode ?? "en").obs;
   RxBool initState = false.obs;
 
@@ -21,6 +23,21 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
+
+  @override
+  void refresh() async{
+    initState.value = false;
+    Result res = await UserRepository.fetchUser();
+    print(res.data);
+    print(res.message);
+    print(res.statusCode);
+    if (res.statusCode == 200) {
+      user = res.data;
+    }
+    initState.value = true;
+    print(user);
+  }
+
   void changeLang(String lang) {
     LocaleListener.updateLocale(lang);
     language.value = lang;
@@ -28,7 +45,10 @@ class ProfileController extends GetxController {
   }
 
   void logout() async{
-    await UserRepository.userLogout();
+    StudentFee? fee = await StudentFeeRepository.fetchLastStudentFee(studentId: 10).then((e)=>e.data);
+    print(fee);
+    print(fee?.toJson());
+    // await UserRepository.userLogout();
   }
 
   @override
