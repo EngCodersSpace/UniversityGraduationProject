@@ -79,16 +79,16 @@ class WebHomeTab extends GetView<HomeTabController> {
                               ),
                             ],
                           ),
-                          SizedBox(
-                            width: width * 0.002,
-                          ),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                SizedBox(
+                                  width: width * 0.002,
+                                ),
                                 CustomText(
-                                  "Hi! ${controller.user?.name ?? " "}",
+                                  "Hi !  ${controller.user?.name ?? " "}",
                                   style: AppTextStyles.mainStyle(
-                                    textHeader: AppTextHeaders.h6Bold,
+                                    textHeader: AppTextHeaders.h3Bold,
                                   ),
                                 ),
                               ]),
@@ -100,7 +100,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                       child: Row(
                         children: [
                           Container(
-                            width: width * 0.1,
+                            width: width * 0.12,
                             decoration: BoxDecoration(
                               color: AppColors.backColor,
                               borderRadius: BorderRadius.circular(8),
@@ -129,7 +129,7 @@ class WebHomeTab extends GetView<HomeTabController> {
                             width: width * 0.01,
                           ),
                           Container(
-                            width: width * 0.1,
+                            width: width * 0.12,
                             decoration: BoxDecoration(
                               color: AppColors.backColor,
                               borderRadius: BorderRadius.circular(8),
