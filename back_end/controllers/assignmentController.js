@@ -264,10 +264,10 @@ exports.createAssignment = async (req, res) => {
       const assignmentRecord = await assignment.create({
         subject_id: req.body.subject_id,
         doctor_id: req.user.user_id,
-        title:{
+        title:JSON.stringify({
           [req.body.language] : req.body.title,
           [targetLanguage] : translatedTitle
-        },
+        }),
         assignment_due_day: req.body.assignment_due_day,
         assignment_date: req.body.assignment_date,
         assignments_due_date: req.body.assignments_due_date,
@@ -299,7 +299,7 @@ exports.createAssignment = async (req, res) => {
       createdAssignments.push(assignmentRecord);
     }
 
-    res.status(200).json({
+    res.status(201).json({
       message: 'Assignments created successfully for the specified sections and levels.',
       data: createdAssignments,
     });

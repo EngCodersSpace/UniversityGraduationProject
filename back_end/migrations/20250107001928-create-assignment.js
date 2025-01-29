@@ -58,11 +58,11 @@ module.exports = {
         allowNull: false,
       },
       assignment_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       assignments_due_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
 

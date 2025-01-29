@@ -1,7 +1,7 @@
 
 const checkRole = (requiredRoles) => (req, res, next) => {
     if (!req.user || !req.user.permission) {
-        return res.status(403).json({ error: 'Permission denied or user not authenticated' });
+        return res.status(403).json({ error: 'Permission denied' });
     }
 
     const roles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
