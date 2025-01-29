@@ -3,8 +3,6 @@ import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../models/helper_models/result.dart';
-import '../../models/student_fee/student_fee.dart';
-import '../../repositories/student_fee_repository.dart';
 import '../main_controller.dart';
 
 class ProfileController extends GetxController {
@@ -45,10 +43,7 @@ class ProfileController extends GetxController {
   }
 
   void logout() async{
-    StudentFee? fee = await StudentFeeRepository.fetchLastStudentFee(studentId: 10).then((e)=>e.data);
-    print(fee);
-    print(fee?.toJson());
-    // await UserRepository.userLogout();
+    await UserRepository.userLogout();
   }
 
   @override

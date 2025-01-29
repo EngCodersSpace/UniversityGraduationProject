@@ -22,7 +22,6 @@ import '../../utils/snake_bar.dart';
 
 class AssignmentsTabController extends GetxController {
   RxBool loadingState = true.obs;
-  RxInt selected = 3.obs;
   RxString fieldMessage = "".obs;
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
@@ -32,7 +31,6 @@ class AssignmentsTabController extends GetxController {
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   Rx<Map<int, Assignment>>? assignments = Rx({});
-  Rx<List<AttachmentFile>>? attachmentsFiles = Rx([]);
 
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
@@ -56,8 +54,10 @@ class AssignmentsTabController extends GetxController {
 
   @override
   void refresh() async {
+    loadingState.value = true;
     await fetchAssignmentsData(force: true);
     super.refresh();
+    loadingState.value = false;
   }
 
   Future<void> fetchAssignmentsData({bool force = false}) async {
@@ -215,10 +215,10 @@ class AssignmentsTabController extends GetxController {
   }
 
   void uploadAttachments() {
-    for (AttachmentFile file in (attachmentsFiles?.value ?? [])) {
+    for (AttachmentFile file in (assignments?.value[selectedAssignment]?.attachment ?? [])) {
       if (file.path == null) continue;
       HttpProvider.uploadFileWithProgress(
-              uploadUrl: "upload-files-assignment-doctor", filePath: file.path!)
+              uploadUrl: "upload-files-assignment-doctor?assignment_id=$selectedAssignment&section_id=${selectedDepartment.value}&level_id=${selectedLevel.value}", filePath: file.path!)
           .then((val) {
         if (val?.statusCode == 200) {
           NotificationHandler().showNotification(
@@ -236,6 +236,7 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> pickFiles() async {
     // Open file picker dialog
+    assignments?.value[selectedAssignment]?.attachment??=[];
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
     );
@@ -243,16 +244,16 @@ class AssignmentsTabController extends GetxController {
       bool exist = false;
       for (int i = 0; i < result.count; i++) {
         AttachmentFile file = AttachmentFile(path: result.files[i].path);
-        attachmentsFiles?.value.forEach((e) {
+        assignments?.value[selectedAssignment]?.attachment?.forEach((e) {
           exist = (e.path?.split("/").last == file.path?.split("/").last);
         });
         if (!exist) {
-          attachmentsFiles?.value.add(file);
-        }else{
+          assignments?.value[selectedAssignment]?.attachment?.add(file);
+        } else {
           showSnakeBar(message: "This File Already Exist");
         }
       }
-      attachmentsFiles?.refresh();
+      update(["AttachmentPiker"]);
     } else {
       // User canceled the picker
       if (kDebugMode) {
@@ -262,8 +263,8 @@ class AssignmentsTabController extends GetxController {
   }
 
   void more(String val, {Map<String, dynamic>? data}) async {
-    selectedAssignment = data?["assignment_id"];
     if (val == "Edit") {
+      selectedAssignment = data?["assignment_id"];
       // mode = "Edit";
       // if (data != null) {
       //   selectedExam = data["exam_id"];
@@ -285,7 +286,7 @@ class AssignmentsTabController extends GetxController {
         subjectId: selectedSubject.value!,
         id: selectedAssignment,
       );
-      Get.back();
+      Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         assignments?.value.remove(selectedAssignment);
         assignments?.refresh();
@@ -295,10 +296,10 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      attachmentsFiles?.value.removeAt(data["index"]);
-      attachmentsFiles?.refresh();
-      // assignments?.value[selectedAssignment];
+      assignments?.value[selectedAssignment]?.attachment?.removeAt(data["index"]);
+      update(["AttachmentPiker"]);
     } else if (val == "reUploadFile") {}
+
   }
 
   void addButtonClick() async {
@@ -327,20 +328,17 @@ class AssignmentsTabController extends GetxController {
 
   void submit() async {
     Map<String, dynamic> jsData = {};
-    // "subject_id": "absconditu",
-    // "title": "controll6",
-    // "assignment_due_day": "Monday",
-    // "assignment_date": "2024-11-10",
-    // "assignments_due_date": "2025-01-05",
-    // "section_id":1,
-    // "level_id":1
     if (formKey.currentState!.validate()) {
-      jsData["section_id"] = selectedDepartment.value;
-      jsData["level_id"] = selectedLevel.value;
+      jsData["language"] = Get.locale?.languageCode ?? "en";
       jsData["subject_id"] = selectedSubject.value;
       jsData["assignment_date"] = DateTime.now().toString();
       jsData["assignment_due_day"] = "Sunday";
-
+      jsData["sectionsAndLevels"] = [
+        {
+          "section_id": selectedDepartment.value,
+          "level_id": selectedLevel.value
+        },
+      ];
       (dueDateController.text.isNotEmpty &&
               dueDateController.text != "Unknown".tr)
           ? jsData["assignments_due_date"] = dueDateController.text

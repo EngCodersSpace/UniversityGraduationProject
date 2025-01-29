@@ -12,7 +12,7 @@ abstract class User {
   @HiveField(3)
   String? email;
   @HiveField(4)
-  String? permission;
+  int? roleId;
   @HiveField(5)
   String? profileImage;
   @HiveField(6)
@@ -31,7 +31,7 @@ abstract class User {
     this.nameData,
     this.dateOfBrith,
     this.email,
-    this.permission,
+    this.roleId,
     this.profileImage,
     this.phones,
     this.collegeNameData,

@@ -52,6 +52,7 @@ class AssignmentsRepository {
     }
     late Response? response;
     try {
+      print("here");
       response = await HttpProvider.get(
           "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
@@ -96,7 +97,6 @@ class AssignmentsRepository {
     required String subjectId,
     String year = "",
     required data,
-    bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
@@ -104,15 +104,22 @@ class AssignmentsRepository {
       response = await HttpProvider.post("upload-assignment-doctor", data: data);
       Assignment? newAssignment;
       if (response?.statusCode == 201) {
-        newAssignment = Assignment.fromJson(response?.data["data"]["assignment"]);
+        int i = 0;
+        for(Map group in  data["sectionsAndLevels"]){
+          Assignment assignment = Assignment.fromJson(response?.data["data"][i]);
+          if(group["section_id"] == sectionId && group["level_id"] == levelId){
+            newAssignment = assignment;
+          }
         AssignmentsCache? cachedAssignments = _assignmentsBox
-            ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
+            ?.get("${group["section_id"]}_${group["level_id"]}_${year}_${subjectId}_Assignments");
         cachedAssignments?? AssignmentsCache(key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments", data: {});
-        cachedAssignments?.data[newAssignment.id] = newAssignment;
+        cachedAssignments?.data[assignment.id] = assignment;
         if (cachedAssignments != null) {
           await _assignmentsBox?.put(
               "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
               cachedAssignments);
+        }
+        i++;
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(

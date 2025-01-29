@@ -194,6 +194,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           target: "Assignments", action: "doctorView"))) ...[
                         CustomButton(
                           onPress: () {
+                            controller.selectedAssignment = content.value!.id;
                             Get.dialog(const FilesPickerCard());
                           },
                           text: "Attachments".tr,

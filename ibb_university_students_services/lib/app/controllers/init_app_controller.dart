@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
-import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../../firebase_options.dart';
 import '../services/downloder/download_manager.dart';
@@ -21,8 +19,8 @@ class InitAppController extends GetxController {
 
   Future<void> _initializeApp() async {
     try {
-      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
+      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();

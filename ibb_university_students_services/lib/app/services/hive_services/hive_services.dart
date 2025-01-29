@@ -59,6 +59,7 @@ class HiveServices{
     await SectionRepository.openBox();
     await LectureRepository.openBox();
     await AssignmentsRepository.openBox();
+    await SubjectRepository.openBox();
   }
 
   static clearAllBox() async{

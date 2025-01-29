@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import '../../utils/json_utils.dart';
 import '../attachment_file_model/attachment_file_model.dart';
 import '../subject_model/subject_model.dart';
 
@@ -49,12 +50,10 @@ class Assignment {
         "doctor_id": json['doctor_id'],
         "user": {"user_name": "{\"en\":\"Doctor name\",\"ar\":\"اسم الدكتور\"}"}
       }),
-      // titleData: JsonUtils.tryJsonDecode(
-      //   json['title'],
-      // ),
-      titleData: {
-        "en":json['title'],
-      },
+      titleData: JsonUtils.tryJsonDecode(
+        json['title'],
+      ),
+      // titleData: json['title'],
       assignmentDay: json['assignment_due_day'],
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],

@@ -13,7 +13,7 @@ import '../services/http_provider/http_provider.dart';
 class UserRepository {
   static Box<User>? _userBox;
 
-  static get userRule => _userBox?.get('currentUser')?.permission;
+  static get userRule => _userBox?.get('currentUser')?.roleId;
 
   static Future<void> openBox() async {
     _userBox = await Hive.openBox<User>('userBox');
@@ -40,11 +40,11 @@ class UserRepository {
           data: {"user_id": id, "password": password});
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
-          // Student user = Student.fromJson(response?.data["user"]);
-          // _userBox?.put('currentUser', user);
+          Student user = Student.fromJson(response?.data["user"]);
+          _userBox?.put('currentUser', user);
         } else {
-          // Doctor user = Doctor.fromJson(response?.data["user"]);
-          // _userBox?.put('currentUser', user);
+          Doctor user = Doctor.fromJson(response?.data["user"]);
+          _userBox?.put('currentUser', user);
         }
         HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);

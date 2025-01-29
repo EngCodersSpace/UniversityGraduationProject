@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
@@ -29,6 +28,7 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
+    _dio.options.headers["language"] = get_x.Get.locale?.languageCode??"en";
     if (kIsWeb) {
       await reSetAccessToken();
     }
@@ -36,16 +36,6 @@ class HttpProvider {
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
-        if (kDebugMode) {
-          // print(error.requestOptions.uri);
-          // print("HttpProviderError ------------------ ");
-          // print("error: ${error.message}");
-          // print("status code: ${error.response?.statusCode}");
-          // print("res data: ${error.response?.data}");
-          // print("status headers: ${error.response?.isRedirect}");
-          // print("request headers: ${error.requestOptions.headers}");
-          // print(connectivityResult);
-        }
         if (connectivityResult.contains(ConnectivityResult.none)) {
           try {
             get_x.Get.dialog(PopUpAlertCard(
@@ -165,7 +155,7 @@ class HttpProvider {
       final response = await _dio.post(
         uploadUrl,
         data: FormData.fromMap({
-          'files': [
+          'file': [
             MultipartFile.fromStream(() => file.openRead(),fileSize ,
                 filename: file.path.split("/").last)
           ],
@@ -174,7 +164,7 @@ class HttpProvider {
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',
-            'Content-Length':  fileSize,
+            'Content-Length':  fileSize.toString(),
           },
         ),
         onSendProgress: (sent, total) {
@@ -202,6 +192,9 @@ class HttpProvider {
     try {
       _refreshTries--;
       if (_refreshTries < 0) {
+        Box box = await Hive.openBox('rememberMe');
+        box.clear();
+        box.close();
         get_x.Get.offAllNamed("login");
         _refreshTries = 5;
         return null;
@@ -222,6 +215,7 @@ class HttpProvider {
         addAccessTokenHeader(
           response.data["accessToken"],
         );
+        _refreshTries = 5;
         return await _dio.request(
           requestOptions.path,
           queryParameters: requestOptions.queryParameters,
