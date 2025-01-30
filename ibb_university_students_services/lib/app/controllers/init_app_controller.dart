@@ -28,7 +28,7 @@ class InitAppController extends GetxController {
       await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform);
       await SubjectRepository.fetchSubjects();
-      await NotificationHandler().initialize();
+      await NotificationHandler.initialize();
 
       // Set initialization complete
     } catch (e) {

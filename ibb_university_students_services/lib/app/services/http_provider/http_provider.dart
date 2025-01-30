@@ -13,6 +13,7 @@ import '../../repositories/user_repository.dart';
 class HttpProvider {
   static final Dio _dio = Dio();
   static int _refreshTries = 5;
+  static Map<int, CancelToken> cancelTokens = {};
 
   static Future<void> init({
     String baseUrl = '',
@@ -28,7 +29,7 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
-    _dio.options.headers["language"] = get_x.Get.locale?.languageCode??"en";
+    _dio.options.headers["language"] = get_x.Get.locale?.languageCode ?? "en";
     if (kIsWeb) {
       await reSetAccessToken();
     }
@@ -139,24 +140,23 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> uploadFileWithProgress({
-    required String filePath,
+  static Future<Response?> uploadFile({
+    required File file,
     required String uploadUrl,
+    required void Function(int, int)? onSendProgress,
+    int? fileSize,
     Map<String, dynamic>? data,
   }) async {
     try {
-      File file = File(filePath);
-      int fileSize = await file.length();
-      // Show initial notification with 0% progress
-      NotificationHandler().showProgressNotification(
-          uniqueId: file.hashCode,
-          progress: 0,
-          message: "Uploading ${file.path.split("/").last}");
+      fileSize ??= await file.length();
+
+      cancelTokens[file.path.hashCode] = CancelToken();
       final response = await _dio.post(
         uploadUrl,
+        cancelToken: cancelTokens[file.path.hashCode],
         data: FormData.fromMap({
           'file': [
-            MultipartFile.fromStream(() => file.openRead(),fileSize ,
+            MultipartFile.fromStream(() => file.openRead(), fileSize,
                 filename: file.path.split("/").last)
           ],
           'assignment_id': '45'
@@ -164,17 +164,10 @@ class HttpProvider {
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',
-            'Content-Length':  fileSize.toString(),
+            'Content-Length': fileSize.toString(),
           },
         ),
-        onSendProgress: (sent, total) {
-          double progress = (sent / total) * 100;
-          // Show updated progress (same notification ID for progress updates)
-          NotificationHandler().showProgressNotification(
-              uniqueId: file.hashCode,
-              progress: progress.toInt(),
-              message: "Uploading ${file.path.split("/").last}");
-        },
+        onSendProgress: onSendProgress,
       );
       return response;
     } on DioException catch (error) {

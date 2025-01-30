@@ -133,7 +133,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                             0.6,
                                                                     child:
                                                                         CustomText(
-                                                                      "Status: Not Uploaded",
+                                                                      "Status:  ${controller.assignments?.value[controller.selectedAssignment]?.attachment?[i].status.value ?? ""}",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .start,
@@ -142,6 +142,31 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                               AppTextHeaders.h5Bold),
                                                                     ),
                                                                   ),
+                                                                  if (controller
+                                                                          .assignments
+                                                                          ?.value[controller
+                                                                              .selectedAssignment]
+                                                                          ?.attachment?[
+                                                                              i]
+                                                                          .status
+                                                                          .value ==
+                                                                      "Uploading") ...[
+                                                                    const SizedBox(
+                                                                      height: 8,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: Get
+                                                                              .width *
+                                                                          0.6,
+                                                                      child: LinearProgressIndicator(
+                                                                          color: AppColors
+                                                                              .inverseCardColor,
+                                                                          backgroundColor: AppColors
+                                                                              .highlightTextColor
+                                                                              .withValues(alpha: 0.2),
+                                                                          value: (controller.assignments?.value[controller.selectedAssignment]?.attachment?[i].progress?.value.toDouble() ?? 0) / 100),
+                                                                    ),
+                                                                  ]
                                                                 ],
                                                               ),
                                                               SizedBox(

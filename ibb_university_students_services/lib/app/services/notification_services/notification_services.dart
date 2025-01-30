@@ -1,26 +1,32 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  String? token;
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  static String? token;
 
-  Future<void> initialize() async {
+  static Future<void> initialize() async {
     // Request notification permissions
     await _firebaseMessaging.requestPermission();
     // Initialize local notifications
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings(
-        '@mipmap/ic_launcher');
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
     );
 
-    await _localNotificationsPlugin.initialize(initSettings);
+    await _localNotificationsPlugin.initialize(initSettings,
+        onDidReceiveBackgroundNotificationResponse: (res) {
+      print(res.notificationResponseType);
+      print(res.id);
+      print(res.actionId);
+    });
 
-
-    await FirebaseMessaging.instance.getToken().then((token) {
-      this.token = token;
+    await FirebaseMessaging.instance.getToken().then((val) {
+      token = val;
     });
 
     // Handle foreground messages
@@ -46,8 +52,7 @@ class NotificationHandler {
     // });
   }
 
-
-  void _handleMessage(RemoteMessage message) {
+  static void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'info') {
       showNotification(
         title: message.notification?.title ?? "Info",
@@ -79,8 +84,8 @@ class NotificationHandler {
     }
   }
 
-  Future<void> showNotification(
-      {required String title,String? body,int? uniqueId}) async {
+  static Future<void> showNotification(
+      {required String title, String? body, int? uniqueId}) async {
     const NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         'default_channel',
@@ -90,9 +95,7 @@ class NotificationHandler {
       ),
     );
     await _localNotificationsPlugin.show(
-       uniqueId??DateTime
-          .now()
-          .millisecondsSinceEpoch ~/ 1000,
+      uniqueId ?? DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
       body,
       notificationDetails,
@@ -100,27 +103,45 @@ class NotificationHandler {
   }
 
   // Show progress for an upload
-  Future<void> showProgressNotification({required int uniqueId, required int progress,String? message}) async {
+  static Future<void> showProgressNotification(
+      {required int uniqueId,
+      int? progress,
+      String? message,
+      String? title}) async {
     NotificationDetails notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
-        'upload_channel',
-        'Upload Progress',
-        importance: Importance.max,
-        priority: Priority.high,
-        progress: progress,
-        maxProgress: 100,
-        sound: null,
-        showProgress: true,
-      ),
+      android: AndroidNotificationDetails('upload_channel', 'Upload Progress',
+          importance: Importance.max,
+          priority: Priority.high,
+          progress: progress ?? 0,
+          maxProgress: 100,
+          playSound: false,
+          silent: true,
+          // icon: "upload",
+          showProgress: (progress != null),
+          styleInformation: BigTextStyleInformation(
+              // (progress != null) ? "$progress%" : "",
+              htmlFormatBigText: true,
+              htmlFormatContentTitle: true,
+              contentTitle:
+                  '<p>$title</p></br><p>$message</p>',
+              '<p style="text-align: end;">${(progress != null) ? "$progress%" : ""}</p>'),
+          actions: (progress != null)
+              ? [
+                  const AndroidNotificationAction(
+                    "1",
+                    "Cancel",
+                    titleColor: Colors.red,
+                  ),
+                ]
+              : null),
     );
 
-      // Update the progress in the notification
-      await _localNotificationsPlugin.show(
-        uniqueId.hashCode,
-        // Use the unique ID hash to identify the notification
-        "${message??"Uploading File"}\n",
-        "$progress%",
-        notificationDetails,
-      );
+    // Update the progress in the notification
+    await _localNotificationsPlugin.show(
+      uniqueId.hashCode,
+      "",
+      "",
+      notificationDetails,
+    );
   }
 }

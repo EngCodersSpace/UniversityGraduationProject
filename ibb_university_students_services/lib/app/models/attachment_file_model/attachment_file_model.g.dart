@@ -20,7 +20,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
       id: fields[0] as int?,
       assignmentId: fields[1] as int?,
       path: fields[2] as String?,
-    )..status = fields[3] as String?;
+    )..status = fields[3] as RxString;
   }
 
   @override

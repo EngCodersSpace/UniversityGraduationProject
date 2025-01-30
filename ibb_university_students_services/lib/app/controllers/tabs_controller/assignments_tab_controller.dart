@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
@@ -214,36 +215,37 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void uploadAttachments() {
-    for (AttachmentFile file in (assignments?.value[selectedAssignment]?.attachment ?? [])) {
-      if (file.path == null) continue;
-      HttpProvider.uploadFileWithProgress(
-              uploadUrl: "upload-files-assignment-doctor?assignment_id=$selectedAssignment&section_id=${selectedDepartment.value}&level_id=${selectedLevel.value}", filePath: file.path!)
-          .then((val) {
-        if (val?.statusCode == 200) {
-          NotificationHandler().showNotification(
-              uniqueId: file.hashCode,
-              title: "${file.path?.split("/").last} uploaded successfully!");
-        } else {
-          NotificationHandler().showNotification(
-              uniqueId: file.hashCode,
-              title: "${file.path?.split("/").last} upload failed!",
-              body: '');
-        }
-      });
+  void uploadAttachments() async{
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
+    for (AttachmentFile file
+        in (assignments?.value[selectedAssignment]?.attachment ?? [])) {
+      if (file.path == null || file.status.value == "Uploaded") continue;
+      await AssignmentsRepository.uploadAttachment(
+          attachment: file,
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!);
     }
   }
 
   Future<void> pickFiles() async {
     // Open file picker dialog
-    assignments?.value[selectedAssignment]?.attachment??=[];
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-    );
+    Get.dialog(const PopUpLoadingCard());
+    FilePickerResult? result;
+    try {
+      assignments?.value[selectedAssignment]?.attachment ??= [];
+      result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        readSequential: true,
+      );
+    } catch (e) {
+      showSnakeBar(message: "Loading Files Failed");
+    }
+    Navigator.of(Get.overlayContext!).pop();
     if (result != null) {
       bool exist = false;
       for (int i = 0; i < result.count; i++) {
-        AttachmentFile file = AttachmentFile(path: result.files[i].path);
+        AttachmentFile file = AttachmentFile(path: result.files[i].path,assignmentId: selectedAssignment);
         assignments?.value[selectedAssignment]?.attachment?.forEach((e) {
           exist = (e.path?.split("/").last == file.path?.split("/").last);
         });
@@ -296,10 +298,10 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      assignments?.value[selectedAssignment]?.attachment?.removeAt(data["index"]);
+      assignments?.value[selectedAssignment]?.attachment
+          ?.removeAt(data["index"]);
       update(["AttachmentPiker"]);
     } else if (val == "reUploadFile") {}
-
   }
 
   void addButtonClick() async {

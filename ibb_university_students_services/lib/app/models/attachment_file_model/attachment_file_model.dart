@@ -1,3 +1,4 @@
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
 import '../subject_model/subject_model.dart';
 
@@ -18,7 +19,9 @@ class AttachmentFile {
   @HiveField(2)
   String? path;
   @HiveField(3)
-  String? status;
+  RxString status = "Not Uploaded".obs;
+  @HiveField(3)
+  RxInt? progress;
 
 
   factory AttachmentFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {
