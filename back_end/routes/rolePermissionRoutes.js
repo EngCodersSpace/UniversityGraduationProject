@@ -1,0 +1,24 @@
+const express = require('express');
+const router = express.Router();
+const CRUD = require('../controllers/rolePermissionController');
+const { verifyToken } = require('../middleware/authMiddleware');
+const checkPermission = require('../middleware/roleMiddleware').checkPermission;
+
+router.use(verifyToken);
+
+// Role Routes
+router.post('/create-roles',  checkPermission('role', 'create'), CRUD.createRole);
+router.get('/get-roles',      checkPermission('role', 'get'),    CRUD.getRoles);
+router.delete('/delete-roles',checkPermission('role', 'delete'), CRUD.deleteRole);
+
+// Permission Routes
+router.post('/create-permissions', CRUD.createPermission);
+router.get('/get-permissions', CRUD.getPermissions);
+router.delete('/delete-permissions', CRUD.deletePermission);
+
+// Role-Permission Routes
+router.post('/assign-permissions-role', CRUD.assignPermissionToRole);
+router.get('/get-rolePermission', CRUD.getRolePermissions);
+router.delete('/delete-permissionsFromRole', CRUD.removePermissionFromRole);
+
+module.exports = router;

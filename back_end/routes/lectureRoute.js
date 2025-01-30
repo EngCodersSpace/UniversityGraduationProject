@@ -3,7 +3,7 @@ const router = express.Router();
 const CRUD = require('../controllers/lectureController');
 const vali=require('../validations/lecturevalidation')
 const { verifyToken } = require('../middleware/authMiddleware');
-const checkRole = require('../middleware/roleMiddleware');
+const checkRole = require('../middleware/roleMiddleware').checkRole;
 
 router.use(verifyToken);
 
