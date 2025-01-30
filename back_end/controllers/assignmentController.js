@@ -62,65 +62,6 @@ exports.getAssignmentsOfSubject = async (req, res) => {
   }
 };
 
-// show all students of specific assignment... query assingment_id => to get all student 
-// exports.getAllStudentsOfAssignmentض=async (req,res)=>{
-//   try {
-//     const AllStudents = await student.findAll({
-//       include:[
-//         {
-//           model:assignment,
-//           where:{id:req.query.assignment_id},
-//           through:{
-//             attributes:['assignment_id','status','is_completed'],
-//           },
-//           include:[],
-//         }
-//       ],
-//     });    
-//     res.status(200).json({
-//       message: 'All Students retrieved successfully.',
-//       data: AllStudents,
-//     });
-//   } catch (error) {
-//     console.error('Error fetching students:', error);
-//     res.status(500).json({
-//       message: 'Error fetching students.',
-//       error: error.message,
-//     });
-//   }
-// };
-
-// Get student files for a specific assignment
-// exports.getStudentFiles = async (req, res) => {
-//   try {
-//     const attachments = await student_assignment.findAll({
-//       where: { 
-//         assignment_id: req.query.assignment_id, 
-//         student_id: req.query.student_id ,
-//       },
-//       include: [
-//         {
-//           model: student_assignment_file,
-//           attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
-//         },
-//       ],
-       
-//     });
-    
-//     if (attachments.length === 0) {
-//       return res.status(404).json({ message: "No attachments found for this assignment." });
-//     }
-
-//     res.status(200).json({
-//       message: `Found ${attachments.length} attachment(s) for the assignment.`,
-//       data: attachments,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Error retrieving attachments.", error: error.message });
-//   }
-// };
-
 // 
 exports.getStudentsAndFilesByAssignment = async (req, res) => {
   try {
@@ -152,7 +93,6 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
     });
   }
 };
-
 
 // download files of student_assignment-file
 exports.downloadFile = async (req, res) => {
@@ -187,7 +127,6 @@ exports.downloadFile = async (req, res) => {
     res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
-
 
 exports.getFileDetails = async (req, res) => {
   try {
@@ -493,7 +432,6 @@ exports.deleteAssigmentFiles=async(req,res)=>{
   }
 };
 
-
 exports.deleteAttachmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await student_assignment_file.findAll({
@@ -517,5 +455,3 @@ exports.deleteAttachmentFiles=async(req,res)=>{
     res.status(500).json({ message: 'Error deleting assignment files.', error: error.message });
   }
 };
-
-

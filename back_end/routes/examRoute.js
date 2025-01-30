@@ -3,11 +3,14 @@ const router = express.Router();
 const validate = require('../validations/examvalidation');
 const CRUD = require('../controllers/examController');
 const { verifyToken } = require('../middleware/authMiddleware');
-const checkRole = require('../middleware/roleMiddleware');
+// const checkPermission = require('../middlewares/checkPermission');
+const checkRole = require('../middleware/roleMiddleware').checkRole;
 
 router.use(verifyToken);
 
-router.post('/create-exam',checkRole(['student', 'dean','controller']), validate.createExam, CRUD.createExam);
+router.post('/create-exam',checkRole(['student', 'Dean','controller']), validate.createExam, CRUD.createExam);
+// router.post('/create-exam', checkPermission('exam', 'create'), validate.createExam, CRUD.createExam);
+
 router.put('/update-exam',checkRole(['student', 'dean','controller']),validate.updateExam, CRUD.updateExam );
 router.delete('/delete-exam',  CRUD.deleteExam );
 

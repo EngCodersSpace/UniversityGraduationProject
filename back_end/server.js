@@ -30,7 +30,7 @@ const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
 const bookRoutes = require('./routes/bookRoute');
 const assignmentRoutes = require('./routes/assignmentRoute');
-
+const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 
 
 app.use(getAllData);
@@ -47,11 +47,11 @@ app.use(studyPlaneRoute);
 app.use(studentFeeRoute);
 app.use(bookRoutes);
 app.use(assignmentRoutes);
-
+app.use(rolePermissionRoutes);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
-    console.log(`Server is running o port ${PORT}`);
+  console.log(`Server is running o port ${PORT}`);
 });
 
 

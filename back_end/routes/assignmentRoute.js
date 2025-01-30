@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CRUD = require('../controllers/assignmentController');
 const { verifyToken } = require('../middleware/authMiddleware');
-const checkRole = require('../middleware/roleMiddleware');
+// const checkRole = require('../middleware/roleMiddleware');
 router.use(verifyToken);
 
 router.post('/upload-assignment-doctor', CRUD.createAssignment);
