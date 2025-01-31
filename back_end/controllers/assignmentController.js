@@ -1,5 +1,5 @@
 
-const {student,assignment, assignment_file,student_assignment,student_assignment_file,user} = require("../models");
+const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
@@ -12,7 +12,8 @@ const { Worker } = require("worker_threads");
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
-    if (req.user.permission=='student' ){
+    console.log('\n\n\nreq.user.permission=',req.user.permission,'\n\n\n')
+    if (req.user.permission == 'Student' || req.user.permission =='Student Representative'){
       const AllAssignmentSub = await assignment.findAll({
         where: {
           subject_id: req.query.subject_id,
@@ -21,30 +22,38 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         },
         include: [
           {
-            model: student,
-            where: { student_id: req.user.user_id },
-            attributes: ['student_id'],
-            through: {
-              attributes: ['assignment_id', 'status', 'is_completed'],
-            },
+            model:assignment_file,
+          },
+          {
+            model:student_assignment , where:{student_id:req.user.user_id},
+            include:[
+              {
+                model:student_assignment_file,
+              }
+            ],
           },
         ],
       });
 
-      res.status(200).json({
+      res.status(201).json({
         message: 'Assignments retrieved successfully for student.',
         data: AllAssignmentSub,
       });
-    } else if (req.user.permission === 'doctor' || 'dean') {
+    } else if (req.user.permission === 'Dean' || req.user.permission ==='Controller' || req.user.permission ==='Instructor') {
       const AllAssignmentSub = await assignment.findAll({
         where: {
           subject_id: req.query.subject_id,
           level_id: req.query.level_id,
           section_id: req.query.section_id,
         },
+        include:[
+          {model:assignment_file},
+        ],
       });
 
-      res.status(200).json({
+
+
+      res.status(201).json({
         message: 'Assignments retrieved successfully for doctor.',
         data: AllAssignmentSub,
       });
@@ -62,7 +71,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
   }
 };
 
-// 
+// to see students of this assignment and their files
 exports.getStudentsAndFilesByAssignment = async (req, res) => {
   try {
     const fileDetail=await student_assignment.findAll({
@@ -130,21 +139,31 @@ exports.downloadFile = async (req, res) => {
 
 exports.getFileDetails = async (req, res) => {
   try {
-      const hash= crypto.createHash('md5').update(req.body.originalname + req.body.size + req.body.mimetype).digest('hex');
-      const existingFile = await assignment.findOne({
-        where:{section_id:req.body.section_id , level_id:req.body.level_id},
+      const hash= crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
+  
+
+      console.log("\n \n CHECK: Name:", req.body.originalname);
+      console.log("\n \n CHECK: Size:", req.body.size);
+      console.log("\n \n CHECK: Computed Hash:", hash);
+
+
+
+      const existingFile = await assignment_file.findOne({
+        where:{attachment_hash: hash},
         include:[
           {
-            model: assignment_file,
-            where: { attachment_hash: hash }, 
+            model: assignment,
+            where: {section_id:req.body.section_id , level_id:req.body.level_id}, 
           }
         ],
       });
 
+      console.log('\n \n \n existingFile=',existingFile,'\n \n \n')
+
       if (existingFile) {
-        return res.status(400).json({message: 'This File is already uploaded.'});
+        return res.status(400).json({message: 'Sorry This File is already uploaded.'});
       } else {
-        return res.status(200).json({message: 'File ready to uploaded successfully.'});
+        return res.status(201).json({message: 'File ready to uploaded successfully.'});
       }
   } catch (error) {
     console.error('Error while checking file duplicates:', error.message);
@@ -154,9 +173,13 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-    const request=`${req.query.section_id}/${req.query.level_id}`
-    console.log('\n \n \n request=', request,'\n \n \n ')
-    uploadFields('assignments/doctors',request ).single('file')(req, res, async (err) => {
+    const sectionName=await section.findOne({section_id:req.query.section_id});
+    const levelName=await level.findOne({level_id:req.query.level_id});
+    const sectionNameObj = JSON.parse(sectionName.section_name); 
+    const sectionName1 = sectionNameObj.en; 
+    const request=`${sectionName1}/${levelName.level_name}`;
+    
+    uploadFields('assignments/attachment-files', request ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -170,6 +193,9 @@ exports.uploadFileForAssignment = async (req, res) => {
         attachment: req.file.path,
         attachment_hash: req.file.hash,
       });
+
+      console.log('\n \n \n name= ',req.file.originalname,'\n \n \n ');
+      console.log('\n \n \n size= ',req.file.size,'\n \n \n ');
 
       res.status(201).json({
         message: 'File uploaded successfully.',
@@ -254,7 +280,13 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    uploadFields('assignments/students', `${req.query.section_id}/${req.query.level_id}`).single('file')(req, res, async (err) => {
+    const sectionName=await section.findOne({section_id:req.query.section_id});
+    const levelName=await level.findOne({level_id:req.query.level_id});
+    const sectionNameObj = JSON.parse(sectionName.section_name); 
+    const sectionName1 = sectionNameObj.en; 
+    const request=`${sectionName1}/${levelName.level_name}`;
+
+    uploadFields('assignments/students-attachment-files', request ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }

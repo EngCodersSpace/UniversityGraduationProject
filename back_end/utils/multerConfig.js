@@ -4,6 +4,8 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
+require('dotenv').config(); 
+
 const createFolderIfNotExists = async (folderPath) => {
   try {
     await fs.promises.access(folderPath);
@@ -12,28 +14,37 @@ const createFolderIfNotExists = async (folderPath) => {
   }
 };
 
-const getStorageForPath = (baseFolder = 'temp',subFolder) => {
+const getStorageForPath = (baseFolder = 'temp', subFolder) => {
   return {
     _handleFile(req, file, cb) {
-      const folderPath = path.join(__dirname, '../storage', baseFolder, subFolder);
-      const hash = crypto.createHash('md5').update(file.originalname + file.size + file.mimetype).digest('hex');
-      const finalFilePath = path.join(folderPath,  `${hash}${path.extname(file.originalname)}`);
-      const bookpath=path.join(folderPath);
+      const folderPath = path.resolve('storage', baseFolder, subFolder);
+      const hash = crypto.createHash('md5').update(file.originalname + file.size).digest('hex');
+      const finalFileName = `${hash}${path.extname(file.originalname)}`;
+      const finalFilePath = path.join(folderPath, finalFileName);
+      const publicFileUrl = `${baseFolder}/${subFolder}/${finalFileName}`;
+
       createFolderIfNotExists(folderPath)
         .then(() => {
           const writeStream = fs.createWriteStream(finalFilePath);
-          file.stream.pipe(writeStream);
+          
+          writeStream.on('error', (err) => {
+            console.error('Error writing file:', err.message);
+            cb(err);
+          });
 
-          writeStream.on('finish', async () => {
+          writeStream.on('finish', () => {
             try {
               const fileMetadata = {
                 originalName: file.originalname,
                 mimeType: file.mimetype,
                 size: writeStream.bytesWritten,
-                path: finalFilePath, 
-                book:bookpath,
+                path: publicFileUrl,
                 hash
               };
+              console.log("\n \n UPLOAD: Name:", file.originalname);
+              console.log("\n \n UPLOAD: Size:", file.size);
+              console.log("\n \n UPLOAD: Computed Hash:", hash);
+
 
               console.log(`File successfully uploaded: ${finalFilePath}`);
               cb(null, fileMetadata);
@@ -42,12 +53,16 @@ const getStorageForPath = (baseFolder = 'temp',subFolder) => {
             }
           });
 
-          writeStream.on('error', (err) => {
-            console.error('Error writing file:', err.message);
+          file.stream.on('error', (err) => {
+            console.error('Error reading file:', err.message);
+            writeStream.destroy(); 
             cb(err);
           });
+
+          file.stream.pipe(writeStream);
         })
         .catch((err) => {
+          console.error('Error creating folder:', err.message);
           cb(err);
         });
     },
@@ -132,4 +147,3 @@ module.exports = {
   uploadFields: createUploadMiddleware,
   createFolderIfNotExists,
 };
-

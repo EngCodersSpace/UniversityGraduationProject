@@ -13,10 +13,6 @@ exports.uploadFile = async (req, res) => {
     const folder=`library/${req.query.category}`;
     const subfolder='books';
 
-    console.log('\n \n \n folder=', folder,'\n \n \n ')
-    console.log('\n \n \n subfolder=', subfolder,'\n \n \n ')
-
-
     uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'File upload failed', error: err.message });
