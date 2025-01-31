@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
+import '../repositories/subject_repository.dart';
 import '../services/hive_services/hive_services.dart';
 
 class LoginController extends GetxController {
@@ -49,7 +50,6 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       Result res = await UserRepository.userLogin(id.text, password.text,rememberMe: rememberMe.value);
       if (res.statusCode == 200) {
-        await HiveServices.openGlobalBoxes();
         Get.offNamed("/main");
       } else if (res.statusCode == 900) {
         loggingFiledMessage.value =

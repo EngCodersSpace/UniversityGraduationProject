@@ -150,7 +150,6 @@ class UserRepository {
     late Response? response;
     try {
       response = await HttpProvider.get("me");
-      print(response?.data);
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);

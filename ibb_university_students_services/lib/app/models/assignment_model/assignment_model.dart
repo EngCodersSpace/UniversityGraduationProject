@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import '../../utils/json_utils.dart';
 import '../attachment_file_model/attachment_file_model.dart';
+import '../helper_models/student_assignment_state/student_assignment_state.dart';
 import '../subject_model/subject_model.dart';
 
 part 'assignment_model.g.dart';
@@ -17,7 +18,7 @@ class Assignment {
     this.assignmentDay,
     this.assignmentDate,
     this.dueDate,
-    this.attachment,
+    this.attachments,
   });
 
   @HiveField(0)
@@ -35,7 +36,9 @@ class Assignment {
   @HiveField(6)
   String? dueDate;
   @HiveField(7)
-  List<AttachmentFile>? attachment;
+  List<AttachmentFile>? attachments;
+  @HiveField(8)
+  List<StudentAssignmentState>? studentsStatus;
 
   String? get title {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -70,7 +73,7 @@ class Assignment {
       "assignment_day": assignmentDay,
       "assignment_date": assignmentDate,
       "assignments_due_date": dueDate,
-      "attachment": attachment,
+      "attachment": attachments,
     };
   }
 }

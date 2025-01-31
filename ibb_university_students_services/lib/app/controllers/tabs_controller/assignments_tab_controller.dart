@@ -6,20 +6,21 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
-import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
+import '../../models/helper_models/student_assignment_state/student_assignment_state.dart';
 import '../../models/level_model/level.dart';
 import '../../models/section_model/section.dart';
 import '../../models/subject_model/subject_model.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../repositories/subject_repository.dart';
-import '../../services/notification_services/notification_services.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
+import '../../views/assignments_tab_view/assignments_view_components/add_attachments_card.dart';
+import '../../views/assignments_tab_view/assignments_view_components/assignment_student_list.dart';
 
 class AssignmentsTabController extends GetxController {
   RxBool loadingState = true.obs;
@@ -219,7 +220,7 @@ class AssignmentsTabController extends GetxController {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     for (AttachmentFile file
-        in (assignments?.value[selectedAssignment]?.attachment ?? [])) {
+        in (assignments?.value[selectedAssignment]?.attachments ?? [])) {
       if (file.path == null || file.status.value == "Uploaded") continue;
       await AssignmentsRepository.uploadAttachment(
           attachment: file,
@@ -233,7 +234,7 @@ class AssignmentsTabController extends GetxController {
     Get.dialog(const PopUpLoadingCard());
     FilePickerResult? result;
     try {
-      assignments?.value[selectedAssignment]?.attachment ??= [];
+      assignments?.value[selectedAssignment]?.attachments ??= [];
       result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         readSequential: true,
@@ -246,11 +247,11 @@ class AssignmentsTabController extends GetxController {
       bool exist = false;
       for (int i = 0; i < result.count; i++) {
         AttachmentFile file = AttachmentFile(path: result.files[i].path,assignmentId: selectedAssignment);
-        assignments?.value[selectedAssignment]?.attachment?.forEach((e) {
+        assignments?.value[selectedAssignment]?.attachments?.forEach((e) {
           exist = (e.path?.split("/").last == file.path?.split("/").last);
         });
         if (!exist) {
-          assignments?.value[selectedAssignment]?.attachment?.add(file);
+          assignments?.value[selectedAssignment]?.attachments?.add(file);
         } else {
           showSnakeBar(message: "This File Already Exist");
         }
@@ -265,8 +266,8 @@ class AssignmentsTabController extends GetxController {
   }
 
   void more(String val, {Map<String, dynamic>? data}) async {
-    if (val == "Edit") {
       selectedAssignment = data?["assignment_id"];
+    if (val == "Edit") {
       // mode = "Edit";
       // if (data != null) {
       //   selectedExam = data["exam_id"];
@@ -298,7 +299,7 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      assignments?.value[selectedAssignment]?.attachment
+      assignments?.value[selectedAssignment]?.attachments
           ?.removeAt(data["index"]);
       update(["AttachmentPiker"]);
     } else if (val == "reUploadFile") {}
@@ -341,46 +342,52 @@ class AssignmentsTabController extends GetxController {
           "level_id": selectedLevel.value
         },
       ];
-      (dueDateController.text.isNotEmpty &&
-              dueDateController.text != "Unknown".tr)
-          ? jsData["assignments_due_date"] = dueDateController.text
-          : null;
-      (titleController.text.isNotEmpty && titleController.text != "Unknown".tr)
-          ? jsData["title"] = titleController.text
-          : null;
-    }
+      jsData["assignments_due_date"] = dueDateController.text;
+      jsData["title"] = titleController.text;
 
-    if (mode == "Add") {
-      Result<Assignment> res = await AssignmentsRepository.createAssignment(
-          sectionId: selectedDepartment.value!,
-          levelId: selectedLevel.value!,
-          subjectId: selectedSubject.value!,
-          data: jsData);
-      Navigator.of(Get.overlayContext!).pop();
-      // print(res.data);
-      // print(res.statusCode);
-      // print(res.message);
-      if (res.statusCode == 201 && res.data != null) {
-        assignments?.value[res.data!.id] = res.data!;
-        assignments?.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
+      if (mode == "Add") {
+        Result<Assignment> res = await AssignmentsRepository.createAssignment(
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!,
+            subjectId: selectedSubject.value!,
+            data: jsData);
+        Navigator.of(Get.overlayContext!).pop();
+        // print(res.data);
+        // print(res.statusCode);
+        // print(res.message);
+        if (res.statusCode == 201 && res.data != null) {
+          assignments?.value[res.data!.id] = res.data!;
+          assignments?.refresh();
+          showSnakeBar(message: "Add successfully");
+        } else {
+          showSnakeBar(message: "Add failed");
+        }
+      } else if (mode == "Edit") {
+        // Result<Exam> res = await ExamRepository.updateExam(
+        //     sectionId: selectedSection.value!,
+        //     levelId: selectedLevel.value!,
+        //     data: jsData,
+        //     id: selectedExam);
+        // Navigator.of(Get.overlayContext!).pop();
+        // if (res.statusCode == 200 && res.data != null) {
+        //   exams?.value[res.data!.id] = res.data!;
+        //   exams?.refresh();
+        //   showSnakeBar(message: "Edit successfully");
+        // } else {
+        //   showSnakeBar(message: "Edit failed");
+        // }
       }
-    } else if (mode == "Edit") {
-      // Result<Exam> res = await ExamRepository.updateExam(
-      //     sectionId: selectedSection.value!,
-      //     levelId: selectedLevel.value!,
-      //     data: jsData,
-      //     id: selectedExam);
-      // Navigator.of(Get.overlayContext!).pop();
-      // if (res.statusCode == 200 && res.data != null) {
-      //   exams?.value[res.data!.id] = res.data!;
-      //   exams?.refresh();
-      //   showSnakeBar(message: "Edit successfully");
-      // } else {
-      //   showSnakeBar(message: "Edit failed");
-      // }
     }
+  }
+
+  void showAttachments(int? assignmentId){
+    selectedAssignment = assignmentId;
+    Get.dialog(const FilesPickerCard());
+  }
+
+  void routeStudentList(int? assignmentId) async{
+    if(assignmentId == null)return;
+    List<StudentAssignmentState>? items = await AssignmentsRepository.fetchAssignmentStudents(assignmentId: assignmentId).then((e)=>e.data);
+    Get.to(AssignmentStudentList(items: items??[],));
   }
 }

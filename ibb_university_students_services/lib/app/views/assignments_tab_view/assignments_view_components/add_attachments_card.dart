@@ -71,7 +71,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                       .assignments
                                                                       ?.value[controller
                                                                           .selectedAssignment]
-                                                                      ?.attachment
+                                                                      ?.attachments
                                                                       ?.length ??
                                                                   0);
                                                           i++) ...[
@@ -114,7 +114,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                       controller
                                                                               .assignments
                                                                               ?.value[controller.selectedAssignment]
-                                                                              ?.attachment?[i]
+                                                                              ?.attachments?[i]
                                                                               .path
                                                                               ?.split("/")
                                                                               .last ??
@@ -133,7 +133,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                             0.6,
                                                                     child:
                                                                         CustomText(
-                                                                      "Status:  ${controller.assignments?.value[controller.selectedAssignment]?.attachment?[i].status.value ?? ""}",
+                                                                      "Status:  ${controller.assignments?.value[controller.selectedAssignment]?.attachments?[i].status.value ?? ""}",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .start,
@@ -146,7 +146,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                           .assignments
                                                                           ?.value[controller
                                                                               .selectedAssignment]
-                                                                          ?.attachment?[
+                                                                          ?.attachments?[
                                                                               i]
                                                                           .status
                                                                           .value ==
@@ -164,7 +164,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                           backgroundColor: AppColors
                                                                               .highlightTextColor
                                                                               .withValues(alpha: 0.2),
-                                                                          value: (controller.assignments?.value[controller.selectedAssignment]?.attachment?[i].progress?.value.toDouble() ?? 0) / 100),
+                                                                          value: (controller.assignments?.value[controller.selectedAssignment]?.attachments?[i].progress?.value.toDouble() ?? 0) / 100),
                                                                     ),
                                                                   ]
                                                                 ],

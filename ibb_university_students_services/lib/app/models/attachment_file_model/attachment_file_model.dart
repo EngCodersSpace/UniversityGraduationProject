@@ -20,7 +20,7 @@ class AttachmentFile {
   String? path;
   @HiveField(3)
   RxString status = "Not Uploaded".obs;
-  @HiveField(3)
+  @HiveField(4)
   RxInt? progress;
 
 

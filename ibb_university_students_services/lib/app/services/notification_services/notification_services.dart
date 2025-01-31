@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
-  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  static final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   static String? token;
@@ -19,7 +20,7 @@ class NotificationHandler {
     );
 
     await _localNotificationsPlugin.initialize(initSettings,
-        onDidReceiveBackgroundNotificationResponse: (res) {
+        onDidReceiveNotificationResponse: (res) {
       print(res.notificationResponseType);
       print(res.id);
       print(res.actionId);
@@ -58,18 +59,6 @@ class NotificationHandler {
         title: message.notification?.title ?? "Info",
         body: message.notification?.body ?? "Notification received",
       );
-    } else if (message.data['type'] == 'command') {
-      // Handle silent command notification
-      _processCommand(message.data);
-    }
-  }
-
-  static Future<void> _backgroundHandler(RemoteMessage message) async {
-    // print("Handling background message: ${message.notification?.title}");
-    // Similar to the foreground handler, process the message here
-    if (message.data['type'] == 'info') {
-      // Process info notification in the background
-      // You could also show a notification or update data in the background if needed
     } else if (message.data['type'] == 'command') {
       // Handle silent command notification
       _processCommand(message.data);
@@ -119,11 +108,8 @@ class NotificationHandler {
           // icon: "upload",
           showProgress: (progress != null),
           styleInformation: BigTextStyleInformation(
-              // (progress != null) ? "$progress%" : "",
               htmlFormatBigText: true,
-              htmlFormatContentTitle: true,
-              contentTitle:
-                  '<p>$title</p></br><p>$message</p>',
+              contentTitle: "$title $message",
               '<p style="text-align: end;">${(progress != null) ? "$progress%" : ""}</p>'),
           actions: (progress != null)
               ? [
@@ -143,5 +129,18 @@ class NotificationHandler {
       "",
       notificationDetails,
     );
+  }
+}
+
+Future<void> _backgroundHandler(RemoteMessage message) async {
+  // print("Handling background message: ${message.notification?.title}");
+
+  if (message.data['type'] == 'info') {
+    NotificationHandler.showNotification(
+      title: message.notification?.title ?? "Info",
+      body: message.notification?.body ?? "Background Notification",
+    );
+  } else if (message.data['type'] == 'command') {
+    NotificationHandler._processCommand(message.data);
   }
 }

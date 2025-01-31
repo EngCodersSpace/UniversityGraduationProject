@@ -54,12 +54,12 @@ class HiveServices{
     Hive.registerAdapter(AttachmentFileAdapter());
   }
   static openGlobalBoxes()async{
+    await SubjectRepository.openBox();
     await UserRepository.openBox();
     await LevelRepository.openBox();
     await SectionRepository.openBox();
     await LectureRepository.openBox();
     await AssignmentsRepository.openBox();
-    await SubjectRepository.openBox();
   }
 
   static clearAllBox() async{
@@ -73,6 +73,7 @@ class HiveServices{
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
     await UserRepository.clearBox();
+
   }
 
   static closeAllBoxes() async{

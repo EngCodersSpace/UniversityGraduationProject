@@ -23,15 +23,14 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       email: fields[3] as String?,
       phones: (fields[6] as List?)?.cast<String>(),
       profileImage: fields[5] as String?,
+      roleId: fields[4] as int?,
       section: fields[8] as Section?,
       status: fields[11] as String?,
       administrativePositionData: (fields[13] as Map?)?.cast<String, dynamic>(),
       academicDegreeData: (fields[12] as Map?)?.cast<String, dynamic>(),
       createdAt: fields[9] as String?,
       updatedAt: fields[10] as String?,
-    )
-      ..roleId = fields[4] as int?
-      ..collegeNameData = (fields[7] as Map?)?.cast<String, dynamic>();
+    )..collegeNameData = (fields[7] as Map?)?.cast<String, dynamic>();
   }
 
   @override

@@ -23,6 +23,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       email: fields[3] as String?,
       phones: (fields[6] as List?)?.cast<String>(),
       profileImage: fields[5] as String?,
+      roleId: fields[4] as int?,
       studyPlaneId: fields[11] as int?,
       level: fields[12] as Level?,
       collegeNameData: (fields[7] as Map?)?.cast<String, dynamic>(),
@@ -31,7 +32,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       enrollmentYear: fields[14] as String?,
       createdAt: fields[9] as String?,
       updatedAt: fields[10] as String?,
-    )..roleId = fields[4] as int?;
+    );
   }
 
   @override

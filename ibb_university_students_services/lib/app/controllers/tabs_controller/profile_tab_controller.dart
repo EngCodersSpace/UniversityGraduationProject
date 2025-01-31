@@ -26,14 +26,10 @@ class ProfileController extends GetxController {
   void refresh() async{
     initState.value = false;
     Result res = await UserRepository.fetchUser();
-    print(res.data);
-    print(res.message);
-    print(res.statusCode);
     if (res.statusCode == 200) {
       user = res.data;
     }
     initState.value = true;
-    print(user);
   }
 
   void changeLang(String lang) {

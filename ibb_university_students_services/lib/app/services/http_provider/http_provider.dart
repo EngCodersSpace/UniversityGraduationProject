@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
-import '../notification_services/notification_services.dart';
 import '../../repositories/user_repository.dart';
 
 class HttpProvider {
