@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class DashbordLectuerTableController extends GetxController {
+class DashbordLectureTableController extends GetxController {
   @override
   // ignore: unnecessary_overrides
   void onInit() {

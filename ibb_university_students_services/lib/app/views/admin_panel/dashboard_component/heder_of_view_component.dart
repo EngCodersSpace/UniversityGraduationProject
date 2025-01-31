@@ -5,8 +5,17 @@ import 'package:ibb_university_students_services/app/controllers/admin_panel_con
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
+// ignore: must_be_immutable
 class HederOfViewComponent extends GetView<DashboardMainController> {
-  const HederOfViewComponent({super.key});
+  String tablename;
+  late Function upload;
+  late Function download;
+
+  HederOfViewComponent(
+      {super.key,
+      required this.tablename,
+      required this.upload,
+      required this.download});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +29,7 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
           SizedBox(
             width: width * 0.3,
             child: CustomText(
-              "table name",
+              tablename, //fetch the table name
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h1Bold,
               ),
@@ -37,7 +46,7 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: upload(), //send function of upload
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -66,7 +75,7 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: download(), //send function of download
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
