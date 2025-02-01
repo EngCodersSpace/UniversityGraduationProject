@@ -38,21 +38,25 @@ class LectureController extends GetxController {
         value: "Term 1",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (((Get.width - 16) / 7) * 2.5)*0.35
+                ? (((Get.width - 16) / 7) * 2.5) * 0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
               "1st",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h5Bold,
+              ),
             ))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
-                ? (((Get.width - 16) / 7) * 2.5)*0.35
+                ? (((Get.width - 16) / 7) * 2.5) * 0.35
                 : (Get.width / 6) * 0.6,
             child: CustomText(
               "2ec",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h5Bold,
+              ),
             ))),
   ];
   Rx<Locale?> currentLocale = Get.locale.obs;
@@ -83,9 +87,7 @@ class LectureController extends GetxController {
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty)
-        ? selectedSection.value = sections.first.value
-        : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchTableData();
     loadState.value = false;
@@ -103,21 +105,21 @@ class LectureController extends GetxController {
   Future<void> fetchTableData({bool force = false}) async {
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuList();
-      if(levels.isNotEmpty) {
+      if (levels.isNotEmpty) {
         selectedLevel.value = levels.first.value;
       }
     }
 
     if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
-      if(sections.isNotEmpty) {
+      if (sections.isNotEmpty) {
         selectedSection.value = sections.first.value;
       }
     }
 
     if (selectedYear.value == null) {
       await initYearDropdownMenuList();
-      if(years.isNotEmpty) {
+      if (years.isNotEmpty) {
         selectedYear.value = years.first.value;
       }
     }
@@ -149,7 +151,7 @@ class LectureController extends GetxController {
           message: "fetching lectures failed please check connection ");
     }
     selected.refresh();
-    if(kIsWeb)update(["WebContentBuilder"]);
+    if (kIsWeb) update(["WebContentBuilder"]);
   }
 
   void changeDepartment(int? val) async {
@@ -225,7 +227,8 @@ class LectureController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-    await SectionRepository.fetchSections(hardFetch: force).then((e) => e.data ?? []);
+        await SectionRepository.fetchSections(hardFetch: force)
+            .then((e) => e.data ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
@@ -233,20 +236,22 @@ class LectureController extends GetxController {
             value: section.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4)*0.48
+                  ? (((Get.width - 16) / 7) * 4) * 0.48
                   : (Get.width / 7) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
     selectedSection.value = sectionsData.first.id;
   }
+
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
-    List<Level> levelsData =
-    await LevelRepository.fetchLevels(hardFetch: force).then((e) => e.data ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
+        .then((e) => e.data ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -256,21 +261,23 @@ class LectureController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                ? (((Get.width - 16) / 7) * 2.5)*0.35
-                : (Get.width / 7) * 0.6,
+                  ? (((Get.width - 16) / 7) * 2.5) * 0.35
+                  : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
     }
     selectedLevel.value = levelsData.first.id;
   }
+
   Future<void> initYearDropdownMenuList({bool force = false}) async {
     List<String> yearData =
-    await LectureRepository.fetchLectureYears(hardFetch: force)
-        .then((e) => e.data ?? []);
+        await LectureRepository.fetchLectureYears(hardFetch: force)
+            .then((e) => e.data ?? []);
     years = [];
     for (String year in yearData) {
       years.add(
@@ -278,11 +285,12 @@ class LectureController extends GetxController {
             value: year,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4)*0.48
+                  ? (((Get.width - 16) / 7) * 4) * 0.48
                   : (Get.width / 7) * 0.6,
               child: CustomText(
                 year,
-                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
               ),
             )),
       );
@@ -396,20 +404,20 @@ class LectureController extends GetxController {
       jsData["term"] = selectedTerm.value;
       jsData["lecture_day"] = selectedDayName.value;
       ((subjectId.value?.isNotEmpty ?? false) &&
-          subjectId.value != "Unknown".tr)
+              subjectId.value != "Unknown".tr)
           ? jsData["subject_id"] = subjectId.value
           : null;
       (doctorId.value != null) ? jsData["doctor_id"] = doctorId.value : null;
       (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
           ? jsData["lecture_time"] = DateTimeUtils.formatStringTime(
-          time: timeController.text,
-          format: TimeFormat.hhMmSs,
-          currentFormat: TimeFormat.hhMmA)
+              time: timeController.text,
+              format: TimeFormat.hhMmSs,
+              currentFormat: TimeFormat.hhMmA)
           : null;
       (durationController.text.isNotEmpty &&
-          durationController.text != "Unknown".tr)
+              durationController.text != "Unknown".tr)
           ? jsData["lecture_duration"] =
-          int.tryParse(durationController.text) ?? 0
+              int.tryParse(durationController.text) ?? 0
           : null;
       (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
           ? jsData["lecture_room"] = hallController.text
@@ -476,7 +484,8 @@ class LectureController extends GetxController {
 
   Future<void> getSubjects() async {
     subjects = {};
-    subjects = await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       subjectId = RxString(subjects!.values.first.id);
       if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&

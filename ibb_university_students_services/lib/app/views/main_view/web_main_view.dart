@@ -1,7 +1,9 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
@@ -109,22 +111,63 @@ class WebMainView extends GetView<MainController> {
                       SizedBox(
                         height: Get.height * 0.01,
                       ),
-                      Obx(() => Column(
-                            children: [
-                              WebTabsComponent(tabname: "Library", index: 5),
-                              WebTabsComponent(tabname: "Profile", index: 4),
-                              WebTabsComponent(tabname: "Home", index: 2),
-                              WebTabsComponent(
-                                  tabname: "Notification", index: 0),
-                              WebTabsComponent(
-                                  tabname: "Lecture Table", index: 1),
-                              WebTabsComponent(tabname: "Reports", index: 3),
-                              WebTabsComponent(tabname: "Exam Table", index: 6),
-                              WebTabsComponent(tabname: "Results", index: 7),
-                              WebTabsComponent(
-                                  tabname: "Acadimic Card", index: 8),
-                            ],
-                          )),
+                      Column(
+                        children: [
+                          WebTabsComponent(
+                            tabname: "Library",
+                            index: 5,
+                            icon: Icons.library_books_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Profile",
+                            index: 4,
+                            icon: Icons.person_outline_sharp,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Home",
+                            index: 2,
+                            icon: Icons.home_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Notification",
+                            index: 0,
+                            icon: Icons.notifications_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Lecture Table",
+                            index: 1,
+                            icon: Icons.calendar_month_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Reports",
+                            index: 3,
+                            icon: Icons.repartition,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Exam Table",
+                            index: 6,
+                            icon: Icons.assessment_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Results",
+                            index: 7,
+                            icon: Icons.bar_chart_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Acadimic Card",
+                            index: 8,
+                            icon: Icons.credit_card_sharp,
+                          ),
+                          // ignore: unrelated_type_equality_checks
+                          if (controller.user?.name == Doctor) ...[
+                            WebTabsComponent(
+                              tabname: "Dashboard",
+                              index: 9,
+                              icon: Icons.settings_outlined,
+                            ),
+                          ]
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -157,6 +200,7 @@ class WebMainView extends GetView<MainController> {
     ExamTableWebView(),
     const StudentResultsWebView(),
     const AcademicCardWebView(),
+    DashboardMainView(),
   ];
 
   WebMainView({super.key});

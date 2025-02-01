@@ -120,7 +120,7 @@ class MainController extends GetxController {
         // controller = Get.put<DashboardMainController>(
         //   DashboardMainController(),
         // );
-        Get.offAll(
+        Get.offAll<DashboardMainController>(
           DashboardMainController(),
         );
         break;
