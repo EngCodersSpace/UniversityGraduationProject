@@ -13,22 +13,22 @@ import '../repositories/user_repository.dart';
 
 class InitAppController extends GetxController {
   @override
-  void onInit() {
+  void onInit()  async{
     super.onInit();
-    _initializeApp();
+    await _initializeApp();
   }
 
   Future<void> _initializeApp() async {
     try {
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
-      await NotificationHandler.initialize();
+      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
       await DownloadManager.initialize();
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+      await NotificationHandler.initialize();
       // Set initialization complete
     } catch (e) {
       // Handle errors if needed

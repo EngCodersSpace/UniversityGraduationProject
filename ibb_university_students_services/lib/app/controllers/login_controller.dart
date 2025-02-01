@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import '../models/helper_models/result.dart';
 import '../repositories/subject_repository.dart';
 import '../services/hive_services/hive_services.dart';
+import '../utils/local_lisenter.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -82,6 +83,6 @@ class LoginController extends GetxController {
   }
 
   void changeLang(String lang){
-    Get.updateLocale(Locale(lang));
+    LocaleListener.updateLocale(lang);
   }
 }

@@ -12,9 +12,9 @@ class HomeTabController extends GetxController
     with GetSingleTickerProviderStateMixin {
   User? user;
   RxBool initState = false.obs;
-  late TabController tabController;
+  TabController? tabController;
   ScrollController scrollController = ScrollController();
-  late Timer _timer;
+  Timer? _timer;
   int _newsCurrentPos = 0;
 
   @override
@@ -31,13 +31,13 @@ class HomeTabController extends GetxController
 
   @override
   void onClose() {
-    tabController.dispose();
+    tabController?.dispose();
   }
 
   bool scrollEvent(UserScrollNotification s) {
     try {
       Duration d = const Duration(seconds: 0, milliseconds: 500);
-      _timer.cancel();
+      _timer?.cancel();
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         _newsCurrentPos++;
@@ -81,9 +81,9 @@ class HomeTabController extends GetxController
 
   void startTimer() {
     try {
-      _timer.cancel();
+      _timer?.cancel();
       _newsCurrentPos = 0;
-      tabController.index = (0);
+      tabController?.index = (0);
       _setUpTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -97,7 +97,7 @@ class HomeTabController extends GetxController
       if (scrollController.hasClients) {
         scrollController.animateTo(width * i,
             duration: duration, curve: Curves.easeInOutQuart);
-        tabController.animateTo(i, duration: duration);
+        tabController?.animateTo(i, duration: duration);
       }
     } catch (e) {
       if (kDebugMode) {

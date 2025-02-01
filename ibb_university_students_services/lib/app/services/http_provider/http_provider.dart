@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
 import '../../repositories/user_repository.dart';
 
@@ -28,7 +29,7 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
-    _dio.options.headers["language"] = get_x.Get.locale?.languageCode ?? "en";
+    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
     if (kIsWeb) {
       await reSetAccessToken();
     }
@@ -251,4 +252,9 @@ class HttpProvider {
   static void removeAccessTokenHeader() {
     _dio.options.headers["Authorization"] = null;
   }
+
+  static void updateLangHeader(){
+    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
+  }
+
 }
