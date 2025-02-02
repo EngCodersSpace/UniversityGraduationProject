@@ -112,18 +112,24 @@ class MainController extends GetxController {
           AcademicCardController(),
         );
         break;
-      case 9:
-        if (controller != null) {
-          controller.dispose();
-        }
-        // controller = Get.put<DashboardMainController>(
-        //   DashboardMainController(),
-        // );
-        Get.offNamed(
-          "/dashboard_main_view",
-        );
-        break;
+      // case 9:
+      //   if (controller != null) {
+      //     controller.dispose();
+      //   }
+      //   // controller = Get.put<DashboardMainController>(
+      //   //   DashboardMainController(),
+      //   // );
+      //   Get.offNamed(
+      //     "/dashboard_main_view",
+      //   );
+      //   break;
     }
+  }
+
+  void routeAdmainPanel() {
+    Get.offNamed(
+      "/dashboard_main_view",
+    );
   }
 
   @override

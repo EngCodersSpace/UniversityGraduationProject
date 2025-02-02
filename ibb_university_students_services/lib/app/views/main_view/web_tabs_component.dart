@@ -22,7 +22,13 @@ class WebTabsComponent extends GetView<MainController> {
   Widget build(BuildContext context) {
     return Obx(
       () => InkWell(
-        onTap: () => controller.changeTabIndex(index),
+        onTap: () {
+          if (index == 9) {
+            controller.routeAdmainPanel();
+            return;
+          }
+          controller.changeTabIndex(index);
+        },
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(

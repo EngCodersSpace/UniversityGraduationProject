@@ -197,7 +197,6 @@ class WebMainView extends GetView<MainController> {
     ExamTableWebView(),
     const StudentResultsWebView(),
     const AcademicCardWebView(),
-    DashboardMainView(),
   ];
 
   WebMainView({super.key});
