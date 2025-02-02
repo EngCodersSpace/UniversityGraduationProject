@@ -14,44 +14,46 @@ class TabViewComponent extends GetView<DashboardMainController> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => controller.changetableindex(int as int),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24), // Top-left corner rounded
-            bottomLeft: Radius.circular(24), // Bottom-left corner rounded
+    return Obx(
+      () => InkWell(
+        onTap: () => controller.changetableindex(index),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24), // Top-left corner rounded
+              bottomLeft: Radius.circular(24), // Bottom-left corner rounded
+            ),
+            color: (controller.selectedindex.value == index)
+                ? AppColors.tabBackColor
+                : AppColors.inverseTabBackColor,
           ),
-          color: (controller.selectedindex.value == 5)
-              ? AppColors.tabBackColor
-              : AppColors.inverseCardColor,
-        ),
-        padding: const EdgeInsets.only(left: 25),
-        margin: const EdgeInsets.only(left: 16),
-        height: Get.height * 0.08,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.library_books_outlined,
-              color: (controller.selectedindex.value == int)
-                  ? AppColors.secTextColor
-                  : AppColors.mainTextColor,
-            ),
-            SizedBox(
-              width: Get.width * 0.005,
-            ),
-            CustomText(
-              tablename.tr,
-              style: AppTextStyles.customColorStyle(
-                color: (controller.selectedindex.value == int)
-                    ? AppColors.secTextColor
-                    : AppColors.mainTextColor,
-                textHeader: AppTextHeaders.h6Bold,
+          padding: const EdgeInsets.only(left: 25),
+          margin: const EdgeInsets.only(left: 16),
+          height: Get.height * 0.08,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Icon(
+              //   Icons.library_books_outlined,
+              //   color: (controller.selectedindex.value == int)
+              //       ? AppColors.secTextColor
+              //       : AppColors.mainTextColor,
+              // ),
+              SizedBox(
+                width: Get.width * 0.005,
               ),
-            ),
-          ],
+              CustomText(
+                tablename.tr,
+                style: AppTextStyles.customColorStyle(
+                  color: (controller.selectedindex.value == index)
+                      ? AppColors.secTextColor
+                      : AppColors.mainTextColor,
+                  textHeader: AppTextHeaders.h6Bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

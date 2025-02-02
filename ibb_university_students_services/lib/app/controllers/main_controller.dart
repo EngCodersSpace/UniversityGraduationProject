@@ -5,7 +5,6 @@ import 'package:ibb_university_students_services/app/components/custom_float_act
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
 import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
 import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
 import '../repositories/user_repository.dart';
@@ -120,8 +119,8 @@ class MainController extends GetxController {
         // controller = Get.put<DashboardMainController>(
         //   DashboardMainController(),
         // );
-        Get.offAll<DashboardMainController>(
-          DashboardMainController(),
+        Get.offNamed(
+          "/dashboard_main_view",
         );
         break;
     }

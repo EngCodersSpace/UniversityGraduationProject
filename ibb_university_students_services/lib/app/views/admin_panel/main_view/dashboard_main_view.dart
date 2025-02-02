@@ -34,25 +34,22 @@ class DashboardMainView extends GetView<DashboardMainController> {
                   width: width * 0.2,
                   height: height,
                   color: AppColors.inverseTabBackColor,
-                  child: Obx(
-                    () => Column(
-                      children: [
-                        TabViewComponent(tablename: "Doctors Table", index: 0),
-                        TabViewComponent(tablename: "Student Table", index: 1),
-                        TabViewComponent(tablename: "Subject Table", index: 2),
-                        TabViewComponent(
-                            tablename: "Study plan Table", index: 3),
-                        TabViewComponent(tablename: "Lecture Table", index: 4),
-                        TabViewComponent(tablename: "Exam Table", index: 5),
-                        TabViewComponent(tablename: "Grad Table", index: 6),
-                        TabViewComponent(tablename: "Library Table", index: 7),
-                        TabViewComponent(
-                            tablename: "Notification Table", index: 8),
-                        TabViewComponent(
-                            tablename: "Phone Number Table", index: 9),
-                        TabViewComponent(tablename: "Payment Table", index: 10),
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      TabViewComponent(tablename: "Doctors Table", index: 0),
+                      TabViewComponent(tablename: "Student Table", index: 1),
+                      TabViewComponent(tablename: "Subject Table", index: 2),
+                      TabViewComponent(tablename: "Study plan Table", index: 3),
+                      TabViewComponent(tablename: "Lecture Table", index: 4),
+                      TabViewComponent(tablename: "Exam Table", index: 5),
+                      TabViewComponent(tablename: "Grad Table", index: 6),
+                      TabViewComponent(tablename: "Library Table", index: 7),
+                      TabViewComponent(
+                          tablename: "Notification Table", index: 8),
+                      TabViewComponent(
+                          tablename: "Phone Number Table", index: 9),
+                      TabViewComponent(tablename: "Payment Table", index: 10),
+                    ],
                   ),
                 ),
                 Container(

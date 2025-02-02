@@ -15,7 +15,7 @@ import 'dashboard_subjects_table_controller.dart';
 import 'dashbord_lecture_table_controller.dart';
 
 class DashboardMainController extends GetxController {
-  RxInt selectedindex = 0.obs;
+  RxInt selectedindex = 2.obs;
   RxBool connected = false.obs;
 
   @override
@@ -139,8 +139,5 @@ class DashboardMainController extends GetxController {
   }
 
   @override
-  // ignore: unnecessary_overrides
-  void onClose() {
-    super.onClose();
-  }
+  void onClose() {}
 }

@@ -158,14 +158,11 @@ class WebMainView extends GetView<MainController> {
                             index: 8,
                             icon: Icons.credit_card_sharp,
                           ),
-                          // ignore: unrelated_type_equality_checks
-                          if (controller.user?.name == Doctor) ...[
-                            WebTabsComponent(
-                              tabname: "Dashboard",
-                              index: 9,
-                              icon: Icons.settings_outlined,
-                            ),
-                          ]
+                          WebTabsComponent(
+                            tabname: "Dashboard",
+                            index: 9,
+                            icon: Icons.settings_outlined,
+                          ),
                         ],
                       ),
                     ],
