@@ -1,3 +1,4 @@
+// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
@@ -17,6 +18,7 @@ import 'package:ibb_university_students_services/app/views/admin_panel/subject_t
 import '../study_plan_table_view/study_plan_table_view.dart';
 
 class DashboardMainView extends GetView<DashboardMainController> {
+  DashboardMainView({super.key});
   double width = Get.width;
   double height = Get.height;
 

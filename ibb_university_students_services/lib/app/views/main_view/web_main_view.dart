@@ -1,9 +1,7 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
