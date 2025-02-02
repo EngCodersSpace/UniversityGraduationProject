@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
@@ -36,9 +38,9 @@ class Assignment {
   @HiveField(6)
   String? dueDate;
   @HiveField(7)
-  List<AttachmentFile>? attachments;
+  Map<int, AttachmentFile>? attachments;
   @HiveField(8)
-  List<StudentAssignmentState>? studentsStatus;
+  Map<int, StudentAssignmentState>? studentsStatus;
 
   String? get title {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -46,6 +48,15 @@ class Assignment {
   }
 
   factory Assignment.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+    Map<int, AttachmentFile> files = {};
+    for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
+      files[file["id"]] = AttachmentFile(
+          id: file["id"],
+          assignmentId: file["assignment_id"],
+          title: "title.type",
+          path: file["attachment"],
+          status: RxString("Not Uploaded"));
+    }
     return Assignment(
       id: json['id'],
       subject: subject,
@@ -56,11 +67,10 @@ class Assignment {
       titleData: JsonUtils.tryJsonDecode(
         json['title'],
       ),
-      // titleData: json['title'],
       assignmentDay: json['assignment_due_day'],
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],
-      // attachment: json['attachment'],
+      attachments: files,
     );
   }
 

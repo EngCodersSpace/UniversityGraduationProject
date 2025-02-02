@@ -166,21 +166,21 @@ class AssignmentsRepository {
     if ((_assignmentsBox?.get(assignmentId)?.studentsStatus?.isNotEmpty??false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
-          data: _assignmentsBox?.get(assignmentId)?.studentsStatus, hasError: false, statusCode: 200);
+          data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(), hasError: false, statusCode: 200);
     }
     late Response? response;
     try {
       response = await HttpProvider.get(
           "get-all-students-assignment?assignment_id=$assignmentId");
-      List<StudentAssignmentState> state = [];
+      Map<int,StudentAssignmentState> state = {};
       if (response?.statusCode == 200) {
         for(Map<String,dynamic> jsState in response?.data["data"]){
-          state.add(StudentAssignmentState.fromJson(jsState));
+          state[response?.data["data"]["student_assignment_files"]] = (StudentAssignmentState.fromJson(jsState));
         }
         _assignmentsBox?.get(assignmentId)?.studentsStatus = state;
 
         return Result(
-            data: _assignmentsBox?.get(assignmentId)?.studentsStatus,
+            data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -278,12 +278,12 @@ class AssignmentsRepository {
 
       if (response?.statusCode == 200) {
         attachment.progress = get_x.RxInt(0);
-        attachment.status.value = "Uploading";
+        attachment.status?.value = "Uploading";
         NotificationHandler.showProgressNotification(
-            uniqueId: file.path.hashCode,
+            uniqueId: attachment.title.hashCode,
             progress: 0,
             title: "Uploading ",
-            message: " ${file.path.split("/").last}");
+            message: " ${attachment.title}");
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
@@ -293,25 +293,27 @@ class AssignmentsRepository {
             double progress = (sent / total) * 100;
             attachment.progress?.value = progress.toInt();
             NotificationHandler.showProgressNotification(
-                uniqueId: file.path.hashCode,
+                uniqueId: attachment.title.hashCode,
                 progress: progress.toInt(),
                 title: "Uploading",
                 message: " ${file.path.split("/").last}");
           },
         );
         if (response?.statusCode == 201) {
+          attachment.id = response?.data["file"]["id"];
+          attachment.path = response?.data["file"]["path"];
+          await FileUtils.saveFiles(
+              fileRelativePath: "UploadedFiles/${attachment.path}", files: [file]);
           NotificationHandler.showProgressNotification(
-              uniqueId: file.path.hashCode,
+              uniqueId: attachment.title.hashCode,
               title: "successful upload ",
-              message: file.path.split("/").last);
-          attachment.status.value = "Uploaded";
-          FileUtils.saveFiles(
-              fileRelativePath: "UploadedFiles/Assignments", files: [file]);
+              message: attachment.title);
+          attachment.status?.value = "Uploaded";
         } else {
           NotificationHandler.showProgressNotification(
-              uniqueId: file.path.hashCode,
+              uniqueId: attachment.title.hashCode,
               title: "failed upload ",
-              message: file.path.split("/").last);
+              message: attachment.title);
         }
         return Result(
             hasError: false,
@@ -419,6 +421,35 @@ class AssignmentsRepository {
     }
   }
 
+
+  static Future<Result<void>> deleteAssignmentFile({
+    required int assignmentId,
+    required id,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response =
+      await HttpProvider.delete("delete-assignment-files?assignment_id=$id");
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
+          message: error.toString(),
+          data: null);
+    }
+  }
 
 
 //

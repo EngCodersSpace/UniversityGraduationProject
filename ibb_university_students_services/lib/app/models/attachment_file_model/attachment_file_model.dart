@@ -9,26 +9,31 @@ class AttachmentFile {
   AttachmentFile({
     this.id,
     this.assignmentId,
+    this.title,
     this.path,
+    this.status,
+    this.progress
   });
 
   @HiveField(0)
   int? id;
   @HiveField(1)
   int? assignmentId;
-  @HiveField(2)
-  String? path;
   @HiveField(3)
-  RxString status = "Not Uploaded".obs;
+  String? path;
   @HiveField(4)
+  String? title;
+  RxString? status;
   RxInt? progress;
+  RxBool? downloaded;
 
 
-  factory AttachmentFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+  factory AttachmentFile.fromJson(Map<String, dynamic> json, {String status = "Not Uploaded"}) {
     return AttachmentFile(
       id: json['id'],
       assignmentId: 0,
       path: "",
+      status: RxString(status),
     );
   }
 

@@ -216,13 +216,13 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void uploadAttachments() async{
+  void uploadAttachments() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     for (AttachmentFile file
-        in (assignments?.value[selectedAssignment]?.attachments ?? [])) {
-      if (file.path == null || file.status.value == "Uploaded") continue;
-      await AssignmentsRepository.uploadAttachment(
+        in (assignments?.value[selectedAssignment]?.attachments?.values.toList() ?? [])) {
+      if (file.path == null || file.id != -1) continue;
+      AssignmentsRepository.uploadAttachment(
           attachment: file,
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!);
@@ -234,7 +234,7 @@ class AssignmentsTabController extends GetxController {
     Get.dialog(const PopUpLoadingCard());
     FilePickerResult? result;
     try {
-      assignments?.value[selectedAssignment]?.attachments ??= [];
+      assignments?.value[selectedAssignment]?.attachments??={};
       result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         readSequential: true,
@@ -246,12 +246,17 @@ class AssignmentsTabController extends GetxController {
     if (result != null) {
       bool exist = false;
       for (int i = 0; i < result.count; i++) {
-        AttachmentFile file = AttachmentFile(path: result.files[i].path,assignmentId: selectedAssignment);
-        assignments?.value[selectedAssignment]?.attachments?.forEach((e) {
+        AttachmentFile file = AttachmentFile(
+            id: -1,
+            title: result.files[i].name,
+            path: result.files[i].path,
+            assignmentId: selectedAssignment,
+            status: RxString("Not Uploaded"));
+        assignments?.value[selectedAssignment]?.attachments?.forEach((i,e) {
           exist = (e.path?.split("/").last == file.path?.split("/").last);
         });
         if (!exist) {
-          assignments?.value[selectedAssignment]?.attachments?.add(file);
+          assignments?.value[selectedAssignment]?.attachments?[-(file.title.hashCode)] = file;
         } else {
           showSnakeBar(message: "This File Already Exist");
         }
@@ -266,7 +271,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   void more(String val, {Map<String, dynamic>? data}) async {
-      selectedAssignment = data?["assignment_id"];
+    selectedAssignment = data?["assignment_id"];
     if (val == "Edit") {
       // mode = "Edit";
       // if (data != null) {
@@ -299,9 +304,21 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      assignments?.value[selectedAssignment]?.attachments
-          ?.removeAt(data["index"]);
-      update(["AttachmentPiker"]);
+      if(data["id"]<0){
+        assignments?.value[selectedAssignment]?.attachments
+            ?.remove(data["id"]);
+        update(["AttachmentPiker"]);
+      }else{
+        Result res = await AssignmentsRepository.deleteAssignmentFile(assignmentId: selectedAssignment!, id: data["id"]);
+        Navigator.of(Get.overlayContext!).pop();
+        if(res.statusCode == 200){
+          assignments?.value[selectedAssignment]?.attachments
+              ?.remove(data["id"]);
+          update(["AttachmentPiker"]);
+        }else{
+          showSnakeBar(message: "Delete File Failed");
+        }
+      }
     } else if (val == "reUploadFile") {}
   }
 
@@ -380,14 +397,19 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void showAttachments(int? assignmentId){
+  void showAttachments(int? assignmentId) {
     selectedAssignment = assignmentId;
     Get.dialog(const FilesPickerCard());
   }
 
-  void routeStudentList(int? assignmentId) async{
-    if(assignmentId == null)return;
-    List<StudentAssignmentState>? items = await AssignmentsRepository.fetchAssignmentStudents(assignmentId: assignmentId).then((e)=>e.data);
-    Get.to(AssignmentStudentList(items: items??[],));
+  void routeStudentList(int? assignmentId) async {
+    if (assignmentId == null) return;
+    List<StudentAssignmentState>? items =
+        await AssignmentsRepository.fetchAssignmentStudents(
+                assignmentId: assignmentId)
+            .then((e) => e.data);
+    Get.to(AssignmentStudentList(
+      items: items ?? [],
+    ));
   }
 }

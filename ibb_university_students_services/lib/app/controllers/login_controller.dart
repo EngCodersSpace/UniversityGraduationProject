@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
-import '../repositories/subject_repository.dart';
-import '../services/hive_services/hive_services.dart';
 import '../utils/local_lisenter.dart';
 
 class LoginController extends GetxController {

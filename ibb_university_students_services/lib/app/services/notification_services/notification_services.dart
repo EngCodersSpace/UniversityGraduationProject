@@ -103,14 +103,18 @@ class NotificationHandler {
           priority: Priority.high,
           progress: progress ?? 0,
           maxProgress: 100,
+          fullScreenIntent: true,
           playSound: false,
           silent: true,
+          styleInformation: InboxStyleInformation([
+            (progress != null) ? "$progress%" : ""
+          ],
+              summaryText: (progress != null) ? "$progress%" : "",
+              htmlFormatLines: true,
+              htmlFormatTitle: true,
+              htmlFormatContent: true),
           // icon: "upload",
           showProgress: (progress != null),
-          styleInformation: BigTextStyleInformation(
-              htmlFormatBigText: true,
-              contentTitle: "$title $message",
-              '<p style="text-align: end;">${(progress != null) ? "$progress%" : ""}</p>'),
           actions: (progress != null)
               ? [
                   const AndroidNotificationAction(
@@ -125,8 +129,8 @@ class NotificationHandler {
     // Update the progress in the notification
     await _localNotificationsPlugin.show(
       uniqueId.hashCode,
-      "",
-      "",
+      '<p>$title $message</p>',
+      '',
       notificationDetails,
     );
   }

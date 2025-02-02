@@ -19,26 +19,23 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
     return AttachmentFile(
       id: fields[0] as int?,
       assignmentId: fields[1] as int?,
-      path: fields[2] as String?,
-    )
-      ..status = fields[3] as RxString
-      ..progress = fields[4] as RxInt?;
+      title: fields[4] as String?,
+      path: fields[3] as String?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, AttachmentFile obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.assignmentId)
-      ..writeByte(2)
-      ..write(obj.path)
       ..writeByte(3)
-      ..write(obj.status)
+      ..write(obj.path)
       ..writeByte(4)
-      ..write(obj.progress);
+      ..write(obj.title);
   }
 
   @override

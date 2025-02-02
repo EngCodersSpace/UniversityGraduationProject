@@ -24,14 +24,15 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       assignmentDay: fields[4] as String?,
       assignmentDate: fields[5] as String?,
       dueDate: fields[6] as String?,
-      attachments: (fields[7] as List?)?.cast<AttachmentFile>(),
-    );
+      attachments: (fields[7] as Map?)?.cast<int, AttachmentFile>(),
+    )..studentsStatus =
+        (fields[8] as Map?)?.cast<int, StudentAssignmentState>();
   }
 
   @override
   void write(BinaryWriter writer, Assignment obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       ..writeByte(6)
       ..write(obj.dueDate)
       ..writeByte(7)
-      ..write(obj.attachments);
+      ..write(obj.attachments)
+      ..writeByte(8)
+      ..write(obj.studentsStatus);
   }
 
   @override

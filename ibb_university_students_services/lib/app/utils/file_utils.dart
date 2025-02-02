@@ -9,13 +9,13 @@ class FileUtils {
     required List<File> files,
     String baseFolderPath = "/storage/emulated/0/StudentServices",
   }) async {
-    Directory dir = Directory("$baseFolderPath/$fileRelativePath");
+    Directory dir = Directory("$baseFolderPath/${fileRelativePath.split("/").removeLast().toString()}");
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
     }
     for (File file in files) {
       await file.copy(
-          "${dir.path}/${file.path.split("/").last}");
+          "${dir.path}/${fileRelativePath.split("/").last}");
     }
   }
 

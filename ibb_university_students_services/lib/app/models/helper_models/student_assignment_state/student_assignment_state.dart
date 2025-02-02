@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-
-import '../../../utils/json_utils.dart';
 import '../../attachment_file_model/attachment_file_model.dart';
 part 'student_assignment_state.g.dart';
 
