@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import '../../../models/helper_models/student_assignment_state/student_assignment_state.dart';
 import '../../../styles/app_colors.dart';
 
+// ignore: must_be_immutable
 class AssignmentStudentList extends GetView<AssignmentsTabController> {
   AssignmentStudentList({required this.items, super.key});
 

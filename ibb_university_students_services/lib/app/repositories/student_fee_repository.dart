@@ -18,8 +18,6 @@ class StudentFeeRepository {
   static const int _createError = 612;
   static const int _updateError = 612;
   static const int _deleteError = 612;
-  static const int _changeStateError = 612;
-  static const int _fetchYearsError = 619;
 
   static Box<StudentFeeCache>? _studentFeeBox;
 

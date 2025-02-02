@@ -1,6 +1,5 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
-import '../subject_model/subject_model.dart';
 
 part 'attachment_file_model.g.dart';
 
