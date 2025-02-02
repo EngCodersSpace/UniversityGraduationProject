@@ -193,18 +193,14 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       if ((PermissionUtils.checkPermission(
                           target: "Assignments", action: "doctorView"))) ...[
                         CustomButton(
-                          onPress: () {
-                            Get.dialog(const FilesPickerCard());
-                          },
+                          onPress: ()=>controller.showAttachments(content.value?.id),
                           text: "Attachments".tr,
                         ),
                         const SizedBox(
                           height: 8,
                         ),
                         CustomButton(
-                          onPress: () {
-                            // Get.toNamed("");
-                          },
+                          onPress: ()=>controller.routeStudentList(content.value?.id),
                           text: "Students".tr,
                         ),
                       ] else ...[

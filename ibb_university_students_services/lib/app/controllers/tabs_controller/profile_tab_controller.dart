@@ -6,7 +6,7 @@ import '../../models/helper_models/result.dart';
 import '../main_controller.dart';
 
 class ProfileController extends GetxController {
-  late User user;
+  User? user;
   RxString language = (Get.locale?.languageCode ?? "en").obs;
   RxBool initState = false.obs;
 
@@ -19,6 +19,17 @@ class ProfileController extends GetxController {
     }
     initState.value = true;
     super.onInit();
+  }
+
+
+  @override
+  void refresh() async{
+    initState.value = false;
+    Result res = await UserRepository.fetchUser();
+    if (res.statusCode == 200) {
+      user = res.data;
+    }
+    initState.value = true;
   }
 
   void changeLang(String lang) {

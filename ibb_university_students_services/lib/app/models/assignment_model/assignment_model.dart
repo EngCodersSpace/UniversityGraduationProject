@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import '../../utils/json_utils.dart';
 import '../attachment_file_model/attachment_file_model.dart';
+import '../helper_models/student_assignment_state/student_assignment_state.dart';
 import '../subject_model/subject_model.dart';
 
 part 'assignment_model.g.dart';
@@ -16,7 +18,7 @@ class Assignment {
     this.assignmentDay,
     this.assignmentDate,
     this.dueDate,
-    this.attachment,
+    this.attachments,
   });
 
   @HiveField(0)
@@ -34,7 +36,9 @@ class Assignment {
   @HiveField(6)
   String? dueDate;
   @HiveField(7)
-  List<AttachmentFile>? attachment;
+  Map<int, AttachmentFile>? attachments;
+  @HiveField(8)
+  Map<int, StudentAssignmentState>? studentsStatus;
 
   String? get title {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -42,6 +46,15 @@ class Assignment {
   }
 
   factory Assignment.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+    Map<int, AttachmentFile> files = {};
+    for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
+      files[file["id"]] = AttachmentFile(
+          id: file["id"],
+          assignmentId: file["assignment_id"],
+          title: "title.type",
+          path: file["attachment"],
+          status: RxString("Not Uploaded"));
+    }
     return Assignment(
       id: json['id'],
       subject: subject,
@@ -49,16 +62,13 @@ class Assignment {
         "doctor_id": json['doctor_id'],
         "user": {"user_name": "{\"en\":\"Doctor name\",\"ar\":\"اسم الدكتور\"}"}
       }),
-      // titleData: JsonUtils.tryJsonDecode(
-      //   json['title'],
-      // ),
-      titleData: {
-        "en":json['title'],
-      },
+      titleData: JsonUtils.tryJsonDecode(
+        json['title'],
+      ),
       assignmentDay: json['assignment_due_day'],
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],
-      // attachment: json['attachment'],
+      attachments: files,
     );
   }
 
@@ -71,7 +81,7 @@ class Assignment {
       "assignment_day": assignmentDay,
       "assignment_date": assignmentDate,
       "assignments_due_date": dueDate,
-      "attachment": attachment,
+      "attachment": attachments,
     };
   }
 }

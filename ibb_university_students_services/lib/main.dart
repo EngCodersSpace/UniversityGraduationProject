@@ -4,8 +4,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
@@ -27,6 +25,7 @@ class MyApp extends StatelessWidget {
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
+            navigatorObservers: [RouteGuard()],
           )
         // Android and web UI
         : GetMaterialApp(
@@ -40,6 +39,7 @@ class MyApp extends StatelessWidget {
             onDispose: () async {
               await Hive.close();
             },
+            navigatorObservers: [RouteGuard()],
           );
   }
 }

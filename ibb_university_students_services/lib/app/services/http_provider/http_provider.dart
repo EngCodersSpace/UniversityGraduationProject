@@ -1,17 +1,19 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../components/pop_up_cards/alert_message_card.dart';
-import '../notification_services/notification_services.dart';
 import '../../repositories/user_repository.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
   static int _refreshTries = 5;
+  static Map<int, CancelToken> cancelTokens = {};
 
   static Future<void> init({
     String baseUrl = '',
@@ -27,6 +29,7 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
+    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
     if (kIsWeb) {
       await reSetAccessToken();
     }
@@ -34,16 +37,6 @@ class HttpProvider {
       onError: (DioException error, ErrorInterceptorHandler handler) async {
         List<ConnectivityResult> connectivityResult =
             await (Connectivity().checkConnectivity());
-        if (kDebugMode) {
-          // print(error.requestOptions.uri);
-          // print("HttpProviderError ------------------ ");
-          // print("error: ${error.message}");
-          // print("status code: ${error.response?.statusCode}");
-          // print("res data: ${error.response?.data}");
-          // print("status headers: ${error.response?.isRedirect}");
-          // print("request headers: ${error.requestOptions.headers}");
-          // print(connectivityResult);
-        }
         if (connectivityResult.contains(ConnectivityResult.none)) {
           try {
             get_x.Get.dialog(PopUpAlertCard(
@@ -63,13 +56,6 @@ class HttpProvider {
             error.requestOptions.path != "login") {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
-            print("________________________________________________");
-            print("________________________________________________");
-            print(response?.statusCode);
-            print(response?.data);
-            print(_dio.options.headers);
-            print("________________________________________________");
-            print("________________________________________________");
             if (response != null) {
               return handler.resolve(response);
             }
@@ -90,11 +76,6 @@ class HttpProvider {
 
         if (error.response?.statusCode == 401 &&
             error.requestOptions.path == "refresh") {
-          print("________________________________________________");
-          print("________________________________________________");
-          print(_dio.options.headers);
-          print("________________________________________________");
-          print("________________________________________________");
           return handler.resolve(error.response!);
         }
 
@@ -159,40 +140,34 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> uploadFileWithProgress({
-    required PlatformFile file,
+  static Future<Response?> uploadFile({
+    required File file,
     required String uploadUrl,
+    required void Function(int, int)? onSendProgress,
+    int? fileSize,
     Map<String, dynamic>? data,
   }) async {
     try {
-      // Show initial notification with 0% progress
-      NotificationHandler().showProgressNotification(
-          uniqueId: file.identifier.hashCode,
-          progress: 0,
-          message: "Uploading ${file.name}");
+      fileSize ??= await file.length();
+
+      cancelTokens[file.path.hashCode] = CancelToken();
       final response = await _dio.post(
         uploadUrl,
+        cancelToken: cancelTokens[file.path.hashCode],
         data: FormData.fromMap({
-          'files': [
-            MultipartFile.fromStream(() => file.xFile.openRead(), file.size,
-                filename: file.name)
+          'file': [
+            MultipartFile.fromStream(() => file.openRead(), fileSize,
+                filename: file.path.split("/").last)
           ],
           'assignment_id': '45'
         }),
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',
-            'Content-Length': file.size.toString(),
+            'Content-Length': fileSize.toString(),
           },
         ),
-        onSendProgress: (sent, total) {
-          double progress = (sent / total) * 100;
-          // Show updated progress (same notification ID for progress updates)
-          NotificationHandler().showProgressNotification(
-              uniqueId: file.identifier.hashCode,
-              progress: progress.toInt(),
-              message: "Uploading ${file.name}");
-        },
+        onSendProgress: onSendProgress,
       );
       return response;
     } on DioException catch (error) {
@@ -210,6 +185,9 @@ class HttpProvider {
     try {
       _refreshTries--;
       if (_refreshTries < 0) {
+        Box box = await Hive.openBox('rememberMe');
+        box.clear();
+        box.close();
         get_x.Get.offAllNamed("login");
         _refreshTries = 5;
         return null;
@@ -230,6 +208,7 @@ class HttpProvider {
         addAccessTokenHeader(
           response.data["accessToken"],
         );
+        _refreshTries = 5;
         return await _dio.request(
           requestOptions.path,
           queryParameters: requestOptions.queryParameters,
@@ -273,4 +252,9 @@ class HttpProvider {
   static void removeAccessTokenHeader() {
     _dio.options.headers["Authorization"] = null;
   }
+
+  static void updateLangHeader(){
+    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
+  }
+
 }

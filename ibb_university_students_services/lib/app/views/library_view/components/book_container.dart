@@ -8,22 +8,20 @@ import '../../../components/custom_text_v2.dart';
 
 class BookContainer extends GetView<LibraryController> {
   BookContainer({required this.book, super.key});
-  Map<String,dynamic> book = {};
+
+  Map<String, dynamic> book = {};
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>controller.showBookInfo(book),
+      onTap: () => controller.showBookInfo(book),
       child: SizedBox(
         width: Get.width / 5,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 8,
-            ),
             SizedBox(
-              height: Get.width/5,
+              width: (Get.height/5)*0.45,
               child: Image(
                 image: AssetImage(
                   book["image"] ?? "",
@@ -31,14 +29,13 @@ class BookContainer extends GetView<LibraryController> {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(
-              height: 3,
-            ),
             Flexible(
-                child: CustomText(
-              book["name"] ?? "Unknown",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
-            ))
+              child: CustomText(
+                book["name"] ?? "Unknown",
+                style: AppTextStyles.mainStyle(
+                    textHeader: AppTextHeaders.h3Normal),
+              ),
+            )
           ],
         ),
       ),

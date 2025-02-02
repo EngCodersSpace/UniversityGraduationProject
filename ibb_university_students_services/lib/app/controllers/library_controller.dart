@@ -20,6 +20,7 @@ class LibraryController extends GetxController
 
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
+  RxInt selectedShowOption = 2.obs;
   RxString selectedSortOption = "title".obs;
   RxInt sortDirection = 0.obs;
   PageController booksPagesController = PageController();
@@ -28,20 +29,20 @@ class LibraryController extends GetxController
   List<DropdownMenuItem<int>> departments = [];
   List<DropdownMenuItem<int>> levels = [];
   List<Border> borders =[];
+  final List<int?> showOptions = [0,1,2];
   Map<String,List<String>> sortOptions = {
     "title":["A to Z","Z to A"],
     "size":["Smallest","Largest"],
     "page":["Lowest","Highest"],
     "date":["Oldest","Newest"],
   };
-
   RxList books = [
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {"name": "book", "image": "assets/images/services_cards/result.png"},
     {
-      "name": "bookknc zxnnznxlknnn",
+      "name": "bookknc zxnnznxlknnnjhhjkhhjhjhjkhj;lkcdjscjklsdjcljdmcasjjcsdcnsdkhcd",
       "image": "assets/images/services_cards/result.png"
     },
     {"name": "book", "image": "assets/images/services_cards/result.png"},
@@ -170,9 +171,15 @@ class LibraryController extends GetxController
     if (val == null) return;
     selectedSortOption.value = val;
   }
+
   void changeSelectedSortDirection(int? val) async {
     if (val == null) return;
     sortDirection.value = val;
+  }
+
+  void changeSelectedShowOption(int? val){
+    if (val == null) return;
+    selectedShowOption.value = val;
   }
 
   void changeLevel(int? val) async {

@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
+import 'package:ibb_university_students_services/app/utils/file_utils.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/assignment_model/assignment_model.dart';
 import '../models/helper_models/assignments_cache/assignments_cache.dart';
 import '../models/helper_models/result.dart';
 import '../services/http_provider/http_provider.dart';
+import '../services/notification_services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
 
 class AssignmentsRepository {
@@ -17,21 +24,28 @@ class AssignmentsRepository {
   static const int _updateError = 624;
   static const int _deleteError = 625;
 
-  static Map<String, Map<int, Assignment>?>? _assignments;
-
-  static Box<AssignmentsCache>? _assignmentsBox;
+  static Box<AssignmentsCache>? _assignmentsGroupsBox;
+  static Box<Assignment>? _assignmentsBox;
 
   static Future<void> openBox() async {
-    _assignmentsBox = await Hive.openBox<AssignmentsCache>("assignmentsBox");
+    _assignmentsGroupsBox =
+        await Hive.openBox<AssignmentsCache>("assignmentsGroupsBox");
+    _assignmentsBox = await Hive.openBox<Assignment>("assignmentsBox");
   }
 
   static Future<void> clearBox() async {
-    _assignmentsBox = await Hive.openBox<AssignmentsCache>("assignmentsBox");
-     _assignments?.clear();
+    _assignmentsGroupsBox =
+        await Hive.openBox<AssignmentsCache>("assignmentsGroupsBox");
+    await _assignmentsGroupsBox?.clear();
+    _assignmentsBox = await Hive.openBox<Assignment>("assignmentsBox");
+    await _assignmentsBox?.clear();
   }
 
   static Future<void> closeBox() async {
-    if (_assignmentsBox?.isOpen ?? false) {
+    if (_assignmentsGroupsBox?.isOpen ?? false) {
+      await _assignmentsGroupsBox?.close();
+    }
+    if (_assignmentsGroupsBox?.isOpen ?? false) {
       await _assignmentsBox?.close();
     }
   }
@@ -43,34 +57,130 @@ class AssignmentsRepository {
     required String subjectId,
     bool hardFetch = false,
   }) async {
-    AssignmentsCache? cachedAssignments = _assignmentsBox
+    AssignmentsCache? cachedAssignments = _assignmentsGroupsBox
         ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
+    Map<int, Assignment> assignments = {};
     if ((cachedAssignments != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
-      return Result(
-          data: cachedAssignments.data, hasError: false, statusCode: 200);
+      for (int id in cachedAssignments.data) {
+        Assignment? assignment =
+            await fetchAssignment(assignmentId: id).then((e) => e.data);
+        if (assignment != null) {
+          assignments[assignment.id] = assignment;
+        }
+      }
+      return Result(data: assignments, hasError: false, statusCode: 200);
     }
     late Response? response;
     try {
       response = await HttpProvider.get(
           "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
-        cachedAssignments =
-            AssignmentsCache(
-                key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
-                data: {});
+        cachedAssignments = AssignmentsCache(
+            key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+            data: []);
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
             Assignment assignment = Assignment.fromJson(jsAssignments);
-            cachedAssignments.data[assignment.id] = assignment;
+            assignments[assignment.id] = assignment;
+            await _assignmentsBox?.put(
+              assignment.id,
+              assignment,
+            );
+            cachedAssignments.data.add(assignment.id);
           }
-          await _assignmentsBox?.put(
+          await _assignmentsGroupsBox?.put(
             "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
             cachedAssignments,
           );
-                }
+        }
         return Result(
-            data: cachedAssignments.data,
+            data: assignments,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchAllError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchAllError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<Assignment>> fetchAssignment({
+    required int assignmentId,
+    bool hardFetch = false,
+  }) async {
+    if ((_assignmentsBox?.get(assignmentId) != null) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
+      return Result(
+          data: _assignmentsBox?.get(assignmentId),
+          hasError: false,
+          statusCode: 200);
+    }
+    Response? response;
+    try {
+      // response = await HttpProvider.get(
+      //     "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
+      if (response?.statusCode == 200) {
+        Assignment assignment =
+            Assignment.fromJson(response?.data["assignment"]);
+        await _assignmentsBox?.put(
+          assignment.id,
+          assignment,
+        );
+        return Result(
+            data: assignment,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchAllError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchAllError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<List<StudentAssignmentState>>> fetchAssignmentStudents({
+    required int assignmentId,
+    bool hardFetch = false,
+  }) async {
+    
+    if ((_assignmentsBox?.get(assignmentId)?.studentsStatus?.isNotEmpty??false) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
+      return Result(
+          data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(), hasError: false, statusCode: 200);
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "get-all-students-assignment?assignment_id=$assignmentId");
+      Map<int,StudentAssignmentState> state = {};
+      if (response?.statusCode == 200) {
+        for(Map<String,dynamic> jsState in response?.data["data"]){
+          state[response?.data["data"]["student_assignment_files"]] = (StudentAssignmentState.fromJson(jsState));
+        }
+        _assignmentsBox?.get(assignmentId)?.studentsStatus = state;
+
+        return Result(
+            data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -96,23 +206,40 @@ class AssignmentsRepository {
     required String subjectId,
     String year = "",
     required data,
-    bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.post("upload-assignment-doctor", data: data);
+      response =
+          await HttpProvider.post("upload-assignment-doctor", data: data);
       Assignment? newAssignment;
       if (response?.statusCode == 201) {
-        newAssignment = Assignment.fromJson(response?.data["data"]["assignment"]);
-        AssignmentsCache? cachedAssignments = _assignmentsBox
-            ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
-        cachedAssignments?? AssignmentsCache(key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments", data: {});
-        cachedAssignments?.data[newAssignment.id] = newAssignment;
-        if (cachedAssignments != null) {
+        int i = 0;
+        for (Map group in data["sectionsAndLevels"]) {
+          Assignment assignment =
+              Assignment.fromJson(response?.data["data"][i]);
+          if (group["section_id"] == sectionId &&
+              group["level_id"] == levelId) {
+            newAssignment = assignment;
+          }
+          AssignmentsCache? cachedAssignments = _assignmentsGroupsBox?.get(
+              "${group["section_id"]}_${group["level_id"]}_${year}_${subjectId}_Assignments");
+          cachedAssignments ??
+              AssignmentsCache(
+                  key:
+                      "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                  data: []);
           await _assignmentsBox?.put(
-              "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
-              cachedAssignments);
+            assignment.id,
+            assignment,
+          );
+          cachedAssignments?.data.add(assignment.id);
+          if (cachedAssignments != null) {
+            await _assignmentsGroupsBox?.put(
+                "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                cachedAssignments);
+          }
+          i++;
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -129,6 +256,81 @@ class AssignmentsRepository {
           statusCode: _createError,
           message: error.toString(),
           data: null);
+    }
+  }
+
+  static Future<Result<void>> uploadAttachment({
+    required AttachmentFile attachment,
+    required int sectionId,
+    required int levelId,
+  }) async {
+    late Response? response;
+    try {
+      File file = File(attachment.path ?? "");
+      int fileSize = await file.length();
+      response = await HttpProvider.post("check-files", data: {
+        "originalname": attachment.path?.split("/").last,
+        "size": fileSize.toString(),
+        "mimetype": "text/plain",
+        "section_id": sectionId,
+        "level_id": levelId
+      });
+
+      if (response?.statusCode == 200) {
+        attachment.progress = get_x.RxInt(0);
+        attachment.status?.value = "Uploading";
+        NotificationHandler.showProgressNotification(
+            uniqueId: attachment.title.hashCode,
+            progress: 0,
+            title: "Uploading ",
+            message: " ${attachment.title}");
+        response = null;
+        response = await HttpProvider.uploadFile(
+          uploadUrl:
+              "upload-files-assignment-doctor?assignment_id=${attachment.assignmentId}&section_id=$sectionId&level_id=$levelId",
+          file: file,
+          onSendProgress: (sent, total) {
+            double progress = (sent / total) * 100;
+            attachment.progress?.value = progress.toInt();
+            NotificationHandler.showProgressNotification(
+                uniqueId: attachment.title.hashCode,
+                progress: progress.toInt(),
+                title: "Uploading",
+                message: " ${file.path.split("/").last}");
+          },
+        );
+        if (response?.statusCode == 201) {
+          attachment.id = response?.data["file"]["id"];
+          attachment.path = response?.data["file"]["path"];
+          await FileUtils.saveFiles(
+              fileRelativePath: "UploadedFiles/${attachment.path}", files: [file]);
+          NotificationHandler.showProgressNotification(
+              uniqueId: attachment.title.hashCode,
+              title: "successful upload ",
+              message: attachment.title);
+          attachment.status?.value = "Uploaded";
+        } else {
+          NotificationHandler.showProgressNotification(
+              uniqueId: attachment.title.hashCode,
+              title: "failed upload ",
+              message: attachment.title);
+        }
+        return Result(
+            hasError: false,
+            statusCode: response?.statusCode ?? _createError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      showSnakeBar(message: "Failed Upload");
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          statusCode: _createError, message: error.toString(), data: null);
     }
   }
 
@@ -194,18 +396,14 @@ class AssignmentsRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-
-
-      response = await HttpProvider.delete("delete-assignment?assignment_id=$id");
+      response =
+          await HttpProvider.delete("delete-assignment?assignment_id=$id");
       if (response?.statusCode == 200) {
-        AssignmentsCache? cachedAssignments = _assignmentsBox
-            ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments");
-        cachedAssignments?.data.remove(id);
-        if (cachedAssignments != null) {
-          await _assignmentsBox?.put(
-              cachedAssignments.key,
-              cachedAssignments);
-        }
+        _assignmentsGroupsBox
+            ?.get("${sectionId}_${levelId}_${year}_${subjectId}_Assignments")
+            ?.data
+            .remove(id);
+        _assignmentsBox?.delete(id);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -222,52 +420,84 @@ class AssignmentsRepository {
           data: null);
     }
   }
-  //
-  // static Future<Result<void>> changeLectureState({
-  //   required int sectionId,
-  //   required int levelId,
-  //   required String year,
-  //   required String term,
-  //   required String day,
-  //   required String action,
-  //   required int id,
-  //   bool hardFetch = false,
-  // }) async {
-  //   get_x.Get.dialog(const PopUpLoadingCard(),
-  //       barrierDismissible: false, name: "loadingDialog");
-  //   late Response? response;
-  //   try {
-  //     AssignmentsCache? cachedDayAssignments = _lecturesBox?.get(
-  //         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Assignments");
-  //     response = await HttpProvider.post("changeLecStatus-lecture",
-  //         data: {"id": 7, "action": action});
-  //     if (response?.statusCode == 200) {
-  //       cachedDayAssignments?.data[day]?[id]?.lectureStatus =
-  //           (action == "confirm")
-  //               ? true
-  //               : (action == "cancel")
-  //                   ? false
-  //                   : null;
-  //       if (cachedDayAssignments != null) {
-  //         await _lecturesBox?.put(
-  //             "${sectionId}_${levelId}_${year}_${term}_Assignments",
-  //             cachedDayAssignments);
-  //       }
-  //     } else if (response?.statusCode == 403) {
-  //       await get_x.Get.dialog(PopUpAlertCard(
-  //           response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-  //     }
-  //
-  //     return Result(
-  //         hasError: false,
-  //         statusCode: response?.statusCode ?? _changeStateError,
-  //         message: response?.data["message"] ?? "error");
-  //   } catch (error) {
-  //     return Result(
-  //         hasError: true,
-  //         statusCode: _changeStateError,
-  //         message: error.toString(),
-  //         data: null);
-  //   }
-  // }
+
+
+  static Future<Result<void>> deleteAssignmentFile({
+    required int assignmentId,
+    required id,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response =
+      await HttpProvider.delete("delete-assignment-files?assignment_id=$id");
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
+//
+// static Future<Result<void>> changeLectureState({
+//   required int sectionId,
+//   required int levelId,
+//   required String year,
+//   required String term,
+//   required String day,
+//   required String action,
+//   required int id,
+//   bool hardFetch = false,
+// }) async {
+//   get_x.Get.dialog(const PopUpLoadingCard(),
+//       barrierDismissible: false, name: "loadingDialog");
+//   late Response? response;
+//   try {
+//     AssignmentsCache? cachedDayAssignments = _lecturesBox?.get(
+//         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Assignments");
+//     response = await HttpProvider.post("changeLecStatus-lecture",
+//         data: {"id": 7, "action": action});
+//     if (response?.statusCode == 200) {
+//       cachedDayAssignments?.data[day]?[id]?.lectureStatus =
+//           (action == "confirm")
+//               ? true
+//               : (action == "cancel")
+//                   ? false
+//                   : null;
+//       if (cachedDayAssignments != null) {
+//         await _lecturesBox?.put(
+//             "${sectionId}_${levelId}_${year}_${term}_Assignments",
+//             cachedDayAssignments);
+//       }
+//     } else if (response?.statusCode == 403) {
+//       await get_x.Get.dialog(PopUpAlertCard(
+//           response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+//     }
+//
+//     return Result(
+//         hasError: false,
+//         statusCode: response?.statusCode ?? _changeStateError,
+//         message: response?.data["message"] ?? "error");
+//   } catch (error) {
+//     return Result(
+//         hasError: true,
+//         statusCode: _changeStateError,
+//         message: error.toString(),
+//         data: null);
+//   }
+// }
 }

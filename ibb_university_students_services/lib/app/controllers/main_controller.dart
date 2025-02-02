@@ -39,6 +39,7 @@ class MainController extends GetxController {
 
   // Method to change the selected index
   void changeTabIndex(int index) {
+
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/bindings/exam_table_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/init_app_binding.dart';
@@ -13,7 +14,6 @@ import 'package:ibb_university_students_services/app/views/main_view/main_view_l
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
-
 import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
 import 'bindings/student_fees_binding.dart';
@@ -72,4 +72,19 @@ class AppRoutes {
 
     // Add more routes here
   ];
+}
+
+
+class RouteGuard extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+
+    // Example: Redirect if user navigates directly
+    if (previousRoute == null && route.settings.name != '/') {
+      Future.delayed(Duration.zero, () {
+        Get.offAllNamed('/splash_screen'); // Redirect to home
+      });
+    }
+  }
 }

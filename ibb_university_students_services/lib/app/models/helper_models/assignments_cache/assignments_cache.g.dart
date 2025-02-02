@@ -18,7 +18,7 @@ class AssignmentsCacheAdapter extends TypeAdapter<AssignmentsCache> {
     };
     return AssignmentsCache(
       key: fields[0] as String,
-      data: (fields[1] as Map).cast<int, Assignment>(),
+      data: (fields[1] as List).cast<int>(),
     );
   }
 
