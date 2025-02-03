@@ -1,5 +1,6 @@
 const { exam, subject , section,level } = require('../models'); 
 const { validationResult } = require('express-validator'); 
+const {createRefreshState} = require('../controllers/refreshController');
 const { Sequelize} = require('sequelize');
 
 //  All Functions are perfict right now 2024-12-10
@@ -9,9 +10,14 @@ exports.createExam = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
+
         const newExam = await exam.create(req.body,{
             include: [{ model: subject, as: 'subject' }], 
         });
+
+        await createRefreshState("exam", res);
+
+
         res.status(201).json({
             message: 'Exam created successfully',
             exam: newExam,

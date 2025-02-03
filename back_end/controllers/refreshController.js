@@ -1,16 +1,12 @@
 
-const { refresh_state } = require('..models'); 
+const { refresh_state } = require('../models'); 
 
-exports.createRefreshState = async (req, res) => {
+exports.createRefreshState = async (target, res) => {
   try {
-    const newRecord = await refresh_state.create(req.body.target, req.body.state, req.body.filter );
-    return res.status(201).json({
-        message:'create newRecord successfully',
-        data:newRecord
-    }); 
+    const newRecord = await refresh_state.create({target:target,filter:''});
+    return newRecord;
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Failed to create refresh state.' , error: error.message   });
+    throw new Error('Failed to create refresh state: ' + error.message);  
   }
 };
 
