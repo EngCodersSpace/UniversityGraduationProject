@@ -9,7 +9,7 @@ app.use(express.json());
 const corsOptions = {
   origin: '*', // Replace with your Flutter Web app's URL (use IP or domain)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only necessary methods
-  allowedHeaders: ['Accept', 'Content-Type', 'Authorization'], // Headers Flutter Web might send
+  allowedHeaders: ['Accept', 'Content-Type', 'Authorization','accept-language'], // Headers Flutter Web might send
   credentials: true, // Allow cookies or Authorization headers
 };
 

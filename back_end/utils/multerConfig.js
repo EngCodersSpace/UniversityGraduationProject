@@ -19,9 +19,8 @@ const getStorageForPath = (baseFolder = 'temp', subFolder) => {
     _handleFile(req, file, cb) {
       const folderPath = path.resolve('storage', baseFolder, subFolder);
       const hash = crypto.createHash('md5').update(file.originalname + file.size).digest('hex');
-      const finalFileName = `${hash}${path.extname(file.originalname)}`;
-      const finalFilePath = path.join(folderPath, finalFileName);
-      const publicFileUrl = `${baseFolder}/${subFolder}/${finalFileName}`;
+      let finalFileName = `${hash}${path.extname(file.originalname)}`;
+      let finalFilePath = path.join(folderPath, finalFileName);
 
       createFolderIfNotExists(folderPath)
         .then(() => {
@@ -34,19 +33,24 @@ const getStorageForPath = (baseFolder = 'temp', subFolder) => {
 
           writeStream.on('finish', () => {
             try {
+
+              const newhash = crypto.createHash('md5').update(file.originalname + writeStream.bytesWritten).digest('hex');
+              const newFileName = `${newhash}${path.extname(file.originalname)}`;
+              const newFilePath = path.join(folderPath, newFileName);
+              fs.renameSync(finalFilePath, newFilePath);
+              
+              finalFileName = newFileName;
+              finalFilePath = newFilePath;
+
               const fileMetadata = {
                 originalName: file.originalname,
                 mimeType: file.mimetype,
                 size: writeStream.bytesWritten,
-                path: publicFileUrl,
-                hash
+                path: `${baseFolder}/${subFolder}/${finalFileName}`,
+                hash:newhash,
               };
-              console.log("\n \n UPLOAD: Name:", file.originalname);
-              console.log("\n \n UPLOAD: Size:", file.size);
-              console.log("\n \n UPLOAD: Computed Hash:", hash);
 
-
-              console.log(`File successfully uploaded: ${finalFilePath}`);
+              console.log(`File successfully uploaded: ${path}`);
               cb(null, fileMetadata);
             } catch (error) {
               cb(error);

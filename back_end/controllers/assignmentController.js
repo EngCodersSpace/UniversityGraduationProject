@@ -6,6 +6,7 @@ const fs = require("fs");
 const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
 const { Worker } = require("worker_threads");
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 
 // get assignments for specific subject of doctor  => 
@@ -137,16 +138,14 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
+// to checks if file duplicate or not
 exports.getFileDetails = async (req, res) => {
   try {
       const hash= crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
   
-
       console.log("\n \n CHECK: Name:", req.body.originalname);
       console.log("\n \n CHECK: Size:", req.body.size);
-      console.log("\n \n CHECK: Computed Hash:", hash);
-
-
+      console.log("\n \n CHECK: Computed Hash:", hash , "\n \n \n ");
 
       const existingFile = await assignment_file.findOne({
         where:{attachment_hash: hash},
@@ -161,7 +160,7 @@ exports.getFileDetails = async (req, res) => {
       console.log('\n \n \n existingFile=',existingFile,'\n \n \n')
 
       if (existingFile) {
-        return res.status(400).json({message: 'Sorry This File is already uploaded.'});
+        return res.status(400).json({message: 'Sorry , This File is already uploaded.'});
       } else {
         return res.status(201).json({message: 'File ready to uploaded successfully.'});
       }
@@ -188,6 +187,7 @@ exports.uploadFileForAssignment = async (req, res) => {
         return res.status(400).json({ message: 'No file provided for upload.' });
       }
 
+      try {
       const newFile = await assignment_file.create({
         assignment_id: req.query.assignment_id,
         attachment: req.file.path,
@@ -205,6 +205,19 @@ exports.uploadFileForAssignment = async (req, res) => {
           hash: newFile.attachment_hash,
         },
       });
+      } catch(error){
+        if (error instanceof UniqueConstraintError) {
+          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+        }
+    
+        if (error instanceof ForeignKeyConstraintError) {
+          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+        }
+    
+        if (error instanceof ValidationError) {
+          return res.status(400).json({ message: 'Validation error: ' + error.message });
+        }
+      }
     });
   } catch (error) {
     console.error('Error while uploading file:', error.message);
@@ -214,24 +227,24 @@ exports.uploadFileForAssignment = async (req, res) => {
 
 exports.createAssignment = async (req, res) => {
   try {
-    const sectionsAndLevels = req.body.sectionsAndLevels; 
+    const sectionsAndLevels = req.body.sectionsAndLevels;
 
-    if (!req.body.sectionsAndLevels || req.body.sectionsAndLevels.length === 0) {
+    if (!sectionsAndLevels || sectionsAndLevels.length === 0) {
       return res.status(400).json({ message: 'No sections and levels provided.' });
     }
 
     const createdAssignments = [];
 
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
+    const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
     const translatedTitle = await translateText(req.body.title, req.body.language, targetLanguage);
 
     for (const { section_id, level_id } of sectionsAndLevels) {
       const assignmentRecord = await assignment.create({
         subject_id: req.body.subject_id,
         doctor_id: req.user.user_id,
-        title:JSON.stringify({
-          [req.body.language] : req.body.title,
-          [targetLanguage] : translatedTitle
+        title: JSON.stringify({
+          [req.body.language]: req.body.title,
+          [targetLanguage]: translatedTitle,
         }),
         assignment_due_day: req.body.assignment_due_day,
         assignment_date: req.body.assignment_date,
@@ -270,8 +283,21 @@ exports.createAssignment = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+    }
+
+    if (error instanceof ForeignKeyConstraintError) {
+      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+    }
+
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: 'Validation error: ' + error.message });
+    }
+
     res.status(500).json({
-      message: 'Error creating assignments.',
+      message: 'Error creating assignment.',
       error: error.message,
     });
   }
@@ -291,31 +317,47 @@ exports.uploadFilesAttachment = async (req, res) => {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
 
-      if (!req.file) {
-        return res.status(400).json({ message: 'No file provided for upload.' });
+      try {
+        if (!req.file) {
+          return res.status(400).json({ message: 'No file provided for upload.' });
+        }
+        const studentAssignment = await student_assignment.findOne({
+          where: {
+            student_id: req.user.user_id,
+            assignment_id: req.query.assignment_id,
+          },
+        });
+
+        const newFile = await student_assignment_file.create({
+          student_assignment_id: studentAssignment.id,
+          attachment: req.file.path,
+          attachment_hash: req.file.hash,
+        });
+
+        res.status(201).json({
+          message: 'File uploaded successfully.',
+          file: {
+            id: newFile.id,
+            student_assignment_id:newFile.student_assignment_id,
+            path: newFile.attachment,
+            hash: newFile.attachment_hash,
+          },
+        });
+      }catch(error){
+        console.error('Error while uploading file:', error.message);
+        if (error instanceof UniqueConstraintError) {
+          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+        }
+    
+        if (error instanceof ForeignKeyConstraintError) {
+          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+        }
+    
+        if (error instanceof ValidationError) {
+          return res.status(400).json({ message: 'Validation error: ' + error.message });
+        }
+    
       }
-      const studentAssignment = await student_assignment.findOne({
-        where: {
-          student_id: req.user.user_id,
-          assignment_id: req.query.assignment_id,
-        },
-      });
-
-      const newFile = await student_assignment_file.create({
-        student_assignment_id: studentAssignment.id,
-        attachment: req.file.path,
-        attachment_hash: req.file.hash,
-      });
-
-      res.status(201).json({
-        message: 'File uploaded successfully.',
-        file: {
-          id: newFile.id,
-          student_assignment_id:newFile.student_assignment_id,
-          path: newFile.attachment,
-          hash: newFile.attachment_hash,
-        },
-      });
     });
 
     
