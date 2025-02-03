@@ -62,22 +62,22 @@ class PhoneProfileView extends GetView<ProfileController> {
                                   borderRadius: BorderRadius.circular(50),
                                   border: Border.all(
                                       width: 3, color: AppColors.tabBackColor),
-                                  image: ((controller.user.profileImage !=
+                                  image: ((controller.user?.profileImage !=
                                               null) &&
-                                          (controller.user.profileImage != ""))
+                                          (controller.user?.profileImage != ""))
                                       ? DecorationImage(
                                           image: AssetImage(
-                                              controller.user.profileImage!),
+                                              controller.user!.profileImage!),
                                           fit: BoxFit.fill)
                                       : null,
                                 ),
-                                child: ((controller.user.profileImage !=
+                                child: ((controller.user?.profileImage !=
                                             null) &&
-                                        (controller.user.profileImage != ""))
+                                        (controller.user?.profileImage != ""))
                                     ? null
                                     : Center(
                                         child: CustomText(
-                                          controller.user.name?[0] ??
+                                          controller.user?.name?[0] ??
                                               "".toUpperCase(),
                                           style: AppTextStyles.mainStyle(
                                               textHeader: TextHeaders(
@@ -92,7 +92,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             height: height * 0.01,
                           ),
                           CustomText(
-                            "User ID: ${controller.user.id}",
+                            "User ID: ${controller.user?.id}",
                             style: AppTextStyles.mainStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
@@ -134,7 +134,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           CustomText(
-                            controller.user.name!,
+                            controller.user?.name??"Unknown",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
                           ),
@@ -160,7 +160,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                           ),
                           Flexible(
                             child: CustomText(
-                              controller.user.email ?? "Unknown".tr,
+                              controller.user?.email ?? "Unknown".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                             ),
@@ -186,7 +186,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           CustomText(
-                            controller.user.phones?.first ?? "Unknown".tr,
+                            controller.user?.phones?.first ?? "Unknown".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
                           ),

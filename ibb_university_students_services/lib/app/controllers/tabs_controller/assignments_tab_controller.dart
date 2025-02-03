@@ -3,25 +3,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
+import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
-import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
+import '../../models/helper_models/student_assignment_state/student_assignment_state.dart';
 import '../../models/level_model/level.dart';
 import '../../models/section_model/section.dart';
 import '../../models/subject_model/subject_model.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../repositories/subject_repository.dart';
-import '../../services/notification_services/notification_services.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
+import '../../views/assignments_tab_view/assignments_view_components/add_attachments_card.dart';
+import '../../views/assignments_tab_view/assignments_view_components/assignment_student_list.dart';
 
 class AssignmentsTabController extends GetxController {
   RxBool loadingState = true.obs;
-  RxInt selected = 3.obs;
   RxString fieldMessage = "".obs;
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
@@ -31,7 +33,6 @@ class AssignmentsTabController extends GetxController {
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   Rx<Map<int, Assignment>>? assignments = Rx({});
-  Rx<List<PlatformFile>>? attachmentsFiles = Rx([]);
 
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
@@ -55,8 +56,10 @@ class AssignmentsTabController extends GetxController {
 
   @override
   void refresh() async {
+    loadingState.value = true;
     await fetchAssignmentsData(force: true);
     super.refresh();
+    loadingState.value = false;
   }
 
   Future<void> fetchAssignmentsData({bool force = false}) async {
@@ -96,9 +99,6 @@ class AssignmentsTabController extends GetxController {
       year: '',
       hardFetch: force,
     );
-    if (kDebugMode) {
-      print(res.data);
-    }
     if (res.statusCode == 200) {
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
@@ -216,33 +216,52 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void uploadAttachments() {
-    for (PlatformFile file in (attachmentsFiles?.value ?? [])) {
-      HttpProvider.uploadFileWithProgress(
-              file: file, uploadUrl: "upload-files-assignment-doctor")
-          .then((val) {
-        if (val?.statusCode == 200) {
-          NotificationHandler().showNotification(
-              uniqueId: file.identifier.hashCode,
-              title: "${file.name} uploaded successfully!");
-        } else {
-          NotificationHandler().showNotification(
-              uniqueId: file.identifier.hashCode,
-              title: "${file.name} upload failed!",
-              body: '');
-        }
-      });
+  void uploadAttachments() async {
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
+    for (AttachmentFile file
+        in (assignments?.value[selectedAssignment]?.attachments?.values.toList() ?? [])) {
+      if (file.path == null || file.id != -1) continue;
+      AssignmentsRepository.uploadAttachment(
+          attachment: file,
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!);
     }
   }
 
   Future<void> pickFiles() async {
     // Open file picker dialog
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-    );
+    Get.dialog(const PopUpLoadingCard());
+    FilePickerResult? result;
+    try {
+      assignments?.value[selectedAssignment]?.attachments??={};
+      result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        readSequential: true,
+      );
+    } catch (e) {
+      showSnakeBar(message: "Loading Files Failed");
+    }
+    Navigator.of(Get.overlayContext!).pop();
     if (result != null) {
-      attachmentsFiles?.value.addAll(result.files);
-      attachmentsFiles?.refresh();
+      bool exist = false;
+      for (int i = 0; i < result.count; i++) {
+        AttachmentFile file = AttachmentFile(
+            id: -1,
+            title: result.files[i].name,
+            path: result.files[i].path,
+            assignmentId: selectedAssignment,
+            status: RxString("Not Uploaded"));
+        assignments?.value[selectedAssignment]?.attachments?.forEach((i,e) {
+          exist = (e.path?.split("/").last == file.path?.split("/").last);
+        });
+        if (!exist) {
+          assignments?.value[selectedAssignment]?.attachments?[-(file.title.hashCode)] = file;
+        } else {
+          showSnakeBar(message: "This File Already Exist");
+        }
+      }
+      update(["AttachmentPiker"]);
     } else {
       // User canceled the picker
       if (kDebugMode) {
@@ -253,9 +272,6 @@ class AssignmentsTabController extends GetxController {
 
   void more(String val, {Map<String, dynamic>? data}) async {
     selectedAssignment = data?["assignment_id"];
-    if (kDebugMode) {
-      print(selectedAssignment);
-    }
     if (val == "Edit") {
       // mode = "Edit";
       // if (data != null) {
@@ -278,7 +294,7 @@ class AssignmentsTabController extends GetxController {
         subjectId: selectedSubject.value!,
         id: selectedAssignment,
       );
-      Get.back();
+      Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         assignments?.value.remove(selectedAssignment);
         assignments?.refresh();
@@ -288,9 +304,21 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      attachmentsFiles?.value.removeAt(data["index"]);
-      attachmentsFiles?.refresh();
-      // assignments?.value[selectedAssignment];
+      if(data["id"]<0){
+        assignments?.value[selectedAssignment]?.attachments
+            ?.remove(data["id"]);
+        update(["AttachmentPiker"]);
+      }else{
+        Result res = await AssignmentsRepository.deleteAssignmentFile(assignmentId: selectedAssignment!, id: data["id"]);
+        Navigator.of(Get.overlayContext!).pop();
+        if(res.statusCode == 200){
+          assignments?.value[selectedAssignment]?.attachments
+              ?.remove(data["id"]);
+          update(["AttachmentPiker"]);
+        }else{
+          showSnakeBar(message: "Delete File Failed");
+        }
+      }
     } else if (val == "reUploadFile") {}
   }
 
@@ -320,66 +348,68 @@ class AssignmentsTabController extends GetxController {
 
   void submit() async {
     Map<String, dynamic> jsData = {};
-    // "subject_id": "absconditu",
-    // "title": "controll6",
-    // "assignment_due_day": "Monday",
-    // "assignment_date": "2024-11-10",
-    // "assignments_due_date": "2025-01-05",
-    // "section_id":1,
-    // "level_id":1
     if (formKey.currentState!.validate()) {
-      jsData["section_id"] = selectedDepartment.value;
-      jsData["level_id"] = selectedLevel.value;
+      jsData["language"] = Get.locale?.languageCode ?? "en";
       jsData["subject_id"] = selectedSubject.value;
       jsData["assignment_date"] = DateTime.now().toString();
       jsData["assignment_due_day"] = "Sunday";
+      jsData["sectionsAndLevels"] = [
+        {
+          "section_id": selectedDepartment.value,
+          "level_id": selectedLevel.value
+        },
+      ];
+      jsData["assignments_due_date"] = dueDateController.text;
+      jsData["title"] = titleController.text;
 
-      (dueDateController.text.isNotEmpty &&
-              dueDateController.text != "Unknown".tr)
-          ? jsData["assignments_due_date"] = dueDateController.text
-          : null;
-      (titleController.text.isNotEmpty && titleController.text != "Unknown".tr)
-          ? jsData["title"] = titleController.text
-          : null;
+      if (mode == "Add") {
+        Result<Assignment> res = await AssignmentsRepository.createAssignment(
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!,
+            subjectId: selectedSubject.value!,
+            data: jsData);
+        Navigator.of(Get.overlayContext!).pop();
+        // print(res.data);
+        // print(res.statusCode);
+        // print(res.message);
+        if (res.statusCode == 201 && res.data != null) {
+          assignments?.value[res.data!.id] = res.data!;
+          assignments?.refresh();
+          showSnakeBar(message: "Add successfully");
+        } else {
+          showSnakeBar(message: "Add failed");
+        }
+      } else if (mode == "Edit") {
+        // Result<Exam> res = await ExamRepository.updateExam(
+        //     sectionId: selectedSection.value!,
+        //     levelId: selectedLevel.value!,
+        //     data: jsData,
+        //     id: selectedExam);
+        // Navigator.of(Get.overlayContext!).pop();
+        // if (res.statusCode == 200 && res.data != null) {
+        //   exams?.value[res.data!.id] = res.data!;
+        //   exams?.refresh();
+        //   showSnakeBar(message: "Edit successfully");
+        // } else {
+        //   showSnakeBar(message: "Edit failed");
+        // }
+      }
     }
+  }
 
-    if (mode == "Add") {
-      Result<Assignment> res = await AssignmentsRepository.createAssignment(
-          sectionId: selectedDepartment.value!,
-          levelId: selectedLevel.value!,
-          subjectId: selectedSubject.value!,
-          data: jsData);
-      Navigator.of(Get.overlayContext!).pop();
-      if (kDebugMode) {
-        print(res.data);
-      }
-      if (kDebugMode) {
-        print(res.statusCode);
-      }
-      if (kDebugMode) {
-        print(res.message);
-      }
-      if (res.statusCode == 201 && res.data != null) {
-        assignments?.value[res.data!.id] = res.data!;
-        assignments?.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
-    } else if (mode == "Edit") {
-      // Result<Exam> res = await ExamRepository.updateExam(
-      //     sectionId: selectedSection.value!,
-      //     levelId: selectedLevel.value!,
-      //     data: jsData,
-      //     id: selectedExam);
-      // Navigator.of(Get.overlayContext!).pop();
-      // if (res.statusCode == 200 && res.data != null) {
-      //   exams?.value[res.data!.id] = res.data!;
-      //   exams?.refresh();
-      //   showSnakeBar(message: "Edit successfully");
-      // } else {
-      //   showSnakeBar(message: "Edit failed");
-      // }
-    }
+  void showAttachments(int? assignmentId) {
+    selectedAssignment = assignmentId;
+    Get.dialog(const FilesPickerCard());
+  }
+
+  void routeStudentList(int? assignmentId) async {
+    if (assignmentId == null) return;
+    List<StudentAssignmentState>? items =
+        await AssignmentsRepository.fetchAssignmentStudents(
+                assignmentId: assignmentId)
+            .then((e) => e.data);
+    Get.to(AssignmentStudentList(
+      items: items ?? [],
+    ));
   }
 }

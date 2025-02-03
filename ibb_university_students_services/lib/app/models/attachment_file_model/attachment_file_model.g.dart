@@ -17,22 +17,25 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AttachmentFile(
-      id: fields[0] as int,
+      id: fields[0] as int?,
       assignmentId: fields[1] as int?,
-      path: fields[2] as String?,
+      title: fields[4] as String?,
+      path: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AttachmentFile obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.assignmentId)
-      ..writeByte(2)
-      ..write(obj.path);
+      ..writeByte(3)
+      ..write(obj.path)
+      ..writeByte(4)
+      ..write(obj.title);
   }
 
   @override

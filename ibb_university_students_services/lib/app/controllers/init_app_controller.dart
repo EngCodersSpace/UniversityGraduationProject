@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../firebase_options.dart';
-import '../services/downloder/download_manager.dart';
+import '../services/downloader/download_manager.dart';
 import '../services/hive_services/hive_services.dart';
 import '../services/http_provider/http_provider.dart';
 import '../services/notification_services/notification_services.dart';
@@ -11,9 +11,9 @@ import '../repositories/user_repository.dart';
 
 class InitAppController extends GetxController {
   @override
-  void onInit() {
+  void onInit()  async{
     super.onInit();
-    _initializeApp();
+    await _initializeApp();
   }
 
   Future<void> _initializeApp() async {
@@ -23,20 +23,16 @@ class InitAppController extends GetxController {
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
-      // await AppDataServices.fetchAppData();
       await DownloadManager.initialize();
       await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform);
-      await NotificationHandler().initialize();
+      await NotificationHandler.initialize();
       // Set initialization complete
     } catch (e) {
       // Handle errors if needed
       if (kDebugMode) {
         print('Initialization error: $e');
       }
-    }
-    if (kDebugMode) {
-      print(await UserRepository.isCredentialsCached());
     }
     if (await UserRepository.isCredentialsCached()) {
       Get.offNamed("/main");

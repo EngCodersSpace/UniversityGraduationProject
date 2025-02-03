@@ -1,13 +1,15 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
+  static final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  String? token;
+  static String? token;
 
-  Future<void> initialize() async {
+  static Future<void> initialize() async {
     // Request notification permissions
     await _firebaseMessaging.requestPermission();
     // Initialize local notifications
@@ -17,10 +19,15 @@ class NotificationHandler {
       android: androidSettings,
     );
 
-    await _localNotificationsPlugin.initialize(initSettings);
+    await _localNotificationsPlugin.initialize(initSettings,
+        onDidReceiveNotificationResponse: (res) {
+      print(res.notificationResponseType);
+      print(res.id);
+      print(res.actionId);
+    });
 
-    await FirebaseMessaging.instance.getToken().then((token) {
-      this.token = token;
+    await FirebaseMessaging.instance.getToken().then((val) {
+      token = val;
     });
 
     // Handle foreground messages
@@ -46,7 +53,7 @@ class NotificationHandler {
     // });
   }
 
-  void _handleMessage(RemoteMessage message) {
+  static void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'info') {
       showNotification(
         title: message.notification?.title ?? "Info",
@@ -58,30 +65,15 @@ class NotificationHandler {
     }
   }
 
-  static Future<void> _backgroundHandler(RemoteMessage message) async {
-    // ignore: avoid_print
-    print("Handling background message: ${message.notification?.title}");
-    // Similar to the foreground handler, process the message here
-    if (message.data['type'] == 'info') {
-      // Process info notification in the background
-      // You could also show a notification or update data in the background if needed
-    } else if (message.data['type'] == 'command') {
-      // Handle silent command notification
-      _processCommand(message.data);
-    }
-  }
-
   static void _processCommand(Map<String, dynamic> data) {
     String action = data['action'] ?? '';
     if (action == 'refresh_data') {
-      String module = data['module'] ?? '';
-      // ignore: avoid_print
-      print("Refreshing data for module: $module");
+      // String module = data['module'] ?? '';
       // Add logic to refresh data (e.g., call a service to update cache)
     }
   }
 
-  Future<void> showNotification(
+  static Future<void> showNotification(
       {required String title, String? body, int? uniqueId}) async {
     const NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -100,28 +92,59 @@ class NotificationHandler {
   }
 
   // Show progress for an upload
-  Future<void> showProgressNotification(
-      {required int uniqueId, required int progress, String? message}) async {
+  static Future<void> showProgressNotification(
+      {required int uniqueId,
+      int? progress,
+      String? message,
+      String? title}) async {
     NotificationDetails notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
-        'upload_channel',
-        'Upload Progress',
-        importance: Importance.max,
-        priority: Priority.high,
-        progress: progress,
-        maxProgress: 100,
-        sound: null,
-        showProgress: true,
-      ),
+      android: AndroidNotificationDetails('upload_channel', 'Upload Progress',
+          importance: Importance.max,
+          priority: Priority.high,
+          progress: progress ?? 0,
+          maxProgress: 100,
+          fullScreenIntent: true,
+          playSound: false,
+          silent: true,
+          styleInformation: InboxStyleInformation([
+            (progress != null) ? "$progress%" : ""
+          ],
+              summaryText: (progress != null) ? "$progress%" : "",
+              htmlFormatLines: true,
+              htmlFormatTitle: true,
+              htmlFormatContent: true),
+          // icon: "upload",
+          showProgress: (progress != null),
+          actions: (progress != null)
+              ? [
+                  const AndroidNotificationAction(
+                    "1",
+                    "Cancel",
+                    titleColor: Colors.red,
+                  ),
+                ]
+              : null),
     );
 
     // Update the progress in the notification
     await _localNotificationsPlugin.show(
       uniqueId.hashCode,
-      // Use the unique ID hash to identify the notification
-      "${message ?? "Uploading File"}\n",
-      "$progress%",
+      '<p>$title $message</p>',
+      '',
       notificationDetails,
     );
+  }
+}
+
+Future<void> _backgroundHandler(RemoteMessage message) async {
+  // print("Handling background message: ${message.notification?.title}");
+
+  if (message.data['type'] == 'info') {
+    NotificationHandler.showNotification(
+      title: message.notification?.title ?? "Info",
+      body: message.notification?.body ?? "Background Notification",
+    );
+  } else if (message.data['type'] == 'command') {
+    NotificationHandler._processCommand(message.data);
   }
 }

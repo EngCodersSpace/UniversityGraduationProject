@@ -28,7 +28,10 @@ import '../../models/helper_models/subjects_cache/subjects_cache.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 
-class HiveServices {
+
+
+class HiveServices{
+
   static registerAdapters() {
     Hive.registerAdapter(LevelAdapter());
     Hive.registerAdapter(SectionAdapter());
@@ -50,8 +53,8 @@ class HiveServices {
     Hive.registerAdapter(AssignmentAdapter());
     Hive.registerAdapter(AttachmentFileAdapter());
   }
-
-  static openGlobalBoxes() async {
+  static openGlobalBoxes()async{
+    await SubjectRepository.openBox();
     await UserRepository.openBox();
     await LevelRepository.openBox();
     await SectionRepository.openBox();
@@ -59,7 +62,7 @@ class HiveServices {
     await AssignmentsRepository.openBox();
   }
 
-  static clearAllBox() async {
+  static clearAllBox() async{
     await AssignmentsRepository.clearBox();
     await ExamRepository.clearBox();
     // await GradRepository.clearBox();
@@ -70,9 +73,10 @@ class HiveServices {
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
     await UserRepository.clearBox();
+
   }
 
-  static closeAllBoxes() async {
+  static closeAllBoxes() async{
     await AssignmentsRepository.closeBox();
     await ExamRepository.closeBox();
     // await GradRepository.closeBox();

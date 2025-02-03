@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
-import '../services/hive_services/hive_services.dart';
+import '../utils/local_lisenter.dart';
 
 class LoginController extends GetxController {
   TextEditingController id = TextEditingController();
@@ -28,7 +28,7 @@ class LoginController extends GetxController {
   }
   @override
   void onInit() async{
-    id.text = "1000";
+    id.text = "1";
     password.text = "1234pass@";
     super.onInit();
     loading.value = false;
@@ -49,7 +49,6 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       Result res = await UserRepository.userLogin(id.text, password.text,rememberMe: rememberMe.value);
       if (res.statusCode == 200) {
-        await HiveServices.openGlobalBoxes();
         Get.offNamed("/main");
       } else if (res.statusCode == 900) {
         loggingFiledMessage.value =
@@ -82,6 +81,6 @@ class LoginController extends GetxController {
   }
 
   void changeLang(String lang){
-    Get.updateLocale(Locale(lang));
+    LocaleListener.updateLocale(lang);
   }
 }

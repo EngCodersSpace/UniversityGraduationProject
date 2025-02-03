@@ -8,9 +8,10 @@ import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
-class PopUpIAddAndUpdateAssignmentsCard
-    extends GetView<AssignmentsTabController> {
+class PopUpIAddAndUpdateAssignmentsCard extends GetView<AssignmentsTabController> {
   const PopUpIAddAndUpdateAssignmentsCard({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,9 @@ class PopUpIAddAndUpdateAssignmentsCard
                 side: BorderSide(
                   color: AppColors.inverseCardColor,
                   width: 3,
-                )),
+
+                )
+            ),
             child: SizedBox(
                 height: Get.height * 0.6,
                 width: Get.width,
@@ -40,8 +43,7 @@ class PopUpIAddAndUpdateAssignmentsCard
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           CustomText("${controller.mode} Assignment",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h2Bold)),
+                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -55,22 +57,19 @@ class PopUpIAddAndUpdateAssignmentsCard
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Title".tr,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3Bold)),
+                                  CustomText("Title".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 controller: controller.titleController,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 // validator: controller.validateEntryYear,
                                 labelText: "Title".tr,
                                 focusNode: controller.hallFocus,
                                 onFieldSubmitted: (e) {
                                   controller.submit();
                                 },
-                                width: (Get.width - 12) * 0.46,
+                                width: (Get.width-12)*0.46,
                               ),
                             ],
                           ),
@@ -87,21 +86,17 @@ class PopUpIAddAndUpdateAssignmentsCard
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Due Date".tr,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3Bold)),
+                                  CustomText("Due Date".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 controller: controller.dueDateController,
                                 // validator: controller.validateDate,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dueDateFocus,
                                 readOnly: true,
-                                onTap: () => DateTimeUtils.datePiker(
-                                    context, controller.dueDateController),
+                                onTap: () => DateTimeUtils.datePiker(context,controller.dueDateController),
                                 onFieldSubmitted: (e) {
                                   // controller.timeFocus.requestFocus();
                                 },
@@ -122,15 +117,12 @@ class PopUpIAddAndUpdateAssignmentsCard
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Doctor".tr,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3Bold)),
+                                  CustomText("Doctor".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
                                 // controller: controller.timeController,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
+                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
                                 // validator: controller.validateTime,
                                 labelText: "Doctor".tr,
                                 // focusNode: controller.timeFocus,
@@ -163,4 +155,6 @@ class PopUpIAddAndUpdateAssignmentsCard
       ),
     );
   }
+
+
 }

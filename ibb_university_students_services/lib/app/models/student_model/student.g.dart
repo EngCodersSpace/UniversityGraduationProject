@@ -23,7 +23,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       email: fields[3] as String?,
       phones: (fields[6] as List?)?.cast<String>(),
       profileImage: fields[5] as String?,
-      permission: fields[4] as String?,
+      roleId: fields[4] as int?,
       studyPlaneId: fields[11] as int?,
       level: fields[12] as Level?,
       collegeNameData: (fields[7] as Map?)?.cast<String, dynamic>(),
@@ -56,7 +56,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       ..writeByte(3)
       ..write(obj.email)
       ..writeByte(4)
-      ..write(obj.permission)
+      ..write(obj.roleId)
       ..writeByte(5)
       ..write(obj.profileImage)
       ..writeByte(6)

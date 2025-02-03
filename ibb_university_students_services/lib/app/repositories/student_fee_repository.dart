@@ -18,10 +18,6 @@ class StudentFeeRepository {
   static const int _createError = 612;
   static const int _updateError = 612;
   static const int _deleteError = 612;
-  // ignore: unused_field
-  static const int _changeStateError = 612;
-  // ignore: unused_field
-  static const int _fetchYearsError = 619;
 
   static Box<StudentFeeCache>? _studentFeeBox;
 
@@ -36,7 +32,7 @@ class StudentFeeRepository {
   }
 
   static Future<void> closeBox() async {
-    if (_studentFeeBox?.isOpen ?? false) {
+    if(_studentFeeBox?.isOpen??false) {
       await _studentFeeBox?.close();
     }
   }
@@ -86,6 +82,44 @@ class StudentFeeRepository {
     }
   }
 
+  static Future<Result<StudentFee>> fetchLastStudentFee({
+    required int studentId,
+    bool hardFetch = false,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      Box lastFeeBox = await Hive.openBox<StudentFee>("lastStudentFee");
+      if ((lastFeeBox.get("$studentId") != null) &&
+          (!hardFetch || !(await checkInternetConnection()))) {
+        return Result(
+            data: lastFeeBox.get("$studentId"),
+            hasError: false,
+            statusCode: 200);
+      }
+      response = await HttpProvider.post("get-allFeeOfStudent-orderd");
+      StudentFee? newStudentFee;
+      if (response?.statusCode == 201) {
+        newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
+          await lastFeeBox.put(studentId, newStudentFee);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: newStudentFee,
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<StudentFee>> createStudentFee({
     required int studentId,
     required data,
@@ -96,8 +130,6 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.post("create-student-fee", data: data);
       StudentFee? newStudentFee;
-      // ignore: avoid_print
-      print(response?.data);
       if (response?.statusCode == 201) {
         newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
         StudentFeeCache? cachedFees = _studentFeeBox?.get(studentId);
@@ -136,7 +168,7 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.put("update-fee", data: data);
       if (response?.statusCode == 200) {
-        cachedFees?.data[id] = StudentFee.fromJson(response?.data["data"]);
+        cachedFees?.data[id] = StudentFee.fromJson( response?.data["data"]);
         if (cachedFees != null) {
           await _studentFeeBox?.put(studentId, cachedFees);
         }
