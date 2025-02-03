@@ -13,7 +13,6 @@ class WebProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    if(controller.user == null)controller.refresh();
     return Obx(() => (controller.initState.value)
         ? Container(
             padding: const EdgeInsets.only(top: 18.0),
@@ -83,12 +82,12 @@ class WebProfileView extends GetView<ProfileController> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    CustomText(controller.user?.name??"Unknown",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(controller.user?.name??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    CustomText(controller.user?.id.toString()??"Unknown",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(controller.user?.id.toString()??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                                   ],
                                 ),
                                 Row(

@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/utils/internet_connection_c
 import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
 import '../repositories/user_repository.dart';
+import '../utils/screen_utils.dart';
 import 'academic_card_controller.dart';
 import 'exam_table_controller.dart';
 import 'library_controller.dart';
@@ -27,7 +28,7 @@ class MainController extends GetxController {
        } else {
          isConnect.value = true;
        }
-     }) ;
+     });
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
@@ -39,7 +40,6 @@ class MainController extends GetxController {
 
   // Method to change the selected index
   void changeTabIndex(int index) {
-
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
@@ -69,7 +69,7 @@ class MainController extends GetxController {
           x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1));
     }
 
-    if (!(Get.width <= 768 && Get.height <= 1025)) {
+    if (ScreenUtils.isWebScreen()) {
       putControllers(index);
     }
 
@@ -111,7 +111,24 @@ class MainController extends GetxController {
           AcademicCardController(),
         );
         break;
+      // case 9:
+      //   if (controller != null) {
+      //     controller.dispose();
+      //   }
+      //   // controller = Get.put<DashboardMainController>(
+      //   //   DashboardMainController(),
+      //   // );
+      //   Get.offNamed(
+      //     "/dashboard_main_view",
+      //   );
+      //   break;
     }
+  }
+
+  void routeAdmainPanel() {
+    Get.offNamed(
+      "/dashboard_main_view",
+    );
   }
 
   @override
