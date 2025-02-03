@@ -376,8 +376,22 @@ const getDoctorLectures = async (req, res) => {
 
 
 const getLecturesByCriteriaPanle = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["lecture_time", "lecture_day", "lecture_room", "subject_id"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
   try {
-    const { section_id, level_id, year, term, day, page = 1, limit = 10 } = req.query;
+    const {
+      section_id,
+      level_id,
+      year,
+      term,
+      day,
+      page = 1,
+      limit = 10,
+      orderBy = "lecture_time",
+      sort = "ASC",
+      search 
+    } = req.query;
 
     const whereClause = {};
     if (section_id) whereClause.lecture_section_id = section_id;
@@ -387,14 +401,35 @@ const getLecturesByCriteriaPanle = async (req, res) => {
     if (day) whereClause.lecture_day = day;
 
     const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
     const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "lecture_time";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { lecture_room: { [Op.like]: `%${search}%` } },
+            { lecture_time: { [Op.like]: `%${search}%` } },
+            { lecture_day : { [Op.like]: `%${search}%` } }, 
+            { subject_id : { [Op.like]: `%${search}%` } }, 
+          ],
+        }
+      : {};
 
     const { count, rows: lectures } = await lecture.findAndCountAll({
       where: {
         [Op.and]: [
           whereClause,
           { isReplaced: { [Op.ne]: true } },
+          searchCondition, 
         ],
       },
       include: [
@@ -404,7 +439,7 @@ const getLecturesByCriteriaPanle = async (req, res) => {
       ],
       limit: limitNumber,
       offset: offset,
-      order: [["lecture_time", "ASC"]], 
+      order: [[validOrderBy, validSort]],
     });
 
     if (!lectures.length) {

@@ -147,18 +147,6 @@ exports.login = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 exports.refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
 
@@ -205,27 +193,25 @@ exports.registerDoctor = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { } = req.body;
 
   try {
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
-
-    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
-    const translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, req.body.language, targetLanguage);
-    const translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, req.body.language, targetLanguage);
+    const targetLanguage = req.headers['accept-language']=== 'en'?'ar':'en';
+    const translatedUserName = await translateText(req.body.user_name, req.headers['accept-language'], targetLanguage);
+    const translatedCollegeName = await translateText(req.body.collegeName, req.headers['accept-language'], targetLanguage);
+    const translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, req.headers['accept-language'], targetLanguage);
+    const translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, req.headers['accept-language'], targetLanguage);
 
     const userData = {
       user_id: req.body.user_id,
       user_name:{
-        [req.body.language] : req.body.user_name,
+        [req.headers['accept-language']] : req.body.user_name,
         [targetLanguage] : translatedUserName
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
       profile_picture: req.body.profile_picture,
       collegeName: {
-        [req.body.language]: req.body.collegeName,
+        [req.headers['accept-language']]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
@@ -233,11 +219,11 @@ exports.registerDoctor = async (req, res) => {
       permission: req.body.permission,
       doctor:{
         academic_degree: {
-            [req.body.language]: req.body.doctor.academic_degree,
+            [req.headers['accept-language']]: req.body.doctor.academic_degree,
             [targetLanguage]: translatedAcademicDegree
         },
         administrative_position: {
-            [req.body.language]: req.body.doctor.administrative_position,
+            [req.headers['accept-language']]: req.body.doctor.administrative_position,
             [targetLanguage]: translatedAdministrativePosition
         }
       }  
@@ -265,26 +251,24 @@ exports.registerStudent = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const {} = req.body;
-
   try {
 
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
-    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
-    const translatedStudentSystem = await translateText(req.body.student.student_system, req.body.language, targetLanguage);
+    const targetLanguage = req.headers['accept-language']=== 'en'?'ar':'en';
+    const translatedUserName = await translateText(req.body.user_name, req.headers['accept-language'], targetLanguage);
+    const translatedCollegeName = await translateText(req.body.collegeName, req.headers['accept-language'], targetLanguage);
+    const translatedStudentSystem = await translateText(req.body.student.student_system, req.headers['accept-language'], targetLanguage);
 
     const userData = {
       user_id: req.body.user_id,
       user_name: {
-        [req.body.language] : req.body.user_name,
+        [req.headers['accept-language']] : req.body.user_name,
         [targetLanguage] : translatedUserName
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
       profile_picture: req.body.profile_picture,
       collegeName: {
-        [req.body.language]: req.body.collegeName,
+        [req.headers['accept-language']]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
@@ -295,7 +279,7 @@ exports.registerStudent = async (req, res) => {
         student_level_id:req.body.student.student_level_id,
         enrollment_year:req.body.student.enrollment_year,
         student_system:{
-          [req.body.language]:req.body.student.student_system,
+          [req.headers['accept-language']]:req.body.student.student_system,
           [targetLanguage]:translatedStudentSystem
         }
       }  
