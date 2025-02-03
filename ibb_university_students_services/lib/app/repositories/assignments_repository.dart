@@ -128,8 +128,8 @@ class AssignmentsRepository {
     }
     Response? response;
     try {
-      // response = await HttpProvider.get(
-      //     "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
+      response = await HttpProvider.get(
+          "");
       if (response?.statusCode == 200) {
         Assignment assignment =
             Assignment.fromJson(response?.data["assignment"]);
