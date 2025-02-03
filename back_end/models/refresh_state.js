@@ -20,15 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    
     target: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false,
-
     },
     filter: {
       type: DataTypes.JSON,

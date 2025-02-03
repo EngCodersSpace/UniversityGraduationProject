@@ -14,11 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: false,
 
-      },
       filter: {
         type: Sequelize.JSON,
         allowNull: true,
