@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/bindings/library_binding.da
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
@@ -68,6 +69,11 @@ class AppRoutes {
       name: '/student_payments',
       page: () => const PaymentsViewLoader(),
       binding: StudentFeesBinding(),
+    ),
+    GetPage(
+      name: "/dashboard_main_view",
+      page: () => DashboardMainView(),
+      binding: MainViewBinding(),
     ),
 
     // Add more routes here

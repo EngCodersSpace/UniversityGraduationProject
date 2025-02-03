@@ -7,7 +7,7 @@ class CustomButton extends StatelessWidget {
   CustomButton({
     super.key,
     required this.onPress,
-    this.size ,
+    this.size,
     this.text = "",
     this.textColor,
     this.icon,
@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
     this.borderRadius = 10,
   }) {
     textColor = AppColors.mainTextColor;
-    iconColor = (iconColor!=null)?iconColor:textColor;
+    iconColor = (iconColor != null) ? iconColor : textColor;
     color = AppColors.buttonColors.color;
     pressedColor = AppColors.buttonColors.pressedColor;
     disableColor = AppColors.buttonColors.disableColor;
@@ -57,11 +57,15 @@ class CustomButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(text, style: TextStyle(color: textColor)),
-            if(icon != null)...[const SizedBox(width: 5,),icon!,],
+            if (icon != null) ...[
+              const SizedBox(
+                width: 5,
+              ),
+              icon!,
+            ],
           ],
         ),
       ),
     );
-
   }
 }

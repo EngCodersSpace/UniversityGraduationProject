@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
+import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
 import '../../components/custom_text_v2.dart';
@@ -26,7 +27,7 @@ class WebMainView extends GetView<MainController> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(top: 10),
-                  color: AppColors.inverseCardColor,
+                  color: AppColors.inverseTabBackColor,
                   width: Get.width * 0.2,
                   height: Get.height,
                   child: Column(
@@ -108,445 +109,65 @@ class WebMainView extends GetView<MainController> {
                       SizedBox(
                         height: Get.height * 0.01,
                       ),
-                      Obx(() => Column(
-                            children: [
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 5)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.library_books_outlined,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    5)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Library".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      5)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(4),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 4)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.person_outline_sharp,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    4)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(width: Get.width * 0.005),
-                                      CustomText(
-                                        "Profile".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      4)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(2),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 2)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.home_outlined,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    2)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Home".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      2)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 0)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.notifications_outlined,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    0)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Notification".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      0)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(1),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 1)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    1)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Lecture Table".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      1)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(3),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 3)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.repartition,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    3)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Reports".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      3)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(6),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 6)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.assignment_outlined,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    6)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Exam Table".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      6)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.changeTabIndex(7),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 7)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.bar_chart_sharp,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    7)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Results".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      7)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () => controller.putControllers(8),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          24), // Top-left corner rounded
-                                      bottomLeft: Radius.circular(
-                                          24), // Bottom-left corner rounded
-                                    ),
-                                    color: (controller.selectedIndex.value == 8)
-                                        ? AppColors.tabBackColor
-                                        : AppColors.inverseCardColor,
-                                  ),
-                                  padding: const EdgeInsets.only(left: 25),
-                                  margin: const EdgeInsets.only(left: 16),
-                                  height: Get.height * 0.08,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.credit_card_sharp,
-                                        color:
-                                            (controller.selectedIndex.value ==
-                                                    8)
-                                                ? AppColors.secTextColor
-                                                : AppColors.mainTextColor,
-                                      ),
-                                      SizedBox(
-                                        width: Get.width * 0.005,
-                                      ),
-                                      CustomText(
-                                        "Acadimic Card".tr,
-                                        style: AppTextStyles.customColorStyle(
-                                          color:
-                                              (controller.selectedIndex.value ==
-                                                      8)
-                                                  ? AppColors.secTextColor
-                                                  : AppColors.mainTextColor,
-                                          textHeader: AppTextHeaders.h6Bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
+                      Column(
+                        children: [
+                          WebTabsComponent(
+                            tabname: "Library",
+                            index: 5,
+                            icon: Icons.library_books_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Profile",
+                            index: 4,
+                            icon: Icons.person_outline_sharp,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Home",
+                            index: 2,
+                            icon: Icons.home_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Notification",
+                            index: 0,
+                            icon: Icons.notifications_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Lecture Table",
+                            index: 1,
+                            icon: Icons.calendar_month_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Reports",
+                            index: 3,
+                            icon: Icons.repartition,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Exam Table",
+                            index: 6,
+                            icon: Icons.assessment_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Results",
+                            index: 7,
+                            icon: Icons.bar_chart_outlined,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Acadimic Card",
+                            index: 8,
+                            icon: Icons.credit_card_sharp,
+                          ),
+                          WebTabsComponent(
+                            tabname: "Dashboard",
+                            index: 9,
+                            icon: Icons.settings_outlined,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
                 Container(
-                  color: AppColors.mainTextColor,
+                  color: AppColors.backColor,
                   width: Get.width * 0.8,
                   height: Get.height,
                   child: screens[controller.selectedIndex.value],
