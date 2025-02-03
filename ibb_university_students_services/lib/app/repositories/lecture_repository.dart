@@ -36,7 +36,7 @@ class LectureRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_lecturesBox?.isOpen??false) {
+    if (_lecturesBox?.isOpen ?? false) {
       await _lecturesBox?.close();
     }
   }
@@ -50,7 +50,6 @@ class LectureRepository {
   }) async {
     LecturesCache? cachedDayLectures = _lecturesBox?.get(
         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-
     if ((cachedDayLectures != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
@@ -68,15 +67,19 @@ class LectureRepository {
                 "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures",
             data: {});
 
-          for (String day in (response?.data["data"] as Map).keys) {
+        for (String term in (response?.data["data"] as Map).keys) {
+          for (String day in (response?.data["data"][term] as Map).keys) {
             dayLectures.data[day] = {};
-            for (Map<String, dynamic> jsLecture in response?.data["data"][day]) {
+            for (Map<String, dynamic> jsLecture in response?.data["data"][term]
+                [day]) {
               Subject? subject = await SubjectRepository.fetchSubject(
                       id: jsLecture["subject_id"])
                   .then((e) => e.data);
               Lecture lecture = Lecture.fromJson(jsLecture, subject: subject);
               dayLectures.data[day]?[lecture.id] = lecture;
             }
+          }
+
           await _lecturesBox?.put(
             dayLectures.key,
             dayLectures,
@@ -88,12 +91,12 @@ class LectureRepository {
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
       }
+
       return Result(
           data: null,
           hasError: true,
           statusCode: response?.statusCode ?? _fetchAllError,
           message: response?.data["message"] ?? "error");
-
     } catch (error) {
       return Result(
           hasError: true,
@@ -286,6 +289,43 @@ class LectureRepository {
     }
   }
 
+  static Future<Result<Lecture>> fetchDashboardLecture({
+    int? sectionId,
+    int? levelId,
+    int limit = 20,
+    String? year,
+    String? term,
+    String? day,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}",
+      );
+      Lecture? newlecture;
+      if (response?.statusCode == 200) {
+        newlecture = Lecture.fromJson(
+          response?.data["data"],
+        );
+      }
+      return Result(
+          data: newlecture,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<Lecture>> tempReplaceLecture({
     required int sectionId,
     required int levelId,
@@ -341,9 +381,13 @@ class LectureRepository {
     bool hardFetch = false,
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
-    List<String>? years= lecturesYearsBox.get("lectureYears");
-    if ((years != null) &&
-        (!hardFetch || !(await checkInternetConnection()))) {
+    List<String>? years;
+    try {
+      years = lecturesYearsBox.get("lectureYears");
+    } catch (e) {
+      //
+    }
+    if (years != null && !hardFetch && !(await checkInternetConnection())) {
       await lecturesYearsBox.close();
       return Result(
         data: years,

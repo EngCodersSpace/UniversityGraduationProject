@@ -7,6 +7,9 @@ class LectureTableView extends GetView<DashbordLectureTableController> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Center(
+      child: ElevatedButton(
+          onPressed: () async => controller.refesh(), child: Placeholder()),
+    );
   }
 }
