@@ -66,6 +66,9 @@ class AssignmentsRepository {
         Assignment? assignment =
             await fetchAssignment(assignmentId: id).then((e) => e.data);
         if (assignment != null) {
+          assignment.attachments?.forEach((i,e) async {
+            await e.checkDownloaded();
+          });
           assignments[assignment.id] = assignment;
         }
       }
@@ -82,6 +85,9 @@ class AssignmentsRepository {
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
             Assignment assignment = Assignment.fromJson(jsAssignments);
+            assignment.attachments?.forEach((i,e) async {
+              await e.checkDownloaded();
+            });
             assignments[assignment.id] = assignment;
             await _assignmentsBox?.put(
               assignment.id,
@@ -121,8 +127,12 @@ class AssignmentsRepository {
   }) async {
     if ((_assignmentsBox?.get(assignmentId) != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
+      Assignment? assignment = _assignmentsBox?.get(assignmentId);
+      assignment?.attachments?.forEach((i,e) async {
+        await e.checkDownloaded();
+      });
       return Result(
-          data: _assignmentsBox?.get(assignmentId),
+          data: assignment,
           hasError: false,
           statusCode: 200);
     }
@@ -259,7 +269,7 @@ class AssignmentsRepository {
     }
   }
 
-  static Future<Result<void>> uploadAttachment({
+  static Future<Result<int>> uploadAttachment({
     required AttachmentFile attachment,
     required int sectionId,
     required int levelId,
@@ -279,11 +289,6 @@ class AssignmentsRepository {
       if (response?.statusCode == 200) {
         attachment.progress = get_x.RxInt(0);
         attachment.status?.value = "Uploading";
-        NotificationHandler.showProgressNotification(
-            uniqueId: attachment.title.hashCode,
-            progress: 0,
-            title: "Uploading ",
-            message: " ${attachment.title}");
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
@@ -293,29 +298,30 @@ class AssignmentsRepository {
             double progress = (sent / total) * 100;
             attachment.progress?.value = progress.toInt();
             NotificationHandler.showProgressNotification(
-                uniqueId: attachment.title.hashCode,
+                uniqueId: attachment.id.hashCode,
                 progress: progress.toInt(),
                 title: "Uploading",
                 message: " ${file.path.split("/").last}");
           },
         );
         if (response?.statusCode == 201) {
-          attachment.id = response?.data["file"]["id"];
           attachment.path = response?.data["file"]["path"];
           await FileUtils.saveFiles(
-              fileRelativePath: "UploadedFiles/${attachment.path}", files: [file]);
+              fileRelativePath: "UploadedFiles/${attachment.path}", file:file);
           NotificationHandler.showProgressNotification(
-              uniqueId: attachment.title.hashCode,
+              uniqueId: attachment.id.hashCode,
               title: "successful upload ",
               message: attachment.title);
+          attachment.id = response?.data["file"]["id"];
           attachment.status?.value = "Uploaded";
         } else {
           NotificationHandler.showProgressNotification(
-              uniqueId: attachment.title.hashCode,
+              uniqueId: attachment.id.hashCode,
               title: "failed upload ",
               message: attachment.title);
         }
         return Result(
+          data: attachment.id,
             hasError: false,
             statusCode: response?.statusCode ?? _createError,
             message: response?.data["message"] ?? "error");

@@ -98,7 +98,8 @@ class NotificationHandler {
       String? message,
       String? title}) async {
     NotificationDetails notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails('upload_channel', 'Upload Progress',
+      android: AndroidNotificationDetails(
+          'transfer_channel', 'transfer Progress',
           importance: Importance.max,
           priority: Priority.high,
           progress: progress ?? 0,
@@ -106,9 +107,8 @@ class NotificationHandler {
           fullScreenIntent: true,
           playSound: false,
           silent: true,
-          styleInformation: InboxStyleInformation([
-            (progress != null) ? "$progress%" : ""
-          ],
+          styleInformation: InboxStyleInformation(
+              [(progress != null) ? "$progress%" : ""],
               summaryText: (progress != null) ? "$progress%" : "",
               htmlFormatLines: true,
               htmlFormatTitle: true,

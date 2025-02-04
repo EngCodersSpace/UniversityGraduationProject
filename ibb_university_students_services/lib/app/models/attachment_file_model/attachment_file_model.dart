@@ -1,12 +1,13 @@
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 
 part 'attachment_file_model.g.dart';
 
 @HiveType(typeId: 16)
 class AttachmentFile {
   AttachmentFile({
-    this.id,
+     required this.id,
     this.assignmentId,
     this.title,
     this.path,
@@ -15,7 +16,7 @@ class AttachmentFile {
   });
 
   @HiveField(0)
-  int? id;
+  int id;
   @HiveField(1)
   int? assignmentId;
   @HiveField(3)
@@ -24,10 +25,17 @@ class AttachmentFile {
   String? title;
   RxString? status;
   RxInt? progress;
-  RxBool? downloaded;
+  final RxBool downloaded = RxBool(false);
+
+
+  checkDownloaded()async{
+    downloaded.value = await FileUtils.checkExists(subPath: "/UploadedFiles",path??"")??false;
+    return;
+  }
 
 
   factory AttachmentFile.fromJson(Map<String, dynamic> json, {String status = "Not Uploaded"}) {
+
     return AttachmentFile(
       id: json['id'],
       assignmentId: 0,

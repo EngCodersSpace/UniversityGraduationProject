@@ -71,13 +71,10 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                 i++) ...[
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 4,
-                                                    right: 4,
-                                                    bottom: 4),
+                                                    left: 16,
+                                                    right: 16,
+                                                    bottom: 8),
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
                                                   children: [
                                                     CircleAvatar(
                                                       backgroundColor: AppColors
@@ -92,75 +89,90 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                       ),
                                                     ),
                                                     const SizedBox(
-                                                      width: 4,
+                                                      width: 8,
                                                     ),
-                                                    Column(
-                                                      children: [
-                                                        SizedBox(
-                                                          width:
-                                                              Get.width * 0.6,
-                                                          child: CustomText(
-                                                            _data?[i].title ??
-                                                                "",
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            style: AppTextStyles
-                                                                .secStyle(
-                                                                    textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              Get.width * 0.6,
-                                                          child: Obx(
-                                                              () => CustomText(
-                                                                    "Status:  ${_data?[i].status?.value ?? ""}",
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .start,
-                                                                    style: AppTextStyles.highlightStyle(
-                                                                        textHeader:
-                                                                            AppTextHeaders.h5Bold),
-                                                                  )),
-                                                        ),
-                                                        Obx(() => Column(
-                                                              children: [
-                                                                if (_data?[i]
-                                                                        .status
-                                                                        ?.value ==
-                                                                    "Uploading") ...[
-                                                                  const SizedBox(
-                                                                    height: 8,
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      SizedBox(
-                                                                          width: Get.width *
-                                                                              0.5,
-                                                                          child: LinearProgressIndicator(
-                                                                              color: AppColors.inverseCardColor,
-                                                                              backgroundColor: AppColors.highlightTextColor.withValues(alpha: 0.2),
-                                                                              value: (_data?[i].progress?.value.toDouble() ?? 0) / 100)),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              4),
-                                                                      CustomText(
-                                                                        "${_data?[i].progress?.value ?? "1"}%",
-                                                                        textAlign:
-                                                                            TextAlign.start,
-                                                                        style: AppTextStyles.highlightStyle(
-                                                                            textHeader:
-                                                                                AppTextHeaders.h5Bold),
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            CustomText(
+                                                              _data?[i].title ??
+                                                                  "",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              style: AppTextStyles
+                                                                  .secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h3Bold),
+                                                            ),
+                                                            Obx(
+                                                                () =>
+                                                                    CustomText(
+                                                                      "Status:  ${_data?[i].status?.value ?? "Uploaded"}",
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .start,
+                                                                      style: AppTextStyles.highlightStyle(
+                                                                          textHeader:
+                                                                              AppTextHeaders.h5Bold),
+                                                                    )),
+                                                            Obx(() => Column(
+                                                                  children: [
+                                                                    if (_data?[i]
+                                                                            .status
+                                                                            ?.value ==
+                                                                        "Uploading") ...[
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            8,
                                                                       ),
-                                                                    ],
-                                                                  )
-                                                                ]
-                                                              ],
-                                                            ))
-                                                      ],
+                                                                      SizedBox(
+                                                                        width: Get
+                                                                            .width,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Expanded(child: LinearProgressIndicator(color: AppColors.inverseCardColor, backgroundColor: AppColors.highlightTextColor.withValues(alpha: 0.2), value: (_data?[i].progress?.value.toDouble() ?? 0) / 100)),
+                                                                            SizedBox(width: 4),
+                                                                            CustomText(
+                                                                              "${_data?[i].progress?.value ?? "1"}%",
+                                                                              textAlign: TextAlign.start,
+                                                                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                    ]
+                                                                  ],
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          (_data?[i]
+                                                                      .downloaded
+                                                                      .value ??
+                                                                  false)
+                                                              ? controller
+                                                                  .openFile()
+                                                              : controller
+                                                                  .downloadAttachment();
+                                                        },
+                                                        icon: Icon((_data?[i]
+                                                                    .downloaded
+                                                                    .value ??
+                                                                false)
+                                                            ? (Icons
+                                                                .folder_open)
+                                                            : (Icons
+                                                                .download))),
                                                     SizedBox(
                                                       height: 24,
                                                       width: 24,

@@ -219,13 +219,22 @@ class AssignmentsTabController extends GetxController {
   void uploadAttachments() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
-    for (AttachmentFile file
-        in (assignments?.value[selectedAssignment]?.attachments?.values.toList() ?? [])) {
-      if (file.path == null || file.id != -1) continue;
-      AssignmentsRepository.uploadAttachment(
-          attachment: file,
-          sectionId: selectedDepartment.value!,
-          levelId: selectedLevel.value!);
+    for (AttachmentFile file in (assignments
+            ?.value[selectedAssignment]?.attachments?.values
+            .toList() ??
+        [])) {
+      if (file.path == null || file.id > 0) {
+        continue;
+      }
+      int? oldId = file.id;
+      await AssignmentsRepository.uploadAttachment(
+              attachment: file,
+              sectionId: selectedDepartment.value!,
+              levelId: selectedLevel.value!)
+          .then((e) {
+        assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
+        assignments?.value[selectedAssignment]?.attachments?.remove(oldId);
+      });
     }
   }
 
@@ -234,7 +243,7 @@ class AssignmentsTabController extends GetxController {
     Get.dialog(const PopUpLoadingCard());
     FilePickerResult? result;
     try {
-      assignments?.value[selectedAssignment]?.attachments??={};
+      assignments?.value[selectedAssignment]?.attachments ??= {};
       result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         readSequential: true,
@@ -247,16 +256,19 @@ class AssignmentsTabController extends GetxController {
       bool exist = false;
       for (int i = 0; i < result.count; i++) {
         AttachmentFile file = AttachmentFile(
-            id: -1,
+            id: -result.files[i].name.hashCode,
             title: result.files[i].name,
             path: result.files[i].path,
             assignmentId: selectedAssignment,
-            status: RxString("Not Uploaded"));
-        assignments?.value[selectedAssignment]?.attachments?.forEach((i,e) {
+            status: RxString("Not Uploaded")
+        );
+        file.downloaded.value = true;
+
+        assignments?.value[selectedAssignment]?.attachments?.forEach((i, e) {
           exist = (e.path?.split("/").last == file.path?.split("/").last);
         });
         if (!exist) {
-          assignments?.value[selectedAssignment]?.attachments?[-(file.title.hashCode)] = file;
+          assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
         } else {
           showSnakeBar(message: "This File Already Exist");
         }
@@ -270,6 +282,13 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  void openFile (){
+
+  }
+
+  void downloadAttachment(){
+
+  }
   void more(String val, {Map<String, dynamic>? data}) async {
     selectedAssignment = data?["assignment_id"];
     if (val == "Edit") {
@@ -304,18 +323,18 @@ class AssignmentsTabController extends GetxController {
       }
     } else if (val == "DeleteFile") {
       if (data == null) return;
-      if(data["id"]<0){
-        assignments?.value[selectedAssignment]?.attachments
-            ?.remove(data["id"]);
+      if (data["id"] < 0) {
+        assignments?.value[selectedAssignment]?.attachments?.remove(data["id"]);
         update(["AttachmentPiker"]);
-      }else{
-        Result res = await AssignmentsRepository.deleteAssignmentFile(assignmentId: selectedAssignment!, id: data["id"]);
+      } else {
+        Result res = await AssignmentsRepository.deleteAssignmentFile(
+            assignmentId: selectedAssignment!, id: data["id"]);
         Navigator.of(Get.overlayContext!).pop();
-        if(res.statusCode == 200){
+        if (res.statusCode == 200) {
           assignments?.value[selectedAssignment]?.attachments
               ?.remove(data["id"]);
           update(["AttachmentPiker"]);
-        }else{
+        } else {
           showSnakeBar(message: "Delete File Failed");
         }
       }

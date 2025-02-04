@@ -6,17 +6,18 @@ class FileUtils {
 
   static saveFiles({
     required String fileRelativePath,
-    required List<File> files,
+    required  file,
     String baseFolderPath = "/storage/emulated/0/StudentServices",
   }) async {
-    Directory dir = Directory("$baseFolderPath/${fileRelativePath.split("/").removeLast().toString()}");
+    List<String>? parts = fileRelativePath.split("/");
+    parts.removeLast();
+    String relativePath = parts.join("/");
+    Directory dir = Directory("$baseFolderPath/$relativePath");
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
     }
-    for (File file in files) {
-      await file.copy(
-          "${dir.path}/${fileRelativePath.split("/").last}");
-    }
+    await file.copy(
+        "${dir.path}/${fileRelativePath.split("/").last}");
   }
 
   static deleteFiles({
@@ -25,5 +26,10 @@ class FileUtils {
     for (String path in filesPath) {
       File(path).delete();
     }
+  }
+
+
+  static checkExists(String filePath,{String? subPath})async{
+    return await File("$baseFolderPath$subPath/$filePath").exists();
   }
 }
