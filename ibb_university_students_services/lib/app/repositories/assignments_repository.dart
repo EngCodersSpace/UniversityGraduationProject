@@ -19,8 +19,10 @@ import '../utils/internet_connection_cheker.dart';
 
 class AssignmentsRepository {
   static const int _fetchAllError = 621;
+  // ignore: unused_field
   static const int _fetchError = 622;
   static const int _createError = 623;
+  // ignore: unused_field
   static const int _updateError = 624;
   static const int _deleteError = 625;
 
@@ -128,8 +130,7 @@ class AssignmentsRepository {
     }
     Response? response;
     try {
-      response = await HttpProvider.get(
-          "");
+      response = await HttpProvider.get("");
       if (response?.statusCode == 200) {
         Assignment assignment =
             Assignment.fromJson(response?.data["assignment"]);
@@ -162,25 +163,36 @@ class AssignmentsRepository {
     required int assignmentId,
     bool hardFetch = false,
   }) async {
-    
-    if ((_assignmentsBox?.get(assignmentId)?.studentsStatus?.isNotEmpty??false) &&
+    if ((_assignmentsBox?.get(assignmentId)?.studentsStatus?.isNotEmpty ??
+            false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
-          data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(), hasError: false, statusCode: 200);
+          data: _assignmentsBox
+              ?.get(assignmentId)
+              ?.studentsStatus
+              ?.values
+              .toList(),
+          hasError: false,
+          statusCode: 200);
     }
     late Response? response;
     try {
       response = await HttpProvider.get(
           "get-all-students-assignment?assignment_id=$assignmentId");
-      Map<int,StudentAssignmentState> state = {};
+      Map<int, StudentAssignmentState> state = {};
       if (response?.statusCode == 200) {
-        for(Map<String,dynamic> jsState in response?.data["data"]){
-          state[response?.data["data"]["student_assignment_files"]] = (StudentAssignmentState.fromJson(jsState));
+        for (Map<String, dynamic> jsState in response?.data["data"]) {
+          state[response?.data["data"]["student_assignment_files"]] =
+              (StudentAssignmentState.fromJson(jsState));
         }
         _assignmentsBox?.get(assignmentId)?.studentsStatus = state;
 
         return Result(
-            data: _assignmentsBox?.get(assignmentId)?.studentsStatus?.values.toList(),
+            data: _assignmentsBox
+                ?.get(assignmentId)
+                ?.studentsStatus
+                ?.values
+                .toList(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -303,7 +315,8 @@ class AssignmentsRepository {
           attachment.id = response?.data["file"]["id"];
           attachment.path = response?.data["file"]["path"];
           await FileUtils.saveFiles(
-              fileRelativePath: "UploadedFiles/${attachment.path}", files: [file]);
+              fileRelativePath: "UploadedFiles/${attachment.path}",
+              files: [file]);
           NotificationHandler.showProgressNotification(
               uniqueId: attachment.title.hashCode,
               title: "successful upload ",
@@ -421,7 +434,6 @@ class AssignmentsRepository {
     }
   }
 
-
   static Future<Result<void>> deleteAssignmentFile({
     required int assignmentId,
     required id,
@@ -430,8 +442,8 @@ class AssignmentsRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response =
-      await HttpProvider.delete("delete-assignment-files?assignment_id=$id");
+      response = await HttpProvider.delete(
+          "delete-assignment-files?assignment_id=$id");
       if (response?.statusCode == 200) {
         _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
       } else if (response?.statusCode == 403) {
@@ -450,7 +462,6 @@ class AssignmentsRepository {
           data: null);
     }
   }
-
 
 //
 // static Future<Result<void>> changeLectureState({

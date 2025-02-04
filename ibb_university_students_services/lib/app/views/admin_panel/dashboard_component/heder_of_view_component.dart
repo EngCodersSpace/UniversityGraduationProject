@@ -20,84 +20,119 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
   @override
   Widget build(BuildContext context) {
     double width = Get.width;
-    // double height=Get.height;
+    double height = Get.height;
     return Container(
       color: AppColors.tabBackColor,
       padding: const EdgeInsets.all(10),
-      child: Row(
+      child: Column(
         children: [
-          SizedBox(
-            width: width * 0.3,
-            child: CustomText(
-              tablename, //fetch the table name
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h1Bold,
+          Row(
+            children: [
+              SizedBox(
+                width: width * 0.2,
+                child: CustomText(
+                  tablename,
+                  style: AppTextStyles.mainStyle(
+                    textHeader: AppTextHeaders.h1Bold,
+                  ),
+                ),
               ),
-            ),
+              SizedBox(
+                width: width * 0.2,
+                child: Container(
+                  width: width * 0.15,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        hintText: "Search",
+                        fillColor: AppColors.backColor,
+                        filled: true,
+                        suffixIcon: const Icon(
+                          Icons.search_outlined,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide:
+                              const BorderSide(color: Colors.transparent),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        )),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: width * 0.2,
+                child: Row(
+                  children: [
+                    Container(
+                      width: width * 0.12,
+                      decoration: BoxDecoration(
+                        color: AppColors.backColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: InkWell(
+                        onTap: upload(), //send function of upload
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Upload",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.inverseMainTextColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: width * 0.003,
+                            ),
+                            const Icon(Icons.file_upload_outlined),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: width * 0.01,
+                    ),
+                    Container(
+                      width: width * 0.12,
+                      decoration: BoxDecoration(
+                        color: AppColors.backColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: InkWell(
+                        onTap: download(), //send function of download
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Download",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.inverseMainTextColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: width * 0.003,
+                            ),
+                            const Icon(
+                              Icons.file_download_outlined,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           SizedBox(
-            width: width * 0.3,
-            child: Row(
-              children: [
-                Container(
-                  width: width * 0.12,
-                  decoration: BoxDecoration(
-                    color: AppColors.backColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: InkWell(
-                    onTap: upload(), //send function of upload
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Upload",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.inverseMainTextColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.003,
-                        ),
-                        const Icon(Icons.file_upload_outlined),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: width * 0.01,
-                ),
-                Container(
-                  width: width * 0.12,
-                  decoration: BoxDecoration(
-                    color: AppColors.backColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: InkWell(
-                    onTap: download(), //send function of download
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Download",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.inverseMainTextColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.003,
-                        ),
-                        const Icon(
-                          Icons.file_download_outlined,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            height: height * 0.03,
+          ),
+          Row(
+            children: [],
           ),
         ],
       ),

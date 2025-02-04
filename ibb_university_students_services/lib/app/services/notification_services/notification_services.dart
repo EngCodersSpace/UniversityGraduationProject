@@ -21,8 +21,11 @@ class NotificationHandler {
 
     await _localNotificationsPlugin.initialize(initSettings,
         onDidReceiveNotificationResponse: (res) {
+      // ignore: avoid_print
       print(res.notificationResponseType);
+      // ignore: avoid_print
       print(res.id);
+      // ignore: avoid_print
       print(res.actionId);
     });
 
@@ -106,9 +109,8 @@ class NotificationHandler {
           fullScreenIntent: true,
           playSound: false,
           silent: true,
-          styleInformation: InboxStyleInformation([
-            (progress != null) ? "$progress%" : ""
-          ],
+          styleInformation: InboxStyleInformation(
+              [(progress != null) ? "$progress%" : ""],
               summaryText: (progress != null) ? "$progress%" : "",
               htmlFormatLines: true,
               htmlFormatTitle: true,
