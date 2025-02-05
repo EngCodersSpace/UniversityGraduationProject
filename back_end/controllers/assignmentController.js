@@ -14,6 +14,7 @@ const {createRefreshState} = require('../controllers/refreshController');
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
+    
     if (req.user.permission == 'Student' || req.user.permission =='Student Representative'){
       const AllAssignmentSub = await assignment.findAll({
         where: {
@@ -59,7 +60,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         data: AllAssignmentSub,
       });
     } else {
-      res.status(401).json({
+      res.status(403).json({
         message: 'Access denied. Only students and doctors can view this information.',
       });
     }
@@ -75,7 +76,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 // to see students of this assignment and their files
 exports.getStudentsAndFilesByAssignment = async (req, res) => {
   try {
-    const fileDetail=await student_assignment.findAll({
+    const fileDetail=await student_assignment.scope(null).findAll({
       where:{assignment_id:req.query.assignment_id},
        include: [
           {
@@ -83,7 +84,7 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
             attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
           },
           {
-            model:student,as:'student',
+            model:student.scope(null),as:'student',
             attributes:['student_id'],
             // includeIgnoreAttributes: false,
             include:[
