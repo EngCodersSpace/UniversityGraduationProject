@@ -36,7 +36,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         ],
       });
 
-      res.status(201).json({
+      res.status(200).json({
         message: 'Assignments retrieved successfully for student.',
         data: AllAssignmentSub,
       });
@@ -54,7 +54,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 
 
 
-      res.status(201).json({
+      res.status(200).json({
         message: 'Assignments retrieved successfully for doctor.',
         data: AllAssignmentSub,
       });
@@ -173,7 +173,7 @@ exports.getFileDetails = async (req, res) => {
       if (existingFile) {
         return res.status(400).json({message: 'Sorry , This File is already uploaded.'});
       } else {
-        return res.status(201).json({message: 'File ready to uploaded successfully.'});
+        return res.status(200).json({message: 'File ready to uploaded successfully.'});
       }
   } catch (error) {
     console.error('Error while checking file duplicates:', error.message);
