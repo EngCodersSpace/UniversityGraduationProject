@@ -71,7 +71,7 @@ class DashboardMainView extends GetView<DashboardMainController> {
     const StudentTableView(),
     const SubjectTableView(),
     const StudyPlanTableView(),
-    const LectureTableView(),
+    LectureTableView(),
     const ExamTableView(),
     const GradTableView(),
     const LibraryTableView(),

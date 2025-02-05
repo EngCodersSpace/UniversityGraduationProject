@@ -93,7 +93,6 @@ class LectureController extends GetxController {
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchTableData();
-
     loadState.value = false;
     super.onInit();
   }

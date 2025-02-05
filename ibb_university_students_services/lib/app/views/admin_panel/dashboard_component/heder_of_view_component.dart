@@ -20,7 +20,7 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
   @override
   Widget build(BuildContext context) {
     double width = Get.width;
-    double height = Get.height;
+    // double height = Get.height;
     return Container(
       color: AppColors.tabBackColor,
       padding: const EdgeInsets.all(10),
@@ -127,12 +127,6 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                 ),
               ),
             ],
-          ),
-          SizedBox(
-            height: height * 0.03,
-          ),
-          Row(
-            children: [],
           ),
         ],
       ),
