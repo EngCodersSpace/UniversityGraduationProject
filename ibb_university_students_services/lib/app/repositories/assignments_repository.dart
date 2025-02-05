@@ -187,8 +187,7 @@ class AssignmentsRepository {
       Map<int, StudentAssignmentState> state = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsState in response?.data["data"]) {
-          state[response?.data["data"]["student_assignment_files"]] =
-              (StudentAssignmentState.fromJson(jsState));
+          state[jsState["id"]] = StudentAssignmentState.fromJson(jsState);
         }
         _assignmentsBox?.get(assignmentId)?.studentsStatus = state;
 
