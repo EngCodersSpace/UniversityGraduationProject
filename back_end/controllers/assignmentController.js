@@ -1,5 +1,5 @@
 
-const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
+const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level,study_plan} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
@@ -7,13 +7,13 @@ const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
 const { Worker } = require("worker_threads");
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
+const {createRefreshState} = require('../controllers/refreshController');
 
 
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
-    console.log('\n\n\nreq.user.permission=',req.user.permission,'\n\n\n')
     if (req.user.permission == 'Student' || req.user.permission =='Student Representative'){
       const AllAssignmentSub = await assignment.findAll({
         where: {
@@ -82,6 +82,17 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
             model: student_assignment_file, 
             attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
           },
+          {
+            model:student,as:'student',
+            attributes:['student_id'],
+            // includeIgnoreAttributes: false,
+            include:[
+              {
+                model:user,as:'user',
+                attributes:['user_name'],
+              }
+            ],
+          }
         ],
     });
 
@@ -188,23 +199,23 @@ exports.uploadFileForAssignment = async (req, res) => {
       }
 
       try {
-      const newFile = await assignment_file.create({
-        assignment_id: req.query.assignment_id,
-        attachment: req.file.path,
-        attachment_hash: req.file.hash,
-      });
+        const newFile = await assignment_file.create({
+          assignment_id: req.query.assignment_id,
+          attachment: req.file.path,
+          attachment_hash: req.file.hash,
+        });
 
-      console.log('\n \n \n name= ',req.file.originalname,'\n \n \n ');
-      console.log('\n \n \n size= ',req.file.size,'\n \n \n ');
+        console.log('\n \n \n name= ',req.file.originalname,'\n \n \n ');
+        console.log('\n \n \n size= ',req.file.size,'\n \n \n ');
 
-      res.status(201).json({
-        message: 'File uploaded successfully.',
-        file: {
-          id: newFile.id,
-          path: newFile.attachment,
-          hash: newFile.attachment_hash,
-        },
-      });
+        res.status(201).json({
+          message: 'File uploaded successfully.',
+          file: {
+            id: newFile.id,
+            path: newFile.attachment,
+            hash: newFile.attachment_hash,
+          },
+        });
       } catch(error){
         if (error instanceof UniqueConstraintError) {
           return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
@@ -236,14 +247,14 @@ exports.createAssignment = async (req, res) => {
     const createdAssignments = [];
 
     const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
-    const translatedTitle = await translateText(req.body.title, req.body.language, targetLanguage);
+    const translatedTitle = await translateText(req.body.title, req.headers['accept-language'], targetLanguage);
 
     for (const { section_id, level_id } of sectionsAndLevels) {
       const assignmentRecord = await assignment.create({
         subject_id: req.body.subject_id,
         doctor_id: req.user.user_id,
         title: JSON.stringify({
-          [req.body.language]: req.body.title,
+          [req.headers['accept-language']]: req.body.title,
           [targetLanguage]: translatedTitle,
         }),
         assignment_due_day: req.body.assignment_due_day,
@@ -277,6 +288,8 @@ exports.createAssignment = async (req, res) => {
       createdAssignments.push(assignmentRecord);
     }
 
+    await createRefreshState("assignment");
+    
     res.status(201).json({
       message: 'Assignments created successfully for the specified sections and levels.',
       data: createdAssignments,
@@ -419,21 +432,22 @@ exports.updateStudentComplete = async (req, res) => {
 exports.updateAssigment=async(req,res)=>{
   try {
     const Assignment = await assignment.findOne({
-      where:{id:req.body.assignment_id},
+      where:{id:req.query.assignment_id},
     });
 
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
-    const translatedTitle = await translateText(req.body.title, req.body.language, targetLanguage);
+
+    const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
+    const translatedTitle = await translateText(req.body.title, req.headers['accept-language'], targetLanguage);
 
     const updatedFields = {
       subject_id: req.body.subject_id || Assignment.subject_id,
       assignment_due_day: req.body.assignment_due_day || Assignment.assignment_due_day,
       assignment_date: req.body.assignment_date || Assignment.assignment_date,
       assignments_due_date: req.body.assignments_due_date || Assignment.assignments_due_date,
-      title:{[req.body.language] : req.body.title, [targetLanguage] : translatedTitle } || Assignment.title,
+      title:JSON.stringify({[req.headers['accept-language']] : req.body.title, [targetLanguage] : translatedTitle }) || Assignment.title,
       section_id: req.body.section_id || Assignment.section_id,
       level_id: req.body.level_id || Assignment.level_id,
     };
@@ -491,13 +505,14 @@ exports.deleteAssigmentFiles=async(req,res)=>{
     });
 
     for (const file of AssignFiles) {
-      const attachmentPath = path.resolve(file.attachment);
+      const attachmentPath = path.resolve('storage',file.attachment);
       if (fs.existsSync(attachmentPath)) {
         await fs.promises.unlink(attachmentPath);
         console.log(`Deleted file: ${attachmentPath}`);
       } else {
         console.warn(`File not found: ${attachmentPath}`);
       }
+      await file.destroy();
     }
     res.status(200).json({ message: 'Assignment files deleted successfully.' });
   } catch (error) {
@@ -513,7 +528,7 @@ exports.deleteAttachmentFiles=async(req,res)=>{
     });
  
     for (const file of AssignFiles) {
-      const attachmentPath = path.resolve(file.attachment);
+      const attachmentPath = path.resolve('storage',file.attachment);
       if (fs.existsSync(attachmentPath)) {
         await fs.promises.unlink(attachmentPath);
         console.log(`Deleted file: ${attachmentPath}`);

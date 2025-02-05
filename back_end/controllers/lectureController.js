@@ -400,6 +400,8 @@ const getLecturesByCriteriaPanle = async (req, res) => {
     if (term) whereClause.Term = term;
     if (day) whereClause.lecture_day = day;
 
+
+
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
 

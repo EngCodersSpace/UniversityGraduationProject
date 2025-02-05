@@ -15,7 +15,7 @@ exports.createExam = async (req, res) => {
             include: [{ model: subject, as: 'subject' }], 
         });
 
-        await createRefreshState("exam", res);
+        await createRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
 
 
         res.status(201).json({
