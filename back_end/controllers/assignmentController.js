@@ -1,5 +1,5 @@
 
-const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level,study_plan} = require("../models");
+const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
@@ -59,7 +59,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         data: AllAssignmentSub,
       });
     } else {
-      res.status(403).json({
+      res.status(401).json({
         message: 'Access denied. Only students and doctors can view this information.',
       });
     }
@@ -438,6 +438,7 @@ exports.updateAssigment=async(req,res)=>{
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
+    console.log('\n \n \n ',Assignment,'\n \n \n ');
 
     const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
     const translatedTitle = await translateText(req.body.title, req.headers['accept-language'], targetLanguage);
@@ -453,6 +454,7 @@ exports.updateAssigment=async(req,res)=>{
     };
 
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
+
 
     res.status(200).json({
       message: `Assignment is updated successfully to `,
