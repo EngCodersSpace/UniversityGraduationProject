@@ -105,7 +105,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                   color: AppColors.inverseCardColor,
                                   itemBuilder: (ctx) => [
                                     PopupMenuItem(
-                                        value: "Update",
+                                        value: "Edit",
                                         child: CustomText(
                                           "Edit".tr,
                                           style: AppTextStyles.mainStyle(

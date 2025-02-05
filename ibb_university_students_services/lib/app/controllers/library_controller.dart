@@ -123,7 +123,7 @@ class LibraryController extends GetxController
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData = await SectionRepository.fetchSections()
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     departments = [];
     for (Section section in sectionsData) {
       departments.add(DropdownMenuItem<int>(

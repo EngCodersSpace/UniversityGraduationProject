@@ -9,6 +9,7 @@ import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/permission_checker.dart';
+import '../../utils/screen_utils.dart';
 
 class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
   PhoneAssignmentsTabView({super.key});
@@ -125,7 +126,21 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
-                                          items: controller.sections,
+                                          items:( controller.sections.entries.map((e){
+                                            return DropdownMenuItem<int>(
+                                                value: e.value.id,
+                                                child: SizedBox(
+                                                  width: (ScreenUtils.isPhoneScreen())
+                                                      ? (Get.width / 3) - 30
+                                                      : (Get.width / 5.5) * 0.6,
+                                                  child: CustomText(
+                                                    e.value.name ?? "unknown",
+                                                    style: AppTextStyles.mainStyle(
+                                                      textHeader: AppTextHeaders.h5Bold,
+                                                    ),
+                                                  ),
+                                                ));
+                                          }).toList()),
                                           onChanged:
                                               controller.changeDepartment,
                                           value: controller

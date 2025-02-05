@@ -30,9 +30,11 @@ class AssignmentsTabController extends GetxController {
   Rx<String?> selectedSubject = Rx(null);
   List<DropdownMenuItem<String>> subjectsItems = [];
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
-  List<DropdownMenuItem<int>> sections = [];
+  Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
+  RxList<Map<String, int>> groups = RxList();
   Rx<Map<int, Assignment>>? assignments = Rx({});
+  RxBool addToMultiGroup = false.obs;
 
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
@@ -75,7 +77,7 @@ class AssignmentsTabController extends GetxController {
     if (selectedDepartment.value == null) {
       await initSectionDropdownMenuList();
       if (sections.isNotEmpty) {
-        selectedDepartment.value = sections.first.value;
+        selectedDepartment.value = sections.values.first.id;
       }
     }
 
@@ -134,29 +136,15 @@ class AssignmentsTabController extends GetxController {
     await fetchAssignmentsData();
   }
 
+  void changeAddToMultiGroup(bool? val) async {
+    if (val == null) return;
+    addToMultiGroup.value = val;
+  }
+
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
-    List<Section> sectionsData =
-        await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? []);
-    sections = [];
-    for (Section section in sectionsData) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 3) - 30
-                  : (Get.width / 5.5) * 0.6,
-              child: CustomText(
-                section.name ?? "unknown",
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5Bold,
-                ),
-              ),
-            )),
-      );
-    }
-    selectedDepartment = RxInt(sectionsData.first.id);
+    sections = await SectionRepository.fetchSections(hardFetch: force)
+        .then((e) => e.data ?? {});
+    selectedDepartment = RxInt(sections.values.first.id);
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
@@ -260,8 +248,7 @@ class AssignmentsTabController extends GetxController {
             title: result.files[i].name,
             path: result.files[i].path,
             assignmentId: selectedAssignment,
-            status: RxString("Not Uploaded")
-        );
+            status: RxString("Not Uploaded"));
         file.downloaded.value = true;
 
         assignments?.value[selectedAssignment]?.attachments?.forEach((i, e) {
@@ -282,30 +269,21 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void openFile (){
-
+  void openFile(String? path) {
+    if (path == null) return;
   }
 
-  void downloadAttachment(){
+  void downloadAttachment() {}
 
-  }
   void more(String val, {Map<String, dynamic>? data}) async {
     selectedAssignment = data?["assignment_id"];
     if (val == "Edit") {
-      // mode = "Edit";
-      // if (data != null) {
-      //   selectedExam = data["exam_id"];
-      //   subjects = {};
-      //   subjects =
-      //   await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
-      //   subject = RxString(data["subject"]["subject_id"]);
-      //   dateController.text = data["exam_date"].toString();
-      //   timeController.text =
-      //       DateTimeUtils.formatStringTime(time: data["exam_time"]);
-      //   day.value = data["exam_day"].toString();
-      //   hallController.text = data["exam_room"].toString();
-      // }
-      // Get.dialog(const PopUpIAddAndUpdateExamCard());
+      mode = "Edit";
+      titleController.text =
+          assignments?.value[selectedAssignment]?.title ?? "";
+      dueDateController.text =
+          assignments?.value[selectedAssignment]?.dueDate ?? "";
+      Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
     } else if (val == "Delete") {
       Result<void> res = await AssignmentsRepository.deleteAssignment(
         sectionId: selectedDepartment.value!,
@@ -355,42 +333,44 @@ class AssignmentsTabController extends GetxController {
       showSnakeBar(message: "Select Subject First");
       return;
     }
-    // dateController.text = DateTime.now().toString().split(" ")[0];
-    // timeController.text = DateTimeUtils.formatTimeOfDay(time:TimeOfDay.now());
-    // subjects = {};
-    // subjects = await SubjectServices.fetchSubjects().then((e) => e.data ?? {});
-    // if (subjects?.values.first != null) {
-    //   subject = RxString(subjects!.values.first.id);
-    // }
+    groups.value = [];
+    addGroup(selectedDepartment.value!, selectedLevel.value!);
     Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
+  }
+
+  void addGroup(int sectionId, int levelId) {
+    if (groups.any((map) =>
+    map["section_id"] == sectionId && map["level_id"] == levelId)) {
+      showSnakeBar(message: "Group Already Exists");
+      return;
+    }
+    groups.add(
+      {"section_id": sectionId, "level_id": levelId},
+    );
+  }
+
+  void delGroup(int index) {
+    groups.removeAt(index);
   }
 
   void submit() async {
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
       jsData["language"] = Get.locale?.languageCode ?? "en";
-      jsData["subject_id"] = selectedSubject.value;
-      jsData["assignment_date"] = DateTime.now().toString();
       jsData["assignment_due_day"] = "Sunday";
-      jsData["sectionsAndLevels"] = [
-        {
-          "section_id": selectedDepartment.value,
-          "level_id": selectedLevel.value
-        },
-      ];
       jsData["assignments_due_date"] = dueDateController.text;
       jsData["title"] = titleController.text;
 
       if (mode == "Add") {
+        jsData["sectionsAndLevels"] = groups;
+        jsData["subject_id"] = selectedSubject.value;
+        jsData["assignment_date"] = DateTime.now().toString();
         Result<Assignment> res = await AssignmentsRepository.createAssignment(
             sectionId: selectedDepartment.value!,
             levelId: selectedLevel.value!,
             subjectId: selectedSubject.value!,
             data: jsData);
         Navigator.of(Get.overlayContext!).pop();
-        // print(res.data);
-        // print(res.statusCode);
-        // print(res.message);
         if (res.statusCode == 201 && res.data != null) {
           assignments?.value[res.data!.id] = res.data!;
           assignments?.refresh();
@@ -399,19 +379,21 @@ class AssignmentsTabController extends GetxController {
           showSnakeBar(message: "Add failed");
         }
       } else if (mode == "Edit") {
-        // Result<Exam> res = await ExamRepository.updateExam(
-        //     sectionId: selectedSection.value!,
-        //     levelId: selectedLevel.value!,
-        //     data: jsData,
-        //     id: selectedExam);
-        // Navigator.of(Get.overlayContext!).pop();
-        // if (res.statusCode == 200 && res.data != null) {
-        //   exams?.value[res.data!.id] = res.data!;
-        //   exams?.refresh();
-        //   showSnakeBar(message: "Edit successfully");
-        // } else {
-        //   showSnakeBar(message: "Edit failed");
-        // }
+        jsData["assignment_id"] = selectedAssignment;
+        Result<Assignment> res = await AssignmentsRepository.updateAssignment(
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!,
+            subjectId: selectedSubject.value!,
+            data: jsData,
+            id: selectedAssignment!);
+        Navigator.of(Get.overlayContext!).pop();
+        if (res.statusCode == 200 && res.data != null) {
+          assignments?.value[res.data!.id] = res.data!;
+          assignments?.refresh();
+          showSnakeBar(message: "Edit successfully");
+        } else {
+          showSnakeBar(message: "Edit failed");
+        }
       }
     }
   }

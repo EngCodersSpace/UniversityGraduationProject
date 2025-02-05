@@ -225,7 +225,7 @@ class LectureController extends GetxController {
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
-    await SectionRepository.fetchSections(hardFetch: force).then((e) => e.data ?? []);
+    await SectionRepository.fetchSections(hardFetch: force).then((e) => e.data?.values.toList() ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(

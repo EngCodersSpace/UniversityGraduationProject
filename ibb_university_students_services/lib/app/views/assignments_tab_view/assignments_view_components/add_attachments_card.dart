@@ -161,7 +161,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                       .value ??
                                                                   false)
                                                               ? controller
-                                                                  .openFile()
+                                                                  .openFile(_data?[i].path)
                                                               : controller
                                                                   .downloadAttachment();
                                                         },
