@@ -35,7 +35,7 @@ async function extractDisplayImage(pdfPath, outputPath) {
     const outputDir = path.dirname(outputPath);
 
     const options = {
-      format: 'jpg', // Output format (e.g., png or jpeg)
+      format: 'png', // Output format (e.g., png or jpeg)
       out_dir: outputDir, // Directory to save the image
       out_prefix: path.basename(pdfPath, '.pdf'), // Image file prefix
       page: 1 // Extract only the first page
@@ -46,15 +46,12 @@ async function extractDisplayImage(pdfPath, outputPath) {
     const finalImageName = `${path.basename(pdfPath, '.pdf')}.${options.format}`;
     const generatedImagePath = path.join(outputDir, finalImageName);
 
-    // إعادة تسمية الصورة الناتجة إلى الاسم النهائي
     const generatedImageFiles = fs.readdirSync(outputDir).filter(file => file.startsWith(options.out_prefix));
     if (generatedImageFiles.length > 0) {
       const tempImagePath = path.join(outputDir, generatedImageFiles[0]);
       await fs.promises.rename(tempImagePath, generatedImagePath);
     }
 
-
-    // const generatedImagePath = path.join(outputDir,`${options.out_prefix}.${options.format}`);
 
     console.log(`\n \n outputPath: ${outputPath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpg
     console.log(`\n \n options.out_prefix: ${options.out_prefix}`);  // Data_Structure

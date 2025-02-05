@@ -21,63 +21,61 @@ exports.uploadFile = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ message: 'No file provided for upload.' });
       }
-      const bookDetails = await extractBookDetails(req.file.path);
-      // const hash = crypto.createHash('md5').update(
-      //   `${bookDetails.title}-${bookDetails.author}-${bookDetails.totalPages}-${bookDetails.edition}`
-      // ).digest('hex');
 
-      const fileName = `${req.file.hash}${path.extname(req.file.path)}`;
-      // const fileName=`${hash}$`
-      // console.log('\n \n \n fileName=', fileName,'\n \n \n ')
-      // console.log('\n \n \n req.file.path=', req.file.path,'\n \n \n ')
+      const filepath=path.join('storage',req.file.path);
+      const bookDetails = await extractBookDetails(filepath);
 
+      try {
+        const displayImagePath = path.join( 'storage/library', req.query.category, 'photos', `${req.file.hash}.png`);
+        const existingBook = await book.findOne({ where: { file_path: filepath } });
+        if (existingBook) {
+          fs.unlinkSync(filepath); 
+        }
 
-      const finalFilePath = path.join(__dirname, '../storage/library', req.query.category, 'books', fileName);
-      const displayImagePath = path.join(__dirname, '../storage/library', req.query.category, 'photos', `${req.file.hash}.jpg`);
+        const newBook = await book.create({
+          title: bookDetails.title || path.parse(file.originalname).name,
+          category: req.query.category,
+          subject_id: req.body.subject_id,
+          added_by: req.user.user_id,
+          file_path: filepath,
+          author: bookDetails.author,
+          edition: bookDetails.edition,
+          numberOfPages: bookDetails.totalPages,
+          file_size: bookDetails.file_size,
+        });
 
-      const existingBook = await book.findOne({ where: { file_path: finalFilePath } });
-      if (existingBook) {
-        fs.unlinkSync(req.file.path); 
-      }
+        await createFolderIfNotExists(filepath);
+        await extractDisplayImage(filepath, displayImagePath);
+        newBook.display_image = displayImagePath;
+        await newBook.save();
 
-
-      const newBook = await book.create({
-        title: bookDetails.title || path.parse(file.originalname).name,
-        category: req.query.category,
-        subject_id: req.body.subject_id,
-        added_by: req.user.user_id,
-        file_path: finalFilePath,
-        author: bookDetails.author,
-        edition: bookDetails.edition,
-        numberOfPages: bookDetails.totalPages,
-        file_size: bookDetails.file_size,
-      });
-
-      await createFolderIfNotExists(finalFilePath);
-
-      await extractDisplayImage(finalFilePath, displayImagePath);
-      newBook.display_image = displayImagePath;
-      await newBook.save();
-
-      return res.status(201).json({
+        return res.status(201).json({
         message: "Books uploaded successfully.",
         books: newBook,
       });
-    });
+    
+    } catch(error){
+      if (error instanceof UniqueConstraintError) {
+        return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+      }
+  
+      if (error instanceof ForeignKeyConstraintError) {
+        return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+      }
+  
+      if (error instanceof ValidationError) {
+        return res.status(400).json({ message: 'Validation error: ' + error.message });
+      }
+      else {
+        res.status(500).json({
+          message: 'Error inner uploadFile.',
+          error: error.message,
+        });
+      }
+    }
+  });
   } catch (error) {
     console.error(error);
-    if (error instanceof UniqueConstraintError) {
-      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
-    }
-
-    if (error instanceof ForeignKeyConstraintError) {
-      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
-    }
-
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: 'Validation error: ' + error.message });
-    }
-
     res.status(500).json({
       message: 'Error uploadFile.',
       error: error.message,

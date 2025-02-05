@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CRUD = require('../controllers/rolePermissionController');
 const { verifyToken } = require('../middleware/authMiddleware');
-const checkPermission = require('../middleware/roleMiddleware').checkPermission;
+const {checkPermission} = require('../middleware/roleMiddleware');
 
 router.use(verifyToken);
 
