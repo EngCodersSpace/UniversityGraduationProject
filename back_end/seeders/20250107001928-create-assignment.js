@@ -39,6 +39,7 @@ module.exports = {
         assignment_due_day: faker.helpers.arrayElement(['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']),
         assignment_date: faker.date.past(),
         assignments_due_date: faker.date.future(),
+        original_name: faker.lorem.word(),
         createdAt: new Date(),
         updatedAt: new Date(),
       });

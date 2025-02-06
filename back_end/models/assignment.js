@@ -101,12 +101,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     assignment_date: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     assignments_due_date: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: false,
+    },
+    original_name:{
+      type:DataTypes.STRING,
     },
 
 
