@@ -6,16 +6,31 @@ import 'package:ibb_university_students_services/app/models/attachment_file_mode
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/permission_checker.dart';
 
-class FilesPickerCard extends GetView<AssignmentsTabController> {
-  const FilesPickerCard({super.key});
+// ignore: must_be_immutable
+class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
+  const AssignmentsAddFilesCard({super.key});
 
-  List<AttachmentFile>? get _data => controller
-      .assignments?.value[controller.selectedAssignment]?.attachments?.values
-      .toList();
+  List<AttachmentFile>? get _data {
+    if (PermissionUtils.checkPermission(
+        target: "Assignments", action: "addAttachments")) {
+      return controller.assignments?.value[controller.selectedAssignment]
+          ?.attachments?.values
+          .toList();
+    }
+    return controller.assignments?.value[controller.selectedAssignment]
+        ?.studentsStatus?[controller.selectedStudent]?.studentFiles
+        ?.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String? mode;
+    if (PermissionUtils.checkPermission(
+        target: "Assignments", action: "addAttachments")) {
+      mode = "attachmentsFiles";
+    }
     return GetBuilder<AssignmentsTabController>(
         id: "AttachmentPiker",
         builder: (ctx) => Center(
@@ -40,7 +55,9 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                             child: Column(
                               children: [
                                 CustomText(
-                                  ("Attachments").tr,
+                                  (mode == "attachmentsFiles")
+                                      ? ("Attachments").tr
+                                      : ("Assignment File").tr,
                                   style: AppTextStyles.secStyle(
                                       textHeader: AppTextHeaders.h1Bold),
                                 ),
@@ -161,7 +178,9 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                                       .value ??
                                                                   false)
                                                               ? controller
-                                                                  .openFile(_data?[i].path)
+                                                                  .openFile(
+                                                                      _data?[i]
+                                                                          .path)
                                                               : controller
                                                                   .downloadAttachment();
                                                         },
@@ -261,7 +280,7 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     CustomButton(
-                                      onPress: controller.uploadAttachments,
+                                      onPress: controller.uploadAssignmentsFiles,
                                       text: "Upload All".tr,
                                     ),
                                     CustomButton(

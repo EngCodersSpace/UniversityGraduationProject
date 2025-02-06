@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
-import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import '../../../components/buttons.dart';
-import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/screen_utils.dart';
 
+// ignore: must_be_immutable
 class PopUpIAddAssignmentsGroupCard extends GetView<AssignmentsTabController> {
   PopUpIAddAssignmentsGroupCard({super.key});
 

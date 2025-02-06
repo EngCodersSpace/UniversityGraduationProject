@@ -1,14 +1,14 @@
 import 'dart:io';
-
+import 'package:open_filex/open_filex.dart';
 
 class FileUtils {
-  static const String baseFolderPath = "storage/emulated/0/StudentServices";
+  static const String baseFolderPath = "/storage/emulated/0/StudentServices";
 
   static saveFiles({
-    required String fileRelativePath,
-    required  file,
-    String baseFolderPath = "/storage/emulated/0/StudentServices",
+    required String? fileRelativePath,
+    required file,
   }) async {
+    if (fileRelativePath == null) return;
     List<String>? parts = fileRelativePath.split("/");
     parts.removeLast();
     String relativePath = parts.join("/");
@@ -16,8 +16,7 @@ class FileUtils {
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
     }
-    await file.copy(
-        "${dir.path}/${fileRelativePath.split("/").last}");
+    await file.copy("${dir.path}/${fileRelativePath.split("/").last}");
   }
 
   static deleteFiles({
@@ -28,8 +27,17 @@ class FileUtils {
     }
   }
 
+  static Future<void> openFile(String? path) async {
+    if (path == null) return;
 
-  static checkExists(String filePath,{String? subPath})async{
-    return await File("$baseFolderPath$subPath/$filePath").exists();
+    final result = await OpenFilex.open("$baseFolderPath/$path");
+    if (result.type == ResultType.error) {
+      print("Error opening file: ${result.message}");
+    }
+
+  }
+
+  static checkExists(String filePath) async {
+    return await File("$baseFolderPath/$filePath").exists();
   }
 }

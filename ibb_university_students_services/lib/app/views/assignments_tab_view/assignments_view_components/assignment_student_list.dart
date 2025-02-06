@@ -31,6 +31,7 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
             return Column(
               children: [
                 ListTile(
+                  onTap: ()=>controller.showStudentFiles(studentId: items[i].studentId),
                   leading: CircleAvatar(
                     backgroundColor: AppColors.inverseIconColor,
                     child: CustomText(
@@ -40,12 +41,12 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
                     ),
                   ),
                   title: CustomText(
-                    "${items[i].studentId}",
+                    "${items[i].studentName}",
                     textAlign: TextAlign.start,
                     style: AppTextStyles.secStyle(
                         textHeader: AppTextHeaders.h2Bold),
                   ),
-                  trailing: Icon(Icons.more_horiz),
+                  trailing: IconButton(onPressed: (){}, icon:Icon(Icons.more_horiz)),
                   subtitle: CustomText(
                     "Status: ${items[i].state}",
                     textAlign: TextAlign.start,

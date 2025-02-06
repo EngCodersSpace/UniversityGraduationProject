@@ -29,7 +29,7 @@ class AttachmentFile {
 
 
   checkDownloaded()async{
-    downloaded.value = await FileUtils.checkExists(subPath: "/UploadedFiles",path??"")??false;
+    downloaded.value = await FileUtils.checkExists(path??"")??false;
     return;
   }
 

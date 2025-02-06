@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../../../utils/json_utils.dart';
 import '../../attachment_file_model/attachment_file_model.dart';
 part 'student_assignment_state.g.dart';
 
@@ -36,10 +37,10 @@ class StudentAssignmentState{
       files.add(AttachmentFile.fromJson(file));
     }
     return StudentAssignmentState(
-      studentId: json['student_id'],
-      // studentNameData: JsonUtils.tryJsonDecode(
-      //   json['title'],
-      // ),
+      studentId: json['student']['student_id'],
+      studentNameData: JsonUtils.tryJsonDecode(
+        json['student']['user']['user_name'],
+      ),
       state: json['status'],
       isCompleted: json['is_completed'],
       studentFiles: files,

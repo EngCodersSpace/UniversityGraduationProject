@@ -313,7 +313,7 @@ class AssignmentsRepository {
         if (response?.statusCode == 201) {
           attachment.path = response?.data["file"]["path"];
           await FileUtils.saveFiles(
-              fileRelativePath: "UploadedFiles/${attachment.path}", file: file);
+              fileRelativePath: attachment.path, file: file);
           NotificationHandler.showProgressNotification(
               uniqueId: attachment.id.hashCode,
               title: "successful upload ",

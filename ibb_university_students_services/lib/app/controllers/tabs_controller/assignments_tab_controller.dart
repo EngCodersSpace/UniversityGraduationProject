@@ -6,20 +6,25 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/show_files_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/helper_models/student_assignment_state/student_assignment_state.dart';
 import '../../models/level_model/level.dart';
 import '../../models/section_model/section.dart';
+import '../../models/student_model/student.dart';
 import '../../models/subject_model/subject_model.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../repositories/subject_repository.dart';
+import '../../utils/permission_checker.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
-import '../../views/assignments_tab_view/assignments_view_components/add_attachments_card.dart';
+import '../../views/assignments_tab_view/assignments_view_components/add_files_card.dart';
 import '../../views/assignments_tab_view/assignments_view_components/assignment_student_list.dart';
 
 class AssignmentsTabController extends GetxController {
@@ -43,11 +48,19 @@ class AssignmentsTabController extends GetxController {
   FocusNode hallFocus = FocusNode();
   String mode = "Add";
   int? selectedAssignment;
+  int? selectedStudent;
 
   @override
   void onInit() async {
     // await initSectionDropdownMenuList();
     // (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
+    if (!(PermissionUtils.checkPermission(
+        target: "Assignments", action: "doctorView"))) {
+      Student? student =
+          await UserRepository.fetchUser().then((e) => e.data as Student);
+      selectedDepartment.value = student?.section?.id;
+      selectedLevel.value = student?.level?.id;
+    }
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
@@ -204,7 +217,7 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void uploadAttachments() async {
+  void uploadAssignmentsFiles() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
     for (AttachmentFile file in (assignments
@@ -269,8 +282,8 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void openFile(String? path) {
-    if (path == null) return;
+  void openFile(String? path) async {
+    await FileUtils.openFile(path);
   }
 
   void downloadAttachment() {}
@@ -340,7 +353,7 @@ class AssignmentsTabController extends GetxController {
 
   void addGroup(int sectionId, int levelId) {
     if (groups.any((map) =>
-    map["section_id"] == sectionId && map["level_id"] == levelId)) {
+        map["section_id"] == sectionId && map["level_id"] == levelId)) {
       showSnakeBar(message: "Group Already Exists");
       return;
     }
@@ -398,9 +411,24 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void showAttachments(int? assignmentId) {
+  void showAttachmentsFiles(int? assignmentId) {
     selectedAssignment = assignmentId;
-    Get.dialog(const FilesPickerCard());
+    if ((PermissionUtils.checkPermission(
+        target: "Assignments", action: "doctorView"))) {
+      Get.dialog(AssignmentsAddFilesCard());
+    }else{
+      Get.dialog(AssignmentsShowFilesCard());
+    }
+  }
+
+  void showStudentFiles({int? studentId}) {
+    selectedStudent = studentId;
+    if ((PermissionUtils.checkPermission(
+        target: "Assignments", action: "doctorView"))) {
+      Get.dialog(AssignmentsShowFilesCard());
+    }else{
+      Get.dialog(AssignmentsAddFilesCard());
+    }
   }
 
   void routeStudentList(int? assignmentId) async {
