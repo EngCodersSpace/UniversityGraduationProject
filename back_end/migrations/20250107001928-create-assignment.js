@@ -58,12 +58,15 @@ module.exports = {
         allowNull: false,
       },
       assignment_date: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       assignments_due_date: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false,
+      },
+      original_name:{
+        type:Sequelize.STRING,
       },
 
 

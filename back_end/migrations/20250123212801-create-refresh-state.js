@@ -5,16 +5,18 @@ module.exports = {
     await queryInterface.createTable('refresh_states', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
 
       target: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-
+      // state: {
+      //   type: Sequelize.STRING,
+      //   allowNull: false,
+      // },
       filter: {
         type: Sequelize.JSON,
         allowNull: true,

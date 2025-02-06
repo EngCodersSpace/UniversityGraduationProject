@@ -25,6 +25,7 @@ module.exports = {
           assignment_id: assignmentItem.id,
           status: faker.helpers.arrayElement(['accepted', 'rejected', 'not submitted', 'pending']),
           is_completed: faker.datatype.boolean(),
+          original_name: faker.lorem.word(),
         });
       }
     }
