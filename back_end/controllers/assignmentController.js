@@ -86,7 +86,6 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
           {
             model:student.scope(null),as:'student',
             attributes:['student_id'],
-            // includeIgnoreAttributes: false,
             include:[
               {
                 model:user,as:'user',
