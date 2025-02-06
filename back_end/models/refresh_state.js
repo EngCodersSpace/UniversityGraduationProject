@@ -16,20 +16,18 @@ module.exports = (sequelize, DataTypes) => {
   refresh_state.init({
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING,
     },
 
     target: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false,
-
-    },
+    // state: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false,
+    // },
     filter: {
       type: DataTypes.JSON,
       allowNull: true,
