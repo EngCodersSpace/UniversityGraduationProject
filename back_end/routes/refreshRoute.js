@@ -6,7 +6,7 @@ const { verifyToken } = require('../middleware/authMiddleware');
 
 router.use(verifyToken);
 
-router.post('/create-refresh', CRUD.createRefreshState);
+router.post('/create-refresh', CRUD.upsertRefreshState);
 router.get('/get-all-refresh',CRUD.getAllRefreshStates);
 router.delete('/delete-refresh', CRUD.deleteRefreshState);
 

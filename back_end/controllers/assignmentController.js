@@ -260,6 +260,7 @@ exports.createAssignment = async (req, res) => {
         assignment_due_day: req.body.assignment_due_day,
         assignment_date: req.body.assignment_date,
         assignments_due_date: req.body.assignments_due_date,
+        original_name:req.body.original_name,
         section_id: section_id,
         level_id: level_id,
       });
@@ -449,6 +450,7 @@ exports.updateAssigment=async(req,res)=>{
       assignment_date: req.body.assignment_date || Assignment.assignment_date,
       assignments_due_date: req.body.assignments_due_date || Assignment.assignments_due_date,
       title:JSON.stringify({[req.headers['accept-language']] : req.body.title, [targetLanguage] : translatedTitle }) || Assignment.title,
+      original_name:req.body.original_name || Assignment.original_name,
       section_id: req.body.section_id || Assignment.section_id,
       level_id: req.body.level_id || Assignment.level_id,
     };

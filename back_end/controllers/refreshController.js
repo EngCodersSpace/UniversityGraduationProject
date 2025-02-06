@@ -1,12 +1,26 @@
 
 const { refresh_state } = require('../models'); 
+const crypto = require('crypto');
 
-exports.createRefreshState = async (target,filter) => {
+
+function generateId(target, filter) {
+  return `${target}-${crypto.createHash('md5').update(JSON.stringify(filter)).digest('hex')}`;
+}
+
+exports.upsertRefreshState = async (target, filter) => {
   try {
-    const newRecord = await refresh_state.create({target:target,filter:filter});
-    return newRecord;
+    const id = generateId(target, filter);
+    const [record, created] = await refresh_state.upsert(
+      { id, target, filter, updatedAt: new Date() }, 
+      {
+        returning: true,
+        conflictFields: ['id'], 
+        update: ['updatedAt'] 
+      }
+    );
+    return { record, created };
   } catch (error) {
-    throw new Error('Failed to create refresh state: ' + error.message);  
+    throw new Error('Failed to create or update refresh state: ' + error.message);
   }
 };
 
