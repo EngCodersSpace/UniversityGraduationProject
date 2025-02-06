@@ -41,10 +41,20 @@ module.exports = {
         unique: true,
         validate: { isEmail: true, },
       },
-      permission: {
-        type: Sequelize.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
+      // permission: {
+      //   type: Sequelize.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
+      //   allowNull: false,
+      //   defaultValue: 'student',
+      // },
+      roleId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 'student',
+        references: {
+          model: 'roles',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       password: {
         type: Sequelize.STRING(100),

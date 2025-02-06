@@ -19,7 +19,7 @@ module.exports = {
       books.push({
         title: faker.lorem.words(5), // Generate a random title
         author: faker.person.fullName(), // Generate a random author name
-        isbn: faker.string.uuid(), // Generate a random ISBN
+        numberOfPages: faker.number.int({min:10 , max:1000}), // Generate a random ISBN
         edition: faker.helpers.arrayElement(["1st", "2nd", "3rd", "Revised"]), // Random edition
         category: faker.helpers.arrayElement([
           "Reference",

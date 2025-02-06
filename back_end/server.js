@@ -9,7 +9,7 @@ app.use(express.json());
 const corsOptions = {
   origin: '*', // Replace with your Flutter Web app's URL (use IP or domain)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only necessary methods
-  allowedHeaders: ['Accept', 'Content-Type', 'Authorization'], // Headers Flutter Web might send
+  allowedHeaders: ['Accept', 'Content-Type', 'Authorization','accept-language'], // Headers Flutter Web might send
   credentials: true, // Allow cookies or Authorization headers
 };
 
@@ -29,7 +29,8 @@ const subject=require('./routes/subjectRoute')
 const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
 const bookRoutes = require('./routes/bookRoute');
-
+const assignmentRoutes = require('./routes/assignmentRoute');
+const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 
 
 app.use(getAllData);
@@ -45,12 +46,12 @@ app.use(subject);
 app.use(studyPlaneRoute);
 app.use(studentFeeRoute);
 app.use(bookRoutes);
-
-
+app.use(assignmentRoutes);
+app.use(rolePermissionRoutes);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
-    console.log(`Server is running o port ${PORT}`);
+  console.log(`Server is running o port ${PORT}`);
 });
 
 

@@ -43,10 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      isbn: {
-        type: DataTypes.STRING(50),
-        allowNull: true,
-      },
       numberOfPages: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -98,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [
       {
         unique: true,
-        fields: ['title', 'numberOfPages', 'author', 'edition'],
+        fields: ['title', 'numberOfPages', 'author', 'edition','category'],
         name: 'unique_constraint_in_book',
       },
         ],

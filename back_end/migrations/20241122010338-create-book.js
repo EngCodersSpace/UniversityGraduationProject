@@ -73,7 +73,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('books', {
-      fields: ['title', 'numberOfPages', 'author', 'edition'],
+      fields: ['title', 'numberOfPages', 'author', 'edition','category'],
       type: 'unique',
       name: 'unique_constraint_in_book',
     });

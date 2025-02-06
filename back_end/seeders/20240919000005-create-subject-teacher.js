@@ -35,7 +35,7 @@ module.exports = {
 
       // التحقق من التكرار قبل إضافة السجل
       if (!exists(doctorData.doctor_id, subjectData.subject_id, subject_teachers)) {
-        console.log('doctor id',doctorData.doctor_id,'subject id',subjectData.subject_id);
+       
         subject_teachers.push({
           doctor_id: doctorData.doctor_id, 
           subject_id: subjectData.subject_id,

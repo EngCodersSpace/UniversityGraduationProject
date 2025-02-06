@@ -11,6 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      student_assignment.belongsTo(models.assignment, {
+        foreignKey: 'assignment_id',
+      });
+
+      student_assignment.belongsTo(models.student, {
+        foreignKey: 'student_id',
+      });
+
+      student_assignment.hasMany(models.student_assignment_file, {
+        foreignKey: 'student_assignment_id',
+      });
     }
   }
   student_assignment.init({
@@ -41,15 +53,20 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     status: {
+      type: DataTypes.ENUM('accepted', 'rejected', 'not submitted', 'pending'),
+      allowNull: false,
+      defaultValue: 'not submitted',
+    },
+    is_completed: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false,
     },
-    attachment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
+    original_name:{
+      type:DataTypes.STRING,
     },
-    
+
+
 
 
   }, {

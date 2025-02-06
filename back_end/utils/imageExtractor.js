@@ -32,13 +32,8 @@ const { PDFDocument } = require('pdf-lib');
  */
 async function extractDisplayImage(pdfPath, outputPath) {
   try {
-    // Ensure output directory exists
     const outputDir = path.dirname(outputPath);
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
-    }
 
-    // Configure options for pdf-poppler
     const options = {
       format: 'png', // Output format (e.g., png or jpeg)
       out_dir: outputDir, // Directory to save the image
@@ -48,13 +43,23 @@ async function extractDisplayImage(pdfPath, outputPath) {
 
     await pdfPoppler.convert(pdfPath, options);
 
-    const generatedImagePath = path.join(
-      outputDir,
-      `${options.out_prefix}-1.${options.format}`
-    );
-    console.log(`First page saved as an image at: ${generatedImagePath}`);
+    const finalImageName = `${path.basename(pdfPath, '.pdf')}.${options.format}`;
+    const generatedImagePath = path.join(outputDir, finalImageName);
+
+    const generatedImageFiles = fs.readdirSync(outputDir).filter(file => file.startsWith(options.out_prefix));
+    if (generatedImageFiles.length > 0) {
+      const tempImagePath = path.join(outputDir, generatedImageFiles[0]);
+      await fs.promises.rename(tempImagePath, generatedImagePath);
+    }
+
+
+    console.log(`\n \n outputPath: ${outputPath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpg
+    console.log(`\n \n options.out_prefix: ${options.out_prefix}`);  // Data_Structure
+    console.log(`\n \n options.format: ${options.format}`);          // jpeg
+    console.log(`\n \n First page saved as an image at: ${generatedImagePath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpeg
 
     return generatedImagePath; 
+
   } catch (error) {
     console.error('Error extracting display image:', error.message);
     throw error;
@@ -83,6 +88,7 @@ async function extractBookDetails(filePath) {
       creationDate: pdfDoc.getCreationDate() || null,
       modificationDate: pdfDoc.getModificationDate() || null,
       producer: pdfDoc.getProducer() || 'Unknown',
+      totalPages :pdfDoc.getPageCount() || 0,
     };
 
     // Calculate file size (in MB)

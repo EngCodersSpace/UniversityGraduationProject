@@ -24,6 +24,25 @@ module.exports = (sequelize, DataTypes) => {
         through: 'student_assignment',
         foreignKey: 'assignment_id',
       });
+
+      assignment.hasMany(models.assignment_file, {
+        foreignKey: 'assignment_id',
+      });
+
+
+      assignment.belongsTo(models.section, {
+        foreignKey: 'section_id',
+      });
+
+      assignment.belongsTo(models.level, {
+        foreignKey: 'level_id',
+      });
+
+      assignment.hasMany(models.student_assignment, {
+        foreignKey: 'assignment_id',
+      });
+
+
     }
   }
   assignment.init({
@@ -53,11 +72,31 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
+    section_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'sections',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
+    },
+    level_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'levels',
+        key: 'id',
+      },
+      onDelete: 'NO ACTION',
+      onUpdate: 'CASCADE',
+    },
     title: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
     },
-    assignment_day: {
+    assignment_due_day: {
       type: DataTypes.ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'),
       allowNull: false,
     },
@@ -69,10 +108,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    attachment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
+    original_name:{
+      type:DataTypes.STRING,
     },
+
 
 
   }, {

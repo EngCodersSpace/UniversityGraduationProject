@@ -1,66 +1,87 @@
 // controllers/bookController.js
 const path = require('path');
 const fs = require("fs");
-const { book } = require('../models');
+const { book} = require('../models');
 const { Worker } = require("worker_threads");
-const { uploadFields  } = require('../utils/multerConfig');
+const crypto = require('crypto');
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
-exports.uploadFile = [
-  uploadFields , 
-    async (req, res) => {
-        try {
-            const added_by= req.user.user_id;
+const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
+const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 
-            const { subject_id } = req.body;
+exports.uploadFile = async (req, res) => {
+  try {
+    const folder=`library/${req.query.category}`;
+    const subfolder='books';
 
-            if ( !subject_id ) {
-              return res.status(400).json({ message: " subject_id is required." });
-            }
+    uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: 'File upload failed', error: err.message });
+      }
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file provided for upload.' });
+      }
 
-            if (!req.files || !req.files['file']) {
-              return res.status(400).json({ message: "No file uploaded." });
-            }
-    
-            const file = req.files['file'][0];
-            const title = file.originalname;
+      const filepath=path.join('storage',req.file.path);
+      const bookDetails = await extractBookDetails(filepath);
 
-            console.log('\n \n File.originalname:', title); 
-            const existingBook = await book.findOne({
-              where: {
-                title:path.parse(title).name,
-                category: req.query.category,
-                subject_id: req.body.subject_id,
-              },
-            });
-            
-            if (existingBook) {
-              return res.status(409).json({
-                message: "This file has already been uploaded.",
-                book: existingBook,
-              });
-            }
-            
-            const newBook = await book.create({
-                title: path.parse(title).name,
-                category : req.query.category,
-                subject_id,
-                added_by,
-                },
-                {
-                  individualHooks: true,
-                }
-            );
-
-            res.status(200).json({
-                message: "File uploaded successfully.",
-                book: newBook,
-            });
-        } catch (error) {
-            console.error("Error during file upload:", error);
-            res.status(500).json({ message: "An error occurred while uploading the file.", error: error.message });
+      try {
+        const displayImagePath = path.join( 'storage/library', req.query.category, 'photos', `${req.file.hash}.png`);
+        const existingBook = await book.findOne({ where: { file_path: filepath } });
+        if (existingBook) {
+          fs.unlinkSync(filepath); 
         }
-    },
-];
+
+        const newBook = await book.create({
+          title: bookDetails.title || path.parse(file.originalname).name,
+          category: req.query.category,
+          subject_id: req.body.subject_id,
+          added_by: req.user.user_id,
+          file_path: filepath,
+          author: bookDetails.author,
+          edition: bookDetails.edition,
+          numberOfPages: bookDetails.totalPages,
+          file_size: bookDetails.file_size,
+        });
+
+        await createFolderIfNotExists(filepath);
+        await extractDisplayImage(filepath, displayImagePath);
+        newBook.display_image = displayImagePath;
+        await newBook.save();
+
+        return res.status(201).json({
+        message: "Books uploaded successfully.",
+        books: newBook,
+      });
+    
+    } catch(error){
+      if (error instanceof UniqueConstraintError) {
+        return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+      }
+  
+      if (error instanceof ForeignKeyConstraintError) {
+        return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+      }
+  
+      if (error instanceof ValidationError) {
+        return res.status(400).json({ message: 'Validation error: ' + error.message });
+      }
+      else {
+        res.status(500).json({
+          message: 'Error inner uploadFile.',
+          error: error.message,
+        });
+      }
+    }
+  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'Error uploadFile.',
+      error: error.message,
+    });
+  }
+};  
 
 exports.downloadFile = async (req, res) => {
   try {
@@ -68,8 +89,7 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath = path.resolve(__dirname, '../storage/library', fileData.category, `${fileData.title}.pdf`);
-    console.log(`\n \n fileData category ${fileData.category} --- fileData.title ${fileData.title} \n \n `);
+    const filePath= fileData.file_path;
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -97,7 +117,6 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
-
 exports.getBooksByCategory = async (req, res) => {
   try {
 
@@ -107,14 +126,13 @@ exports.getBooksByCategory = async (req, res) => {
 
       const books = await book.findAll({
           where: { category: req.query.category },
-          attributes: ['id', 'title', 'file_path', 'image_path'],
       });
 
       if (books.length === 0) {
           return res.status(404).json({ success: false, message: "No books found for the specified category" });
       }
 
-      res.status(200).json({ message: `get all books depends on category:${req.query.category} succssfully `, data: books });
+      res.status(200).json({ message: `get all books depends on category:${ (  req.query.category )} succssfully `, data: books });
   } catch (error) {
       console.error("Error fetching books by category:", error);
       res.status(500).json({message: "An error occurred while fetching books", error: error.message });
@@ -122,48 +140,29 @@ exports.getBooksByCategory = async (req, res) => {
 };
 
 exports.deleteBook = async (req, res) => {
-    try {
-        const Book = await book.findByPk({ where: { id:req.query.id } });
-        if (!Book) {
-            return { success: false, message: "Book not found" };
-        }
-
-        await fs.promises.unlink(path.resolve(Book.file_path));
-        await fs.promises.unlink(path.resolve(Book.image_path));
-        await book.destroy({ where: { id:req.query.id } });
-        res.status(200).json({ message: "Book and its related files were deleted successfully" });
-         
-    } catch (error) {
+  try {
+    const Book = await book.findByPk(req.query.id);
+    if (!Book) {
+        return { success: false, message: "Book not found" };
+    }
+    const filePath = path.resolve(Book.file_path);
+    const imagePath = path.resolve(Book.display_image);
+    if (fs.existsSync(filePath)) {
+        await fs.promises.unlink(filePath);
+        console.log(`Deleted file: ${filePath}`);
+    } else {
+        console.warn(`\n \n \n File not found: ${filePath}`);
+    }
+    if (fs.existsSync(imagePath)) {
+        await fs.promises.unlink(imagePath);
+        console.log(`Deleted image: ${imagePath}`);
+    } else {
+        console.warn(`\n \n \n Image not found: ${imagePath}`);
+    }
+    await book.destroy({ where: { id:req.query.id } });
+    res.status(200).json({ message: "Book and its related files were deleted successfully" });
+  } catch (error) {
         console.error("Error deleting book:", error);
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
-    }
+  }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  for storage 
-//  const >> from  path of hostage to file of local storage 
-//  var   >> depends on each path of (image,....file path)
-// file_path when you storing books ,storing it as uniqe in local storage 
-// and display_image path >> extract from pdf file of book ( bit map )  first time download the displaye_image and storage
-// inside  storage 3 files for all category 
-// download and >> upload (streeming) with create (threading) [download on backgraund dont stop app] 
-// CRUD  >>  CREATE with upload,    Get the only data with filter by category, 
-// 
-// 
-// 
-// const BASE_URL = process.env.BASE_URL;
-// const UPLOAD_DIR = process.env.UPLOAD_DIR;
-// const uniqueName = `${Date.now()}_${file.originalname}`;
-// const fileUrl = `${BASE_URL}/${category}/${uniqueName}`;

@@ -3,8 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { workerData, parentPort } = require("worker_threads");
 const { filePath, range } = workerData;
-// const downloadPath = path.join(__dirname, "../storage", "downloads"); // for download inside storage
-const downloadPath = process.env.DOWNLOAD_PATH || path.join(__dirname, "../downloads"); // for download out storage
+const downloadPath = process.env.DOWNLOAD_PATH || path.join(__dirname, "../downloads"); 
  
 
 if (!filePath || typeof filePath !== "string") {

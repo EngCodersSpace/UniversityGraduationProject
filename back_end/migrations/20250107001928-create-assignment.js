@@ -29,11 +29,31 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      section_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
+      level_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
       title: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         allowNull: false,
       },
-      assignment_day: {
+      assignment_due_day: {
         type: Sequelize.ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'),
         allowNull: false,
       },
@@ -45,10 +65,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      attachment: {
-        type: Sequelize.TEXT,
-        allowNull: true,
+      original_name:{
+        type:Sequelize.STRING,
       },
+
 
 
       createdAt: {

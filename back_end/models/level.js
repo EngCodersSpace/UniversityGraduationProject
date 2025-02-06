@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'levelId',
       });
 
+      level.hasMany(models.assignment, {
+        foreignKey: 'level_id',
+      });
+
 
     }
   }

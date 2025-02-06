@@ -36,8 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         through: 'student_assignment',
         foreignKey: 'student_id',
       });
-
-
+      student.hasMany(models.student_assignment, {
+        foreignKey: 'student_id',
+      });
 
 
     }
@@ -82,6 +83,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       allowNull: false,
     },
+    // status: {
+    //   type: DataTypes.JSON,
+    //   allowNull: false,
+    //   defaultValue: 'Freshman',
+    // },
+    repeat_years_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+
   }, {
     sequelize,
     modelName: 'student',
