@@ -2,11 +2,7 @@
 'use strict';
 
 const { faker } = require('@faker-js/faker');
-<<<<<<< HEAD:back_end/seeders/20240914000033-create-user.js
 const { user, student, doctor, study_plan, level, section, role } = require('../models');
-=======
-const { user, student, doctor, study_plan, level, section } = require('../models');
->>>>>>> BackEnd:back_end/seeders/20240914000003-create-user.js
 const bcrypt = require("bcrypt");
 
 module.exports = {
