@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 
-import '../../../../components/custom_text_v2.dart';
+// import '../../../../components/custom_text_v2.dart';
 import '../../../../styles/app_colors.dart';
-import '../../../../styles/text_styles.dart';
+// import '../../../../styles/text_styles.dart';
 
 class LectureTableFilterComponent
     extends GetView<DashbordLectureTableController> {
@@ -27,7 +27,7 @@ class LectureTableFilterComponent
           // ),
           Container(
             height: height * 0.08,
-            width: width * 0.1,
+            width: width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -42,6 +42,9 @@ class LectureTableFilterComponent
                     dropdownColor: AppColors.inverseCardColor,
                   )),
             ),
+          ),
+          SizedBox(
+            width: width * 0.01,
           ),
           // CustomText(
           //   "Level".tr,
@@ -68,6 +71,9 @@ class LectureTableFilterComponent
                   )),
             ),
           ),
+          SizedBox(
+            width: width * 0.01,
+          ),
           // CustomText(
           //   "Term".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
@@ -93,6 +99,9 @@ class LectureTableFilterComponent
                   )),
             ),
           ),
+          SizedBox(
+            width: width * 0.01,
+          ),
           // CustomText(
           //   "Order".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
@@ -102,7 +111,7 @@ class LectureTableFilterComponent
           // ),
           Container(
             height: height * 0.08,
-            width: width * 0.1,
+            width: width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -118,6 +127,9 @@ class LectureTableFilterComponent
                   )),
             ),
           ),
+          SizedBox(
+            width: width * 0.01,
+          ),
           // CustomText(
           //   "Sort".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
@@ -127,7 +139,7 @@ class LectureTableFilterComponent
           // ),
           Container(
             height: height * 0.08,
-            width: width * 0.1,
+            width: width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),

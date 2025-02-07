@@ -13,22 +13,23 @@ import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
 
 class DashbordLectureTableController extends GetxController {
-  Lecture? lecture;
+  RxMap<int, Lecture>? lecture;
+  int rowsperpage = 10;
   RxString fieldMessage = "".obs;
   RxString searchFild = "".obs;
   RxBool lodingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  RxString selectedOrder = "".obs;
-  RxString selectedSort = "".obs;
+  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedSort = "DESC".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
     DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
@@ -38,7 +39,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
@@ -50,7 +51,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "lecture_time",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Lecture Time",
               style: AppTextStyles.mainStyle(
@@ -60,7 +61,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "lecture_day",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Lecture Day",
               style: AppTextStyles.mainStyle(
@@ -70,7 +71,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "lecture_room",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Lecture Room",
               style: AppTextStyles.mainStyle(
@@ -80,7 +81,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "subject_id",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Subject",
               style: AppTextStyles.mainStyle(
@@ -92,7 +93,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "DESC",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Descending",
               style: AppTextStyles.mainStyle(
@@ -102,7 +103,7 @@ class DashbordLectureTableController extends GetxController {
     DropdownMenuItem<String>(
         value: "ASC",
         child: SizedBox(
-            width: (Get.width / 6) * 0.6,
+            width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Ascending",
               style: AppTextStyles.mainStyle(
@@ -117,7 +118,7 @@ class DashbordLectureTableController extends GetxController {
     await initLevelDashboardMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
-    await fetchDashboardData();
+    // await fetchDashboardData();
     lodingState.value = false;
     super.onInit();
   }
@@ -126,7 +127,14 @@ class DashbordLectureTableController extends GetxController {
     await fetchDashboardData();
   }
 
-  Future fetchDashboardData() async {
+  void onRowChange(int? value) {
+    if (value != null) {
+      rowsperpage = value;
+      update(["DataTable"]);
+    }
+  }
+
+  Future<void> fetchDashboardData() async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
       if (levels.isNotEmpty) {
@@ -141,9 +149,7 @@ class DashbordLectureTableController extends GetxController {
       }
     }
 
-    if (selectedSection.value == null || selectedLevel.value == null) {
-      return;
-    }
+    if (selectedSection.value == null || selectedLevel.value == null) {}
 
     Result res = await LectureRepository.fetchDashboardLecture(
         sectionId: selectedSection.value!,
@@ -155,18 +161,19 @@ class DashbordLectureTableController extends GetxController {
     if (res.statusCode == 200) {
       lecture = res.data;
     } else if (res.statusCode == 404) {
-      lecture = null;
+      lecture?.value = {};
       fieldMessage.value = "this section and level not has Lectures";
       showSnakeBar(
           title: "Not Found Lectures",
           message: "this section and level doesn't has Lectures ");
     } else {
-      lecture = null;
+      lecture?.value = {};
       fieldMessage.value = "fetching lectures failed please check connection";
       showSnakeBar(
           title: "Fetch Lectures Failed",
           message: "fetching lectures failed please check connection ");
     }
+    update(["DataTable"]);
   }
 
   void changeSection(int? val) async {
@@ -179,6 +186,24 @@ class DashbordLectureTableController extends GetxController {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchDashboardData();
+  }
+
+  void changeTerm(String? val) async {
+    if (val == null) return;
+    selectedTerm.value = val;
+    fetchDashboardData();
+  }
+
+  void changeOrder(String? val) async {
+    if (val == null) return;
+    selectedOrder.value = val;
+    fetchDashboardData();
+  }
+
+  void changeSort(String? val) async {
+    if (val == null) return;
+    selectedSort.value = val;
+    fetchDashboardData();
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
@@ -212,7 +237,7 @@ class DashbordLectureTableController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 7) * 0.6,
+              width: (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style:

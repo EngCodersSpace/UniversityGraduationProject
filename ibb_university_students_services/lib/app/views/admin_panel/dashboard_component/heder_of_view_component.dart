@@ -32,13 +32,13 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                 width: width * 0.2,
                 child: CustomText(
                   tablename,
-                  style: AppTextStyles.mainStyle(
+                  style: AppTextStyles.secStyle(
                     textHeader: AppTextHeaders.h1Bold,
                   ),
                 ),
               ),
               SizedBox(
-                width: width * 0.2,
+                width: width * 0.3,
                 child: Container(
                   width: width * 0.15,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -63,67 +63,70 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                 ),
               ),
               SizedBox(
-                width: width * 0.2,
-                child: Row(
-                  children: [
-                    Container(
-                      width: width * 0.12,
-                      decoration: BoxDecoration(
-                        color: AppColors.backColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: InkWell(
-                        onTap: upload(), //send function of upload
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Upload",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.inverseMainTextColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: width * 0.003,
-                            ),
-                            const Icon(Icons.file_upload_outlined),
-                          ],
+                width: width * 0.26,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: width * 0.12,
+                        decoration: BoxDecoration(
+                          color: AppColors.backColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: InkWell(
+                          onTap: upload(), //send function of upload
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Upload",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.inverseMainTextColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: width * 0.003,
+                              ),
+                              const Icon(Icons.file_upload_outlined),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: width * 0.01,
-                    ),
-                    Container(
-                      width: width * 0.12,
-                      decoration: BoxDecoration(
-                        color: AppColors.backColor,
-                        borderRadius: BorderRadius.circular(8),
+                      SizedBox(
+                        width: width * 0.01,
                       ),
-                      child: InkWell(
-                        onTap: download(), //send function of download
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Download",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.inverseMainTextColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: width * 0.003,
-                            ),
-                            const Icon(
-                              Icons.file_download_outlined,
-                            ),
-                          ],
+                      Container(
+                        width: width * 0.13,
+                        decoration: BoxDecoration(
+                          color: AppColors.backColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: InkWell(
+                          onTap: download(), //send function of download
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Download",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.inverseMainTextColor,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                width: width * 0.003,
+                              ),
+                              const Icon(
+                                Icons.file_download_outlined,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
