@@ -211,7 +211,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           height: 8,
                         ),
                         CustomButton(
-                          onPress: ()=>controller.showStudentFiles(studentId: content.value?.studentsStatus?.values.first.studentId),
+                          onPress: ()=>controller.showStudentFiles(content.value?.id,stateId: content.value?.studentsStatus?.values.first.id),
                           text: "Assignment Files".tr,
                         ),
                       ],

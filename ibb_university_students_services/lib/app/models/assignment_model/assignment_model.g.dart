@@ -25,8 +25,8 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       assignmentDate: fields[5] as String?,
       dueDate: fields[6] as String?,
       attachments: (fields[7] as Map?)?.cast<int, AttachmentFile>(),
-    )..studentsStatus =
-        (fields[8] as Map?)?.cast<int, StudentAssignmentState>();
+      studentsStatus: (fields[8] as Map?)?.cast<int, StudentAssignmentState>(),
+    );
   }
 
   @override

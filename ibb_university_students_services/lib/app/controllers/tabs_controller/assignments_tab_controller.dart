@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
+import 'package:ibb_university_students_services/app/models/student_assignments_file_model/student_assignments_file_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -48,7 +49,7 @@ class AssignmentsTabController extends GetxController {
   FocusNode hallFocus = FocusNode();
   String mode = "Add";
   int? selectedAssignment;
-  int? selectedStudent;
+  int? selectedState;
 
   @override
   void onInit() async {
@@ -157,7 +158,9 @@ class AssignmentsTabController extends GetxController {
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     sections = await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? {});
-    selectedDepartment = RxInt(sections.values.first.id);
+    if (sections.isNotEmpty) {
+      selectedDepartment = RxInt(sections.values.first.id);
+    }
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
@@ -181,7 +184,9 @@ class AssignmentsTabController extends GetxController {
             )),
       );
     }
-    selectedLevel = RxInt(levelsData.first.id);
+    if (levelsData.isNotEmpty) {
+      selectedLevel = RxInt(levelsData.first.id);
+    }
   }
 
   Future<void> initSubjectDropdownMenuList() async {
@@ -228,7 +233,7 @@ class AssignmentsTabController extends GetxController {
         continue;
       }
       int? oldId = file.id;
-      await AssignmentsRepository.uploadAttachment(
+      await AssignmentsRepository.uploadAttachmentFiles(
               attachment: file,
               sectionId: selectedDepartment.value!,
               levelId: selectedLevel.value!)
@@ -239,7 +244,34 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  Future<void> pickFiles() async {
+  void uploadStudentAssignmentsFiles() async {
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
+    if (selectedAssignment == null) return;
+    for (StudentAssignmentsFile file in (assignments?.value[selectedAssignment]!
+            .studentsStatus?[selectedState]?.studentFiles?.values
+            .toList() ??
+        [])) {
+      if (file.path == null || file.id > 0) {
+        continue;
+      }
+      int? oldId = file.id;
+      await AssignmentsRepository.uploadStudentAssignmentsFiles(
+              files: file,
+              assignmentId: selectedAssignment!,
+              sectionId: selectedDepartment.value!,
+              levelId: selectedLevel.value!)
+          .then((e) {
+        assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+            ?.studentFiles?[file.id] = file;
+        assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+            ?.studentFiles
+            ?.remove(oldId);
+      });
+    }
+  }
+
+  Future<void> pickAttachmentFiles() async {
     // Open file picker dialog
     Get.dialog(const PopUpLoadingCard());
     FilePickerResult? result;
@@ -282,15 +314,63 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  Future<void> pickStudentAssignmentsFiles() async {
+    // Open file picker dialog
+    Get.dialog(const PopUpLoadingCard());
+    FilePickerResult? result;
+    try {
+      assignments?.value[selectedAssignment]?.studentsStatus?.values.first
+          .studentFiles ??= {};
+      result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        readSequential: true,
+      );
+    } catch (e) {
+      showSnakeBar(message: "Loading Files Failed");
+    }
+    Navigator.of(Get.overlayContext!).pop();
+    if (result != null) {
+      bool exist = false;
+      for (int i = 0; i < result.count; i++) {
+        StudentAssignmentsFile file = StudentAssignmentsFile(
+            id: -result.files[i].name.hashCode,
+            title: result.files[i].name,
+            path: result.files[i].path,
+            studentAssignmentId: assignments?.value[selectedAssignment]
+                ?.studentsStatus?[selectedState]?.studentId,
+            status: RxString("Not Uploaded"));
+        file.downloaded.value = true;
+
+        assignments?.value[selectedAssignment]?.studentsStatus?.values.first
+            .studentFiles
+            ?.forEach((i, e) {
+          exist = (e.path?.split("/").last == file.path?.split("/").last);
+        });
+        if (!exist) {
+          assignments?.value[selectedAssignment]?.studentsStatus?.values.first
+              .studentFiles?[file.id] = file;
+        } else {
+          showSnakeBar(message: "This File Already Exist");
+        }
+      }
+      update(["AttachmentPiker"]);
+    } else {
+      // User canceled the picker
+      if (kDebugMode) {
+        print('No file selected');
+      }
+    }
+  }
+
   void openFile(String? path) async {
     await FileUtils.openFile(path);
   }
 
   void downloadAttachment() {}
 
-  void more(String val, {Map<String, dynamic>? data}) async {
-    selectedAssignment = data?["assignment_id"];
+  void more(String val, {Map<String, dynamic>? data}) async{
     if (val == "Edit") {
+      selectedAssignment = data?["assignment_id"];
       mode = "Edit";
       titleController.text =
           assignments?.value[selectedAssignment]?.title ?? "";
@@ -298,6 +378,7 @@ class AssignmentsTabController extends GetxController {
           assignments?.value[selectedAssignment]?.dueDate ?? "";
       Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
     } else if (val == "Delete") {
+      selectedAssignment = data?["assignment_id"];
       Result<void> res = await AssignmentsRepository.deleteAssignment(
         sectionId: selectedDepartment.value!,
         levelId: selectedLevel.value!,
@@ -312,7 +393,7 @@ class AssignmentsTabController extends GetxController {
       } else {
         showSnakeBar(message: "Delete failed");
       }
-    } else if (val == "DeleteFile") {
+    } else if (val == "DeleteAttachmentFile") {
       if (data == null) return;
       if (data["id"] < 0) {
         assignments?.value[selectedAssignment]?.attachments?.remove(data["id"]);
@@ -324,6 +405,22 @@ class AssignmentsTabController extends GetxController {
         if (res.statusCode == 200) {
           assignments?.value[selectedAssignment]?.attachments
               ?.remove(data["id"]);
+          update(["AttachmentPiker"]);
+        } else {
+          showSnakeBar(message: "Delete File Failed");
+        }
+      }
+    } else if (val == "DeleteStudentAssignmentFile") {
+      if (data == null) return;
+      if (data["id"] < 0) {
+        assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]?.studentFiles?.remove(data["id"]);
+        update(["AttachmentPiker"]);
+      } else {
+        Result res = await AssignmentsRepository.deleteAssignmentFile(
+            assignmentId: selectedAssignment!, id: data["id"]);
+        Navigator.of(Get.overlayContext!).pop();
+        if (res.statusCode == 200) {
+          assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]?.studentFiles?.remove(data["id"]);
           update(["AttachmentPiker"]);
         } else {
           showSnakeBar(message: "Delete File Failed");
@@ -416,17 +513,18 @@ class AssignmentsTabController extends GetxController {
     if ((PermissionUtils.checkPermission(
         target: "Assignments", action: "doctorView"))) {
       Get.dialog(AssignmentsAddFilesCard());
-    }else{
+    } else {
       Get.dialog(AssignmentsShowFilesCard());
     }
   }
 
-  void showStudentFiles({int? studentId}) {
-    selectedStudent = studentId;
+  void showStudentFiles(int? assignmentId, {int? stateId}) {
+    selectedAssignment = assignmentId;
+    selectedState = stateId;
     if ((PermissionUtils.checkPermission(
         target: "Assignments", action: "doctorView"))) {
       Get.dialog(AssignmentsShowFilesCard());
-    }else{
+    } else {
       Get.dialog(AssignmentsAddFilesCard());
     }
   }

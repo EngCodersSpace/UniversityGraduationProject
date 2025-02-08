@@ -13,6 +13,7 @@ import '../components/pop_up_cards/loading_card.dart';
 import '../models/assignment_model/assignment_model.dart';
 import '../models/helper_models/assignments_cache/assignments_cache.dart';
 import '../models/helper_models/result.dart';
+import '../models/student_assignments_file_model/student_assignments_file_model.dart';
 import '../services/http_provider/http_provider.dart';
 import '../services/notification_services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
@@ -275,7 +276,7 @@ class AssignmentsRepository {
     }
   }
 
-  static Future<Result<int>> uploadAttachment({
+  static Future<Result<int>> uploadAttachmentFiles({
     required AttachmentFile attachment,
     required int sectionId,
     required int levelId,
@@ -328,6 +329,80 @@ class AssignmentsRepository {
         }
         return Result(
             data: attachment.id,
+            hasError: false,
+            statusCode: response?.statusCode ?? _createError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      showSnakeBar(message: "Failed Upload");
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          statusCode: _createError, message: error.toString(), data: null);
+    }
+  }
+
+
+  static Future<Result<int>> uploadStudentAssignmentsFiles({
+    required StudentAssignmentsFile files,
+    required int sectionId,
+    required int levelId,
+    required int assignmentId,
+  }) async {
+    late Response? response;
+    try {
+      File file = File(files.path ?? "");
+      int fileSize = await file.length();
+      response = await HttpProvider.post("check-files", data: {
+        "originalname": files.path?.split("/").last,
+        "size": fileSize.toString(),
+        "mimetype": "text/plain",
+        "section_id": sectionId,
+        "level_id": levelId
+      });
+
+      if (response?.statusCode == 200) {
+        files.progress = get_x.RxInt(0);
+        files.status?.value = "Uploading";
+        response = null;
+        response = await HttpProvider.uploadFile(
+          uploadUrl:
+          "upload-files-assignment-student?assignment_id=$assignmentId&section_id=$sectionId&level_id=$levelId",
+          file: file,
+          onSendProgress: (sent, total) {
+            double progress = (sent / total) * 100;
+            files.progress?.value = progress.toInt();
+            NotificationHandler.showProgressNotification(
+                uniqueId: files.id.hashCode,
+                progress: progress.toInt(),
+                title: "Uploading",
+                message: " ${file.path.split("/").last}");
+          },
+        );
+        if (response?.statusCode == 201) {
+          files.path = response?.data["file"]["path"];
+          await FileUtils.saveFiles(
+              fileRelativePath: files.path, file: file);
+          NotificationHandler.showProgressNotification(
+              uniqueId: files.id.hashCode,
+              title: "successful upload ",
+              message: files.title);
+          files.id = response?.data["file"]["id"];
+          files.status?.value = "Uploaded";
+        } else {
+          files.status?.value = "Failed";
+          NotificationHandler.showProgressNotification(
+              uniqueId: files.id.hashCode,
+              title: "failed upload ",
+              message: files.title);
+        }
+        return Result(
+            data: files.id,
             hasError: false,
             statusCode: response?.statusCode ?? _createError,
             message: response?.data["message"] ?? "error");
@@ -447,6 +522,35 @@ class AssignmentsRepository {
     try {
       response = await HttpProvider.delete(
           "delete-assignment-files?assignment_id=$id");
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<void>> deleteStudentAssignmentFile({
+    required int assignmentId,
+    required id,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.delete(
+          "delete-attachment-files?assignment_id=$id");
       if (response?.statusCode == 200) {
         _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
       } else if (response?.statusCode == 403) {

@@ -7,11 +7,13 @@ import 'package:ibb_university_students_services/app/models/grads_model/grads_mo
 import 'package:ibb_university_students_services/app/models/helper_models/assignments_cache/assignments_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/students_fee_cache/student_fee_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/models/student_assignments_file_model/student_assignments_file_model.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
@@ -45,13 +47,15 @@ class HiveServices{
     Hive.registerAdapter(StudentFeeAdapter());
     Hive.registerAdapter(StudyPlanElementAdapter());
     Hive.registerAdapter(StudyPlaneAdapter());
+    Hive.registerAdapter(StudentFeeCacheAdapter());
     Hive.registerAdapter(LecturesCacheAdapter());
     Hive.registerAdapter(ExamsCacheAdapter());
-    Hive.registerAdapter(StudentFeeCacheAdapter());
     Hive.registerAdapter(AssignmentsCacheAdapter());
     Hive.registerAdapter(SubjectsCacheAdapter());
     Hive.registerAdapter(AssignmentAdapter());
     Hive.registerAdapter(AttachmentFileAdapter());
+    Hive.registerAdapter(StudentAssignmentsFileAdapter());
+    Hive.registerAdapter(StudentAssignmentStateAdapter());
   }
   static openGlobalBoxes()async{
     await SubjectRepository.openBox();

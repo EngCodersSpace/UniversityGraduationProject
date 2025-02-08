@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
-import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
@@ -11,13 +10,13 @@ import '../../../utils/permission_checker.dart';
 // ignore: must_be_immutable
 class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
   const AssignmentsShowFilesCard({super.key});
-  List<AttachmentFile>? get _data {
+   get _data {
 
     if (PermissionUtils.checkPermission(
         target: "Assignments", action: "showStudentsFiles")) {
       return controller.assignments?.value[controller.selectedAssignment]
-          ?.studentsStatus?[controller.selectedStudent]?.studentFiles
-          ?.toList();
+          ?.studentsStatus?[controller.selectedState]?.studentFiles?.values
+          .toList();
     }
     return controller.assignments?.value[controller.selectedAssignment]
         ?.attachments?.values.toList();
@@ -203,15 +202,23 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                         color: AppColors
                                                             .inverseCardColor,
                                                         itemBuilder: (ctx) => [
-                                                          PopupMenuItem(
-                                                              value:
-                                                                  "DeleteFile",
+                                                          (mode =="studentsFiles")?PopupMenuItem(
+                                                              value: "DeleteStudentAssignmentFile",
                                                               child: CustomText(
                                                                 "Delete".tr,
                                                                 style: AppTextStyles.mainStyle(
                                                                     textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
+                                                                    AppTextHeaders
+                                                                        .h3Bold),
+                                                              )):PopupMenuItem(
+                                                              value:
+                                                              "DeleteAttachmentFile",
+                                                              child: CustomText(
+                                                                "Delete".tr,
+                                                                style: AppTextStyles.mainStyle(
+                                                                    textHeader:
+                                                                    AppTextHeaders
+                                                                        .h3Bold),
                                                               )),
                                                           PopupMenuItem(
                                                               value:

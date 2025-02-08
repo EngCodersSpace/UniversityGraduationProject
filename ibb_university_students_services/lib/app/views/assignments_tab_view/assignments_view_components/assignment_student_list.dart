@@ -31,7 +31,7 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
             return Column(
               children: [
                 ListTile(
-                  onTap: ()=>controller.showStudentFiles(studentId: items[i].studentId),
+                  onTap: ()=>controller.showStudentFiles(controller.selectedAssignment,stateId: items[i].id),
                   leading: CircleAvatar(
                     backgroundColor: AppColors.inverseIconColor,
                     child: CustomText(
