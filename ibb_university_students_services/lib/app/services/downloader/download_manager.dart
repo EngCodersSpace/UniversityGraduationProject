@@ -9,7 +9,7 @@ class DownloadManager {
   // Initialize the downloader
   static Future<void> initialize() async {
     await FlutterDownloader.initialize(debug: true);
-    downloadBasePath =  await getDownloadsFolderPath();
+    downloadBasePath =  "/storage/emulated/0/StudentServices";
   }
 
   // Fetch the base download directory
@@ -41,10 +41,14 @@ class DownloadManager {
   // Start a download task
   static Future<String?> startDownload(String url, String fileName , {String? savePath}) async {
 
-    final savingPath = Directory(savePath??downloadBasePath).path;
+    Directory dir = Directory("$downloadBasePath/$savePath");
+    if (!(await dir.exists())) {
+      await dir.create(recursive: true);
+    }
+
     final taskId = await FlutterDownloader.enqueue(
       url: url,
-      savedDir: savingPath,
+      savedDir: dir.path,
       fileName: fileName,
       showNotification: true,
       openFileFromNotification: false,

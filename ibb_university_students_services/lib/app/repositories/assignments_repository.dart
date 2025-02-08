@@ -569,4 +569,38 @@ class AssignmentsRepository {
           data: null);
     }
   }
+
+  static Future<Result<void>> changeStudentState({
+    required int id,
+    required int studentId,
+    required int stateId,
+    required String state,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.put("update-student-assignment-status?id=$stateId&student_id=$studentId&status=$state");
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.state = response?.data["data"]["status"];
+        return Result(
+            hasError: true,
+            statusCode: response?.statusCode ?? _createError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
 }

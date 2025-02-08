@@ -1,6 +1,7 @@
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 
 class PermissionUtils {
+
   static Map<int, Map<String, List<String>>> permissionsMap = {
     1: {//dean
       "Lectures": ["add","edit" "delete", "view","accessOldTables"],

@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../../models/assignment_model/assignment_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
@@ -61,35 +63,28 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.mainCardColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText(
-                            "Create Date".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
+                        CustomText(
+                          "Title:".tr,
+                          style: AppTextStyles.mainStyle(
+                              textHeader: AppTextHeaders.h1Bold),
                         ),
                         Row(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.mainCardColor,
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(32)),
+                            if( (UserRepository.isCurrentUser(content.value?.studentsStatus?.entries.first.value.studentId)??false))
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainCardColor,
+                                  borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                                ),
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                                child: CustomText(
+                                  (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
+                                ),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: CustomText(
-                                "${content.value?.assignmentDate}".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                            ),
                             if ((PermissionUtils.checkPermission(
                                 target: "Assignments", action: "edit"))) ...[
                               const SizedBox(
@@ -130,7 +125,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                     const SizedBox(
                       height: 8,
                     ),
-                    CustomText(content.value?.title ?? "Unknown".tr,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold,),),
+                    Padding(padding: (LocaleListener.currentLocal.value?.languageCode == "en")?EdgeInsets.only(left: 32):EdgeInsets.only(right: 32) ,child: CustomText(content.value?.title ?? "Unknown".tr,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold,),)),
                   ],
                 ),
               ),
@@ -164,6 +159,26 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       Row(
                         children: [
                           CustomText(
+                            "${"Create Date".tr}:",
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          CustomText(
+                            content.value?.assignmentDate ?? "00:00:00",
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          CustomText(
                             "${"Due Date".tr}:",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
@@ -186,6 +201,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           ),
                         ],
                       ),
+
                       const SizedBox(
                         height: 16,
                       ),
