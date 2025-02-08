@@ -6,52 +6,22 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/lecture_table_filter_component.dart';
 
 class LectureTableView extends GetView<DashbordLectureTableController> {
-  double width = Get.width;
-  double height = Get.height;
-
   @override
   Widget build(BuildContext context) {
+    controller.fetchDashboardData();
+    final dataSours = MyData(controller.lecture?.values.toList() ?? []);
     return Scaffold(
-      body: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: height * 0.8,
-              width: width,
-              padding: EdgeInsets.all(10),
-              color: AppColors.tabBackColor,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    GetBuilder<DashbordLectureTableController>(
-                      id: "DataTable",
-                      builder: (ctx) => PaginatedDataTable(
-                        rowsPerPage: controller.rowsperpage,
-                        columnSpacing: 60,
-                        availableRowsPerPage: const <int>[10, 20, 30],
-                        onRowsPerPageChanged: controller.onRowChange,
-                        columns: kTableColumn,
-                        source:
-                            MyData(controller.lecture?.values.toList() ?? []),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            color: AppColors.tabBackColor,
-            width: width,
-            height: height * 0.25,
+        body: Container(
+            height: Get.height,
+            width: Get.width,
             padding: EdgeInsets.all(10),
+            color: AppColors.tabBackColor,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 HederOfViewComponent(
                   tablename: "Lectures",
@@ -59,49 +29,94 @@ class LectureTableView extends GetView<DashbordLectureTableController> {
                   download: () {},
                 ),
                 SizedBox(
-                  height: height * 0.01,
+                  height: Get.height * 0.01,
                 ),
                 LectureTableFilterComponent(),
+                SizedBox(
+                  height: Get.height * 0.01,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        GetBuilder<DashbordLectureTableController>(
+                          id: "DataTable",
+                          builder: (ctx) => PaginatedDataTable(
+                            rowsPerPage: controller.rowsperpage,
+                            columnSpacing: 100,
+                            availableRowsPerPage: const <int>[10, 20, 30],
+                            onRowsPerPageChanged: controller.onRowChange,
+                            columns: kTableColumn,
+                            source: dataSours,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
+            )));
   }
 
   List<DataColumn> kTableColumn = <DataColumn>[
     DataColumn(
-      label: CustomText("Lecture ID"),
+      label: CustomText(
+        "Lecture ID",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
       numeric: true,
     ),
-    DataColumn(label: CustomText("Subject")),
     DataColumn(
-      label: CustomText("Doctor ID"),
+        label: CustomText(
+      "Subject",
+      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+    )),
+    DataColumn(
+      label: CustomText(
+        "Doctor ID",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
       numeric: true,
     ),
     DataColumn(
-      label: CustomText("Duration"),
+      label: CustomText(
+        "Duration",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
       // numeric: true,
     ),
     DataColumn(
-      label: CustomText("Start Time"),
+      label: CustomText(
+        "Start Time",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
       // numeric: true,
     ),
     DataColumn(
-      label: CustomText("Hall"),
+      label: CustomText(
+        "Hall",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
       // numeric: true,
     ),
     DataColumn(
-      label: CustomText("Decsription"),
+      label: CustomText(
+        "Decsription",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      ),
     ),
   ];
 }
 
 class MyData extends DataTableSource {
   final List<Lecture> _list;
-
   MyData(this._list);
+  // void main() {
+  //   DashbordLectureTableController baz = DashbordLectureTableController();
+  //   MyData bazraa = MyData(baz.lecture as List<Lecture>);
+  //   _list = bazraa as List<Lecture>;
+  // }
+
   @override
   DataRow? getRow(int index) {
     if (index >= _list.length) return null;

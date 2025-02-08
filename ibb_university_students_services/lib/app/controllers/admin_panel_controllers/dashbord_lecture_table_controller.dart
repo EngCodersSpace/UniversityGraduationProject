@@ -13,8 +13,8 @@ import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
 
 class DashbordLectureTableController extends GetxController {
-  RxMap<int, Lecture>? lecture;
-  int rowsperpage = 10;
+  RxMap<String, Lecture>? lecture;
+  int rowsperpage = PaginatedDataTable.defaultRowsPerPage;
   RxString fieldMessage = "".obs;
   RxString searchFild = "".obs;
   RxBool lodingState = true.obs;
@@ -216,7 +216,7 @@ class DashbordLectureTableController extends GetxController {
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 7) * 0.6,
+              width: (Get.width / 6) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
                 style:
