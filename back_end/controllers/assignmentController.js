@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
 const { Worker } = require("worker_threads");
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
-const {createRefreshState} = require('../controllers/refreshController');
+const { upsertRefreshState} = require('../controllers/refreshController');
 
 
 // get assignments for specific subject of doctor  => 
@@ -289,7 +289,7 @@ exports.createAssignment = async (req, res) => {
       createdAssignments.push(assignmentRecord);
     }
 
-    await createRefreshState("assignment");
+    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
     
     res.status(201).json({
       message: 'Assignments created successfully for the specified sections and levels.',
@@ -456,6 +456,7 @@ exports.updateAssigment=async(req,res)=>{
     };
 
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
+    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
 
 
     res.status(200).json({
@@ -494,6 +495,8 @@ exports.deleteAssignment = async (req, res) => {
     }
 
     await Assignment.destroy();
+    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
+
     res.status(200).json({ message: 'Assignment deleted successfully.' });
   } catch (error) {
     console.error(error);

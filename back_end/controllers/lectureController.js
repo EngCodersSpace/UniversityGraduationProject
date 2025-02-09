@@ -1,9 +1,9 @@
 const { validationResult } = require("express-validator");
 const { lecture, subject, doctor, section, level, user } = require("../models");
 const { Sequelize } = require("sequelize");
-// const { } = require('../middleware/helperLecture');
 const { Op } = require("sequelize");
 const cron = require("node-cron");
+const { upsertRefreshState} = require('../controllers/refreshController');
 
 const createLecture = async (req, res) => {
   const errors = validationResult(req);
@@ -12,6 +12,8 @@ const createLecture = async (req, res) => {
   }
   try {
     const newLecture = await lecture.create(req.body);
+    await upsertRefreshState("lecture",`section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`);
+
     res.status(201).json({
       message: "Lecture created successfully",
       data: newLecture,
@@ -157,6 +159,7 @@ const updateLecture = async (req, res) => {
       where: { id: req.query.id },
       returning: true,
     });
+    await upsertRefreshState("lecture",`section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`);
 
     res.status(200).json({
       message: "Lecture updated successfully",
@@ -178,6 +181,7 @@ const deleteLecture = async (req, res) => {
     if (deleted === 0) {
       return res.status(404).json({ message: "Lecture not found" });
     }
+    await upsertRefreshState("lecture",`section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`);
 
     res.status(200).json({
       message: "Lecture deleted successfully",

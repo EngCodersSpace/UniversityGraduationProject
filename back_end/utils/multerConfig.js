@@ -82,8 +82,24 @@ const getStorageForPath = (baseFolder = 'temp', subFolder) => {
   };
 };
 
+const getStorageForPathPhoto = (baseFolder = 'temp', subFolder) => {
+  return multer.diskStorage({
+    destination: async (req, file, cb) => {
+      const folderPath = path.resolve('storage', baseFolder, subFolder);
+      await createFolderIfNotExists(folderPath);
+      cb(null, folderPath);
+    },
+    filename: (req, file, cb) => {
+      // const hash = crypto.createHash('md5').update(file.originalname).digest('hex');
+      const fileName = `${path.extname(file.originalname)}`;
+      cb(null, fileName);
+    },
+  });
+};
+
 const createUploadMiddleware = (baseFolder,subFolder) => {
   const storage = getStorageForPath(baseFolder,subFolder);
+
   // const allowedMimetypes = [
   //   'image/jpeg',
   //   'image/png',
@@ -147,7 +163,15 @@ const createUploadMiddleware = (baseFolder,subFolder) => {
 };
 
 
+const uploadPhoto = (baseFolder,subFolder)=>{
+  const storagePhoto = getStorageForPathPhoto(baseFolder,subFolder);
+  return multer({
+    storagePhoto,
+  });
+}
+
 module.exports = {
   uploadFields: createUploadMiddleware,
   createFolderIfNotExists,
+  uploadPhoto
 };

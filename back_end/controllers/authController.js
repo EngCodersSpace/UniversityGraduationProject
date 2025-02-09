@@ -78,6 +78,8 @@ exports.login = async (req, res) => {
     const refreshToken = jwt.sign(
       {
         user_id: foundUser.user_id,
+        permission: foundUser.role.roleName,
+
       },
       REFRESH_SECRET_KEY,
       { expiresIn: "1d" }
@@ -241,7 +243,7 @@ exports.registerDoctor = async (req, res) => {
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
+      roleID: req.body.roleId,
       doctor: {
         academic_degree: {
           [req.headers["accept-language"]]: req.body.doctor.academic_degree,
@@ -308,14 +310,14 @@ exports.registerStudent = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
+      // profile_picture: req.body.profile_picture,
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
+      roleID: req.body.roleId,
       student: {
         study_plan_id: req.body.student.study_plan_id,
         student_level_id: req.body.student.student_level_id,
@@ -331,6 +333,17 @@ exports.registerStudent = async (req, res) => {
       include: [{ model: student, as: "student" }],
     });
 
+    if (req.file) {
+      const oldFilePath = req.file.path;
+      const fileExtension = path.extname(req.file.originalname); 
+      const newFileName = `student_${newStudent.id}${fileExtension}`; 
+      const newFilePath = path.join(path.dirname(oldFilePath), newFileName); 
+      fs.renameSync(oldFilePath, newFilePath);
+      newStudent.profile_picture = `${req.file.baseFolder}/${req.file.subFolder}/${newFileName}`;
+      await newStudent.save();
+    }
+
+
     res.status(201).json({
       message: "Student registered successfully",
       user: newStudent,
@@ -342,6 +355,9 @@ exports.registerStudent = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
+
+
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
@@ -528,4 +544,27 @@ exports.getCurrentUser = (req, res) => {
         .json({ message: "Internal server error", error: error.message });
     }
   });
+};
+
+
+exports.logout = async (req, res) => {
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id : req.query.user_id},
+    });
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    foundUser.refreshToken = null;
+    await foundUser.save();
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };

@@ -275,9 +275,6 @@ exports.updateGrade = async (req, res) => {
     }
 };
 
-
-
-
 exports.deleteGrade = async (req, res) => {
     try {
       const { id } = req.params;
@@ -296,4 +293,3 @@ exports.deleteGrade = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-

@@ -13,6 +13,7 @@ const corsOptions = {
   credentials: true, // Allow cookies or Authorization headers
 };
 
+// Rest of  application code
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); 
 
@@ -31,7 +32,7 @@ const studentFeeRoute=require('./routes/studentFeeRoute')
 const bookRoutes = require('./routes/bookRoute');
 const assignmentRoutes = require('./routes/assignmentRoute');
 const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
-
+const notificationRoute= require('./routes/notificationRoute');
 
 app.use(getAllData);
 app.use(mainRouter);
@@ -48,6 +49,7 @@ app.use(studentFeeRoute);
 app.use(bookRoutes);
 app.use(assignmentRoutes);
 app.use(rolePermissionRoutes);
+app.use(notificationRoute);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {

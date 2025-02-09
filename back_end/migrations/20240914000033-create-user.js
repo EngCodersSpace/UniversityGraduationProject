@@ -77,6 +77,10 @@ module.exports = {
         allowNull: true,
       },
 
+      fcm_token:{
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
 
       createdAt: {
         allowNull: false,

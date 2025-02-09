@@ -140,6 +140,9 @@ exports.updateExam = async (req, res) => {
             include: [{ model: subject, as: 'subject' }], 
         });
 
+        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
+
+
         res.status(200).json({
             message: 'Exam updated successfully',
             exam: updatedExam,
@@ -159,6 +162,9 @@ exports.deleteExam = async (req, res) => {
         if (!foundExam) {
             return res.status(404).json({ message: 'Exam not found' });
         }
+
+        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
+
         res.status(200).json({
             message: 'Exam deleted successfully',
         });
