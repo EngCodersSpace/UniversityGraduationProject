@@ -100,4 +100,13 @@ class DateTimeUtils {
       controller.text = DateTimeUtils.formatTimeOfDay(time: pikeTime);
     }
   }
+
+  static String calcUniversityYear(String enrollmentYear,int level,int repeatYears){
+    int year = dateTimeFromString(enrollmentYear).year;
+    year += level-1;
+    year += repeatYears;
+
+    return "$year/${year + 1}";
+  }
+
 }
