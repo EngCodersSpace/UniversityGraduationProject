@@ -165,9 +165,7 @@ const createUploadMiddleware = (baseFolder,subFolder) => {
 
 const uploadPhoto = (baseFolder,subFolder)=>{
   const storagePhoto = getStorageForPathPhoto(baseFolder,subFolder);
-  return multer({
-    storagePhoto,
-  });
+  return multer({ storage: storagePhoto });
 }
 
 module.exports = {

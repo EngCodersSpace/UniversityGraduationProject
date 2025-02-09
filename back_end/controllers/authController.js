@@ -18,8 +18,10 @@ const nodemailer = require("nodemailer");
 const { validationResult } = require("express-validator");
 // const { sequelize} = require('sequelize');
 const { Op, Sequelize } = require("sequelize");
-
+const path = require('path');
+const fs = require("fs");
 const { translateText } = require("../middleware/translationServices");
+const { uploadPhoto } = require('../utils/multerConfig');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -236,7 +238,6 @@ exports.registerDoctor = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
@@ -317,7 +318,7 @@ exports.registerStudent = async (req, res) => {
       },
       email: req.body.email,
       password: req.body.password,
-      roleID: req.body.roleId,
+      roleId: req.body.roleId,
       student: {
         study_plan_id: req.body.student.study_plan_id,
         student_level_id: req.body.student.student_level_id,
@@ -333,17 +334,6 @@ exports.registerStudent = async (req, res) => {
       include: [{ model: student, as: "student" }],
     });
 
-    if (req.file) {
-      const oldFilePath = req.file.path;
-      const fileExtension = path.extname(req.file.originalname); 
-      const newFileName = `student_${newStudent.id}${fileExtension}`; 
-      const newFilePath = path.join(path.dirname(oldFilePath), newFileName); 
-      fs.renameSync(oldFilePath, newFilePath);
-      newStudent.profile_picture = `${req.file.baseFolder}/${req.file.subFolder}/${newFileName}`;
-      await newStudent.save();
-    }
-
-
     res.status(201).json({
       message: "Student registered successfully",
       user: newStudent,
@@ -356,7 +346,47 @@ exports.registerStudent = async (req, res) => {
   }
 };
 
+exports.uploadPhotoForuser = async (req, res) => {
+  try {
+    const newUser = await user.findOne({ where: { user_id: req.query.user_id } });
 
+    if (!newUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    uploadPhoto('profile_picture', 'user' ).single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: 'Error during photo upload.', error: err.message });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: 'No photo provided for upload.' });
+      }
+
+      try {
+        const oldFilePath = req.file.path; 
+        const fileExtension = path.extname(req.file.originalname); 
+        const newFileName = `${newUser.user_id}${fileExtension}`; 
+        const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
+
+        fs.renameSync(oldFilePath, newFilePath);
+        newUser.profile_picture = `profile_picture/user/${newFileName}`; 
+        await newUser.save();
+
+        res.status(201).json({
+          message: 'Photo uploaded successfully.',
+          filePath: newUser.profile_picture, 
+        });
+      } catch (error) {
+        console.error('Error while uploading photo:', error.message);
+        res.status(500).json({ message: 'Internal server error.', error: error.message });
+      }
+    });
+  } catch (error) {
+    console.error('Error while uploading photo:', error.message);
+    res.status(500).json({ message: 'Internal server error.', error: error.message });
+  }
+};
 
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {

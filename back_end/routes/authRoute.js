@@ -4,8 +4,8 @@ const router = express.Router();
 const vali = require('../validations/authvalidation');
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
-const { createUploadMiddleware } = require('../utils/multerConfig');
-const uploadProfilePicture = createUploadMiddleware('profile_pictures', 'students');
+const { uploadPhoto } = require('../utils/multerConfig');
+const uploadProfilePicture = uploadPhoto('profile_pictures', 'students');
 
 
 router.post('/login', authController.login);
@@ -26,13 +26,15 @@ router.post('/register', uploadProfilePicture.single('profile_picture'), (req, r
 
 router.post('/registerDoctor',vali.validateDoctorRegistration,authController.registerDoctor);
 
-router.post('/registerStudent',uploadProfilePicture.single('profile_picture'),(req, res) => {exports.registerStudent(req, res);},vali.validateStudentRegistration,authController.registerStudent);
-// router.post(
-//     '/registerStudent',
-//     vali.validateStudentRegistration, 
-//     uploadProfilePicture.single('profile_picture'), 
-//     exports.registerStudent 
-// );
+// router.post('/registerStudent',uploadProfilePicture.single('profile_picture'),(req, res) => {exports.registerStudent(req, res);},vali.validateStudentRegistration,authController.registerStudent);
+router.post(
+    '/registerStudent', 
+    uploadProfilePicture.single('profile_picture'), 
+    authController.registerStudent 
+);
+
+router.post('/upload-photo-user',authController.uploadPhotoForuser);
+
 
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
 

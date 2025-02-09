@@ -12,7 +12,7 @@ router.post('/upload-files-assignment-student', CRUD.uploadFilesAttachment);
 
 router.get('/get-assignments-subject',CRUD.getAssignmentsOfSubject);
 router.get('/get-all-students-assignment', CRUD.getStudentsAndFilesByAssignment);
-router.get('/download-assignment', CRUD.downloadFile);
+router.get('/download-assignment-files', CRUD.downloadFile);
 
 
 router.put('/update-assignment', CRUD.updateAssigment);
