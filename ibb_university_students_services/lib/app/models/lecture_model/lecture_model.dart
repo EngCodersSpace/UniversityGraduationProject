@@ -1,5 +1,3 @@
-
-
 import 'package:hive/hive.dart';
 
 import '../subject_model/subject_model.dart';
@@ -47,6 +45,8 @@ class Lecture {
       hall: json['lecture_room'],
     );
   }
+
+  get selected => null;
 
   Map<String, dynamic> toJson() {
     return {

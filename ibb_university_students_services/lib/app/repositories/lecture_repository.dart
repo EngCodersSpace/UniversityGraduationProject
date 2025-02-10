@@ -57,7 +57,7 @@ class LectureRepository {
           hasError: false,
           statusCode: 200);
     }
-    late Response? response;
+    Response? response;
     try {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
@@ -116,7 +116,7 @@ class LectureRepository {
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
-    late Response? response;
+    Response? response;
     try {
       response = await HttpProvider.post("create-lecture", data: data);
       Lecture? newLecture;
@@ -163,7 +163,7 @@ class LectureRepository {
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
-    late Response? response;
+    Response? response;
     LecturesCache? cachedDayLectures = _lecturesBox?.get(
         "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
     try {
@@ -212,7 +212,7 @@ class LectureRepository {
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
-    late Response? response;
+    Response? response;
     try {
       LecturesCache? cachedDayLectures = _lecturesBox?.get(
           "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
@@ -254,7 +254,7 @@ class LectureRepository {
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
-    late Response? response;
+    Response? response;
     try {
       LecturesCache? cachedDayLectures = _lecturesBox?.get(
           "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
@@ -289,6 +289,28 @@ class LectureRepository {
     }
   }
 
+  // static Future<Result<Lecture>> fetchAllLecture() async {
+  //   Response? response;
+  //   try {
+  //     response = await HttpProvider.get("get-all-lecture");
+  //     Lecture? getLecture;
+  //     if (response?.statusCode == 200) {
+  //       getLecture = Lecture.fromJson(response?.data["data"]);
+  //     }
+  //     return Result(
+  //         data: getLecture,
+  //         hasError: true,
+  //         statusCode: response?.statusCode ?? _updateError,
+  //         message: response?.data["message"] ?? "error");
+  //   } catch (error) {
+  //     return Result(
+  //         hasError: true,
+  //         statusCode: _fetchError,
+  //         message: error.toString(),
+  //         data: null);
+  //   }
+  // }
+
   static Future<Result<Lecture>> fetchDashboardLecture({
     int? sectionId,
     int? levelId,
@@ -301,7 +323,7 @@ class LectureRepository {
     String? search,
     bool hardFetch = false,
   }) async {
-    late Response? response;
+    Response? response;
     try {
       response = await HttpProvider.get(
         "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}",

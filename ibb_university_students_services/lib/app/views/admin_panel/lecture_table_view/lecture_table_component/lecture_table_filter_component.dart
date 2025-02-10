@@ -27,7 +27,7 @@ class LectureTableFilterComponent
           // ),
           Container(
             height: height * 0.08,
-            width: width * 0.12,
+            width: width * 0.13,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),

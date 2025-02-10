@@ -111,24 +111,20 @@ class LectureTableView extends GetView<DashbordLectureTableController> {
 class MyData extends DataTableSource {
   final List<Lecture> _list;
   MyData(this._list);
-  // void main() {
-  //   DashbordLectureTableController baz = DashbordLectureTableController();
-  //   MyData bazraa = MyData(baz.lecture as List<Lecture>);
-  //   _list = bazraa as List<Lecture>;
-  // }
 
   @override
   DataRow? getRow(int index) {
+    assert(index >= 0);
     if (index >= _list.length) return null;
-    final lecture = _list[index];
-    return DataRow(cells: [
-      DataCell(CustomText(lecture.id.toString())),
-      DataCell(CustomText(lecture.subject?.subjectName ?? "")),
-      DataCell(CustomText(lecture.instructorId.toString())),
-      DataCell(CustomText(lecture.duration.toString())),
-      DataCell(CustomText(lecture.startTime ?? "")),
-      DataCell(CustomText(lecture.hall ?? "")),
-      DataCell(CustomText(lecture.description ?? "")),
+    final Lecture newlecture = _list[index];
+    return DataRow.byIndex(index: index, selected: newlecture.selected, cells: [
+      DataCell(CustomText(newlecture.id.toString())),
+      DataCell(CustomText(newlecture.subject?.subjectName ?? "")),
+      DataCell(CustomText(newlecture.instructorId.toString())),
+      DataCell(CustomText(newlecture.duration.toString())),
+      DataCell(CustomText(newlecture.startTime ?? "")),
+      DataCell(CustomText(newlecture.hall ?? "")),
+      DataCell(CustomText(newlecture.description ?? "")),
     ]);
   }
 

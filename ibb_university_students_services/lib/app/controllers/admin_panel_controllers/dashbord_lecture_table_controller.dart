@@ -134,6 +134,43 @@ class DashbordLectureTableController extends GetxController {
     }
   }
 
+  // Future<void> fetchAllLectureData() async {
+  //   if (selectedLevel.value == null) {
+  //     await initLevelDashboardMenuList();
+  //     if (levels.isNotEmpty) {
+  //       selectedLevel.value = levels.first.value;
+  //     }
+  //   }
+
+  //   if (selectedSection.value == null) {
+  //     await initSectionDashboardMenuList();
+  //     if (sections.isNotEmpty) {
+  //       selectedSection.value = sections.first.value;
+  //     }
+  //   }
+
+  //   if (selectedSection.value == null || selectedLevel.value == null) {}
+  //   Result result = await LectureRepository.fetchAllLecture();
+  //   {
+  //     if (result.statusCode == 200) {
+  //       lecture = result.data;
+  //     } else if (result.statusCode == 404) {
+  //       lecture?.value = {};
+  //       fieldMessage.value = "this section and level not has Lectures";
+  //       showSnakeBar(
+  //           title: "Not Found Lectures",
+  //           message: "this section and level doesn't has Lectures ");
+  //     } else {
+  //       lecture?.value = {};
+  //       fieldMessage.value = "fetching lectures failed please check connection";
+  //       showSnakeBar(
+  //           title: "Fetch Lectures Failed",
+  //           message: "fetching lectures failed please check connection ");
+  //     }
+  //     update(["DataTable"]);
+  //   }
+  // }
+
   Future<void> fetchDashboardData() async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
@@ -152,8 +189,8 @@ class DashbordLectureTableController extends GetxController {
     if (selectedSection.value == null || selectedLevel.value == null) {}
 
     Result res = await LectureRepository.fetchDashboardLecture(
-        sectionId: selectedSection.value!,
-        levelId: selectedLevel.value!,
+        sectionId: selectedSection.value,
+        levelId: selectedLevel.value,
         term: selectedTerm.value,
         order: selectedOrder.value,
         sort: selectedSort.value,
@@ -216,7 +253,7 @@ class DashbordLectureTableController extends GetxController {
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 6) * 0.6,
+              width: (Get.width / 6) * 0.63,
               child: CustomText(
                 section.name ?? "unknown",
                 style:

@@ -78,6 +78,7 @@ class LectureController extends GetxController {
   String mode = "Add";
   int? selectedLecture;
   bool submitting = false;
+  int rowsperpage = PaginatedDataTable.defaultRowsPerPage;
 
   get force => null;
 
@@ -95,6 +96,13 @@ class LectureController extends GetxController {
     await fetchTableData();
     loadState.value = false;
     super.onInit();
+  }
+
+  void onRowChange(int? value) {
+    if (value != null) {
+      rowsperpage = value;
+      update(["DataTable"]);
+    }
   }
 
   @override
@@ -209,7 +217,9 @@ class LectureController extends GetxController {
     }
   }
 
-  Map<int, Lecture>? selectedDay(int index) {
+  Map<int, Lecture>? selectedDay(
+    int index,
+  ) {
     switch (index) {
       case 0:
         return tableTime?.sat;
@@ -240,7 +250,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 7) * 0.6,
+                  : (Get.width / 6) * 0.63,
               child: CustomText(
                 section.name ?? "unknown",
                 style:
@@ -265,7 +275,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 7) * 0.6,
+                  : (Get.width / 7) * 0.5,
               child: CustomText(
                 level.name ?? "unknown",
                 style:
