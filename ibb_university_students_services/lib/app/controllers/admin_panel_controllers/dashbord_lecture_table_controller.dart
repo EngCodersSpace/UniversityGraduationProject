@@ -118,7 +118,7 @@ class DashbordLectureTableController extends GetxController {
     await initLevelDashboardMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
-    // await fetchDashboardData();
+    await fetchDashboardData();
     lodingState.value = false;
     super.onInit();
   }
@@ -186,11 +186,13 @@ class DashbordLectureTableController extends GetxController {
       }
     }
 
-    if (selectedSection.value == null || selectedLevel.value == null) {}
+    if (selectedSection.value == null || selectedLevel.value == null) {
+      return;
+    }
 
     Result res = await LectureRepository.fetchDashboardLecture(
-        sectionId: selectedSection.value,
-        levelId: selectedLevel.value,
+        sectionId: selectedSection.value!,
+        levelId: selectedLevel.value!,
         term: selectedTerm.value,
         order: selectedOrder.value,
         sort: selectedSort.value,
