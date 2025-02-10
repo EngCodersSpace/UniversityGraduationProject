@@ -47,29 +47,30 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAuEkbL9_sqHwhBovUVHe3EmMbDoA2jCHQ',
-    appId: '1:231712318834:web:6b2733231bfc5e654e69eb',
-    messagingSenderId: '231712318834',
-    projectId: 'unversity-project-2a9e4',
-    authDomain: 'unversity-project-2a9e4.firebaseapp.com',
-    storageBucket: 'unversity-project-2a9e4.firebasestorage.app',
-    measurementId: 'G-0KE3B0KMM4',
+    apiKey: 'AIzaSyAOFAvWOsmpeL_yplL-twY22ONh9t_01hQ',
+    appId: '1:153983563829:web:d9eb8c8b4cd2d1c383597c',
+    messagingSenderId: '153983563829',
+    projectId: 'student-services-91fb5',
+    authDomain: 'student-services-91fb5.firebaseapp.com',
+    storageBucket: 'student-services-91fb5.firebasestorage.app',
+    measurementId: 'G-ZHVZL67HT3',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCgajg2fSHoq53LoVk8z-8E0hCbQpiaoXQ',
-    appId: '1:231712318834:android:959c0bbbc05769ae4e69eb',
-    messagingSenderId: '231712318834',
-    projectId: 'unversity-project-2a9e4',
-    storageBucket: 'unversity-project-2a9e4.firebasestorage.app',
+    apiKey: 'AIzaSyDjNL0UTTxpdLSDzx0WuWpiUmLAkFGVbrY',
+    appId: '1:153983563829:android:c2c5501a83810f5683597c',
+    messagingSenderId: '153983563829',
+    projectId: 'student-services-91fb5',
+    storageBucket: 'student-services-91fb5.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBC2yvQSJrqczFXtkbk2B0QatyFHETAeTE',
-    appId: '1:231712318834:ios:77a4a2f8bb6e422a4e69eb',
-    messagingSenderId: '231712318834',
-    projectId: 'unversity-project-2a9e4',
-    storageBucket: 'unversity-project-2a9e4.firebasestorage.app',
+    apiKey: 'AIzaSyAhiQtI-kyCLbBeA_JlgpCL7gMigMFYaGE',
+    appId: '1:153983563829:ios:660772f89fb87e4183597c',
+    messagingSenderId: '153983563829',
+    projectId: 'student-services-91fb5',
+    storageBucket: 'student-services-91fb5.firebasestorage.app',
     iosBundleId: 'com.example.ibbUniversityStudentsServices',
   );
+
 }

@@ -28,6 +28,7 @@ class NotificationHandler {
 
     await FirebaseMessaging.instance.getToken().then((val) {
       token = val;
+      print(token);
     });
 
     // Handle foreground messages
@@ -54,15 +55,19 @@ class NotificationHandler {
   }
 
   static void _handleMessage(RemoteMessage message) {
-    if (message.data['type'] == 'info') {
-      showNotification(
-        title: message.notification?.title ?? "Info",
-        body: message.notification?.body ?? "Notification received",
-      );
-    } else if (message.data['type'] == 'command') {
-      // Handle silent command notification
-      _processCommand(message.data);
-    }
+    showNotification(
+      title: message.notification?.title ?? "Info",
+      body: message.notification?.body ?? "Notification received",
+    );
+    // if (message.data['type'] == 'info') {
+    //   showNotification(
+    //     title: message.notification?.title ?? "Info",
+    //     body: message.notification?.body ?? "Notification received",
+    //   );
+    // } else if (message.data['type'] == 'command') {
+    //   // Handle silent command notification
+    //   _processCommand(message.data);
+    // }
   }
 
   static void _processCommand(Map<String, dynamic> data) {
