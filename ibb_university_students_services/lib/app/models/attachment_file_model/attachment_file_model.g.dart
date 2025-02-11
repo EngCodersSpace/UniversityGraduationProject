@@ -17,7 +17,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AttachmentFile(
-      id: fields[0] as int,
+      id: fields[0] as int?,
       assignmentId: fields[1] as int?,
       title: fields[4] as String?,
       path: fields[3] as String?,
