@@ -319,11 +319,11 @@ RxBool selectAll = false.obs;
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
-    List<Section> sectionsData =
+    Map<int,Section> sectionsData =
         await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? []);
+            .then((e) => e.data ?? {});
     sections = [];
-    for (Section section in sectionsData) {
+    for (Section section in sectionsData.values.toList()) {
       sections.add(
         DropdownMenuItem<int>(
             value: section.id,
@@ -337,7 +337,7 @@ RxBool selectAll = false.obs;
             )),
       );
     }
-    selectedSection.value = sectionsData.first.id;
+    selectedSection.value = sectionsData.values.first.id;
   }
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {

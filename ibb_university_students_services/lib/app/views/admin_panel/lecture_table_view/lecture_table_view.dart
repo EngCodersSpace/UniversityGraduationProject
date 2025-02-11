@@ -6,12 +6,11 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/lecture_table_filter_component.dart';
 
 class LectureTableView extends GetView<DashboardLectureTableController> {
-  LectureTableView({super.key});
+  const LectureTableView({super.key});
 
   @override
   Widget build(BuildContext context) {
