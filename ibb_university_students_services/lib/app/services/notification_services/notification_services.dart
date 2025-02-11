@@ -21,14 +21,14 @@ class NotificationHandler {
 
     await _localNotificationsPlugin.initialize(initSettings,
         onDidReceiveNotificationResponse: (res) {
-      print(res.notificationResponseType);
-      print(res.id);
-      print(res.actionId);
+      // print(res.notificationResponseType);
+      // print(res.id);
+      // print(res.actionId);
     });
 
     await FirebaseMessaging.instance.getToken().then((val) {
       token = val;
-      print(token);
+      // print(token);
     });
 
     // Handle foreground messages

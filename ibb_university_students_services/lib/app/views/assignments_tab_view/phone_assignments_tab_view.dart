@@ -267,7 +267,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     )),
                                     IconButton(
                                         onPressed: () async =>
-                                            controller.refresh(),
+                                             controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
                                   for (int i = 0;

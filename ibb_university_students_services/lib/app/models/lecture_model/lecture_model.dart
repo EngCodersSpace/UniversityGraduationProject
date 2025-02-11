@@ -1,5 +1,3 @@
-
-
 import 'package:hive/hive.dart';
 
 import '../subject_model/subject_model.dart';
@@ -35,7 +33,7 @@ class Lecture {
   @HiveField(7)
   int? instructorId;
 
-  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}){
     return Lecture(
       id: json['id'],
       lectureStatus: json["lectureStatus"],

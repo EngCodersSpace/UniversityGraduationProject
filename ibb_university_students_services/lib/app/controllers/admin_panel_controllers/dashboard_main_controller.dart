@@ -76,8 +76,8 @@ class DashboardMainController extends GetxController {
         if (controller != null) {
           controller.dispose();
         }
-        controller = Get.put<DashbordLectureTableController>(
-          DashbordLectureTableController(),
+        controller = Get.put<DashboardLectureTableController>(
+          DashboardLectureTableController(),
         );
         break;
       case 5:

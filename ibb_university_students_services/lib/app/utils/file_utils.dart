@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:open_filex/open_filex.dart';
 
 class FileUtils {
@@ -32,7 +33,9 @@ class FileUtils {
 
     final result = await OpenFilex.open("$baseFolderPath/$path");
     if (result.type == ResultType.error) {
-      print("Error opening file: ${result.message}");
+      if (kDebugMode) {
+        print("Error opening file: ${result.message}");
+      }
     }
 
   }

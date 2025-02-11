@@ -36,7 +36,7 @@ class LectureRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_lecturesBox?.isOpen??false) {
+    if (_lecturesBox?.isOpen ?? false) {
       await _lecturesBox?.close();
     }
   }
@@ -281,6 +281,73 @@ class LectureRepository {
       return Result(
           hasError: true,
           statusCode: _changeStateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  // static Future<Result<Lecture>> fetchAllLecture() async {
+  //   Response? response;
+  //   try {
+  //     response = await HttpProvider.get("get-all-lecture");
+  //     Lecture? getLecture;
+  //     if (response?.statusCode == 200) {
+  //       getLecture = Lecture.fromJson(response?.data["data"]);
+  //     }
+  //     return Result(
+  //         data: getLecture,
+  //         hasError: true,
+  //         statusCode: response?.statusCode ?? _updateError,
+  //         message: response?.data["message"] ?? "error");
+  //   } catch (error) {
+  //     return Result(
+  //         hasError: true,
+  //         statusCode: _fetchError,
+  //         message: error.toString(),
+  //         data: null);
+  //   }
+  // }
+
+  static Future<Result<Map>> fetchDashboardLecture({
+    int? sectionId,
+    int? levelId,
+    int limit = 20,
+    int? page,
+    String? year,
+    String? term,
+    String? day,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page",
+      );
+      Map<int,Lecture> lectures = {};
+
+      if (response?.statusCode == 200) {
+        for(Map<String,dynamic> jsLecture in response?.data['data']){
+          Subject? subject = await SubjectRepository.fetchSubject(
+              id: jsLecture["subject_id"])
+              .then((e) => e.data);
+          lectures[jsLecture['id']] =  Lecture.fromJson(jsLecture,subject: subject);
+        }
+      }
+      return Result(
+          data: {
+            "lectures":lectures,
+            "totalLectures":response?.data["pagination"]["totalLectures"],
+          },
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
           message: error.toString(),
           data: null);
     }
