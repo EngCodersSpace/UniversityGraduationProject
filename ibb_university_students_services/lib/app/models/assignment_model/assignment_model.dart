@@ -19,6 +19,7 @@ class Assignment {
     this.assignmentDate,
     this.dueDate,
     this.attachments,
+    this.studentsStatus,
   });
 
   @HiveField(0)
@@ -55,6 +56,12 @@ class Assignment {
           path: file["attachment"],
           status: RxString("Not Uploaded"));
     }
+    StudentAssignmentState? state;
+    if (json['student_assignments'] != null) {
+      state =
+          StudentAssignmentState.fromJson(json['student_assignments'][0]);
+    }
+
     return Assignment(
       id: json['id'],
       subject: subject,
@@ -69,6 +76,7 @@ class Assignment {
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],
       attachments: files,
+      studentsStatus: (state != null)?{state.id!:state}:null,
     );
   }
 

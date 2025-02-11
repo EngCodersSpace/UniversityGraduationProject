@@ -26,12 +26,12 @@ class SectionRepository {
     }
   }
 
-  static Future<Result<List<Section>>> fetchSections({
+  static Future<Result<Map<int,Section>>> fetchSections({
     bool hardFetch = false,
   }) async {
     if ((_sectionsBox?.isNotEmpty ?? false) && (!hardFetch|| !(await checkInternetConnection()))) {
       return Result(
-        data: _sectionsBox?.values.toList(),
+        data: (_sectionsBox?.toMap().cast<int,Section>()),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -47,7 +47,7 @@ class SectionRepository {
           await _sectionsBox?.put(section.id, section);
         }
         return Result(
-            data: _sectionsBox?.values.toList(),
+            data: (_sectionsBox?.toMap().cast<int,Section>()),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

@@ -2,13 +2,13 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 
-part 'attachment_file_model.g.dart';
+part 'student_assignments_file_model.g.dart';
 
-@HiveType(typeId: 16)
-class AttachmentFile {
-  AttachmentFile({
+@HiveType(typeId: 18)
+class StudentAssignmentsFile {
+  StudentAssignmentsFile({
      required this.id,
-    this.assignmentId,
+    this.studentAssignmentId,
     this.title,
     this.path,
     this.status,
@@ -18,7 +18,7 @@ class AttachmentFile {
   @HiveField(0)
   int id;
   @HiveField(1)
-  int? assignmentId;
+  int? studentAssignmentId;
   @HiveField(3)
   String? path;
   @HiveField(4)
@@ -34,11 +34,11 @@ class AttachmentFile {
   }
 
 
-  factory AttachmentFile.fromJson(Map<String, dynamic> json, {String status = "Not Uploaded"}) {
+  factory StudentAssignmentsFile.fromJson(Map<String, dynamic> json, {String status = "Not Uploaded"}) {
 
-    return AttachmentFile(
+    return StudentAssignmentsFile(
       id: json['id'],
-      assignmentId: 0,
+      studentAssignmentId: 0,
       path: "",
       status: RxString(status),
     );

@@ -2,20 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
-import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/permission_checker.dart';
 
-class FilesPickerCard extends GetView<AssignmentsTabController> {
-  const FilesPickerCard({super.key});
+// ignore: must_be_immutable
+class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
+  const AssignmentsShowFilesCard({super.key});
+   get _data {
 
-  List<AttachmentFile>? get _data => controller
-      .assignments?.value[controller.selectedAssignment]?.attachments?.values
-      .toList();
+    if (PermissionUtils.checkPermission(
+        target: "Assignments", action: "showStudentsFiles")) {
+      return controller.assignments?.value[controller.selectedAssignment]
+          ?.studentsStatus?[controller.selectedState]?.studentFiles?.values
+          .toList();
+    }
+    return controller.assignments?.value[controller.selectedAssignment]
+        ?.attachments?.values.toList();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    String? mode;
+    if (PermissionUtils.checkPermission(
+        target: "Assignments", action: "showStudentsFiles")) {
+      mode = "studentsFiles";
+    }
     return GetBuilder<AssignmentsTabController>(
         id: "AttachmentPiker",
         builder: (ctx) => Center(
@@ -33,14 +47,14 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                           width: 3,
                         )),
                     child: SizedBox(
-                        height: Get.height * 0.85,
+                        height: Get.height * 0.8,
                         width: Get.width,
                         child: SafeArea(
                             minimum: const EdgeInsets.all(12),
                             child: Column(
                               children: [
                                 CustomText(
-                                  ("Attachments").tr,
+                                  (mode == "studentsFiles")?("Student File").tr:("Attachments").tr,
                                   style: AppTextStyles.secStyle(
                                       textHeader: AppTextHeaders.h1Bold),
                                 ),
@@ -71,13 +85,10 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                 i++) ...[
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 4,
-                                                    right: 4,
-                                                    bottom: 4),
+                                                    left: 16,
+                                                    right: 16,
+                                                    bottom: 8),
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
                                                   children: [
                                                     CircleAvatar(
                                                       backgroundColor: AppColors
@@ -92,75 +103,89 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                       ),
                                                     ),
                                                     const SizedBox(
-                                                      width: 4,
+                                                      width: 8,
                                                     ),
-                                                    Column(
-                                                      children: [
-                                                        SizedBox(
-                                                          width:
-                                                              Get.width * 0.6,
-                                                          child: CustomText(
-                                                            _data?[i].title ??
-                                                                "",
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            style: AppTextStyles
-                                                                .secStyle(
-                                                                    textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              Get.width * 0.6,
-                                                          child: Obx(
-                                                              () => CustomText(
-                                                                    "Status:  ${_data?[i].status?.value ?? ""}",
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .start,
-                                                                    style: AppTextStyles.highlightStyle(
-                                                                        textHeader:
-                                                                            AppTextHeaders.h5Bold),
-                                                                  )),
-                                                        ),
-                                                        Obx(() => Column(
-                                                              children: [
-                                                                if (_data?[i]
+                                                    Expanded(
+                                                      child: SizedBox(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            CustomText(
+                                                              _data?[i].title ??
+                                                                  "",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              style: AppTextStyles
+                                                                  .secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h3Bold),
+                                                            ),
+                                                            Obx(() => Column(
+                                                                  children: [
+
+                                                                    if (_data?[i]
                                                                         .status
                                                                         ?.value ==
-                                                                    "Uploading") ...[
-                                                                  const SizedBox(
-                                                                    height: 8,
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      SizedBox(
-                                                                          width: Get.width *
-                                                                              0.5,
-                                                                          child: LinearProgressIndicator(
-                                                                              color: AppColors.inverseCardColor,
-                                                                              backgroundColor: AppColors.highlightTextColor.withValues(alpha: 0.2),
-                                                                              value: (_data?[i].progress?.value.toDouble() ?? 0) / 100)),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              4),
+                                                                        "Downloading") ...[
                                                                       CustomText(
-                                                                        "${_data?[i].progress?.value ?? "1"}%",
+                                                                        "Downloading",
                                                                         textAlign:
-                                                                            TextAlign.start,
+                                                                        TextAlign
+                                                                            .start,
                                                                         style: AppTextStyles.highlightStyle(
                                                                             textHeader:
-                                                                                AppTextHeaders.h5Bold),
+                                                                            AppTextHeaders.h5Bold),
                                                                       ),
-                                                                    ],
-                                                                  )
-                                                                ]
-                                                              ],
-                                                            ))
-                                                      ],
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            8,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: Get
+                                                                            .width,
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Expanded(child: LinearProgressIndicator(color: AppColors.inverseCardColor, backgroundColor: AppColors.highlightTextColor.withValues(alpha: 0.2), value: (_data?[i].progress?.value.toDouble() ?? 0) / 100)),
+                                                                            SizedBox(width: 4),
+                                                                            CustomText(
+                                                                              "${_data?[i].progress?.value ?? "1"}%",
+                                                                              textAlign: TextAlign.start,
+                                                                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                    ]
+                                                                  ],
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          (_data?[i]
+                                                                      .downloaded
+                                                                      .value ??
+                                                                  false)
+                                                              ? controller
+                                                                  .openFile(_data?[i].path)
+                                                              : controller
+                                                                  .downloadAttachment();
+                                                        },
+                                                        icon: Icon((_data?[i]
+                                                                    .downloaded
+                                                                    .value ??
+                                                                false)
+                                                            ? (Icons
+                                                                .folder_open)
+                                                            : (Icons
+                                                                .download))),
                                                     SizedBox(
                                                       height: 24,
                                                       width: 24,
@@ -177,15 +202,23 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                                         color: AppColors
                                                             .inverseCardColor,
                                                         itemBuilder: (ctx) => [
-                                                          PopupMenuItem(
-                                                              value:
-                                                                  "DeleteFile",
+                                                          (mode =="studentsFiles")?PopupMenuItem(
+                                                              value: "DeleteStudentAssignmentFile",
                                                               child: CustomText(
                                                                 "Delete".tr,
                                                                 style: AppTextStyles.mainStyle(
                                                                     textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
+                                                                    AppTextHeaders
+                                                                        .h3Bold),
+                                                              )):PopupMenuItem(
+                                                              value:
+                                                              "DeleteAttachmentFile",
+                                                              child: CustomText(
+                                                                "Delete".tr,
+                                                                style: AppTextStyles.mainStyle(
+                                                                    textHeader:
+                                                                    AppTextHeaders
+                                                                        .h3Bold),
                                                               )),
                                                           PopupMenuItem(
                                                               value:
@@ -234,30 +267,10 @@ class FilesPickerCard extends GetView<AssignmentsTabController> {
                                   height: 16,
                                 ),
                                 CustomButton(
-                                  onPress: () async => controller.pickFiles(),
-                                  text: "Add".tr,
+                                  onPress: () => Get.back(),
+                                  text: "Close".tr,
                                   size: Size(Get.width * 0.86, 40),
                                 ),
-                                // const SizedBox(
-                                //   height: 16,
-                                // ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    CustomButton(
-                                      onPress: controller.uploadAttachments,
-                                      text: "Upload All".tr,
-                                    ),
-                                    CustomButton(
-                                      onPress: () => Get.back(result: null),
-                                      text: "Close".tr,
-                                    ),
-                                  ],
-                                )
                               ],
                             ))),
                   ),

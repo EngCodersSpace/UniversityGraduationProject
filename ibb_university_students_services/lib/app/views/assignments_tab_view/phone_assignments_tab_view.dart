@@ -9,6 +9,7 @@ import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/permission_checker.dart';
+import '../../utils/screen_utils.dart';
 
 class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
   PhoneAssignmentsTabView({super.key});
@@ -52,45 +53,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                             ),
                             if ((PermissionUtils.checkPermission(
                                 target: "Assignments",
-                                action: "studentView"))) ...[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  CustomText(
-                                    "Subject".tr,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2Bold),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.inverseCardColor,
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    width: Get.width * 0.65,
-                                    child: Center(
-                                      child: Obx(
-                                        () => DropdownButton<String>(
-                                          items: controller.subjectsItems,
-                                          selectedItemBuilder: (_) {
-                                            return controller
-                                                .selectedSubjectsItems;
-                                          },
-                                          onChanged: controller.changeSubject,
-                                          value:
-                                              controller.selectedSubject.value,
-                                          underline: const SizedBox(),
-                                          iconEnabledColor:
-                                              AppColors.mainCardColor,
-                                          dropdownColor:
-                                              AppColors.inverseCardColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ] else ...[
+                                action: "doctorView"))) ...[
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -125,7 +88,25 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
-                                          items: controller.sections,
+                                          items: (controller.sections.entries
+                                              .map((e) {
+                                            return DropdownMenuItem<int>(
+                                                value: e.value.id,
+                                                child: SizedBox(
+                                                  width: (ScreenUtils
+                                                          .isPhoneScreen())
+                                                      ? (Get.width / 3) - 30
+                                                      : (Get.width / 5.5) * 0.6,
+                                                  child: CustomText(
+                                                    e.value.name ?? "unknown",
+                                                    style:
+                                                        AppTextStyles.mainStyle(
+                                                      textHeader:
+                                                          AppTextHeaders.h5Bold,
+                                                    ),
+                                                  ),
+                                                ));
+                                          }).toList()),
                                           onChanged:
                                               controller.changeDepartment,
                                           value: controller
@@ -166,6 +147,44 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       borderRadius: BorderRadius.circular(24),
                                     ),
                                     width: Get.width / 3,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton<String>(
+                                          items: controller.subjectsItems,
+                                          selectedItemBuilder: (_) {
+                                            return controller
+                                                .selectedSubjectsItems;
+                                          },
+                                          onChanged: controller.changeSubject,
+                                          value:
+                                              controller.selectedSubject.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ] else ...[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CustomText(
+                                    "Subject".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width * 0.65,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton<String>(
@@ -248,7 +267,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     )),
                                     IconButton(
                                         onPressed: () async =>
-                                             controller.refresh(),
+                                            controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
                                   for (int i = 0;
