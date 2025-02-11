@@ -10,11 +10,11 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/lecture_table_filter_component.dart';
 
-class LectureTableView extends GetView<DashbordLectureTableController> {
+class LectureTableView extends GetView<DashboardLectureTableController> {
+  LectureTableView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    controller.fetchDashboardData();
-    final dataSours = MyData(controller.lecture?.values.toList() ?? []);
     return Scaffold(
         body: Container(
             height: Get.height,
@@ -39,15 +39,17 @@ class LectureTableView extends GetView<DashbordLectureTableController> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        GetBuilder<DashbordLectureTableController>(
+                        GetBuilder<DashboardLectureTableController>(
                           id: "DataTable",
                           builder: (ctx) => PaginatedDataTable(
-                            rowsPerPage: controller.rowsperpage,
+                            rowsPerPage: controller.rowsPerPage.value,
                             columnSpacing: 100,
-                            availableRowsPerPage: const <int>[10, 20, 30],
+                            onPageChanged: controller.onPageChange,
+                            availableRowsPerPage: const <int>[5,10, 20, 30],
                             onRowsPerPageChanged: controller.onRowChange,
-                            columns: kTableColumn,
-                            source: dataSours,
+                            showCheckboxColumn: false,
+                            columns: controller.kTableColumn,
+                            source: MyData(),
                           ),
                         ),
                       ],
@@ -58,81 +60,51 @@ class LectureTableView extends GetView<DashbordLectureTableController> {
             )));
   }
 
-  List<DataColumn> kTableColumn = <DataColumn>[
-    DataColumn(
-      label: CustomText(
-        "Lecture ID",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-      numeric: true,
-    ),
-    DataColumn(
-        label: CustomText(
-      "Subject",
-      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-    )),
-    DataColumn(
-      label: CustomText(
-        "Doctor ID",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-      numeric: true,
-    ),
-    DataColumn(
-      label: CustomText(
-        "Duration",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-      // numeric: true,
-    ),
-    DataColumn(
-      label: CustomText(
-        "Start Time",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-      // numeric: true,
-    ),
-    DataColumn(
-      label: CustomText(
-        "Hall",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-      // numeric: true,
-    ),
-    DataColumn(
-      label: CustomText(
-        "Decsription",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      ),
-    ),
-  ];
 }
 
 class MyData extends DataTableSource {
-  final List<Lecture> _list;
-  MyData(this._list);
+  final DashboardLectureTableController controller = Get.find<DashboardLectureTableController>(); // GetX Controller
+
+  MyData();
 
   @override
   DataRow? getRow(int index) {
     assert(index >= 0);
-    if (index >= _list.length) return null;
-    final Lecture newlecture = _list[index];
-    return DataRow.byIndex(index: index, selected: newlecture.selected, cells: [
-      DataCell(CustomText(newlecture.id.toString())),
-      DataCell(CustomText(newlecture.subject?.subjectName ?? "")),
-      DataCell(CustomText(newlecture.instructorId.toString())),
-      DataCell(CustomText(newlecture.duration.toString())),
-      DataCell(CustomText(newlecture.startTime ?? "")),
-      DataCell(CustomText(newlecture.hall ?? "")),
-      DataCell(CustomText(newlecture.description ?? "")),
-    ]);
+    if (index >= rowCount) return null;
+    return DataRow.byIndex(
+        index: index%controller.rowsPerPage.value,
+        selected: controller.selectedRows.contains(items[index%controller.rowsPerPage.value].id),
+    onSelectChanged: (selected) {
+        },
+        cells: [
+          DataCell(
+            Obx(() => Checkbox(
+              value: controller.selectedRows.contains(items[index%controller.rowsPerPage.value].id) || controller.selectAll.value,
+              onChanged: (isSelected) {
+                if (isSelected == true) {
+                  controller.selectedRows.add(items[index%controller.rowsPerPage.value].id);
+                } else {
+                  controller.selectedRows.remove(items[index%controller.rowsPerPage.value].id);
+                }
+              },
+            )),
+          ),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].id.toString())),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].subject?.subjectName ?? "")),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].instructorId.toString())),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].duration.toString())),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].startTime ?? "")),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].hall ?? "")),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].description ?? "")),
+        ]);
   }
 
+  List<Lecture> get items =>controller.lectures.values.toList();
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => _list.length;
+  int get rowCount => controller.availableRows.value;
 
   @override
   int get selectedRowCount => 0;

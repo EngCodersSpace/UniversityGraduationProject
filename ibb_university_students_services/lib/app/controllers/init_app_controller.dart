@@ -11,7 +11,7 @@ import '../repositories/user_repository.dart';
 
 class InitAppController extends GetxController {
   @override
-  void onInit()  async{
+  void onInit() async {
     super.onInit();
     await _initializeApp();
   }
@@ -24,8 +24,14 @@ class InitAppController extends GetxController {
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
       await DownloadManager.initialize();
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
+      try {
+        await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform);
+      } catch (e) {
+        if (kDebugMode) {
+          print('Initialization error: $e');
+        }
+      }
       await NotificationHandler.initialize();
       // Set initialization complete
     } catch (e) {
@@ -35,7 +41,7 @@ class InitAppController extends GetxController {
       }
     }
     if (await UserRepository.isCredentialsCached()) {
-      Get.offNamed("/main");
+      Get.offNamed("/dashboard_main_view");
     } else {
       Get.offNamed("/login");
     }

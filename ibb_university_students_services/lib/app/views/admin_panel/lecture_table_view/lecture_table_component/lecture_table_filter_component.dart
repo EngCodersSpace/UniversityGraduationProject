@@ -7,10 +7,8 @@ import '../../../../styles/app_colors.dart';
 // import '../../../../styles/text_styles.dart';
 
 class LectureTableFilterComponent
-    extends GetView<DashbordLectureTableController> {
-  double width = Get.width;
-  double height = Get.height;
-
+    extends GetView<DashboardLectureTableController> {
+  const LectureTableFilterComponent({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,11 +21,11 @@ class LectureTableFilterComponent
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold),
           // ),
           // SizedBox(
-          //   width: width * 0.002,
+          //   width: Get.width * 0.002,
           // ),
           Container(
-            height: height * 0.08,
-            width: width * 0.13,
+            height: Get.height * 0.08,
+            width: Get.width * 0.13,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -44,18 +42,18 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: width * 0.01,
+            width: Get.width * 0.01,
           ),
           // CustomText(
           //   "Level".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
-          //   width: width * 0.002,
+          //   width: Get.width * 0.002,
           // ),
           Container(
-            height: height * 0.08,
-            width: width * 0.1,
+            height: Get.height * 0.08,
+            width: Get.width * 0.1,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -72,18 +70,18 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: width * 0.01,
+            width: Get.width * 0.01,
           ),
           // CustomText(
           //   "Term".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
-          //   width: width * 0.002,
+          //   width: Get.width * 0.002,
           // ),
           Container(
-            height: height * 0.08,
-            width: width * 0.1,
+            height: Get.height * 0.08,
+            width: Get.width * 0.1,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -100,25 +98,25 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: width * 0.01,
+            width: Get.width * 0.01,
           ),
           // CustomText(
           //   "Order".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
-          //   width: width * 0.002,
+          //   width: Get.width * 0.002,
           // ),
           Container(
-            height: height * 0.08,
-            width: width * 0.12,
+            height: Get.height * 0.08,
+            width: Get.width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Center(
               child: Obx(() => DropdownButton(
-                    items: controller.orderby,
+                    items: controller.orderBy,
                     onChanged: controller.changeOrder,
                     value: controller.selectedOrder.value,
                     underline: const SizedBox(),
@@ -128,18 +126,18 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: width * 0.01,
+            width: Get.width * 0.01,
           ),
           // CustomText(
           //   "Sort".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
-          //   width: width * 0.002,
+          //   width: Get.width * 0.002,
           // ),
           Container(
-            height: height * 0.08,
-            width: width * 0.12,
+            height: Get.height * 0.08,
+            width: Get.width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),

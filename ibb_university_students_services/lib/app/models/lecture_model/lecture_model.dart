@@ -33,7 +33,7 @@ class Lecture {
   @HiveField(7)
   int? instructorId;
 
-  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}){
     return Lecture(
       id: json['id'],
       lectureStatus: json["lectureStatus"],
@@ -45,8 +45,6 @@ class Lecture {
       hall: json['lecture_room'],
     );
   }
-
-  get selected => null;
 
   Map<String, dynamic> toJson() {
     return {

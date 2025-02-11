@@ -12,12 +12,15 @@ import '../../repositories/section_repository.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
 
-class DashbordLectureTableController extends GetxController {
-  RxMap<String, Lecture>? lecture;
-  int rowsperpage = PaginatedDataTable.defaultRowsPerPage;
+class DashboardLectureTableController extends GetxController {
+  RxMap<int, Lecture> lectures = RxMap({});
+  RxSet<int> selectedRows = RxSet({});
+  RxInt availableRows  = 0.obs;
+  int currentPage  = 1;
+  RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   RxString fieldMessage = "".obs;
-  RxString searchFild = "".obs;
-  RxBool lodingState = true.obs;
+  RxString searchFiled = "".obs;
+  RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
@@ -47,7 +50,7 @@ class DashbordLectureTableController extends GetxController {
               ),
             ))),
   ];
-  List<DropdownMenuItem<String>> orderby = [
+  List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "lecture_time",
         child: SizedBox(
@@ -111,25 +114,85 @@ class DashbordLectureTableController extends GetxController {
               ),
             ))),
   ];
-
+  List<DataColumn> kTableColumn = [];
+RxBool selectAll = false.obs;
   @override
   void onInit() async {
+    kTableColumn = <DataColumn>[
+      DataColumn(
+        label: Obx(() => Checkbox(
+          value: selectAll.value,
+          onChanged: (isSelected) {
+            if (isSelected == null) return;
+            selectAll.value = isSelected;
+          },
+        )),
+      ),
+
+      DataColumn(
+        label: CustomText(
+          "Lecture ID",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        numeric: true,
+      ),
+      DataColumn(
+          label: CustomText(
+            "Subject",
+            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+          )),
+      DataColumn(
+        label: CustomText(
+          "Doctor ID",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        numeric: true,
+      ),
+      DataColumn(
+        label: CustomText(
+          "Duration",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        // numeric: true,
+      ),
+      DataColumn(
+        label: CustomText(
+          "Start Time",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        // numeric: true,
+      ),
+      DataColumn(
+        label: CustomText(
+          "Hall",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        // numeric: true,
+      ),
+      DataColumn(
+        label: CustomText(
+          "Decsription",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+    ];
     await initSectionDashboardMenuList();
     await initLevelDashboardMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
     await fetchDashboardData();
-    lodingState.value = false;
+    loadingState.value = false;
     super.onInit();
   }
 
-  void refesh() async {
+  @override
+  void refresh() async {
     await fetchDashboardData();
   }
 
   void onRowChange(int? value) {
     if (value != null) {
-      rowsperpage = value;
+      rowsPerPage.value = value;
       update(["DataTable"]);
     }
   }
@@ -191,30 +254,40 @@ class DashbordLectureTableController extends GetxController {
     }
 
     Result res = await LectureRepository.fetchDashboardLecture(
-        sectionId: selectedSection.value!,
-        levelId: selectedLevel.value!,
-        term: selectedTerm.value,
+        sectionId: null,
+        levelId: null,
+        term: null,
         order: selectedOrder.value,
+        limit: rowsPerPage.value,
         sort: selectedSort.value,
+        page: currentPage,
         hardFetch: false);
     if (res.statusCode == 200) {
-      lecture = res.data;
-    } else if (res.statusCode == 404) {
-      lecture?.value = {};
+      lectures.value = res.data["lectures"]??{};
+      availableRows.value = res.data["totalLectures"];
+      update(["DataTable"]);
+    }
+    else if (res.statusCode == 404) {
+      lectures.value = {};
       fieldMessage.value = "this section and level not has Lectures";
       showSnakeBar(
           title: "Not Found Lectures",
           message: "this section and level doesn't has Lectures ");
-    } else {
-      lecture?.value = {};
+    }
+    else {
+      lectures.value = {};
       fieldMessage.value = "fetching lectures failed please check connection";
       showSnakeBar(
           title: "Fetch Lectures Failed",
           message: "fetching lectures failed please check connection ");
     }
-    update(["DataTable"]);
   }
 
+
+  void onPageChange(int page)async {
+    currentPage = (page~/rowsPerPage.value)+1;
+    await fetchDashboardData();
+  }
   void changeSection(int? val) async {
     if (val == null) return;
     selectedSection.value = val;

@@ -311,10 +311,11 @@ class LectureRepository {
   //   }
   // }
 
-  static Future<Result<Lecture>> fetchDashboardLecture({
+  static Future<Result<Map>> fetchDashboardLecture({
     int? sectionId,
     int? levelId,
     int limit = 20,
+    int? page,
     String? year,
     String? term,
     String? day,
@@ -326,16 +327,23 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}",
+        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page",
       );
-      Lecture? newlecture;
+      Map<int,Lecture> lectures = {};
+
       if (response?.statusCode == 200) {
-        newlecture = Lecture.fromJson(
-          response?.data["data"],
-        );
+        for(Map<String,dynamic> jsLecture in response?.data['data']){
+          Subject? subject = await SubjectRepository.fetchSubject(
+              id: jsLecture["subject_id"])
+              .then((e) => e.data);
+          lectures[jsLecture['id']] =  Lecture.fromJson(jsLecture,subject: subject);
+        }
       }
       return Result(
-          data: newlecture,
+          data: {
+            "lectures":lectures,
+            "totalLectures":response?.data["pagination"]["totalLectures"],
+          },
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
