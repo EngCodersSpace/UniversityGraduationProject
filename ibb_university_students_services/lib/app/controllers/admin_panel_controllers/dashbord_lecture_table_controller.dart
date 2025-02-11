@@ -13,6 +13,10 @@ import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
 
 class DashboardLectureTableController extends GetxController {
+
+  double get width => (Get.width - (Get.width*0.2));
+  double get height => Get.height;
+
   RxMap<int, Lecture> lectures = RxMap({});
   RxSet<int> selectedRows = RxSet({});
   RxInt availableRows  = 0.obs;
@@ -115,6 +119,8 @@ class DashboardLectureTableController extends GetxController {
             ))),
   ];
   List<DataColumn> kTableColumn = [];
+  ScrollController horizontal = ScrollController();
+  ScrollController vertical = ScrollController();
 RxBool selectAll = false.obs;
   @override
   void onInit() async {
