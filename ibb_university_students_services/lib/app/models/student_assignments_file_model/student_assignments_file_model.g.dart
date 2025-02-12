@@ -1,37 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'attachment_file_model.dart';
+part of 'student_assignments_file_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
+class StudentAssignmentsFileAdapter
+    extends TypeAdapter<StudentAssignmentsFile> {
   @override
-  final int typeId = 16;
+  final int typeId = 18;
 
   @override
-  AttachmentFile read(BinaryReader reader) {
+  StudentAssignmentsFile read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return AttachmentFile(
+    return StudentAssignmentsFile(
       id: fields[0] as int,
-      assignmentId: fields[1] as int?,
+      studentAssignmentId: fields[1] as int?,
       title: fields[4] as String?,
       path: fields[3] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, AttachmentFile obj) {
+  void write(BinaryWriter writer, StudentAssignmentsFile obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.assignmentId)
+      ..write(obj.studentAssignmentId)
       ..writeByte(3)
       ..write(obj.path)
       ..writeByte(4)
@@ -44,7 +45,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AttachmentFileAdapter &&
+      other is StudentAssignmentsFileAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

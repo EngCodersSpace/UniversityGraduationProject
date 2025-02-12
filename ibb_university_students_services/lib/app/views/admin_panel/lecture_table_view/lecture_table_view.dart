@@ -6,19 +6,20 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/lecture_table_filter_component.dart';
 
 class LectureTableView extends GetView<DashboardLectureTableController> {
-  LectureTableView({super.key});
+  const LectureTableView({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            height: Get.height,
-            width: Get.width,
+            height: controller.height,
+            width: controller.width,
             padding: EdgeInsets.all(10),
             color: AppColors.tabBackColor,
             child: Column(
@@ -29,21 +30,29 @@ class LectureTableView extends GetView<DashboardLectureTableController> {
                   download: () {},
                 ),
                 SizedBox(
-                  height: Get.height * 0.01,
+                  height: controller.height * 0.01,
                 ),
                 LectureTableFilterComponent(),
                 SizedBox(
-                  height: Get.height * 0.01,
+                  height: controller.height * 0.01,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        GetBuilder<DashboardLectureTableController>(
-                          id: "DataTable",
-                          builder: (ctx) => PaginatedDataTable(
+                  child: Scrollbar(
+                    controller: controller.vertical,
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: controller.vertical,
+                      child: GetBuilder<DashboardLectureTableController>(
+                        id: "DataTable",
+                        builder: (ctx) => Scrollbar(
+                          controller: controller.horizontal,
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: PaginatedDataTable(
+                            controller: controller.horizontal,
                             rowsPerPage: controller.rowsPerPage.value,
-                            columnSpacing: 100,
+                            columnSpacing: controller.width*0.05,
                             onPageChanged: controller.onPageChange,
                             availableRowsPerPage: const <int>[5,10, 20, 30],
                             onRowsPerPageChanged: controller.onRowChange,
@@ -52,7 +61,7 @@ class LectureTableView extends GetView<DashboardLectureTableController> {
                             source: MyData(),
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -94,8 +103,9 @@ class MyData extends DataTableSource {
           DataCell(CustomText(items[index%controller.rowsPerPage.value].instructorId.toString())),
           DataCell(CustomText(items[index%controller.rowsPerPage.value].duration.toString())),
           DataCell(CustomText(items[index%controller.rowsPerPage.value].startTime ?? "")),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].hall ?? "")),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].description ?? "")),
+          // DataCell(CustomText(items[index%controller.rowsPerPage.value].hall ?? "")),
+          DataCell(CustomText("mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
+          DataCell(CustomText(items[index%controller.rowsPerPage.value].description ?? "dhcsdchsdjkhcvsdjkhvjsndjkvjkhdjkhvklsjvhjdsvjndsjkvjdnsjvnbjkdsvnjdbsjvnjsdbvjkjkdsbvjkhhguerhwvosudhvbidhvoicbuigf")),
         ]);
   }
 

@@ -156,7 +156,7 @@ class ExamTableController extends GetxController {
 
   Future<void> initSectionDropdownMenuList() async {
     List<Section> sectionsData =
-        await SectionRepository.fetchSections().then((e) => e.data ?? []);
+        await SectionRepository.fetchSections().then((e) => e.data?.values.toList() ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(

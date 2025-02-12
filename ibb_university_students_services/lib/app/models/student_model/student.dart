@@ -17,6 +17,8 @@ class Student extends User {
   Map<String, dynamic>? systemData;
   @HiveField(14)
   String? enrollmentYear;
+  @HiveField(15)
+  int? repeatYearsCount;
 
   String? get system {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -37,6 +39,7 @@ class Student extends User {
     super.section,
     this.systemData,
     this.enrollmentYear,
+    this.repeatYearsCount,
     super.createdAt,
     super.updatedAt,
   });
@@ -56,6 +59,7 @@ class Student extends User {
       section: Section.fromJson(json["section"]),
       systemData: JsonUtils.tryJsonDecode(json['student_system']),
       enrollmentYear: json['enrollment_year'],
+      repeatYearsCount: json['repeat_years_count'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

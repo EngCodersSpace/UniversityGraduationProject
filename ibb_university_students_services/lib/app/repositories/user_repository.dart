@@ -197,65 +197,7 @@ class UserRepository {
     return credentials;
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//////                                     fake data                                 ///////
-////////////////////////////////////////////////////////////////////////////////////////////
-// static void _fakeUser(String type) {
-//   if (type == "student") {
-//     // virtual response for test
-//     Map<String, dynamic> response = {
-//       'message': 'login successfully',
-//       'user': {
-//         'id': 2070093,
-//         'name': 'Shehab AL-Saidi',
-//         'email': 'shehab@gmail.com',
-//         'phone': '772388461',
-//         'level': '4th',
-//         'part': 'Electrical engineering',
-//         'department': 'Computer engineering',
-//         'profile_image': 'assets/images/login_background_0.jpg',
-//       },
-//       'user_type': 'student',
-//       'token': 'token_val'
-//     };
-//     if (response["user_type"] == "student") {
-//       _user = Student.fromJson(response["user"]);
-//     } else {
-//       _user = Doctor.fromJson(response["user"]);
-//     }
-//   } else if (type == "doctor") {
-//     // virtual response for test
-//     Map<String, dynamic> response = {
-//       'message': 'login successfully',
-//       'user': {
-//         'id': 2070093,
-//         'name': 'Shehab AL-Saidi',
-//         'email': 'shehab@gmail.com',
-//         'phone': '772388461',
-//         'department': 'Computer Eng',
-//         'academic_degree': 'Doctor',
-//         'administrative_position': 'Lecturer',
-//         'profile_image': 'assets/images/login_background_0.jpg',
-//       },
-//       'user_type': 'doctor',
-//       'token': 'token_val'
-//     };
-//     if (response["user_type"] == "student") {
-//       _user = Student.fromJson(response["user"]);
-//       _permission = "student";
-//     } else {
-//       _user = Doctor.fromJson(response["user"]);
-//       _permission = "doctor";
-//     }
-//   }
-// }
-//
-// static Future<Result<bool>> _userFakeLogin(String id, String password) async {
-//   if (id == "1231" && password == "1111aaaa@") {
-//     _fakeUser("student");
-//   } else if (id == "113" && password == "1111aaaa@") {
-//     _fakeUser("doctor");
-//   }
-//   return Result(hasError: false, statusCode: 200, data: true);
-// }
+  static bool? isCurrentUser(int? id) {
+    return  _userBox?.get('currentUser')?.id == id;
+  }
 }

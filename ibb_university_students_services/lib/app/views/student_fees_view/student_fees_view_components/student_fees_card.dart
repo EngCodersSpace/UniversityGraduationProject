@@ -9,7 +9,7 @@ import 'package:ibb_university_students_services/app/utils/dobule_digits_parse.d
 import 'package:intl/intl.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/maping_term_data.dart';
+import '../../../utils/maping_data.dart';
 import '../../../utils/permission_checker.dart';
 
 class StudentFeeCard extends GetView<StudentFeeController> {

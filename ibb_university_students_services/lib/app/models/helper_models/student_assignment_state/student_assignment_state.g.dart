@@ -18,21 +18,24 @@ class StudentAssignmentStateAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return StudentAssignmentState(
-      studentId: fields[0] as int?,
-      studentNameData: (fields[1] as Map?)?.cast<String, dynamic>(),
+      id: fields[0] as int?,
+      studentId: fields[1] as int?,
+      studentNameData: (fields[2] as Map?)?.cast<String, dynamic>(),
       state: fields[3] as String?,
       isCompleted: fields[4] as bool?,
-      studentFiles: (fields[5] as List?)?.cast<AttachmentFile>(),
+      studentFiles: (fields[5] as Map?)?.cast<int, StudentAssignmentsFile>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, StudentAssignmentState obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.studentId)
+      ..write(obj.id)
       ..writeByte(1)
+      ..write(obj.studentId)
+      ..writeByte(2)
       ..write(obj.studentNameData)
       ..writeByte(3)
       ..write(obj.state)

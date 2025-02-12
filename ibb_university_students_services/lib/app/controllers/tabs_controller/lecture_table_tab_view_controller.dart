@@ -22,7 +22,6 @@ import '../../views/lecture_table_tab_view/lecture_table_tab_components/add_and_
 class LectureController extends GetxController {
   //Lecture main view variables
   RxBool loadState = true.obs;
-
   TableDays? tableTime;
   RxInt selected = 3.obs;
   RxString selectedDayName = "Sunday".obs;
@@ -78,9 +77,6 @@ class LectureController extends GetxController {
   String mode = "Add";
   int? selectedLecture;
   bool submitting = false;
-  int rowsperpage = PaginatedDataTable.defaultRowsPerPage;
-
-  get force => null;
 
   @override
   void onInit() async {
@@ -96,13 +92,6 @@ class LectureController extends GetxController {
     await fetchTableData();
     loadState.value = false;
     super.onInit();
-  }
-
-  void onRowChange(int? value) {
-    if (value != null) {
-      rowsperpage = value;
-      update(["DataTable"]);
-    }
   }
 
   @override
@@ -217,9 +206,7 @@ class LectureController extends GetxController {
     }
   }
 
-  Map<int, Lecture>? selectedDay(
-    int index,
-  ) {
+  Map<int, Lecture>? selectedDay(int index) {
     switch (index) {
       case 0:
         return tableTime?.sat;
@@ -241,7 +228,7 @@ class LectureController extends GetxController {
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     List<Section> sectionsData =
         await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? []);
+            .then((e) => e.data?.values.toList() ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
@@ -250,7 +237,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 6) * 0.63,
+                  : (Get.width / 7) * 0.6,
               child: CustomText(
                 section.name ?? "unknown",
                 style:
@@ -275,7 +262,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 7) * 0.5,
+                  : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style:

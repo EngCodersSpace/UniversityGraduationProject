@@ -32,8 +32,11 @@ class StudentFeeRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_studentFeeBox?.isOpen??false) {
+    if (_studentFeeBox?.isOpen ?? false) {
       await _studentFeeBox?.close();
+    }
+    if (Hive.isBoxOpen("lastStudentFee")) {
+      await Hive.box("lastStudentFee").close();
     }
   }
 
@@ -86,26 +89,27 @@ class StudentFeeRepository {
     required int studentId,
     bool hardFetch = false,
   }) async {
-    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
       Box lastFeeBox = await Hive.openBox<StudentFee>("lastStudentFee");
       if ((lastFeeBox.get("$studentId") != null) &&
           (!hardFetch || !(await checkInternetConnection()))) {
+        lastFeeBox.close();
         return Result(
             data: lastFeeBox.get("$studentId"),
             hasError: false,
             statusCode: 200);
       }
-      response = await HttpProvider.post("get-allFeeOfStudent-orderd");
+      response = await HttpProvider.get("get-allFeeOfStudent-orderd");
       StudentFee? newStudentFee;
-      if (response?.statusCode == 201) {
-        newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
-          await lastFeeBox.put(studentId, newStudentFee);
+      if (response?.statusCode == 200) {
+        newStudentFee = StudentFee.fromJson(response?.data["lastPayment"]);
+        await lastFeeBox.put(studentId, newStudentFee);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
+      lastFeeBox.close();
       return Result(
           data: newStudentFee,
           hasError: true,
@@ -168,7 +172,7 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.put("update-fee", data: data);
       if (response?.statusCode == 200) {
-        cachedFees?.data[id] = StudentFee.fromJson( response?.data["data"]);
+        cachedFees?.data[id] = StudentFee.fromJson(response?.data["data"]);
         if (cachedFees != null) {
           await _studentFeeBox?.put(studentId, cachedFees);
         }

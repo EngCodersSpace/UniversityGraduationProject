@@ -23,6 +23,7 @@ class StudentResultController extends GetxController {
 
   @override
   void onInit() async {
+    // TODO: implement onInit
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     await fetchStudentGrads();
@@ -79,8 +80,8 @@ class StudentResultController extends GetxController {
   }
 
   Future<void> initDropdownMenuLists() async {
-    List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels()
+        .then((e) => e.data ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -90,9 +91,7 @@ class StudentResultController extends GetxController {
               width: (Get.width / 3.3) * 0.75,
               child: CustomText(
                 level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5Bold,
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ),
             )),
       );
@@ -104,9 +103,7 @@ class StudentResultController extends GetxController {
               width: (Get.width / 3.3) * 0.75,
               child: CustomText(
                 "Term 1",
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5Bold,
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
       DropdownMenuItem<String>(
           value: "Term 2",
@@ -114,9 +111,7 @@ class StudentResultController extends GetxController {
               width: (Get.width / 3.3) * 0.75,
               child: CustomText(
                 "Term 2",
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5Bold,
-                ),
+                style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold,),
               ))),
     ];
   }

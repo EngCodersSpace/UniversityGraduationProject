@@ -31,6 +31,9 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
             return Column(
               children: [
                 ListTile(
+                  onTap: () => controller.showStudentFiles(
+                      controller.selectedAssignment,
+                      stateId: items[i].id),
                   leading: CircleAvatar(
                     backgroundColor: AppColors.inverseIconColor,
                     child: CustomText(
@@ -40,17 +43,44 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
                     ),
                   ),
                   title: CustomText(
-                    "${items[i].studentId}",
+                    "${items[i].studentName}",
                     textAlign: TextAlign.start,
                     style: AppTextStyles.secStyle(
                         textHeader: AppTextHeaders.h2Bold),
                   ),
-                  trailing: Icon(Icons.more_horiz),
-                  subtitle: CustomText(
-                    "Status: ${items[i].state}",
-                    textAlign: TextAlign.start,
-                    style: AppTextStyles.highlightStyle(
-                        textHeader: AppTextHeaders.h3Bold),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (val) =>
+                        controller.changeState(val,items[i].studentId,items[i].id),
+                    color: AppColors.inverseCardColor,
+                    itemBuilder: (ctx) => [
+                      PopupMenuItem(
+                          value: "Accept",
+                          child: CustomText(
+                            "Accept".tr,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          )),
+                      PopupMenuItem(
+                          value: "Reject",
+                          child: CustomText(
+                            "Reject".tr,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          )),
+                    ],
+                    child: Icon(Icons.more_vert_outlined,
+                        color: AppColors.inverseCardColor),
+                  ),
+                  subtitle: GetBuilder<AssignmentsTabController>(
+                    id: "statusTextBuilder",
+                    builder: (context) {
+                      return CustomText(
+                        "Status: ${items[i].state}",
+                        textAlign: TextAlign.start,
+                        style: AppTextStyles.highlightStyle(
+                            textHeader: AppTextHeaders.h3Bold),
+                      );
+                    }
                   ),
                 ),
                 Divider(

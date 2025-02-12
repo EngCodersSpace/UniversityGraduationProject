@@ -13,6 +13,10 @@ import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
 
 class DashboardLectureTableController extends GetxController {
+
+  double get width => (Get.width - (Get.width*0.2));
+  double get height => Get.height;
+
   RxMap<int, Lecture> lectures = RxMap({});
   RxSet<int> selectedRows = RxSet({});
   RxInt availableRows  = 0.obs;
@@ -115,6 +119,8 @@ class DashboardLectureTableController extends GetxController {
             ))),
   ];
   List<DataColumn> kTableColumn = [];
+  ScrollController horizontal = ScrollController();
+  ScrollController vertical = ScrollController();
 RxBool selectAll = false.obs;
   @override
   void onInit() async {
@@ -319,11 +325,11 @@ RxBool selectAll = false.obs;
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
-    List<Section> sectionsData =
+    Map<int,Section> sectionsData =
         await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? []);
+            .then((e) => e.data ?? {});
     sections = [];
-    for (Section section in sectionsData) {
+    for (Section section in sectionsData.values.toList()) {
       sections.add(
         DropdownMenuItem<int>(
             value: section.id,
@@ -337,7 +343,7 @@ RxBool selectAll = false.obs;
             )),
       );
     }
-    selectedSection.value = sectionsData.first.id;
+    selectedSection.value = sectionsData.values.first.id;
   }
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {

@@ -12,6 +12,7 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() async {
+    // TODO: implement onInit
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
@@ -20,8 +21,9 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
+
   @override
-  void refresh() async {
+  void refresh() async{
     initState.value = false;
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
@@ -36,7 +38,7 @@ class ProfileController extends GetxController {
     Get.find<MainController>().changeTabIndex(4);
   }
 
-  void logout() async {
+  void logout() async{
     await UserRepository.userLogout();
   }
 

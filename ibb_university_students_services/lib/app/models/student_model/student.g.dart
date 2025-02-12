@@ -30,6 +30,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       section: fields[8] as Section?,
       systemData: (fields[13] as Map?)?.cast<String, dynamic>(),
       enrollmentYear: fields[14] as String?,
+      repeatYearsCount: fields[15] as int?,
       createdAt: fields[9] as String?,
       updatedAt: fields[10] as String?,
     );
@@ -38,7 +39,7 @@ class StudentAdapter extends TypeAdapter<Student> {
   @override
   void write(BinaryWriter writer, Student obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(11)
       ..write(obj.studyPlaneId)
       ..writeByte(12)
@@ -47,6 +48,8 @@ class StudentAdapter extends TypeAdapter<Student> {
       ..write(obj.systemData)
       ..writeByte(14)
       ..write(obj.enrollmentYear)
+      ..writeByte(15)
+      ..write(obj.repeatYearsCount)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
