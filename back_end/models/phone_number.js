@@ -1,5 +1,4 @@
 'use strict';
-const { options } = require('joi');
 const {
   Model
 } = require('sequelize');

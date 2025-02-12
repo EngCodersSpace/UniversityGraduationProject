@@ -9,10 +9,18 @@ const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = re
 const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 
+
+
+
 exports.uploadFile = async (req, res) => {
   try {
     const folder=`library/${req.query.category}`;
-    const subfolder='books';
+    const sectionName=await section.findOne({section_id:req.query.section_id});
+    const levelName=await level.findOne({level_id:req.query.level_id});
+    const sectionNameObj = JSON.parse(sectionName.section_name); 
+    const sectionName1 = sectionNameObj.en; 
+    const subfolder=`books/${sectionName1}/${levelName.level_name}`;
+
 
     uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
       if (err) {

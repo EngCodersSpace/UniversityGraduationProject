@@ -1,6 +1,5 @@
 'use strict'; 
 const { Model } = require('sequelize');
-const bookHooks = require('../hooks/bookHooks');
 
 module.exports = (sequelize, DataTypes) => {
   class book extends Model {
@@ -99,6 +98,5 @@ module.exports = (sequelize, DataTypes) => {
       },
         ],
     });
-    book.addHook('afterCreate', bookHooks.afterCreate);
     return book;
 };

@@ -153,10 +153,6 @@ exports.downloadFile = async (req, res) => {
 exports.getFileDetails = async (req, res) => {
   try {
       const hash= crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
-  
-      console.log("\n \n CHECK: Name:", req.body.originalname);
-      console.log("\n \n CHECK: Size:", req.body.size);
-      console.log("\n \n CHECK: Computed Hash:", hash , "\n \n \n ");
 
       const existingFile = await assignment_file.findOne({
         where:{attachment_hash: hash},
@@ -167,8 +163,6 @@ exports.getFileDetails = async (req, res) => {
           }
         ],
       });
-
-      console.log('\n \n \n existingFile=',existingFile,'\n \n \n')
 
       if (existingFile) {
         return res.status(400).json({message: 'Sorry , This File is already uploaded.'});

@@ -37,7 +37,7 @@ exports.welcome = (req, res) => {
 ///////////////////////////
 
 exports.login = async (req, res) => {
-  const { user_id, password } = req.body;
+  const { user_id, password ,fcm_token} = req.body;
 
   try {
     const foundUser = await user.scope("with_hidden_data").findOne({
@@ -88,6 +88,7 @@ exports.login = async (req, res) => {
     );
 
     foundUser.refreshToken = refreshToken;
+    foundUser.fcm_token=fcm_token;
     await foundUser.save();
 
     let responseUser = {};
