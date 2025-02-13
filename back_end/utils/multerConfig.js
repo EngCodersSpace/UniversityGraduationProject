@@ -99,66 +99,8 @@ const getStorageForPathPhoto = (baseFolder = 'temp', subFolder) => {
 
 const createUploadMiddleware = (baseFolder,subFolder) => {
   const storage = getStorageForPath(baseFolder,subFolder);
-
-  // const allowedMimetypes = [
-  //   'image/jpeg',
-  //   'image/png',
-  //   'image/gif',
-  //   'image/bmp',
-  //   'image/webp',
-  //   'image/svg+xml',
-  //   'image/tiff',
-  //   'image/x-icon',
-  
-  //   'application/pdf',
-  
-  //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  //   'application/msword',
-  //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  //   'application/vnd.ms-excel',
-  //   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  //   'application/vnd.ms-powerpoint',
-  
-  //   'video/mp4',
-  //   'video/x-msvideo',
-  //   'video/x-m4v',
-  //   'video/mpeg',
-  //   'video/quicktime',
-  //   'video/x-ms-wmv',
-  //   'video/ogg',
-  //   'video/webm',
-  
-  //   'audio/mpeg',
-  //   'audio/wav',
-  //   'audio/ogg',
-  
-  //   'application/zip',
-  //   'application/x-rar-compressed',
-  
-  //   'text/csv',
-  
-  //   'application/javascript', 
-  //   'text/x-python',          
-  //   'text/x-java-source',     
-  //   'text/html',             
-  //   'text/css',               
-  //   'application/x-httpd-php',
-  //   'text/x-csrc',            
-  //   'text/x-c++src',          
-  //   'application/json',    
-  //   'application/x-yaml',     
-  //   'application/x-ruby',     
-  //   'application/x-sh',       
-  //   'application/sql',      
-  // ];
   return multer({
     storage,
-    // fileFilter: (req, file, cb) => {
-    //   if (!allowedMimetypes.includes(file.mimetype)) {
-    //     return cb(new Error('File type not allowed.'), false);
-    //   }
-    //   cb(null, true);
-    // },
   });
 };
 

@@ -589,6 +589,7 @@ exports.logout = async (req, res) => {
     }
 
     foundUser.refreshToken = null;
+    
     await foundUser.save();
 
     res.status(200).json({ message: "Logout successful" });

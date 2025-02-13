@@ -17,5 +17,3 @@ module.exports = admin;
 //     privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace escaped newlines
 //   }),
 // });
-
-

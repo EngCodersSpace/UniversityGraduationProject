@@ -1,25 +1,46 @@
 // controllers/bookController.js
 const path = require('path');
 const fs = require("fs");
-const { book} = require('../models');
+const { book,section,level} = require('../models');
 const { Worker } = require("worker_threads");
 const crypto = require('crypto');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
+const { Op } = require('sequelize'); 
 
+// To check if a file is a duplicate
+exports.checkFileDuplicate = async (req, res) => {
+  try {
+    const hash = crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
+    const existingFile = await book.findOne({
+      where: {
+        file_path: { [Op.like]: `%${hash}%` }, 
+        section_id: req.body.section_id, 
+        level_id: req.body.level_id, 
+      },
+    });
 
-
+    if (existingFile) {
+      return res.status(400).json({ message: 'Sorry, this file has already been uploaded.' });
+    } else {
+      return res.status(200).json({ message: 'File is ready to be uploaded successfully.' });
+    }
+  } catch (error) {
+    console.error('Error while checking file duplicates:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
 
 exports.uploadFile = async (req, res) => {
   try {
-    const folder=`library/${req.query.category}`;
     const sectionName=await section.findOne({section_id:req.query.section_id});
     const levelName=await level.findOne({level_id:req.query.level_id});
     const sectionNameObj = JSON.parse(sectionName.section_name); 
     const sectionName1 = sectionNameObj.en; 
-    const subfolder=`books/${sectionName1}/${levelName.level_name}`;
+    const folder=`library/${req.query.category}/${sectionName1}/${levelName.level_name}`;
+    const subfolder=`books`;
 
 
     uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
@@ -34,12 +55,7 @@ exports.uploadFile = async (req, res) => {
       const bookDetails = await extractBookDetails(filepath);
 
       try {
-        const displayImagePath = path.join( 'storage/library', req.query.category, 'photos', `${req.file.hash}.png`);
-        const existingBook = await book.findOne({ where: { file_path: filepath } });
-        if (existingBook) {
-          fs.unlinkSync(filepath); 
-        }
-
+        const displayImagePath = path.join( 'storage/library', `${req.query.category}/${sectionName1}/${levelName.level_name}`,'photos', `${req.file.hash}.png`);
         const newBook = await book.create({
           title: bookDetails.title || path.parse(file.originalname).name,
           category: req.query.category,
@@ -53,7 +69,9 @@ exports.uploadFile = async (req, res) => {
         });
 
         await createFolderIfNotExists(filepath);
+
         await extractDisplayImage(filepath, displayImagePath);
+        
         newBook.display_image = displayImagePath;
         await newBook.save();
 
@@ -124,6 +142,58 @@ exports.downloadFile = async (req, res) => {
     res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
+
+
+
+// To get books by filtering (section, level, category) and stream them
+exports.getBooksByCriteria = async (req, res) => {
+  try {
+    const { section, level, category } = req.query;
+
+    // Build the where clause for filtering
+    const whereClause = {};
+    if (section) whereClause.section = section;
+    if (level) whereClause.level = level;
+    if (category) whereClause.category = category;
+
+    // Find books that match the criteria
+    const books = await book.findAll({
+      where: whereClause,
+    });
+
+    if (!books.length) {
+      return res.status(404).json({ message: 'No books found for the specified criteria.' });
+    }
+
+    books.forEach((book) => {
+      const filePath = path.resolve(__dirname,'..','BACK_END',book.file_path); 
+      const fileName = path.basename(filePath); 
+
+      if (!fs.existsSync(filePath)) {
+        console.error(`File not found: ${filePath}`);
+        return;
+      }
+
+      // res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+      res.setHeader('Content-Type', 'application/pdf');
+
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+
+      fileStream.on('error', (error) => {
+        console.error('Error streaming file:', error.message);
+        res.status(500).json({ message: 'Error streaming file', error: error.message });
+      });
+    });
+  } catch (error) {
+    console.error('Error retrieving books:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};
+
+//  get image by path (body)(param)
+
 
 exports.getBooksByCategory = async (req, res) => {
   try {
