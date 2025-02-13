@@ -52,8 +52,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'sectionId',
       });
 
-      section.hasMany(models.assignment,{
-        foreignKey:'section_id',
+      section.hasMany(models.assignment, {
+        foreignKey: 'section_id',
+      });
+
+      section.hasMany(models.book, {
+        foreignKey: 'section_id',
       });
 
 

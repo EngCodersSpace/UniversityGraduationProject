@@ -3,13 +3,15 @@
 "use strict";
 
 const { faker } = require("@faker-js/faker");
-const { user, subject, book } = require("../models");
+const { user, subject, book, section, level } = require("../models");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Fetch all users and subjects to associate with books
     const users = await user.findAll();
     const subjects = await subject.findAll();
+    const sections = await section.findAll();
+    const levels = await level.findAll();
 
     const books = [];
     for (let i = 0; i < 20; i++) {
@@ -17,6 +19,8 @@ module.exports = {
       const subjectData = faker.helpers.arrayElement(subjects); // Randomly select a subject
 
       books.push({
+        section_id: sections[i % sections.length].id,
+        level_id: levels[i % levels.length].id,
         title: faker.lorem.words(5), // Generate a random title
         author: faker.person.fullName(), // Generate a random author name
         isbn: faker.string.uuid(), // Generate a random ISBN
