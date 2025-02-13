@@ -1,5 +1,4 @@
 'use strict';
-const { options } = require('joi');
 const {
   Model
 } = require('sequelize');
@@ -56,8 +55,6 @@ module.exports = (sequelize, DataTypes) => {
     //   },
     // ],
   });
-  phone_number.addHook('beforeValidate', (phone_number, options) => {
-    phone_number.primarykey = ['user_id', 'phone_number'];
-  });
+  
   return phone_number;
 };
