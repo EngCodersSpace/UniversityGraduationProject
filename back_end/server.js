@@ -33,6 +33,7 @@ const bookRoutes = require('./routes/bookRoute');
 const assignmentRoutes = require('./routes/assignmentRoute');
 const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 const notificationRoute= require('./routes/notificationRoute');
+const refreshRoute=require('./routes/refreshRoute')
 
 app.use(getAllData);
 app.use(mainRouter);
@@ -50,6 +51,7 @@ app.use(bookRoutes);
 app.use(assignmentRoutes);
 app.use(rolePermissionRoutes);
 app.use(notificationRoute);
+app.use(refreshRoute);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {

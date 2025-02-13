@@ -2,5 +2,3 @@ node_modules/
 .env
 instructions_for_the_models_and_migrations.text
 storage/
-
-config/studentsservices.json
