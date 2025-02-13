@@ -9,6 +9,26 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      section_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'sections',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
+      level_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'levels',
+          key: 'id',
+        },
+        onDelete: 'NO ACTION',
+        onUpdate: 'CASCADE',
+      },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -25,17 +45,17 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: true,
       },
-      category:{
-        type:Sequelize.ENUM('Reference','Lecture','ExamForm'),
-        allowNull:false,
+      category: {
+        type: Sequelize.ENUM('Book', 'Reference', 'Lecture', 'Summary', 'Exam', 'Other'),
+        allowNull: false,
       },
       file_size: {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
-      file_path:{
-        type:Sequelize.TEXT,
-        allowNull:true,
+      file_path: {
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       display_image: {
         type: Sequelize.STRING,
@@ -73,7 +93,7 @@ module.exports = {
       }
     });
     await queryInterface.addConstraint('books', {
-      fields: ['title', 'numberOfPages', 'author', 'edition','category'],
+      fields: ['title', 'numberOfPages', 'author', 'edition'],
       type: 'unique',
       name: 'unique_constraint_in_book',
     });

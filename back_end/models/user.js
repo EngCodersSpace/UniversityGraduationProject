@@ -100,6 +100,11 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: { isEmail: true, },
     },
+    // permission: {
+    //   type: DataTypes.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
+    //   allowNull: false,
+    //   defaultValue: 'student',
+    // },
     roleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -128,10 +133,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     refreshToken: {
       type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    fcm_token:{
-      type: DataTypes.STRING(250),
       allowNull: true,
     },
 

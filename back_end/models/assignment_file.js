@@ -1,5 +1,4 @@
 'use strict';
-const crypto = require('crypto');
 const {
   Model
 } = require('sequelize');
@@ -56,11 +55,6 @@ module.exports = (sequelize, DataTypes) => {
         fields: ['assignment_id', 'attachment_hash'],
       },
     ],
-    // hooks:{
-    //   beforeValidate:(record)=>{
-    //     record.attachment_hash=crypto.createHash('md5').update(record.attachment).digest('hex');
-    //   },
-    // },
   });
   return assignment_file;
 };

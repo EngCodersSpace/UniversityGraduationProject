@@ -60,7 +60,7 @@ module.exports = {
       //   allowNull: false,
       // },
       payment_date: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: true,
       },
       receipt_number: {
