@@ -38,8 +38,8 @@ class StudentAssignmentsFile {
 
     return StudentAssignmentsFile(
       id: json['id'],
-      studentAssignmentId: 0,
-      path: "",
+      studentAssignmentId: json["student_assignment_id"],
+      path: json["path"],
       status: RxString(status),
     );
   }

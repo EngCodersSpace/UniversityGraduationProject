@@ -92,6 +92,7 @@ class AssignmentsRepository {
             assignment.attachments?.forEach((i, e) async {
               await e.checkDownloaded();
             });
+
             assignments[assignment.id] = assignment;
             await _assignmentsBox?.put(
               assignment.id,

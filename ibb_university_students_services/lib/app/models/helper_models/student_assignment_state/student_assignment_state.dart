@@ -37,7 +37,8 @@ class StudentAssignmentState{
   factory StudentAssignmentState.fromJson(Map<String, dynamic> json) {
     Map<int,StudentAssignmentsFile> files = {};
     for(Map<String,dynamic> file in json["student_assignment_files"]){
-      files[json["id"]] = StudentAssignmentsFile.fromJson(file);
+      files[file["id"]] = StudentAssignmentsFile.fromJson(file);
+      files[file["id"]]?.checkDownloaded();
     }
     return StudentAssignmentState(
       id: json["id"],
