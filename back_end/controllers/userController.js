@@ -207,8 +207,87 @@ exports.getAllDoctors = async (req, res) => {
     }
 };
 
-
-
+exports.getDoctorsByCriteriaPanle = async (req, res) => {
+    const ALLOWED_ORDER_FIELDS = ["doctor_id", "academic_degree", "administrative_position"];
+    const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+  
+    try {
+      const {
+        doctor_id,
+        academic_degree,
+        administrative_position,
+        page = 1,
+        limit = 10,
+        orderBy = "doctor_id",
+        sort = "ASC",
+        search,
+      } = req.query;
+  
+      const whereClause = {};
+      if (doctor_id) whereClause.doctor_id = doctor_id;
+      if (academic_degree) whereClause.academic_degree = academic_degree;
+      if (administrative_position) whereClause.administrative_position = administrative_position;
+  
+      const pageNumber = parseInt(page, 10);
+      let limitNumber = parseInt(limit, 10);
+  
+      const LOWER_LIMIT = 10;
+      const UPPER_LIMIT = 250;
+      if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+      if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+      if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+  
+      const offset = (pageNumber - 1) * limitNumber;
+  
+      const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "doctor_id";
+      const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+  
+      const searchCondition = search
+        ? {
+            [Op.or]: [
+              { academic_degree: { [Op.like]: `%${search}%` } },
+              { administrative_position: { [Op.like]: `%${search}%` } },
+            ],
+          }
+        : {};
+  
+      const { count, rows: doctors } = await doctor.findAndCountAll({
+        where: {
+          [Op.and]: [whereClause, searchCondition],
+        },
+        include: [
+          { model: user, as: "user" }, // Assuming 'user' is the associated model
+        ],
+        limit: limitNumber,
+        offset: offset,
+        order: [[validOrderBy, validSort]],
+      });
+  
+      if (!doctors.length) {
+        return res.status(404).json({ message: "No doctors found for the specified criteria" });
+      }
+  
+      const doctorList = doctors.map((doctor) => ({
+        doctor_id: doctor.doctor_id,
+        academic_degree: doctor.academic_degree,
+        administrative_position: doctor.administrative_position,
+      }));
+  
+      res.status(200).json({
+        message: "Doctors retrieved successfully",
+        data: doctorList,
+        pagination: {
+          totalDoctors: count,
+          totalPages: Math.ceil(count / limitNumber),
+          currentPage: pageNumber,
+          perPage: limitNumber,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error retrieving doctors", error: error.message });
+    }
+};
 
 
 
@@ -401,7 +480,96 @@ exports.getAllStudents = async (req, res) => {
 
 
 
-
+exports.getStudentsByCriteriaPanle = async (req, res) => {
+    const ALLOWED_ORDER_FIELDS = ["enrollment_year", "student_id", "student_level_id", "repeat_years_count"];
+    const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+  
+    try {
+      const {
+        student_id,
+        study_plan_id,
+        student_level_id,
+        enrollment_year,
+        repeat_years_count,
+        page = 1,
+        limit = 10,
+        orderBy = "enrollment_year",
+        sort = "ASC",
+        search,
+      } = req.query;
+  
+      const whereClause = {};
+      if (student_id) whereClause.student_id = student_id;
+      if (study_plan_id) whereClause.study_plan_id = study_plan_id;
+      if (student_level_id) whereClause.student_level_id = student_level_id;
+      if (enrollment_year) whereClause.enrollment_year = enrollment_year;
+      if (repeat_years_count) whereClause.repeat_years_count = repeat_years_count;
+  
+      const pageNumber = parseInt(page, 10);
+      let limitNumber = parseInt(limit, 10);
+  
+      const LOWER_LIMIT = 10;
+      const UPPER_LIMIT = 250;
+      if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+      if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+      if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+  
+      const offset = (pageNumber - 1) * limitNumber;
+  
+      const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "enrollment_year";
+      const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+  
+      const searchCondition = search
+        ? {
+            [Op.or]: [
+              { student_id: { [Op.like]: `%${search}%` } },
+              { student_system: { [Op.like]: `%${search}%` } },
+            ],
+          }
+        : {};
+  
+      const { count, rows: students } = await student.findAndCountAll({
+        where: {
+          [Op.and]: [whereClause, searchCondition],
+        },
+        include: [
+          { model: user, as: "user" }, // Assuming 'user' is the associated model
+          { model: study_plan, as: "study_plan" },
+          { model: level, as: "level" },
+        ],
+        limit: limitNumber,
+        offset: offset,
+        order: [[validOrderBy, validSort]],
+      });
+  
+      if (!students.length) {
+        return res.status(404).json({ message: "No students found for the specified criteria" });
+      }
+  
+      const studentList = students.map((student) => ({
+        student_id: student.student_id,
+        study_plan_id: student.study_plan_id,
+        student_level_id: student.student_level_id,
+        enrollment_year: student.enrollment_year,
+        student_system: student.student_system,
+        repeat_years_count: student.repeat_years_count,
+      }));
+  
+      res.status(200).json({
+        message: "Students retrieved successfully",
+        data: studentList,
+        pagination: {
+          totalStudents: count,
+          totalPages: Math.ceil(count / limitNumber),
+          currentPage: pageNumber,
+          perPage: limitNumber,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error retrieving students", error: error.message });
+    }
+};
 
 
 

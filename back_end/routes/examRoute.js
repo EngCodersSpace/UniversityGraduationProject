@@ -17,6 +17,9 @@ router.delete('/delete-exam',  CRUD.deleteExam );
 router.get('/get-all-exam',  CRUD.getAllExams);
 router.get('/get-exam', CRUD.getExam );
 router.get('/get-exam-grouped', CRUD.getExamGroupedByCriteria );
+router.get('/get-exam-grouped-Panle', CRUD.getExamGroupedByCriteriaPanle );
+
+
 router.get('/get-exam-year', CRUD.getExamYear );
 
 module.exports = router; 

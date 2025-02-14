@@ -113,6 +113,89 @@ exports.getSubjectByfilter = async (req,res) => {
   }
 };
 
+exports.getSubjectsByCriteriaPanle = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["subject_id", "subject_name", "number_of_units"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      subject_id,
+      subject_name,
+      number_of_units,
+      page = 1,
+      limit = 10,
+      orderBy = "subject_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const whereClause = {};
+    if (subject_id) whereClause.subject_id = subject_id;
+    if (subject_name) whereClause.subject_name = subject_name;
+    if (number_of_units) whereClause.number_of_units = number_of_units;
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "subject_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { subject_id: { [Op.like]: `%${search}%` } },
+            { subject_name: { [Op.like]: `%${search}%` } },
+            { subject_description: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
+    const { count, rows: subjects } = await subject.findAndCountAll({
+      where: {
+        [Op.and]: [whereClause, searchCondition],
+      },
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!subjects.length) {
+      return res.status(404).json({ message: "No subjects found for the specified criteria" });
+    }
+
+    const subjectList = subjects.map((subject) => ({
+      subject_id: subject.subject_id,
+      subject_name: subject.subject_name,
+      number_of_units: subject.number_of_units,
+      subject_description: subject.subject_description,
+    }));
+
+    res.status(200).json({
+      message: "Subjects retrieved successfully",
+      data: subjectList,
+      pagination: {
+        totalSubjects: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving subjects", error: error.message });
+  }
+};
+
+
+
 exports.updateSubject = async (req, res) => {
     try {
       const { id } = req.query;

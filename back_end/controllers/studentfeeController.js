@@ -76,7 +76,102 @@ exports.getLastPayment = async (req, res) => {
 };
 
 
-
+exports.getStudentFeesByCriteriaanle = async (req, res) => {
+    const ALLOWED_ORDER_FIELDS = ["payment_date", "total_amount", "amount_paid", "remaining_amount", "receipt_number"];
+    const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+  
+    try {
+      const {
+        student_id,
+        level_fees_id,
+        term,
+        total_amount,
+        amount_paid,
+        remaining_amount,
+        receipt_number,
+        page = 1,
+        limit = 10,
+        orderBy = "payment_date",
+        sort = "ASC",
+        search,
+      } = req.query;
+  
+      const whereClause = {};
+      if (student_id) whereClause.student_id = student_id;
+      if (level_fees_id) whereClause.level_fees_id = level_fees_id;
+      if (term) whereClause.term = term;
+      if (total_amount) whereClause.total_amount = total_amount;
+      if (amount_paid) whereClause.amount_paid = amount_paid;
+      if (remaining_amount) whereClause.remaining_amount = remaining_amount;
+      if (receipt_number) whereClause.receipt_number = receipt_number;
+  
+      const pageNumber = parseInt(page, 10);
+      let limitNumber = parseInt(limit, 10);
+  
+      const LOWER_LIMIT = 10;
+      const UPPER_LIMIT = 250;
+      if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+      if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+      if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+  
+      const offset = (pageNumber - 1) * limitNumber;
+  
+      const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "payment_date";
+      const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+  
+      const searchCondition = search
+        ? {
+            [Op.or]: [
+              { receipt_number: { [Op.like]: `%${search}%` } },
+              { term: { [Op.like]: `%${search}%` } },
+            ],
+          }
+        : {};
+  
+      const { count, rows: studentFees } = await student_fee.findAndCountAll({
+        where: {
+          [Op.and]: [whereClause, searchCondition],
+        },
+        include: [
+          { model: student, as: "student" }, // Assuming 'student' is the associated model
+          { model: level, as: "level" }, // Assuming 'level' is the associated model
+        ],
+        limit: limitNumber,
+        offset: offset,
+        order: [[validOrderBy, validSort]],
+      });
+  
+      if (!studentFees.length) {
+        return res.status(404).json({ message: "No student fees found for the specified criteria" });
+      }
+  
+      const studentFeeList = studentFees.map((fee) => ({
+        id: fee.id,
+        student_id: fee.student_id,
+        level_fees_id: fee.level_fees_id,
+        term: fee.term,
+        total_amount: fee.total_amount,
+        amount_paid: fee.amount_paid,
+        remaining_amount: fee.remaining_amount,
+        payment_date: fee.payment_date,
+        receipt_number: fee.receipt_number,
+      }));
+  
+      res.status(200).json({
+        message: "Student fees retrieved successfully",
+        data: studentFeeList,
+        pagination: {
+          totalStudentFees: count,
+          totalPages: Math.ceil(count / limitNumber),
+          currentPage: pageNumber,
+          perPage: limitNumber,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error retrieving student fees", error: error.message });
+    }
+};
 
 
 

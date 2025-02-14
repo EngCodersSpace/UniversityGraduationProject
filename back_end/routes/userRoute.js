@@ -1,53 +1,37 @@
 // routes/userRoute.js
 const express = require('express');
-const userController = require('../controllers/userController');
+const CRUD = require('../controllers/userController');
 
 const authToken = require('../middleware/authMiddleware');
-const {checkRole} = require('../middleware/roleMiddleware');
-
+// const {checkRole} = require('../middleware/roleMiddleware');
 
 const router = express.Router();
-
 router.use(authToken.verifyToken);
 
 
 
-router.get('/users', checkRole('teacher'), userController.getAllUsers);
-
-router.get('/users/:id', userController.getUserById);
-
-router.delete('/users/:id', userController.deleteUser);
+router.get('/users', CRUD.getAllUsers);
+router.get('/users/:id', CRUD.getUserById);
+router.delete('/users/:id', CRUD.deleteUser);
 
 
 
-router.get('/doctor', userController.getAllDoctors);
+router.get('/doctor', CRUD.getAllDoctors);
+router.get('/doctor/:id', CRUD.getDoctorById);
+router.get('/get-doctors-panle', CRUD.getDoctorsByCriteriaPanle);
 
-router.get('/doctor/:id', userController.getDoctorById);
-// ?/:language?
-router.put('/doctor/:id', userController.updateDoctor);
-
-router.delete('/doctor/:id', userController.deleteDoctor);
-
+router.put('/doctor/:id', CRUD.updateDoctor);
+router.delete('/doctor/:id', CRUD.deleteDoctor);
 
 
-router.get('/student', userController.getAllStudents);
 
-router.get('/student/:id', userController.getStudentById);
+router.get('/student', CRUD.getAllStudents);
+router.get('/student/:id', CRUD.getStudentById);
+router.get('/get-student-panle', CRUD.getStudentsByCriteriaPanle);
 
-router.put('/student/:id', userController.updateStudent);
+router.put('/student/:id', CRUD.updateStudent);
+router.delete('/student/:id', CRUD.deleteStudent);
 
-router.delete('/student/:id', userController.deleteStudent);
 
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
