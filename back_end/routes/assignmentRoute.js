@@ -13,7 +13,7 @@ router.post('/upload-files-assignment-student', CRUD.uploadFilesAttachment);
 router.get('/get-assignments-subject',CRUD.getAssignmentsOfSubject);
 router.get('/get-all-students-assignment', CRUD.getStudentsAndFilesByAssignment);
 router.get('/download-assignment-files', CRUD.downloadFile);
-router.get('/download-files', CRUD.doctorDownloadFile);
+router.get('/download-files-doctor', CRUD.doctorDownloadFile);
 
 router.put('/update-assignment', CRUD.updateAssigment);
 router.put('/update-student-assignment-status', CRUD.updateAssignmentStatus);

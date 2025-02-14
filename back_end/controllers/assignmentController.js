@@ -245,8 +245,7 @@ exports.uploadFileForAssignment = async (req, res) => {
           attachment_hash: req.file.hash,
         });
 
-        console.log('\n \n \n name= ',req.file.originalname,'\n \n \n ');
-        console.log('\n \n \n size= ',req.file.size,'\n \n \n ');
+        await upsertRefreshState("assignment",`section_id : ${req.query.section_id} - level_id : ${req.query.level_id}`);
 
         res.status(201).json({
           message: 'File uploaded successfully.',
@@ -479,7 +478,6 @@ exports.updateAssigment=async(req,res)=>{
     if (!Assignment) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
-    console.log('\n \n \n ',Assignment,'\n \n \n ');
 
     const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
     const translatedTitle = await translateText(req.body.title, req.headers['accept-language'], targetLanguage);
@@ -495,8 +493,8 @@ exports.updateAssigment=async(req,res)=>{
       level_id: req.body.level_id || Assignment.level_id,
     };
 
+    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
-    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
 
 
     res.status(200).json({
@@ -534,8 +532,8 @@ exports.deleteAssignment = async (req, res) => {
       await file.destroy();
     }
 
+    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
     await Assignment.destroy();
-    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
 
     res.status(200).json({ message: 'Assignment deleted successfully.' });
   } catch (error) {
