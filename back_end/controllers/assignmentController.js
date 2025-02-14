@@ -28,9 +28,20 @@ exports.getAssignmentsOfSubject = async (req, res) => {
           },
           {
             model:student_assignment , where:{student_id:req.user.user_id},
+
             include:[
               {
                 model:student_assignment_file,
+              },
+              {
+                model:student.scope(null),as:'student',
+                attributes:['student_id'],
+                include:[
+                  {
+                    model:user,as:'user',
+                    attributes:['user_name'],
+                  }
+                ],
               }
             ],
           },
@@ -76,7 +87,7 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 // to see students of this assignment and their files
 exports.getStudentsAndFilesByAssignment = async (req, res) => {
   try {
-    const fileDetail=await student_assignment.scope(null).findAll({
+    const fileDetail=await student_assignment.findAll({
       where:{assignment_id:req.query.assignment_id},
        include: [
           {
