@@ -27,7 +27,11 @@ module.exports = {
       attachment_hash:{
         type:Sequelize.STRING(64),
         allowNull:false,
-      }
+      },
+      original_name:{
+        type:Sequelize.STRING,
+        allowNull:false
+      },
 
 
 

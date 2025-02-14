@@ -38,10 +38,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    attachment_hash:{
-      type:DataTypes.STRING(64),
-      allowNull:false,
-    }
+    attachment_hash: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    original_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'student_assignment_file',
@@ -52,9 +56,9 @@ module.exports = (sequelize, DataTypes) => {
         fields: ['student_assignment_id', 'attachment_hash'],
       },
     ],
-    hooks:{
-      beforeValidate:(record)=>{
-        record.attachment_hash=crypto.createHash('sha256').update(record.attachment).digest('hex');
+    hooks: {
+      beforeValidate: (record) => {
+        record.attachment_hash = crypto.createHash('sha256').update(record.attachment).digest('hex');
       },
     },
   });

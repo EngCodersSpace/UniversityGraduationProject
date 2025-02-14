@@ -108,9 +108,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    original_name:{
-      type:DataTypes.STRING,
-    },
+
 
 
 
