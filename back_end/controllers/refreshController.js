@@ -27,6 +27,9 @@ exports.upsertRefreshState = async (target, filter) => {
 exports.getAllRefreshStates = async (req, res) => {
   try {
     const records = await refresh_state.findAll();
+    if (records.length === 0) {
+      return res.status(204).send(); 
+    }
     return res.status(200).json({
         message:'get all Records successfully',
         data:records

@@ -5,9 +5,9 @@ const { book,section,level} = require('../models');
 const { Worker } = require("worker_threads");
 const crypto = require('crypto');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
-
 const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
+const { upsertRefreshState} = require('../controllers/refreshController');
 const { Op } = require('sequelize'); 
 
 // To check if a file is a duplicate
@@ -61,6 +61,8 @@ exports.uploadFile = async (req, res) => {
           category: req.query.category,
           subject_id: req.body.subject_id,
           added_by: req.user.user_id,
+          section_id:req.query.section_id,
+          level_id:req.query.level_id,
           file_path: filepath,
           author: bookDetails.author,
           edition: bookDetails.edition,
@@ -74,32 +76,34 @@ exports.uploadFile = async (req, res) => {
         
         newBook.display_image = displayImagePath;
         await newBook.save();
+        await upsertRefreshState("book",`section_id : ${req.query.section_id} - level_id : ${req.query.level_id}`);
+
 
         return res.status(201).json({
-        message: "Books uploaded successfully.",
-        books: newBook,
-      });
-    
-    } catch(error){
-      if (error instanceof UniqueConstraintError) {
-        return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
-      }
-  
-      if (error instanceof ForeignKeyConstraintError) {
-        return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
-      }
-  
-      if (error instanceof ValidationError) {
-        return res.status(400).json({ message: 'Validation error: ' + error.message });
-      }
-      else {
-        res.status(500).json({
-          message: 'Error inner uploadFile.',
-          error: error.message,
+          message: "Books uploaded successfully.",
+          books: newBook,
         });
+    
+      } catch(error){
+        if (error instanceof UniqueConstraintError) {
+          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+        }
+    
+        if (error instanceof ForeignKeyConstraintError) {
+          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+        }
+    
+        if (error instanceof ValidationError) {
+          return res.status(400).json({ message: 'Validation error: ' + error.message });
+        }
+        else {
+          res.status(500).json({
+            message: 'Error inner uploadFile.',
+            error: error.message,
+          });
+        }
       }
-    }
-  });
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -143,20 +147,18 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
-
-
 // To get books by filtering (section, level, category) and stream them
-exports.getBooksByCriteria = async (req, res) => {
+exports.streamBooks = async (req, res) => {
   try {
-    const { section, level, category } = req.query;
+    const { section_id, level_id, category } = req.query;
 
     // Build the where clause for filtering
     const whereClause = {};
-    if (section) whereClause.section = section;
-    if (level) whereClause.level = level;
+    if (section_id) whereClause.section_id = section_id;
+    if (level_id) whereClause.level_id = level_id;
     if (category) whereClause.category = category;
 
-    // Find books that match the criteria
+    // Fetch books from the database
     const books = await book.findAll({
       where: whereClause,
     });
@@ -165,35 +167,60 @@ exports.getBooksByCriteria = async (req, res) => {
       return res.status(404).json({ message: 'No books found for the specified criteria.' });
     }
 
-    books.forEach((book) => {
-      const filePath = path.resolve(__dirname,'..','BACK_END',book.file_path); 
-      const fileName = path.basename(filePath); 
+    // Set headers for streaming JSON
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Transfer-Encoding', 'chunked');
 
-      if (!fs.existsSync(filePath)) {
-        console.error(`File not found: ${filePath}`);
+    let index = 0;
+    const chunkSize = 5; // Number of books per chunk
+
+    res.write('['); // Start JSON array
+
+    const interval = setInterval(() => {
+      if (index >= books.length) {
+        res.write(']'); // Close JSON array
+        res.end();
+        clearInterval(interval);
         return;
       }
 
-      // res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-      res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
-      res.setHeader('Content-Type', 'application/pdf');
+      const chunk = books.slice(index, index + chunkSize);
+      index += chunkSize;
 
-      const fileStream = fs.createReadStream(filePath);
-      fileStream.pipe(res);
+      res.write(JSON.stringify(chunk)); // Send JSON chunk
 
-      fileStream.on('error', (error) => {
-        console.error('Error streaming file:', error.message);
-        res.status(500).json({ message: 'Error streaming file', error: error.message });
-      });
-    });
+      if (index < books.length) {
+        res.write(','); // Add comma between chunks
+      }
+    }, 1000); // Send a chunk every second
   } catch (error) {
-    console.error('Error retrieving books:', error.message);
+    console.error('Error streaming books:', error.message);
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
-//  get image by path (body)(param)
+//  get image from path by id (req.query.id)
+exports.getImageOfBook = async (req, res) => {
+  try {
 
+      if (!req.query.id) {
+          return res.status(400).json({message: "book id  is required" });
+      }
+
+      const ImageOfBook = await book.findOne({
+          where: { id: req.query.id },
+      });
+
+      if (ImageOfBook.length === 0) {
+          return res.status(404).json({ success: false, message: "No image found for the specified book" });
+      }
+      const imagePath = path.join(__dirname  , '..', ImageOfBook.display_image);
+      res.sendFile(imagePath);
+  } catch (error) {
+      console.error("Error fetching book's image:", error);
+      res.status(500).json({message: "An error occurred while fetching book's image", error: error.message });
+  }
+};
 
 exports.getBooksByCategory = async (req, res) => {
   try {
@@ -225,6 +252,7 @@ exports.deleteBook = async (req, res) => {
     }
     const filePath = path.resolve(Book.file_path);
     const imagePath = path.resolve(Book.display_image);
+
     if (fs.existsSync(filePath)) {
         await fs.promises.unlink(filePath);
         console.log(`Deleted file: ${filePath}`);
@@ -237,10 +265,60 @@ exports.deleteBook = async (req, res) => {
     } else {
         console.warn(`\n \n \n Image not found: ${imagePath}`);
     }
+    await upsertRefreshState("book",`section_id : ${Book.section_id} - level_id : ${Book.level_id}`);
     await book.destroy({ where: { id:req.query.id } });
+
     res.status(200).json({ message: "Book and its related files were deleted successfully" });
   } catch (error) {
         console.error("Error deleting book:", error);
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
   }
 };
+
+
+
+// exports.getBooksByCriteria = async (req, res) => {
+//   try {
+//     const { section, level, category } = req.query;
+
+//     // Build the where clause for filtering
+//     const whereClause = {};
+//     if (section) whereClause.section = section;
+//     if (level) whereClause.level = level;
+//     if (category) whereClause.category = category;
+
+//     // Find books that match the criteria
+//     const books = await book.findAll({
+//       where: whereClause,
+//     });
+
+//     if (!books.length) {
+//       return res.status(404).json({ message: 'No books found for the specified criteria.' });
+//     }
+
+//     books.forEach((book) => {
+//       const filePath = path.resolve(__dirname,'..',book.file_path); 
+//       const fileName = path.basename(filePath); 
+
+//       if (!fs.existsSync(filePath)) {
+//         console.error(`File not found: ${filePath}`);
+//         return;
+//       }
+
+//       // res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+//       res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
+//       res.setHeader('Content-Type', 'application/pdf');
+
+//       const fileStream = fs.createReadStream(filePath);
+//       fileStream.pipe(res);
+
+//       fileStream.on('error', (error) => {
+//         console.error('Error streaming file:', error.message);
+//         res.status(500).json({ message: 'Error streaming file', error: error.message });
+//       });
+//     });
+//   } catch (error) {
+//     console.error('Error retrieving books:', error.message);
+//     res.status(500).json({ message: 'Internal server error', error: error.message });
+//   }
+// };

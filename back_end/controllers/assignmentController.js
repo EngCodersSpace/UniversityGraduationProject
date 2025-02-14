@@ -149,6 +149,41 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
+// download files of assignment-file
+exports.doctorDownloadFile = async (req, res) => {
+  try {
+    const fileData = await assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+    const filePath= fileData.attachment;
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server." });
+    }
+
+    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
+      workerData: { filePath },
+    });
+    console.log(`\n \n worker find path ${filePath} \n \n` );
+    worker.on("message", (message) => {
+      if (message.status === "success") {
+        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
+        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
+      }
+    });
+    worker.on("error", (err) => {
+      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
+      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
+    });
+    
+    res.status(200).json({ message: "Download started in the background." });
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ message: "Failed to start download.", error: error.message });
+  }
+};
+
+
 // to checks if file duplicate or not
 exports.getFileDetails = async (req, res) => {
   try {
