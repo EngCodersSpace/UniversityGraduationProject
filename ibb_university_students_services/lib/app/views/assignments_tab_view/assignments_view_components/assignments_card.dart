@@ -71,19 +71,38 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                         Row(
                           children: [
                             if( (UserRepository.isCurrentUser(content.value?.studentsStatus?.entries.first.value.studentId)??false))
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainCardColor,
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(32)),
-                                ),
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                                child: CustomText(
-                                  (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mainCardColor,
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                    ),
+                                    padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    child: CustomText(
+                                      (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mainCardColor,
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                    ),
+                                    padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    child: CustomText(
+                                      (content.value?.studentsStatus?.entries.first.value.state??"Unknown".tr),
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ),
+                                ],
                               ),
                             if ((PermissionUtils.checkPermission(
                                 target: "Assignments", action: "write"))) ...[
