@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
@@ -14,6 +15,7 @@ import '../models/assignment_model/assignment_model.dart';
 import '../models/helper_models/assignments_cache/assignments_cache.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_assignments_file_model/student_assignments_file_model.dart';
+import '../models/subject_model/subject_model.dart';
 import '../services/http_provider/http_provider.dart';
 import '../services/notification_services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
@@ -85,7 +87,8 @@ class AssignmentsRepository {
             data: []);
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
-            Assignment assignment = Assignment.fromJson(jsAssignments);
+            Subject? subject = await SubjectRepository.fetchSubject(id: jsAssignments["subject_id"]).then((e)=>e.data);
+            Assignment assignment = Assignment.fromJson(jsAssignments,subject: subject);
             assignment.attachments?.forEach((i, e) async {
               await e.checkDownloaded();
             });
@@ -603,4 +606,39 @@ class AssignmentsRepository {
           data: null);
     }
   }
+
+  static Future<Result<void>> changeStudentCompletion({
+    required int id,
+    required int studentId,
+    required int stateId,
+    required bool state,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.put("update-student-assignment-complete?id=$stateId&student_id=$studentId&is_completed=$state");
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.isCompleted = response?.data["data"]["is_completed"];
+        return Result(
+            hasError: true,
+            statusCode: response?.statusCode ?? _createError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
 }

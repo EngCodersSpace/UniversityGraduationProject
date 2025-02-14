@@ -86,7 +86,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                 ),
                               ),
                             if ((PermissionUtils.checkPermission(
-                                target: "Assignments", action: "edit"))) ...[
+                                target: "Assignments", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),
@@ -109,6 +109,38 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
+                                        )),
+                                  ],
+                                  child: Icon(Icons.more_vert_outlined,
+                                      color: AppColors.mainTextColor),
+                                ),
+                              )
+                            ]else if (PermissionUtils.checkPermission(
+                                target: "Assignments", action: "setCompletion"))...[
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: PopupMenuButton<String>(
+                                  onSelected: (val) => controller.more(val,
+                                      data: content.toJson()),
+                                  color: AppColors.inverseCardColor,
+                                  itemBuilder: (ctx) => [
+                                    PopupMenuItem(
+                                        value: "setComplete",
+                                        child: CustomText(
+                                          "Set Complete".tr,
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
+                                        )),
+                                    PopupMenuItem(
+                                        value: "setNotComplete",
+                                        child: CustomText(
+                                          "Set Not Complete".tr,
                                           style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3Bold),
                                         )),

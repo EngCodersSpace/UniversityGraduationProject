@@ -58,8 +58,7 @@ class Assignment {
     }
     StudentAssignmentState? state;
     if (json['student_assignments'] != null) {
-      state =
-          StudentAssignmentState.fromJson(json['student_assignments'][0]);
+      state = StudentAssignmentState.fromJson(json['student_assignments'][0]);
     }
 
     return Assignment(
@@ -76,7 +75,7 @@ class Assignment {
       assignmentDate: json['assignment_date'],
       dueDate: json['assignments_due_date'],
       attachments: files,
-      studentsStatus: (state != null)?{state.id!:state}:null,
+      studentsStatus: (state != null) ? {state.id!: state} : null,
     );
   }
 
@@ -90,6 +89,8 @@ class Assignment {
       "assignment_date": assignmentDate,
       "assignments_due_date": dueDate,
       "attachment": attachments,
+      "studentsStatus":studentsStatus
+
     };
   }
 }

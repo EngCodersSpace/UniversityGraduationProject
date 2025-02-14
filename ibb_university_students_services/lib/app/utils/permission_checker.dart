@@ -7,13 +7,13 @@ class PermissionUtils {
       "Lectures": ["add","edit" "delete", "view","accessOldTables"],
       "Exams": ["add", "edit","delete", "view","accessOldTables"],
       "Payments": ["add", "edit","delete", "studentSearch"],
-      "Assignments": ["add", "edit","delete", "doctorView","addAttachments","showStudentsFiles"],
+      "Assignments": ["add", "edit","delete","write","doctorView","setCompletion","setStatus","addAttachments","showStudentsFiles"],
     },
-    2: {
+    5: {
       "Lectures": [],
       "Exams": [],
       "Payments": [],
-      "Assignments": [],
+      "Assignments": ["setCompletion"],
     },
 
   };
