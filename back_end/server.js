@@ -34,6 +34,8 @@ const assignmentRoutes = require('./routes/assignmentRoute');
 const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 const notificationRoute= require('./routes/notificationRoute');
 const refreshRoute=require('./routes/refreshRoute')
+const controllPanle=require('./routes/controllPanle')
+
 
 app.use(getAllData);
 app.use(mainRouter);
@@ -52,6 +54,7 @@ app.use(assignmentRoutes);
 app.use(rolePermissionRoutes);
 app.use(notificationRoute);
 app.use(refreshRoute);
+app.use(controllPanle);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
