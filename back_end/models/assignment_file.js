@@ -39,10 +39,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    attachment_hash:{
-      type:DataTypes.STRING(64),
-      allowNull:false,
-    }
+    attachment_hash: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+    },
+    original_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
 
 
   }, {
@@ -55,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         fields: ['assignment_id', 'attachment_hash'],
       },
     ],
+    
   });
   return assignment_file;
 };

@@ -39,9 +39,13 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
+<<<<<<< HEAD
       original_name:{
         type:Sequelize.STRING,
       },
+=======
+
+>>>>>>> 24fc6d51bde2fbeda4ab8cdfd52ec87940fd1002
 
 
 

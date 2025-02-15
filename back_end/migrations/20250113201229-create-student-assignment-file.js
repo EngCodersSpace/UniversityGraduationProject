@@ -26,7 +26,11 @@ module.exports = {
       attachment_hash:{
         type:Sequelize.STRING(64),
         allowNull:false,
-      }
+      },
+      original_name:{
+        type:Sequelize.STRING,
+        allowNull:false
+      },
     });
     await queryInterface.addConstraint('student_assignment_files', {
       fields: ['student_assignment_id', 'attachment_hash'],

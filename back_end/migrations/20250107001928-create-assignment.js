@@ -65,9 +65,6 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      original_name:{
-        type:Sequelize.STRING,
-      },
 
 
 
