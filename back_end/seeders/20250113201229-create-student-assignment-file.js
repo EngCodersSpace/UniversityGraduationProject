@@ -16,12 +16,14 @@ module.exports = {
 
       for (let i = 0; i < numberOfAttachments; i++) {
         const attachmentUrl = faker.internet.url(); 
+        const originalName = faker.system.fileName(); 
         const attachmentHash = crypto.createHash('sha256').update(attachmentUrl).digest('hex'); 
 
         student_assignment_files.push({
           student_assignment_id: studentAssignment.id, 
           attachment: attachmentUrl, 
           attachment_hash: attachmentHash, 
+          original_name: originalName, 
         });
       }
     }

@@ -13,8 +13,7 @@ module.exports = {
       const numberOfAttachments = faker.number.int({ min: 1, max: 3 }); 
       for (let i = 0; i < numberOfAttachments; i++) {
         const attachment = faker.internet.url(); 
-
-        
+        const originalName = faker.system.fileName(); 
         const attachmentHash = crypto.createHash('sha256').update(attachment).digest('hex');
         
         
@@ -30,6 +29,7 @@ module.exports = {
             assignment_id: assignmentItem.id, 
             attachment, 
             attachment_hash: attachmentHash, 
+            original_name: originalName,
           });
         }
       }
