@@ -57,12 +57,13 @@ exports.uploadFile = async (req, res) => {
       try {
         const displayImagePath = path.join( 'storage/library', `${req.query.category}/${sectionName1}/${levelName.level_name}`,'photos', `${req.file.hash}.png`);
         const newBook = await book.create({
-          title: bookDetails.title || path.parse(file.originalname).name,
+          title: bookDetails.title || req.file.originalName,
           category: req.query.category,
           subject_id: req.body.subject_id,
           added_by: req.user.user_id,
           section_id:req.query.section_id,
           level_id:req.query.level_id,
+          original_name:req.file.originalName,
           file_path: filepath,
           author: bookDetails.author,
           edition: bookDetails.edition,
@@ -212,6 +213,10 @@ exports.getImageOfBook = async (req, res) => {
       });
 
       if (ImageOfBook.length === 0) {
+        return res.status(204).json();
+      }
+
+      if (!ImageOfBook) {
           return res.status(404).json({ success: false, message: "No image found for the specified book" });
       }
       const imagePath = path.join(__dirname  , '..', ImageOfBook.display_image);

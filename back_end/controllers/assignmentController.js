@@ -48,6 +48,16 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         ],
       });
 
+      if (!AllAssignmentSub) {
+        return res.status(404).json({
+          message: "No assignment found ",
+        });
+      }
+
+      if (AllAssignmentSub.length === 0) {
+        return res.status(204).send(); 
+      }
+
       res.status(200).json({
         message: 'Assignments retrieved successfully for student.',
         data: AllAssignmentSub,
@@ -64,7 +74,15 @@ exports.getAssignmentsOfSubject = async (req, res) => {
         ],
       });
 
+      if (!AllAssignmentSub) {
+        return res.status(404).json({
+          message: "No assignment found ",
+        });
+      }
 
+      if (AllAssignmentSub.length === 0) {
+        return res.status(204).send(); 
+      }
 
       res.status(200).json({
         message: 'Assignments retrieved successfully for doctor.',
@@ -111,6 +129,9 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
       return res.status(404).json({
         message: "No assignment found with the provided ID.",
       });
+    }
+    if (fileDetail.length === 0) {
+      return res.status(204).send(); 
     }
 
     res.status(200).json({
@@ -243,6 +264,7 @@ exports.uploadFileForAssignment = async (req, res) => {
           assignment_id: req.query.assignment_id,
           attachment: req.file.path,
           attachment_hash: req.file.hash,
+          original_name:req.file.originalName
         });
 
         await upsertRefreshState("assignment",`section_id : ${req.query.section_id} - level_id : ${req.query.level_id}`);
@@ -385,6 +407,7 @@ exports.uploadFilesAttachment = async (req, res) => {
           student_assignment_id: studentAssignment.id,
           attachment: req.file.path,
           attachment_hash: req.file.hash,
+          original_name:req.file.originalName
         });
 
         res.status(201).json({
