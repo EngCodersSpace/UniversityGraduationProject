@@ -24,8 +24,8 @@ class LectureTableFilterComponent
           //   width: Get.width * 0.002,
           // ),
           Container(
-            height: Get.height * 0.08,
-            width: Get.width * 0.13,
+            height: Get.height * 0.06,
+            width: Get.width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -52,8 +52,8 @@ class LectureTableFilterComponent
           //   width: Get.width * 0.002,
           // ),
           Container(
-            height: Get.height * 0.08,
-            width: Get.width * 0.1,
+            height: Get.height * 0.06,
+            width: Get.width * 0.08,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -80,8 +80,8 @@ class LectureTableFilterComponent
           //   width: Get.width * 0.002,
           // ),
           Container(
-            height: Get.height * 0.08,
-            width: Get.width * 0.1,
+            height: Get.height * 0.06,
+            width: Get.width * 0.08,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -108,8 +108,8 @@ class LectureTableFilterComponent
           //   width: Get.width * 0.002,
           // ),
           Container(
-            height: Get.height * 0.08,
-            width: Get.width * 0.12,
+            height: Get.height * 0.06,
+            width: Get.width * 0.11,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -136,8 +136,8 @@ class LectureTableFilterComponent
           //   width: Get.width * 0.002,
           // ),
           Container(
-            height: Get.height * 0.08,
-            width: Get.width * 0.12,
+            height: Get.height * 0.06,
+            width: Get.width * 0.11,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),

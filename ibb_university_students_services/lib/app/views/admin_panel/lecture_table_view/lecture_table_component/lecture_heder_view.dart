@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 // ignore: must_be_immutable
-class HederOfViewComponent extends GetView<DashboardMainController> {
+class LectureHederView extends GetView<DashboardLectureTableController> {
   String tablename;
   late Function upload;
   late Function download;
 
-  HederOfViewComponent(
+  LectureHederView(
       {super.key,
       required this.tablename,
       required this.upload,
@@ -43,9 +43,16 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                 child: Container(
                   width: width * 0.15,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: CustomTextFormField(
+                  child: TextField(
+                    //problem of onChange
                     controller: controller.search,
-                    labelText: "Search".tr,
+                    onEditingComplete: () {
+                      print("Editing Completed: ${controller.search.text}");
+                      controller.search.text;
+                    },
+                    onChanged: (e) {
+                      print(e);
+                    },
                   ),
                 ),
               ),

@@ -12,8 +12,6 @@ import 'package:ibb_university_students_services/app/views/admin_panel/lecture_t
 class LectureTableView extends GetView<DashboardLectureTableController> {
   const LectureTableView({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,9 +50,9 @@ class LectureTableView extends GetView<DashboardLectureTableController> {
                           child: PaginatedDataTable(
                             controller: controller.horizontal,
                             rowsPerPage: controller.rowsPerPage.value,
-                            columnSpacing: controller.width*0.05,
+                            columnSpacing: controller.width * 0.05,
                             onPageChanged: controller.onPageChange,
-                            availableRowsPerPage: const <int>[5,10, 20, 30],
+                            availableRowsPerPage: const <int>[5, 10, 20, 30],
                             onRowsPerPageChanged: controller.onRowChange,
                             showCheckboxColumn: false,
                             columns: controller.kTableColumn,
@@ -68,11 +66,11 @@ class LectureTableView extends GetView<DashboardLectureTableController> {
               ],
             )));
   }
-
 }
 
 class MyData extends DataTableSource {
-  final DashboardLectureTableController controller = Get.find<DashboardLectureTableController>(); // GetX Controller
+  final DashboardLectureTableController controller =
+      Get.find<DashboardLectureTableController>(); // GetX Controller
 
   MyData();
 
@@ -81,35 +79,50 @@ class MyData extends DataTableSource {
     assert(index >= 0);
     if (index >= rowCount) return null;
     return DataRow.byIndex(
-        index: index%controller.rowsPerPage.value,
-        selected: controller.selectedRows.contains(items[index%controller.rowsPerPage.value].id),
-    onSelectChanged: (selected) {
-        },
+        index: index % controller.rowsPerPage.value,
+        selected: controller.selectedRows
+            .contains(items[index % controller.rowsPerPage.value].id),
+        onSelectChanged: (selected) {},
         cells: [
           DataCell(
             Obx(() => Checkbox(
-              value: controller.selectedRows.contains(items[index%controller.rowsPerPage.value].id) || controller.selectAll.value,
-              onChanged: (isSelected) {
-                if (isSelected == true) {
-                  controller.selectedRows.add(items[index%controller.rowsPerPage.value].id);
-                } else {
-                  controller.selectedRows.remove(items[index%controller.rowsPerPage.value].id);
-                }
-              },
-            )),
+                  value: controller.selectedRows.contains(
+                          items[index % controller.rowsPerPage.value].id) ||
+                      controller.selectAll.value,
+                  onChanged: (isSelected) {
+                    if (isSelected == true) {
+                      controller.selectedRows
+                          .add(items[index % controller.rowsPerPage.value].id);
+                    } else {
+                      controller.selectedRows.remove(
+                          items[index % controller.rowsPerPage.value].id);
+                    }
+                  },
+                )),
           ),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].id.toString())),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].subject?.subjectName ?? "")),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].instructorId.toString())),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].duration.toString())),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].startTime ?? "")),
-          // DataCell(CustomText(items[index%controller.rowsPerPage.value].hall ?? "")),
-          DataCell(CustomText("mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
-          DataCell(CustomText(items[index%controller.rowsPerPage.value].description ?? "dhcsdchsdjkhcvsdjkhvjsndjkvjkhdjkhvklsjvhjdsvjndsjkvjdnsjvnbjkdsvnjdbsjvnjsdbvjkjkdsbvjkhhguerhwvosudhvbidhvoicbuigf")),
+          DataCell(CustomText(
+              items[index % controller.rowsPerPage.value].id.toString())),
+          DataCell(CustomText(items[index % controller.rowsPerPage.value]
+                  .subject
+                  ?.subjectName ??
+              "")),
+          DataCell(CustomText(items[index % controller.rowsPerPage.value]
+              .instructorId
+              .toString())),
+          DataCell(CustomText(
+              items[index % controller.rowsPerPage.value].duration.toString())),
+          DataCell(CustomText(
+              items[index % controller.rowsPerPage.value].startTime ?? "")),
+          DataCell(CustomText(
+              items[index % controller.rowsPerPage.value].hall ?? "")),
+          // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
+          DataCell(CustomText(items[index % controller.rowsPerPage.value]
+                  .description ??
+              "dhcsdchsdjkhcvsdjkhvjsndjkvjkhdjkhvklsjvhjdsvjndsjkvjdnsjvnbjkdsvnjdbsjvnjsdbvjkjkdsbvjkhhguerhwvosudhvbidhvoicbuigf")),
         ]);
   }
 
-  List<Lecture> get items =>controller.lectures.values.toList();
+  List<Lecture> get items => controller.lectures.values.toList();
   @override
   bool get isRowCountApproximate => false;
 
