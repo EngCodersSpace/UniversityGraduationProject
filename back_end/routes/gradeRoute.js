@@ -6,7 +6,7 @@ const vali = require('../validations/gradevalidation');
 const { verifyToken  } = require('../middleware/authMiddleware');
 // const { attachStudentDetails  } = require('../middleware/userMiddleware');
 
-app.use(verifyToken);
+router.use(verifyToken);
 router.post('/create-grade', vali.createGrade,   CRUD.createGrade);
 
 router.get('/get-grades',    CRUD.getGrades);
