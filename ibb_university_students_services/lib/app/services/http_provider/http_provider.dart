@@ -145,7 +145,6 @@ class HttpProvider {
     required String uploadUrl,
     required void Function(int, int)? onSendProgress,
     int? fileSize,
-    Map<String, dynamic>? data,
   }) async {
     try {
       fileSize ??= await file.length();
