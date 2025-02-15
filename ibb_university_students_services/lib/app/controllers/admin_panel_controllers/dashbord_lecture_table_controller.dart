@@ -13,18 +13,21 @@ import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
+import 'header_of_view_controller_interface.dart';
 
-class DashboardLectureTableController extends GetxController {
+class DashboardLectureTableController extends GetxController
+    implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
+
   double get height => Get.height;
-  TextEditingController search = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxMap<int, Lecture> lectures = RxMap({});
   RxSet<int> selectedRows = RxSet({});
   RxInt availableRows = 0.obs;
   int currentPage = 1;
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   RxString fieldMessage = "".obs;
-  RxString searchFiled = "".obs;
   RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
@@ -124,8 +127,13 @@ class DashboardLectureTableController extends GetxController {
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   Timer? _debounce;
+
   @override
   void onInit() async {
+    searchController.addListener(() {
+       onSearch();
+    });
+
     kTableColumn = <DataColumn>[
       DataColumn(
         label: Obx(() => Checkbox(
@@ -189,10 +197,6 @@ class DashboardLectureTableController extends GetxController {
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
     await fetchDashboardData();
     loadingState.value = false;
-    search.addListener(() {
-      print("object");
-      onSearch();
-    });
     super.onInit();
     // filteredlectures.assignAll(lectures);
   }
@@ -246,7 +250,7 @@ class DashboardLectureTableController extends GetxController {
   //   }
   // }
 
-  Future<void> fetchDashboardData() async {
+  Future<void> fetchDashboardData({bool showSnakeBars = true}) async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
       if (levels.isNotEmpty) {
@@ -273,7 +277,7 @@ class DashboardLectureTableController extends GetxController {
         limit: rowsPerPage.value,
         sort: selectedSort.value,
         page: currentPage,
-        search: search.text,
+        search: searchController.text,
         hardFetch: false);
     if (res.statusCode == 200) {
       lectures.value = res.data["lectures"] ?? {};
@@ -282,25 +286,20 @@ class DashboardLectureTableController extends GetxController {
     } else if (res.statusCode == 404) {
       lectures.value = {};
       fieldMessage.value = "this section and level not has Lectures";
-      showSnakeBar(
+      if(showSnakeBars) {
+        showSnakeBar(
           title: "Not Found Lectures",
           message: "this section and level doesn't has Lectures ");
+      }
     } else {
       lectures.value = {};
       fieldMessage.value = "fetching lectures failed please check connection";
-      showSnakeBar(
+      if(showSnakeBars) {
+        showSnakeBar(
           title: "Fetch Lectures Failed",
           message: "fetching lectures failed please check connection ");
+      }
     }
-  }
-
-  void onSearch() async {
-    if (search.text.isEmpty) return;
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-    _debounce = Timer(Duration(milliseconds: 500), () async {
-      await fetchDashboardData();
-    });
   }
 
   void onPageChange(int page) async {
@@ -382,7 +381,27 @@ class DashboardLectureTableController extends GetxController {
   }
 
   @override
+  TextEditingController searchController = TextEditingController(text: "");
+
+  @override
+  void export() {}
+
+  @override
+  void import() {}
+
+  String prevTxt = "";
+  @override
+  void onSearch(){
+    if (searchController.text == prevTxt)return;
+    prevTxt = searchController.text;
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(Duration(milliseconds: 600), () async {
+      await fetchDashboardData();
+    });
+  }
+
+  @override
   void onClose() {
-    search.dispose();
+    searchController.dispose();
   }
 }

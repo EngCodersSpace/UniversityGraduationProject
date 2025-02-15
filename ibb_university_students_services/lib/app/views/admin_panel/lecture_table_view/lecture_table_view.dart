@@ -6,8 +6,9 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/lecture_table_filter_component.dart';
+
+import '../dashboard_component/heder_of_view_component.dart';
 
 class LectureTableView extends GetView<DashboardLectureTableController> {
   const LectureTableView({super.key});
@@ -22,10 +23,9 @@ class LectureTableView extends GetView<DashboardLectureTableController> {
             color: AppColors.tabBackColor,
             child: Column(
               children: [
-                HederOfViewComponent(
-                  tablename: "Lectures",
-                  upload: () {},
-                  download: () {},
+                HeaderOfViewComponent(
+                  tableName: "Lectures",
+                  controller: controller,
                 ),
                 SizedBox(
                   height: controller.height * 0.01,
