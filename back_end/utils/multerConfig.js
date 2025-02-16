@@ -14,6 +14,8 @@ const createFolderIfNotExists = async (folderPath) => {
   }
 };
 
+
+
 const getStorageForPath = (baseFolder = 'temp', subFolder) => {
   return {
     _handleFile(req, file, cb) {
@@ -97,6 +99,65 @@ const getStorageForPathPhoto = (baseFolder = 'temp', subFolder) => {
   });
 };
 
+
+const getStorageForPathExcel = (baseFolder = 'temp', subFolder) => {
+  return {
+    _handleFile(req, file, cb) {
+      const folderPath = path.resolve('storage', baseFolder, subFolder);
+      let finalFileName = file.originalname;
+      let finalFilePath = path.join(folderPath, finalFileName);
+
+      createFolderIfNotExists(folderPath)
+        .then(() => {
+          const writeStream = fs.createWriteStream(finalFilePath);
+          
+          writeStream.on('error', (err) => {
+            console.error('Error writing file:', err.message);
+            cb(err);
+          });
+
+          writeStream.on('finish', () => {
+            try {
+              const fileMetadata = {
+                originalName: file.originalname,
+                mimeType: file.mimetype,
+                size: writeStream.bytesWritten,
+                path: finalFilePath,
+              };
+
+              console.log(`File successfully uploaded: ${path}`);
+              cb(null, fileMetadata);
+            } catch (error) {
+              cb(error);
+            }
+          });
+
+          file.stream.on('error', (err) => {
+            console.error('Error reading file:', err.message);
+            writeStream.destroy(); 
+            cb(err);
+          });
+
+          file.stream.pipe(writeStream);
+        })
+        .catch((err) => {
+          console.error('Error creating folder:', err.message);
+          cb(err);
+        });
+    },
+
+    _removeFile(req, file, cb) {
+      const filePath = file.path;
+
+      fs.unlink(filePath, (err) => {
+        if (err) return cb(err);
+        cb(null);
+      });
+    },
+  };
+};
+
+
 const createUploadMiddleware = (baseFolder,subFolder) => {
   const storage = getStorageForPath(baseFolder,subFolder);
   return multer({
@@ -110,8 +171,16 @@ const uploadPhoto = (baseFolder,subFolder)=>{
   return multer({ storage: storagePhoto });
 }
 
+const uploadExcel = (baseFolder,subFolder)=>{
+  const storageExcel = getStorageForPathExcel(baseFolder,subFolder);
+  return multer({ storage: storageExcel });
+}
+
+
+
 module.exports = {
   uploadFields: createUploadMiddleware,
   createFolderIfNotExists,
-  uploadPhoto
+  uploadPhoto,
+  uploadExcel
 };

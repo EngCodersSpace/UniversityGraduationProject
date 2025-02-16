@@ -2,6 +2,7 @@ const { exam, subject , section,level } = require('../models');
 const { validationResult } = require('express-validator'); 
 const { upsertRefreshState} = require('../controllers/refreshController');
 const { Sequelize} = require('sequelize');
+const { Op } = require("sequelize");
 
 //  All Functions are perfict right now 2024-12-10
 exports.createExam = async (req, res) => {

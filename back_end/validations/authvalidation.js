@@ -58,9 +58,7 @@ const validateDoctorRegistration = [
         .notEmpty().withMessage('Date Of Birth is required')
         .isDate().withMessage('Date Of Birth must be a Date'),
 
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
+  
 
     body('password')
         .notEmpty().withMessage('password is required')
@@ -70,9 +68,6 @@ const validateDoctorRegistration = [
         .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
 
     body('doctor.academic_degree')
         .notEmpty().withMessage('Academic degree is required')
@@ -133,11 +128,7 @@ const validateStudentRegistration = [
         .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-    
-   
+
     body('student.enrollment_year')
         .isDate().withMessage('Enrollment year must be a valid date'),
 

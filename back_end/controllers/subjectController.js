@@ -1,6 +1,7 @@
 const {subject,doctor,user,study_plan_elment}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
+const { Op } = require("sequelize");
 
 
 exports.createSubject=async (req, res) => {

@@ -3,61 +3,82 @@ const fs = require("fs");
 const path = require("path");
 const { sequelize } = require("../models"); // Import database connection
 const models = require("../models"); // Load all Sequelize models
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
-// Get table schema (column names)
-async function getTableSchema(tableName) {
-    if (!models[tableName] || !models[tableName].getAttributes) {
-        throw new Error(`Table '${tableName}' does not exist in the database.`);
+const { uploadExcel  } = require('../utils/multerConfig');
+const { readExcelFile } = require('../middleware/excelService');
+const { insertData } = require('../middleware/dbService');
+
+// Centralized error handler (can i use it as middleware later)
+const handleSequelError = (error, res) => {
+    let status = 500;
+    let message = 'Internal server error';
+  
+    if (error instanceof UniqueConstraintError) {
+      status = 400;
+      message = `Duplicate entry: ${error.message}`;
+    } else if (error instanceof ForeignKeyConstraintError) {
+      status = 400;
+      message = `Foreign key violation: ${error.message}`;
+    } else if (error instanceof ValidationError) {
+      status = 400;
+      message = `Validation failed: ${error.message}`;
+    } else {
+      message = error.message;
     }
-    return Object.keys(models[tableName].getAttributes());
-}
+  
+    res.status(status).send({ message });
+};
 
-exports.uploadExcel = async (req, res) => {
-    try {
-        const { tableName } = req.body; // Get table name from request
 
-        if (!tableName) {
-            return res.status(400).json({ message: "Table name is required." });
+exports.uploadExcelFile = async (req, res) => {
+  try {
+    const folder = 'temp';
+    const subfolder = 'ExcelFiles';
+
+    uploadExcel(folder, subfolder).single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).send({ message: 'Error uploading file' });
+      }
+
+      try {
+        const filePath = req.file.path;
+        const sheetsData = readExcelFile(filePath);
+        const skippedRecords = [];
+        
+        // Define mandatory processing order
+        const processingOrder = [
+          'user',         // Parent table
+          'student',      // Depends on user
+          'doctor',       // Depends on user
+        ];
+
+        // Process sheets in strict order
+        for (const sheetName of processingOrder) {
+          if (sheetsData[sheetName]) {
+            for (const row of sheetsData[sheetName]) {
+              const result = await insertData(sheetName, row);
+              if (result.status === 'skipped') {
+                skippedRecords.push({
+                  sheet: sheetName,
+                  record: row,
+                  reason: result.reason,
+                });
+              }
+            }
+          }
         }
 
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded." });
-        }
-
-        // Read and parse Excel file
-        const filePath = path.join(__dirname, "../uploads", req.file.filename);
-        const workbook = xlsx.readFile(filePath);
-        const sheetName = workbook.SheetNames[0];
-        const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-        // Get the table schema
-        const tableColumns = await getTableSchema(tableName);
-
-        // Transform data to match the table schema
-        const transformedData = data.map(row => {
-            let newRow = {};
-            tableColumns.forEach(field => {
-                if (row[field] !== undefined) {
-                    newRow[field] = row[field];
-                }
-            });
-            return newRow;
+        res.status(200).send({
+          message: 'File uploaded successfully',
+          skippedRecords
         });
 
-        if (transformedData.length === 0) {
-            return res.status(400).json({ message: "No matching data found for the selected table." });
-        }
-
-        // Insert data into the selected table
-        await models[tableName].bulkCreate(transformedData, { ignoreDuplicates: true });
-
-        // Delete the file after processing
-        fs.unlinkSync(filePath);
-
-        res.json({ message: `Data successfully uploaded to table '${tableName}'!` });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error processing file", error });
-    }
+      } catch (error) {
+        handleSequelError(error, res);
+      }
+    });
+  } catch (error) {
+    handleSequelError(error, res);
+  }
 };
