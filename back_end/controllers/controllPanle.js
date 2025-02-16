@@ -69,12 +69,23 @@ exports.uploadExcelFile = async (req, res) => {
           }
         }
 
-        res.status(200).send({
-          message: 'File uploaded successfully',
-          skippedRecords
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+            return res.status(500).send({ message: 'Error deleting file after processing' });
+          }
+
+          console.log('File deleted successfully:', filePath);
+          res.status(200).send({
+            message: 'File uploaded and processed successfully',
+            skippedRecords,
+          });
         });
 
       } catch (error) {
+        fs.unlink(req.file.path, (err) => {
+          if (err) console.error('Error deleting file on error:', err);
+        });
         handleSequelError(error, res);
       }
     });
