@@ -152,97 +152,8 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                               ],
                             ),
                             const SizedBox(
-                              height: 16,
+                              height: 8,
                             ),
-                            if (PermissionUtils.checkPermission(
-                                target: "Exams", action: "accessOldTables")) ...[
-                              Row(
-                                children: [
-                                  SizedBox(
-                                      width: ((Get.width - 16) / 7) * 3.9,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CustomText(
-                                              "${"Year".tr}:",
-                                              textAlign: TextAlign.start,
-                                              style: AppTextStyles.secStyle(
-                                                  textHeader: AppTextHeaders.h3Bold),
-                                            ),
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.inverseCardColor,
-                                              borderRadius:
-                                              BorderRadius.circular(24),
-                                            ),
-                                            width: (((Get.width - 16) / 7) * 4)*0.63,
-                                            child: Center(
-                                              child: Obx(
-                                                    () => DropdownButton(
-                                                  items: controller.years,
-                                                  onChanged:
-                                                  controller.changeYear,
-                                                  value: controller
-                                                      .selectedYear.value,
-                                                  underline: const SizedBox(),
-                                                  iconEnabledColor:
-                                                  AppColors.mainCardColor,
-                                                  dropdownColor:
-                                                  AppColors.inverseCardColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: (((Get.width - 16) / 7) * 4) * 0.04,
-                                          ),
-                                        ],
-                                      )),
-                                  SizedBox(
-                                    width: ((Get.width - 16) / 7) * 0.1,
-                                  ),
-                                  SizedBox(
-                                      width: ((Get.width - 16) / 7) * 2.8,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CustomText(
-                                              "${"Semester".tr}:",
-                                              textAlign: TextAlign.start,
-                                              style: AppTextStyles.secStyle(
-                                                  textHeader: AppTextHeaders.h3Bold),
-                                            ),
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.inverseCardColor,
-                                              borderRadius:
-                                              BorderRadius.circular(24),
-                                            ),
-                                            width: (((Get.width - 16) / 7) * 2.5)*0.6,
-                                            child: Center(
-                                              child: Obx(
-                                                    () => DropdownButton(
-                                                  items: controller.terms,
-                                                  onChanged:
-                                                  controller.changeTerm,
-                                                  value: controller
-                                                      .selectedTerm.value,
-                                                  underline: const SizedBox(),
-                                                  iconEnabledColor:
-                                                  AppColors.mainCardColor,
-                                                  dropdownColor:
-                                                  AppColors.inverseCardColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                ],
-                              ),
-                            ],
                           ],
                         )),
                     const SizedBox(height: 16),
@@ -257,7 +168,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((PermissionUtils.checkPermission(
-                              target: "Exams", action: "add")))
+                              target: "Exams", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,
                               text: "Add Exam".tr,

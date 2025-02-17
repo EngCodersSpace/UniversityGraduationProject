@@ -83,7 +83,7 @@ class ExamCard extends GetView<ExamTableController> {
                               child: CustomText("${content.value?.day}".tr),
                             ),
                             if ((PermissionUtils.checkPermission(
-                                target: "Exams", action: "edit"))) ...[
+                                target: "Exams", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),

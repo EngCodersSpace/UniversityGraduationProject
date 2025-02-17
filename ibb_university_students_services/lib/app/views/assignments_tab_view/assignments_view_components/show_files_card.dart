@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../../components/buttons.dart';
+import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/permission_checker.dart';
@@ -26,8 +28,7 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
   @override
   Widget build(BuildContext context) {
     String? mode;
-    if (PermissionUtils.checkPermission(
-        target: "Assignments", action: "showStudentsFiles")) {
+    if (UserRepository.currentUserType() == Doctor) {
       mode = "studentsFiles";
     }
     return GetBuilder<AssignmentsTabController>(

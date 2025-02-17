@@ -19,7 +19,7 @@ class LecturesCacheAdapter extends TypeAdapter<LecturesCache> {
     return LecturesCache(
       key: fields[0] as String,
       data: (fields[1] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as Map).cast<int, Lecture>())),
+          MapEntry(k as String, (v as List).cast<int>())),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../role_model/role.dart';
 import '../section_model/section.dart';
 import '../user_model/user.dart';
 import '../../utils/json_utils.dart';
@@ -21,7 +22,7 @@ class Doctor extends User {
     super.email,
     super.phones,
     super.profileImage,
-    super.roleId,
+    super.role,
     super.section,
     this.status,
     this.administrativePositionData,
@@ -45,7 +46,7 @@ class Doctor extends User {
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
-      roleId: json['roleId'],
+      role: Role.fromJson(json['role']),
       phones: json['phones'],
       // profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
@@ -63,7 +64,7 @@ class Doctor extends User {
       "name": name,
       "date_of_brith": dateOfBrith,
       "email": email,
-      "roleId": roleId,
+      "role": role?.toJson(),
       "profile_image": profileImage,
       "phones": phones,
       "student_section": section,

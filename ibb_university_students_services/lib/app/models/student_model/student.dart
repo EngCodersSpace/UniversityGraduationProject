@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import '../../utils/json_utils.dart';
+import '../role_model/role.dart';
 import '../section_model/section.dart';
 
 part 'student.g.dart';
@@ -32,7 +33,7 @@ class Student extends User {
     super.email,
     super.phones,
     super.profileImage,
-    super.roleId,
+    super.role,
     this.studyPlaneId,
     this.level,
     super.collegeNameData,
@@ -50,7 +51,7 @@ class Student extends User {
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_brith'],
       email: json['email'],
-      roleId: json['roleId'],
+      role: Role.fromJson(json['role']),
       phones: json['phones'],
       // profileImage: json['profile_picture'],
       studyPlaneId: json['study_plan_id'],
@@ -71,7 +72,7 @@ class Student extends User {
       "name": name,
       "date_of_brith": dateOfBrith,
       "email": email,
-      "roleId": roleId,
+      "role": role?.toJson(),
       "profile_image": profileImage,
       "phones": phones,
       "study_plan_id": studyPlaneId,

@@ -98,7 +98,7 @@ class LectureCard extends GetView<LectureController> {
                               ),
                             ],
                             if ((PermissionUtils.checkPermission(
-                                target: "Lectures", action: "add"))) ...[
+                                target: "Lectures", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),

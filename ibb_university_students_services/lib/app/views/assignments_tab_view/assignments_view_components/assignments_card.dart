@@ -9,6 +9,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../../models/assignment_model/assignment_model.dart';
+import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
 
@@ -256,8 +257,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       const SizedBox(
                         height: 16,
                       ),
-                      if ((PermissionUtils.checkPermission(
-                          target: "Assignments", action: "doctorView"))) ...[
+                      if (UserRepository.currentUserType() == Doctor) ...[
                         CustomButton(
                           onPress: ()=>controller.showAttachmentsFiles(content.value?.id),
                           text: "Attachments".tr,

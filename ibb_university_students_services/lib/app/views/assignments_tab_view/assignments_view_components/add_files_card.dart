@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
 import '../../../components/buttons.dart';
+import '../../../models/doctor_model/doctor.dart';
+import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/permission_checker.dart';
@@ -12,8 +14,7 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
   const AssignmentsAddFilesCard({super.key});
 
    get _data {
-    if (PermissionUtils.checkPermission(
-        target: "Assignments", action: "addAttachments")) {
+    if (UserRepository.currentUserType() == Doctor) {
       return controller.assignments?.value[controller.selectedAssignment]
           ?.attachments?.values
           .toList();
@@ -26,8 +27,7 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
   @override
   Widget build(BuildContext context) {
     String? mode;
-    if (PermissionUtils.checkPermission(
-        target: "Assignments", action: "addAttachments")) {
+    if (UserRepository.currentUserType() == Doctor) {
       mode = "attachmentsFiles";
     }
     return GetBuilder<AssignmentsTabController>(

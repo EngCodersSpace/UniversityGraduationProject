@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/assignments_card.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
+import '../../models/doctor_model/doctor.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/permission_checker.dart';
@@ -51,9 +53,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                             SizedBox(
                               height: Get.height * 0.02,
                             ),
-                            if ((PermissionUtils.checkPermission(
-                                target: "Assignments",
-                                action: "doctorView"))) ...[
+                            if (UserRepository.currentUserType() == Doctor) ...[
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -225,7 +225,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((PermissionUtils.checkPermission(
-                              target: "Assignments", action: "add")))
+                              target: "Assignments", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,
                               text: "Add Assignment".tr,
@@ -240,7 +240,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                   child: SizedBox(
                       width: width,
                       height: (PermissionUtils.checkPermission(
-                              target: "Assignments", action: "add"))
+                              target: "Assignments", action: "write"))
                           ? Get.height * 0.64
                           : Get.height * 0.666,
                       child: RefreshIndicator(

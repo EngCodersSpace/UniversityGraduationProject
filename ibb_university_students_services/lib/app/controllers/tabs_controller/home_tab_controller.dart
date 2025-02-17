@@ -29,6 +29,16 @@ class HomeTabController extends GetxController
     super.onInit();
   }
 
+
+  @override
+  void refresh() async{
+    Result res = await UserRepository.fetchUser();
+    if (res.statusCode == 200) {
+      user = res.data;
+      initState.refresh();
+    }
+  }
+
   @override
   void onClose() {
     tabController?.dispose();

@@ -13,6 +13,7 @@ import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/show_files_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
+import '../../models/doctor_model/doctor.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/helper_models/student_assignment_state/student_assignment_state.dart';
 import '../../models/level_model/level.dart';
@@ -59,8 +60,7 @@ class AssignmentsTabController extends GetxController {
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
-    if (!(PermissionUtils.checkPermission(
-        target: "Assignments", action: "doctorView"))) {
+    if (UserRepository.currentUserType() == Student) {
       Student? student =
           await UserRepository.fetchUser().then((e) => e.data as Student);
       selectedDepartment.value = student?.section?.id;
@@ -121,7 +121,7 @@ class AssignmentsTabController extends GetxController {
     );
     if (res.statusCode == 200) {
       assignments?.value = res.data ?? {};
-    } else if (res.statusCode == 404) {
+    } else if (res.statusCode == 204) {
       assignments?.value = res.data ?? {};
       fieldMessage.value = "this section and level not has Assignments";
       showSnakeBar(
@@ -188,7 +188,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initSubjectDropdownMenuList() async {
-    List<Subject> subjects = await SubjectRepository.fetchSubjects()
+    List<Subject> subjects = await SubjectRepository.fetchSubjects(hardFetch: true)
         .then((e) => e.data?.values.toList() ?? []);
     subjectsItems = [];
     selectedSubjectsItems = [];
@@ -375,9 +375,6 @@ class AssignmentsTabController extends GetxController {
   void _moreDelete(Map<String, dynamic>? data) async {
     selectedAssignment = data?["assignment_id"];
     Result<void> res = await AssignmentsRepository.deleteAssignment(
-      sectionId: selectedDepartment.value!,
-      levelId: selectedLevel.value!,
-      subjectId: selectedSubject.value!,
       id: selectedAssignment,
     );
     Navigator.of(Get.overlayContext!).pop();
@@ -455,7 +452,6 @@ class AssignmentsTabController extends GetxController {
       assignments?.value[data["assignment_id"]]?.studentsStatus?[statId]
           ?.isCompleted = stat;
       assignments?.refresh();
-      print("oh");
     }
   }
 
@@ -552,20 +548,17 @@ class AssignmentsTabController extends GetxController {
   void submit() async {
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
-      jsData["language"] = Get.locale?.languageCode ?? "en";
-      jsData["assignment_due_day"] = "Sunday";
-      jsData["assignments_due_date"] = dueDateController.text;
-      jsData["title"] = titleController.text;
 
       if (mode == "Add") {
-        jsData["sectionsAndLevels"] = groups;
-        jsData["subject_id"] = selectedSubject.value;
-        jsData["assignment_date"] = DateTime.now().toString();
         Result<Assignment> res = await AssignmentsRepository.createAssignment(
             sectionId: selectedDepartment.value!,
             levelId: selectedLevel.value!,
             subjectId: selectedSubject.value!,
-            data: jsData);
+          title: titleController.text,
+          assignmentDate: DateTime.now().toString(),
+          assignmentsDueDate: dueDateController.text,
+          sectionsAndLevels: groups,
+        );
         Navigator.of(Get.overlayContext!).pop();
         if (res.statusCode == 201 && res.data != null) {
           assignments?.value[res.data!.id] = res.data!;
@@ -580,7 +573,10 @@ class AssignmentsTabController extends GetxController {
             sectionId: selectedDepartment.value!,
             levelId: selectedLevel.value!,
             subjectId: selectedSubject.value!,
-            data: jsData,
+            title: titleController.text,
+            assignmentDate: DateTime.now().toString(),
+            assignmentsDueDate: dueDateController.text,
+            sectionsAndLevels: groups,
             id: selectedAssignment!);
         Navigator.of(Get.overlayContext!).pop();
         if (res.statusCode == 200 && res.data != null) {
@@ -596,8 +592,7 @@ class AssignmentsTabController extends GetxController {
 
   void showAttachmentsFiles(int? assignmentId) {
     selectedAssignment = assignmentId;
-    if ((PermissionUtils.checkPermission(
-        target: "Assignments", action: "doctorView"))) {
+    if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsAddFilesCard());
     } else {
       Get.dialog(AssignmentsShowFilesCard());
@@ -607,8 +602,7 @@ class AssignmentsTabController extends GetxController {
   void showStudentFiles(int? assignmentId, {int? stateId}) {
     selectedAssignment = assignmentId;
     selectedState = stateId;
-    if ((PermissionUtils.checkPermission(
-        target: "Assignments", action: "doctorView"))) {
+    if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsShowFilesCard());
     } else {
       Get.dialog(AssignmentsAddFilesCard());

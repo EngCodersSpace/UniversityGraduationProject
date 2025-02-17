@@ -178,6 +178,31 @@ class HttpProvider {
     }
     return null;
   }
+  static Future<Response?> downloadFile({
+    required String savePath,
+    required String downloadUrl,
+    required void Function(int, int)? onSendProgress,
+    int? fileSize,
+  }) async {
+    try {
+
+      cancelTokens[savePath.hashCode] = CancelToken();
+      final response = await _dio.post(
+        downloadUrl,
+        // cancelToken: cancelTokens[file.path.hashCode],
+        onSendProgress: onSendProgress,
+      );
+
+      return response;
+    } on DioException catch (error) {
+      if (error.response != null) {
+        return error.response;
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
 
   static Future<Response?> _refreshAndRetry(
       RequestOptions requestOptions) async {

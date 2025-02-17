@@ -1,12 +1,16 @@
 import 'package:hive/hive.dart';
 
 import '../subject_model/subject_model.dart';
+
 part 'lecture_model.g.dart';
 
 @HiveType(typeId: 8)
 class Lecture {
   Lecture({
     required this.id,
+    this.sectionId,
+    this.day,
+    this.levelId,
     this.subject,
     this.startTime,
     this.duration,
@@ -19,23 +23,32 @@ class Lecture {
   @HiveField(0)
   int id;
   @HiveField(1)
-  Subject? subject;
+  int? sectionId;
   @HiveField(2)
-  String? startTime;
+  int? levelId;
   @HiveField(3)
-  int? duration;
+  String? day;
   @HiveField(4)
-  String? hall;
+  Subject? subject;
   @HiveField(5)
-  String? description;
+  String? startTime;
   @HiveField(6)
-  bool? lectureStatus = false;
+  int? duration;
   @HiveField(7)
+  String? hall;
+  @HiveField(8)
+  String? description;
+  @HiveField(9)
+  bool? lectureStatus = false;
+  @HiveField(10)
   int? instructorId;
 
-  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}){
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return Lecture(
       id: json['id'],
+      sectionId: json['section_id'],
+      levelId: json['level_id'],
+      day: json['day'],
       lectureStatus: json["lectureStatus"],
       subject: subject,
       startTime: json['lecture_time'],

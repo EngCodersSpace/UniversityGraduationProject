@@ -12,6 +12,8 @@ part 'assignment_model.g.dart';
 class Assignment {
   Assignment({
     required this.id,
+    this.levelId,
+    this.sectionId,
     this.subject,
     this.doctor,
     this.titleData,
@@ -25,20 +27,23 @@ class Assignment {
   @HiveField(0)
   int id;
   @HiveField(1)
-  Subject? subject;
+  int? sectionId;
   @HiveField(2)
-  Instructor? doctor;
+  int? levelId;
+  Subject? subject;
   @HiveField(3)
-  Map<String, dynamic>? titleData;
+  Instructor? doctor;
   @HiveField(4)
-  String? assignmentDay;
+  Map<String, dynamic>? titleData;
   @HiveField(5)
-  String? assignmentDate;
+  String? assignmentDay;
   @HiveField(6)
-  String? dueDate;
+  String? assignmentDate;
   @HiveField(7)
-  Map<int, AttachmentFile>? attachments;
+  String? dueDate;
   @HiveField(8)
+  Map<int, AttachmentFile>? attachments;
+  @HiveField(9)
   Map<int, StudentAssignmentState>? studentsStatus;
 
   String? get title {
@@ -63,6 +68,8 @@ class Assignment {
 
     return Assignment(
       id: json['id'],
+      sectionId: json['section_id'],
+      levelId: json['level_id'],
       subject: subject,
       doctor: Instructor.fromJson({
         "doctor_id": json['doctor_id'],
@@ -77,6 +84,39 @@ class Assignment {
       attachments: files,
       studentsStatus: (state != null) ? {state.id!: state} : null,
     );
+  }
+
+
+
+
+  void updateFromJson(Map<String, dynamic> json,{Subject? subject}){
+
+    Map<int, AttachmentFile> files = {};
+    for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
+      files[file["id"]] = AttachmentFile(
+          id: file["id"],
+          assignmentId: file["assignment_id"],
+          title: "title.type",
+          path: file["attachment"],
+          status: RxString("Not Uploaded"));
+    }
+    StudentAssignmentState? state;
+    if (json['student_assignments'] != null) {
+      state = StudentAssignmentState.fromJson(json['student_assignments'][0]);
+    }
+
+    sectionId = json["section_id"]??sectionId;
+    levelId = json["level_id"]??levelId;
+    this.subject = subject??this.subject;
+    doctor = json['doctor']??doctor;
+    titleData = JsonUtils.tryJsonDecode(
+      json['title'],
+    )??titleData;
+    assignmentDay = json['assignment_due_day']??assignmentDay;
+    assignmentDate = json['assignment_date']??assignmentDate;
+    dueDate = json['assignments_due_date']??dueDate;
+    studentsStatus = (state != null) ? {state.id!: state} : studentsStatus;
+    attachments = ((files.isNotEmpty))?files:attachments;
   }
 
   Map<String, dynamic> toJson() {
