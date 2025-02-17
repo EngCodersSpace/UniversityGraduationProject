@@ -188,7 +188,7 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initSubjectDropdownMenuList() async {
-    List<Subject> subjects = await SubjectRepository.fetchSubjects(hardFetch: true)
+    List<Subject> subjects = await SubjectRepository.fetchSubjects()
         .then((e) => e.data?.values.toList() ?? []);
     subjectsItems = [];
     selectedSubjectsItems = [];

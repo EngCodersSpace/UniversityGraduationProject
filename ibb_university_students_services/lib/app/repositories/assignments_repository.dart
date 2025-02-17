@@ -31,7 +31,6 @@ class AssignmentsRepository {
   static Box<Assignment>? _assignmentsBox;
 
   static Future<void> openBox() async {
-
     _assignmentsGroupsBox =
         await Hive.openBox<AssignmentsCache>("assignmentsGroupsBox");
     _assignmentsBox = await Hive.openBox<Assignment>("assignmentsBox");
@@ -88,8 +87,11 @@ class AssignmentsRepository {
             data: []);
         for (Map<String, dynamic> jsAssignments in response?.data["data"]) {
           {
-            Subject? subject = await SubjectRepository.fetchSubject(id: jsAssignments["subject_id"]).then((e)=>e.data);
-            Assignment assignment = Assignment.fromJson(jsAssignments,subject: subject);
+            Subject? subject = await SubjectRepository.fetchSubject(
+                    id: jsAssignments["subject_id"])
+                .then((e) => e.data);
+            Assignment assignment =
+                Assignment.fromJson(jsAssignments, subject: subject);
             assignment.attachments?.forEach((i, e) async {
               await e.checkDownloaded();
             });
@@ -222,28 +224,26 @@ class AssignmentsRepository {
     }
   }
 
-  static Future<Result<Assignment>> createAssignment({
-    required int sectionId,
-    required int levelId,
-    required String subjectId,
-    required String title,
-    required String assignmentDate,
-    required String assignmentsDueDate,
-    required List<Map<String,int>> sectionsAndLevels,
-    String year = ""
-  }) async {
+  static Future<Result<Assignment>> createAssignment(
+      {required int sectionId,
+      required int levelId,
+      required String subjectId,
+      required String title,
+      required String assignmentDate,
+      required String assignmentsDueDate,
+      required List<Map<String, int>> sectionsAndLevels,
+      String year = ""}) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response =
-          await HttpProvider.post("upload-assignment-doctor", data: {
-            "subject_id": subjectId,
-            "title": title,
-            "assignment_due_day": "Sun",
-            "assignment_date": assignmentDate,
-            "assignments_due_date": assignmentsDueDate,
-            "sectionsAndLevels": sectionsAndLevels
-          });
+      response = await HttpProvider.post("upload-assignment-doctor", data: {
+        "subject_id": subjectId,
+        "title": title,
+        "assignment_due_day": "Sun",
+        "assignment_date": assignmentDate,
+        "assignments_due_date": assignmentsDueDate,
+        "sectionsAndLevels": sectionsAndLevels
+      });
       Assignment? newAssignment;
       if (response?.statusCode == 201) {
         int i = 0;
@@ -362,7 +362,6 @@ class AssignmentsRepository {
     }
   }
 
-
   static Future<Result<int>> uploadStudentAssignmentsFiles({
     required StudentAssignmentsFile files,
     required int sectionId,
@@ -387,7 +386,7 @@ class AssignmentsRepository {
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
-          "upload-files-assignment-student?assignment_id=$assignmentId&section_id=$sectionId&level_id=$levelId",
+              "upload-files-assignment-student?assignment_id=$assignmentId&section_id=$sectionId&level_id=$levelId",
           file: file,
           onSendProgress: (sent, total) {
             double progress = (sent / total) * 100;
@@ -401,9 +400,8 @@ class AssignmentsRepository {
         );
         if (response?.statusCode == 201) {
           files.path = response?.data["file"]["path"];
-          await FileUtils.saveFiles(
-              fileRelativePath: files.path, file: file);
-          NotificationHandler.showProgressNotification(
+          await FileUtils.saveFiles(fileRelativePath: files.path, file: file);
+          await NotificationHandler.showProgressNotification(
               uniqueId: files.id.hashCode,
               title: "successful upload ",
               message: files.title);
@@ -436,21 +434,21 @@ class AssignmentsRepository {
     }
   }
 
-  static Future<Result<Assignment>> updateAssignment({
-    required int id,
-    required int sectionId,
-    required int levelId,
-    required String subjectId,
-    required String title,
-    required String assignmentDate,
-    required String assignmentsDueDate,
-    required List<Map<String,int>> sectionsAndLevels,
-    String year = ""
-  }) async {
+  static Future<Result<Assignment>> updateAssignment(
+      {required int id,
+      required int sectionId,
+      required int levelId,
+      required String subjectId,
+      required String title,
+      required String assignmentDate,
+      required String assignmentsDueDate,
+      required List<Map<String, int>> sectionsAndLevels,
+      String year = ""}) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.put("update-assignment?assignment_id=$id", data: {
+      response =
+          await HttpProvider.put("update-assignment?assignment_id=$id", data: {
         "subject_id": subjectId,
         "title": title,
         "assignment_due_day": "Sun",
@@ -498,9 +496,10 @@ class AssignmentsRepository {
           await HttpProvider.delete("delete-assignment?assignment_id=$id");
       if (response?.statusCode == 200 && withCache) {
         Assignment? assignment = _assignmentsBox?.get(id);
-        if(assignment != null){
+        if (assignment != null) {
           _assignmentsGroupsBox
-              ?.get("${assignment.sectionId}_${assignment.levelId}_${year}_${assignment.subject?.id}_Assignments")
+              ?.get(
+                  "${assignment.sectionId}_${assignment.levelId}_${year}_${assignment.subject?.id}_Assignments")
               ?.data
               .remove(id);
         }
@@ -589,9 +588,11 @@ class AssignmentsRepository {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.put("update-student-assignment-status?id=$stateId&student_id=$studentId&status=$state");
+      response = await HttpProvider.put(
+          "update-student-assignment-status?id=$stateId&student_id=$studentId&status=$state");
       if (response?.statusCode == 200) {
-        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.state = response?.data["data"]["status"];
+        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.state =
+            response?.data["data"]["status"];
         return Result(
             hasError: true,
             statusCode: response?.statusCode ?? _createError,
@@ -623,9 +624,11 @@ class AssignmentsRepository {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.put("update-student-assignment-complete?id=$stateId&student_id=$studentId&is_completed=$state");
+      response = await HttpProvider.put(
+          "update-student-assignment-complete?id=$stateId&student_id=$studentId&is_completed=$state");
       if (response?.statusCode == 200) {
-        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.isCompleted = response?.data["data"]["is_completed"];
+        _assignmentsBox?.get(id)?.studentsStatus?[studentId]?.isCompleted =
+            response?.data["data"]["is_completed"];
         return Result(
             hasError: true,
             statusCode: response?.statusCode ?? _createError,
@@ -647,5 +650,4 @@ class AssignmentsRepository {
           data: null);
     }
   }
-
 }

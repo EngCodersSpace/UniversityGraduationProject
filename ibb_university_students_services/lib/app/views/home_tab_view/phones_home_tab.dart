@@ -87,10 +87,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CustomText(
-                                      controller.user?.name ?? "",
-                                        style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h1Bold,height: 0)
+                                    SizedBox(
+                                      width: width* 0.6,
+                                      child: CustomText(
+                                        controller.user?.name ?? "",
+                                          textAlign: TextAlign.start,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h1Bold,height: 0)
+                                      ),
                                     ),
                                     CustomText(
                                       "ID : ${controller.user?.id}",
