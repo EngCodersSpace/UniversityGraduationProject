@@ -541,6 +541,7 @@ exports.getCurrentUser = (req, res) => {
           { model: doctor, as: "doctor" },
           { model: student, as: "student" },
           { model: section, as: "section" },
+          { model: role },
         ],
       });
 
