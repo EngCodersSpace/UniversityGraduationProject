@@ -4,7 +4,6 @@ const fs = require("fs");
 const { book,section,level} = require('../models');
 const { Worker } = require("worker_threads");
 const crypto = require('crypto');
-const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
 const { upsertRefreshState} = require('../controllers/refreshController');
@@ -35,14 +34,17 @@ exports.checkFileDuplicate = async (req, res) => {
 
 exports.uploadFile = async (req, res) => {
   try {
-    const sectionName=await section.findOne({section_id:req.query.section_id});
-    const levelName=await level.findOne({level_id:req.query.level_id});
-    const sectionNameObj = JSON.parse(sectionName.section_name); 
-    const sectionName1 = sectionNameObj.en; 
-    const folder=`library/${req.query.category}/${sectionName1}/${levelName.level_name}`;
+    const sectionData = await section.findOne({ where: { id: req.query.section_id } });
+    const levelData = await level.findOne({ where: { id: req.query.level_id } });
+    if (!sectionData || !levelData) {
+      throw new Error("Section or Level not found with the provided IDs.");
+    }
+    const sectionNameObj = JSON.parse(sectionData.section_name); 
+    const sectionNameEN = sectionNameObj.en; 
+    const levelName = levelData.level_name;
+
+    const folder = `library/${req.query.category}/${sectionNameEN}/${levelName}`;
     const subfolder=`books`;
-
-
     uploadFields(folder,subfolder).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'File upload failed', error: err.message });
@@ -52,10 +54,13 @@ exports.uploadFile = async (req, res) => {
       }
 
       const filepath=path.join('storage',req.file.path);
+      console.log('\n \n filepath=',filepath  , '\n \n ');
+
       const bookDetails = await extractBookDetails(filepath);
 
       try {
-        const displayImagePath = path.join( 'storage/library', `${req.query.category}/${sectionName1}/${levelName.level_name}`,'photos', `${req.file.hash}.png`);
+        const displayImagePath = path.join( 'storage/library', `${req.query.category}/${sectionNameEN}/${levelName}`,'photos', `${req.file.hash}.png`);
+
         const newBook = await book.create({
           title: bookDetails.title || req.file.originalName,
           category: req.query.category,
@@ -72,7 +77,6 @@ exports.uploadFile = async (req, res) => {
         });
 
         await createFolderIfNotExists(filepath);
-
         await extractDisplayImage(filepath, displayImagePath);
         
         newBook.display_image = displayImagePath;
@@ -86,23 +90,10 @@ exports.uploadFile = async (req, res) => {
         });
     
       } catch(error){
-        if (error instanceof UniqueConstraintError) {
-          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
-        }
-    
-        if (error instanceof ForeignKeyConstraintError) {
-          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
-        }
-    
-        if (error instanceof ValidationError) {
-          return res.status(400).json({ message: 'Validation error: ' + error.message });
-        }
-        else {
-          res.status(500).json({
-            message: 'Error inner uploadFile.',
-            error: error.message,
-          });
-        }
+        res.status(500).json({
+          message: 'Error inner uploadFile.',
+          error: error.message,
+        });
       }
     });
   } catch (error) {
@@ -120,7 +111,8 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= fileData.file_path;
+
+    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -141,7 +133,7 @@ exports.downloadFile = async (req, res) => {
       // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
     });
     
-    res.status(200).json({ message: "Download started in the background." });
+    res.status(200).json({ message: "Download Finish " });
   } catch (error) {
     console.error("Error during download:", error);
     res.status(500).json({ message: "Failed to start download.", error: error.message });
@@ -280,50 +272,3 @@ exports.deleteBook = async (req, res) => {
   }
 };
 
-
-
-// exports.getBooksByCriteria = async (req, res) => {
-//   try {
-//     const { section, level, category } = req.query;
-
-//     // Build the where clause for filtering
-//     const whereClause = {};
-//     if (section) whereClause.section = section;
-//     if (level) whereClause.level = level;
-//     if (category) whereClause.category = category;
-
-//     // Find books that match the criteria
-//     const books = await book.findAll({
-//       where: whereClause,
-//     });
-
-//     if (!books.length) {
-//       return res.status(404).json({ message: 'No books found for the specified criteria.' });
-//     }
-
-//     books.forEach((book) => {
-//       const filePath = path.resolve(__dirname,'..',book.file_path); 
-//       const fileName = path.basename(filePath); 
-
-//       if (!fs.existsSync(filePath)) {
-//         console.error(`File not found: ${filePath}`);
-//         return;
-//       }
-
-//       // res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-//       res.setHeader('Content-Disposition', `inline; filename="${fileName}"`);
-//       res.setHeader('Content-Type', 'application/pdf');
-
-//       const fileStream = fs.createReadStream(filePath);
-//       fileStream.pipe(res);
-
-//       fileStream.on('error', (error) => {
-//         console.error('Error streaming file:', error.message);
-//         res.status(500).json({ message: 'Error streaming file', error: error.message });
-//       });
-//     });
-//   } catch (error) {
-//     console.error('Error retrieving books:', error.message);
-//     res.status(500).json({ message: 'Internal server error', error: error.message });
-//   }
-// };

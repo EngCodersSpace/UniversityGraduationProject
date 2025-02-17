@@ -49,12 +49,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'student_assignment_file',
     timestamps: false,
-    indexes: [
-      {
-        unique: true,
-        fields: ['student_assignment_id', 'attachment_hash'],
-      },
-    ],
   
   });
   return student_assignment_file;

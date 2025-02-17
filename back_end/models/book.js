@@ -134,13 +134,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'book',
-    indexes: [
-      {
-        unique: true,
-        fields: ['title', 'numberOfPages', 'author', 'edition'],
-        name: 'unique_constraint_in_book',
-      },
-    ],
   });
   return book;
 };

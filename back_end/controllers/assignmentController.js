@@ -154,7 +154,7 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= fileData.attachment;
+    const filePath= path.resolve(__dirname,'..',`${fileData.attachment}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -174,7 +174,7 @@ exports.downloadFile = async (req, res) => {
       // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
     });
     
-    res.status(200).json({ message: "Download started in the background." });
+    res.status(200).json({ message: "Download Finish " });
   } catch (error) {
     console.error("Error during download:", error);
     res.status(500).json({ message: "Failed to start download.", error: error.message });
@@ -244,8 +244,13 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-    const sectionName=await section.findOne({section_id:req.query.section_id});
-    const levelName=await level.findOne({level_id:req.query.level_id});
+    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
+    const levelName = await level.findOne({ where: { id: req.query.level_id } });
+
+    if (!sectionName || !levelName) {
+      throw new Error("Section or Level not found with the provided IDs.");
+    }
+
     const sectionNameObj = JSON.parse(sectionName.section_name); 
     const sectionName1 = sectionNameObj.en; 
     const request=`${sectionName1}/${levelName.level_name}`;
@@ -278,17 +283,7 @@ exports.uploadFileForAssignment = async (req, res) => {
           },
         });
       } catch(error){
-        if (error instanceof UniqueConstraintError) {
-          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
-        }
-    
-        if (error instanceof ForeignKeyConstraintError) {
-          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
-        }
-    
-        if (error instanceof ValidationError) {
-          return res.status(400).json({ message: 'Validation error: ' + error.message });
-        }
+        res.status(500).json({ message: 'Internal server Error.', error: error.message });
       }
     });
   } catch (error) {
@@ -381,8 +376,13 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    const sectionName=await section.findOne({section_id:req.query.section_id});
-    const levelName=await level.findOne({level_id:req.query.level_id});
+    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
+    const levelName = await level.findOne({ where: { id: req.query.level_id } });
+
+    if (!sectionName || !levelName) {
+      throw new Error("Section or Level not found with the provided IDs.");
+    }
+
     const sectionNameObj = JSON.parse(sectionName.section_name); 
     const sectionName1 = sectionNameObj.en; 
     const request=`${sectionName1}/${levelName.level_name}`;
@@ -421,27 +421,12 @@ exports.uploadFilesAttachment = async (req, res) => {
         });
       }catch(error){
         console.error('Error while uploading file:', error.message);
-        if (error instanceof UniqueConstraintError) {
-          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
-        }
-    
-        if (error instanceof ForeignKeyConstraintError) {
-          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
-        }
-    
-        if (error instanceof ValidationError) {
-          return res.status(400).json({ message: 'Validation error: ' + error.message });
-        }
-    
       }
     });
-
-    
   } catch (error) {
     console.error('Error while uploading file:', error.message);
     res.status(500).json({ message: 'Internal server error.', error: error.message });
   }
-
 };
 
 // Doctor updates the status of a student's assignment (4)

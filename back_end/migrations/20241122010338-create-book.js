@@ -96,11 +96,6 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    await queryInterface.addConstraint('books', {
-      fields: ['title', 'numberOfPages', 'author', 'edition'],
-      type: 'unique',
-      name: 'unique_constraint_in_book',
-    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('books');

@@ -36,11 +36,6 @@ module.exports = {
 
 
     });
-    await queryInterface.addConstraint('assignment_files', {
-      fields: ['assignment_id', 'attachment_hash'],
-      type: 'unique',
-      name: 'assignment_file_unique',
-    });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('assignment_files');
