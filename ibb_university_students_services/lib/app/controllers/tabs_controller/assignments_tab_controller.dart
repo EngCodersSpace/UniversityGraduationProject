@@ -23,7 +23,6 @@ import '../../models/subject_model/subject_model.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../repositories/subject_repository.dart';
-import '../../utils/permission_checker.dart';
 import '../../utils/screen_utils.dart';
 import '../../utils/snake_bar.dart';
 import '../../views/assignments_tab_view/assignments_view_components/add_files_card.dart';

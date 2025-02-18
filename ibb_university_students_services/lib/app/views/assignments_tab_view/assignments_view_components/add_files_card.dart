@@ -7,7 +7,6 @@ import '../../../models/doctor_model/doctor.dart';
 import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/permission_checker.dart';
 
 // ignore: must_be_immutable
 class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
