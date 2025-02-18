@@ -114,7 +114,7 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                                   .start,
                                                           children: [
                                                             CustomText(
-                                                              _data?[i].title ??
+                                                              _data?[i].originName ??
                                                                   "",
                                                               textAlign:
                                                                   TextAlign

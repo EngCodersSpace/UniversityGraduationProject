@@ -54,12 +54,7 @@ class Assignment {
   factory Assignment.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     Map<int, AttachmentFile> files = {};
     for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
-      files[file["id"]] = AttachmentFile(
-          id: file["id"],
-          assignmentId: file["assignment_id"],
-          title: "title.type",
-          path: file["attachment"],
-          status: RxString("Not Uploaded"));
+      files[file["id"]] = AttachmentFile.fromJson(file);
     }
     StudentAssignmentState? state;
     if (json['student_assignments'] != null) {
@@ -96,7 +91,7 @@ class Assignment {
       files[file["id"]] = AttachmentFile(
           id: file["id"],
           assignmentId: file["assignment_id"],
-          title: "title.type",
+          originName: "title.type",
           path: file["attachment"],
           status: RxString("Not Uploaded"));
     }

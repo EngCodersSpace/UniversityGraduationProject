@@ -19,7 +19,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
     return AttachmentFile(
       id: fields[0] as int,
       assignmentId: fields[1] as int?,
-      title: fields[4] as String?,
+      originName: fields[4] as String?,
       path: fields[3] as String?,
     );
   }
@@ -35,7 +35,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
       ..writeByte(3)
       ..write(obj.path)
       ..writeByte(4)
-      ..write(obj.title);
+      ..write(obj.originName);
   }
 
   @override

@@ -284,7 +284,7 @@ class AssignmentsTabController extends GetxController {
       for (int i = 0; i < result.count; i++) {
         AttachmentFile file = AttachmentFile(
             id: -result.files[i].name.hashCode,
-            title: result.files[i].name,
+            originName: result.files[i].name,
             path: result.files[i].path,
             assignmentId: selectedAssignment,
             status: RxString("Not Uploaded"));
@@ -328,7 +328,7 @@ class AssignmentsTabController extends GetxController {
       for (int i = 0; i < result.count; i++) {
         StudentAssignmentsFile file = StudentAssignmentsFile(
             id: -result.files[i].name.hashCode,
-            title: result.files[i].name,
+            originName: result.files[i].name,
             path: result.files[i].path,
             studentAssignmentId: assignments?.value[selectedAssignment]
                 ?.studentsStatus?[selectedState]?.studentId,

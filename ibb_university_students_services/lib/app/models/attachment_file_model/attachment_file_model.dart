@@ -9,7 +9,7 @@ class AttachmentFile {
   AttachmentFile({
      required this.id,
     this.assignmentId,
-    this.title,
+    this.originName,
     this.path,
     this.status,
     this.progress
@@ -22,7 +22,7 @@ class AttachmentFile {
   @HiveField(3)
   String? path;
   @HiveField(4)
-  String? title;
+  String? originName;
   RxString? status;
   RxInt? progress;
   final RxBool downloaded = RxBool(false);
@@ -38,8 +38,9 @@ class AttachmentFile {
 
     return AttachmentFile(
       id: json['id'],
-      assignmentId: 0,
-      path: "",
+      originName: json['original_name'],
+      assignmentId: json['assignment_id'],
+      path: json['path'],
       status: RxString(status),
     );
   }

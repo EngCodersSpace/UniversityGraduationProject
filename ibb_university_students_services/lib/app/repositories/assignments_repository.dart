@@ -333,14 +333,14 @@ class AssignmentsRepository {
           NotificationHandler.showProgressNotification(
               uniqueId: attachment.id.hashCode,
               title: "successful upload ",
-              message: attachment.title);
+              message: attachment.originName);
           attachment.id = response?.data["file"]["id"];
           attachment.status?.value = "Uploaded";
         } else {
           NotificationHandler.showProgressNotification(
               uniqueId: attachment.id.hashCode,
               title: "failed upload ",
-              message: attachment.title);
+              message: attachment.originName);
         }
         return Result(
             data: attachment.id,
@@ -404,7 +404,7 @@ class AssignmentsRepository {
           await NotificationHandler.showProgressNotification(
               uniqueId: files.id.hashCode,
               title: "successful upload ",
-              message: files.title);
+              message: files.originName);
           files.id = response?.data["file"]["id"];
           files.status?.value = "Uploaded";
         } else {
@@ -412,7 +412,7 @@ class AssignmentsRepository {
           NotificationHandler.showProgressNotification(
               uniqueId: files.id.hashCode,
               title: "failed upload ",
-              message: files.title);
+              message: files.originName);
         }
         return Result(
             data: files.id,
