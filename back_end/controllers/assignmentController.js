@@ -3,9 +3,11 @@ const {student,assignment, assignment_file,student_assignment,student_assignment
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require("fs");
+const fs = require('fs').promises;
+
 const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
-const { Worker } = require("worker_threads");
+const { Worker, MessageChannel } = require('worker_threads');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
 
@@ -151,10 +153,95 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
 
 
 
-
-
 // download files of student_assignment-file
 exports.downloadFile = async (req, res) => {
+  try {
+    // Fetch file metadata from the database
+    const fileData = await student_assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+
+    // Resolve the file path
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+
+    // Validate file existence and permissions
+    await fs.access(filePath, fs.constants.R_OK);
+
+    // Create a communication channel
+    const statusChannel = new MessageChannel();
+
+    // Initialize the worker
+    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
+      workerData: { 
+        filePath,
+        range: req.headers.range, // Pass the range header to the worker
+        port: statusChannel.port2 
+      },
+      transferList: [statusChannel.port2]
+    });
+
+    // Set response headers
+    res.setHeader('Content-Type', 'application/json');
+    res.write('{"status": "started", "message": "Download initiated"}');
+
+    // Handle worker messages
+    statusChannel.port1.on('message', (message) => {
+      if (message.status === 'progress') {
+        // Stream progress updates
+        res.write(`,\n"progress": ${message.percentage}`);
+      } else if (message.status === 'success') {
+        // Finalize response
+        res.end(`,\n"status": "completed", "path": "${message.filePath}"}]`);
+      } else if (message.status === 'error') {
+        // Handle worker errors
+        if (!res.headersSent) {
+          res.status(500).json({ 
+            status: "error",
+            message: "Download failed",
+            error: message.error 
+          });
+        }
+      }
+    });
+
+    // Handle worker errors
+    worker.on('error', (err) => {
+      if (!res.headersSent) {
+        res.status(500).json({ 
+          status: "error",
+          message: "Download failed",
+          error: err.message 
+        });
+      }
+    });
+
+    // Handle worker exit
+    worker.on('exit', (code) => {
+      if (code !== 0 && !res.headersSent) {
+        res.status(500).json({
+          status: "error",
+          message: `Worker stopped with exit code ${code}`
+        });
+      }
+    });
+
+  } catch (error) {
+    if (!res.headersSent) {
+      res.status(500).json({ 
+        status: "error",
+        message: "Download failed",
+        error: error.message 
+      });
+    }
+  }
+};
+
+
+
+
+
+exports.downloadFile3 = async (req, res) => {
   try {
     const fileData = await student_assignment_file.findByPk(req.query.id);
     if (!fileData) {
@@ -313,12 +400,6 @@ exports.downloadFile4 = async (req, res) => {
     console.error("Download error:", error);
   }
 };
-
-
-
-
-
-
 
 // download files of assignment-file
 exports.doctorDownloadFile = async (req, res) => {
