@@ -32,6 +32,7 @@ module.exports = {
         allowNull:false
       },
     });
+
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('student_assignment_files');

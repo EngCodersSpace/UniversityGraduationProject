@@ -34,22 +34,3 @@ git push origin ModelsAndMigrations:ModelsAndMigrations
 git switch ModelsAndMigrations
 
 
-
-
-
-
-
-git 
-
-
-git checkout BackEnd 
-
-git fetch
-
-git pull ||  git reset origin/BackEnd --hard 
-
-git switch ModelsAndMigrations
-
-git merge --squash BackEnd 
-
-git commit --m "merge BackEnd to ModelsAndMigrations"
