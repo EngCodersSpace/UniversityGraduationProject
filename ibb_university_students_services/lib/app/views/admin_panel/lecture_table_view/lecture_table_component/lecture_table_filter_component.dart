@@ -153,6 +153,16 @@ class LectureTableFilterComponent
                   )),
             ),
           ),
+          SizedBox(
+            width: Get.width * 0.18,
+          ),
+          IconButton(
+            onPressed: () {
+              controller.addlecture();
+            },
+            icon: Icon(Icons.add_box_outlined),
+            tooltip: "Add",
+          ),
         ],
       ),
     );

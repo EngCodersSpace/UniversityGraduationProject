@@ -13,10 +13,7 @@ class HeaderOfViewComponent extends GetView {
   HeaderOfViewControllerInterface controller;
 
   HeaderOfViewComponent(
-      {super.key,
-        required this.tableName,
-        required this.controller
-      });
+      {super.key, required this.tableName, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +37,9 @@ class HeaderOfViewComponent extends GetView {
                 ),
               ),
               CustomTextFormField(
+                labelText: "Search",
                 controller: controller.searchController,
-                icon: Icons.search_rounded,
+                // icon: Icons.search_rounded,
                 color: AppColors.inverseCardColor,
                 width: width * 0.25,
               ),

@@ -116,9 +116,9 @@ class MyData extends DataTableSource {
           DataCell(CustomText(
               items[index % controller.rowsPerPage.value].hall ?? "")),
           // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
-          DataCell(CustomText(items[index % controller.rowsPerPage.value]
-                  .description ??
-              "dhcsdchsdjkhcvsdjkhvjsndjkvjkhdjkhvklsjvhjdsvjndsjkvjdnsjvnbjkdsvnjdbsjvnjsdbvjkjkdsbvjkhhguerhwvosudhvbidhvoicbuigf")),
+          DataCell(CustomText(
+              items[index % controller.rowsPerPage.value].description ??
+                  "there is not descroiption")),
         ]);
   }
 

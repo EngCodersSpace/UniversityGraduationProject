@@ -38,6 +38,16 @@ class DashboardLectureTableController extends GetxController
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
     DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
             width: (Get.width / 8) * 0.4,
@@ -131,7 +141,7 @@ class DashboardLectureTableController extends GetxController
   @override
   void onInit() async {
     searchController.addListener(() {
-       onSearch();
+      onSearch();
     });
 
     kTableColumn = <DataColumn>[
@@ -213,43 +223,6 @@ class DashboardLectureTableController extends GetxController
     }
   }
 
-  // Future<void> fetchAllLectureData() async {
-  //   if (selectedLevel.value == null) {
-  //     await initLevelDashboardMenuList();
-  //     if (levels.isNotEmpty) {
-  //       selectedLevel.value = levels.first.value;
-  //     }
-  //   }
-
-  //   if (selectedSection.value == null) {
-  //     await initSectionDashboardMenuList();
-  //     if (sections.isNotEmpty) {
-  //       selectedSection.value = sections.first.value;
-  //     }
-  //   }
-
-  //   if (selectedSection.value == null || selectedLevel.value == null) {}
-  //   Result result = await LectureRepository.fetchAllLecture();
-  //   {
-  //     if (result.statusCode == 200) {
-  //       lecture = result.data;
-  //     } else if (result.statusCode == 404) {
-  //       lecture?.value = {};
-  //       fieldMessage.value = "this section and level not has Lectures";
-  //       showSnakeBar(
-  //           title: "Not Found Lectures",
-  //           message: "this section and level doesn't has Lectures ");
-  //     } else {
-  //       lecture?.value = {};
-  //       fieldMessage.value = "fetching lectures failed please check connection";
-  //       showSnakeBar(
-  //           title: "Fetch Lectures Failed",
-  //           message: "fetching lectures failed please check connection ");
-  //     }
-  //     update(["DataTable"]);
-  //   }
-  // }
-
   Future<void> fetchDashboardData({bool showSnakeBars = true}) async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
@@ -270,9 +243,9 @@ class DashboardLectureTableController extends GetxController
     }
 
     Result res = await LectureRepository.fetchDashboardLecture(
-        sectionId: selectedSection.value,
-        levelId: selectedLevel.value,
-        term: selectedTerm.value,
+        sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
+        levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+        term: (selectedTerm.value == "") ? "" : selectedTerm.value,
         order: selectedOrder.value,
         limit: rowsPerPage.value,
         sort: selectedSort.value,
@@ -286,18 +259,18 @@ class DashboardLectureTableController extends GetxController
     } else if (res.statusCode == 404) {
       lectures.value = {};
       fieldMessage.value = "this section and level not has Lectures";
-      if(showSnakeBars) {
+      if (showSnakeBars) {
         showSnakeBar(
-          title: "Not Found Lectures",
-          message: "this section and level doesn't has Lectures ");
+            title: "Not Found Lectures",
+            message: "this section and level doesn't has Lectures ");
       }
     } else {
       lectures.value = {};
       fieldMessage.value = "fetching lectures failed please check connection";
-      if(showSnakeBars) {
+      if (showSnakeBars) {
         showSnakeBar(
-          title: "Fetch Lectures Failed",
-          message: "fetching lectures failed please check connection ");
+            title: "Fetch Lectures Failed",
+            message: "fetching lectures failed please check connection ");
       }
     }
   }
@@ -341,7 +314,17 @@ class DashboardLectureTableController extends GetxController
     Map<int, Section> sectionsData =
         await SectionRepository.fetchSections(hardFetch: force)
             .then((e) => e.data ?? {});
-    sections = [];
+    sections = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
     for (Section section in sectionsData.values.toList()) {
       sections.add(
         DropdownMenuItem<int>(
@@ -362,7 +345,17 @@ class DashboardLectureTableController extends GetxController
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
         .then((e) => e.data ?? []);
-    levels = [];
+    levels = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
     for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
@@ -391,14 +384,17 @@ class DashboardLectureTableController extends GetxController
 
   String prevTxt = "";
   @override
-  void onSearch(){
-    if (searchController.text == prevTxt)return;
+  void onSearch() {
+    if (searchController.text == prevTxt) return;
     prevTxt = searchController.text;
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(Duration(milliseconds: 600), () async {
       await fetchDashboardData();
     });
   }
+
+  @override
+  void addlecture() {}
 
   @override
   void onClose() {

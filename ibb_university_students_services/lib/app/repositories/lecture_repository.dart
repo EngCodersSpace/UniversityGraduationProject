@@ -285,28 +285,6 @@ class LectureRepository {
     }
   }
 
-  // static Future<Result<Lecture>> fetchAllLecture() async {
-  //   Response? response;
-  //   try {
-  //     response = await HttpProvider.get("get-all-lecture");
-  //     Lecture? getLecture;
-  //     if (response?.statusCode == 200) {
-  //       getLecture = Lecture.fromJson(response?.data["data"]);
-  //     }
-  //     return Result(
-  //         data: getLecture,
-  //         hasError: true,
-  //         statusCode: response?.statusCode ?? _updateError,
-  //         message: response?.data["message"] ?? "error");
-  //   } catch (error) {
-  //     return Result(
-  //         hasError: true,
-  //         statusCode: _fetchError,
-  //         message: error.toString(),
-  //         data: null);
-  //   }
-  // }
-
   static Future<Result<Map>> fetchDashboardLecture({
     int? sectionId,
     int? levelId,
