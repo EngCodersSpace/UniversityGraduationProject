@@ -147,6 +147,10 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
   }
 };
 
+
+
+
+
 // download files of student_assignment-file
 exports.downloadFile = async (req, res) => {
   try {
@@ -181,6 +185,58 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
+exports.downloadFile1 = async (req, res) => {
+  try {
+    const fileData = await student_assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+
+    const filePath = path.resolve(__dirname, '..', fileData.attachment);
+    
+    // Stream the file directly
+    res.download(filePath, (err) => {
+      if (err) {
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Download failed", error: err.message });
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ message: "Failed to start download.", error: error.message });
+  }
+};
+
+exports.downloadFile2 = async (req, res) => {
+    try {
+      const fileData = await student_assignment_file.findByPk(req.query.id);
+      if (!fileData) {
+        return res.status(404).json({ message: "File not found in database." });
+      }
+  
+      const filePath = path.resolve(__dirname, '..', fileData.attachment);
+      const stats = await fs.promises.stat(filePath);
+
+      res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Length', stats.size);
+
+      const stream = fs.createReadStream(filePath);
+      stream.pipe(res);
+      
+      stream.on('error', (err) => {
+        if (!res.headersSent) res.status(500).send('Error streaming file');
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to start download.", error: err.message });
+    }
+};
+
+
+
+
 // download files of assignment-file
 exports.doctorDownloadFile = async (req, res) => {
   try {
@@ -214,6 +270,65 @@ exports.doctorDownloadFile = async (req, res) => {
     res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
+
+exports.doctorDownloadFile1 = async (req, res) => {
+  try {
+    const fileData = await assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+    const filePath= fileData.attachment;
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server." });
+    }
+
+    // Stream the file directly
+    res.download(filePath, (err) => {
+      if (err) {
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Download failed", error: err.message });
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ message: "Failed to start download.", error: error.message });
+  }
+};
+
+exports.doctorDownloadFile2 = async (req, res) => {
+  try {
+    const fileData = await assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+    const filePath= fileData.attachment;
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server." });
+    }
+
+    const stats = await fs.promises.stat(filePath);
+
+      res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Length', stats.size);
+
+      const stream = fs.createReadStream(filePath);
+      stream.pipe(res);
+      
+      stream.on('error', (err) => {
+        if (!res.headersSent) res.status(500).send('Error streaming file');
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to start download.", error: err.message });
+    }
+};
+
+
+
+
+
 
 
 // to checks if file duplicate or not

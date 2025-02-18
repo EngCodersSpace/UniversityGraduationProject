@@ -17,6 +17,7 @@ if (!fs.existsSync(filePath)) {
 if (!fs.existsSync(downloadPath)) {
   fs.mkdirSync(downloadPath, { recursive: true });
 }
+
 const fileName = path.basename(filePath);
 const downloadFilePath = path.join(downloadPath, fileName);
 

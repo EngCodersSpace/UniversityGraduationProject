@@ -105,8 +105,10 @@ exports.uploadFile = async (req, res) => {
   }
 };  
 
+
 exports.downloadFile = async (req, res) => {
   try {
+
     const fileData = await book.findByPk(req.query.id);
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
@@ -139,6 +141,68 @@ exports.downloadFile = async (req, res) => {
     res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
+
+exports.downloadFile1 = async (req, res) => {
+  try {
+
+    const fileData = await book.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+
+    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server." });
+    }
+
+    // Stream the file directly
+    res.download(filePath, (err) => {
+      if (err) {
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Download failed", error: err.message });
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ message: "Failed to start download.", error: error.message });
+  }
+};
+
+exports.downloadFile2 = async (req, res) => {
+  try {
+
+    const fileData = await book.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+
+    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "File not found on server." });
+    }
+    const stats = await fs.promises.stat(filePath);
+
+    res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Length', stats.size);
+
+    const stream = fs.createReadStream(filePath);
+    stream.pipe(res);
+    
+    stream.on('error', (err) => {
+      if (!res.headersSent) res.status(500).send('Error streaming file');
+    });
+
+
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ message: "Failed to start download.", error: error.message });
+  }
+};
+
+
 
 // To get books by filtering (section, level, category) and stream them
 exports.streamBooks = async (req, res) => {
@@ -271,4 +335,3 @@ exports.deleteBook = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting the book" ,error: error.message});
   }
 };
-
