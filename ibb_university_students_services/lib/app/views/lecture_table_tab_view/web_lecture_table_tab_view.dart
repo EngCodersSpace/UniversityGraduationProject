@@ -46,24 +46,24 @@ class WebLectureTableTabView extends GetView<LectureController> {
                                 children: [
                                   WebSchedualContent(day: "Saturday", index: 0),
                                   SizedBox(
-                                    width: width * 0.01,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Sunday", index: 1),
                                   SizedBox(
-                                    width: width * 0.01,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Monday", index: 2),
                                   SizedBox(
-                                    width: width * 0.01,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Tuseday", index: 3),
                                   SizedBox(
-                                    width: width * 0.01,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(
                                       day: "Wednesday", index: 4),
                                   SizedBox(
-                                    width: width * 0.01,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Thursday", index: 5),
                                 ],

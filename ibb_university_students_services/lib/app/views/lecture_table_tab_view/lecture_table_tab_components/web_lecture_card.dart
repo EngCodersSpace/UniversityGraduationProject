@@ -88,11 +88,11 @@ class WebLectureCard extends GetView<LectureController> {
                         if ((PermissionUtils.checkPermission(
                             target: "Lectures", action: "add"))) ...[
                           const SizedBox(
-                            width: 8,
+                            width: 0,
                           ),
                           SizedBox(
-                            height: 24,
-                            width: 24,
+                            height: 15,
+                            width: 15,
                             child: PopupMenuButton<String>(
                               onSelected: (val) =>
                                   controller.more(val, data: content.toJson()),

@@ -21,7 +21,7 @@ class WebSchedualContent extends GetView<LectureController> {
     return GetBuilder<LectureController>(
         id: "WebContentBuilder",
         builder: (ctx) => SizedBox(
-              width: width * 0.116,
+              width: width * 0.12,
               child: Column(
                 children: [
                   Align(
@@ -36,7 +36,7 @@ class WebSchedualContent extends GetView<LectureController> {
                               color: AppColors.secTextColor),
                         ),
                         SizedBox(
-                          height: height * 0.02,
+                          height: height * 0.01,
                         ),
                       ],
                     ),
@@ -44,7 +44,7 @@ class WebSchedualContent extends GetView<LectureController> {
                   Column(
                     children: [
                       SizedBox(
-                        height: height * 0.04,
+                        height: height * 0.01,
                       ),
                       SizedBox(height: height * 0.02),
                       if (controller.selectedDay(index)?.isEmpty ?? true) ...[

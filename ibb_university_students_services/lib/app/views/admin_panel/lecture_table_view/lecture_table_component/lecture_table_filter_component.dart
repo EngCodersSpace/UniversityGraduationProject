@@ -154,7 +154,7 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.18,
+            width: Get.width * 0.19,
           ),
           IconButton(
             onPressed: () {

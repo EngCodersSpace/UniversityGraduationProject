@@ -216,9 +216,10 @@ class DashboardLectureTableController extends GetxController
     await fetchDashboardData();
   }
 
-  void onRowChange(int? value) {
+  void onRowChange(int? value) async {
     if (value != null) {
       rowsPerPage.value = value;
+      await fetchDashboardData();
       update(["DataTable"]);
     }
   }
