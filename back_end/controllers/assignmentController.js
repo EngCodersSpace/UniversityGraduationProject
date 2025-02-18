@@ -9,6 +9,8 @@ const { Worker } = require("worker_threads");
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
 
+const { promisify } = require('util');
+const statAsync = promisify(fs.stat);
 
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
@@ -193,15 +195,31 @@ exports.downloadFile1 = async (req, res) => {
     }
 
     const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    
-    // Stream the file directly
-    res.download(filePath, (err) => {
-      if (err) {
-        if (!res.headersSent) {
-          res.status(500).json({ message: "Download failed", error: err.message });
-        }
-      }
-    });
+    const stat = fs.statSync(filePath);
+    const range = req.headers.range;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+      const chunkSize = (end - start) + 1;
+
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunkSize,
+        'Content-Type': 'application/octet-stream',
+      });
+
+      const stream = fs.createReadStream(filePath, { start, end });
+      stream.pipe(res);
+    } else {
+      res.writeHead(200, {
+        'Content-Length': stat.size,
+        'Content-Type': 'application/octet-stream',
+      });
+      fs.createReadStream(filePath).pipe(res);
+    }
 
   } catch (error) {
     console.error("Error during download:", error);
@@ -233,6 +251,71 @@ exports.downloadFile2 = async (req, res) => {
       res.status(500).json({ message: "Failed to start download.", error: err.message });
     }
 };
+
+exports.downloadFile4 = async (req, res) => {
+  try {
+    const fileData = await student_assignment_file.findByPk(req.query.id);
+    if (!fileData) {
+      return res.status(404).json({ message: "File not found in database." });
+    }
+
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const stat = await statAsync(filePath); 
+
+    const range = req.headers.range;
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
+      
+      if (start >= stat.size || end >= stat.size) {
+        return res.status(416).header('Content-Range', `bytes */${stat.size}`).send();
+      }
+
+      const chunkSize = end - start + 1;
+      
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunkSize,
+      });
+
+      const stream = fs.createReadStream(filePath, { start, end });
+      
+      stream.on('error', (err) => {
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Stream error", error: err.message });
+        }
+      });
+      
+      stream.pipe(res);
+    } else {
+      res.writeHead(200, {
+        'Content-Length': stat.size,
+        'Content-Disposition': `attachment; filename="${path.basename(filePath)}"`
+      });
+
+      const stream = fs.createReadStream(filePath);
+      
+      stream.on('error', (err) => {
+        if (!res.headersSent) {
+          res.status(500).json({ message: "Stream error", error: err.message });
+        }
+      });
+      
+      stream.pipe(res);
+    }
+
+  } catch (error) {
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Download failed", error: error.message });
+    }
+    console.error("Download error:", error);
+  }
+};
+
+
+
 
 
 
