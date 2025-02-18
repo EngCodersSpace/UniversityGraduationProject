@@ -62,6 +62,7 @@ exports.login = async (req, res) => {
     if (!foundUser) {
       return res.status(401).json({ message: "User ID is not correct" });
     }
+
     const isMatch = await bcrypt.compare(password, foundUser.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Password is not correct" });
@@ -150,6 +151,7 @@ exports.login = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
 exports.refreshToken = async (req, res) => {
   const { refreshToken } = req.body;
 
