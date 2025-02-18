@@ -6,16 +6,22 @@ const {
   user,
   student,
   section,
+  role,
+  student_assignment,
+  assignment,
   level,
   study_plan,
 } = require("../models");
 // const crypto = require('crypto');
 const nodemailer = require("nodemailer");
-const { Op } = require("sequelize");
+// const { Op, where } = require("sequelize");
 const { validationResult } = require("express-validator");
 // const { sequelize} = require('sequelize');
-
-const {  translateText } = require('../middleware/translationServices');
+const { Op, Sequelize } = require("sequelize");
+const path = require('path');
+const fs = require("fs");
+const { translateText } = require("../middleware/translationServices");
+const { uploadPhoto } = require('../utils/multerConfig');
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -29,15 +35,27 @@ exports.welcome = (req, res) => {
   });
 };
 ///////////////////////////
+
 exports.login = async (req, res) => {
-  const { user_id, password } = req.body;
+  const { user_id, password ,fcm_token} = req.body;
+
   try {
     const foundUser = await user.scope("with_hidden_data").findOne({
       where: { user_id },
       include: [
         { model: doctor, as: "doctor" },
-        { model: student, as: "student" },
+        {
+          model: student,
+          as: "student",
+          include: [
+            {
+              model: level,
+              as: "level",
+            },
+          ],
+        },
         { model: section, as: "section" },
+        { model: role },
       ],
     });
 
@@ -48,10 +66,11 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Password is not correct" });
     }
+
     const accessToken = jwt.sign(
       {
         user_id: foundUser.user_id,
-        permission: foundUser.permission,
+        permission: foundUser.role.roleName,
       },
       SECRET_KEY,
       { expiresIn: "1h" }
@@ -60,31 +79,58 @@ exports.login = async (req, res) => {
     const refreshToken = jwt.sign(
       {
         user_id: foundUser.user_id,
+        permission: foundUser.role.roleName,
+
       },
       REFRESH_SECRET_KEY,
-      { expiresIn: "7d" }
+      { expiresIn: "1d" }
     );
 
-    if (foundUser.doctor == null) {
-      delete foundUser.doctor;
-    } else if (foundUser.student === null) {
-      delete foundUser.student;
-    }
-
     foundUser.refreshToken = refreshToken;
+    foundUser.fcm_token=fcm_token;
     await foundUser.save();
+
+    let responseUser = {};
+    let user_type = null;
 
     if (foundUser.doctor == null) {
       responseUser = foundUser.toJSON();
       user_type = "student";
-      tempStudent = responseUser.student;
+      const tempStudent = responseUser.student;
       delete responseUser.student;
       delete responseUser.doctor;
       responseUser = { ...responseUser, ...tempStudent };
+
+      const studentAssignments = await assignment.findAll({
+        where: {
+          level_id: foundUser.student.level.id,
+          section_id: foundUser.user_section_id,
+        },
+        include: [
+          {
+            model: student,
+            through: {
+              attributes: [],
+              where: { student_id: foundUser.user_id },
+            },
+          },
+        ],
+      });
+
+      totalAssignmentsCount = studentAssignments.length;
+      completedAssignmentsCount = studentAssignments.filter(
+        (assign) => assign.is_completed === true
+      ).length;
+
+      responseUser = {
+        ...responseUser,
+        completedAssignmentsCount,
+        totalAssignmentsCount,
+      };
     } else if (foundUser.student == null) {
       responseUser = foundUser.toJSON();
       user_type = "doctor";
-      tempDoctor = responseUser.doctor;
+      const tempDoctor = responseUser.doctor;
       delete responseUser.student;
       delete responseUser.doctor;
       responseUser = { ...responseUser, ...tempDoctor };
@@ -114,11 +160,12 @@ exports.refreshToken = async (req, res) => {
   jwt.verify(refreshToken, REFRESH_SECRET_KEY, async (err, decoded) => {
     if (err) {
       console.log("Token verification error:", err.message);
-      return res.status(403).json({ message: "Invalid refresh token" });
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
     try {
       const foundUser = await user.findOne({
         where: { user_id: decoded.user_id },
+        include:{ model: role },
       });
 
       if (!foundUser) {
@@ -127,13 +174,20 @@ exports.refreshToken = async (req, res) => {
 
       if (foundUser.refreshToken !== refreshToken) {
         return res
-          .status(403)
+          .status(401)
           .json({ message: "Refresh token does not match" });
       }
 
-      const accessToken = jwt.sign({ user_id: foundUser.user_id }, SECRET_KEY, {
-        expiresIn: "15m",
-      });
+      const accessToken = jwt.sign(
+        {
+          user_id: foundUser.user_id,
+          permission: foundUser.role.roleName,
+        },
+        SECRET_KEY,
+        {
+          expiresIn: "15m",
+        }
+      );
 
       res.json({ accessToken });
     } catch (error) {
@@ -150,58 +204,78 @@ exports.registerDoctor = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { } = req.body;
 
   try {
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
-
-    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
-    const translatedAcademicDegree = await translateText(req.body.doctor.academic_degree, req.body.language, targetLanguage);
-    const translatedAdministrativePosition = await translateText(req.body.doctor.administrative_position, req.body.language, targetLanguage);
+    const targetLanguage =
+      req.headers["accept-language"] === "en" ? "ar" : "en";
+    const translatedUserName = await translateText(
+      req.body.user_name,
+      req.headers["accept-language"],
+      targetLanguage
+    );
+    const translatedCollegeName = await translateText(
+      req.body.collegeName,
+      req.headers["accept-language"],
+      targetLanguage
+    );
+    const translatedAcademicDegree = await translateText(
+      req.body.doctor.academic_degree,
+      req.headers["accept-language"],
+      targetLanguage
+    );
+    const translatedAdministrativePosition = await translateText(
+      req.body.doctor.administrative_position,
+      req.headers["accept-language"],
+      targetLanguage
+    );
 
     const userData = {
       user_id: req.body.user_id,
-      user_name:{
-        [req.body.language] : req.body.user_name,
-        [targetLanguage] : translatedUserName
+      user_name: {
+        [req.headers["accept-language"]]: req.body.user_name,
+        [targetLanguage]: translatedUserName,
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
+
       collegeName: {
-        [req.body.language]: req.body.collegeName,
+        [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
-      doctor:{
+      roleId: req.body.roleId,
+      doctor: {
         academic_degree: {
-            [req.body.language]: req.body.doctor.academic_degree,
-            [targetLanguage]: translatedAcademicDegree
+          [req.headers["accept-language"]]: req.body.doctor.academic_degree,
+          [targetLanguage]: translatedAcademicDegree,
         },
         administrative_position: {
-            [req.body.language]: req.body.doctor.administrative_position,
-            [targetLanguage]: translatedAdministrativePosition
-        }
-      }  
+          [req.headers["accept-language"]]:
+            req.body.doctor.administrative_position,
+          [targetLanguage]: translatedAdministrativePosition,
+        },
+      },
     };
-  
+
     const newDoctor = await user.create(userData, {
-        include: [{
-            model: doctor,
-            as: 'doctor' 
-        }]
+      include: [
+        {
+          model: doctor,
+          as: "doctor",
+        },
+      ],
     });
 
     res.status(201).json({
-      message: 'Doctor registered successfully',
+      message: "Doctor registered successfully",
       user: newDoctor,
     });
   } catch (error) {
-    console.error('Error during user registration:', error.message);
-    res.status(500).json({ message: 'Internal server error',error: error.message});
+    console.error("Error during user registration:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 exports.registerStudent = async (req, res) => {
@@ -210,40 +284,50 @@ exports.registerStudent = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const {} = req.body;
-
   try {
-
-    const targetLanguage = req.body.language === 'en'?'ar':'en';
-    const translatedUserName = await translateText(req.body.user_name, req.body.language, targetLanguage);
-    const translatedCollegeName = await translateText(req.body.collegeName, req.body.language, targetLanguage);
-    const translatedStudentSystem = await translateText(req.body.student.student_system, req.body.language, targetLanguage);
+    const targetLanguage =
+      req.headers["accept-language"] === "en" ? "ar" : "en";
+    const translatedUserName = await translateText(
+      req.body.user_name,
+      req.headers["accept-language"],
+      targetLanguage
+    );
+    const translatedCollegeName = await translateText(
+      req.body.collegeName,
+      req.headers["accept-language"],
+      targetLanguage
+    );
+    const translatedStudentSystem = await translateText(
+      req.body.student.student_system,
+      req.headers["accept-language"],
+      targetLanguage
+    );
 
     const userData = {
       user_id: req.body.user_id,
       user_name: {
-        [req.body.language] : req.body.user_name,
-        [targetLanguage] : translatedUserName
+        [req.headers["accept-language"]]: req.body.user_name,
+        [targetLanguage]: translatedUserName,
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
+      // profile_picture: req.body.profile_picture,
       collegeName: {
-        [req.body.language]: req.body.collegeName,
+        [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
-      student:{
-        study_plan_id:req.body.student.study_plan_id,
-        student_level_id:req.body.student.student_level_id,
-        enrollment_year:req.body.student.enrollment_year,
-        student_system:{
-          [req.body.language]:req.body.student.student_system,
-          [targetLanguage]:translatedStudentSystem
-        }
-      }  
+      roleId: req.body.roleId,
+      student: {
+        study_plan_id: req.body.student.study_plan_id,
+        student_level_id: req.body.student.student_level_id,
+        enrollment_year: req.body.student.enrollment_year,
+        student_system: {
+          [req.headers["accept-language"]]: req.body.student.student_system,
+          [targetLanguage]: translatedStudentSystem,
+        },
+      },
     };
 
     const newStudent = await user.create(userData, {
@@ -261,6 +345,49 @@ exports.registerStudent = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
+exports.uploadPhotoForuser = async (req, res) => {
+  try {
+    const newUser = await user.findOne({ where: { user_id: req.query.user_id } });
+
+    if (!newUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    uploadPhoto('profile_picture', 'user' ).single('file')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: 'Error during photo upload.', error: err.message });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ message: 'No photo provided for upload.' });
+      }
+
+      try {
+        const oldFilePath = req.file.path; 
+        const fileExtension = path.extname(req.file.originalname); 
+        const newFileName = `${newUser.user_id}${fileExtension}`; 
+        const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
+
+        fs.renameSync(oldFilePath, newFilePath);
+        newUser.profile_picture = `profile_picture/user/${newFileName}`; 
+        await newUser.save();
+
+        res.status(201).json({
+          message: 'Photo uploaded successfully.',
+          filePath: newUser.profile_picture, 
+        });
+      } catch (error) {
+        console.error('Error while uploading photo:', error.message);
+        res.status(500).json({ message: 'Internal server error.', error: error.message });
+      }
+    });
+  } catch (error) {
+    console.error('Error while uploading photo:', error.message);
+    res.status(500).json({ message: 'Internal server error.', error: error.message });
+  }
+};
+
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
@@ -409,9 +536,10 @@ exports.getCurrentUser = (req, res) => {
       const foundUser = await user.findOne({
         where: { user_id: decoded.user_id },
         include: [
-          { model: doctor , as: "doctor"  },
+          { model: doctor, as: "doctor" },
           { model: student, as: "student" },
           { model: section, as: "section" },
+          { model: role },
         ],
       });
 
@@ -447,4 +575,28 @@ exports.getCurrentUser = (req, res) => {
         .json({ message: "Internal server error", error: error.message });
     }
   });
+};
+
+
+exports.logout = async (req, res) => {
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id : req.query.user_id},
+    });
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    foundUser.refreshToken = null;
+    
+    await foundUser.save();
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };

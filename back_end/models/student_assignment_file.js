@@ -1,5 +1,4 @@
 'use strict';
-const crypto = require('crypto');
 const {
   Model
 } = require('sequelize');
@@ -50,17 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'student_assignment_file',
     timestamps: false,
-    indexes: [
-      {
-        unique: true,
-        fields: ['student_assignment_id', 'attachment_hash'],
-      },
-    ],
-    hooks: {
-      beforeValidate: (record) => {
-        record.attachment_hash = crypto.createHash('sha256').update(record.attachment).digest('hex');
-      },
-    },
+  
   });
   return student_assignment_file;
 };

@@ -51,6 +51,108 @@ exports.getAllGrades = async (req, res) => {
   }
 }; 
 
+
+exports.getGradesByCriteriaPanle = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade", "work_grade", "term", "subject_id"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      student_id,
+      subject_id,
+      term,
+      section_id,
+      level_id,
+      year_of_issue,
+      page = 1,
+      limit = 10,
+      orderBy = "student_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const whereClause = {};
+    if (student_id) whereClause.student_id = student_id;
+    if (subject_id) whereClause.subject_id = subject_id;
+    // if (term) whereClause.term = term;
+    if (section_id) whereClause.section_id = section_id;
+    if (level_id) whereClause.level_id = level_id;
+    // if (year_of_issue) whereClause.year_of_issue = year_of_issue;
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "student_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { subject_id: { [Op.like]: `%${search}%` } },
+            { term: { [Op.like]: `%${search}%` } },
+            { status: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
+    const { count, rows: grades } = await grade.findAndCountAll({
+      where: {
+        [Op.and]: [whereClause, searchCondition],
+      },
+      include: [
+        { model: student, as: "student" },
+        { model: subject, as: "subject" },
+        { model: section, as: "section" },
+        { model: level, as: "level" },
+      ],
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!grades.length) {
+      return res.status(404).json({ message: "No grades found for the specified criteria" });
+    }
+
+    const gradeList = grades.map((grade) => ({
+      grad_id: grade.grad_id,
+      student_id: grade.student_id,
+      subject_id: grade.subject_id,
+      exam_grade: grade.exam_grade,
+      work_grade: grade.work_grade,
+      term: grade.term,
+      section_id: grade.section_id,
+      level_id: grade.level_id,
+      year_of_issue: grade.year_of_issue,
+      is_absent: grade.is_absent,
+      status: grade.status,
+    }));
+
+    res.status(200).json({
+      message: "Grades retrieved successfully",
+      data: gradeList,
+      pagination: {
+        totalGrades: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving grades", error: error.message });
+  }
+};
+
+
 //   additional function i will deleted if it is unneccessary 
 exports.getGradeById = async (req, res) => {
     try {
@@ -275,9 +377,6 @@ exports.updateGrade = async (req, res) => {
     }
 };
 
-
-
-
 exports.deleteGrade = async (req, res) => {
     try {
       const { id } = req.params;
@@ -296,4 +395,3 @@ exports.deleteGrade = async (req, res) => {
       res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
-

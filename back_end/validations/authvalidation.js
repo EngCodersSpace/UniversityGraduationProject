@@ -58,28 +58,7 @@ const validateDoctorRegistration = [
         .notEmpty().withMessage('Date Of Birth is required')
         .isDate().withMessage('Date Of Birth must be a Date'),
 
-<<<<<<< HEAD
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-=======
-    body('collegeName')
-        .notEmpty().withMessage('collegeName is required')
-        .isString().withMessage('collegeName must be a String'),
-
-    body('email')
-        .notEmpty().withMessage('Email is required')
-        .isEmail().withMessage('Invalid email format')
-        .custom(async (value) => {
-            const existingUser = await user.findOne({ where: { email: value } });
-            if (existingUser) {
-                throw new Error('Email already registered');
-            }
-            return true;
-        }),
-
-   
->>>>>>> Ahmed
+  
 
     body('password')
         .notEmpty().withMessage('password is required')
@@ -89,28 +68,6 @@ const validateDoctorRegistration = [
         .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
-<<<<<<< HEAD
-   
-
-    body('collegeName')
-        .notEmpty().withMessage('collegeName is required')
-        .isString().withMessage('collegeName must be a String'),
-
-    body('email')
-        .notEmpty().withMessage('Email is required')
-        .isEmail().withMessage('Invalid email format')
-        .custom(async (value) => {
-            const existingUser = await user.findOne({ where: { email: value } });
-            if (existingUser) {
-                throw new Error('Email already registered');
-            }
-            return true;
-        }),
-=======
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
->>>>>>> Ahmed
 
     body('doctor.academic_degree')
         .notEmpty().withMessage('Academic degree is required')
@@ -171,11 +128,7 @@ const validateStudentRegistration = [
         .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-    
-   
+
     body('student.enrollment_year')
         .isDate().withMessage('Enrollment year must be a valid date'),
 

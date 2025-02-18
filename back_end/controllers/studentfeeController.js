@@ -1,15 +1,9 @@
 // controllers/studentFeeController.js
 const { student_fee, student } = require('../models');
-const { validationResult } = require('express-validator');
-
+// const { validationResult } = require('express-validator');
 
 exports.createStudentFee = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     try {
-        const {} = req.body;
         const fee = await student_fee.create(req.body,{
             include:[
                 {model:student, as:'student'}
@@ -20,21 +14,17 @@ exports.createStudentFee = async (req, res) => {
         res.status(201).json({
                 message :'Make fee successfully',
                 Fee     :   fee
-            });
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// For Student see
+// For Student see his fees
 exports.getAllFees = async (req, res) => {
     try {
-        const studentId = req.user.user_id;
         const fees = await student_fee.findAll({
-            where:{student_id:studentId},
-            include: {
-                model: student
-            },
+            where:{student_id:req.user.user_id},
         });
         res.status(200).json({
             message:'These all your Fees',
@@ -46,17 +36,10 @@ exports.getAllFees = async (req, res) => {
 };
 
 //  For Doctor see   All fees of specific Student during student_id
-exports.getAllFeesDoc = async (req, res) => {
-    const {studentId} = req.body;
-    if (!studentId) {
-        return res.status(400).json({ message: 'Student ID is required' });
-    }
+exports.getAllFeesOfStudent = async (req, res) => {
     try {
         const FEES = await student_fee.findAll({
-            where:{student_id:studentId},
-            include: {
-                model: student
-            },
+            where:{student_id:req.body.student_id},
         });
         if (!FEES.length) {
             return res.status(404).json({ message: 'No Fee found for this Student' });
@@ -70,16 +53,139 @@ exports.getAllFeesDoc = async (req, res) => {
     }
 };
 
+exports.getLastPayment = async (req, res) => {
+    try {
+        const lastPayment = await student_fee.findOne({
+            where: { student_id: req.user.user_id },
+            order: [['payment_date', 'DESC']]
+        });
+
+        if (lastPayment) {
+            res.status(200).json({
+                message: 'This is your most recent payment.',
+                lastPayment,
+            });
+        } else {
+            res.status(404).json({
+                message: 'No payment records found for this student.',
+            });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+exports.getStudentFeesByCriteriaanle = async (req, res) => {
+    const ALLOWED_ORDER_FIELDS = ["payment_date", "total_amount", "amount_paid", "remaining_amount", "receipt_number"];
+    const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+  
+    try {
+      const {
+        student_id,
+        level_fees_id,
+        term,
+        total_amount,
+        amount_paid,
+        remaining_amount,
+        receipt_number,
+        page = 1,
+        limit = 10,
+        orderBy = "payment_date",
+        sort = "ASC",
+        search,
+      } = req.query;
+  
+      const whereClause = {};
+      if (student_id) whereClause.student_id = student_id;
+      if (level_fees_id) whereClause.level_fees_id = level_fees_id;
+      if (term) whereClause.term = term;
+      if (total_amount) whereClause.total_amount = total_amount;
+      if (amount_paid) whereClause.amount_paid = amount_paid;
+      if (remaining_amount) whereClause.remaining_amount = remaining_amount;
+      if (receipt_number) whereClause.receipt_number = receipt_number;
+  
+      const pageNumber = parseInt(page, 10);
+      let limitNumber = parseInt(limit, 10);
+  
+      const LOWER_LIMIT = 10;
+      const UPPER_LIMIT = 250;
+      if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+      if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+      if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+  
+      const offset = (pageNumber - 1) * limitNumber;
+  
+      const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "payment_date";
+      const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+  
+      const searchCondition = search
+        ? {
+            [Op.or]: [
+              { receipt_number: { [Op.like]: `%${search}%` } },
+              { term: { [Op.like]: `%${search}%` } },
+            ],
+          }
+        : {};
+  
+      const { count, rows: studentFees } = await student_fee.findAndCountAll({
+        where: {
+          [Op.and]: [whereClause, searchCondition],
+        },
+        include: [
+          { model: student, as: "student" }, // Assuming 'student' is the associated model
+          { model: level, as: "level" }, // Assuming 'level' is the associated model
+        ],
+        limit: limitNumber,
+        offset: offset,
+        order: [[validOrderBy, validSort]],
+      });
+  
+      if (!studentFees.length) {
+        return res.status(404).json({ message: "No student fees found for the specified criteria" });
+      }
+  
+      const studentFeeList = studentFees.map((fee) => ({
+        id: fee.id,
+        student_id: fee.student_id,
+        level_fees_id: fee.level_fees_id,
+        term: fee.term,
+        total_amount: fee.total_amount,
+        amount_paid: fee.amount_paid,
+        remaining_amount: fee.remaining_amount,
+        payment_date: fee.payment_date,
+        receipt_number: fee.receipt_number,
+      }));
+  
+      res.status(200).json({
+        message: "Student fees retrieved successfully",
+        data: studentFeeList,
+        pagination: {
+          totalStudentFees: count,
+          totalPages: Math.ceil(count / limitNumber),
+          currentPage: pageNumber,
+          perPage: limitNumber,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error retrieving student fees", error: error.message });
+    }
+};
+
+
+
 
 exports.updateFee = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { amount_paid, remaining_amount, payment_date } = req.body;
-        const fee = await student_fee.update(
-            { amount_paid, remaining_amount, payment_date },
-            { where: { id } }
+        await student_fee.update(req.body,
+            {where:{id:req.body.id}},
         );
-        res.status(200).json({ message: 'Student fee updated successfully' });
+        const updatedFee = await student_fee.findOne({ where: { id: req.body.id } });
+        res.status(200).json({ 
+            message: 'Student fee updated successfully' ,
+            data: updatedFee
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -87,8 +193,7 @@ exports.updateFee = async (req, res) => {
 
 exports.deleteFee = async (req, res) => {
     try {
-        const { id } = req.params;
-        await student_fee.destroy({ where: { id } });
+        await student_fee.destroy({ where: { id: req.query.id} });
         res.status(200).json({ message: 'Student fee deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
