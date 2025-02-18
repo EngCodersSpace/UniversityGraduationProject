@@ -114,7 +114,8 @@ exports.downloadFile = async (req, res) => {
       return res.status(404).json({ message: "File not found in database." });
     }
 
-    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.file_path}`);
+
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }

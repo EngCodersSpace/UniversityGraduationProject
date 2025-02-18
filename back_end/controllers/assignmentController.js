@@ -158,7 +158,7 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= path.resolve(__dirname,'..',`${fileData.attachment}`);
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -192,7 +192,7 @@ exports.downloadFile1 = async (req, res) => {
       return res.status(404).json({ message: "File not found in database." });
     }
 
-    const filePath = path.resolve(__dirname, '..', fileData.attachment);
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
     
     // Stream the file directly
     res.download(filePath, (err) => {
@@ -216,7 +216,7 @@ exports.downloadFile2 = async (req, res) => {
         return res.status(404).json({ message: "File not found in database." });
       }
   
-      const filePath = path.resolve(__dirname, '..', fileData.attachment);
+      const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
       const stats = await fs.promises.stat(filePath);
 
       res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
@@ -244,7 +244,7 @@ exports.doctorDownloadFile = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= fileData.attachment;
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -277,7 +277,7 @@ exports.doctorDownloadFile1 = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= fileData.attachment;
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
@@ -303,7 +303,7 @@ exports.doctorDownloadFile2 = async (req, res) => {
     if (!fileData) {
       return res.status(404).json({ message: "File not found in database." });
     }
-    const filePath= fileData.attachment;
+    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ message: "File not found on server." });
     }
