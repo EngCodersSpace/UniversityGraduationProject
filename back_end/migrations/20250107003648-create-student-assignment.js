@@ -39,7 +39,10 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
-
+      original_name:{
+        type:Sequelize.STRING,
+        allowNull: false,
+      },
 
 
 
