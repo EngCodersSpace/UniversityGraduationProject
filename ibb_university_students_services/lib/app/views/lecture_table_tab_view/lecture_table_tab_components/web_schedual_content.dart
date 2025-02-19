@@ -19,12 +19,11 @@ class WebSchedualContent extends GetView<LectureController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LectureController>(
-      id: "WebContentBuilder",
+        id: "WebContentBuilder",
         builder: (ctx) => SizedBox(
-              width: width * 0.114,
-              child: Stack(
+              width: width * 0.12,
+              child: Column(
                 children: [
-
                   Align(
                     alignment: Alignment.topCenter,
                     child: Row(
@@ -37,7 +36,7 @@ class WebSchedualContent extends GetView<LectureController> {
                               color: AppColors.secTextColor),
                         ),
                         SizedBox(
-                          height: height * 0.02,
+                          height: height * 0.01,
                         ),
                       ],
                     ),
@@ -45,7 +44,7 @@ class WebSchedualContent extends GetView<LectureController> {
                   Column(
                     children: [
                       SizedBox(
-                        height: height * 0.04,
+                        height: height * 0.01,
                       ),
                       SizedBox(height: height * 0.02),
                       if (controller.selectedDay(index)?.isEmpty ?? true) ...[
@@ -55,7 +54,8 @@ class WebSchedualContent extends GetView<LectureController> {
                         Center(
                             child: CustomText(
                           controller.fieldMessage.value,
-                          style: AppTextStyles.secStyle(textHeader:AppTextHeaders.h2Bold),
+                          style: AppTextStyles.secStyle(
+                              textHeader: AppTextHeaders.h2Bold),
                         )),
                         IconButton(
                             onPressed: () async => controller.refresh(),

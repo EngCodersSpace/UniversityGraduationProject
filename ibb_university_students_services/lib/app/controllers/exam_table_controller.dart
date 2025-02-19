@@ -36,7 +36,7 @@ class ExamTableController extends GetxController {
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
                 ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 6) * 0.6,
+                : (Get.width / 7) * 0.5,
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
@@ -48,7 +48,7 @@ class ExamTableController extends GetxController {
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
                 ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 6) * 0.6,
+                : (Get.width / 7) * 0.5,
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
@@ -155,15 +155,17 @@ class ExamTableController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList() async {
-    List<Section> sectionsData =
-        await SectionRepository.fetchSections().then((e) => e.data?.values.toList() ?? []);
+    List<Section> sectionsData = await SectionRepository.fetchSections()
+        .then((e) => e.data?.values.toList() ?? []);
     sections = [];
     for (Section section in sectionsData) {
       sections.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 4) * 0.48,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? (((Get.width - 16) / 7) * 2.5) * 0.35
+                  : (Get.width / 7.3) * 0.7,
               child: CustomText(
                 section.name ?? "unknown",
                 style:
@@ -186,7 +188,9 @@ class ExamTableController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (((Get.width - 16) / 7) * 2.5) * 0.35,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? (((Get.width - 16) / 7) * 2.5) * 0.35
+                  : (Get.width / 6) * 0.3,
               child: CustomText(
                 level.name ?? "unknown",
                 style:
@@ -261,7 +265,8 @@ class ExamTableController extends GetxController {
     dateController.text = DateTime.now().toString().split(" ")[0];
     timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
     subjects = {};
-    subjects = await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {
       subject = RxString(subjects!.values.first.id);
     }

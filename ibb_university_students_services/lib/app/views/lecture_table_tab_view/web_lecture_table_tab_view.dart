@@ -26,13 +26,13 @@ class WebLectureTableTabView extends GetView<LectureController> {
                 child: Container(
                   width: width,
                   height: height * 0.8,
-                  padding: const EdgeInsets.only(left: 2, right: 2, top: 20),
+                  padding: const EdgeInsets.only(left: 2, right: 2, top: 10),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          padding: const EdgeInsets.only(left: 6, top: 10),
+                          padding: const EdgeInsets.only(top: 10),
                           decoration: BoxDecoration(
                               color: AppColors.backColor,
                               border: Border.all(width: 1, color: Colors.black),
@@ -46,24 +46,24 @@ class WebLectureTableTabView extends GetView<LectureController> {
                                 children: [
                                   WebSchedualContent(day: "Saturday", index: 0),
                                   SizedBox(
-                                    width: width * 0.02,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Sunday", index: 1),
                                   SizedBox(
-                                    width: width * 0.02,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Monday", index: 2),
                                   SizedBox(
-                                    width: width * 0.02,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Tuseday", index: 3),
                                   SizedBox(
-                                    width: width * 0.02,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(
                                       day: "Wednesday", index: 4),
                                   SizedBox(
-                                    width: width * 0.02,
+                                    width: width * 0.011,
                                   ),
                                   WebSchedualContent(day: "Thursday", index: 5),
                                 ],
@@ -105,7 +105,8 @@ class WebLectureTableTabView extends GetView<LectureController> {
                         children: [
                           CustomText(
                             "Section".tr,
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -135,7 +136,8 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           ),
                           CustomText(
                             "Level".tr,
-                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -163,7 +165,8 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           ),
                           CustomText(
                             "Term".tr,
-                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,
@@ -191,7 +194,8 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           ),
                           CustomText(
                             "Year".tr,
-                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h2Bold),
                           ),
                           SizedBox(
                             width: width * 0.002,

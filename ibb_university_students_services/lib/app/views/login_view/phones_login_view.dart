@@ -16,7 +16,7 @@ class PhoneLoginView extends GetView<LoginController> {
     super.key,
   });
 
-final double width = (Get.width - 20);
+  final double width = (Get.width - 20);
 
   List<PopupMenuItem<String>> menuItems = [
     PopupMenuItem<String>(value: "en", child: CustomText("English")),
@@ -112,43 +112,47 @@ final double width = (Get.width - 20);
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    width: width*0.2,
+                                    width: width * 0.2,
                                     child: PopupMenuButton<String>(
                                       initialValue:
-                                      Get.locale?.languageCode.toString(),
+                                          Get.locale?.languageCode.toString(),
                                       itemBuilder: (BuildContext context) =>
-                                      menuItems,
+                                          menuItems,
                                       color: AppColors.mainCardColor,
                                       onSelected: (lang) {
                                         controller.changeLang(lang);
                                       },
                                       child: Row(
                                         children: (Get.locale?.languageCode
-                                            .toString() ==
-                                            "en")
+                                                    .toString() ==
+                                                "en")
                                             ? [
-                                          const Icon(
-                                            Icons.language,
-                                            color: Colors.blueGrey,
-                                          ),
-                                          CustomText(
-                                            "English",
-                                            style: AppTextStyles.secStyle(
-                                                textHeader:
-                                                AppTextHeaders.h3Bold),
-                                          ),
-                                        ]
+                                                const Icon(
+                                                  Icons.language,
+                                                  color: Colors.blueGrey,
+                                                ),
+                                                CustomText(
+                                                  "English",
+                                                  style: AppTextStyles.secStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Bold),
+                                                ),
+                                              ]
                                             : [
-                                          const Icon(Icons.language,color: Colors.blueGrey,),
-                                          CustomText("العربية",
-                                              style: AppTextStyles.secStyle(
-                                                  textHeader:
-                                                  AppTextHeaders.h3Bold)),
-                                        ],
+                                                const Icon(
+                                                  Icons.language,
+                                                  color: Colors.blueGrey,
+                                                ),
+                                                CustomText("العربية",
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold)),
+                                              ],
                                       ),
                                     ),
                                   ),

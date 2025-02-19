@@ -23,13 +23,155 @@ class ExamTableWebView extends GetView<ExamTableController> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
+            : Container(
+                width: width,
+                height: height,
+                color: AppColors.tabBackColor,
+                alignment: Alignment.bottomLeft,
+                child: Column(
+                  children: [
+                    Container(
                       width: width,
-                      height: height * 0.8,
+                      height: height * 0.2,
+                      decoration: BoxDecoration(
+                        color: AppColors.mainTextColor,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: Offset(0, 5),
+                          )
+                        ],
+                        borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(24),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 70),
+                      child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CustomText(
+                            "Section".tr,
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                          SizedBox(
+                            width: width * 0.008,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.12,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => DropdownButton(
+                                  items: controller.sections,
+                                  onChanged: controller.changeDepartment,
+                                  value: controller.selectedSection.value,
+                                  underline: const SizedBox(),
+                                  iconEnabledColor: AppColors.mainCardColor,
+                                  dropdownColor: AppColors.inverseCardColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.03,
+                          ),
+                          CustomText(
+                            "Level".tr,
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                          SizedBox(
+                            width: width * 0.008,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.08,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.levels,
+                                    onChanged: controller.changeLevel,
+                                    value: controller.selectedLevel.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.03,
+                          ),
+                          CustomText(
+                            "Term".tr,
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                          SizedBox(
+                            width: width * 0.008,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.1,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.terms,
+                                    onChanged: controller.changeTerm,
+                                    value: controller.selectedTerm.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width * 0.03,
+                          ),
+                          CustomText(
+                            "Year".tr,
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Bold),
+                          ),
+                          SizedBox(
+                            width: width * 0.008,
+                          ),
+                          Container(
+                            height: height * 0.08,
+                            width: width * 0.12,
+                            decoration: BoxDecoration(
+                              color: AppColors.inverseIconColor,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(() => DropdownButton(
+                                    items: controller.years,
+                                    onChanged: controller.changeYear,
+                                    value: controller.selectedYear.value,
+                                    underline: const SizedBox(),
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: width,
+                      height: height * 0.75,
                       padding: const EdgeInsets.all(12),
                       child: SingleChildScrollView(
                         child: Column(
@@ -38,7 +180,8 @@ class ExamTableWebView extends GetView<ExamTableController> {
                               children: [
                                 CustomText(
                                   "Exams ",
-                                  style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),
+                                  style: AppTextStyles.highlightStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
                                 ),
                               ],
                             ),
@@ -48,155 +191,25 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             for (int i = 0;
                                 i < controller.exams!.value.length;
                                 i++) ...[
-                              ExamCard(content: Rx(controller.exams?.value[i])),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                width: (width * 0.6) * 1 / 2,
+                                child: ExamCard(
+                                    content: Rx(controller.exams?.value[i])),
+                              ),
                               SizedBox(
-                                height: height * 0.01,
+                                height: height * 0.02,
                               )
                             ]
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: height * 0.02,
-                  ),
-                  Container(
-                    width: width,
-                    height: height * 0.2,
-                    decoration: BoxDecoration(
-                      color: AppColors.mainTextColor,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: Offset(0, 5),
-                        )
-                      ],
-                      borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(24),
-                      ),
+                    SizedBox(
+                      height: height * 0.02,
                     ),
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        CustomText(
-                          "Section".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.008,
-                        ),
-                        Container(
-                          height: height * 0.1,
-                          width: width * 0.15,
-                          decoration: BoxDecoration(
-                            color: AppColors.inverseIconColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Obx(
-                              () => DropdownButton(
-                                items: controller.sections,
-                                onChanged: controller.changeDepartment,
-                                value: controller.selectedSection.value,
-                                underline: const SizedBox(),
-                                iconEnabledColor: AppColors.mainCardColor,
-                                dropdownColor: AppColors.inverseCardColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: width * 0.03,
-                        ),
-                        CustomText(
-                          "Level".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.008,
-                        ),
-                        Container(
-                          height: height * 0.1,
-                          width: width * 0.15,
-                          decoration: BoxDecoration(
-                            color: AppColors.inverseIconColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Obx(() => DropdownButton(
-                                  items: controller.levels,
-                                  onChanged: controller.changeLevel,
-                                  value: controller.selectedLevel.value,
-                                  underline: const SizedBox(),
-                                  iconEnabledColor: AppColors.mainCardColor,
-                                  dropdownColor: AppColors.inverseCardColor,
-                                )),
-                          ),
-                        ),
-                        SizedBox(
-                          width: width * 0.03,
-                        ),
-                        CustomText(
-                          "Term".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.008,
-                        ),
-                        Container(
-                          height: height * 0.1,
-                          width: width * 0.16,
-                          decoration: BoxDecoration(
-                            color: AppColors.inverseIconColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Obx(() => DropdownButton(
-                                  items: controller.terms,
-                                  onChanged: controller.changeTerm,
-                                  value: controller.selectedTerm.value,
-                                  underline: const SizedBox(),
-                                  iconEnabledColor: AppColors.mainCardColor,
-                                  dropdownColor: AppColors.inverseCardColor,
-                                )),
-                          ),
-                        ),
-                        SizedBox(
-                          width: width * 0.03,
-                        ),
-                        CustomText(
-                          "Year".tr,
-                          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                        ),
-                        SizedBox(
-                          width: width * 0.008,
-                        ),
-                        Container(
-                          height: height * 0.1,
-                          width: width * 0.15,
-                          decoration: BoxDecoration(
-                            color: AppColors.inverseIconColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Obx(() => DropdownButton(
-                                  items: controller.years,
-                                  onChanged: controller.changeYear,
-                                  value: controller.selectedYear.value,
-                                  underline: const SizedBox(),
-                                  iconEnabledColor: AppColors.mainCardColor,
-                                  dropdownColor: AppColors.inverseCardColor,
-                                )),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
       ),
     );

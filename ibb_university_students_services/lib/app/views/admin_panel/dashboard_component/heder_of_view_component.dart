@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
+import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import '../../../controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
 
 // ignore: must_be_immutable
-class HederOfViewComponent extends GetView<DashboardMainController> {
-  String tablename;
-  late Function upload;
-  late Function download;
+class HeaderOfViewComponent extends GetView {
+  String tableName;
+  @override
+  HeaderOfViewControllerInterface controller;
 
-  HederOfViewComponent(
-      {super.key,
-      required this.tablename,
-      required this.upload,
-      required this.download});
+  HeaderOfViewComponent(
+      {super.key, required this.tableName, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -27,40 +25,23 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
                 width: width * 0.2,
                 child: CustomText(
-                  tablename,
+                  tableName,
                   style: AppTextStyles.secStyle(
                     textHeader: AppTextHeaders.h1Bold,
                   ),
                 ),
               ),
-              SizedBox(
-                width: width * 0.3,
-                child: Container(
-                  width: width * 0.15,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        hintText: "Search",
-                        fillColor: AppColors.backColor,
-                        filled: true,
-                        suffixIcon: const Icon(
-                          Icons.search_outlined,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          borderSide:
-                              const BorderSide(color: Colors.transparent),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
-                        )),
-                  ),
-                ),
+              CustomTextFormField(
+                labelText: "Search",
+                controller: controller.searchController,
+                // icon: Icons.search_rounded,
+                color: AppColors.inverseCardColor,
+                width: width * 0.25,
               ),
               SizedBox(
                 width: width * 0.26,
@@ -75,12 +56,12 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: InkWell(
-                          onTap: upload(), //send function of upload
+                          onTap: controller.export, //send function of upload
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Upload",
+                                "Export",
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: AppColors.inverseMainTextColor,
@@ -104,12 +85,12 @@ class HederOfViewComponent extends GetView<DashboardMainController> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: InkWell(
-                          onTap: download(), //send function of download
+                          onTap: controller.import, //send function of download
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Download",
+                                "Import",
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: AppColors.inverseMainTextColor,
