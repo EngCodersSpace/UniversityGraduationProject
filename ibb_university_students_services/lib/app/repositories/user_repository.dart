@@ -195,7 +195,9 @@ class UserRepository {
     Box box = await Hive.openBox('rememberMe');
     bool isCredentialsCached =
         box.containsKey("credentials") && (box.get("credentials") != null);
-    await box.close();
+    if(box.isOpen) {
+      await box.close();
+    }
     return isCredentialsCached;
   }
 

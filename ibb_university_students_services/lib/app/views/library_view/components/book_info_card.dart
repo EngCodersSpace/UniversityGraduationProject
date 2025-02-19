@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(16.0),
           child: Hero(
               tag: "PupCard",
               child: Material(
@@ -30,9 +31,10 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                           color: AppColors.inverseCardColor, width: 4),
                       borderRadius: BorderRadius.circular(32)),
                   // height: Get.height * 0.4,
-                  // width: Get.width - 32,
+                  width: Get.width,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 8),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,54 +72,130 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                                 ))
                           ],
                         ),
-                        const SizedBox(height: 16,),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Center(
+                          child: SizedBox(
+                              height: (Get.height ) * 0.35,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                controller.selectedBook?.displayImage ??
+                                    "assets/images/library/file.png",
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        SizedBox(height: 32,),
+
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Center(
-                              child: Image(
-                                image: AssetImage(
-                                    controller.selectedBook["image"] ?? ""),
-                                width: 120,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: OverflowBox(
-                                fit: OverflowBoxFit.deferToChild,
-                                maxWidth: Get.width * 0.4,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    CustomText(
-                                      "Title :${controller.selectedBook["name"]}",
-                                      style: AppTextStyles.secStyle(
-                                          textHeader:
-                                              AppTextHeaders.h3Normal),
-                                    ),
-                                    CustomText("Authors :",
+                            SizedBox(width: 8,),
+                            OverflowBox(
+                              fit: OverflowBoxFit.deferToChild,
+                              maxWidth: Get.width * 0.82,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        "Title :",
                                         style: AppTextStyles.secStyle(
                                             textHeader:
-                                                AppTextHeaders.h3Normal)),
-                                    CustomText("Pages : ",
-                                        style: AppTextStyles.secStyle(
-                                            textHeader:
-                                                AppTextHeaders.h3Normal)),
-                                    CustomText("Size :",
-                                        style: AppTextStyles.secStyle(
-                                            textHeader:
-                                                AppTextHeaders.h3Normal)),
-                                  ],
-                                ),
+                                                AppTextHeaders.h3Normal),
+                                      ),
+                                      Expanded(
+                                        child: CustomText(
+                                          controller.selectedBook?.title ??
+                                              "Unknown".tr,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Normal),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Authors :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            controller.selectedBook?.author ??
+                                                "Unknown".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Pages :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            "${controller.selectedBook?.numberOfPages ?? "Unknown".tr}",
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Size :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            "${controller.selectedBook?.fileSize ?? "Unknown".tr}",
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             )
                           ],
                         ),
-                        const SizedBox(height: 32,),
+                        const SizedBox(
+                          height: 32,
+                        ),
                         Column(
                           children: [
                             const SizedBox(

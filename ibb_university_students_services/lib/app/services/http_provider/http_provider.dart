@@ -84,9 +84,9 @@ class HttpProvider {
     ));
   }
 
-  static Future<Response?> get(String url, {dynamic data}) async {
+  static Future<Response?> get(String url, {dynamic data ,Options? options}) async {
     try {
-      final response = await _dio.get(url, data: data);
+      final response = await _dio.get(url, data: data,options:options);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {

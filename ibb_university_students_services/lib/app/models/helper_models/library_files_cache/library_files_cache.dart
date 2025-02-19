@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 part 'library_files_cache.g.dart';
-@HiveType(typeId: 25)
+@HiveType(typeId: 26)
 class LibraryFilesCache {
 
   @HiveField(0)

@@ -5,6 +5,7 @@ import 'package:ibb_university_students_services/app/controllers/library_control
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/screen_utils.dart';
 
 
 
@@ -54,14 +55,31 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                     Container(
                                       decoration: BoxDecoration(
                                         color: AppColors.inverseCardColor,
-                                        borderRadius:
-                                        BorderRadius.circular(24),
+                                        borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width*0.5,
+                                      width: Get.width / 3,
                                       child: Center(
                                         child: Obx(
                                               () => DropdownButton(
-                                            items: controller.departments,
+                                            items: (controller.sections.entries
+                                                .map((e) {
+                                              return DropdownMenuItem<int>(
+                                                  value: e.value.id,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                        .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) * 0.6,
+                                                    child: CustomText(
+                                                      e.value.name ?? "unknown",
+                                                      style:
+                                                      AppTextStyles.mainStyle(
+                                                        textHeader:
+                                                        AppTextHeaders.h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            }).toList()),
                                             onChanged:
                                             controller.changeDepartment,
                                             value: controller

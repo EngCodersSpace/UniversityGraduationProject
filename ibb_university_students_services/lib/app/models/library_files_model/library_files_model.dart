@@ -72,6 +72,13 @@ class LibraryFile {
       sectionId: json['section_id'],
       levelId: json['level_id'],
       subject: subject,
+      title: json['title'],
+      author: json['author'],
+      filePath: json['file_path'],
+      fileSize: json['file_size'],
+      edition: json['edition'],
+      category: json['category'],
+      displayImage: json['display_image'],
     );
   }
 

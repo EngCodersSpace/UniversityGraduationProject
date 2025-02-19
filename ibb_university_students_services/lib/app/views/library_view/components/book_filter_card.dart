@@ -6,6 +6,7 @@ import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/screen_utils.dart';
 
 // ignore: must_be_immutable
 class PopUpBookFilterCard extends GetView<LibraryController> {
@@ -68,20 +69,38 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width / 2,
+                                      width: Get.width / 3,
                                       child: Center(
                                         child: Obx(
-                                          () => DropdownButton(
-                                            items: controller.departments,
+                                              () => DropdownButton(
+                                            items: (controller.sections.entries
+                                                .map((e) {
+                                              return DropdownMenuItem<int>(
+                                                  value: e.value.id,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                        .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) * 0.6,
+                                                    child: CustomText(
+                                                      e.value.name ?? "unknown",
+                                                      style:
+                                                      AppTextStyles.mainStyle(
+                                                        textHeader:
+                                                        AppTextHeaders.h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            }).toList()),
                                             onChanged:
-                                                controller.changeDepartment,
+                                            controller.changeDepartment,
                                             value: controller
                                                 .selectedDepartment.value,
                                             underline: const SizedBox(),
                                             iconEnabledColor:
-                                                AppColors.mainCardColor,
+                                            AppColors.mainCardColor,
                                             dropdownColor:
-                                                AppColors.inverseCardColor,
+                                            AppColors.inverseCardColor,
                                           ),
                                         ),
                                       ),

@@ -158,7 +158,7 @@ class LectureTableFilterComponent
           ),
           IconButton(
             onPressed: () {
-              controller.addlecture();
+              controller.addLecture();
             },
             icon: Icon(Icons.add_box_outlined),
             tooltip: "Add",

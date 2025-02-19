@@ -394,8 +394,7 @@ class DashboardLectureTableController extends GetxController
     });
   }
 
-  @override
-  void addlecture() {}
+  void addLecture() {}
 
   @override
   void onClose() {

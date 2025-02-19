@@ -11,91 +11,87 @@ class LecturesTab extends GetView<LibraryController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => PageView(
-          controller: controller.booksPagesController,
-          children: [
-            for (int p = 0; p < controller.books.length; p += 16)
-              Column(
-                children: [
-                  Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/library/istockphoto-867895848-612x612.jpg"),
-                            fit: BoxFit.fill),
-                      ),
-                      height: Get.height * 0.74,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+    return Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(
+                  "assets/images/library/istockphoto-867895848-612x612.jpg"),
+              fit: BoxFit.fill),
+        ),
+        height: Get.height * 0.74,
+        child: Obx(
+              () => (controller.loadingState.value)
+              ? Center(
+            child: CircularProgressIndicator(
+              color: AppColors.mainCardColor,
+            ),
+          )
+              : PageView(
+                physics: AlwaysScrollableScrollPhysics(),
+                          controller: controller.booksPagesController,
+                          children: [
+              for (int p = 0; p < controller.books.length; p += 16)
+                RefreshIndicator(
+                  onRefresh:() async => controller.refresh(),
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        if (controller.books.isEmpty) ...[
                           SizedBox(
-                            height: (Get.height * 0.74) * 0.04,
+                            height: Get.height*0.3,
                           ),
-                          for (int i = p;
+                          CustomText(
+                            controller.fieldMessage.value,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h2Bold),
+                          ),
+                          IconButton(
+                              onPressed: () async =>
+                                  controller.refresh(),
+                              icon:
+                              Icon(Icons.refresh,color: AppColors.inverseCardColor,))
+                        ],
+                        SizedBox(
+                          height: 16,
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.70,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              for (int i = p;
                               (i < controller.books.length) && (i < p + 16);
-                              i += 4) ...[
-                            SizedBox(
-                              height: (Get.height * 0.74) / 5,
-                              child: Row(
-                                  mainAxisAlignment:
+                              i += 3) ...[
+                                SizedBox(
+                                  height: (Get.height * 0.70) / 4,
+                                  child: Row(
+                                      mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    for (int j = i;
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.end,
+                                      children: [
+                                        for (int j = i;
                                         (j < controller.books.length) &&
-                                            (j < i + 4);
+                                            (j < i + 3);
                                         j++)
-                                      Obx(
-                                        () => BookContainer(
-                                          book: controller.books[j],
-                                        ),
-                                      )
-                                  ]),
-                            ),
-                            SizedBox(
-                              height: (Get.height * 0.68) / 26,
-                            )
-                          ],
-                        ],
-                      )),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                                "assets/images/library/istockphoto-867895848-612x612_bottom.jpg"),
-                            fit: BoxFit.fill),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              controller.booksPagesController.previousPage(
-                                  duration: const Duration(milliseconds: 400),
-                                  curve: Curves.ease);
-                            },
-                            icon: const Icon(Icons.arrow_back_rounded),
-                            color: AppColors.backColor,
-                            iconSize: 40,
+                                          Obx(
+                                                () => BookContainer(
+                                              book: controller.books.values.toList()[j],
+                                            ),
+                                          )
+                                      ]),
+                                ),
+                              ],
+                            ],
                           ),
-                          CustomText("${(p ~/ 16) + 1}/${p + 1}",style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),),
-                          IconButton(
-                              onPressed: () {
-                                controller.booksPagesController.nextPage(
-                                    duration: const Duration(milliseconds: 400),
-                                    curve: Curves.ease);
-                              },
-                              icon: const Icon(Icons.arrow_forward_rounded),
-                              color: AppColors.backColor,
-                              iconSize: 40)
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-          ],
+                ),
+                          ],
+                        ),
         ));
   }
 }
