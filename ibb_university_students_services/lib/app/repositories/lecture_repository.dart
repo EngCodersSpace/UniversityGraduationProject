@@ -386,9 +386,7 @@ class LectureRepository {
     bool hardFetch = false,
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
-    lecturesYearsBox.clear();
-    List<String>? years =
-        lecturesYearsBox.get("lectureYears", defaultValue: null);
+    List<String>? years = lecturesYearsBox.get("lectureYears");
     if ((years != null) && (!hardFetch || !(await checkInternetConnection()))) {
       await lecturesYearsBox.close();
       return Result(
