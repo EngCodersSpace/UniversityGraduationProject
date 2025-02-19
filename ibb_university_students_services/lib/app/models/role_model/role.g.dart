@@ -1,41 +1,45 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'attachment_file_model.dart';
+part of 'role.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
+class RoleAdapter extends TypeAdapter<Role> {
   @override
-  final int typeId = 16;
+  final int typeId = 33;
 
   @override
-  AttachmentFile read(BinaryReader reader) {
+  Role read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return AttachmentFile(
+    return Role(
       id: fields[0] as int,
-      assignmentId: fields[1] as int?,
-      originName: fields[4] as String?,
-      path: fields[3] as String?,
+      permissions: (fields[2] as Map).map((dynamic k, dynamic v) =>
+          MapEntry(k as String, (v as List).cast<String>())),
+      nameData: (fields[1] as Map?)?.cast<String, dynamic>(),
+      createdAt: fields[3] as String?,
+      updatedAt: fields[4] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, AttachmentFile obj) {
+  void write(BinaryWriter writer, Role obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.assignmentId)
+      ..write(obj.nameData)
+      ..writeByte(2)
+      ..write(obj.permissions)
       ..writeByte(3)
-      ..write(obj.path)
+      ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.originName);
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -44,7 +48,7 @@ class AttachmentFileAdapter extends TypeAdapter<AttachmentFile> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AttachmentFileAdapter &&
+      other is RoleAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

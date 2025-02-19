@@ -9,7 +9,7 @@ class StudentAssignmentsFile {
   StudentAssignmentsFile({
      required this.id,
     this.studentAssignmentId,
-    this.title,
+    this.originName,
     this.path,
     this.status,
     this.progress
@@ -22,7 +22,7 @@ class StudentAssignmentsFile {
   @HiveField(3)
   String? path;
   @HiveField(4)
-  String? title;
+  String? originName;
   RxString? status;
   RxInt? progress;
   final RxBool downloaded = RxBool(false);
@@ -38,8 +38,9 @@ class StudentAssignmentsFile {
 
     return StudentAssignmentsFile(
       id: json['id'],
-      studentAssignmentId: 0,
-      path: "",
+      originName: json['original_name'],
+      studentAssignmentId: json["student_assignment_id"],
+      path: json["path"],
       status: RxString(status),
     );
   }

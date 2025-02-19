@@ -87,10 +87,14 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CustomText(
-                                      controller.user?.name ?? "",
-                                        style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h1Bold,height: 0)
+                                    SizedBox(
+                                      width: width* 0.6,
+                                      child: CustomText(
+                                        controller.user?.name ?? "",
+                                          textAlign: TextAlign.start,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader: AppTextHeaders.h1Bold,height: 0)
+                                      ),
                                     ),
                                     CustomText(
                                       "ID : ${controller.user?.id}",
@@ -110,12 +114,21 @@ class PhoneMainTab extends GetView<HomeTabController> {
                         SizedBox(
                           height: height * 0.018,
                         ),
-                        SizedBox(
-                          height: height * 0.14,
-                          child: (controller.user is Student)
-                              ? const StudentInfoCard()
-                              : const DoctorInfoCard(),
-                        ),
+                        if(controller.user != null)...[
+                          SizedBox(
+                            height: height * 0.14,
+                            child: (controller.user is Student)
+                                ? const StudentInfoCard()
+                                : const DoctorInfoCard(),
+                          ),
+                        ]else...[
+                          Center(child: Column(
+                            children: [
+                              CustomText("ReTry fetch data"),
+                              IconButton(onPressed: controller.refresh, icon: Icon(Icons.refresh)),
+                            ],
+                          ))
+                        ],
                         SizedBox(
                           height: height * 0.03,
                         ),

@@ -9,6 +9,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../../models/assignment_model/assignment_model.dart';
+import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/permission_checker.dart';
 
@@ -71,22 +72,41 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                         Row(
                           children: [
                             if( (UserRepository.isCurrentUser(content.value?.studentsStatus?.entries.first.value.studentId)??false))
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainCardColor,
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(32)),
-                                ),
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 8),
-                                child: CustomText(
-                                  (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),
+                              Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mainCardColor,
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                    ),
+                                    padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    child: CustomText(
+                                      (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mainCardColor,
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(32)),
+                                    ),
+                                    padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    child: CustomText(
+                                      (content.value?.studentsStatus?.entries.first.value.state??"Unknown".tr),
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ),
+                                ],
                               ),
                             if ((PermissionUtils.checkPermission(
-                                target: "Assignments", action: "edit"))) ...[
+                                target: "Assignments", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,
                               ),
@@ -109,6 +129,38 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
+                                        )),
+                                  ],
+                                  child: Icon(Icons.more_vert_outlined,
+                                      color: AppColors.mainTextColor),
+                                ),
+                              )
+                            ]else if (PermissionUtils.checkPermission(
+                                target: "Assignments", action: "setCompletion"))...[
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: PopupMenuButton<String>(
+                                  onSelected: (val) => controller.more(val,
+                                      data: content.toJson()),
+                                  color: AppColors.inverseCardColor,
+                                  itemBuilder: (ctx) => [
+                                    PopupMenuItem(
+                                        value: "setComplete",
+                                        child: CustomText(
+                                          "Set Complete".tr,
+                                          style: AppTextStyles.mainStyle(
+                                              textHeader: AppTextHeaders.h3Bold),
+                                        )),
+                                    PopupMenuItem(
+                                        value: "setNotComplete",
+                                        child: CustomText(
+                                          "Set Not Complete".tr,
                                           style: AppTextStyles.mainStyle(
                                               textHeader: AppTextHeaders.h3Bold),
                                         )),
@@ -205,8 +257,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                       const SizedBox(
                         height: 16,
                       ),
-                      if ((PermissionUtils.checkPermission(
-                          target: "Assignments", action: "doctorView"))) ...[
+                      if (UserRepository.currentUserType() == Doctor) ...[
                         CustomButton(
                           onPress: ()=>controller.showAttachmentsFiles(content.value?.id),
                           text: "Attachments".tr,

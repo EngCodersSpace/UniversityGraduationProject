@@ -13,16 +13,18 @@ import '../services/http_provider/http_provider.dart';
 class UserRepository {
   static Box<User>? _userBox;
 
-  static get userRule => _userBox?.get('currentUser')?.roleId;
+  static get userRule => _userBox?.get('currentUser')?.role;
 
   static Future<void> openBox() async {
     _userBox = await Hive.openBox<User>('userBox');
-    // Box  = await Hive.openBox('');
   }
 
   static Future<void> clearBox() async {
     _userBox = await Hive.openBox<User>('userBox');
-    _userBox?.clear();
+   await  _userBox?.clear();
+    Box box = await Hive.openBox('rememberMe');
+    await box.clear();
+    await box.close();
   }
 
   static Future<void> closeBox() async {
@@ -87,7 +89,7 @@ class UserRepository {
       String password, String passwordConfirmation) async {
     late Response? response;
     try {
-      response = await HttpProvider.post("auth/register", data: {
+      response = await HttpProvider.post("register", data: {
         "name": name,
         "email": email,
         "password": password,
@@ -122,7 +124,7 @@ class UserRepository {
   static Future<void> userLogout() async {
     Response? response;
     try {
-      response = await HttpProvider.post("logout");
+      response = await HttpProvider.post("logout?user_id=${_userBox?.get('currentUser')?.id}");
       if (response?.statusCode == 200 || true) {
         Box box = await Hive.openBox('rememberMe');
         box.clear();
@@ -206,5 +208,9 @@ class UserRepository {
 
   static bool? isCurrentUser(int? id) {
     return _userBox?.get('currentUser')?.id == id;
+  }
+
+  static Type? currentUserType() {
+    return  _userBox?.get('currentUser')?.runtimeType;
   }
 }

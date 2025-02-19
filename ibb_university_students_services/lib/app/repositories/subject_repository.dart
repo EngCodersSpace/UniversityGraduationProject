@@ -82,7 +82,7 @@ class SubjectRepository {
               jsSubject["subject_id"], Subject.fromJson(jsSubject));
         }
         return Result(
-            data: (_subjectsBox as Map<String, Subject>?),
+            data: _subjectsBox?.toMap().cast<String, Subject>(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

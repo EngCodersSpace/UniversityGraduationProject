@@ -18,35 +18,44 @@ class LectureAdapter extends TypeAdapter<Lecture> {
     };
     return Lecture(
       id: fields[0] as int,
-      subject: fields[1] as Subject?,
-      startTime: fields[2] as String?,
-      duration: fields[3] as int?,
-      instructorId: fields[7] as int?,
-      hall: fields[4] as String?,
-      description: fields[5] as String?,
-      lectureStatus: fields[6] as bool?,
+      sectionId: fields[1] as int?,
+      day: fields[3] as String?,
+      levelId: fields[2] as int?,
+      subject: fields[4] as Subject?,
+      startTime: fields[5] as String?,
+      duration: fields[6] as int?,
+      instructorId: fields[10] as int?,
+      hall: fields[7] as String?,
+      description: fields[8] as String?,
+      lectureStatus: fields[9] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Lecture obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.subject)
+      ..write(obj.sectionId)
       ..writeByte(2)
-      ..write(obj.startTime)
+      ..write(obj.levelId)
       ..writeByte(3)
-      ..write(obj.duration)
+      ..write(obj.day)
       ..writeByte(4)
-      ..write(obj.hall)
+      ..write(obj.subject)
       ..writeByte(5)
-      ..write(obj.description)
+      ..write(obj.startTime)
       ..writeByte(6)
-      ..write(obj.lectureStatus)
+      ..write(obj.duration)
       ..writeByte(7)
+      ..write(obj.hall)
+      ..writeByte(8)
+      ..write(obj.description)
+      ..writeByte(9)
+      ..write(obj.lectureStatus)
+      ..writeByte(10)
       ..write(obj.instructorId);
   }
 

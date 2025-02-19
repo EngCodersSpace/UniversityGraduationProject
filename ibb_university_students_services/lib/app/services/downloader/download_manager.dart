@@ -41,7 +41,7 @@ class DownloadManager {
   // Start a download task
   static Future<String?> startDownload(String url, String fileName , {String? savePath}) async {
 
-    Directory dir = Directory("$downloadBasePath/$savePath");
+    Directory dir = Directory("$downloadBasePath/${savePath ??"Download" }");
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
     }

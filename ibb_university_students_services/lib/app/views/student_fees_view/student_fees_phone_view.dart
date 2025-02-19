@@ -84,7 +84,7 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                               textHeader: AppTextHeaders.h2Bold),
                         ),
                         if ((PermissionUtils.checkPermission(
-                            target: "Exams", action: "add")))
+                            target: "Exams", action: "write")))
                           CustomButton(
                             onPress: controller.addButtonClick,
                             text: "Add Exam".tr,

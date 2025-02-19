@@ -10,6 +10,7 @@ import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/days_table.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
+import '../utils/date_time_utils.dart';
 import '../utils/internet_connection_cheker.dart';
 import '../services/http_provider/http_provider.dart';
 
@@ -24,20 +25,27 @@ class LectureRepository {
   static const int _changeStateError = 612;
   static const int _fetchYearsError = 619;
 
-  static Box<LecturesCache>? _lecturesBox;
+  static Box<LecturesCache>? _lecturesGroupsBox;
+  static Box<Lecture>? _lecturesBox;
 
   static Future<void> openBox() async {
-    _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
+    _lecturesGroupsBox = await Hive.openBox<LecturesCache>("lecturesGroupBox");
+    _lecturesBox = await Hive.openBox<Lecture>("lecturesBox");
   }
 
   static Future<void> clearBox() async {
-    _lecturesBox = await Hive.openBox<LecturesCache>("lectureBox");
+    _lecturesBox ?? await Hive.openBox<Lecture>("lectureBox");
     _lecturesBox?.clear();
+    _lecturesGroupsBox ?? await Hive.openBox<LecturesCache>("lecturesGroupBox");
+    _lecturesGroupsBox?.clear();
   }
 
   static Future<void> closeBox() async {
     if (_lecturesBox?.isOpen ?? false) {
       await _lecturesBox?.close();
+    }
+    if (_lecturesGroupsBox?.isOpen ?? false) {
+      await _lecturesGroupsBox?.close();
     }
   }
 
@@ -48,16 +56,25 @@ class LectureRepository {
     required String term,
     bool hardFetch = false,
   }) async {
-    LecturesCache? cachedDayLectures = _lecturesBox?.get(
-        "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-
+    LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
+        "${sectionId}_${levelId}_Lectures");
+    Map<String, Map<int, Lecture>> lectures = {};
     if ((cachedDayLectures != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
+      for (String day in cachedDayLectures.data.keys) {
+        lectures[day] = {};
+        for (int id in cachedDayLectures.data[day] ?? []) {
+          Lecture? lecture =
+              await fetchLecture(lectureId: id).then((e) => e.data);
+          if (lecture != null) {
+            lectures[day]?[lecture.id] = lecture;
+          }
+        }
+      }
       return Result(
-          data: TableDays.fromJson(cachedDayLectures.data),
-          hasError: false,
-          statusCode: 200);
+          data: TableDays.fromJson(lectures), hasError: false, statusCode: 200);
     }
+
     late Response? response;
     try {
       response = await HttpProvider.get(
@@ -65,25 +82,31 @@ class LectureRepository {
       if (response?.statusCode == 200) {
         LecturesCache dayLectures = LecturesCache(
             key:
-                "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures",
+                "${sectionId}_${levelId}_Lectures",
             data: {});
 
         for (String day in (response?.data["data"] as Map).keys) {
-          dayLectures.data[day] = {};
+          dayLectures.data[day] = [];
+          lectures[day] = {};
           for (Map<String, dynamic> jsLecture in response?.data["data"][day]) {
             Subject? subject = await SubjectRepository.fetchSubject(
                     id: jsLecture["subject_id"])
                 .then((e) => e.data);
             Lecture lecture = Lecture.fromJson(jsLecture, subject: subject);
-            dayLectures.data[day]?[lecture.id] = lecture;
+            await _lecturesBox?.put(
+              lecture.id,
+              lecture,
+            );
+            dayLectures.data[day]?.add(lecture.id);
+            lectures[day]?[lecture.id] = lecture;
           }
-          await _lecturesBox?.put(
-            dayLectures.key,
-            dayLectures,
-          );
         }
+        await _lecturesGroupsBox?.put(
+          dayLectures.key,
+          dayLectures,
+        );
         return Result(
-            data: TableDays.fromJson(dayLectures.data),
+            data: TableDays.fromJson(lectures),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -102,32 +125,96 @@ class LectureRepository {
     }
   }
 
+  static Future<Result<Lecture>> fetchLecture({
+    required int lectureId,
+    bool hardFetch = false,
+  }) async {
+    if ((_lecturesBox?.get(lectureId) != null) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
+      Lecture? lecture = _lecturesBox?.get(lectureId);
+      return Result(data: lecture, hasError: false, statusCode: 200);
+    }
+    Response? response;
+    try {
+      response = await HttpProvider.get("");
+      if (response?.statusCode == 200) {
+        Lecture lecture = Lecture.fromJson(response?.data["lecture"]);
+        await _lecturesBox?.put(
+          lecture.id,
+          lecture,
+        );
+        return Result(
+            data: lecture,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<Lecture>> createLecture({
     required int sectionId,
     required int levelId,
     required String year,
     required String term,
     required String day,
-    required data,
+    required String subjectId,
+    required String lectureTime,
+    required int doctorId,
+    required int lectureDuration,
+    String? lectureRoom,
     bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.post("create-lecture", data: data);
+      response = await HttpProvider.post("create-lecture", data: {
+        "lecture_section_id": sectionId,
+        "lecture_level_id": levelId,
+        "year": year,
+        "term": term,
+        "lecture_day": day,
+        "subject_id": sectionId,
+        "doctor_id": doctorId,
+        "lecture_time": DateTimeUtils.formatStringTime(
+            time: lectureTime,
+            format: TimeFormat.hhMmSs,
+            currentFormat: TimeFormat.hhMmA),
+        "lecture_duration": lectureDuration,
+        "lecture_room": lectureRoom,
+      });
       Lecture? newLecture;
       if (response?.statusCode == 201) {
         Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["data"]["subject_id"])
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["data"], subject: subject);
-        LecturesCache? cachedDayLectures = _lecturesBox?.get(
-            "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-        cachedDayLectures?.data[day]?[newLecture.id] = newLecture;
-        if (cachedDayLectures != null) {
-          await _lecturesBox?.put(
-              "${sectionId}_${levelId}_${year}_${term}_Lectures",
-              cachedDayLectures);
+        if (withCache) {
+          LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
+                  "${sectionId}_${levelId}_Lectures") ??
+              LecturesCache(
+                  key:
+                      "${sectionId}_${levelId}_Lectures",
+                  data: {});
+          cachedDayLectures.data[day]?.add(newLecture.id);
+          await _lecturesBox?.put(newLecture.id, newLecture);
+          await _lecturesGroupsBox?.put(
+            cachedDayLectures.key,
+            cachedDayLectures,
+          );
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -153,38 +240,49 @@ class LectureRepository {
     required String year,
     required String term,
     required String day,
-    required data,
+    required String subjectId,
+    required String lectureTime,
+    required int doctorId,
+    required int lectureDuration,
+    String? lectureRoom,
     required id,
     bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
-    LecturesCache? cachedDayLectures = _lecturesBox?.get(
-        "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
     try {
-      response = await HttpProvider.put("update-lecture?id=$id", data: data);
-      if (response?.statusCode == 200) {
-        Subject? subject;
-        if (cachedDayLectures?.data[day]?[id]?.subject?.id !=
-            data["subject_id"]) {
-          subject = await SubjectRepository.fetchSubject(id: data["subject_id"])
-              .then((e) => e.data);
-        }
+      response = await HttpProvider.put("update-lecture?id=$id", data: {
+        "lecture_section_id": sectionId,
+        "lecture_level_id": levelId,
+        "year": year,
+        "term": term,
+        "lecture_day": day,
+        "subject_id": sectionId,
+        "doctor_id": doctorId,
+        "lecture_time": lectureTime,
+        "lecture_duration": lectureDuration,
+        "lecture_room": lectureRoom,
+      });
 
-        cachedDayLectures?.data[day]?[id]
-            ?.updateFromJson(data, subject: subject);
-        if (cachedDayLectures != null) {
-          await _lecturesBox?.put(
-              "${sectionId}_${levelId}_${year}_${term}_Lectures",
-              cachedDayLectures);
+      if (response?.statusCode == 200) {
+        Subject? subject = await SubjectRepository.fetchSubject(id: subjectId)
+            .then((e) => e.data);
+        Lecture updatedLecture =
+            Lecture.fromJson(response?.data["data"], subject: subject);
+        if (withCache) {
+          await _lecturesBox?.put(updatedLecture.id, updatedLecture);
         }
+        return Result(
+            data: updatedLecture,
+            statusCode: response?.statusCode ?? _updateError,
+            message: response?.data["message"] ?? "error");
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: cachedDayLectures?.data[day]?[id],
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
@@ -198,29 +296,22 @@ class LectureRepository {
   }
 
   static Future<Result<void>> deleteLecture({
-    required int sectionId,
-    required int levelId,
-    required String year,
-    required String term,
-    required String day,
     required id,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      LecturesCache? cachedDayLectures = _lecturesBox?.get(
-          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
-
       response = await HttpProvider.delete("delete-lecture?id=$id");
-      if (response?.statusCode == 200) {
-        cachedDayLectures?.data[day]?.remove(id);
-        if (cachedDayLectures != null) {
-          await _lecturesBox?.put(
-              "${sectionId}_${levelId}_${year}_${term}_Lectures",
-              cachedDayLectures);
+      if (response?.statusCode == 200 && withCache) {
+        Lecture? lecture = _lecturesBox?.get(id);
+        if(lecture != null){
+          _lecturesGroupsBox?.get(
+              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data.remove(id) ;
+          _lecturesBox?.delete(id);
         }
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -239,11 +330,6 @@ class LectureRepository {
   }
 
   static Future<Result<void>> changeLectureState({
-    required int sectionId,
-    required int levelId,
-    required String year,
-    required String term,
-    required String day,
     required String action,
     required int id,
     bool hardFetch = false,
@@ -252,26 +338,18 @@ class LectureRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      LecturesCache? cachedDayLectures = _lecturesBox?.get(
-          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
       response = await HttpProvider.post("changeLecStatus-lecture",
           data: {"id": 7, "action": action});
       if (response?.statusCode == 200) {
-        cachedDayLectures?.data[day]?[id]?.lectureStatus = (action == "confirm")
+        _lecturesBox?.get(id)?.lectureStatus = (action == "confirm")
             ? true
             : (action == "cancel")
                 ? false
                 : null;
-        if (cachedDayLectures != null) {
-          await _lecturesBox?.put(
-              "${sectionId}_${levelId}_${year}_${term}_Lectures",
-              cachedDayLectures);
-        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
-
       return Result(
           hasError: false,
           statusCode: response?.statusCode ?? _changeStateError,
@@ -284,6 +362,28 @@ class LectureRepository {
           data: null);
     }
   }
+
+// static Future<Result<Lecture>> fetchAllLecture() async {
+//   Response? response;
+//   try {
+//     response = await HttpProvider.get("get-all-lecture");
+//     Lecture? getLecture;
+//     if (response?.statusCode == 200) {
+//       getLecture = Lecture.fromJson(response?.data["data"]);
+//     }
+//     return Result(
+//         data: getLecture,
+//         hasError: true,
+//         statusCode: response?.statusCode ?? _updateError,
+//         message: response?.data["message"] ?? "error");
+//   } catch (error) {
+//     return Result(
+//         hasError: true,
+//         statusCode: _fetchError,
+//         message: error.toString(),
+//         data: null);
+//   }
+// }
 
   static Future<Result<Map>> fetchDashboardLecture({
     int? sectionId,
@@ -332,23 +432,25 @@ class LectureRepository {
   }
 
   static Future<Result<Lecture>> tempReplaceLecture({
-    required int sectionId,
-    required int levelId,
-    required String year,
-    required String term,
-    required String day,
-    required data,
     required id,
+    required int doctorId,
+    required String subjectId,
+    required String lectureTime,
+    required String lectureRoom,
+    required int lectureDuration,
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      LecturesCache? cachedDayLectures = _lecturesBox?.get(
-          "${sectionId}_${levelId}_${year}_${term.replaceAll(' ', '_')}_Lectures");
       response =
-          await HttpProvider.post("replaceOne-lecture?id=$id", data: data);
+          await HttpProvider.post("replaceOne-lecture?id=$id", data: {
+            " subject_id ": subjectId,
+            " doctor_id  ": doctorId,
+            " lecture_time ": lectureTime,
+            " lecture_duration ": lectureDuration
+          });
 
       Lecture? newLecture;
       if (response?.statusCode == 200) {
@@ -357,22 +459,30 @@ class LectureRepository {
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["replacedLecture"],
             subject: subject);
-        cachedDayLectures?.data[day]?[newLecture.id] = newLecture;
-        cachedDayLectures?.data[day]?.remove(id);
-        if (cachedDayLectures != null) {
-          await _lecturesBox?.put(
-              "${sectionId}_${levelId}_${year}_${term}_Lectures",
-              cachedDayLectures);
+
+        Lecture? lecture = _lecturesBox?.get(id);
+        _lecturesBox?.put(newLecture.id,newLecture);
+        if(lecture != null){
+          _lecturesGroupsBox?.get(
+              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data[lecture.day]?.add(newLecture.id) ;
+          _lecturesGroupsBox?.get(
+              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data[lecture.day]?.remove(id) ;
         }
+        return Result(
+            data: newLecture,
+            hasError: true,
+            statusCode: response?.statusCode ?? _updateError,
+            message: response?.data["message"] ?? "error");
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: newLecture,
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
+
     } catch (error) {
       return Result(
           hasError: true,
@@ -386,9 +496,7 @@ class LectureRepository {
     bool hardFetch = false,
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
-    lecturesYearsBox.clear();
-    List<String>? years =
-        lecturesYearsBox.get("lectureYears", defaultValue: null);
+    List<String>? years = lecturesYearsBox.get("lectureYears");
     if ((years != null) && (!hardFetch || !(await checkInternetConnection()))) {
       await lecturesYearsBox.close();
       return Result(

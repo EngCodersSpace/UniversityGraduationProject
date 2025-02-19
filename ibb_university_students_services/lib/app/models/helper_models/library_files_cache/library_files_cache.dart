@@ -1,16 +1,15 @@
 import 'package:hive/hive.dart';
-
-part 'lectures_cache.g.dart';
-@HiveType(typeId: 21)
-class LecturesCache {
+part 'library_files_cache.g.dart';
+@HiveType(typeId: 25)
+class LibraryFilesCache {
 
   @HiveField(0)
   String key ;
   @HiveField(1)
-  Map<String, List<int>> data;
+  List<int> data;
 
 
-  LecturesCache({
+  LibraryFilesCache({
     required this.key,
     required this.data,
 
