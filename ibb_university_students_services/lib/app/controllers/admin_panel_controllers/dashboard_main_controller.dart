@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
@@ -17,6 +18,7 @@ import 'dashbord_lecture_table_controller.dart';
 class DashboardMainController extends GetxController {
   RxInt selectedindex = 2.obs;
   RxBool connected = false.obs;
+  TextEditingController search = TextEditingController();
 
   @override
   void onInit() async {

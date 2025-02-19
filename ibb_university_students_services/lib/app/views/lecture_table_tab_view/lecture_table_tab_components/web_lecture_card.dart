@@ -73,61 +73,61 @@ class WebLectureCard extends GetView<LectureController> {
                           decoration: BoxDecoration(
                             color: AppColors.mainCardColor,
                             borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
+                                const BorderRadius.all(Radius.circular(30)),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: CustomText(
-                            "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(
-                              time: content.value?.startTime ?? "00:00:00",
-                              duration: Duration(
-                                  minutes: content.value?.duration ?? 0),
-                            )}",
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h7Bold)
-                          ),
+                              "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(
+                                time: content.value?.startTime ?? "00:00:00",
+                                duration: Duration(
+                                    minutes: content.value?.duration ?? 0),
+                              )}",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h7Bold)),
                         ),
                         if ((PermissionUtils.checkPermission(
                             target: "Lectures", action: "write"))) ...[
                           const SizedBox(
-                            width: 8,
+                            width: 0,
                           ),
                           SizedBox(
-                            height: 24,
-                            width: 24,
+                            height: 15,
+                            width: 15,
                             child: PopupMenuButton<String>(
-                              onSelected: (val) => controller.more(val,
-                                  data: content.toJson()),
+                              onSelected: (val) =>
+                                  controller.more(val, data: content.toJson()),
                               color: AppColors.inverseCardColor,
                               itemBuilder: (ctx) => [
                                 PopupMenuItem(
                                     value: "TemporaryReplace",
-                                    child: CustomText(
-                                      "TemporaryReplace".tr,
-                                        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold)
-                                    )),
+                                    child: CustomText("TemporaryReplace".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Bold))),
                                 PopupMenuItem(
                                     value: "Update",
-                                    child: CustomText(
-                                      "Update".tr,
-                                        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold)
-                                    )),
+                                    child: CustomText("Update".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Bold))),
                                 PopupMenuItem(
                                     value: "Delete",
-                                    child: CustomText(
-                                      "Delete".tr,
-                                        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold)
-                                    )),
+                                    child: CustomText("Delete".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Bold))),
                                 PopupMenuItem(
                                     value: "Confirm",
-                                    child: CustomText(
-                                      "Confirm".tr,
-                                        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold)
-                                    )),
+                                    child: CustomText("Confirm".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Bold))),
                                 PopupMenuItem(
                                     value: "Cancel",
-                                    child: CustomText(
-                                      "Cancel".tr,
-                                        style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold)
-                                    )),
+                                    child: CustomText("Cancel".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader:
+                                                AppTextHeaders.h3Bold))),
                               ],
                               child: Icon(Icons.more_vert_outlined,
                                   color: AppColors.mainTextColor),
@@ -149,11 +149,10 @@ class WebLectureCard extends GetView<LectureController> {
                               color: (content.value?.lectureStatus ?? false)
                                   ? Colors.greenAccent
                                   : Colors.redAccent,
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(32)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
                             ),
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: (content.value?.lectureStatus ?? false)
                                 ? CustomText("Confirmed".tr)
                                 : CustomText("Canceled".tr),
@@ -166,7 +165,8 @@ class WebLectureCard extends GetView<LectureController> {
                     ),
                     CustomText(
                       content.value?.subject?.subjectName ?? "Unknown".tr,
-                      style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
                       textAlign: TextAlign.center,
                     ),
                   ],

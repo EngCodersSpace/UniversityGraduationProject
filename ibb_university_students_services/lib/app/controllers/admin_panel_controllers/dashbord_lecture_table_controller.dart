@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,19 +13,21 @@ import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
 import '../../styles/text_styles.dart';
 import '../../utils/snake_bar.dart';
+import 'header_of_view_controller_interface.dart';
 
-class DashboardLectureTableController extends GetxController {
+class DashboardLectureTableController extends GetxController
+    implements HeaderOfViewControllerInterface {
+  double get width => (Get.width - (Get.width * 0.2));
 
-  double get width => (Get.width - (Get.width*0.2));
   double get height => Get.height;
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxMap<int, Lecture> lectures = RxMap({});
   RxSet<int> selectedRows = RxSet({});
-  RxInt availableRows  = 0.obs;
-  int currentPage  = 1;
+  RxInt availableRows = 0.obs;
+  int currentPage = 1;
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   RxString fieldMessage = "".obs;
-  RxString searchFiled = "".obs;
   RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
@@ -34,23 +38,33 @@ class DashboardLectureTableController extends GetxController {
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
     DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
         value: "Term 1",
         child: SizedBox(
-            width: (Get.width / 8) * 0.6,
+            width: (Get.width / 8) * 0.4,
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
         value: "Term 2",
         child: SizedBox(
-            width: (Get.width / 8) * 0.6,
+            width: (Get.width / 8) * 0.4,
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
@@ -62,7 +76,7 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Lecture Time",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -72,7 +86,7 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Lecture Day",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -82,7 +96,7 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Lecture Room",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -92,7 +106,7 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Subject",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
@@ -104,7 +118,7 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Descending",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -114,27 +128,32 @@ class DashboardLectureTableController extends GetxController {
             child: CustomText(
               "Ascending",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
   List<DataColumn> kTableColumn = [];
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
-RxBool selectAll = false.obs;
+  RxBool selectAll = false.obs;
+  Timer? _debounce;
+
   @override
   void onInit() async {
+    searchController.addListener(() {
+      onSearch();
+    });
+
     kTableColumn = <DataColumn>[
       DataColumn(
         label: Obx(() => Checkbox(
-          value: selectAll.value,
-          onChanged: (isSelected) {
-            if (isSelected == null) return;
-            selectAll.value = isSelected;
-          },
-        )),
+              value: selectAll.value,
+              onChanged: (isSelected) {
+                if (isSelected == null) return;
+                selectAll.value = isSelected;
+              },
+            )),
       ),
-
       DataColumn(
         label: CustomText(
           "Lecture ID",
@@ -144,9 +163,9 @@ RxBool selectAll = false.obs;
       ),
       DataColumn(
           label: CustomText(
-            "Subject",
-            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-          )),
+        "Subject",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
       DataColumn(
         label: CustomText(
           "Doctor ID",
@@ -189,6 +208,7 @@ RxBool selectAll = false.obs;
     await fetchDashboardData();
     loadingState.value = false;
     super.onInit();
+    // filteredlectures.assignAll(lectures);
   }
 
   @override
@@ -196,51 +216,15 @@ RxBool selectAll = false.obs;
     await fetchDashboardData();
   }
 
-  void onRowChange(int? value) {
+  void onRowChange(int? value) async {
     if (value != null) {
       rowsPerPage.value = value;
+      await fetchDashboardData();
       update(["DataTable"]);
     }
   }
 
-  // Future<void> fetchAllLectureData() async {
-  //   if (selectedLevel.value == null) {
-  //     await initLevelDashboardMenuList();
-  //     if (levels.isNotEmpty) {
-  //       selectedLevel.value = levels.first.value;
-  //     }
-  //   }
-
-  //   if (selectedSection.value == null) {
-  //     await initSectionDashboardMenuList();
-  //     if (sections.isNotEmpty) {
-  //       selectedSection.value = sections.first.value;
-  //     }
-  //   }
-
-  //   if (selectedSection.value == null || selectedLevel.value == null) {}
-  //   Result result = await LectureRepository.fetchAllLecture();
-  //   {
-  //     if (result.statusCode == 200) {
-  //       lecture = result.data;
-  //     } else if (result.statusCode == 404) {
-  //       lecture?.value = {};
-  //       fieldMessage.value = "this section and level not has Lectures";
-  //       showSnakeBar(
-  //           title: "Not Found Lectures",
-  //           message: "this section and level doesn't has Lectures ");
-  //     } else {
-  //       lecture?.value = {};
-  //       fieldMessage.value = "fetching lectures failed please check connection";
-  //       showSnakeBar(
-  //           title: "Fetch Lectures Failed",
-  //           message: "fetching lectures failed please check connection ");
-  //     }
-  //     update(["DataTable"]);
-  //   }
-  // }
-
-  Future<void> fetchDashboardData() async {
+  Future<void> fetchDashboardData({bool showSnakeBars = true}) async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
       if (levels.isNotEmpty) {
@@ -260,40 +244,43 @@ RxBool selectAll = false.obs;
     }
 
     Result res = await LectureRepository.fetchDashboardLecture(
-        sectionId: null,
-        levelId: null,
-        term: null,
+        sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
+        levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+        term: (selectedTerm.value == "") ? "" : selectedTerm.value,
         order: selectedOrder.value,
         limit: rowsPerPage.value,
         sort: selectedSort.value,
         page: currentPage,
+        search: searchController.text,
         hardFetch: false);
     if (res.statusCode == 200) {
-      lectures.value = res.data["lectures"]??{};
+      lectures.value = res.data["lectures"] ?? {};
       availableRows.value = res.data["totalLectures"];
       update(["DataTable"]);
-    }
-    else if (res.statusCode == 404) {
+    } else if (res.statusCode == 404) {
       lectures.value = {};
       fieldMessage.value = "this section and level not has Lectures";
-      showSnakeBar(
-          title: "Not Found Lectures",
-          message: "this section and level doesn't has Lectures ");
-    }
-    else {
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Not Found Lectures",
+            message: "this section and level doesn't has Lectures ");
+      }
+    } else {
       lectures.value = {};
       fieldMessage.value = "fetching lectures failed please check connection";
-      showSnakeBar(
-          title: "Fetch Lectures Failed",
-          message: "fetching lectures failed please check connection ");
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Fetch Lectures Failed",
+            message: "fetching lectures failed please check connection ");
+      }
     }
   }
 
-
-  void onPageChange(int page)async {
-    currentPage = (page~/rowsPerPage.value)+1;
+  void onPageChange(int page) async {
+    currentPage = (page ~/ rowsPerPage.value) + 1;
     await fetchDashboardData();
   }
+
   void changeSection(int? val) async {
     if (val == null) return;
     selectedSection.value = val;
@@ -325,20 +312,30 @@ RxBool selectAll = false.obs;
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
-    Map<int,Section> sectionsData =
+    Map<int, Section> sectionsData =
         await SectionRepository.fetchSections(hardFetch: force)
             .then((e) => e.data ?? {});
-    sections = [];
+    sections = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
     for (Section section in sectionsData.values.toList()) {
       sections.add(
         DropdownMenuItem<int>(
             value: section.id,
             child: SizedBox(
-              width: (Get.width / 6) * 0.63,
+              width: (Get.width / 6) * 0.5,
               child: CustomText(
                 section.name ?? "unknown",
                 style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
               ),
             )),
       );
@@ -349,17 +346,27 @@ RxBool selectAll = false.obs;
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
         .then((e) => e.data ?? []);
-    levels = [];
+    levels = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
     for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 8) * 0.6,
+              width: (Get.width / 8) * 0.4,
               child: CustomText(
                 level.name ?? "unknown",
                 style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
               ),
             )),
       );
@@ -368,5 +375,30 @@ RxBool selectAll = false.obs;
   }
 
   @override
-  void onClose() {}
+  TextEditingController searchController = TextEditingController(text: "");
+
+  @override
+  void export() {}
+
+  @override
+  void import() {}
+
+  String prevTxt = "";
+  @override
+  void onSearch() {
+    if (searchController.text == prevTxt) return;
+    prevTxt = searchController.text;
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(Duration(milliseconds: 600), () async {
+      await fetchDashboardData();
+    });
+  }
+
+  @override
+  void addlecture() {}
+
+  @override
+  void onClose() {
+    searchController.dispose();
+  }
 }

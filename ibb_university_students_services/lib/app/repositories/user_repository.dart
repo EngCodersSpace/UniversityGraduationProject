@@ -28,7 +28,7 @@ class UserRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_userBox?.isOpen??false) {
+    if (_userBox?.isOpen ?? false) {
       await _userBox?.close();
     }
     // Box  = await Hive.openBox('');
@@ -139,6 +139,12 @@ class UserRepository {
     }
   }
 
+  // static Future<Result<Doctor>> fetchDashboardDoctors({
+
+  // })async{
+
+  // }
+
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
     if (_userBox?.get('currentUser') != null &&
         (!hardFetch || !(await checkInternetConnection()))) {
@@ -187,7 +193,8 @@ class UserRepository {
 
   static Future<bool> isCredentialsCached() async {
     Box box = await Hive.openBox('rememberMe');
-    bool isCredentialsCached = box.containsKey("credentials")&&(box.get("credentials") != null) ;
+    bool isCredentialsCached =
+        box.containsKey("credentials") && (box.get("credentials") != null);
     await box.close();
     return isCredentialsCached;
   }
@@ -200,7 +207,7 @@ class UserRepository {
   }
 
   static bool? isCurrentUser(int? id) {
-    return  _userBox?.get('currentUser')?.id == id;
+    return _userBox?.get('currentUser')?.id == id;
   }
 
   static Type? currentUserType() {

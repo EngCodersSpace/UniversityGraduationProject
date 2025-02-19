@@ -7,6 +7,20 @@ class DoctorTableView extends GetView<DashboardDoctorTableController> {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Container(
+        height: Get.height,
+        width: Get.width,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Text("Doctors tabble"),
+            // HeaderOfViewComponent(tableName: "Doctors",
+            // controller: controller,
+            // ),
+          ],
+        ),
+      ),
+    );
   }
 }

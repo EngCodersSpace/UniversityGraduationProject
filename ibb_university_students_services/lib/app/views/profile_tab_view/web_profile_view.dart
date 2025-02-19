@@ -42,7 +42,7 @@ class WebProfileView extends GetView<ProfileController> {
                       //     AppColors.linkTextColor.withOpacity(0.4),
                       //   ],
                       // ),
-                      color: AppColors.inverseCardColor.withValues(alpha:0.2),
+                      color: AppColors.inverseCardColor.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Stack(
@@ -54,22 +54,26 @@ class WebProfileView extends GetView<ProfileController> {
                             children: [
                               CircleAvatar(
                                   radius: Get.width * 0.07,
-                                  backgroundColor: AppColors.inverseCardColor),
+                                  backgroundColor: AppColors.mainCardColor),
                               CircleAvatar(
                                 backgroundColor:
                                     (controller.user?.profileImage) != null
                                         ? AppColors.inverseCardColor
-                                        : AppColors.inverseMainTextColor,
-                                maxRadius: Get.width * 0.07 - 2,
+                                        : AppColors.inverseCardColor,
+                                maxRadius: Get.width * 0.07 - 3,
                                 backgroundImage:
                                     (controller.user?.profileImage) != null
                                         ? AssetImage(
                                             controller.user?.profileImage ?? "")
                                         : null,
-                                child: (controller.user?.profileImage) != ""
+                                child: (controller.user?.profileImage) != null
                                     ? null
-                                    : CustomText(controller.user?.name?[0] ??
-                                        "".toUpperCase()),
+                                    : CustomText(
+                                        controller.user?.name?[0] ??
+                                            "".toUpperCase(),
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader: AppTextHeaders.h1Bold),
+                                      ),
                               ),
                             ],
                           ),
@@ -82,60 +86,100 @@ class WebProfileView extends GetView<ProfileController> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    CustomText(controller.user?.name??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    CustomText(controller.user?.id.toString()??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(
+                                      controller.user?.name ?? "Unknown".tr,
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     CustomText(
-                                        controller.user?.email ?? "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                      controller.user?.id.toString() ??
+                                          "Unknown".tr,
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    CustomText(controller.user?.phones?.first ??
-                                        "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                    CustomText(
+                                      controller.user?.email ?? "Unknown".tr,
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      controller.user?.phones?.first ??
+                                          "Unknown".tr,
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 if (controller.user is Student) ...[
                                   Row(
                                     children: [
-                                      CustomText((controller.user as Student)
-                                              .section
-                                              ?.name
-                                              ?.tr ??
-                                          "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                      CustomText(
+                                        (controller.user as Student)
+                                                .section
+                                                ?.name
+                                                ?.tr ??
+                                            "Unknown".tr,
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      CustomText((controller.user as Student)
-                                              .level
-                                              ?.name
-                                              ?.tr ??
-                                          "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                      CustomText(
+                                        (controller.user as Student)
+                                                .level
+                                                ?.name
+                                                ?.tr ??
+                                            "Unknown".tr,
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ] else ...[
                                   Row(
                                     children: [
-                                      CustomText((controller.user as Doctor)
-                                              .academicDegree
-                                              ?.tr ??
-                                          "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                      CustomText(
+                                        (controller.user as Doctor)
+                                                .academicDegree
+                                                ?.tr ??
+                                            "Unknown".tr,
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Row(
                                     children: [
-                                      CustomText((controller.user as Doctor)
-                                              .administrativePosition
-                                              ?.tr ??
-                                          "Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
+                                      CustomText(
+                                        (controller.user as Doctor)
+                                                .administrativePosition
+                                                ?.tr ??
+                                            "Unknown".tr,
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],

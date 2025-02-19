@@ -43,7 +43,7 @@ class Lecture {
   @HiveField(10)
   int? instructorId;
 
-  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}) {
+  factory Lecture.fromJson(Map<String, dynamic> json, {Subject? subject}){
     return Lecture(
       id: json['id'],
       sectionId: json['section_id'],
