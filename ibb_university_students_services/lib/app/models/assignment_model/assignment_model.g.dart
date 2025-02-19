@@ -18,6 +18,8 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
     };
     return Assignment(
       id: fields[0] as int,
+      levelId: fields[2] as int?,
+      sectionId: fields[1] as int?,
       doctor: fields[3] as Instructor?,
       titleData: (fields[4] as Map?)?.cast<String, dynamic>(),
       assignmentDay: fields[5] as String?,
@@ -25,9 +27,7 @@ class AssignmentAdapter extends TypeAdapter<Assignment> {
       dueDate: fields[7] as String?,
       attachments: (fields[8] as Map?)?.cast<int, AttachmentFile>(),
       studentsStatus: (fields[9] as Map?)?.cast<int, StudentAssignmentState>(),
-    )
-      ..sectionId = fields[1] as int?
-      ..levelId = fields[2] as int?;
+    );
   }
 
   @override
