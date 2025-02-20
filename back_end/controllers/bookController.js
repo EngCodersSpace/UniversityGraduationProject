@@ -2,7 +2,6 @@
 const path = require('path');
 const fs = require("fs");
 const { book,section,level} = require('../models');
-const { Worker } = require("worker_threads");
 const crypto = require('crypto');
 const { uploadFields ,createFolderIfNotExists } = require('../utils/multerConfig');
 const {extractBookDetails,extractDisplayImage }= require('../utils/imageExtractor'); 
@@ -105,105 +104,57 @@ exports.uploadFile = async (req, res) => {
   }
 };  
 
-
 exports.downloadFile = async (req, res) => {
   try {
 
     const fileData = await book.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
+    if (!fileData) return res.status(404).json({ error: "File not found" });
+
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const destinationDir = path.resolve(__dirname, '..', 'downloads');
+    const destination = path.join(destinationDir, path.basename(fileData.attachment));
+
+    if (!fs.existsSync(destinationDir)) {
+      fs.mkdirSync(destinationDir, { recursive: true });
     }
 
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.file_path}`);
+    const readStream = fs.createReadStream(filePath);
+    const writeStream = fs.createWriteStream(destination);
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
+    readStream.pipe(writeStream);
 
-    // start download using worker_threads 
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { filePath },
-    });
-    console.log(`\n \n worker find path ${filePath} \n \n` );
-    worker.on("message", (message) => {
-      if (message.status === "success") {
-        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
-        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
-      }
-    });
-    worker.on("error", (err) => {
-      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
-      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
-    });
-    
-    res.status(200).json({ message: "Download Finish " });
-  } catch (error) {
-    console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
+    return new Promise((resolve, reject) => {
+      writeStream.on('finish', () => {
+        writeStream.close();
+        resolve(res.json({ 
+          message: 'Download completed successfully',
+          path: destination 
+        }));
+      });
 
-exports.downloadFile1 = async (req, res) => {
-  try {
+      writeStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'Write error',
+          details: err.message 
+        }));
+      });
 
-    const fileData = await book.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-
-    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
-
-    // Stream the file directly
-    res.download(filePath, (err) => {
-      if (err) {
-        if (!res.headersSent) {
-          res.status(500).json({ message: "Download failed", error: err.message });
-        }
-      }
+      readStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'File read error',
+          details: err.message 
+        }));
+      });
     });
 
   } catch (error) {
     console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
-
-exports.downloadFile2 = async (req, res) => {
-  try {
-
-    const fileData = await book.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-
-    const filePath= path.resolve(__dirname,'..',`${fileData.file_path}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
-    const stats = await fs.promises.stat(filePath);
-
-    res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Length', stats.size);
-
-    const stream = fs.createReadStream(filePath);
-    stream.pipe(res);
-    
-    stream.on('error', (err) => {
-      if (!res.headersSent) res.status(500).send('Error streaming file');
+    res.status(500).json({ 
+      error: "Download failed",
+      details: error.message 
     });
-
-
-  } catch (error) {
-    console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
   }
 };
-
-
 
 // To get books by filtering (section, level, category) and stream them
 exports.streamBooks = async (req, res) => {

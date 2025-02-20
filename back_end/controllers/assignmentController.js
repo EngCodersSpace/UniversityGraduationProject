@@ -2,17 +2,11 @@
 const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
-const fs = require("fs");
-const fs = require('fs').promises;
-
+const fs = require('fs');
 const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
-const { Worker, MessageChannel } = require('worker_threads');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
-
-const { promisify } = require('util');
-const statAsync = promisify(fs.stat);
 
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
@@ -151,253 +145,55 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
   }
 };
 
-
-
 // download files of student_assignment-file
 exports.downloadFile = async (req, res) => {
   try {
-    // Fetch file metadata from the database
     const fileData = await student_assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
+    if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    // Resolve the file path
     const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const destinationDir = path.resolve(__dirname, '..', 'downloads');
+    const destination = path.join(destinationDir, path.basename(fileData.attachment));
 
-    // Validate file existence and permissions
-    await fs.access(filePath, fs.constants.R_OK);
-
-    // Create a communication channel
-    const statusChannel = new MessageChannel();
-
-    // Initialize the worker
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { 
-        filePath,
-        range: req.headers.range, // Pass the range header to the worker
-        port: statusChannel.port2 
-      },
-      transferList: [statusChannel.port2]
-    });
-
-    // Set response headers
-    res.setHeader('Content-Type', 'application/json');
-    res.write('{"status": "started", "message": "Download initiated"}');
-
-    // Handle worker messages
-    statusChannel.port1.on('message', (message) => {
-      if (message.status === 'progress') {
-        // Stream progress updates
-        res.write(`,\n"progress": ${message.percentage}`);
-      } else if (message.status === 'success') {
-        // Finalize response
-        res.end(`,\n"status": "completed", "path": "${message.filePath}"}]`);
-      } else if (message.status === 'error') {
-        // Handle worker errors
-        if (!res.headersSent) {
-          res.status(500).json({ 
-            status: "error",
-            message: "Download failed",
-            error: message.error 
-          });
-        }
-      }
-    });
-
-    // Handle worker errors
-    worker.on('error', (err) => {
-      if (!res.headersSent) {
-        res.status(500).json({ 
-          status: "error",
-          message: "Download failed",
-          error: err.message 
-        });
-      }
-    });
-
-    // Handle worker exit
-    worker.on('exit', (code) => {
-      if (code !== 0 && !res.headersSent) {
-        res.status(500).json({
-          status: "error",
-          message: `Worker stopped with exit code ${code}`
-        });
-      }
-    });
-
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ 
-        status: "error",
-        message: "Download failed",
-        error: error.message 
-      });
-    }
-  }
-};
-
-
-
-
-
-exports.downloadFile3 = async (req, res) => {
-  try {
-    const fileData = await student_assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
+    if (!fs.existsSync(destinationDir)) {
+      fs.mkdirSync(destinationDir, { recursive: true });
     }
 
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { filePath },
-    });
-    console.log(`\n \n worker find path ${filePath} \n \n` );
-    worker.on("message", (message) => {
-      if (message.status === "success") {
-        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
-        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
-      }
-    });
-    worker.on("error", (err) => {
-      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
-      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
-    });
-    
-    res.status(200).json({ message: "Download Finish " });
-  } catch (error) {
-    console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
+    const readStream = fs.createReadStream(filePath);
+    const writeStream = fs.createWriteStream(destination);
 
-exports.downloadFile1 = async (req, res) => {
-  try {
-    const fileData = await student_assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
+    readStream.pipe(writeStream);
 
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    const stat = fs.statSync(filePath);
-    const range = req.headers.range;
-
-    if (range) {
-      const parts = range.replace(/bytes=/, '').split('-');
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
-      const chunkSize = (end - start) + 1;
-
-      res.writeHead(206, {
-        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunkSize,
-        'Content-Type': 'application/octet-stream',
+    return new Promise((resolve, reject) => {
+      writeStream.on('finish', () => {
+        writeStream.close();
+        resolve(res.json({ 
+          message: 'Download completed successfully',
+          path: destination 
+        }));
       });
 
-      const stream = fs.createReadStream(filePath, { start, end });
-      stream.pipe(res);
-    } else {
-      res.writeHead(200, {
-        'Content-Length': stat.size,
-        'Content-Type': 'application/octet-stream',
+      writeStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'Write error',
+          details: err.message 
+        }));
       });
-      fs.createReadStream(filePath).pipe(res);
-    }
+
+      readStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'File read error',
+          details: err.message 
+        }));
+      });
+    });
 
   } catch (error) {
     console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
-
-exports.downloadFile2 = async (req, res) => {
-    try {
-      const fileData = await student_assignment_file.findByPk(req.query.id);
-      if (!fileData) {
-        return res.status(404).json({ message: "File not found in database." });
-      }
-  
-      const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-      const stats = await fs.promises.stat(filePath);
-
-      res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
-      res.setHeader('Content-Type', 'application/zip');
-      res.setHeader('Content-Length', stats.size);
-
-      const stream = fs.createReadStream(filePath);
-      stream.pipe(res);
-      
-      stream.on('error', (err) => {
-        if (!res.headersSent) res.status(500).send('Error streaming file');
-      });
-    } catch (err) {
-      res.status(500).json({ message: "Failed to start download.", error: err.message });
-    }
-};
-
-exports.downloadFile4 = async (req, res) => {
-  try {
-    const fileData = await student_assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-
-    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
-    const stat = await statAsync(filePath); 
-
-    const range = req.headers.range;
-    if (range) {
-      const parts = range.replace(/bytes=/, '').split('-');
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1;
-      
-      if (start >= stat.size || end >= stat.size) {
-        return res.status(416).header('Content-Range', `bytes */${stat.size}`).send();
-      }
-
-      const chunkSize = end - start + 1;
-      
-      res.writeHead(206, {
-        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunkSize,
-      });
-
-      const stream = fs.createReadStream(filePath, { start, end });
-      
-      stream.on('error', (err) => {
-        if (!res.headersSent) {
-          res.status(500).json({ message: "Stream error", error: err.message });
-        }
-      });
-      
-      stream.pipe(res);
-    } else {
-      res.writeHead(200, {
-        'Content-Length': stat.size,
-        'Content-Disposition': `attachment; filename="${path.basename(filePath)}"`
-      });
-
-      const stream = fs.createReadStream(filePath);
-      
-      stream.on('error', (err) => {
-        if (!res.headersSent) {
-          res.status(500).json({ message: "Stream error", error: err.message });
-        }
-      });
-      
-      stream.pipe(res);
-    }
-
-  } catch (error) {
-    if (!res.headersSent) {
-      res.status(500).json({ message: "Download failed", error: error.message });
-    }
-    console.error("Download error:", error);
+    res.status(500).json({ 
+      error: "Download failed",
+      details: error.message 
+    });
   }
 };
 
@@ -405,95 +201,53 @@ exports.downloadFile4 = async (req, res) => {
 exports.doctorDownloadFile = async (req, res) => {
   try {
     const fileData = await assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
+    if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { filePath },
-    });
-    console.log(`\n \n worker find path ${filePath} \n \n` );
-    worker.on("message", (message) => {
-      if (message.status === "success") {
-        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
-        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
-      }
-    });
-    worker.on("error", (err) => {
-      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
-      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
-    });
-    
-    res.status(200).json({ message: "Download started in the background." });
-  } catch (error) {
-    console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const destinationDir = path.resolve(__dirname, '..', 'downloads');
+    const destination = path.join(destinationDir, path.basename(fileData.attachment));
 
-exports.doctorDownloadFile1 = async (req, res) => {
-  try {
-    const fileData = await assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
+    if (!fs.existsSync(destinationDir)) {
+      fs.mkdirSync(destinationDir, { recursive: true });
     }
 
-    // Stream the file directly
-    res.download(filePath, (err) => {
-      if (err) {
-        if (!res.headersSent) {
-          res.status(500).json({ message: "Download failed", error: err.message });
-        }
-      }
-    });
-    
-  } catch (error) {
-    console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
-  }
-};
+    const readStream = fs.createReadStream(filePath);
+    const writeStream = fs.createWriteStream(destination);
 
-exports.doctorDownloadFile2 = async (req, res) => {
-  try {
-    const fileData = await assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= path.resolve(__dirname,'..',`storage/${fileData.attachment}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
+    readStream.pipe(writeStream);
 
-    const stats = await fs.promises.stat(filePath);
-
-      res.setHeader('Content-Disposition', 'attachment; filename="file.zip"');
-      res.setHeader('Content-Type', 'application/zip');
-      res.setHeader('Content-Length', stats.size);
-
-      const stream = fs.createReadStream(filePath);
-      stream.pipe(res);
-      
-      stream.on('error', (err) => {
-        if (!res.headersSent) res.status(500).send('Error streaming file');
+    return new Promise((resolve, reject) => {
+      writeStream.on('finish', () => {
+        writeStream.close();
+        resolve(res.json({ 
+          message: 'Download completed successfully',
+          path: destination 
+        }));
       });
-    } catch (err) {
-      res.status(500).json({ message: "Failed to start download.", error: err.message });
-    }
+
+      writeStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'Write error',
+          details: err.message 
+        }));
+      });
+
+      readStream.on('error', (err) => {
+        reject(res.status(500).json({ 
+          error: 'File read error',
+          details: err.message 
+        }));
+      });
+    });
+
+  } catch (error) {
+    console.error("Error during download:", error);
+    res.status(500).json({ 
+      error: "Download failed",
+      details: error.message 
+    });
+  }
 };
-
-
-
-
-
-
 
 // to checks if file duplicate or not
 exports.getFileDetails = async (req, res) => {
