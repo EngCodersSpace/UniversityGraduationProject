@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/days_table.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/result.dart';
@@ -137,6 +140,25 @@ class DashboardLectureTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   Timer? _debounce;
+
+  //Lecture popCard variables
+  Map<String, Subject>? subjects;
+  TableDays? tableTime;
+  RxInt selected = 3.obs;
+  RxString selectedDayName = "Sunday".obs;
+  Rx<String?> subjectId = Rx(null);
+  Rx<int?> doctorId = Rx(null);
+  TextEditingController timeController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController hallController = TextEditingController();
+  FocusNode nameFocus = FocusNode();
+  FocusNode timeFocus = FocusNode();
+  FocusNode durationFocus = FocusNode();
+  FocusNode entryYearFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  String mode = "Add";
+  int? selectedLecture;
+  bool submitting = false;
 
   @override
   void onInit() async {
@@ -394,11 +416,44 @@ class DashboardLectureTableController extends GetxController
     });
   }
 
-  @override
-  void addlecture() {}
+  Future<void> addlecture() async {
+    Result<Lecture> res = await LectureRepository.createLecture(
+      sectionId: selectedSection.value!,
+      levelId: selectedLevel.value!,
+      term: selectedTerm.value,
+      year: selectedOrder.value,
+      day: selectedDayName.value,
+      subjectId: subjectId.value!,
+      doctorId: doctorId.value!,
+      lectureTime: timeController.text,
+      lectureDuration: int.tryParse(durationController.text) ?? -999,
+      lectureRoom: hallController.text,
+    );
+
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      // selectedDay(selected.value)?[res.data!.id] = res.data!;
+      selected.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+  }
+
+  void popCardClear() {
+    timeController.dispose();
+    durationController.dispose();
+    hallController.dispose();
+    nameFocus.dispose();
+    timeFocus.dispose();
+    durationFocus.dispose();
+    entryYearFocus.dispose();
+    phoneFocus.dispose();
+  }
 
   @override
   void onClose() {
     searchController.dispose();
+    popCardClear();
   }
 }
