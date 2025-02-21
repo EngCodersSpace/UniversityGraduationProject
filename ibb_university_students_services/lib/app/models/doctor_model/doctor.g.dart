@@ -23,7 +23,7 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       email: fields[3] as String?,
       phones: (fields[6] as List?)?.cast<String>(),
       profileImage: fields[5] as String?,
-      roleId: fields[4] as int?,
+      role: fields[4] as Role?,
       section: fields[8] as Section?,
       status: fields[11] as String?,
       administrativePositionData: (fields[13] as Map?)?.cast<String, dynamic>(),
@@ -52,7 +52,7 @@ class DoctorAdapter extends TypeAdapter<Doctor> {
       ..writeByte(3)
       ..write(obj.email)
       ..writeByte(4)
-      ..write(obj.roleId)
+      ..write(obj.role)
       ..writeByte(5)
       ..write(obj.profileImage)
       ..writeByte(6)

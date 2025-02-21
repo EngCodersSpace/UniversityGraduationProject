@@ -15,10 +15,10 @@ class DoctorTableView extends GetView<DashboardDoctorTableController> {
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Doctors tabble"),
-            // HeaderOfViewComponent(tableName: "Doctors",
-            // controller: controller,
-            // ),
+            HeaderOfViewComponent(
+              tableName: "Doctors",
+              controller: controller,
+            ),
           ],
         ),
       ),

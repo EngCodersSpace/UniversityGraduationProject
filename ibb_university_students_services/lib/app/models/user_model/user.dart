@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import '../role_model/role.dart';
 import '../section_model/section.dart';
 // @HiveType(typeId: 0)
 abstract class User {
@@ -12,7 +13,7 @@ abstract class User {
   @HiveField(3)
   String? email;
   @HiveField(4)
-  int? roleId;
+  Role? role;
   @HiveField(5)
   String? profileImage;
   @HiveField(6)
@@ -31,7 +32,7 @@ abstract class User {
     this.nameData,
     this.dateOfBrith,
     this.email,
-    this.roleId,
+    this.role,
     this.profileImage,
     this.phones,
     this.collegeNameData,

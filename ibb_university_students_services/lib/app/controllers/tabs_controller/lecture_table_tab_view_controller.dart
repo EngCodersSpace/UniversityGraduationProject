@@ -262,7 +262,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 8) * 0.6,
+                  : (Get.width / 7) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style:
@@ -317,11 +317,6 @@ class LectureController extends GetxController {
       if (selectedYear.value == null) return;
       selectedLecture = data?["id"];
       Result<void> res = await LectureRepository.deleteLecture(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value!,
-          term: selectedTerm.value,
-          day: selectedDayName.value,
           id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
@@ -348,11 +343,6 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureRepository.changeLectureState(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value!,
-          term: selectedTerm.value,
-          day: selectedDayName.value,
           id: selectedLecture!,
           action: 'confirm');
       Navigator.of(Get.overlayContext!).pop();
@@ -367,11 +357,6 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureRepository.changeLectureState(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value!,
-          term: selectedTerm.value,
-          day: selectedDayName.value,
           id: selectedLecture!,
           action: 'cancel');
       Navigator.of(Get.overlayContext!).pop();
@@ -396,90 +381,95 @@ class LectureController extends GetxController {
   void submit() async {
     if (submitting) return;
     submitting = true;
-    Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
-      jsData["lecture_section_id"] = selectedSection.value;
-      jsData["lecture_level_id"] = selectedLevel.value;
-      jsData["year"] = selectedYear.value ?? "2024";
-      jsData["term"] = selectedTerm.value;
-      jsData["lecture_day"] = selectedDayName.value;
-      ((subjectId.value?.isNotEmpty ?? false) &&
-              subjectId.value != "Unknown".tr)
-          ? jsData["subject_id"] = subjectId.value
-          : null;
-      (doctorId.value != null) ? jsData["doctor_id"] = doctorId.value : null;
-      (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
-          ? jsData["lecture_time"] = DateTimeUtils.formatStringTime(
-              time: timeController.text,
-              format: TimeFormat.hhMmSs,
-              currentFormat: TimeFormat.hhMmA)
-          : null;
-      (durationController.text.isNotEmpty &&
-              durationController.text != "Unknown".tr)
-          ? jsData["lecture_duration"] =
-              int.tryParse(durationController.text) ?? 0
-          : null;
-      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
-          ? jsData["lecture_room"] = hallController.text
-          : null;
-    }
-    if (mode == "Add") {
-      Result<Lecture> res = await LectureRepository.createLecture(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value ?? "2024",
-          term: selectedTerm.value,
-          day: selectedDayName.value,
-          data: jsData);
-
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 201 && res.data != null) {
-        selectedDay(selected.value)?[res.data!.id] = res.data!;
-        selected.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
-    } else if (mode == "Edit") {
-      if (selectedLecture == null) return;
-      Result<Lecture> res = await LectureRepository.updateLecture(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value!,
-          term: selectedTerm.value,
-          day: selectedDayName.value,
-          data: jsData,
-          id: selectedLecture);
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data != null) {
-        selectedDay(selected.value)?[selectedLecture!] = res.data!;
-        selected.refresh();
-        showSnakeBar(message: "Edit successfully");
-      } else {
-        showSnakeBar(message: "Edit failed");
-      }
-    } else if (mode == "Replace") {
-      if (selectedLecture == null) return;
-      Result<Lecture> res = await LectureRepository.tempReplaceLecture(
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          year: selectedYear.value!,
-          term: selectedTerm.value,
-          day: selectedDayName.value,
-          data: jsData,
-          id: selectedLecture);
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data != null) {
-        selectedDay(selected.value)?.remove(selectedLecture);
-        selectedDay(selected.value)?[res.data!.id] = res.data!;
-        selected.refresh();
-        showSnakeBar(message: "Replace successfully");
-      } else {
-        showSnakeBar(message: "Replace failed");
+      switch (mode) {
+        case "Add":
+          await _submitAdd();
+          break;
+        case "Edit":
+          await _submitEdit();
+          break;
+        case "Replace":
+          await _submitReplace();
+          break;
       }
     }
     submitting = false;
     popCardClear();
+  }
+
+  Future<void> _submitAdd() async {
+    Result<Lecture> res = await LectureRepository.createLecture(
+      sectionId: selectedSection.value!,
+      levelId: selectedLevel.value!,
+      year: selectedYear.value ?? "2024",
+      term: selectedTerm.value,
+      day: selectedDayName.value,
+      subjectId: subjectId.value!,
+      doctorId: doctorId.value!,
+      lectureTime: timeController.text,
+      lectureDuration: int.tryParse(durationController.text) ?? -999,
+      lectureRoom: hallController.text,
+    );
+
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      selectedDay(selected.value)?[res.data!.id] = res.data!;
+      selected.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+  }
+
+  Future<void> _submitEdit() async {
+    if (selectedLecture == null) return;
+    Result<Lecture> res = await LectureRepository.updateLecture(
+        sectionId: selectedSection.value!,
+        levelId: selectedLevel.value!,
+        year: selectedYear.value ?? "2024",
+        term: selectedTerm.value,
+        day: selectedDayName.value,
+        subjectId: subjectId.value!,
+        doctorId: doctorId.value!,
+        lectureTime: DateTimeUtils.formatStringTime(
+            time: timeController.text,
+            format: TimeFormat.hhMmSs,
+            currentFormat: TimeFormat.hhMmA),
+        lectureDuration: int.tryParse(durationController.text) ?? -999,
+        lectureRoom: hallController.text,
+        id: selectedLecture);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 200 && res.data != null) {
+      selectedDay(selected.value)?[selectedLecture!] = res.data!;
+      selected.refresh();
+      showSnakeBar(message: "Edit successfully");
+    } else {
+      showSnakeBar(message: "Edit failed");
+    }
+  }
+
+  Future<void> _submitReplace() async {
+    if (selectedLecture == null) return;
+    Result<Lecture> res = await LectureRepository.tempReplaceLecture(
+        subjectId: subjectId.value!,
+        doctorId: doctorId.value!,
+        lectureTime: DateTimeUtils.formatStringTime(
+            time: timeController.text,
+            format: TimeFormat.hhMmSs,
+            currentFormat: TimeFormat.hhMmA),
+        lectureDuration: int.tryParse(durationController.text) ?? -999,
+        lectureRoom: hallController.text,
+        id: selectedLecture);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 200 && res.data != null) {
+      selectedDay(selected.value)?.remove(selectedLecture);
+      selectedDay(selected.value)?[res.data!.id] = res.data!;
+      selected.refresh();
+      showSnakeBar(message: "Replace successfully");
+    } else {
+      showSnakeBar(message: "Replace failed");
+    }
   }
 
   Future<void> getSubjects() async {
@@ -500,6 +490,13 @@ class LectureController extends GetxController {
   }
 
   void popCardClear() {
+    timeController.clear();
+    durationController.clear();
+    hallController.clear();
+  }
+
+  @override
+  void onClose() {
     timeController.dispose();
     durationController.dispose();
     hallController.dispose();
@@ -508,10 +505,5 @@ class LectureController extends GetxController {
     durationFocus.dispose();
     entryYearFocus.dispose();
     phoneFocus.dispose();
-  }
-
-  @override
-  void onClose() {
-    popCardClear();
   }
 }

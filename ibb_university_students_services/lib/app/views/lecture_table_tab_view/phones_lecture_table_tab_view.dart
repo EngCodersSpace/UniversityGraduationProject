@@ -138,95 +138,6 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                           SizedBox(
                             height: height * 0.004,
                           ),
-                          if (PermissionUtils.checkPermission(
-                              target: "Lectures", action: "accessOldTables")) ...[
-                            Row(
-                              children: [
-                                SizedBox(
-                                    width: ((Get.width - 16) / 7) * 3.9,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: CustomText(
-                                            "${"Year".tr}:",
-                                            textAlign: TextAlign.start,
-                                            style: AppTextStyles.secStyle(
-                                                textHeader: AppTextHeaders.h3Bold),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColors.inverseCardColor,
-                                            borderRadius:
-                                            BorderRadius.circular(24),
-                                          ),
-                                          width: (((Get.width - 16) / 7) * 4)*0.63,
-                                          child: Center(
-                                            child: Obx(
-                                                  () => DropdownButton(
-                                                items: controller.years,
-                                                onChanged:
-                                                controller.changeYear,
-                                                value: controller
-                                                    .selectedYear.value,
-                                                underline: const SizedBox(),
-                                                iconEnabledColor:
-                                                AppColors.mainCardColor,
-                                                dropdownColor:
-                                                AppColors.inverseCardColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: (((Get.width - 16) / 7) * 4) * 0.04,
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  width: ((Get.width - 16) / 7) * 0.1,
-                                ),
-                                SizedBox(
-                                    width: ((Get.width - 16) / 7) * 2.8,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: CustomText(
-                                            "${"Semester".tr}:",
-                                            textAlign: TextAlign.start,
-                                            style: AppTextStyles.secStyle(
-                                                textHeader: AppTextHeaders.h3Bold),
-                                          ),
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColors.inverseCardColor,
-                                            borderRadius:
-                                            BorderRadius.circular(24),
-                                          ),
-                                          width: (((Get.width - 16) / 7) * 2.5)*0.6,
-                                          child: Center(
-                                            child: Obx(
-                                                  () => DropdownButton(
-                                                items: controller.terms,
-                                                onChanged:
-                                                controller.changeTerm,
-                                                value: controller
-                                                    .selectedTerm.value,
-                                                underline: const SizedBox(),
-                                                iconEnabledColor:
-                                                AppColors.mainCardColor,
-                                                dropdownColor:
-                                                AppColors.inverseCardColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              ],
-                            ),
-                          ],
                           SizedBox(
                             width: width * 0.96,
                             height: height * 0.12,
@@ -323,7 +234,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                           CustomText(controller.selectedDayName.value.tr,
                               style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),),
                         if ((PermissionUtils.checkPermission(
-                            target: "Lectures", action: "add")))
+                            target: "Lectures", action: "write")))
                           CustomButton(
                             onPress: controller.addButtonClick,
                             text: "Add Lecture".tr,
