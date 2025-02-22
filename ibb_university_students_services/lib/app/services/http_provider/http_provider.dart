@@ -181,16 +181,16 @@ class HttpProvider {
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
-    required void Function(int, int)? onSendProgress,
+    required void Function(int, int)? onReceiveProgress,
     int? fileSize,
   }) async {
     try {
 
       cancelTokens[savePath.hashCode] = CancelToken();
-      final response = await _dio.post(
+      final response = await _dio.get(
         downloadUrl,
         // cancelToken: cancelTokens[file.path.hashCode],
-        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
       );
 
       return response;

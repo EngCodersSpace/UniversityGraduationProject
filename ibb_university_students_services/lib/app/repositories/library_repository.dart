@@ -15,9 +15,9 @@ import '../utils/internet_connection_cheker.dart';
 class LibraryRepository {
   static const int _fetchAllError = 621;
   static const int _fetchError = 622;
-  static const int _createError = 623;
-  static const int _updateError = 624;
-  static const int _deleteError = 625;
+  // static const int _createError = 623;
+  // static const int _updateError = 624;
+  // static const int _deleteError = 625;
 
   static Box<LibraryFilesCache>? _libraryFilesGroupsBox;
   static Box<LibraryFile>? _libraryFilesBox;

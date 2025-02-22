@@ -12,6 +12,8 @@ import '../../../styles/text_styles.dart';
 class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
   const AssignmentsAddFilesCard({super.key});
 
+
+
    get _data {
     if (UserRepository.currentUserType() == Doctor) {
       return controller.assignments?.value[controller.selectedAssignment]
@@ -141,7 +143,10 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
                                                                     if (_data?[i]
                                                                             .status
                                                                             ?.value ==
-                                                                        "Uploading") ...[
+                                                                        "Uploading" || _data?[i]
+                                                                        .status
+                                                                        ?.value ==
+                                                                        "Downloading") ...[
                                                                       const SizedBox(
                                                                         height:
                                                                             8,
@@ -179,8 +184,7 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
                                                                   .openFile(
                                                                       _data?[i]
                                                                           .path)
-                                                              : controller
-                                                                  .downloadAttachment();
+                                                              : (mode =="attachmentsFiles")?controller.downloadAssignmentFile(_data?[i]):controller.downloadStudentAssignmentFile(_data?[i]);
                                                         },
                                                         icon: Icon((_data?[i]
                                                                     .downloaded

@@ -40,7 +40,7 @@ class StudentAssignmentsFile {
       id: json['id'],
       originName: json['original_name'],
       studentAssignmentId: json["student_assignment_id"],
-      path: json["path"],
+      path: json["attachment"],
       status: RxString(status),
     );
   }

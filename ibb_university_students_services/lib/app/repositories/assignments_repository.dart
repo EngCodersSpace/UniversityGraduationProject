@@ -291,6 +291,93 @@ class AssignmentsRepository {
     }
   }
 
+  static Future<Result<Assignment>> updateAssignment(
+      {required int id,
+      required int sectionId,
+      required int levelId,
+      required String subjectId,
+      required String title,
+      required String assignmentDate,
+      required String assignmentsDueDate,
+      required List<Map<String, int>> sectionsAndLevels,
+      String year = ""}) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response =
+          await HttpProvider.put("update-assignment?assignment_id=$id", data: {
+        "subject_id": subjectId,
+        "title": title,
+        "assignment_due_day": "Sun",
+        "assignment_date": assignmentDate,
+        "assignments_due_date": assignmentsDueDate,
+        "sectionsAndLevels": sectionsAndLevels
+      });
+      if (response?.statusCode == 200) {
+        _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
+
+        return Result(
+            data: _assignmentsBox?.get(id),
+            hasError: true,
+            statusCode: response?.statusCode ?? _createError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _updateError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<void>> deleteAssignment({
+    required id,
+    String year = "",
+    bool hardFetch = false,
+    bool withCache = true,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response =
+          await HttpProvider.delete("delete-assignment?assignment_id=$id");
+      if (response?.statusCode == 200 && withCache) {
+        Assignment? assignment = _assignmentsBox?.get(id);
+        if (assignment != null) {
+          _assignmentsGroupsBox
+              ?.get(
+                  "${assignment.sectionId}_${assignment.levelId}_${year}_${assignment.subject?.id}_Assignments")
+              ?.data
+              .remove(id);
+        }
+        _assignmentsBox?.delete(id);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<int>> uploadAttachmentFiles({
     required AttachmentFile attachment,
     required int sectionId,
@@ -433,91 +520,53 @@ class AssignmentsRepository {
           statusCode: _createError, message: error.toString(), data: null);
     }
   }
-
-  static Future<Result<Assignment>> updateAssignment(
-      {required int id,
-      required int sectionId,
-      required int levelId,
-      required String subjectId,
-      required String title,
-      required String assignmentDate,
-      required String assignmentsDueDate,
-      required List<Map<String, int>> sectionsAndLevels,
-      String year = ""}) async {
-    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
-    late Response? response;
-    try {
-      response =
-          await HttpProvider.put("update-assignment?assignment_id=$id", data: {
-        "subject_id": subjectId,
-        "title": title,
-        "assignment_due_day": "Sun",
-        "assignment_date": assignmentDate,
-        "assignments_due_date": assignmentsDueDate,
-        "sectionsAndLevels": sectionsAndLevels
-      });
-      if (response?.statusCode == 200) {
-        _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
-
-        return Result(
-            data: _assignmentsBox?.get(id),
-            hasError: true,
-            statusCode: response?.statusCode ?? _createError,
-            message: response?.data["message"] ?? "error");
-      } else if (response?.statusCode == 403) {
-        await get_x.Get.dialog(PopUpAlertCard(
-            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-      }
-      return Result(
-          data: null,
-          hasError: true,
-          statusCode: response?.statusCode ?? _updateError,
-          message: response?.data["message"] ?? "error");
-    } catch (error) {
-      return Result(
-          hasError: true,
-          statusCode: _updateError,
-          message: error.toString(),
-          data: null);
-    }
-  }
-
-  static Future<Result<void>> deleteAssignment({
-    required id,
-    String year = "",
-    bool hardFetch = false,
-    bool withCache = true,
+  static Future<Result<int>> downloadStudentAssignmentsFiles({
+    required StudentAssignmentsFile file,
+    required int sectionId,
+    required int levelId,
   }) async {
-    get_x.Get.dialog(const PopUpLoadingCard(),
-        barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response =
-          await HttpProvider.delete("delete-assignment?assignment_id=$id");
-      if (response?.statusCode == 200 && withCache) {
-        Assignment? assignment = _assignmentsBox?.get(id);
-        if (assignment != null) {
-          _assignmentsGroupsBox
-              ?.get(
-                  "${assignment.sectionId}_${assignment.levelId}_${year}_${assignment.subject?.id}_Assignments")
-              ?.data
-              .remove(id);
-        }
-        _assignmentsBox?.delete(id);
+      file.progress = get_x.RxInt(0);
+      file.status?.value = "Downloading";
+      response = await HttpProvider.downloadFile(
+        downloadUrl:
+        "download-assignment-files?id=${file.id}",
+        savePath: "${FileUtils.baseFolderPath}/${file.path}",
+        onReceiveProgress: (sent, total) {
+          double progress = (sent / total) * 100;
+          NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              progress: progress.toInt(),
+              title: "Downloading",
+              message: " ${file.originName}");
+        },
+      );
+      if (response?.statusCode == 200) {
+        file.status?.value = "Uploaded";
+        await NotificationHandler.showProgressNotification(
+            uniqueId: file.id.hashCode,
+            title: "Successful Downloaded ",
+            message: file.originName);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }else {
+        file.status?.value = "Download Failed";
+        NotificationHandler.showProgressNotification(
+            uniqueId: file.id.hashCode,
+            title: "Failed Downloaded ",
+            message: file.originName);
+        showSnakeBar(message: "Downloading ${file.originName} Failed");
       }
       return Result(
+          data: file.id,
           hasError: false,
-          statusCode: response?.statusCode ?? _deleteError,
+          statusCode: response?.statusCode ?? _createError,
           message: response?.data["message"] ?? "error");
     } catch (error) {
       return Result(
-          hasError: true,
-          statusCode: _deleteError,
-          message: error.toString(),
-          data: null);
+          statusCode: _createError, message: error.toString(), data: null);
     }
   }
 
