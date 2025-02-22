@@ -1,11 +1,8 @@
 // ignore: implementation_imports
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
-import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 class DashboardDoctorTableController extends GetxController

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/days_table.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
-
+import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/add_and_update_lecture_table_card.dart';
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/lecture_model/lecture_model.dart';
@@ -156,7 +157,6 @@ class DashboardLectureTableController extends GetxController
   FocusNode durationFocus = FocusNode();
   FocusNode entryYearFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
-  String mode = "Add";
   int? selectedLecture;
   bool submitting = false;
 
@@ -406,6 +406,8 @@ class DashboardLectureTableController extends GetxController
   void import() {}
 
   String prevTxt = "";
+
+  get jsdata => null;
   @override
   void onSearch() {
     if (searchController.text == prevTxt) return;
@@ -416,12 +418,36 @@ class DashboardLectureTableController extends GetxController
     });
   }
 
+  Future<void> addClick() async {
+    // doctorId.value = 1000;
+    await getSubjects();
+    timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
+    Get.dialog(const PopUpAddAndUpdateLectureCard());
+  }
+
+  Future<void> getSubjects() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+      if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&
+          subjects?.values.first.instructors?.values.first != null) {
+        doctorId.value = subjects?.values.first.instructors?.values.first.id;
+      } else {
+        doctorId.value = null;
+      }
+    } else {
+      subjectId.value = null;
+    }
+  }
+
   Future<void> addlecture() async {
     Result<Lecture> res = await LectureRepository.createLecture(
       sectionId: selectedSection.value!,
       levelId: selectedLevel.value!,
       term: selectedTerm.value,
-      year: selectedOrder.value,
+      year: "",
       day: selectedDayName.value,
       subjectId: subjectId.value!,
       doctorId: doctorId.value!,
@@ -430,17 +456,28 @@ class DashboardLectureTableController extends GetxController
       lectureRoom: hallController.text,
     );
 
+    // ignore: unused_local_variable
+    Lecture? createLecture;
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 201 && res.data != null) {
-      // selectedDay(selected.value)?[res.data!.id] = res.data!;
-      selected.refresh();
+      createLecture = res.data;
       showSnakeBar(message: "Add successfully");
     } else {
       showSnakeBar(message: "Add failed");
     }
+    update(["DataTable"]);
   }
 
   void popCardClear() {
+    timeController.clear();
+    durationController.clear();
+    hallController.clear();
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    popCardClear();
     timeController.dispose();
     durationController.dispose();
     hallController.dispose();
@@ -449,11 +486,5 @@ class DashboardLectureTableController extends GetxController
     durationFocus.dispose();
     entryYearFocus.dispose();
     phoneFocus.dispose();
-  }
-
-  @override
-  void onClose() {
-    searchController.dispose();
-    popCardClear();
   }
 }
