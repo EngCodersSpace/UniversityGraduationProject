@@ -5,6 +5,8 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -41,39 +43,180 @@ class PopUpAddAndUpdateLectureCard
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          // CustomText("${controller.mode} Lecture",
-                          //     style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CustomText(
-                                "Section".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.002,
+                              Row(
+                                children: [
+                                  // Icon(
+                                  //   Icons.menu_book,
+                                  //   size: 40,
+                                  //   color: AppColors.inverseIconColor,
+                                  // ),
+                                  // const SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  CustomText("Section".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold)),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                ],
                               ),
                               Container(
-                                height: Get.height * 0.06,
                                 width: Get.width * 0.23,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
-                                  color: AppColors.inverseIconColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)),
                                 child: Center(
-                                  child: Obx(() => DropdownButton(
-                                        items: controller.sections,
-                                        onChanged: controller.changeSection,
-                                        value: controller.selectedSection.value,
+                                  child: Obx(() => DropdownButton<int?>(
+                                        value: controller.SectionId.value,
+                                        icon: Icon(Icons.arrow_drop_down_sharp,
+                                            color: AppColors.inverseCardColor),
                                         underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                        dropdownColor:
-                                            AppColors.inverseCardColor,
+                                        dropdownColor: AppColors.mainCardColor,
+                                        onChanged: (val) {
+                                          if (val == null) return;
+                                          controller.SectionId.value = val;
+                                        },
+                                        isExpanded: true,
+                                        menuWidth: Get.width * 0.3,
+                                        selectedItemBuilder: (_) {
+                                          List<Widget> items = [];
+                                          for (Section sectionI
+                                              in (controller.section.values)) {
+                                            items.add(DropdownMenuItem<int?>(
+                                              value: sectionI.id,
+                                              child: SizedBox(
+                                                  width: Get.width * 0.28,
+                                                  child: CustomText(
+                                                    sectionI.name ??
+                                                        "Unknown".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                    softWrap: false,
+                                                  )),
+                                            ));
+                                          }
+                                          return items;
+                                        },
+                                        items: [
+                                          for (Section sectionI in (controller
+                                              .section.values)) ...[
+                                            DropdownMenuItem<int?>(
+                                                value: sectionI.id,
+                                                child: Column(
+                                                  children: [
+                                                    CustomText(
+                                                      sectionI.name ??
+                                                          "Unknown",
+                                                      style: AppTextStyles
+                                                          .secStyle(
+                                                              textHeader:
+                                                                  AppTextHeaders
+                                                                      .h3Bold),
+                                                    ),
+                                                    // Divider(color: AppColors.highlightTextColor,)
+                                                  ],
+                                                )),
+                                          ]
+                                        ],
                                       )),
                                 ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  // Icon(
+                                  //   Icons.menu_book,
+                                  //   size: 40,
+                                  //   color: AppColors.inverseIconColor,
+                                  // ),
+                                  // const SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  CustomText("Level".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold)),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                ],
                               ),
+                              Container(
+                                width: Get.width * 0.23,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)),
+                                child: Center(
+                                  child: Obx(() => DropdownButton<int?>(
+                                        value: controller.LevelId.value,
+                                        icon: Icon(Icons.arrow_drop_down_sharp,
+                                            color: AppColors.inverseCardColor),
+                                        underline: const SizedBox(),
+                                        dropdownColor: AppColors.mainCardColor,
+                                        onChanged: (val) {
+                                          if (val == null) return;
+                                          controller.LevelId.value = val;
+                                        },
+                                        isExpanded: true,
+                                        menuWidth: Get.width * 0.3,
+                                        selectedItemBuilder: (_) {
+                                          List<Widget> items = [];
+                                          for (Level levelI
+                                              in (controller.level ?? [])) {
+                                            items.add(DropdownMenuItem<int?>(
+                                              value: levelI.id,
+                                              child: SizedBox(
+                                                  width: Get.width * 0.28,
+                                                  child: CustomText(
+                                                    levelI.name ?? "Unknown".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                    softWrap: false,
+                                                  )),
+                                            ));
+                                          }
+                                          return items;
+                                        },
+                                        items: [
+                                          for (Level levelI
+                                              in (controller.level ?? [])) ...[
+                                            DropdownMenuItem<int?>(
+                                                value: levelI.id,
+                                                child: Column(
+                                                  children: [
+                                                    CustomText(
+                                                      levelI.name ?? "Unknown",
+                                                      style: AppTextStyles
+                                                          .secStyle(
+                                                              textHeader:
+                                                                  AppTextHeaders
+                                                                      .h3Bold),
+                                                    ),
+                                                    // Divider(color: AppColors.highlightTextColor,)
+                                                  ],
+                                                )),
+                                          ]
+                                        ],
+                                      )),
+                                ),
+                              )
                             ],
                           ),
                           Row(
@@ -88,55 +231,22 @@ class PopUpAddAndUpdateLectureCard
                                 width: Get.width * 0.002,
                               ),
                               Container(
-                                height: Get.height * 0.06,
+                                // height: Get.height * 0.06,
                                 width: Get.width * 0.23,
                                 decoration: BoxDecoration(
-                                  color: AppColors.inverseIconColor,
+                                  color: AppColors.mainIconColor,
                                   borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(),
                                 ),
                                 child: Center(
                                   child: Obx(() => DropdownButton(
-                                        items: controller.term,
-                                        onChanged: controller.changeTerm,
-                                        value: controller.selectedTerm.value,
+                                        items: controller.terms,
+                                        onChanged: controller.changeAddTerm,
+                                        value: controller.TermId.value,
                                         underline: const SizedBox(),
                                         iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                        dropdownColor:
                                             AppColors.inverseCardColor,
-                                      )),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(
-                                "Level".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.002,
-                              ),
-                              Container(
-                                height: Get.height * 0.06,
-                                width: Get.width * 0.23,
-                                decoration: BoxDecoration(
-                                  color: AppColors.inverseIconColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: Center(
-                                  child: Obx(() => DropdownButton(
-                                        items: controller.levels,
-                                        onChanged: controller.changeLevel,
-                                        value: controller.selectedLevel.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                        dropdownColor:
-                                            AppColors.inverseCardColor,
+                                        dropdownColor: AppColors.mainCardColor,
                                       )),
                                 ),
                               ),
@@ -366,7 +476,6 @@ class PopUpAddAndUpdateLectureCard
                               ),
                             ],
                           ),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

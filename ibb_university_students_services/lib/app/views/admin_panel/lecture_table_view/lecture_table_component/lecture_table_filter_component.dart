@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/add_and_update_lecture_table_card.dart';
-
 // import '../../../../components/custom_text_v2.dart';
 import '../../../../styles/app_colors.dart';
 // import '../../../../styles/text_styles.dart';

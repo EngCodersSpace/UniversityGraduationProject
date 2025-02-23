@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/models/helper_models/days_table.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/add_and_update_lecture_table_card.dart';
 import '../../components/custom_text_v2.dart';
@@ -144,11 +144,14 @@ class DashboardLectureTableController extends GetxController
 
   //Lecture popCard variables
   Map<String, Subject>? subjects;
-  TableDays? tableTime;
-  RxInt selected = 3.obs;
+  Map<int, Section> section = <int, Section>{}.obs;
+  List<Level>? level;
   RxString selectedDayName = "Sunday".obs;
   Rx<String?> subjectId = Rx(null);
   Rx<int?> doctorId = Rx(null);
+  Rx<int?> SectionId = Rx(null);
+  Rx<int?> LevelId = Rx(null);
+  RxString TermId = "Term 1".obs;
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   TextEditingController hallController = TextEditingController();
@@ -159,6 +162,38 @@ class DashboardLectureTableController extends GetxController
   FocusNode phoneFocus = FocusNode();
   int? selectedLecture;
   bool submitting = false;
+  List<DropdownMenuItem<String>> terms = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "1st",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "2ec",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+  ];
 
   @override
   void onInit() async {
@@ -408,6 +443,7 @@ class DashboardLectureTableController extends GetxController
   String prevTxt = "";
 
   get jsdata => null;
+
   @override
   void onSearch() {
     if (searchController.text == prevTxt) return;
@@ -419,10 +455,16 @@ class DashboardLectureTableController extends GetxController
   }
 
   Future<void> addClick() async {
-    // doctorId.value = 1000;
+    await getSection();
+    await getLevel();
     await getSubjects();
     timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
     Get.dialog(const PopUpAddAndUpdateLectureCard());
+  }
+
+  void changeAddTerm(String? val) async {
+    if (val == null) return;
+    TermId.value = val;
   }
 
   Future<void> getSubjects() async {
@@ -442,11 +484,30 @@ class DashboardLectureTableController extends GetxController
     }
   }
 
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels(hardFetch: false)
+        .then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      LevelId = RxInt(level?.first.id ?? 0);
+    } else {
+      LevelId.value = null;
+    }
+  }
+
   Future<void> addlecture() async {
     Result<Lecture> res = await LectureRepository.createLecture(
-      sectionId: selectedSection.value!,
-      levelId: selectedLevel.value!,
-      term: selectedTerm.value,
+      sectionId: SectionId.value!,
+      levelId: LevelId.value!,
+      term: TermId.value,
       year: "",
       day: selectedDayName.value,
       subjectId: subjectId.value!,
