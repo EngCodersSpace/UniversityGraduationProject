@@ -106,47 +106,26 @@ exports.uploadFile = async (req, res) => {
 
 exports.downloadFile = async (req, res) => {
   try {
-
     const fileData = await book.findByPk(req.query.id);
-    if (!fileData) return res.status(404).json({ error: "File not found" });
-
-    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
-    const destinationDir = path.resolve(__dirname, '..', 'downloads');
-    const destination = path.join(destinationDir, path.basename(fileData.attachment));
-
-    if (!fs.existsSync(destinationDir)) {
-      fs.mkdirSync(destinationDir, { recursive: true });
+    if (!fileData) {
+      return res.status(404).json({ error: "File not found" });
     }
 
+    const filePath = path.resolve(__dirname, '..', `${fileData.file_path}`);
+
+    // Set headers to instruct the browser to download the file
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+
+    // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);
-    const writeStream = fs.createWriteStream(destination);
+    readStream.pipe(res);
 
-    readStream.pipe(writeStream);
-
-    return new Promise((resolve, reject) => {
-      writeStream.on('finish', () => {
-        writeStream.close();
-        resolve(res.json({ 
-          message: 'Download completed successfully',
-          path: destination 
-        }));
-      });
-
-      writeStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'Write error',
-          details: err.message 
-        }));
-      });
-
-      readStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'File read error',
-          details: err.message 
-        }));
-      });
+    readStream.on('error', (err) => {
+      console.error("Error during streaming:", err);
+      res.status(500).end('Error reading file.');
     });
-
+    
   } catch (error) {
     console.error("Error during download:", error);
     res.status(500).json({ 
@@ -161,50 +140,42 @@ exports.streamBooks = async (req, res) => {
   try {
     const { section_id, level_id, category } = req.query;
 
-    // Build the where clause for filtering
+    // Build the where clause dynamically
     const whereClause = {};
     if (section_id) whereClause.section_id = section_id;
     if (level_id) whereClause.level_id = level_id;
     if (category) whereClause.category = category;
 
     // Fetch books from the database
-    const books = await book.findAll({
-      where: whereClause,
-    });
+    const books = await book.findAll({ where: whereClause });
 
     if (!books.length) {
       return res.status(404).json({ message: 'No books found for the specified criteria.' });
     }
 
     // Set headers for streaming JSON
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.setHeader('Transfer-Encoding', 'chunked');
 
-    let index = 0;
-    const chunkSize = 5; // Number of books per chunk
+    for (const book of books) {
+      // Convert each book to JSON and add a delimiter
+      const jsonChunk = JSON.stringify(book) + "\n---\n";
+      res.write(jsonChunk);
+      res.flush?.();
 
-    res.write('['); // Start JSON array
+      // Simulate streaming effect
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
 
-    const interval = setInterval(() => {
-      if (index >= books.length) {
-        res.write(']'); // Close JSON array
-        res.end();
-        clearInterval(interval);
-        return;
-      }
+    res.end();
 
-      const chunk = books.slice(index, index + chunkSize);
-      index += chunkSize;
-
-      res.write(JSON.stringify(chunk)); // Send JSON chunk
-
-      if (index < books.length) {
-        res.write(','); // Add comma between chunks
-      }
-    }, 1000); // Send a chunk every second
   } catch (error) {
     console.error('Error streaming books:', error.message);
-    res.status(500).json({ message: 'Internal server error', error: error.message });
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+    } else {
+      res.end();
+    }
   }
 };
 

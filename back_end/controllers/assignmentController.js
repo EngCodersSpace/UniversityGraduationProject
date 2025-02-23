@@ -151,41 +151,19 @@ exports.downloadFile = async (req, res) => {
     const fileData = await student_assignment_file.findByPk(req.query.id);
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
-    const destinationDir = path.resolve(__dirname, '..', 'downloads');
-    const destination = path.join(destinationDir, path.basename(fileData.attachment));
+    const filePath = path.resolve(__dirname, '..', `${fileData.attachment}`);
 
-    if (!fs.existsSync(destinationDir)) {
-      fs.mkdirSync(destinationDir, { recursive: true });
-    }
+    // Set headers to instruct the browser to download the file
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
 
+    // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);
-    const writeStream = fs.createWriteStream(destination);
+    readStream.pipe(res);
 
-    readStream.pipe(writeStream);
-
-    return new Promise((resolve, reject) => {
-      writeStream.on('finish', () => {
-        writeStream.close();
-        resolve(res.json({ 
-          message: 'Download completed successfully',
-          path: destination 
-        }));
-      });
-
-      writeStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'Write error',
-          details: err.message 
-        }));
-      });
-
-      readStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'File read error',
-          details: err.message 
-        }));
-      });
+    readStream.on('error', (err) => {
+      console.error("Error during streaming:", err);
+      res.status(500).end('Error reading file.');
     });
 
   } catch (error) {
@@ -203,41 +181,19 @@ exports.doctorDownloadFile = async (req, res) => {
     const fileData = await assignment_file.findByPk(req.query.id);
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
-    const destinationDir = path.resolve(__dirname, '..', 'downloads');
-    const destination = path.join(destinationDir, path.basename(fileData.attachment));
+    const filePath = path.resolve(__dirname, '..', `${fileData.attachment}`);
 
-    if (!fs.existsSync(destinationDir)) {
-      fs.mkdirSync(destinationDir, { recursive: true });
-    }
+    // Set headers to instruct the browser to download the file
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
 
+    // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);
-    const writeStream = fs.createWriteStream(destination);
+    readStream.pipe(res);
 
-    readStream.pipe(writeStream);
-
-    return new Promise((resolve, reject) => {
-      writeStream.on('finish', () => {
-        writeStream.close();
-        resolve(res.json({ 
-          message: 'Download completed successfully',
-          path: destination 
-        }));
-      });
-
-      writeStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'Write error',
-          details: err.message 
-        }));
-      });
-
-      readStream.on('error', (err) => {
-        reject(res.status(500).json({ 
-          error: 'File read error',
-          details: err.message 
-        }));
-      });
+    readStream.on('error', (err) => {
+      console.error("Error during streaming:", err);
+      res.status(500).end('Error reading file.');
     });
 
   } catch (error) {
