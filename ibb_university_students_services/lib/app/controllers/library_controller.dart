@@ -55,7 +55,7 @@ class LibraryController extends GetxController
     const ExamFormsTab(),
   ]);
   List<String> categories = [
-    "Lectures",
+    "Lecture",
     "Reference",
     "Exams Forms",
   ];
@@ -144,6 +144,7 @@ class LibraryController extends GetxController
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     sections = await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? {});
+    sections[-1] = Section(id: -1,nameData: {"en":"All"});
   }
 
   Future<void> initLevelDropdownMenuLists() async {
@@ -164,6 +165,18 @@ class LibraryController extends GetxController
             )),
       );
     }
+    levels.add(
+      DropdownMenuItem<int>(
+          value: -1,
+          child: SizedBox(
+            width: (Get.width * 0.5) * 0.75,
+            child: CustomText(
+              "All",
+              style:
+              AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+            ),
+          )),
+    );
     if (levelsData.isNotEmpty) {
       selectedLevel.value = levelsData.first.id;
     }

@@ -39,10 +39,11 @@ class BookContainer extends GetView<LibraryController> {
             ),
             ConstrainedBox(
               constraints: BoxConstraints(
-                minWidth: 10
+                minWidth: 10,
               ),
               child: CustomText(
                 book.title ?? "Unknown",
+                maxLines: 2,
                 style: AppTextStyles.mainStyle(
                     textHeader: AppTextHeaders.h3Normal),
               ),

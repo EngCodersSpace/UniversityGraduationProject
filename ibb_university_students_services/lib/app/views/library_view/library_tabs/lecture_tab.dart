@@ -20,78 +20,84 @@ class LecturesTab extends GetView<LibraryController> {
         ),
         height: Get.height * 0.74,
         child: Obx(
-              () => (controller.loadingState.value)
+          () => (controller.loadingState.value)
               ? Center(
-            child: CircularProgressIndicator(
-              color: AppColors.mainCardColor,
-            ),
-          )
+                  child: CircularProgressIndicator(
+                    color: AppColors.mainCardColor,
+                  ),
+                )
               : PageView(
-                physics: AlwaysScrollableScrollPhysics(),
-                          controller: controller.booksPagesController,
-                          children: [
-              for (int p = 0; p < controller.books.length; p += 16)
-                RefreshIndicator(
-                  onRefresh:() async => controller.refresh(),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        if (controller.books.isEmpty) ...[
-                          SizedBox(
-                            height: Get.height*0.3,
-                          ),
-                          CustomText(
-                            controller.fieldMessage.value,
-                            style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h2Bold),
-                          ),
-                          IconButton(
-                              onPressed: () async =>
-                                  controller.refresh(),
-                              icon:
-                              Icon(Icons.refresh,color: AppColors.inverseCardColor,))
-                        ],
-                        SizedBox(
-                          height: 16,
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.70,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  controller: controller.booksPagesController,
+                  children: [
+                    for (int p = 0; p < controller.books.length; p += 12)
+                      RefreshIndicator(
+                        onRefresh: () async => controller.refresh(),
+                        child: SingleChildScrollView(
+                          physics: AlwaysScrollableScrollPhysics(),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              for (int i = p;
-                              (i < controller.books.length) && (i < p + 16);
-                              i += 3) ...[
+                              if (controller.books.isEmpty) ...[
                                 SizedBox(
-                                  height: (Get.height * 0.70) / 4,
-                                  child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.end,
-                                      children: [
-                                        for (int j = i;
-                                        (j < controller.books.length) &&
-                                            (j < i + 3);
-                                        j++)
+                                  height: Get.height * 0.3,
+                                ),
+                                CustomText(
+                                  controller.fieldMessage.value,
+                                  style: AppTextStyles.mainStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
+                                ),
+                                IconButton(
+                                    onPressed: () async => controller.refresh(),
+                                    icon: Icon(
+                                      Icons.refresh,
+                                      color: AppColors.inverseCardColor,
+                                    ))
+                              ],
+                              SizedBox(
+                                height: 24,
+                              ),
+                              SizedBox(
+                                height: Get.height * 0.70,
+                                child: Wrap(
+                                    spacing: Get.width * 0.03,
+                                    runSpacing: Get.height * 0.045,
+                                    children: [
+                                      for (int i = p;
+                                          (i < controller.books.length) &&
+                                              (i < p + 12);
+                                          i++)
+                                        if (controller.books.values
+                                                    .toList()[i]
+                                                    .category ==
+                                                controller.categories[0] &&
+                                            (controller.books.values
+                                                        .toList()[i]
+                                                        .sectionId ==
+                                                    controller
+                                                        .selectedDepartment
+                                                        .value ||
+                                                controller.selectedDepartment.value ==
+                                                    -1) &&
+                                            (controller.books.values
+                                                        .toList()[i]
+                                                        .levelId ==
+                                                    controller.selectedLevel.value ||
+                                                controller.selectedLevel.value == -1)) ...[
                                           Obx(
-                                                () => BookContainer(
-                                              book: controller.books.values.toList()[j],
+                                            () => BookContainer(
+                                              book: controller.books.values
+                                                  .toList()[i],
                                             ),
                                           )
-                                      ]),
-                                ),
-                              ],
+                                        ]
+                                    ]),
+                              ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                  ],
                 ),
-                          ],
-                        ),
         ));
   }
 }

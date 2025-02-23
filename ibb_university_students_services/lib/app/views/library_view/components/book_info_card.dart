@@ -30,7 +30,6 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                       border: Border.all(
                           color: AppColors.inverseCardColor, width: 4),
                       borderRadius: BorderRadius.circular(32)),
-                  // height: Get.height * 0.4,
                   width: Get.width,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -77,7 +76,8 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                         ),
                         Center(
                           child: SizedBox(
-                              height: (Get.height ) * 0.35,
+                              height: (Get.height ) * 0.3,
+                              width: (Get.height ) * 0.25,
                               child: CachedNetworkImage(
                                 imageUrl:
                                 controller.selectedBook?.displayImage ??
@@ -90,16 +90,17 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                               )),
                         ),
                         SizedBox(height: 32,),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(width: 8,),
-                            OverflowBox(
-                              fit: OverflowBoxFit.deferToChild,
-                              maxWidth: Get.width * 0.82,
+                        SizedBox(width: 8,),
+                        OverflowBox(
+                          fit: OverflowBoxFit.deferToChild,
+                          maxWidth: Get.width * 0.82,
+                          maxHeight: Get.height *0.24,
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            trackVisibility: true,
+                            radius: Radius.circular(24),
+                            child: SingleChildScrollView(
                               child: Column(
-                                mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -171,6 +172,66 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                                   SizedBox(height: 8,),
                                   Row(
                                     mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Edition :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                              AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            controller.selectedBook?.edition ?? "Unknown".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Category :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                              AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            controller.selectedBook?.category ?? "Unknown".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Subject :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                              AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            controller.selectedBook?.subject?.subjectName ?? "Unknown".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
                                         MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -188,10 +249,30 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(height: 8,),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText("Added By :",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                              AppTextHeaders.h3Normal)),
+                                      Expanded(
+                                        child: CustomText(
+                                            "${controller.selectedBook?.addedBy ?? "Unknown".tr}",
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Normal)),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                            )
-                          ],
+                            ),
+                          ),
                         ),
                         const SizedBox(
                           height: 32,
@@ -201,20 +282,18 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                             const SizedBox(
                               height: 8,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                CustomButton(
-                                  text: "Download",
-                                  onPress: () {},
-                                  size: const Size(120, 40),
-                                ),
-                                CustomButton(
-                                  text: "About",
-                                  onPress: () {},
-                                  size: const Size(120, 40),
-                                ),
-                              ],
+                            CustomButton(
+                              text: "Download",
+                              onPress: () {},
+                              // size: const Size(120, 40),
+                            ),
+                            CustomButton(
+                              text: "Delete From Disk",
+                              onPress: () {},
+                            ),
+                            CustomButton(
+                              text: "Delete From Server",
+                              onPress: () {},
                             ),
                           ],
                         )

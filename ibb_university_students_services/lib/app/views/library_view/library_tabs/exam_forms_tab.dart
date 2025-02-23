@@ -13,119 +13,92 @@ class ExamFormsTab extends GetView<LibraryController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage(
-                "assets/images/library/istockphoto-867895848-612x612.jpg"),
-            fit: BoxFit.fill),
-      ),
-      height: Get.height * 0.74,
-      child: Obx(() => (controller.loadingState.value)
-          ? Center(
-              child: CircularProgressIndicator(
-                color: AppColors.mainCardColor,
-              ),
-            )
-          : PageView(
-              controller: controller.booksPagesController,
-              children: [
-
-                if (controller.books.isEmpty) ...[
-                  SizedBox(
-                    height: Get.height * 0.2,
-                  ),
-                  Center(
-                      child: CustomText(
-                        controller.fieldMessage.value,
-                        style: AppTextStyles.secStyle(
-                            textHeader: AppTextHeaders.h2Bold),
-                      )),
-                  IconButton(
-                      onPressed: () async =>
-                          controller.refresh(),
-                      icon: const Icon(Icons.refresh))
-                ],
-                for (int p = 0; p < controller.books.length; p += 16)
-                  Column(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(
+                  "assets/images/library/istockphoto-867895848-612x612.jpg"),
+              fit: BoxFit.fill),
+        ),
+        height: Get.height * 0.74,
+        child: Obx(
+              () => (controller.loadingState.value)
+              ? Center(
+            child: CircularProgressIndicator(
+              color: AppColors.mainCardColor,
+            ),
+          )
+              : PageView(
+            physics: AlwaysScrollableScrollPhysics(),
+            controller: controller.booksPagesController,
+            children: [
+              for (int p = 0; p < controller.books.length; p += 12)
+                RefreshIndicator(
+                  onRefresh: () async => controller.refresh(),
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        if (controller.books.isEmpty) ...[
                           SizedBox(
-                            height: (Get.height * 0.74) * 0.04,
+                            height: Get.height * 0.3,
                           ),
-                          for (int i = p;
-                              (i < controller.books.length) && (i < p + 16);
-                              i += 4) ...[
-                            SizedBox(
-                              height: (Get.height * 0.74) / 5,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    for (int j = i;
-                                        (j < controller.books.length) &&
-                                            (j < i + 4);
-                                        j++)
-                                      Obx(
-                                        () => BookContainer(
-                                          book: controller.books.values.toList()[j],
-                                        ),
-                                      )
-                                  ]),
-                            ),
-                            SizedBox(
-                              height: (Get.height * 0.68) / 26,
-                            )
-                          ],
+                          CustomText(
+                            controller.fieldMessage.value,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h2Bold),
+                          ),
+                          IconButton(
+                              onPressed: () async => controller.refresh(),
+                              icon: Icon(
+                                Icons.refresh,
+                                color: AppColors.inverseCardColor,
+                              ))
                         ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(
-                                    "assets/images/library/istockphoto-867895848-612x612_bottom.jpg"),
-                                fit: BoxFit.fill),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  controller.booksPagesController.previousPage(
-                                      duration:
-                                          const Duration(milliseconds: 400),
-                                      curve: Curves.ease);
-                                },
-                                icon: const Icon(Icons.arrow_back_rounded),
-                                color: AppColors.backColor,
-                                iconSize: 40,
-                              ),
-                              CustomText(
-                                "${(p ~/ 16) + 1}/${p + 1}",
-                                style: AppTextStyles.mainStyle(
-                                    textHeader: AppTextHeaders.h1Bold),
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    controller.booksPagesController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 400),
-                                        curve: Curves.ease);
-                                  },
-                                  icon: const Icon(Icons.arrow_forward_rounded),
-                                  color: AppColors.backColor,
-                                  iconSize: 40)
-                            ],
-                          ),
+                        SizedBox(
+                          height: 24,
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: Get.height * 0.70,
+                          child: Wrap(
+                              spacing: Get.width * 0.03,
+                              runSpacing: Get.height * 0.045,
+                              children: [
+                                for (int i = p;
+                                (i < controller.books.length) &&
+                                    (i < p + 12);
+                                i++)
+                                  if (controller.books.values
+                                      .toList()[i]
+                                      .category ==
+                                      controller.categories[2] &&
+                                      (controller.books.values
+                                          .toList()[i]
+                                          .sectionId ==
+                                          controller
+                                              .selectedDepartment
+                                              .value ||
+                                          controller.selectedDepartment.value ==
+                                              -1) &&
+                                      (controller.books.values
+                                          .toList()[i]
+                                          .levelId ==
+                                          controller.selectedLevel.value ||
+                                          controller.selectedLevel.value == -1)) ...[
+                                    Obx(
+                                          () => BookContainer(
+                                        book: controller.books.values
+                                            .toList()[i],
+                                      ),
+                                    )
+                                  ]
+                              ]),
+                        ),
+                      ],
+                    ),
                   ),
-              ],
-            )),
-    );
+                ),
+            ],
+          ),
+        ));
   }
 }

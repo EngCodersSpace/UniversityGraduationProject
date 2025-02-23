@@ -55,8 +55,18 @@ class LibraryRepository {
     LibraryFilesCache? cachedLibrary = _libraryFilesGroupsBox
         ?.get("${sectionId}_${levelId}_${category}_Library");
 
-    // You may want to consider implementing caching logic here.
-    // For now, we are skipping it to focus on the streaming part.
+    if ((cachedLibrary?.data.isNotEmpty??false ) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
+      for(int fileId in cachedLibrary?.data??[]){
+        Result res = await fetchLibraryFile(id: fileId);
+        if(res.statusCode==200 && res.data!=null){
+        destination[res.data.id] = res.data!;
+        }
+      }
+      return Result(
+          hasError: false,
+          statusCode: 200);
+    }
 
     try {
       Response? response = await HttpProvider.get(
@@ -74,36 +84,37 @@ class LibraryRepository {
 
       StringBuffer buffer = StringBuffer();
 
-      // **Await the stream**
       await for (List<int> chunk in response?.data!.stream) {
         buffer.write(utf8.decode(chunk, allowMalformed: true));
 
-        // Process complete JSON objects safely
-        List<String> parts = buffer.toString().split('],');
+        // Process all complete JSON objects
+        List<String> parts = buffer.toString().split("\n---\n");
+
         for (int i = 0; i < parts.length - 1; i++) {
-          String jsonChunk = parts[i] + ']';
+          String jsonChunk = parts[i].trim(); // Clean up whitespace
 
-          try {
-            final List<dynamic> books = jsonDecode(jsonChunk);
+          if (jsonChunk.isNotEmpty) {
+            try {
+              final Map<String, dynamic> jsLibrary = jsonDecode(jsonChunk);
 
-            for (var jsLibrary in books) {
               Subject? subject = await SubjectRepository.fetchSubject(
                   id: jsLibrary["subject_id"])
                   .then((e) => e.data);
-              LibraryFile libraryFile =
-              LibraryFile.fromJson(jsLibrary, subject: subject);
+
+              LibraryFile libraryFile = LibraryFile.fromJson(jsLibrary, subject: subject);
               destination[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
+            } catch (e) {
+              print("Error parsing JSON chunk: $e. Chunk: $jsonChunk");
             }
-          } catch (e) {
-            // Log the specific chunk causing the error
-            print("Error parsing JSON chunk: $e. Chunk: ${parts[i]}");
           }
         }
 
-        buffer.clear(); // Discard the parsed parts to prevent memory issues
-        buffer.write(parts.last); // Retain the remaining, unfinished data
+        // Keep the last part (which may be incomplete) in the buffer
+        buffer.clear();
+        buffer.write(parts.last);
       }
+
 
       // Store the final cache
       LibraryFilesCache cachedLibrary = LibraryFilesCache(
