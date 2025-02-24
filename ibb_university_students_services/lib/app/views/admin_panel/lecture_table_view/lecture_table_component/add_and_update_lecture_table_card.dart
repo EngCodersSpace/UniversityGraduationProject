@@ -255,6 +255,40 @@ class PopUpAddAndUpdateLectureCard
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              CustomText(
+                                "Days".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              SizedBox(
+                                width: Get.width * 0.002,
+                              ),
+                              Container(
+                                // height: Get.height * 0.06,
+                                width: Get.width * 0.23,
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainIconColor,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(),
+                                ),
+                                child: Center(
+                                  child: Obx(() => DropdownButton(
+                                        items: controller.days,
+                                        menuWidth: Get.width * 0.2,
+                                        onChanged: controller.changeAddDay,
+                                        value: controller.selectedDayName.value,
+                                        underline: const SizedBox(),
+                                        iconEnabledColor:
+                                            AppColors.inverseCardColor,
+                                        dropdownColor: AppColors.mainCardColor,
+                                      )),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                               Row(
                                 children: [
                                   // Icon(

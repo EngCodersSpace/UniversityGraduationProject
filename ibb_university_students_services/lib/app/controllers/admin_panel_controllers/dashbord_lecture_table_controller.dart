@@ -35,7 +35,7 @@ class DashboardLectureTableController extends GetxController
   RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "Term 1".obs;
+  RxString selectedTerm = "".obs;
   RxString selectedOrder = "lecture_time".obs;
   RxString selectedSort = "DESC".obs;
   List<DropdownMenuItem<int>> sections = [];
@@ -151,7 +151,7 @@ class DashboardLectureTableController extends GetxController
   Rx<int?> doctorId = Rx(null);
   Rx<int?> SectionId = Rx(null);
   Rx<int?> LevelId = Rx(null);
-  RxString TermId = "Term 1".obs;
+  RxString TermId = "".obs;
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   TextEditingController hallController = TextEditingController();
@@ -160,7 +160,6 @@ class DashboardLectureTableController extends GetxController
   FocusNode durationFocus = FocusNode();
   FocusNode entryYearFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
-  int? selectedLecture;
   bool submitting = false;
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(
@@ -189,6 +188,69 @@ class DashboardLectureTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "2ec",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+  ];
+
+  List<DropdownMenuItem<String>> days = [
+    DropdownMenuItem<String>(
+        value: "Saturday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Saturday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Sunday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Sunday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Monday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Monday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Tuseday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Tuseday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Wednesday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Wednesday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Thursday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Thursday",
               style: AppTextStyles.secStyle(
                 textHeader: AppTextHeaders.h3Bold,
               ),
@@ -465,6 +527,11 @@ class DashboardLectureTableController extends GetxController
   void changeAddTerm(String? val) async {
     if (val == null) return;
     TermId.value = val;
+  }
+
+  void changeAddDay(String? val) async {
+    if (val == null) return;
+    selectedDayName.value = val;
   }
 
   Future<void> getSubjects() async {
