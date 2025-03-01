@@ -140,19 +140,32 @@ class UserRepository {
     }
   }
 
-  // static Future<Result<Doctor>> fetchDashboardDoctors({
-  //   bool hardfetch = false,
-  // }) async {
-  //   late Response? response;
-  //   try {
-  //     Map<int,Doctor> doctor={};
-  //     response=await HttpProvider.get("/get-doctors-panle");
-  //     if(response?.statusCode==200){
-
-  //     }
-
-  //   }
-  // }
+  static Future<Result<Map>> fetchDashboardDoctors({
+    bool hardfetch = false,
+  }) async {
+    late Response? response;
+    try {
+      Map<int, Doctor> doctor = {};
+      response = await HttpProvider.get("/get-doctors-panle");
+      if (response?.statusCode == 200) {
+        doctor = response?.data;
+      }
+      return Result(
+          data: {
+            "Doctors": doctor,
+            "totalDoctor": response?.data["pagination"]["totalDoctors"],
+          },
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
     if (_userBox?.get('currentUser') != null &&

@@ -84,6 +84,9 @@ class MyData extends DataTableSource {
         onSelectChanged: (selected) {},
         cells: [
           DataCell(
+            onTap: () {
+              controller.onSelectedOperation();
+            },
             Obx(() => Checkbox(
                   value: controller.selectedRows.contains(
                           items[index % controller.rowsPerPage.value].id) ||
@@ -99,25 +102,47 @@ class MyData extends DataTableSource {
                   },
                 )),
           ),
-          DataCell(CustomText(
-              items[index % controller.rowsPerPage.value].id.toString())),
-          DataCell(CustomText(items[index % controller.rowsPerPage.value]
-                  .subject
-                  ?.subjectName ??
-              "")),
-          DataCell(CustomText(items[index % controller.rowsPerPage.value]
-              .instructorId
-              .toString())),
-          DataCell(CustomText(
-              items[index % controller.rowsPerPage.value].duration.toString())),
-          DataCell(CustomText(
-              items[index % controller.rowsPerPage.value].startTime ?? "")),
-          DataCell(CustomText(
-              items[index % controller.rowsPerPage.value].hall ?? "")),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(
+                  items[index % controller.rowsPerPage.value].id.toString())),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(items[index % controller.rowsPerPage.value]
+                      .subject
+                      ?.subjectName ??
+                  "")),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(items[index % controller.rowsPerPage.value]
+                  .instructorId
+                  .toString())),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(items[index % controller.rowsPerPage.value]
+                  .duration
+                  .toString())),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(
+                  items[index % controller.rowsPerPage.value].startTime ?? "")),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(
+                  items[index % controller.rowsPerPage.value].hall ?? "")),
           // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
-          DataCell(CustomText(
-              items[index % controller.rowsPerPage.value].description ??
-                  "there is not descroiption")),
+          DataCell(onTap: () {
+            controller.onSelectedOperation();
+          },
+              CustomText(
+                  items[index % controller.rowsPerPage.value].description ??
+                      "there is not descroiption")),
         ]);
   }
 
