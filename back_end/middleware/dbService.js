@@ -79,4 +79,5 @@ const insertData = async (modelName, data) => {
   }
 };
 
+
 module.exports = { insertData };

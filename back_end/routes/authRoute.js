@@ -9,24 +9,19 @@ const uploadProfilePicture = uploadPhoto('profile_pictures', 'students');
 
 
 router.post('/login', authController.login);
-
 router.post('/login/authToken', authMiddleware.verifyToken);
 router.post('/logout', authController.logout);
-
 router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
-
 router.post('/refresh', authController.refreshToken);
 
+// router.post('/register', uploadProfilePicture.single('profile_picture'), (req, res) => {exports.registerStudent(req, res);});
 
+router.post(
+    '/registerDoctor',
+    uploadProfilePicture.single('profile_picture'),
+    authController.registerDoctor
+);
 
-
-
-router.post('/register', uploadProfilePicture.single('profile_picture'), (req, res) => {exports.registerStudent(req, res);});
-
-
-router.post('/registerDoctor',vali.validateDoctorRegistration,authController.registerDoctor);
-
-// router.post('/registerStudent',uploadProfilePicture.single('profile_picture'),(req, res) => {exports.registerStudent(req, res);},vali.validateStudentRegistration,authController.registerStudent);
 router.post(
     '/registerStudent', 
     uploadProfilePicture.single('profile_picture'), 
@@ -34,23 +29,9 @@ router.post(
 );
 
 router.post('/upload-photo-user',authController.uploadPhotoForuser);
-
-
 router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
-
 router.get('/verify-reset-token',authController.verifyResetToken);
-
 router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
 
 
 module.exports = router;
-
-
-
-
-
-
-// const checkRole = require('./middleware/role');
-// router.get('/admin-only', checkRole(['admin']), adminController.getAdminData);
-// router.get('/doctor-data', checkRole(['doctor']), doctorController.getDoctorData);
-

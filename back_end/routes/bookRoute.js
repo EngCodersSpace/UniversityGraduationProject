@@ -10,7 +10,6 @@ router.post('/upload',  CRUD.uploadFile);
 router.get('/download', CRUD.downloadFile);
 router.get('/get-all-books-stream', CRUD.streamBooks);
 router.get('/get-imageOfbook', CRUD.getImageOfBook);
-
 router.delete('/delete', CRUD.deleteBook);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const xlsx = require("xlsx");
 const fs = require("fs");
 const path = require("path");
-const { sequelize } = require("../models"); // Import database connection
-const models = require("../models"); // Load all Sequelize models
+const { sequelize } = require("../models"); 
+const models = require("../models"); 
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 const { uploadExcel  } = require('../utils/multerConfig');
@@ -69,6 +69,7 @@ exports.uploadExcelFile = async (req, res) => {
           }
         }
 
+        // after insertion - delete excel file
         fs.unlink(filePath, (err) => {
           if (err) {
             console.error('Error deleting file:', err);
