@@ -374,10 +374,10 @@ class DashboardLectureTableController extends GetxController
         hardFetch: false);
     if (res.statusCode == 200) {
       lectures.value = res.data["lectures"] ?? {};
-      availableRows.value = res.data["totalLectures"];
-      update(["DataTable"]);
+      availableRows.value = res.data["totalLectures"]??0;
     } else if (res.statusCode == 404) {
       lectures.value = {};
+      availableRows.value = 0;
       fieldMessage.value = "this section and level not has Lectures";
       if (showSnakeBars) {
         showSnakeBar(
@@ -386,6 +386,7 @@ class DashboardLectureTableController extends GetxController
       }
     } else {
       lectures.value = {};
+      availableRows.value = res.data["totalLectures"]??0;
       fieldMessage.value = "fetching lectures failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
@@ -393,6 +394,7 @@ class DashboardLectureTableController extends GetxController
             message: "fetching lectures failed please check connection ");
       }
     }
+    update(["DataTable"]);
   }
 
   void onPageChange(int page) async {

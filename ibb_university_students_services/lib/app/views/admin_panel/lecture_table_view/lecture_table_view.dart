@@ -75,8 +75,9 @@ class MyData extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    assert(index >= 0);
-    if (index >= rowCount) return null;
+    if (index >= rowCount || items.isEmpty) {
+      return null;
+    }
     return DataRow.byIndex(
         index: index % controller.rowsPerPage.value,
         selected: controller.selectedRows
