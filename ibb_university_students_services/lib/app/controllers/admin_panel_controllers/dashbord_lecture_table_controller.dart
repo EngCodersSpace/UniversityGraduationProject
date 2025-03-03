@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
+import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/add_and_update_lecture_table_card.dart';
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/result.dart';
@@ -149,8 +150,11 @@ class DashboardLectureTableController extends GetxController
   RxString selectedDayName = "Sunday".obs;
   Rx<String?> subjectId = Rx(null);
   Rx<int?> doctorId = Rx(null);
+  // ignore: non_constant_identifier_names
   Rx<int?> SectionId = Rx(null);
+  // ignore: non_constant_identifier_names
   Rx<int?> LevelId = Rx(null);
+  // ignore: non_constant_identifier_names
   RxString TermId = "".obs;
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
@@ -160,6 +164,8 @@ class DashboardLectureTableController extends GetxController
   FocusNode durationFocus = FocusNode();
   FocusNode entryYearFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
+  int? selectedLecture;
+  String mode = "Edit";
   bool submitting = false;
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(
@@ -598,7 +604,147 @@ class DashboardLectureTableController extends GetxController
     update(["DataTable"]);
   }
 
-  void popCardClear() {
+  Future<void> more(String val, {Map<String, dynamic>? data}) async {
+    if (val == "Edit") {
+      await getSubjects();
+      mode = "Edit";
+      if (data != null) {
+        selectedLecture = data["id"];
+        doctorId.value = data["doctor_id"];
+        subjectId.value = data["subject"]["subject_id"];
+        timeController.text =
+            DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+        durationController.text = data["duration"].toString();
+        hallController.text = data["lecture_room"].toString();
+      }
+      Get.dialog(const PopUpAddAndUpdateLectureCard());
+    } else if (val == "Delete") {
+      if (selectedLevel.value == null) return;
+      if (selectedSection.value == null) return;
+
+      selectedLecture = data?["id"];
+      Result<void> res =
+          await LectureRepository.deleteLecture(id: selectedLecture);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        lectures.remove(selectedLecture);
+        showSnakeBar(message: "Delete successfully");
+      } else {
+        showSnakeBar(message: "Delete failed");
+      }
+    } else if (val == "TemporaryReplace") {
+      await getSubjects();
+      mode = "Replace";
+      if (data != null) {
+        selectedLecture = data["id"];
+        doctorId.value = data["doctor_id"];
+        subjectId.value = data["subject"]["subject_id"];
+        timeController.text =
+            DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+        durationController.text = data["duration"].toString();
+        hallController.text = data["lecture_room"].toString();
+      }
+      Get.dialog(const PopUpAddAndUpdateLectureCard());
+    } else if (val == "Confirm") {
+      selectedLecture = data?["id"];
+      if (selectedLecture == null) return;
+      Result<void> res = await LectureRepository.changeLectureState(
+          id: selectedLecture!, action: 'confirm');
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        lectures[selectedLecture]?.lectureStatus == true;
+        showSnakeBar(message: "Confirm successfully");
+      } else {
+        showSnakeBar(message: "Confirm failed");
+      }
+    } else if (val == "Cancel") {
+      selectedLecture = data?["id"];
+      if (selectedLecture == null) return;
+      Result<void> res = await LectureRepository.changeLectureState(
+          id: selectedLecture!, action: 'cancel');
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        lectures[selectedLecture]?.lectureStatus = false;
+        showSnakeBar(message: "Cancel successfully");
+      } else {
+        showSnakeBar(message: "Cancel failed");
+      }
+    }
+  }
+
+  void onSelectedOperation() {
+    if ((PermissionUtils.checkPermission(
+        target: "Lectures", action: "write"))) {
+      [
+        SizedBox(
+            height: 24,
+            width: 24,
+            child: PopupMenuButton<String>(
+              onSelected: (val) => more(val, data: lectures.toJson()),
+              color: AppColors.inverseCardColor,
+              itemBuilder: (ctx) => [
+                PopupMenuItem(
+                    value: "TemporaryReplace",
+                    child: CustomText(
+                      "Temporary Replace".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
+                    )),
+                PopupMenuItem(
+                    value: "Edit",
+                    child: CustomText(
+                      "Edit".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
+                    )),
+                PopupMenuItem(
+                    value: "Delete",
+                    child: CustomText(
+                      "Delete".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
+                    )),
+                PopupMenuItem(
+                    value: "Confirm",
+                    child: CustomText(
+                      "Confirm".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
+                    )),
+                PopupMenuItem(
+                    value: "Cancel",
+                    child: CustomText(
+                      "Cancel".tr,
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h3Bold),
+                    )),
+              ],
+            ))
+      ];
+    }
+  }
+
+  void submit() async {
+    if (submitting) return;
+    submitting = true;
+    if (formKey.currentState!.validate()) {
+      switch (mode) {
+        case ("Edit"):
+          submitEdit();
+          break;
+        case ("Replace"):
+          submitReplace();
+          break;
+      }
+    }
+    submitting = false;
+    popCardCleare();
+  }
+
+  void submitEdit() async {}
+  void submitReplace() async {}
+
+  void popCardCleare() {
     timeController.clear();
     durationController.clear();
     hallController.clear();
@@ -607,7 +753,7 @@ class DashboardLectureTableController extends GetxController
   @override
   void onClose() {
     searchController.dispose();
-    popCardClear();
+    popCardCleare();
     timeController.dispose();
     durationController.dispose();
     hallController.dispose();
