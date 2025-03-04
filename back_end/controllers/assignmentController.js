@@ -151,7 +151,7 @@ exports.downloadFile = async (req, res) => {
     const fileData = await student_assignment_file.findByPk(req.query.id);
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const filePath = path.resolve(__dirname, '..', `${fileData.attachment}`);
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
 
     // Set headers to instruct the browser to download the file
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
@@ -181,7 +181,7 @@ exports.doctorDownloadFile = async (req, res) => {
     const fileData = await assignment_file.findByPk(req.query.id);
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const filePath = path.resolve(__dirname, '..', `${fileData.attachment}`);
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
 
     // Set headers to instruct the browser to download the file
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
@@ -518,8 +518,14 @@ exports.deleteAssignment = async (req, res) => {
       where:{assignment_id: Assignment.id},
     });
 
+    if (!AssignFiles) {
+      return res.status(404).json({ message: 'Assignment Files not found.' });
+    }
+
     for (const file of AssignFiles) {
-      const attachmentPath = path.resolve(file.attachment);
+      const attachmentPath = path.resolve('storage',file.attachment);
+      console.log('\n \n \n attachmentPath:' ,`${attachmentPath}`,'\n \n');
+
       if (fs.existsSync(attachmentPath)) {
         await fs.promises.unlink(attachmentPath);
         console.log(`Deleted file: ${attachmentPath}`);
