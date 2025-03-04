@@ -11,9 +11,9 @@ class Doctor extends User {
   @HiveField(11)
   String? status;
   @HiveField(12)
-  Map<String,dynamic>? academicDegreeData;
+  Map<String, dynamic>? academicDegreeData;
   @HiveField(13)
-  Map<String,dynamic>? administrativePositionData;
+  Map<String, dynamic>? administrativePositionData;
 
   Doctor({
     required super.id,
@@ -31,12 +31,13 @@ class Doctor extends User {
     super.updatedAt,
   });
 
-  String? get administrativePosition{
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+  String? get administrativePosition {
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return administrativePositionData?[currentLang];
   }
-  String? get academicDegree{
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+
+  String? get academicDegree {
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return academicDegreeData?[currentLang];
   }
 
@@ -51,7 +52,8 @@ class Doctor extends User {
       // profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
       academicDegreeData: JsonUtils.tryJsonDecode(json['academic_degree']),
-      administrativePositionData: JsonUtils.tryJsonDecode(json['administrative_position']),
+      administrativePositionData:
+          JsonUtils.tryJsonDecode(json['administrative_position']),
       status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
@@ -70,8 +72,8 @@ class Doctor extends User {
       "student_section": section,
       "status": status,
       "section": section,
-      "academic_degree":academicDegree,
-      "administrative_position":administrativePosition,
+      "academic_degree": academicDegree,
+      "administrative_position": administrativePosition,
       "created_at": createdAt,
       "updated_at": updatedAt,
     };

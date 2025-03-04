@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -106,8 +107,17 @@ class MyData extends DataTableSource {
           DataCell(onTap: () {
             controller.onSelectedOperation();
           },
-              CustomText(
-                  items[index % controller.rowsPerPage.value].id.toString())),
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {
+                    print(str);
+                  },
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .id
+                      .toString())),
           DataCell(onTap: () {
             controller.onSelectedOperation();
           },

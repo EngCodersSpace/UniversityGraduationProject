@@ -145,12 +145,11 @@ class UserRepository {
   }) async {
     late Response? response;
     try {
-      List<Map<int, Doctor>> doctor = [];
+      Map<int, Doctor> doctor = {};
       response = await HttpProvider.get("/get-doctors-panle");
       if (response?.statusCode == 200) {
-        for (Map<String, dynamic> jsDoctor in response?.data['data']
-            ['doctor_id']) {
-          doctor.add(Doctor.fromJson(jsDoctor) as Map<int, Doctor>);
+        for (Map<String, dynamic> jsDoctor in response?.data['data']) {
+          doctor[jsDoctor["doctor_id"]] = Doctor.fromJson(jsDoctor);
         }
       }
       return Result(
