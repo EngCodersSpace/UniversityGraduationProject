@@ -175,7 +175,7 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                                       .value ??
                                                                   false)
                                                               ? controller
-                                                                  .openFile(_data?[i].path)
+                                                                  .openFile(_data?[i].id,_data?[i].path)
                                                               : (mode =="studentsFiles")?controller.downloadStudentAssignmentFile(_data?[i]):controller.downloadAssignmentFile(_data?[i]);
                                                         },
                                                         icon: Icon((_data?[i]

@@ -174,7 +174,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                 .selectedSortOption.value ==
                                             "title",
                                         onTap: () => controller
-                                            .selectedSortOption("title"),
+                                            .changeSelectedSortOption("title"),
                                       ),
                                       SortIcon(
                                           icon: Icons.calendar_month,
@@ -183,7 +183,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   .selectedSortOption.value ==
                                               "date",
                                           onTap: () => controller
-                                              .selectedSortOption("date")),
+                                              .changeSelectedSortOption("date")),
                                       SortIcon(
                                           icon: Icons.assignment_sharp,
                                           title: 'Pages',
@@ -191,7 +191,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   .selectedSortOption.value ==
                                               "page",
                                           onTap: () => controller
-                                              .selectedSortOption("page")),
+                                              .changeSelectedSortOption("page")),
                                       SortIcon(
                                         icon: Icons.memory,
                                         title: 'Size',
@@ -199,7 +199,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                 .selectedSortOption.value ==
                                             "size",
                                         onTap: () => controller
-                                            .selectedSortOption("size"),
+                                            .changeSelectedSortOption("size"),
                                       ),
                                     ],
                                   ),

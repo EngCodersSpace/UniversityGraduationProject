@@ -30,7 +30,6 @@ class LecturesTab extends GetView<LibraryController> {
                   physics: AlwaysScrollableScrollPhysics(),
                   controller: controller.booksPagesController,
                   children: [
-                    for (int p = 0; p < controller.books.length; p += 12)
                       RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(
@@ -62,6 +61,7 @@ class LecturesTab extends GetView<LibraryController> {
                                     spacing: Get.width * 0.03,
                                     runSpacing: Get.height * 0.045,
                                     children: [
+                                      for (int p = 0; p < controller.books.length; p += 12)
                                       for (int i = p;
                                           (i < controller.books.length) &&
                                               (i < p + 12);
@@ -76,20 +76,23 @@ class LecturesTab extends GetView<LibraryController> {
                                                     controller
                                                         .selectedDepartment
                                                         .value ||
-                                                controller.selectedDepartment.value ==
+                                                controller.selectedDepartment
+                                                        .value ==
                                                     -1) &&
                                             (controller.books.values
                                                         .toList()[i]
                                                         .levelId ==
-                                                    controller.selectedLevel.value ||
-                                                controller.selectedLevel.value == -1)) ...[
+                                                    controller
+                                                        .selectedLevel.value ||
+                                                controller
+                                                        .selectedLevel.value ==
+                                                    -1))
                                           Obx(
                                             () => BookContainer(
                                               book: controller.books.values
                                                   .toList()[i],
                                             ),
                                           )
-                                        ]
                                     ]),
                               ),
                             ],

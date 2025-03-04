@@ -72,10 +72,6 @@ class LibraryController extends GetxController
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
-    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty)
-        ? selectedDepartment.value = sections.values.toList().first.id
-        : null;
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
@@ -145,6 +141,7 @@ class LibraryController extends GetxController
     sections = await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? {});
     sections[-1] = Section(id: -1,nameData: {"en":"All"});
+    selectedDepartment.value = -1;
   }
 
   Future<void> initLevelDropdownMenuLists() async {
@@ -177,9 +174,7 @@ class LibraryController extends GetxController
             ),
           )),
     );
-    if (levelsData.isNotEmpty) {
-      selectedLevel.value = levelsData.first.id;
-    }
+      selectedLevel.value = -1;
   }
 
   void changeDepartment(int? val) async {
@@ -190,11 +185,32 @@ class LibraryController extends GetxController
   void changeSelectedSortOption(String? val) async {
     if (val == null) return;
     selectedSortOption.value = val;
+    switch(val){
+      case "title":
+        books.value = Map<int,LibraryFile>.fromEntries(
+            books.entries.toList()
+              ..sort((a, b) => (sortDirection.value==0)?(a.value.title?.toLowerCase().compareTo(b.value.title?.toLowerCase()??"")??0):(b.value.title?.toLowerCase().compareTo(a.value.title?.toLowerCase()??"")??0))
+        );
+        break;
+      case "page":
+        books.value = Map<int,LibraryFile>.fromEntries(
+            books.entries.toList()
+              ..sort((a, b) => (sortDirection.value==0)?(a.value.numberOfPages?.compareTo(b.value.numberOfPages??0)??0):(b.value.numberOfPages?.compareTo(a.value.numberOfPages??0)??0)
+        ));
+        break;
+      case "size":
+        books.value = Map<int,LibraryFile>.fromEntries(
+            books.entries.toList()
+              ..sort((a, b) => (sortDirection.value==0)?(a.value.fileSize?.compareTo(b.value.fileSize??0)??0):(b.value.fileSize?.compareTo(a.value.fileSize??0)??0)
+              ));
+        break;
+    }
   }
 
   void changeSelectedSortDirection(int? val) async {
     if (val == null) return;
     sortDirection.value = val;
+    changeSelectedSortOption(selectedSortOption.value);
   }
 
   void changeSelectedShowOption(int? val) {
@@ -213,8 +229,6 @@ class LibraryController extends GetxController
   }
 
   void searching(String? val) {}
-
-  void filtering(String? val) {}
 
   void filteringIconClick() {
     Get.dialog(PopUpBookFilterCard());

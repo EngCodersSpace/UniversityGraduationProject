@@ -69,9 +69,6 @@ class AssignmentsRepository {
         Assignment? assignment =
             await fetchAssignment(assignmentId: id).then((e) => e.data);
         if (assignment != null) {
-          assignment.attachments?.forEach((i, e) async {
-            await e.checkDownloaded();
-          });
           assignments[assignment.id] = assignment;
         }
       }
@@ -92,9 +89,7 @@ class AssignmentsRepository {
                 .then((e) => e.data);
             Assignment assignment =
                 Assignment.fromJson(jsAssignments, subject: subject);
-            assignment.attachments?.forEach((i, e) async {
-              await e.checkDownloaded();
-            });
+
 
             assignments[assignment.id] = assignment;
             await _assignmentsBox?.put(
@@ -136,9 +131,6 @@ class AssignmentsRepository {
     if ((_assignmentsBox?.get(assignmentId) != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       Assignment? assignment = _assignmentsBox?.get(assignmentId);
-      assignment?.attachments?.forEach((i, e) async {
-        await e.checkDownloaded();
-      });
       return Result(data: assignment, hasError: false, statusCode: 200);
     }
     Response? response;
@@ -532,7 +524,7 @@ class AssignmentsRepository {
       response = await HttpProvider.downloadFile(
         downloadUrl:
         "download-assignment-files?id=${file.id}",
-        savePath: "${FileUtils.baseFolderPath}/${file.path}",
+        savePath: "${FileUtils.defaultBaseFolderPath}/${file.path}",
         onReceiveProgress: (sent, total) {
           double progress = (sent / total) * 100;
           NotificationHandler.showProgressNotification(

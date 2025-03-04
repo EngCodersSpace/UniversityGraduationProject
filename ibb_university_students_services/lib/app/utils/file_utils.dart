@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:open_filex/open_filex.dart';
 
 class FileUtils {
-  static const String baseFolderPath = "/storage/emulated/0/StudentServices";
+  static const String defaultBaseFolderPath = "/storage/emulated/0/StudentServices";
 
   static saveFiles({
     required String? fileRelativePath,
@@ -13,7 +13,7 @@ class FileUtils {
     List<String>? parts = fileRelativePath.split("/");
     parts.removeLast();
     String relativePath = parts.join("/");
-    Directory dir = Directory("$baseFolderPath/$relativePath");
+    Directory dir = Directory("$defaultBaseFolderPath/$relativePath");
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
     }
@@ -28,10 +28,14 @@ class FileUtils {
     }
   }
 
-  static Future<void> openFile(String? path) async {
+  static Future<void> openFile(String? path, {String? baseFolderPath}) async {
+    baseFolderPath??=defaultBaseFolderPath;
     if (path == null) return;
-
-    final result = await OpenFilex.open("$baseFolderPath/$path");
+    if(kIsWeb){
+     return;
+    }
+    final OpenResult result;
+    result = await OpenFilex.open("$baseFolderPath/$path");
     if (result.type == ResultType.error) {
       if (kDebugMode) {
         print("Error opening file: ${result.message}");
@@ -40,7 +44,7 @@ class FileUtils {
 
   }
 
-  static checkExists(String filePath) async {
-    return await File("$baseFolderPath/$filePath").exists();
+  static checkExists(String filePath,{String? baseFolderPath}) async {
+    return await File("$defaultBaseFolderPath/$filePath").exists();
   }
 }
