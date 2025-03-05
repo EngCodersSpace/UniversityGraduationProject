@@ -90,7 +90,6 @@ class AssignmentsRepository {
             Assignment assignment =
                 Assignment.fromJson(jsAssignments, subject: subject);
 
-
             assignments[assignment.id] = assignment;
             await _assignmentsBox?.put(
               assignment.id,
@@ -441,6 +440,65 @@ class AssignmentsRepository {
     }
   }
 
+  static Future<Result<void>> downloadAttachmentFiles({
+    required AttachmentFile file,
+  }) async {
+    late Response? response;
+    try {
+      file.progress = get_x.RxInt(0);
+      file.status??=get_x.RxString("");
+      file.status?.value = "Downloading";
+      response = await HttpProvider.downloadFile(
+        downloadUrl: "download-files-doctor?id=${file.id}",
+        savePath: "${FileUtils.defaultBaseFolderPath}/${file.path}",
+        onReceiveProgress: (sent, total) {
+          double progress = (sent / total) * 100;
+          file.progress?.value = progress.toInt();
+          NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              progress: progress.toInt(),
+              title: "Downloading",
+              message: " ${file.originName}");
+        },
+      );
+      if (response?.statusCode == 200) {
+        await file.checkDownloaded();
+        if (file.downloaded.value) {
+          await NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              title: "Successful Downloaded ",
+              message: file.originName);
+          showSnakeBar(
+              title: "Download Successful",
+              message: "Downloading ${file.originName} Successful");
+        } else {
+          NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              title: "Download Failed ",
+              message: file.originName);
+          showSnakeBar(message: "Downloading ${file.originName} Failed");
+        }
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      } else {
+        file.status?.value = "Download Failed";
+        NotificationHandler.showProgressNotification(
+            uniqueId: file.id.hashCode,
+            title: "Download Failed ",
+            message: file.originName);
+        showSnakeBar(message: "Downloading ${file.originName} Failed");
+      }
+      file.status?.value = "None";
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _createError);
+    } catch (error) {
+      return Result(
+          statusCode: _createError, message: error.toString(), data: null);
+    }
+  }
+
   static Future<Result<int>> uploadStudentAssignmentsFiles({
     required StudentAssignmentsFile files,
     required int sectionId,
@@ -512,6 +570,7 @@ class AssignmentsRepository {
           statusCode: _createError, message: error.toString(), data: null);
     }
   }
+
   static Future<Result<int>> downloadStudentAssignmentsFiles({
     required StudentAssignmentsFile file,
     required int sectionId,
@@ -522,11 +581,11 @@ class AssignmentsRepository {
       file.progress = get_x.RxInt(0);
       file.status?.value = "Downloading";
       response = await HttpProvider.downloadFile(
-        downloadUrl:
-        "download-assignment-files?id=${file.id}",
+        downloadUrl: "download-assignment-files?id=${file.id}",
         savePath: "${FileUtils.defaultBaseFolderPath}/${file.path}",
         onReceiveProgress: (sent, total) {
           double progress = (sent / total) * 100;
+          file.progress?.value = progress.toInt();
           NotificationHandler.showProgressNotification(
               uniqueId: file.id.hashCode,
               progress: progress.toInt(),
@@ -535,15 +594,26 @@ class AssignmentsRepository {
         },
       );
       if (response?.statusCode == 200) {
-        file.status?.value = "Uploaded";
-        await NotificationHandler.showProgressNotification(
-            uniqueId: file.id.hashCode,
-            title: "Successful Downloaded ",
-            message: file.originName);
+        await file.checkDownloaded();
+        if (file.downloaded.value) {
+          await NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              title: "Successful Downloaded ",
+              message: file.originName);
+          showSnakeBar(
+              title: "Download Successful",
+              message: "Downloading ${file.originName} Successful");
+        } else {
+          NotificationHandler.showProgressNotification(
+              uniqueId: file.id.hashCode,
+              title: "Download Failed ",
+              message: file.originName);
+          showSnakeBar(message: "Downloading ${file.originName} Failed");
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-      }else {
+      } else {
         file.status?.value = "Download Failed";
         NotificationHandler.showProgressNotification(
             uniqueId: file.id.hashCode,
@@ -551,6 +621,7 @@ class AssignmentsRepository {
             message: file.originName);
         showSnakeBar(message: "Downloading ${file.originName} Failed");
       }
+      file.status?.value = "None";
       return Result(
           data: file.id,
           hasError: false,

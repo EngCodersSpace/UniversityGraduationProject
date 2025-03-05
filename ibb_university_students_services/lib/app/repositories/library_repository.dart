@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
@@ -105,7 +106,9 @@ class LibraryRepository {
               destination[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
-              print("Error parsing JSON chunk: $e. Chunk: $jsonChunk");
+              if (kDebugMode) {
+                print("Error parsing JSON chunk: $e. Chunk: $jsonChunk");
+              }
             }
           }
         }

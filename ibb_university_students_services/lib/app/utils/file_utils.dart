@@ -20,12 +20,21 @@ class FileUtils {
     await file.copy("${dir.path}/${fileRelativePath.split("/").last}");
   }
 
-  static deleteFiles({
-    required List<String> filesPath,
+  static Future<bool> deleteFile({
+    required String? filePath,
+    String? baseFolderPath
   }) async {
-    for (String path in filesPath) {
-      File(path).delete();
+    if(filePath==null)return false;
+    baseFolderPath??=defaultBaseFolderPath;
+    try{
+      File("$baseFolderPath/$filePath").delete();
+      return true;
+    }catch(e){
+      if (kDebugMode) {
+        print(e);
+      }
     }
+    return false;
   }
 
   static Future<void> openFile(String? path, {String? baseFolderPath}) async {
@@ -45,6 +54,7 @@ class FileUtils {
   }
 
   static checkExists(String filePath,{String? baseFolderPath}) async {
-    return await File("$defaultBaseFolderPath/$filePath").exists();
+    baseFolderPath??=defaultBaseFolderPath;
+    return await File("$baseFolderPath/$filePath").exists();
   }
 }

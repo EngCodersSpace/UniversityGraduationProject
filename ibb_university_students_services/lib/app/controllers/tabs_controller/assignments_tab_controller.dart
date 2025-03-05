@@ -369,7 +369,9 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void downloadAssignmentFile(AttachmentFile file) {}
+  void downloadAssignmentFile(AttachmentFile file) async{
+    await AssignmentsRepository.downloadAttachmentFiles(file: file);
+  }
 
   void downloadStudentAssignmentFile(StudentAssignmentsFile file) {
     if (selectedLevel.value == null) return;
@@ -419,6 +421,15 @@ class AssignmentsTabController extends GetxController {
       } else {
         showSnakeBar(message: "Delete File Failed");
       }
+    }
+  }
+
+  void _moreDeleteAttachmentFileFromStorage(Map<String, dynamic>? data) async {
+    if (data == null) return;
+    bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
+    if(res){
+      showSnakeBar(message: "File Deleted");
+      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.checkDownloaded();
     }
   }
 
@@ -482,6 +493,9 @@ class AssignmentsTabController extends GetxController {
         break;
       case "DeleteAttachmentFile":
         _moreDeleteAttachmentFile(data);
+        break;
+        case "DeleteAttachmentFileFromStorage":
+        _moreDeleteAttachmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFile":
         _moreDeleteStudentAssignmentFile(data);
@@ -608,12 +622,10 @@ class AssignmentsTabController extends GetxController {
 
   void showAttachmentsFiles(int? assignmentId) async {
     selectedAssignment = assignmentId;
-    if (!kIsWeb) {
-      for (AttachmentFile file
-          in assignments?.value[selectedAssignment]?.attachments?.values ??
-              []) {
-        await file.checkDownloaded();
-      }
+    for (AttachmentFile file
+    in assignments?.value[selectedAssignment]?.attachments?.values ??
+        []) {
+      await file.checkDownloaded();
     }
     if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsAddFilesCard());
@@ -625,7 +637,6 @@ class AssignmentsTabController extends GetxController {
   void showStudentFiles(int? assignmentId, {int? stateId}) async {
     selectedAssignment = assignmentId;
     selectedState = stateId;
-
     for (StudentAssignmentsFile file in assignments?.value[selectedAssignment]
             ?.studentsStatus?[selectedState]?.studentFiles?.values ??
         []) {

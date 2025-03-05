@@ -187,10 +187,12 @@ class HttpProvider {
     try {
 
       cancelTokens[savePath.hashCode] = CancelToken();
-      final response = await _dio.get(
+      final response = await _dio.download(
         downloadUrl,
+        savePath,
         // cancelToken: cancelTokens[file.path.hashCode],
         onReceiveProgress: onReceiveProgress,
+
       );
 
       return response;

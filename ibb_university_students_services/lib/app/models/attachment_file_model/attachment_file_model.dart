@@ -36,12 +36,12 @@ class AttachmentFile {
   }
 
   factory AttachmentFile.fromJson(Map<String, dynamic> json,
-      {String status = "Not Uploaded"}) {
+      {String status = "None"}) {
     return AttachmentFile(
       id: json['id'],
       originName: json['original_name'],
       assignmentId: json['assignment_id'],
-      path: json['path'],
+      path: json['attachment'],
       status: RxString(status),
     );
   }
