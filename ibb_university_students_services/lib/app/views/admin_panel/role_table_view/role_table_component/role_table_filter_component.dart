@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
-class DoctorTableComponent extends GetView<DashboardDoctorTableController> {
-  const DoctorTableComponent({super.key});
+class RoleTableFilterComponent
+    extends GetView<DashboardRoleUsersTableController> {
+  const RoleTableFilterComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // CustomText(
-          //   "Order".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
-            width: Get.width * 0.11,
+            width: Get.width * 0.15,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -65,6 +59,16 @@ class DoctorTableComponent extends GetView<DashboardDoctorTableController> {
                     dropdownColor: AppColors.inverseCardColor,
                   )),
             ),
+          ),
+          SizedBox(
+            width: Get.width * 0.45,
+          ),
+          IconButton(
+            onPressed: () {
+              controller.addClick();
+            },
+            icon: Icon(Icons.add_box_outlined),
+            tooltip: "Add",
           ),
         ],
       ),

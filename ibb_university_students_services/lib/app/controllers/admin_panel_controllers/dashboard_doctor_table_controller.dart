@@ -7,14 +7,18 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/add_doctor_table_card.dart';
 import '../../utils/snake_bar.dart';
 
 class DashboardDoctorTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxMap<int, Doctor> doctors = RxMap({});
   RxBool loadingState = true.obs;
   RxString fieldMessage = "".obs;
@@ -25,6 +29,24 @@ class DashboardDoctorTableController extends GetxController
   RxInt availableRows = 0.obs;
   List<DataColumn> kTableColumn = [];
   Timer? _debounce;
+  TextEditingController doctorId = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController dateOfBirth = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController role = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+  TextEditingController college = TextEditingController();
+  TextEditingController acadimicDegree = TextEditingController();
+  TextEditingController adminPosition = TextEditingController();
+  FocusNode doctorIdFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
+  FocusNode dateOfBirthFocus = FocusNode();
+  FocusNode emailFocus = FocusNode();
+  FocusNode roleFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  FocusNode collegeFocus = FocusNode();
+  FocusNode acadimicFocus = FocusNode();
+  FocusNode administrativeFocus = FocusNode();
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "doctor_id",
@@ -83,6 +105,9 @@ class DashboardDoctorTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   RxSet<int> selectedRows = RxSet({});
+  Map<int, Section> section = <int, Section>{}.obs;
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
 
   @override
   // ignore: unnecessary_overrides
@@ -226,6 +251,22 @@ class DashboardDoctorTableController extends GetxController
   void onClose() {
     super.onClose();
   }
+
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> addClick() async {
+    await getSection();
+    Get.dialog(const PopUpAddDoctorCard());
+  }
+
+  Future<void> addDoctor() async {}
 
   @override
   void export() {}

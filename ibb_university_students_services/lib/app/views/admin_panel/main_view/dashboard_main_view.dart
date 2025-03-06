@@ -38,8 +38,8 @@ class DashboardMainView extends GetView<DashboardMainController> {
                   color: AppColors.inverseTabBackColor,
                   child: Column(
                     children: [
-                      TabViewComponent(tablename: "Doctors Table", index: 0),
-                      TabViewComponent(tablename: "Student Table", index: 1),
+                      TabViewComponent(tablename: "Rols Table", index: 0),
+                      // TabViewComponent(tablename: "Student Table", index: 1),
                       TabViewComponent(tablename: "Subject Table", index: 2),
                       TabViewComponent(tablename: "Study plan Table", index: 3),
                       TabViewComponent(tablename: "Lecture Table", index: 4),

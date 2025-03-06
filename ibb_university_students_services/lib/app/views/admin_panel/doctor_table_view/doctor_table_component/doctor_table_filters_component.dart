@@ -61,11 +61,11 @@ class DoctorTableFiltersComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.19,
+            width: Get.width * 0.45,
           ),
           IconButton(
             onPressed: () {
-              // controller.addClick();
+              controller.addClick();
             },
             icon: Icon(Icons.add_box_outlined),
             tooltip: "Add",

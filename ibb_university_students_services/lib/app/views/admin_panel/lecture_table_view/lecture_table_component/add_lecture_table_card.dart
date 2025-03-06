@@ -12,9 +12,8 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
-class PopUpAddAndUpdateLectureCard
-    extends GetView<DashboardLectureTableController> {
-  const PopUpAddAndUpdateLectureCard({super.key});
+class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
+  const PopUpAddLectureCard({super.key});
 
   @override
   Widget build(BuildContext context) {

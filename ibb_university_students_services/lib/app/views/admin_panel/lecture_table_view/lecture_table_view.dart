@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
@@ -86,9 +85,7 @@ class MyData extends DataTableSource {
         onSelectChanged: (selected) {},
         cells: [
           DataCell(
-            onTap: () {
-              controller.onSelectedOperation();
-            },
+            onTap: () {},
             Obx(() => Checkbox(
                   value: controller.selectedRows.contains(
                           items[index % controller.rowsPerPage.value].id) ||
@@ -104,56 +101,84 @@ class MyData extends DataTableSource {
                   },
                 )),
           ),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
+          DataCell(
+              onTap: () {},
               CustomTextFormField(
                   onTapOutside: (e) {
                     controller.refresh();
                   },
-                  onFieldSubmitted: (str) {
-                    print(str);
-                  },
+                  onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
                       .id
                       .toString())),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(items[index % controller.rowsPerPage.value]
-                      .subject
-                      ?.subjectName ??
-                  "")),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .instructorId
-                  .toString())),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .duration
-                  .toString())),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(
-                  items[index % controller.rowsPerPage.value].startTime ?? "")),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(
-                  items[index % controller.rowsPerPage.value].hall ?? "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                          .subject
+                          ?.subjectName ??
+                      "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .instructorId
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .duration
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].startTime ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].hall ?? "")),
           // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
-          DataCell(onTap: () {
-            controller.onSelectedOperation();
-          },
-              CustomText(
-                  items[index % controller.rowsPerPage.value].description ??
-                      "there is not descroiption")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].description ??
+                          "there is not descroiption")),
         ]);
   }
 
