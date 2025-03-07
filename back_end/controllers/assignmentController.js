@@ -152,10 +152,12 @@ exports.downloadFile = async (req, res) => {
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
     const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const fileSize = fs.statSync(filePath).size;
 
     // Set headers to instruct the browser to download the file
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSize);
 
     // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);
@@ -182,10 +184,12 @@ exports.doctorDownloadFile = async (req, res) => {
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
     const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const fileSize = fs.statSync(filePath).size;
 
     // Set headers to instruct the browser to download the file
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSize);
 
     // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);
@@ -518,14 +522,8 @@ exports.deleteAssignment = async (req, res) => {
       where:{assignment_id: Assignment.id},
     });
 
-    if (!AssignFiles) {
-      return res.status(404).json({ message: 'Assignment Files not found.' });
-    }
-
     for (const file of AssignFiles) {
-      const attachmentPath = path.resolve('storage',file.attachment);
-      console.log('\n \n \n attachmentPath:' ,`${attachmentPath}`,'\n \n');
-
+      const attachmentPath = path.resolve(file.attachment);
       if (fs.existsSync(attachmentPath)) {
         await fs.promises.unlink(attachmentPath);
         console.log(`Deleted file: ${attachmentPath}`);
