@@ -12,6 +12,7 @@ import 'package:ibb_university_students_services/app/views/admin_panel/main_view
 import 'package:ibb_university_students_services/app/views/admin_panel/notification_table_view/notification_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/payment_table_view/payment_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/phone_number_table_view/phone_number_table_view.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_users_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/subject_table_view/subject_table_view.dart';
 
@@ -67,7 +68,7 @@ class DashboardMainView extends GetView<DashboardMainController> {
   }
 
   List screens = [
-    const DoctorTableView(),
+    RoleUsersTableView(),
     const StudentTableView(),
     const SubjectTableView(),
     const StudyPlanTableView(),

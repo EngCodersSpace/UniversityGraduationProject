@@ -128,26 +128,34 @@ class DashboardRoleUsersTableController extends GetxController
     await fetchRoleData();
   }
 
-  void changeTableView(int index) {
-    GetxController? controller;
-    switch (index) {
-      case 0:
-        // ignore: unnecessary_null_comparison
-        if (controller != null) {
-          controller.dispose();
-        }
-        controller = Get.put<DashboardDoctorTableController>(
-            DashboardDoctorTableController());
-        break;
-      case 1:
-        // ignore: unnecessary_null_comparison
-        if (controller != null) {
-          controller.dispose();
-        }
-        controller = Get.put<DashboardStudentTableController>(
-            DashboardStudentTableController());
-    }
-    selectedIndex.value = index;
+  // void changeTableView(int index) {
+  //   GetxController? controller;
+  //   switch (index) {
+  //     case 0:
+  //       // ignore: unnecessary_null_comparison
+  //       if (controller != null) {
+  //         controller.dispose();
+  //       }
+  //       controller = Get.put<DashboardDoctorTableController>(
+  //           DashboardDoctorTableController());
+  //       break;
+  //     case 1:
+  //       // ignore: unnecessary_null_comparison
+  //       if (controller != null) {
+  //         controller.dispose();
+  //       }
+  //       controller = Get.put<DashboardStudentTableController>(
+  //           DashboardStudentTableController());
+  //   }
+  //   selectedIndex.value = index;
+  // }
+
+  void changeDoctorTableView() {
+    Get.offNamed("/dashboard_doctor_view");
+  }
+
+  void changeStudentTableView() {
+    Get.offNamed("/dashboard_student_view");
   }
 
   Future<void> fetchRoleData() async {}
