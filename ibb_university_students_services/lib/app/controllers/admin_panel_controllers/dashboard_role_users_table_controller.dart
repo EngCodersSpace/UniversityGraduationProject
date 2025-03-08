@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -92,8 +90,7 @@ class DashboardRoleUsersTableController extends GetxController
   ];
 
   @override
-  // ignore: unnecessary_overrides
-  void onInit() {
+  void onInit() async {
     searchController.addListener(() {
       onSearch();
     });
@@ -120,6 +117,7 @@ class DashboardRoleUsersTableController extends GetxController
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
     ];
+    await fetchRoleData();
     super.onInit();
   }
 
@@ -150,13 +148,13 @@ class DashboardRoleUsersTableController extends GetxController
   //   selectedIndex.value = index;
   // }
 
-  void changeDoctorTableView() {
-    Get.offNamed("/dashboard_doctor_view");
-  }
+  // void changeDoctorTableView() {
+  //   Get.offNamed("/dashboard_doctor_view");
+  // }
 
-  void changeStudentTableView() {
-    Get.offNamed("/dashboard_student_view");
-  }
+  // void changeStudentTableView() {
+  //   Get.offNamed("/dashboard_student_view");
+  // }
 
   Future<void> fetchRoleData() async {}
 
