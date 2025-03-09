@@ -250,7 +250,7 @@ class ExamRepository {
     }
   }
 
-  Future<Result<Map>> fetchDashboardExam() async {
+  static Future<Result<Map>> fetchDashboardExam() async {
     late Response? response;
     try {
       response = await HttpProvider.get("get-exam-grouped-Panle");

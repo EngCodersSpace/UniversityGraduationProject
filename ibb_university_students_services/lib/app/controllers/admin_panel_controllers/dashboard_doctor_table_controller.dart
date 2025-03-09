@@ -149,7 +149,6 @@ class DashboardDoctorTableController extends GetxController
           "Email",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
-        // numeric: true,
       ),
       DataColumn(
         label: CustomText(
