@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
-import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
@@ -12,8 +11,8 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
-class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
-  const PopUpAddLectureCard({super.key});
+class AddExamTableCard extends GetView<DashboardExamTableController> {
+  const AddExamTableCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -128,14 +127,6 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.menu_book,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Level".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
@@ -282,14 +273,6 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.menu_book,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Subject".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
@@ -315,13 +298,6 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                                         onChanged: (val) {
                                           if (val == null) return;
                                           controller.subjectId.value = val;
-                                          controller.doctorId.value = controller
-                                              .subjects?[
-                                                  controller.subjectId.value]
-                                              ?.instructors
-                                              ?.values
-                                              .first
-                                              .id;
                                         },
                                         isExpanded: true,
                                         menuWidth: Get.width * 0.3,
@@ -381,91 +357,21 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.menu_book,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
-                                  CustomText("Doctor".tr,
+                                  CustomText("Date".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
-                                  const SizedBox(
-                                    width: 2,
-                                  ),
                                 ],
                               ),
-                              Container(
-                                width: Get.width * 0.23,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)),
-                                child: Center(
-                                  child: Obx(() => DropdownButton<int?>(
-                                        value: controller.doctorId.value,
-                                        icon: Icon(Icons.arrow_drop_down_sharp,
-                                            color: AppColors.inverseCardColor),
-                                        underline: const SizedBox(),
-                                        dropdownColor: AppColors.mainCardColor,
-                                        onChanged: (val) {
-                                          controller.doctorId.value = val;
-                                        },
-                                        isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
-                                        selectedItemBuilder: (_) {
-                                          List<Widget> items = [];
-                                          for (Instructor instructorI
-                                              in (controller
-                                                      .subjects?[controller
-                                                          .subjectId.value]
-                                                      ?.instructors
-                                                      ?.values
-                                                      .toList()) ??
-                                                  []) {
-                                            items.add(DropdownMenuItem<int?>(
-                                              value: instructorI.id,
-                                              child: SizedBox(
-                                                  width: Get.width * 0.28,
-                                                  child: CustomText(
-                                                    instructorI.name ?? "",
-                                                    style:
-                                                        AppTextStyles.secStyle(
-                                                            textHeader:
-                                                                AppTextHeaders
-                                                                    .h3Bold),
-                                                    softWrap: false,
-                                                  )),
-                                            ));
-                                          }
-                                          return items;
-                                        },
-                                        items: [
-                                          for (Instructor instructorI
-                                              in (controller
-                                                      .subjects?[controller
-                                                          .subjectId.value]
-                                                      ?.instructors
-                                                      ?.values
-                                                      .toList()) ??
-                                                  []) ...[
-                                            DropdownMenuItem<int?>(
-                                                value: instructorI.id,
-                                                child: CustomText(
-                                                  instructorI.name ??
-                                                      "unknown".tr,
-                                                  style: AppTextStyles.secStyle(
-                                                      textHeader: AppTextHeaders
-                                                          .h3Bold),
-                                                )),
-                                          ]
-                                        ],
-                                      )),
-                                ),
-                              )
+                              CustomTextFormField(
+                                controller: controller.dateController,
+                                // validator: controller.validateTime,
+                                labelText: "Date".tr,
+                                focusNode: controller.dateFocus,
+                                onFieldSubmitted: (e) {
+                                  controller.timeFocus.requestFocus();
+                                },
+                                width: (Get.width - 12) * 0.23,
+                              ),
                             ],
                           ),
                           Row(
@@ -473,14 +379,6 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.access_time_filled,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Time".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
@@ -495,7 +393,7 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                                 onTap: () => DateTimeUtils.timePiker(
                                     context, controller.timeController),
                                 onFieldSubmitted: (e) {
-                                  controller.durationFocus.requestFocus();
+                                  controller.hallFocus.requestFocus();
                                 },
                                 width: (Get.width - 12) * 0.23,
                               ),
@@ -506,44 +404,6 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.timer,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
-                                  CustomText("Duration".tr,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              CustomTextFormField(
-                                controller: controller.durationController,
-                                labelText: "Duration".tr,
-                                keyboardType: TextInputType.number,
-                                focusNode: controller.durationFocus,
-                                onFieldSubmitted: (e) {
-                                  controller.entryYearFocus.requestFocus();
-                                },
-                                width: (Get.width - 12) * 0.23,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  // Icon(
-                                  //   Icons.account_balance,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Hall".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
@@ -566,7 +426,7 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomButton(
-                                  onPress: controller.addlecture, text: "Add"),
+                                  onPress: controller.addExam, text: "Add"),
                               CustomButton(
                                 onPress: () =>
                                     Navigator.of(Get.overlayContext!).pop(),

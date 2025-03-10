@@ -98,6 +98,12 @@ class ExamRepository {
     required int sectionId,
     required int levelId,
     required data,
+
+    // required String term,
+    // required String day,
+    // required String subjectId,
+    // required String examTime,
+    // String? examRoom,
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
@@ -250,10 +256,23 @@ class ExamRepository {
     }
   }
 
-  static Future<Result<Map>> fetchDashboardExam() async {
+  static Future<Result<Map>> fetchDashboardExam({
+    int? sectionId,
+    int? levelId,
+    int limit = 20,
+    int? page,
+    String? year,
+    String? term,
+    String? day,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("get-exam-grouped-Panle");
+      response = await HttpProvider.get(
+          "get-exam-grouped-Panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page"); //add the required;
       Map<int, Exam> exams = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsExam in response?.data['data']) {
