@@ -533,6 +533,7 @@ exports.deleteAssignment = async (req, res) => {
       await file.destroy();
     }
 
+    // await assignment_file.destroy({where:{assignment_id: Assignment.id}});
     await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
     await Assignment.destroy();
 

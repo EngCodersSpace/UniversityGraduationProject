@@ -257,7 +257,10 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
           [Op.and]: [whereClause, searchCondition],
         },
         include: [
-          { model: user, as: "user" }, // Assuming 'user' is the associated model
+          { model: user,
+            as: "user",
+            attributes: ['user_id', 'user_name', 'email'], 
+          }, 
         ],
         limit: limitNumber,
         offset: offset,
@@ -267,13 +270,19 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
       if (!doctors.length) {
         return res.status(404).json({ message: "No doctors found for the specified criteria" });
       }
-  
+
       const doctorList = doctors.map((doctor) => ({
         doctor_id: doctor.doctor_id,
         academic_degree: doctor.academic_degree,
         administrative_position: doctor.administrative_position,
+        user: {
+        //   user_id: doctor.user.user_id,
+          name: doctor.user.user_name,
+          email: doctor.user.email,
+        },
       }));
-  
+
+
       res.status(200).json({
         message: "Doctors retrieved successfully",
         data: doctorList,
@@ -534,7 +543,10 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
           [Op.and]: [whereClause, searchCondition],
         },
         include: [
-          { model: user, as: "user" }, // Assuming 'user' is the associated model
+          { model: user,
+            as: "user" ,
+            attributes: ['user_id', 'user_name', 'email'] 
+          },
           { model: study_plan, as: "study_plan" },
           { model: level, as: "level" },
         ],
@@ -554,6 +566,10 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
         enrollment_year: student.enrollment_year,
         student_system: student.student_system,
         repeat_years_count: student.repeat_years_count,
+        user:{
+            name: student.user.user_name,
+            email: student.user.email,
+        }
       }));
   
       res.status(200).json({

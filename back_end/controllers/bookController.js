@@ -112,10 +112,13 @@ exports.downloadFile = async (req, res) => {
     }
 
     const filePath = path.resolve(__dirname, '..', `${fileData.file_path}`);
+    const fileSize = fs.statSync(filePath).size;
 
     // Set headers to instruct the browser to download the file
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSize);
+
 
     // Create a read stream and pipe it directly to the response
     const readStream = fs.createReadStream(filePath);

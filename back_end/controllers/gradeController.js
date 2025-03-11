@@ -1,7 +1,7 @@
 
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const { validationResult } = require('express-validator');
-const { Sequelize} = require('sequelize');
+const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
