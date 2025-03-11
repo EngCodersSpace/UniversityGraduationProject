@@ -98,12 +98,11 @@ class ExamRepository {
     required int sectionId,
     required int levelId,
     required data,
-
-    // required String term,
-    // required String day,
-    // required String subjectId,
-    // required String examTime,
-    // String? examRoom,
+    String? term,
+    String? day,
+    String? subjectId,
+    String? examTime,
+    String? examRoom,
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),

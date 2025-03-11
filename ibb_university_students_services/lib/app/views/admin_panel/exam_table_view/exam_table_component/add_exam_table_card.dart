@@ -222,7 +222,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 ),
                                 child: Center(
                                   child: Obx(() => DropdownButton(
-                                        items: controller.terms,
+                                        items: controller.term,
                                         onChanged: controller.changeAddTerm,
                                         value: controller.TermId.value,
                                         underline: const SizedBox(),

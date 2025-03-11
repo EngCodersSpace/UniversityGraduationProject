@@ -49,7 +49,7 @@ class DashboardExamTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "All",
-              style: AppTextStyles.secStyle(
+              style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
@@ -59,7 +59,7 @@ class DashboardExamTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "1st",
-              style: AppTextStyles.secStyle(
+              style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
@@ -69,7 +69,7 @@ class DashboardExamTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "2ec",
-              style: AppTextStyles.secStyle(
+              style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
@@ -78,7 +78,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "doctor_id",
         child: SizedBox(
-            width: (Get.width / 3) * 0.3,
+            width: (Get.width / 4) * 0.3,
             child: CustomText(
               "Doctor Id",
               style: AppTextStyles.mainStyle(
@@ -88,7 +88,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "academic_degree",
         child: SizedBox(
-            width: (Get.width / 3) * 0.3,
+            width: (Get.width / 4) * 0.3,
             child: CustomText(
               "Academic Degree",
               style: AppTextStyles.mainStyle(
@@ -98,7 +98,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "administrative_position",
         child: SizedBox(
-            width: (Get.width / 2) * 0.2,
+            width: (Get.width / 3) * 0.2,
             child: CustomText(
               "Administrative Position",
               style: AppTextStyles.mainStyle(
@@ -529,11 +529,11 @@ class DashboardExamTableController extends GetxController
       sectionId: SectionId.value!,
       levelId: LevelId.value!,
       data: dateController.text,
-      // term: TermId.value,
-      // day: selectedDayName.value,
-      // subjectId: subjectId.value!,
-      // examTime: timeController.text,
-      // examRoom: hallController.text,
+      term: TermId.value,
+      day: selectedDayName.value,
+      subjectId: subjectId.value!,
+      examTime: timeController.text,
+      examRoom: hallController.text,
     );
 
     // ignore: unused_local_variable

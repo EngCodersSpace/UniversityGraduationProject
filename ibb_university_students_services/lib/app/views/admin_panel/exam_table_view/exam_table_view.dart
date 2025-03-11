@@ -29,28 +29,31 @@ class ExamTableView extends GetView<DashboardExamTableController> {
               height: Get.height * 0.01,
             ),
             Expanded(
-              child: Scrollbar(
-                controller: controller.vertical,
-                thumbVisibility: true,
-                trackVisibility: true,
-                child: SingleChildScrollView(
+              child: Container(
+                width: Get.width * 0.6,
+                child: Scrollbar(
                   controller: controller.vertical,
-                  child: GetBuilder<DashboardExamTableController>(
-                    id: "DataTable",
-                    builder: (ctx) => Scrollbar(
-                      controller: controller.horizontal,
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      child: PaginatedDataTable(
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    controller: controller.vertical,
+                    child: GetBuilder<DashboardExamTableController>(
+                      id: "DataTable",
+                      builder: (ctx) => Scrollbar(
                         controller: controller.horizontal,
-                        rowsPerPage: controller.rowsPerPage.value,
-                        columnSpacing: controller.width * 0.05,
-                        onPageChanged: controller.onPageChange,
-                        availableRowsPerPage: const <int>[5, 10, 20, 30],
-                        onRowsPerPageChanged: controller.onRowChange,
-                        showCheckboxColumn: false,
-                        columns: controller.kTableColumn,
-                        source: MyData(),
+                        thumbVisibility: true,
+                        trackVisibility: true,
+                        child: PaginatedDataTable(
+                          controller: controller.horizontal,
+                          rowsPerPage: controller.rowsPerPage.value,
+                          columnSpacing: controller.width * 0.05,
+                          onPageChanged: controller.onPageChange,
+                          availableRowsPerPage: const <int>[5, 10, 20, 30],
+                          onRowsPerPageChanged: controller.onRowChange,
+                          showCheckboxColumn: false,
+                          columns: controller.kTableColumn,
+                          source: MyData(),
+                        ),
                       ),
                     ),
                   ),
