@@ -69,7 +69,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width / 3,
+                                      width: Get.width *0.4,
                                       child: Center(
                                         child: Obx(
                                               () => DropdownButton(
@@ -125,11 +125,29 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width / 2,
+                                      width: Get.width *0.4,
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
-                                            items: controller.levels,
+                                            items: (controller.levels.entries
+                                                .map((e) {
+                                              return DropdownMenuItem<int>(
+                                                  value: e.key,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                        .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) * 0.6,
+                                                    child: CustomText(
+                                                      (e.key == -1)?"All":e.key.toString(),
+                                                      style:
+                                                      AppTextStyles.mainStyle(
+                                                        textHeader:
+                                                        AppTextHeaders.h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            }).toList()),
                                             onChanged: controller.changeLevel,
                                             value:
                                                 controller.selectedLevel.value,

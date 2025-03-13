@@ -42,45 +42,13 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                 Icons.filter_list_alt,
                                 color: AppColors.mainCardColor,
                               )),
-                          PopupMenuButton<String>(
-                            onSelected: (val) => controller.libraryMore(val),
-                            color: AppColors.inverseCardColor,
-                            itemBuilder: (ctx) => [
-                              PopupMenuItem(
-                                  value: "add",
-                                  child: CustomText(
-                                    "Upload New Books".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "addReq",
-                                  child: CustomText(
-                                    "Books Add Request".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "uploadHis",
-                                  child: CustomText(
-                                    "Uploads History".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "uploadHis",
-                                  child: CustomText(
-                                    "Uploads History".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                            ],
-                            child: Icon(
-                              Icons.more_vert,
-                              color: AppColors.mainCardColor,
-                              size: 25,
-                            ),
-                          ),
+                          IconButton(
+                              onPressed: controller.addIconClick,
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.mainCardColor,
+                              )),
+
                           Expanded(
                             child: CustomTextFormField(
                               controller: controller.searchText,

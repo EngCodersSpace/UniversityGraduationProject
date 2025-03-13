@@ -1,24 +1,32 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-
+import '../components/pop_up_cards/alert_message_card.dart';
 import '../models/helper_models/library_files_cache/library_files_cache.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../services/http_provider/http_provider.dart';
+import '../services/notification_services/notification_services.dart';
+import '../utils/file_utils.dart';
 import '../utils/internet_connection_cheker.dart';
+import '../utils/snake_bar.dart';
 
 class LibraryRepository {
   static const int _fetchAllError = 621;
   static const int _fetchError = 622;
+
   // static const int _createError = 623;
   // static const int _updateError = 624;
   // static const int _deleteError = 625;
+  static const int _uploadError = 626;
 
   static Box<LibraryFilesCache>? _libraryFilesGroupsBox;
   static Box<LibraryFile>? _libraryFilesBox;
@@ -50,23 +58,21 @@ class LibraryRepository {
     required int sectionId,
     required int levelId,
     required String category,
-    required RxMap<int, LibraryFile> destination,
+    required get_x.RxMap<int, LibraryFile> destination,
     bool hardFetch = false,
   }) async {
     LibraryFilesCache? cachedLibrary = _libraryFilesGroupsBox
         ?.get("${sectionId}_${levelId}_${category}_Library");
 
-    if ((cachedLibrary?.data.isNotEmpty??false ) &&
+    if ((cachedLibrary?.data.isNotEmpty ?? false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
-      for(int fileId in cachedLibrary?.data??[]){
+      for (int fileId in cachedLibrary?.data ?? []) {
         Result res = await fetchLibraryFile(id: fileId);
-        if(res.statusCode==200 && res.data!=null){
-        destination[res.data.id] = res.data!;
+        if (res.statusCode == 200 && res.data != null) {
+          destination[res.data.id] = res.data!;
         }
       }
-      return Result(
-          hasError: false,
-          statusCode: 200);
+      return Result(hasError: false, statusCode: 200);
     }
 
     try {
@@ -99,10 +105,11 @@ class LibraryRepository {
               final Map<String, dynamic> jsLibrary = jsonDecode(jsonChunk);
 
               Subject? subject = await SubjectRepository.fetchSubject(
-                  id: jsLibrary["subject_id"])
+                      id: jsLibrary["subject_id"])
                   .then((e) => e.data);
 
-              LibraryFile libraryFile = LibraryFile.fromJson(jsLibrary, subject: subject);
+              LibraryFile libraryFile =
+                  LibraryFile.fromJson(jsLibrary, subject: subject);
               destination[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
@@ -118,7 +125,6 @@ class LibraryRepository {
         buffer.write(parts.last);
       }
 
-
       // Store the final cache
       LibraryFilesCache cachedLibrary = LibraryFilesCache(
           key: "${sectionId}_${levelId}_${category}_Library",
@@ -126,10 +132,7 @@ class LibraryRepository {
 
       await _libraryFilesGroupsBox?.put(cachedLibrary.key, cachedLibrary);
 
-      return Result(
-          hasError: false,
-          statusCode: response?.statusCode);
-
+      return Result(hasError: false, statusCode: response?.statusCode);
     } catch (error) {
       return Result(
           hasError: true,
@@ -138,7 +141,6 @@ class LibraryRepository {
           data: null);
     }
   }
-
 
   static Future<Result<LibraryFile>> fetchLibraryFile({
     required int id,
@@ -251,149 +253,79 @@ class LibraryRepository {
 //   }
 // }
 //
-// static Future<Result<int>> uploadAttachmentFiles({
-//   required AttachmentFile attachment,
-//   required int sectionId,
-//   required int levelId,
-// }) async {
-//   late Response? response;
-//   try {
-//     File file = File(attachment.path ?? "");
-//     int fileSize = await file.length();
-//     response = await HttpProvider.post("check-files", data: {
-//       "originalname": attachment.path?.split("/").last,
-//       "size": fileSize.toString(),
-//       "mimetype": "text/plain",
-//       "section_id": sectionId,
-//       "level_id": levelId
-//     });
-//
-//     if (response?.statusCode == 200) {
-//       attachment.progress = get_x.RxInt(0);
-//       attachment.status?.value = "Uploading";
-//       response = null;
-//       response = await HttpProvider.uploadFile(
-//         uploadUrl:
-//         "upload-files-assignment-doctor?assignment_id=${attachment.assignmentId}&section_id=$sectionId&level_id=$levelId",
-//         file: file,
-//         onSendProgress: (sent, total) {
-//           double progress = (sent / total) * 100;
-//           attachment.progress?.value = progress.toInt();
-//           NotificationHandler.showProgressNotification(
-//               uniqueId: attachment.id.hashCode,
-//               progress: progress.toInt(),
-//               title: "Uploading",
-//               message: " ${file.path.split("/").last}");
-//         },
-//       );
-//       if (response?.statusCode == 201) {
-//         attachment.path = response?.data["file"]["path"];
-//         await FileUtils.saveFiles(
-//             fileRelativePath: attachment.path, file: file);
-//         NotificationHandler.showProgressNotification(
-//             uniqueId: attachment.id.hashCode,
-//             title: "successful upload ",
-//             message: attachment.originName);
-//         attachment.id = response?.data["file"]["id"];
-//         attachment.status?.value = "Uploaded";
-//       } else {
-//         NotificationHandler.showProgressNotification(
-//             uniqueId: attachment.id.hashCode,
-//             title: "failed upload ",
-//             message: attachment.originName);
-//       }
-//       return Result(
-//           data: attachment.id,
-//           hasError: false,
-//           statusCode: response?.statusCode ?? _createError,
-//           message: response?.data["message"] ?? "error");
-//     } else if (response?.statusCode == 403) {
-//       await get_x.Get.dialog(PopUpAlertCard(
-//           response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-//     }
-//     showSnakeBar(message: "Failed Upload");
-//     return Result(
-//         hasError: true,
-//         statusCode: response?.statusCode ?? _createError,
-//         message: response?.data["message"] ?? "error");
-//   } catch (error) {
-//     return Result(
-//         statusCode: _createError, message: error.toString(), data: null);
-//   }
-// }
-//
-// static Future<Result<int>> uploadStudentLibraryFiles({
-//   required StudentLibraryFile files,
-//   required int sectionId,
-//   required int levelId,
-//   required int assignmentId,
-// }) async {
-//   late Response? response;
-//   try {
-//     File file = File(files.path ?? "");
-//     int fileSize = await file.length();
-//     response = await HttpProvider.post("check-files", data: {
-//       "originalname": files.path?.split("/").last,
-//       "size": fileSize.toString(),
-//       "mimetype": "text/plain",
-//       "section_id": sectionId,
-//       "level_id": levelId
-//     });
-//
-//     if (response?.statusCode == 200) {
-//       files.progress = get_x.RxInt(0);
-//       files.status?.value = "Uploading";
-//       response = null;
-//       response = await HttpProvider.uploadFile(
-//         uploadUrl:
-//         "upload-files-assignment-student?assignment_id=$assignmentId&section_id=$sectionId&level_id=$levelId",
-//         file: file,
-//         onSendProgress: (sent, total) {
-//           double progress = (sent / total) * 100;
-//           files.progress?.value = progress.toInt();
-//           NotificationHandler.showProgressNotification(
-//               uniqueId: files.id.hashCode,
-//               progress: progress.toInt(),
-//               title: "Uploading",
-//               message: " ${file.path.split("/").last}");
-//         },
-//       );
-//       if (response?.statusCode == 201) {
-//         files.path = response?.data["file"]["path"];
-//         await FileUtils.saveFiles(fileRelativePath: files.path, file: file);
-//         await NotificationHandler.showProgressNotification(
-//             uniqueId: files.id.hashCode,
-//             title: "successful upload ",
-//             message: files.originName);
-//         files.id = response?.data["file"]["id"];
-//         files.status?.value = "Uploaded";
-//       } else {
-//         files.status?.value = "Failed";
-//         NotificationHandler.showProgressNotification(
-//             uniqueId: files.id.hashCode,
-//             title: "failed upload ",
-//             message: files.originName);
-//       }
-//       return Result(
-//           data: files.id,
-//           hasError: false,
-//           statusCode: response?.statusCode ?? _createError,
-//           message: response?.data["message"] ?? "error");
-//     } else if (response?.statusCode == 403) {
-//       await get_x.Get.dialog(PopUpAlertCard(
-//           response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-//     }
-//     showSnakeBar(message: "Failed Upload");
-//     return Result(
-//         hasError: true,
-//         statusCode: response?.statusCode ?? _createError,
-//         message: response?.data["message"] ?? "error");
-//   } catch (error) {
-//     return Result(
-//         statusCode: _createError, message: error.toString(), data: null);
-//   }
-// }
-//
+  static Future<Result<LibraryFile>> uploadLibraryFile({
+    required PlatformFile file,
+    required String category,
+    required List<Map<String, int>> groups,
+  }) async {
+    late Response? response;
+    try {
+      File fileData = File(file.path ?? "");
+      int fileSize = await fileData.length();
+      response = await HttpProvider.post("checkFileDuplicate", data: {
+        "originalname": file.path?.split("/").last,
+        "size": fileSize.toString(),
+        "mimetype": "text/plain",
+        "section_id": groups.first["section_id"],
+        "level_id": groups.first["level_id"]
+      });
+
+      if (response?.statusCode == 200) {
+        response = null;
+        response = await HttpProvider.uploadFile(
+          uploadUrl:
+              "upload?category=$category&section_id=${groups.first["section_id"]}&level_id=${groups.first["level_id"]}",
+          file: fileData,
+          onSendProgress: (sent, total) {
+            double progress = (sent / total) * 100;
+            NotificationHandler.showProgressNotification(
+                uniqueId: file.path.hashCode,
+                progress: progress.toInt(),
+                title: "Uploading",
+                message: " ${file.path?.split("/").last}");
+          },
+        );
+        if (response?.statusCode == 201) {
+          LibraryFile resFile = LibraryFile.fromJson(response?.data["books"]);
+          await FileUtils.saveFiles(
+              fileRelativePath: resFile.filePath, file: file);
+          NotificationHandler.showProgressNotification(
+            uniqueId: file.path.hashCode,
+            title: "successful upload ",
+            message: file.path?.split("/").last,
+          );
+          return Result(
+              data: resFile,
+              hasError: false,
+              statusCode: response?.statusCode ?? _uploadError,
+              message: response?.data["message"] ?? "error");
+        } else {
+          NotificationHandler.showProgressNotification(
+            uniqueId: file.path.hashCode,
+            title: "failed upload ",
+            message: file.path?.split("/").last,
+          );
+        }
+        return Result(
+            data: null,
+            hasError: false,
+            statusCode: response?.statusCode ?? _uploadError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      showSnakeBar(message: "Failed Upload");
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? _uploadError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          statusCode: _uploadError, message: error.toString(), data: null);
+    }
+  }
+
 // static Future<Result<Assignment>> updateAssignment(
 //     {required int id,
 //       required int sectionId,

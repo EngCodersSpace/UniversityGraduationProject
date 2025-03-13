@@ -6,15 +6,15 @@ import 'package:ibb_university_students_services/app/views/library_view/componen
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/lecture_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/refreneces_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
-import '../components/custom_text_v2.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/library_files_model/library_files_model.dart';
 import '../models/section_model/section.dart';
+import '../models/subject_model/subject_model.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
+import '../repositories/subject_repository.dart';
 import '../styles/app_colors.dart';
-import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
 import '../views/library_view/components/add_books_card.dart';
 import '../views/library_view/components/book_info_card.dart';
@@ -25,6 +25,7 @@ class LibraryController extends GetxController
   RxString fieldMessage = "".obs;
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
+  TextEditingController selectedSubject = TextEditingController();
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
@@ -38,8 +39,15 @@ class LibraryController extends GetxController
   PageController notesPagesController = PageController();
   PageController refPagesController = PageController();
   Map<int, Section> sections = {};
-  List<DropdownMenuItem<int>> levels = [];
+  Map<int, RxBool> levels = {};
+  List<String> subjects = [];
+  RxList<Map<String, int>> groups = RxList();
 
+  List<String> categories = [
+    "Lecture",
+    "Reference",
+    "Exams Forms",
+  ];
   List<Border> borders = [];
   final List<int?> showOptions = [0, 1, 2];
   Map<String, List<String>> sortOptions = {
@@ -54,11 +62,6 @@ class LibraryController extends GetxController
     const ReferencesTab(),
     const ExamFormsTab(),
   ]);
-  List<String> categories = [
-    "Lecture",
-    "Reference",
-    "Exams Forms",
-  ];
   LibraryFile? selectedBook;
 
   @override
@@ -72,6 +75,8 @@ class LibraryController extends GetxController
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
+    subjects = await SubjectRepository.fetchSubjects()
+        .then((e) => e.data?.values.toList().map((e)=>e.subjectName??"Unknown".tr).toList() ?? []);
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
@@ -91,9 +96,8 @@ class LibraryController extends GetxController
     loadingState.value = false;
   }
 
-
   @override
-  void refresh() async{
+  void refresh() async {
     await fetchLibraryData();
   }
 
@@ -101,7 +105,7 @@ class LibraryController extends GetxController
     if (selectedLevel.value == null) {
       await initLevelDropdownMenuLists();
       if (levels.isNotEmpty) {
-        selectedLevel.value = levels.first.value;
+        selectedLevel.value = levels.keys.first;
       }
     }
     if (selectedDepartment.value == null) {
@@ -121,7 +125,6 @@ class LibraryController extends GetxController
       hardFetch: force,
     );
     if (res.statusCode == 200) {
-
     } else if (res.statusCode == 204) {
       books.value = res.data ?? {};
       fieldMessage.value = "this section and level not has Document";
@@ -140,41 +143,19 @@ class LibraryController extends GetxController
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     sections = await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? {});
-    sections[-1] = Section(id: -1,nameData: {"en":"All"});
+    sections[-1] = Section(id: -1, nameData: {"en": "All"});
     selectedDepartment.value = -1;
   }
 
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData =
         await LevelRepository.fetchLevels().then((e) => e.data ?? []);
-    levels = [];
+    levels = {};
     for (Level level in levelsData) {
-      levels.add(
-        DropdownMenuItem<int>(
-            value: level.id,
-            child: SizedBox(
-              width: (Get.width * 0.5) * 0.75,
-              child: CustomText(
-                level.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-              ),
-            )),
-      );
+      levels[level.id] = false.obs;
     }
-    levels.add(
-      DropdownMenuItem<int>(
-          value: -1,
-          child: SizedBox(
-            width: (Get.width * 0.5) * 0.75,
-            child: CustomText(
-              "All",
-              style:
-              AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-            ),
-          )),
-    );
-      selectedLevel.value = -1;
+    levels[-1] = false.obs;
+    selectedLevel.value = -1;
   }
 
   void changeDepartment(int? val) async {
@@ -185,24 +166,32 @@ class LibraryController extends GetxController
   void changeSelectedSortOption(String? val) async {
     if (val == null) return;
     selectedSortOption.value = val;
-    switch(val){
+    switch (val) {
       case "title":
-        books.value = Map<int,LibraryFile>.fromEntries(
-            books.entries.toList()
-              ..sort((a, b) => (sortDirection.value==0)?(a.value.title?.toLowerCase().compareTo(b.value.title?.toLowerCase()??"")??0):(b.value.title?.toLowerCase().compareTo(a.value.title?.toLowerCase()??"")??0))
-        );
+        books.value = Map<int, LibraryFile>.fromEntries(books.entries.toList()
+          ..sort((a, b) => (sortDirection.value == 0)
+              ? (a.value.title
+                      ?.toLowerCase()
+                      .compareTo(b.value.title?.toLowerCase() ?? "") ??
+                  0)
+              : (b.value.title
+                      ?.toLowerCase()
+                      .compareTo(a.value.title?.toLowerCase() ?? "") ??
+                  0)));
         break;
       case "page":
-        books.value = Map<int,LibraryFile>.fromEntries(
-            books.entries.toList()
-              ..sort((a, b) => (sortDirection.value==0)?(a.value.numberOfPages?.compareTo(b.value.numberOfPages??0)??0):(b.value.numberOfPages?.compareTo(a.value.numberOfPages??0)??0)
-        ));
+        books.value = Map<int, LibraryFile>.fromEntries(books.entries.toList()
+          ..sort((a, b) => (sortDirection.value == 0)
+              ? (a.value.numberOfPages?.compareTo(b.value.numberOfPages ?? 0) ??
+                  0)
+              : (b.value.numberOfPages?.compareTo(a.value.numberOfPages ?? 0) ??
+                  0)));
         break;
       case "size":
-        books.value = Map<int,LibraryFile>.fromEntries(
-            books.entries.toList()
-              ..sort((a, b) => (sortDirection.value==0)?(a.value.fileSize?.compareTo(b.value.fileSize??0)??0):(b.value.fileSize?.compareTo(a.value.fileSize??0)??0)
-              ));
+        books.value = Map<int, LibraryFile>.fromEntries(books.entries.toList()
+          ..sort((a, b) => (sortDirection.value == 0)
+              ? (a.value.fileSize?.compareTo(b.value.fileSize ?? 0) ?? 0)
+              : (b.value.fileSize?.compareTo(a.value.fileSize ?? 0) ?? 0)));
         break;
     }
   }
@@ -332,7 +321,35 @@ class LibraryController extends GetxController
     }
   }
 
-  void uploadBooks() {}
+  void uploadBooks() async {
+    if (groups.isEmpty) {
+      showSnakeBar(
+          title: "Validation Error", message: "Should add at least one group");
+    }
+    for (PlatformFile file in (selectedFiles)) {
+      await LibraryRepository.uploadLibraryFile(
+        file: file,
+        groups: groups,
+        category: categories[selectedCategory.value??0]
+      ).then((e) {});
+    }
+  }
+
+  void addGroup(int sectionId, int levelId) {
+    if (groups.any((map) =>
+        map["section_id"] == sectionId && map["level_id"] == levelId)) {
+      showSnakeBar(message: "Group Already Exists");
+      return;
+    }
+    groups.insert(
+      0,
+      {"section_id": sectionId, "level_id": levelId},
+    );
+  }
+
+  void delGroup(int index) {
+    groups.removeAt(index);
+  }
 
   void closeAddBooksDialog() {
     Navigator.of(Get.overlayContext!).pop();

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/typeahead.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/screen_utils.dart';
-
-
+import 'library_add_group_card.dart';
 
 class BooksAddFilesCard extends GetView<LibraryController> {
   const BooksAddFilesCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LibraryController>(
@@ -47,133 +48,235 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                   height: 8,
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                        SizedBox(
-                                            width: (Get.width *0.2),
-                                            child: CustomText("Program".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold))),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.inverseCardColor,
-                                        borderRadius: BorderRadius.circular(24),
-                                      ),
-                                      width: Get.width / 3,
-                                      child: Center(
-                                        child: Obx(
-                                              () => DropdownButton(
-                                            items: (controller.sections.entries
-                                                .map((e) {
-                                              return DropdownMenuItem<int>(
-                                                  value: e.value.id,
-                                                  child: SizedBox(
-                                                    width: (ScreenUtils
-                                                        .isPhoneScreen())
-                                                        ? (Get.width / 3) - 30
-                                                        : (Get.width / 5.5) * 0.6,
-                                                    child: CustomText(
-                                                      e.value.name ?? "unknown",
-                                                      style:
-                                                      AppTextStyles.mainStyle(
-                                                        textHeader:
-                                                        AppTextHeaders.h5Bold,
-                                                      ),
-                                                    ),
-                                                  ));
-                                            }).toList()),
-                                            onChanged:
-                                            controller.changeDepartment,
-                                            value: controller
-                                                .selectedDepartment.value,
-                                            underline: const SizedBox(),
-                                            iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                            dropdownColor:
-                                            AppColors.inverseCardColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     SizedBox(
-                                        width: (Get.width *0.2),
-                                        child: CustomText("Level".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold))),
+                                        width: (Get.width * 0.2),
+                                        child: CustomText("Category".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold))),
                                     Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.inverseCardColor,
-                                        borderRadius:
-                                        BorderRadius.circular(24),
-                                      ),
-                                      width: Get.width*0.5,
-                                      child: Center(
-                                        child: Obx(
-                                              () => DropdownButton(
-                                            items: controller.levels,
-                                            onChanged:
-                                            controller.changeLevel,
-                                            value: controller
-                                                .selectedLevel.value,
-                                            underline: const SizedBox(),
-                                            iconEnabledColor:
-                                            AppColors.mainCardColor,
-                                            dropdownColor:
-                                            AppColors.inverseCardColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    SizedBox(
-                                      width: (Get.width *0.2),
-                                        child: CustomText("Category".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold))),
-                                    Container(
-                                        width: Get.width*0.5,
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                                      width: Get.width * 0.5,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
                                       decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
-                                          borderRadius: BorderRadius.circular(24)
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(24)),
                                       child: Center(
-                                        child: Obx(()=>DropdownButton(
-                                          value: controller.selectedCategory.value,
-                                          iconEnabledColor:
-                                          AppColors.mainCardColor,
-                                          underline: const SizedBox(),
-                                          dropdownColor: AppColors.inverseCardColor,
-                                          onChanged: (val) {
-                                            if(val == null)return;
-                                          },
-                                          isExpanded: true,
-                                          menuWidth: Get.width*0.7,
-                                          items: [
-                                            for(var (i,s) in controller.categories.indexed)...[
-                                              DropdownMenuItem(
-                                                  value: i,
-                                                  child:  SizedBox(
-                                                    width: (Get.width *0.5) * 0.75,
-                                                      child: CustomText(s,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),))
-                                              ),
-                                            ]
-                                          ],
-                                        )),
-                                      ),)
+                                        child: Obx(() => DropdownButton(
+                                              value: controller
+                                                  .selectedCategory.value,
+                                              iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                              underline: const SizedBox(),
+                                              dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                              onChanged: (val) {
+                                                if (val == null) return;
+                                              },
+                                              isExpanded: true,
+                                              menuWidth: Get.width * 0.7,
+                                              items: [
+                                                for (var (i, s) in controller
+                                                    .categories.indexed) ...[
+                                                  DropdownMenuItem(
+                                                      value: i,
+                                                      child: SizedBox(
+                                                          width: (Get.width *
+                                                                  0.5) *
+                                                              0.75,
+                                                          child: CustomText(
+                                                            s,
+                                                            style: AppTextStyles
+                                                                .mainStyle(
+                                                                    textHeader:
+                                                                        AppTextHeaders
+                                                                            .h3Bold),
+                                                          ))),
+                                                ]
+                                              ],
+                                            )),
+                                      ),
+                                    )
                                   ],
                                 ),
+                                TypeAhead(
+                                  textController: controller.selectedSubject,
+                                  items: controller.subjects, context: context,
+                                ),
+                                Obx(() => Column(
+                                      children: [
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional.centerStart,
+                                          child: CustomText("Groups",
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h2Bold)),
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Container(
+                                          height: Get.height * 0.18,
+                                          width: Get.width * 0.88,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: AppColors
+                                                      .inverseCardColor),
+                                              color: AppColors.tabBackColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(24)),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: ((Get.width * 0.85) /
+                                                        7),
+                                                    child: CustomText("#",
+                                                        style: AppTextStyles
+                                                            .secStyle(
+                                                                textHeader:
+                                                                    AppTextHeaders
+                                                                        .h2Bold)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: ((Get.width * 0.85) /
+                                                            7) *
+                                                        3,
+                                                    child: CustomText("Program",
+                                                        style: AppTextStyles
+                                                            .secStyle(
+                                                                textHeader:
+                                                                    AppTextHeaders
+                                                                        .h2Bold)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: ((Get.width * 0.85) /
+                                                            7) *
+                                                        2,
+                                                    child: CustomText("Level",
+                                                        style: AppTextStyles
+                                                            .secStyle(
+                                                                textHeader:
+                                                                    AppTextHeaders
+                                                                        .h2Bold)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: ((Get.width * 0.85) /
+                                                        7),
+                                                    height: 25,
+                                                    child: IconButton(
+                                                      onPressed: () async {
+                                                        Get.dialog(
+                                                            AddGroupCard());
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.add,
+                                                        color: AppColors
+                                                            .inverseCardColor,
+                                                      ),
+                                                      padding: EdgeInsets.zero,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Divider(
+                                                color:
+                                                    AppColors.inverseCardColor,
+                                              ),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    children: [
+                                                      for (var (index, item)
+                                                          in controller.groups
+                                                              .indexed) ...[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width:
+                                                                  ((Get.width *
+                                                                          0.85) /
+                                                                      7),
+                                                              child: CustomText(
+                                                                  "${index + 1}",
+                                                                  style: AppTextStyles.secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
+                                                            ),
+                                                            SizedBox(
+                                                              width: ((Get.width *
+                                                                          0.85) /
+                                                                      7) *
+                                                                  3,
+                                                              child: CustomText(
+                                                                  "${controller.sections[item["section_id"]!]?.name}",
+                                                                  softWrap:
+                                                                      false,
+                                                                  style: AppTextStyles.secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
+                                                            ),
+                                                            SizedBox(
+                                                              width: ((Get.width *
+                                                                          0.85) /
+                                                                      7) *
+                                                                  2,
+                                                              child: CustomText(
+                                                                  "${item["level_id"]}",
+                                                                  style: AppTextStyles.secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
+                                                            ),
+                                                            SizedBox(
+                                                                width: ((Get.width *
+                                                                        0.85) /
+                                                                    7),
+                                                                child: IconButton(
+                                                                    onPressed: () =>
+                                                                        controller.delGroup(
+                                                                            index),
+                                                                    icon: Icon(Icons
+                                                                        .delete)))
+                                                          ],
+                                                        ),
+                                                      ]
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                      ],
+                                    )),
                                 const SizedBox(
                                   height: 8,
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: CustomText("Selected Books",
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h2Bold)),
                                 ),
                                 Expanded(
                                   child: Container(
@@ -197,7 +300,8 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                                 ),
                                                 for (int i = 0;
                                                     i <
-                                                        (controller.selectedFiles
+                                                        (controller
+                                                            .selectedFiles
                                                             .length);
                                                     i++) ...[
                                                   Padding(
@@ -250,35 +354,36 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                                         SizedBox(
                                                           height: 24,
                                                           width: 24,
-                                                          child: PopupMenuButton<
-                                                              String>(
+                                                          child:
+                                                              PopupMenuButton<
+                                                                  String>(
                                                             onSelected: (val) =>
                                                                 controller
                                                                     .filesMore(
                                                                         val, i),
                                                             color: AppColors
                                                                 .inverseCardColor,
-                                                            itemBuilder: (ctx) =>
-                                                                [
+                                                            itemBuilder:
+                                                                (ctx) => [
                                                               PopupMenuItem(
-                                                                  value: "Delete",
+                                                                  value:
+                                                                      "Delete",
                                                                   child:
                                                                       CustomText(
                                                                     "Delete".tr,
                                                                     style: AppTextStyles.mainStyle(
                                                                         textHeader:
-                                                                            AppTextHeaders
-                                                                                .h3Bold),
+                                                                            AppTextHeaders.h3Bold),
                                                                   )),
                                                               PopupMenuItem(
-                                                                  value: "reName",
+                                                                  value:
+                                                                      "reName",
                                                                   child:
                                                                       CustomText(
                                                                     "Rename".tr,
                                                                     style: AppTextStyles.mainStyle(
                                                                         textHeader:
-                                                                            AppTextHeaders
-                                                                                .h3Bold),
+                                                                            AppTextHeaders.h3Bold),
                                                                   )),
                                                             ],
                                                             child: Icon(
@@ -297,8 +402,8 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                                               .length) -
                                                           1)) ...[
                                                     Divider(
-                                                      color:
-                                                          AppColors.secTextColor,
+                                                      color: AppColors
+                                                          .secTextColor,
                                                       thickness: 0.3,
                                                       indent: 10,
                                                       endIndent: 10,
