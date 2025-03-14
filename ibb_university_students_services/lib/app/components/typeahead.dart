@@ -19,12 +19,13 @@ class TypeAhead<T> extends StatefulWidget {
     this.menuTextStyle,
     this.menuColor = Colors.white,
     this.onSelected,
+    this.includeAllOption = false,
     super.key,
   });
 
   final TextEditingController _textController = TextEditingController();
   String? label;
-  Map<T,String> items;
+  Map<T, String> items;
   Color? color;
   TextStyle? textStyle;
   TextStyle? menuTextStyle;
@@ -32,8 +33,11 @@ class TypeAhead<T> extends StatefulWidget {
   Color menuColor;
   double? width;
   double height;
-  void Function(T val,String item)? onSelected;
+  bool includeAllOption;
+
+  void Function(T val, String item)? onSelected;
   T? value;
+
   @override
   State<TypeAhead> createState() => _TypeAheadState();
 }
@@ -51,11 +55,16 @@ class _TypeAheadState extends State<TypeAhead> {
         GestureDetector(
           onTap: () {
             hideOverlay();
+            if (widget.value != null) {
+              if (widget.items.containsKey(widget.value)) {
+                widget._textController.text = widget.items[widget.value]!;
+              }
+            }
           },
         ),
         Positioned(
           left: offset.dx,
-          top: offset.dy + renderBox.size.height-10,
+          top: offset.dy + renderBox.size.height - 10,
           width: renderBox.size.width,
           child: Material(
             color: Colors.transparent,
@@ -71,8 +80,9 @@ class _TypeAheadState extends State<TypeAhead> {
               child: Theme(
                 data: ThemeData(
                     scrollbarTheme: ScrollbarThemeData(
-                  thumbColor: WidgetStateProperty.all(widget.menuTextStyle?.color),
-                      trackColor: WidgetStateProperty.all(Colors.grey),
+                  thumbColor:
+                      WidgetStateProperty.all(widget.menuTextStyle?.color),
+                  trackColor: WidgetStateProperty.all(Colors.grey),
                 )),
                 child: Scrollbar(
                   thumbVisibility: true,
@@ -88,10 +98,11 @@ class _TypeAheadState extends State<TypeAhead> {
                                   style: widget.menuTextStyle,
                                 ),
                                 onTap: () {
+                                  widget.value = item.key;
                                   widget._textController.text = item.value;
                                   hideOverlay();
-                                  if(widget.onSelected != null){
-                                  widget.onSelected!(item.key,item.value);
+                                  if (widget.onSelected != null) {
+                                    widget.onSelected!(item.key, item.value);
                                   }
                                 },
                               ))
@@ -117,12 +128,22 @@ class _TypeAheadState extends State<TypeAhead> {
   }
 
 
+  @override
+  void didUpdateWidget( oldWidget) {
+    if (widget.includeAllOption) {
+      widget.items["all-option"] = "All";
+    }
+    if (widget.value != null) {
+      if (widget.items.containsKey(widget.value)) {
+        widget._textController.text = widget.items[widget.value]!;
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    if(widget.value != null) {
-      widget._textController.text = widget.items[widget.value]!;
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -132,16 +153,17 @@ class _TypeAheadState extends State<TypeAhead> {
           child: TextFormField(
             controller: widget._textController,
             onTap: () {
+              widget._textController.text = "";
               showOverlay(context);
             },
             onChanged: (e) {
               setState(() {
                 if (overlayEntry == null) showOverlay(context);
                 overlayEntry?.markNeedsBuild();
-                widget._textController.text = e;
               });
             },
             style: widget.textStyle,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               fillColor: widget.color,
               filled: true,

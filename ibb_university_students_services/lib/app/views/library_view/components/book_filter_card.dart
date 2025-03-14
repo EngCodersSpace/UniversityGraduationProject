@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/controllers/library_control
 import 'package:ibb_university_students_services/app/views/library_view/components/sort_icons.dart';
 import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
+import '../../../components/typeahead.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/screen_utils.dart';
@@ -59,7 +60,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                     SizedBox(
                                         width: Get.width * 0.2,
                                         child: CustomText(
-                                          "Section:",
+                                          "${"Program".tr}:",
                                           style: AppTextStyles.secStyle(
                                               textHeader:
                                                   AppTextHeaders.h3Bold),
@@ -115,7 +116,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                     SizedBox(
                                         width: Get.width * 0.2,
                                         child: CustomText(
-                                          "Level:",
+                                          "${"Level".tr}:",
                                           style: AppTextStyles.secStyle(
                                               textHeader:
                                                   AppTextHeaders.h3Bold),
@@ -159,6 +160,35 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                           ),
                                         ),
                                       ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SizedBox(
+                                        width: (Get.width * 0.2),
+                                        child: CustomText("Subject".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Bold))),
+                                    TypeAhead(
+                                      width: (Get.width * 0.5),
+                                      onSelected: (i,v){
+                                        controller.selectedSubject = i;
+                                      },
+                                      value: "all-option",
+                                      label: "Select Subject",
+                                      items: controller.subjects.map((i,e)=>MapEntry(i, e.subjectName??"")),
+                                      color: AppColors.inverseCardColor,
+                                      menuColor: AppColors.inverseCardColor,
+                                      textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                      menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                      includeAllOption: true,
                                     ),
                                   ],
                                 ),
