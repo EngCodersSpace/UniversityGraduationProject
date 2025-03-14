@@ -6,7 +6,6 @@ import 'package:ibb_university_students_services/app/controllers/library_control
 import '../../../components/buttons.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/screen_utils.dart';
 import 'library_add_group_card.dart';
 
 class BooksAddFilesCard extends GetView<LibraryController> {
@@ -103,10 +102,32 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                     )
                                   ],
                                 ),
-                                TypeAhead(
-                                  textController: controller.selectedSubject,
-                                  items: controller.subjects, context: context,
+                                SizedBox(
+                                  height: 8,
                                 ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SizedBox(
+                                        width: (Get.width * 0.2),
+                                        child: CustomText("Subject".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                AppTextHeaders.h3Bold))),
+                                    TypeAhead(
+                                      width: (Get.width * 0.5),
+                                      textController: controller.selectedSubject,
+                                      label: "Select Subject",
+                                      items: controller.subjects,
+                                      color: AppColors.inverseCardColor,
+                                      menuColor: AppColors.inverseCardColor,
+                                      textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                      menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ],
+                                ),
+
                                 Obx(() => Column(
                                       children: [
                                         Align(
