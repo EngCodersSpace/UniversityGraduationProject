@@ -117,9 +117,11 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                                 AppTextHeaders.h3Bold))),
                                     TypeAhead(
                                       width: (Get.width * 0.5),
-                                      textController: controller.selectedSubject,
+                                      onSelected: (i,v){
+                                        controller.selectedSubject = i;
+                                      },
                                       label: "Select Subject",
-                                      items: controller.subjects,
+                                      items: controller.subjects.map((i,e)=>MapEntry(i, e.subjectName??"")),
                                       color: AppColors.inverseCardColor,
                                       menuColor: AppColors.inverseCardColor,
                                       textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),

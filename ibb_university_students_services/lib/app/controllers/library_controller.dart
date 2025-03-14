@@ -10,6 +10,7 @@ import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/library_files_model/library_files_model.dart';
 import '../models/section_model/section.dart';
+import '../models/subject_model/subject_model.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
 import '../repositories/subject_repository.dart';
@@ -24,7 +25,7 @@ class LibraryController extends GetxController
   RxString fieldMessage = "".obs;
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
-  TextEditingController selectedSubject = TextEditingController();
+  String? selectedSubject;
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
@@ -39,7 +40,7 @@ class LibraryController extends GetxController
   PageController refPagesController = PageController();
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
-  List<String> subjects = [];
+  Map<String,Subject> subjects = {};
   RxList<Map<String, int>> groups = RxList();
 
   List<String> categories = [
@@ -75,7 +76,7 @@ class LibraryController extends GetxController
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
     subjects = await SubjectRepository.fetchSubjects()
-        .then((e) => e.data?.values.toList().map((e)=>e.subjectName??"Unknown".tr).toList() ?? []);
+        .then((e) => e.data??{});
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
