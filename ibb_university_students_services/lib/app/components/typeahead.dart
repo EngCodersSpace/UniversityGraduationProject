@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-class TypeAhead<T> extends StatefulWidget {
+class TypeAhead<T extends Object> extends StatefulWidget {
   TypeAhead({
     this.label,
     this.icon = const Icon(
@@ -34,15 +34,8 @@ class TypeAhead<T> extends StatefulWidget {
   double? width;
   double height;
   bool includeAllOption;
-
-  void Function(T val, String item)? onSelected;
   T? value;
-
-  @override
-  State<TypeAhead> createState() => _TypeAheadState();
-}
-
-class _TypeAheadState extends State<TypeAhead> {
+  void Function(T, String)? onSelected;
   OverlayEntry? overlayEntry;
 
   void showOverlay(BuildContext context) {
@@ -55,9 +48,9 @@ class _TypeAheadState extends State<TypeAhead> {
         GestureDetector(
           onTap: () {
             hideOverlay();
-            if (widget.value != null) {
-              if (widget.items.containsKey(widget.value)) {
-                widget._textController.text = widget.items[widget.value]!;
+            if ( value != null) {
+              if ( items.containsKey( value)) {
+                 _textController.text =  items[ value]!;
               }
             }
           },
@@ -72,7 +65,7 @@ class _TypeAheadState extends State<TypeAhead> {
               height: 300,
               padding: EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: widget.menuColor,
+                color:  menuColor,
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(24),
                     bottomRight: Radius.circular(24)),
@@ -80,32 +73,33 @@ class _TypeAheadState extends State<TypeAhead> {
               child: Theme(
                 data: ThemeData(
                     scrollbarTheme: ScrollbarThemeData(
-                  thumbColor:
-                      WidgetStateProperty.all(widget.menuTextStyle?.color),
-                  trackColor: WidgetStateProperty.all(Colors.grey),
-                )),
+                      thumbColor:
+                      WidgetStateProperty.all( menuTextStyle?.color),
+                      trackColor: WidgetStateProperty.all(Colors.grey),
+                    )),
                 child: Scrollbar(
                   thumbVisibility: true,
+                  interactive: false,
                   radius: Radius.circular(24),
                   child: SingleChildScrollView(
                     child: Column(
-                      children: widget.items.entries
+                      children:  items.entries
                           .where((item) => item.value.toLowerCase().contains(
-                              widget._textController.text.toLowerCase()))
+                           _textController.text.toLowerCase()))
                           .map((item) => ListTile(
-                                title: Text(
-                                  item.value,
-                                  style: widget.menuTextStyle,
-                                ),
-                                onTap: () {
-                                  widget.value = item.key;
-                                  widget._textController.text = item.value;
-                                  hideOverlay();
-                                  if (widget.onSelected != null) {
-                                    widget.onSelected!(item.key, item.value);
-                                  }
-                                },
-                              ))
+                        title: Text(
+                          item.value,
+                          style:  menuTextStyle,
+                        ),
+                        onTap: () {
+                           value = item.key;
+                           _textController.text = item.value;
+                          hideOverlay();
+                          if ( onSelected != null) {
+                             onSelected!( item.key, item.value);
+                          }
+                        },
+                      ))
                           .toList(),
                     ),
                   ),
@@ -121,23 +115,36 @@ class _TypeAheadState extends State<TypeAhead> {
   }
 
   void hideOverlay() {
-    setState(() {
-      overlayEntry?.remove();
-      overlayEntry = null;
-    });
+    overlayEntry?.remove();
+    overlayEntry = null;
   }
+
+  @override
+  State<TypeAhead> createState() => _TypeAheadState();
+}
+
+class _TypeAheadState extends State<TypeAhead> {
+
 
 
   @override
+  void initState() {
+    setUpIncludeAllOptions();
+    super.initState();
+  }
+void setUpIncludeAllOptions(){
+  if (widget.includeAllOption) {
+    widget.items["all-option"] = "All";
+  }
+  if (widget.value != null) {
+    if (widget.items.containsKey(widget.value)) {
+      widget._textController.text = widget.items[widget.value]!;
+    }
+  }
+}
+  @override
   void didUpdateWidget( oldWidget) {
-    if (widget.includeAllOption) {
-      widget.items["all-option"] = "All";
-    }
-    if (widget.value != null) {
-      if (widget.items.containsKey(widget.value)) {
-        widget._textController.text = widget.items[widget.value]!;
-      }
-    }
+    setUpIncludeAllOptions();
     super.didUpdateWidget(oldWidget);
   }
 
@@ -154,12 +161,12 @@ class _TypeAheadState extends State<TypeAhead> {
             controller: widget._textController,
             onTap: () {
               widget._textController.text = "";
-              showOverlay(context);
+              widget.showOverlay(context);
             },
             onChanged: (e) {
               setState(() {
-                if (overlayEntry == null) showOverlay(context);
-                overlayEntry?.markNeedsBuild();
+                if (widget.overlayEntry == null) widget.showOverlay(context);
+                widget.overlayEntry?.markNeedsBuild();
               });
             },
             style: widget.textStyle,

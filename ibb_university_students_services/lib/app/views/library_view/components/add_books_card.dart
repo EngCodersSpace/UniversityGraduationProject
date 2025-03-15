@@ -118,7 +118,7 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                     TypeAhead(
                                       width: (Get.width * 0.5),
                                       onSelected: (i,v){
-                                        controller.selectedSubject = i;
+                                        controller.selectedSubjectId?.value = i;
                                       },
                                       label: "Select Subject",
                                       items: controller.subjects.map((i,e)=>MapEntry(i, e.subjectName??"")),

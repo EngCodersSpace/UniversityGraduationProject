@@ -25,7 +25,7 @@ class LibraryController extends GetxController
   RxString fieldMessage = "".obs;
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
-  String? selectedSubject;
+  RxString? selectedSubjectId = "all-option".obs;
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];

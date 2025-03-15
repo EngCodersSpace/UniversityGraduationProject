@@ -30,38 +30,40 @@ class LecturesTab extends GetView<LibraryController> {
                   physics: AlwaysScrollableScrollPhysics(),
                   controller: controller.booksPagesController,
                   children: [
-                      RefreshIndicator(
-                        onRefresh: () async => controller.refresh(),
-                        child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                            children: [
-                              if (controller.books.isEmpty) ...[
-                                SizedBox(
-                                  height: Get.height * 0.3,
-                                ),
-                                CustomText(
-                                  controller.fieldMessage.value,
-                                  style: AppTextStyles.mainStyle(
-                                      textHeader: AppTextHeaders.h2Bold),
-                                ),
-                                IconButton(
-                                    onPressed: () async => controller.refresh(),
-                                    icon: Icon(
-                                      Icons.refresh,
-                                      color: AppColors.inverseCardColor,
-                                    ))
-                              ],
+                    RefreshIndicator(
+                      onRefresh: () async => controller.refresh(),
+                      child: SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            if (controller.books.isEmpty) ...[
                               SizedBox(
-                                height: 24,
+                                height: Get.height * 0.3,
                               ),
-                              SizedBox(
-                                height: Get.height * 0.70,
-                                child: Wrap(
-                                    spacing: Get.width * 0.03,
-                                    runSpacing: Get.height * 0.045,
-                                    children: [
-                                      for (int p = 0; p < controller.books.length; p += 12)
+                              CustomText(
+                                controller.fieldMessage.value,
+                                style: AppTextStyles.mainStyle(
+                                    textHeader: AppTextHeaders.h2Bold),
+                              ),
+                              IconButton(
+                                  onPressed: () async => controller.refresh(),
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    color: AppColors.inverseCardColor,
+                                  ))
+                            ],
+                            SizedBox(
+                              height: 24,
+                            ),
+                            SizedBox(
+                              height: Get.height * 0.70,
+                              child: Wrap(
+                                  spacing: Get.width * 0.03,
+                                  runSpacing: Get.height * 0.045,
+                                  children: [
+                                    for (int p = 0;
+                                        p < controller.books.length;
+                                        p += 12)
                                       for (int i = p;
                                           (i < controller.books.length) &&
                                               (i < p + 12);
@@ -73,32 +75,35 @@ class LecturesTab extends GetView<LibraryController> {
                                             (controller.books.values
                                                         .toList()[i]
                                                         .sectionId ==
-                                                    controller
-                                                        .selectedDepartment
+                                                    controller.selectedDepartment
                                                         .value ||
-                                                controller.selectedDepartment
-                                                        .value ==
+                                                controller.selectedDepartment.value ==
                                                     -1) &&
                                             (controller.books.values
                                                         .toList()[i]
                                                         .levelId ==
                                                     controller
                                                         .selectedLevel.value ||
-                                                controller
-                                                        .selectedLevel.value ==
-                                                    -1))
+                                                controller.selectedLevel.value ==
+                                                    -1) &&
+                                            (controller.books.values
+                                                        .toList()[i]
+                                                        .subject
+                                                        ?.id ==
+                                                    controller.selectedSubjectId?.value ||
+                                                controller.selectedSubjectId?.value == "all-option"))
                                           Obx(
                                             () => BookContainer(
                                               book: controller.books.values
                                                   .toList()[i],
                                             ),
                                           )
-                                    ]),
-                              ),
-                            ],
-                          ),
+                                  ]),
+                            ),
+                          ],
                         ),
                       ),
+                    ),
                   ],
                 ),
         ));

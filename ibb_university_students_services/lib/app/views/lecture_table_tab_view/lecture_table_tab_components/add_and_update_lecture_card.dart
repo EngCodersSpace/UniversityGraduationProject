@@ -65,10 +65,10 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   ),
                                 ],
                               ),
-                              TypeAhead(
+                              TypeAhead<String>(
                                 value: controller.subjectId.value,
                                 width: (Get.width * 0.45),
-                                onSelected: (i,v){
+                                onSelected: (String i,v){
                                   controller.subjectId.value = i;
                                   controller.doctorId.value = controller.subjects?[controller.subjectId.value]?.instructors?.values.first.id;
                                 },

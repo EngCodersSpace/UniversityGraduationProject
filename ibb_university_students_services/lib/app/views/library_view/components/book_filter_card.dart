@@ -70,38 +70,40 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width *0.4,
+                                      width: Get.width * 0.4,
                                       child: Center(
                                         child: Obx(
-                                              () => DropdownButton(
+                                          () => DropdownButton(
                                             items: (controller.sections.entries
                                                 .map((e) {
                                               return DropdownMenuItem<int>(
                                                   value: e.value.id,
                                                   child: SizedBox(
                                                     width: (ScreenUtils
-                                                        .isPhoneScreen())
+                                                            .isPhoneScreen())
                                                         ? (Get.width / 3) - 30
-                                                        : (Get.width / 5.5) * 0.6,
+                                                        : (Get.width / 5.5) *
+                                                            0.6,
                                                     child: CustomText(
                                                       e.value.name ?? "unknown",
-                                                      style:
-                                                      AppTextStyles.mainStyle(
+                                                      style: AppTextStyles
+                                                          .mainStyle(
                                                         textHeader:
-                                                        AppTextHeaders.h5Bold,
+                                                            AppTextHeaders
+                                                                .h5Bold,
                                                       ),
                                                     ),
                                                   ));
                                             }).toList()),
                                             onChanged:
-                                            controller.changeDepartment,
+                                                controller.changeDepartment,
                                             value: controller
                                                 .selectedDepartment.value,
                                             underline: const SizedBox(),
                                             iconEnabledColor:
-                                            AppColors.mainCardColor,
+                                                AppColors.mainCardColor,
                                             dropdownColor:
-                                            AppColors.inverseCardColor,
+                                                AppColors.inverseCardColor,
                                           ),
                                         ),
                                       ),
@@ -126,7 +128,7 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width *0.4,
+                                      width: Get.width * 0.4,
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
@@ -136,15 +138,19 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   value: e.key,
                                                   child: SizedBox(
                                                     width: (ScreenUtils
-                                                        .isPhoneScreen())
+                                                            .isPhoneScreen())
                                                         ? (Get.width / 3) - 30
-                                                        : (Get.width / 5.5) * 0.6,
+                                                        : (Get.width / 5.5) *
+                                                            0.6,
                                                     child: CustomText(
-                                                      (e.key == -1)?"All":e.key.toString(),
-                                                      style:
-                                                      AppTextStyles.mainStyle(
+                                                      (e.key == -1)
+                                                          ? "All"
+                                                          : e.key.toString(),
+                                                      style: AppTextStyles
+                                                          .mainStyle(
                                                         textHeader:
-                                                        AppTextHeaders.h5Bold,
+                                                            AppTextHeaders
+                                                                .h5Bold,
                                                       ),
                                                     ),
                                                   ));
@@ -168,26 +174,29 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     SizedBox(
                                         width: (Get.width * 0.2),
                                         child: CustomText("Subject".tr,
                                             style: AppTextStyles.secStyle(
                                                 textHeader:
-                                                AppTextHeaders.h3Bold))),
-                                    TypeAhead(
+                                                    AppTextHeaders.h3Bold))),
+                                    TypeAhead<String>(
                                       width: (Get.width * 0.5),
-                                      onSelected: (i,v){
-                                        controller.selectedSubject = i;
+                                      onSelected: (i, v) {
+                                        controller.selectedSubjectId?.value = i;
                                       },
-                                      value: "all-option",
+                                      value: controller.selectedSubjectId?.value,
                                       label: "Select Subject",
-                                      items: controller.subjects.map((i,e)=>MapEntry(i, e.subjectName??"")),
+                                      items: controller.subjects.map((i, e) =>
+                                          MapEntry(i, e.subjectName ?? "")),
                                       color: AppColors.inverseCardColor,
                                       menuColor: AppColors.inverseCardColor,
-                                      textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-                                      menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                      textStyle: AppTextStyles.mainStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      menuTextStyle: AppTextStyles.mainStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
                                       includeAllOption: true,
                                     ),
                                   ],
@@ -231,7 +240,8 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   .selectedSortOption.value ==
                                               "date",
                                           onTap: () => controller
-                                              .changeSelectedSortOption("date")),
+                                              .changeSelectedSortOption(
+                                                  "date")),
                                       SortIcon(
                                           icon: Icons.assignment_sharp,
                                           title: 'Pages',
@@ -239,7 +249,8 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                                   .selectedSortOption.value ==
                                               "page",
                                           onTap: () => controller
-                                              .changeSelectedSortOption("page")),
+                                              .changeSelectedSortOption(
+                                                  "page")),
                                       SortIcon(
                                         icon: Icons.memory,
                                         title: 'Size',
@@ -427,8 +438,10 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   ),
                                   RadioListTile<int>(
                                     value: 0,
-                                    groupValue: controller.selectedShowOption.value,
-                                    onChanged: controller.changeSelectedShowOption,
+                                    groupValue:
+                                        controller.selectedShowOption.value,
+                                    onChanged:
+                                        controller.changeSelectedShowOption,
                                     contentPadding: const EdgeInsets.all(0),
                                     title: CustomText(
                                       "Downloaded only",
@@ -439,8 +452,10 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   ),
                                   RadioListTile<int>(
                                     value: 1,
-                                    groupValue: controller.selectedShowOption.value,
-                                    onChanged: controller.changeSelectedShowOption,
+                                    groupValue:
+                                        controller.selectedShowOption.value,
+                                    onChanged:
+                                        controller.changeSelectedShowOption,
                                     contentPadding: const EdgeInsets.all(0),
                                     title: CustomText(
                                       "Not downloaded only",
@@ -451,8 +466,10 @@ class PopUpBookFilterCard extends GetView<LibraryController> {
                                   ),
                                   RadioListTile<int>(
                                     value: 2,
-                                    groupValue: controller.selectedShowOption.value,
-                                    onChanged: controller.changeSelectedShowOption,
+                                    groupValue:
+                                        controller.selectedShowOption.value,
+                                    onChanged:
+                                        controller.changeSelectedShowOption,
                                     contentPadding: const EdgeInsets.all(0),
                                     title: CustomText(
                                       "Both",
