@@ -63,7 +63,7 @@ exports.uploadFile = async (req, res) => {
         const newBook = await book.create({
           title: bookDetails.title || req.file.originalName,
           category: req.query.category,
-          subject_id: req.body.subject_id,
+          subject_id: req.body.subject_id || null ,
           added_by: req.user.user_id,
           section_id:req.query.section_id,
           level_id:req.query.level_id,
