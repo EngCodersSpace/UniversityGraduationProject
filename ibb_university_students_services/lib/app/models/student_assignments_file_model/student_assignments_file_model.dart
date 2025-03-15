@@ -34,7 +34,7 @@ class StudentAssignmentsFile {
   }
 
 
-  factory StudentAssignmentsFile.fromJson(Map<String, dynamic> json, {String status = "Not Uploaded"}) {
+  factory StudentAssignmentsFile.fromJson(Map<String, dynamic> json, {String status = "None"}) {
 
     return StudentAssignmentsFile(
       id: json['id'],
