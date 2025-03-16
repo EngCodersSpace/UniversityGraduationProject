@@ -27,5 +27,5 @@ class DashboardStudentTableController extends GetxController
   void onSearch() {}
 
   @override
-  TextEditingController get searchController => throw UnimplementedError();
+  TextEditingController searchController = TextEditingController(text: "");
 }

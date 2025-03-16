@@ -148,9 +148,9 @@ class DashboardRoleUsersTableController extends GetxController
   //   selectedIndex.value = index;
   // }
 
-  // void changeDoctorTableView() {
-  //   Get.offNamed("/dashboard_doctor_view");
-  // }
+  void changeDoctorTableView() {
+    Get.offNamed("/dashboard_doctor_view");
+  }
 
   // void changeStudentTableView() {
   //   Get.offNamed("/dashboard_student_view");

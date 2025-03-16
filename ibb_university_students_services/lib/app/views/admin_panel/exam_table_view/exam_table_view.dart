@@ -29,6 +29,7 @@ class ExamTableView extends GetView<DashboardExamTableController> {
               height: Get.height * 0.01,
             ),
             Expanded(
+              // ignore: sized_box_for_whitespace
               child: Container(
                 width: Get.width * 0.6,
                 child: Scrollbar(
