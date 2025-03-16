@@ -8,7 +8,7 @@ part of 'library_files_cache.dart';
 
 class LibraryFilesCacheAdapter extends TypeAdapter<LibraryFilesCache> {
   @override
-  final int typeId = 25;
+  final int typeId = 26;
 
   @override
   LibraryFilesCache read(BinaryReader reader) {

@@ -307,29 +307,6 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: controller.studentResultRoute,
-                                  size: cardSize,
-                                  color: Colors.transparent,
-                                  image: const AssetImage(
-                                      "assets/images/services_cards/result.png"),
-                                ),
-                                if (Get.locale?.languageCode == "ar") ...[
-                                  CustomText(
-                                      "${"Degrees".tr}\n${"Student".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
-                                  ),
-
-                                ] else ...[
-                                  CustomText(
-                                      "${"Student".tr}\n${"Degrees".tr}",
-                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
-                                  ),
-                                ]
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                ServicesCard(
                                   onTap: controller.examTableRoute,
                                   color: Colors.transparent,
                                   size: cardSize,
@@ -347,6 +324,21 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                       style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
                                   ),
                                 ]
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                ServicesCard(
+                                  onTap: controller.assignmentsScheduleRoute,
+                                  size: cardSize,
+                                  color: Colors.transparent,
+                                  image: const AssetImage(
+                                      "assets/images/services_cards/assignment.png"),
+                                ),
+                                CustomText(
+                                    "Assignments".tr,
+                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
+                                ),
                               ],
                             ),
                             Column(

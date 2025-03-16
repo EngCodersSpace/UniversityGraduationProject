@@ -288,10 +288,15 @@ class AssignmentsTabController extends GetxController {
             path: result.files[i].path,
             assignmentId: selectedAssignment,
             status: RxString("Not Uploaded"));
-        file.downloaded.value = true;
+        if(kIsWeb){
+          file.downloaded.value = false;
+        }else{
+          file.downloaded.value = true;
+        }
+
 
         assignments?.value[selectedAssignment]?.attachments?.forEach((i, e) {
-          exist = (e.path?.split("/").last == file.path?.split("/").last);
+          exist = (e.originName == file.originName);
         });
         if (!exist) {
           assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
@@ -356,11 +361,26 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void openFile(String? path) async {
-    await FileUtils.openFile(path);
+  void openFile(int id,String? path) async {
+    if(id>0){
+      await FileUtils.openFile(path);
+    }else{
+      await FileUtils.openFile(path,baseFolderPath: "");
+    }
   }
 
-  void downloadAttachment() {}
+  void downloadAssignmentFile(AttachmentFile file) async{
+    await AssignmentsRepository.downloadAttachmentFiles(file: file);
+  }
+
+  void downloadStudentAssignmentFile(StudentAssignmentsFile file) {
+    if (selectedLevel.value == null) return;
+    if (selectedDepartment.value == null) return;
+    AssignmentsRepository.downloadStudentAssignmentsFiles(
+        file: file,
+        sectionId: selectedDepartment.value!,
+        levelId: selectedLevel.value!);
+  }
 
   void _moreEdit(Map<String, dynamic>? data) {
     selectedAssignment = data?["assignment_id"];
@@ -401,6 +421,15 @@ class AssignmentsTabController extends GetxController {
       } else {
         showSnakeBar(message: "Delete File Failed");
       }
+    }
+  }
+
+  void _moreDeleteAttachmentFileFromStorage(Map<String, dynamic>? data) async {
+    if (data == null) return;
+    bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
+    if(res){
+      showSnakeBar(message: "File Deleted");
+      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.checkDownloaded();
     }
   }
 
@@ -447,7 +476,7 @@ class AssignmentsTabController extends GetxController {
         stateId: statId,
         state: stat);
     Navigator.of(Get.overlayContext!).pop();
-    if(res.statusCode == 200){
+    if (res.statusCode == 200) {
       assignments?.value[data["assignment_id"]]?.studentsStatus?[statId]
           ?.isCompleted = stat;
       assignments?.refresh();
@@ -464,6 +493,9 @@ class AssignmentsTabController extends GetxController {
         break;
       case "DeleteAttachmentFile":
         _moreDeleteAttachmentFile(data);
+        break;
+        case "DeleteAttachmentFileFromStorage":
+        _moreDeleteAttachmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFile":
         _moreDeleteStudentAssignmentFile(data);
@@ -547,12 +579,11 @@ class AssignmentsTabController extends GetxController {
   void submit() async {
     Map<String, dynamic> jsData = {};
     if (formKey.currentState!.validate()) {
-
       if (mode == "Add") {
         Result<Assignment> res = await AssignmentsRepository.createAssignment(
-            sectionId: selectedDepartment.value!,
-            levelId: selectedLevel.value!,
-            subjectId: selectedSubject.value!,
+          sectionId: selectedDepartment.value!,
+          levelId: selectedLevel.value!,
+          subjectId: selectedSubject.value!,
           title: titleController.text,
           assignmentDate: DateTime.now().toString(),
           assignmentsDueDate: dueDateController.text,
@@ -589,8 +620,13 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void showAttachmentsFiles(int? assignmentId) {
+  void showAttachmentsFiles(int? assignmentId) async {
     selectedAssignment = assignmentId;
+    for (AttachmentFile file
+    in assignments?.value[selectedAssignment]?.attachments?.values ??
+        []) {
+      await file.checkDownloaded();
+    }
     if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsAddFilesCard());
     } else {
@@ -598,9 +634,14 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void showStudentFiles(int? assignmentId, {int? stateId}) {
+  void showStudentFiles(int? assignmentId, {int? stateId}) async {
     selectedAssignment = assignmentId;
     selectedState = stateId;
+    for (StudentAssignmentsFile file in assignments?.value[selectedAssignment]
+            ?.studentsStatus?[selectedState]?.studentFiles?.values ??
+        []) {
+      await file.checkDownloaded();
+    }
     if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsShowFilesCard());
     } else {

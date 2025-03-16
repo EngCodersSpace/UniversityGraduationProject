@@ -5,7 +5,7 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
-import '../../../models/subject_model/subject_model.dart';
+import '../../../components/typeahead.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/date_time_utils.dart';
@@ -65,58 +65,25 @@ class PopUpIAddAndUpdateLectureCard extends GetView<LectureController> {
                                   ),
                                 ],
                               ),
-                              Container(
-                                width: Get.width*0.45,
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)
+                              TypeAhead<String>(
+                                value: controller.subjectId.value,
+                                width: (Get.width * 0.45),
+                                onSelected: (String i,v){
+                                  controller.subjectId.value = i;
+                                  controller.doctorId.value = controller.subjects?[controller.subjectId.value]?.instructors?.values.first.id;
+                                },
+                                icon: Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  color: AppColors.inverseCardColor,
+                                  size: 25,
                                 ),
-                                child: Center(
-                                  child: Obx(()=>DropdownButton<String?>(
-                                    value: controller.subjectId.value,
-                                    icon: Icon(Icons.arrow_drop_down_sharp,
-                                        color: AppColors.inverseCardColor),
-                                    underline: const SizedBox(),
-                                    dropdownColor: AppColors.mainCardColor,
-                                    onChanged: (val) {
-                                      if(val == null)return;
-                                      controller.subjectId.value = val;
-                                      controller.doctorId.value = controller.subjects?[controller.subjectId.value]?.instructors?.values.first.id;
-                                    },
-                                    isExpanded: true,
-                                    menuWidth: Get.width*0.7,
-                                    selectedItemBuilder: (_){
-                                      List<Widget> items = [];
-                                      for(Subject subjectI in (controller.subjects?.values.toList())??[]) {
-                                        items.add(DropdownMenuItem<String?>(
-                                          value: subjectI.id,
-                                          child: SizedBox(
-                                              width: Get.width * 0.28,
-                                              child: CustomText(
-                                                subjectI.subjectName ?? "",
-                                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                                                softWrap: false,
-                                              )),
-                                        ));
-                                      }
-                                      return items;
-                                    },
-                                    items: [
-                                      for(Subject subjectI in (controller.subjects?.values.toList())??[])...[
-                                        DropdownMenuItem<String?>(
-                                            value: subjectI.id,
-                                            child:  Column(
-                                              children: [
-                                                CustomText(subjectI.subjectName??"",style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                                // Divider(color: AppColors.highlightTextColor,)
-                                              ],
-                                            )
-                                        ),
-                                      ]
-                                    ],
-                                  )),
-                                ),)
+                                label: "Select Subject",
+                                items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
+                                // color: AppColors.inverseCardColor,
+                                menuColor: AppColors.inverseCardColor,
+                                textStyle: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+                                menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                              ),
                             ],
                           ),
                           Row(

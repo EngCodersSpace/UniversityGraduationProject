@@ -124,6 +124,10 @@ class HomeTabController extends GetxController
     Get.find<MainController>().changeTabIndex(1);
   }
 
+  void assignmentsScheduleRoute() {
+    Get.find<MainController>().changeTabIndex(3);
+  }
+
   void academicCardRoute() {
     Get.toNamed("/academic_card");
   }
