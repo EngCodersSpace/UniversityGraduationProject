@@ -34,7 +34,7 @@ class ExamRepository {
   }
 
   static Future<void> closeBox() async {
-    if(_examsBox?.isOpen??false) {
+    if (_examsBox?.isOpen ?? false) {
       await _examsBox?.close();
     }
   }
@@ -45,8 +45,8 @@ class ExamRepository {
     bool hardFetch = false,
   }) async {
     ExamsCache? cachedExams = _examsBox?.get("${sectionId}_${levelId}_Exams");
-    if ((cachedExams != null) && (!hardFetch|| !(await checkInternetConnection())
-        )) {
+    if ((cachedExams != null) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
         data: cachedExams.data,
         statusCode: 200,
@@ -98,6 +98,11 @@ class ExamRepository {
     required int sectionId,
     required int levelId,
     required data,
+    String? term,
+    String? day,
+    String? subjectId,
+    String? examTime,
+    String? examRoom,
     bool hardFetch = false,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
@@ -207,9 +212,9 @@ class ExamRepository {
   }) async {
     Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
     List<String>? years;
-    try{
+    try {
       years = lecturesYearsBox.get("lectureYears");
-    }catch(e){
+    } catch (e) {
       //
     }
     if (years != null && !hardFetch && !(await checkInternetConnection())) {
@@ -226,7 +231,7 @@ class ExamRepository {
       response = await HttpProvider.get("lecture/year");
       if (response?.statusCode == 200) {
         List<String> years = List<String>.from(response?.data["data"]);
-        await lecturesYearsBox.put("lectureYears",years);
+        await lecturesYearsBox.put("lectureYears", years);
         lecturesYearsBox.close();
         return Result(
             data: years,
@@ -250,5 +255,54 @@ class ExamRepository {
     }
   }
 
-
+  static Future<Result<Map>> fetchDashboardExam({
+    int? sectionId,
+    int? levelId,
+    int limit = 20,
+    int? page,
+    String? year,
+    String? term,
+    String? day,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "get-exam-grouped-Panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page"); //add the required;
+      Map<int, Exam> exams = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsExam in response?.data['data']) {
+          Subject? subject =
+              await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
+                  .then((e) => e.data);
+          exams[jsExam["id"]] = Exam.fromJson(jsExam, subject: subject);
+        }
+        return Result(
+            data: {
+              "exams": exams,
+              "totalExams": response?.data["pagination"]["totalExams"],
+            },
+            hasError: false,
+            statusCode: response?.statusCode ?? _updateError,
+            message: response?.data["message"] ?? "error");
+      }
+      return Result(
+          data: {
+            "exams": exams,
+            "totalExams": 0,
+          },
+          hasError: false,
+          statusCode: response?.statusCode ?? _updateError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
 }

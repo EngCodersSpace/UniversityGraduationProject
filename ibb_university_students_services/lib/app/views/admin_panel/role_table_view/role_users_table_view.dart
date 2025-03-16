@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_exam_table_controller.dart';
-import 'package:ibb_university_students_services/app/models/exam_model/exam_model.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
+import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/exam_table_view/exam_table_component/exam_table_filters_component.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_table_component/role_table_filter_component.dart';
 
-class ExamTableView extends GetView<DashboardExamTableController> {
-  const ExamTableView({super.key});
+// ignore: must_be_immutable
+class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
+  const RoleUsersTableView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,29 +19,28 @@ class ExamTableView extends GetView<DashboardExamTableController> {
       body: Container(
         padding: EdgeInsets.all(10),
         color: AppColors.tabBackColor,
-        width: Get.width,
-        height: Get.height,
         child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HeaderOfViewComponent(tableName: "Exam", controller: controller),
+            HeaderOfViewComponent(tableName: "Roles", controller: controller),
             SizedBox(
               height: Get.height * 0.01,
             ),
-            ExamTableFiltersComponent(),
+            RoleTableFilterComponent(),
             SizedBox(
               height: Get.height * 0.01,
             ),
             Expanded(
-              // ignore: sized_box_for_whitespace
               child: Container(
-                width: Get.width * 0.6,
+                padding: EdgeInsets.all(5),
+                width: Get.width * 0.3,
                 child: Scrollbar(
                   controller: controller.vertical,
                   thumbVisibility: true,
                   trackVisibility: true,
                   child: SingleChildScrollView(
                     controller: controller.vertical,
-                    child: GetBuilder<DashboardExamTableController>(
+                    child: GetBuilder<DashboardRoleUsersTableController>(
                       id: "DataTable",
                       builder: (ctx) => Scrollbar(
                         controller: controller.horizontal,
@@ -47,9 +49,9 @@ class ExamTableView extends GetView<DashboardExamTableController> {
                         child: PaginatedDataTable(
                           controller: controller.horizontal,
                           rowsPerPage: controller.rowsPerPage.value,
-                          columnSpacing: controller.width * 0.05,
+                          columnSpacing: controller.width * 0.06,
                           onPageChanged: controller.onPageChange,
-                          availableRowsPerPage: const <int>[5, 10, 20, 30],
+                          availableRowsPerPage: const <int>[5, 10],
                           onRowsPerPageChanged: controller.onRowChange,
                           showCheckboxColumn: false,
                           columns: controller.kTableColumn,
@@ -57,6 +59,50 @@ class ExamTableView extends GetView<DashboardExamTableController> {
                         ),
                       ),
                     ),
+                  ),
+                ),
+              ),
+            ),
+            Obx(
+              () => InkWell(
+                onTap: () => controller.changeDoctorTableView(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24), // Top-left corner rounded
+                      bottomLeft:
+                          Radius.circular(24), // Bottom-left corner rounded
+                    ),
+                    color: (controller.selectedIndex.value == 0)
+                        ? AppColors.tabBackColor
+                        : AppColors.inverseTabBackColor,
+                  ),
+                  padding: const EdgeInsets.only(left: 25),
+                  margin: const EdgeInsets.only(left: 16),
+                  height: Get.height * 0.08,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Icon(
+                      //   Icons.library_books_outlined,
+                      //   color: (controller.selectedindex.value == int)
+                      //       ? AppColors.secTextColor
+                      //       : AppColors.mainTextColor,
+                      // ),
+                      SizedBox(
+                        width: Get.width * 0.005,
+                      ),
+                      CustomText(
+                        "Doctor".tr,
+                        style: AppTextStyles.customColorStyle(
+                          color: (controller.selectedIndex.value == 0)
+                              ? AppColors.secTextColor
+                              : AppColors.mainTextColor,
+                          textHeader: AppTextHeaders.h6Bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -69,8 +115,8 @@ class ExamTableView extends GetView<DashboardExamTableController> {
 }
 
 class MyData extends DataTableSource {
-  final DashboardExamTableController controller =
-      Get.find<DashboardExamTableController>();
+  final DashboardRoleUsersTableController controller =
+      Get.find<DashboardRoleUsersTableController>(); // GetX Controller
 
   MyData();
 
@@ -81,22 +127,22 @@ class MyData extends DataTableSource {
     }
     return DataRow.byIndex(
         index: index % controller.rowsPerPage.value,
-        selected: controller.selectedRow
+        selected: controller.selectedRows
             .contains(items[index % controller.rowsPerPage.value].id),
         onSelectChanged: (selected) {},
         cells: [
           DataCell(
             onTap: () {},
             Obx(() => Checkbox(
-                  value: controller.selectedRow.contains(
+                  value: controller.selectedRows.contains(
                           items[index % controller.rowsPerPage.value].id) ||
-                      controller.selectedAll.value,
+                      controller.selectAll.value,
                   onChanged: (isSelected) {
                     if (isSelected == true) {
-                      controller.selectedRow
+                      controller.selectedRows
                           .add(items[index % controller.rowsPerPage.value].id);
                     } else {
-                      controller.selectedRow.remove(
+                      controller.selectedRows.remove(
                           items[index % controller.rowsPerPage.value].id);
                     }
                   },
@@ -121,53 +167,12 @@ class MyData extends DataTableSource {
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .subject
-                      ?.subjectName)),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].date)),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].day)),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].examTime)),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].hall)),
+                      items[index % controller.rowsPerPage.value].name)),
         ]);
   }
 
-  List<Exam> get items => controller.exams.values.toList();
+  List<Role> get items => controller.roles.values.toList();
   @override
   bool get isRowCountApproximate => false;
 

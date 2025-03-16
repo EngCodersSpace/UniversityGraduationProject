@@ -11,12 +11,12 @@ class AcademicCardController extends GetxController {
   Rx<StudentFee>? lastFee;
   @override
   void onInit() async {
-    // TODO: implement onInit
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = Rx(res.data);
-      if(user?.value.id == null)return;
-      Result res2 = await StudentFeeRepository.fetchLastStudentFee(studentId: user!.value.id);
+      if (user?.value.id == null) return;
+      Result res2 = await StudentFeeRepository.fetchLastStudentFee(
+          studentId: user!.value.id);
       if (res2.statusCode == 200) {
         lastFee = Rx(res2.data);
       }

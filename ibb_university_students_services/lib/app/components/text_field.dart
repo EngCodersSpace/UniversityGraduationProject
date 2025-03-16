@@ -7,11 +7,13 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     super.key,
+    this.initialValue,
     this.isPassword = false,
     this.style,
     this.labelStyle,
     this.readOnly = false,
     this.enable,
+    this.enableBorder = true,
     this.minLines,
     this.maxLines,
     this.controller,
@@ -28,15 +30,18 @@ class CustomTextFormField extends StatelessWidget {
     this.onChange,
     this.keyboardType,
     this.prefixIcon,
-  }){
-    labelStyle??=AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h3Normal);
+  }) {
+    labelStyle ??=
+        AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h3Normal);
   }
 
+  String? initialValue;
   bool isPassword;
   bool readOnly;
   RxBool hide = true.obs;
-  bool? enable;
   int? minLines;
+  bool? enable;
+  bool enableBorder;
   int? maxLines;
   double? width;
   TextEditingController? controller;
@@ -56,15 +61,15 @@ class CustomTextFormField extends StatelessWidget {
   void Function(String?)? onFieldSubmitted;
   void Function(String?)? onChange;
 
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
       child: (isPassword)
           ? Obx(() => TextFormField(
-
+                key: UniqueKey(),
                 controller: controller,
+                initialValue: initialValue,
                 style: style,
                 enabled: enable,
                 readOnly: readOnly,
@@ -79,15 +84,23 @@ class CustomTextFormField extends StatelessWidget {
                 validator: validator,
                 decoration: InputDecoration(
                     isDense: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: color,),
-                        borderRadius: const BorderRadius.all(Radius.circular(25))),
-                    border:  OutlineInputBorder(
-                      borderSide: BorderSide(color: color),
-                        borderRadius: const BorderRadius.all(Radius.circular(30)),
-
-                    ),
-                    prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                    enabledBorder: (enableBorder)
+                        ? OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: color,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)))
+                        : InputBorder.none,
+                    border: (enableBorder)
+                        ? OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: color,
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)))
+                        : InputBorder.none,
+                    prefixIcon: (prefixIcon != null) ? Icon(prefixIcon) : null,
                     prefixIconColor: color,
                     iconColor: color,
                     icon: (icon != null)
@@ -111,6 +124,8 @@ class CustomTextFormField extends StatelessWidget {
                     })),
               ))
           : TextFormField(
+              key: UniqueKey(),
+              initialValue: initialValue,
               controller: controller,
               style: style,
               readOnly: readOnly,
@@ -127,13 +142,23 @@ class CustomTextFormField extends StatelessWidget {
               validator: validator,
               decoration: InputDecoration(
                 isDense: true,
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: color,),
-                    borderRadius: const BorderRadius.all(Radius.circular(25))),
-                border:  OutlineInputBorder(
-                    borderSide: BorderSide(color: color,),
-                    borderRadius: const BorderRadius.all(Radius.circular(25))),
-                  prefixIcon: (prefixIcon!=null)?Icon(prefixIcon):null,
+                enabledBorder: (enableBorder)
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: color,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25)))
+                    : InputBorder.none,
+                border: (enableBorder)
+                    ? OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: color,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25)))
+                    : InputBorder.none,
+                prefixIcon: (prefixIcon != null) ? Icon(prefixIcon) : null,
                 prefixIconColor: color,
                 iconColor: color,
                 icon: (icon != null)

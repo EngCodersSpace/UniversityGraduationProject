@@ -21,7 +21,7 @@ class UserRepository {
 
   static Future<void> clearBox() async {
     _userBox = await Hive.openBox<User>('userBox');
-   await  _userBox?.clear();
+    await _userBox?.clear();
     Box box = await Hive.openBox('rememberMe');
     await box.clear();
     await box.close();
@@ -124,7 +124,8 @@ class UserRepository {
   static Future<void> userLogout() async {
     Response? response;
     try {
-      response = await HttpProvider.post("logout?user_id=${_userBox?.get('currentUser')?.id}");
+      response = await HttpProvider.post(
+          "logout?user_id=${_userBox?.get('currentUser')?.id}");
       if (response?.statusCode == 200 || true) {
         Box box = await Hive.openBox('rememberMe');
         box.clear();
@@ -139,11 +140,64 @@ class UserRepository {
     }
   }
 
-  // static Future<Result<Doctor>> fetchDashboardDoctors({
+  static Future<Result<Map>> fetchDashboardDoctors({
+    bool hardfetch = false,
+  }) async {
+    late Response? response;
+    try {
+      Map<int, Doctor> doctor = {};
+      response = await HttpProvider.get("get-doctors-panle");
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsDoctor in response?.data['data']) {
+          doctor[jsDoctor["doctor_id"]] = Doctor.fromJson(jsDoctor);
+        }
+      }
+      return Result(
+          data: {
+            "Doctors": doctor,
+            "totalDoctor": response?.data["pagination"]["totalDoctors"],
+          },
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
 
-  // })async{
-
-  // }
+  static Future<Result<Map>> fetchDashboardStudent({
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      Map<int, Student> student = {};
+      response = await HttpProvider.get("get-student-panle");
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsStudent in response?.data['data']) {
+          student[jsStudent['student_id']] = Student.fromJson(jsStudent);
+        }
+      }
+      return Result(
+        data: {
+          "students": student,
+          "totalStudent": response?.data["pagination"]["totalstudents"],
+        },
+        hasError: true,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
     if (_userBox?.get('currentUser') != null &&
@@ -211,6 +265,6 @@ class UserRepository {
   }
 
   static Type? currentUserType() {
-    return  _userBox?.get('currentUser')?.runtimeType;
+    return _userBox?.get('currentUser')?.runtimeType;
   }
 }
