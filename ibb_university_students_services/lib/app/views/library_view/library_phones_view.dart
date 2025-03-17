@@ -42,45 +42,13 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                 Icons.filter_list_alt,
                                 color: AppColors.mainCardColor,
                               )),
-                          PopupMenuButton<String>(
-                            onSelected: (val) => controller.libraryMore(val),
-                            color: AppColors.inverseCardColor,
-                            itemBuilder: (ctx) => [
-                              PopupMenuItem(
-                                  value: "add",
-                                  child: CustomText(
-                                    "Upload New Books".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "addReq",
-                                  child: CustomText(
-                                    "Books Add Request".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "uploadHis",
-                                  child: CustomText(
-                                    "Uploads History".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                              PopupMenuItem(
-                                  value: "uploadHis",
-                                  child: CustomText(
-                                    "Uploads History".tr,
-                                    style: AppTextStyles.mainStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  )),
-                            ],
-                            child: Icon(
-                              Icons.more_vert,
-                              color: AppColors.mainCardColor,
-                              size: 25,
-                            ),
-                          ),
+                          IconButton(
+                              onPressed: controller.addIconClick,
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.mainCardColor,
+                              )),
+
                           Expanded(
                             child: CustomTextFormField(
                               controller: controller.searchText,
@@ -136,11 +104,55 @@ class LibraryPhonesView extends GetView<LibraryController> {
                     ],
                   )),
               SizedBox(
-                height: Get.height * 0.82,
+                height: Get.height * 0.72,
                 child: TabBarView(
                     controller: controller.tapController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: controller.myTabs),
+              ),
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                          "assets/images/library/istockphoto-867895848-612x612_bottom.jpg"),
+                      fit: BoxFit.fill),
+                ),
+                height: Get.height * 0.1,
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        controller.booksPagesController
+                            .previousPage(
+                            duration: const Duration(
+                                milliseconds: 400),
+                            curve: Curves.ease);
+                      },
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      color: AppColors.backColor,
+                      iconSize: 40,
+                    ),
+                    CustomText(
+                      "0",
+                      style: AppTextStyles.mainStyle(
+                          textHeader: AppTextHeaders.h1Bold),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          controller.booksPagesController
+                              .nextPage(
+                              duration: const Duration(
+                                  milliseconds: 400),
+                              curve: Curves.ease);
+                        },
+                        icon: const Icon(
+                            Icons.arrow_forward_rounded),
+                        color: AppColors.backColor,
+                        iconSize: 40)
+                  ],
+                ),
               ),
             ],
           ),

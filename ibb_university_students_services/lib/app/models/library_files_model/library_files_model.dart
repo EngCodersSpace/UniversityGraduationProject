@@ -1,4 +1,6 @@
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
+import '../../utils/file_utils.dart';
 import '../subject_model/subject_model.dart';
 
 part 'library_files_model.g.dart';
@@ -64,6 +66,16 @@ class LibraryFile {
   @HiveField(13)
   String? originalName;
 
+  RxString? status;
+  RxInt? progress;
+  final RxBool downloaded = RxBool(false);
+
+
+  checkDownloaded()async{
+    downloaded.value = await FileUtils.checkExists(filePath??"")??false;
+    return;
+  }
+
 
   factory LibraryFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {
 
@@ -72,6 +84,13 @@ class LibraryFile {
       sectionId: json['section_id'],
       levelId: json['level_id'],
       subject: subject,
+      title: json['title'],
+      author: json['author'],
+      filePath: json['file_path'],
+      fileSize: json['file_size'],
+      edition: json['edition'],
+      category: json['category'],
+      displayImage: json['display_image'],
     );
   }
 

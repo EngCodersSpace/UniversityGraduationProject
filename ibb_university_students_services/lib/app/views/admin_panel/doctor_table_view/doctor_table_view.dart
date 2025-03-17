@@ -125,10 +125,9 @@ class MyData extends DataTableSource {
                       "")),
           DataCell(
               onTap: () {},
-              CustomText(
-                  items[index % controller.rowsPerPage.value].phones?.first ??
-                      "")),
-          // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
+              CustomText(items[index % controller.rowsPerPage.value]
+                  .phones
+                  .toString())),
           DataCell(
               onTap: () {},
               CustomText(items[index % controller.rowsPerPage.value]

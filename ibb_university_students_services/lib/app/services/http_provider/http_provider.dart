@@ -84,9 +84,9 @@ class HttpProvider {
     ));
   }
 
-  static Future<Response?> get(String url, {dynamic data}) async {
+  static Future<Response?> get(String url, {dynamic data ,Options? options}) async {
     try {
-      final response = await _dio.get(url, data: data);
+      final response = await _dio.get(url, data: data,options:options);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -181,16 +181,18 @@ class HttpProvider {
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
-    required void Function(int, int)? onSendProgress,
+    required void Function(int, int)? onReceiveProgress,
     int? fileSize,
   }) async {
     try {
 
       cancelTokens[savePath.hashCode] = CancelToken();
-      final response = await _dio.post(
+      final response = await _dio.download(
         downloadUrl,
+        savePath,
         // cancelToken: cancelTokens[file.path.hashCode],
-        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+
       );
 
       return response;

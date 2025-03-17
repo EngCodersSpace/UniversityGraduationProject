@@ -7,23 +7,20 @@ import '../../../components/buttons.dart';
 import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/permission_checker.dart';
-
 // ignore: must_be_immutable
 class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
   const AssignmentsShowFilesCard({super.key});
-   get _data {
 
-    if (PermissionUtils.checkPermission(
-        target: "Assignments", action: "showStudentsFiles")) {
+  get _data {
+    if (UserRepository.currentUserType() == Doctor) {
       return controller.assignments?.value[controller.selectedAssignment]
           ?.studentsStatus?[controller.selectedState]?.studentFiles?.values
           .toList();
     }
-    return controller.assignments?.value[controller.selectedAssignment]
-        ?.attachments?.values.toList();
+    return controller
+        .assignments?.value[controller.selectedAssignment]?.attachments?.values
+        .toList();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +52,9 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                             child: Column(
                               children: [
                                 CustomText(
-                                  (mode == "studentsFiles")?("Student File").tr:("Attachments").tr,
+                                  (mode == "studentsFiles")
+                                      ? ("Student File").tr
+                                      : ("Attachments").tr,
                                   style: AppTextStyles.secStyle(
                                       textHeader: AppTextHeaders.h1Bold),
                                 ),
@@ -114,7 +113,8 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                                   .start,
                                                           children: [
                                                             CustomText(
-                                                              _data?[i].originName ??
+                                                              _data?[i]
+                                                                      .originName ??
                                                                   "",
                                                               textAlign:
                                                                   TextAlign
@@ -127,24 +127,27 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                             ),
                                                             Obx(() => Column(
                                                                   children: [
-
                                                                     if (_data?[i]
-                                                                        .status
-                                                                        ?.value ==
-                                                                        "Downloading") ...[
+                                                                            .status
+                                                                            ?.value !=
+                                                                        "None") ...[
                                                                       CustomText(
-                                                                        "Downloading",
+                                                                        "status: ${_data?[i].status?.value ?? ""}",
                                                                         textAlign:
-                                                                        TextAlign
-                                                                            .start,
+                                                                            TextAlign.start,
                                                                         style: AppTextStyles.highlightStyle(
                                                                             textHeader:
-                                                                            AppTextHeaders.h5Bold),
+                                                                                AppTextHeaders.h5Bold),
                                                                       ),
                                                                       const SizedBox(
                                                                         height:
                                                                             8,
                                                                       ),
+                                                                    ],
+                                                                    if (_data?[i]
+                                                                            .status
+                                                                            ?.value ==
+                                                                        "Downloading") ...[
                                                                       SizedBox(
                                                                         width: Get
                                                                             .width,
@@ -168,25 +171,37 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                         ),
                                                       ),
                                                     ),
-                                                    IconButton(
+                                                    Obx(()=>IconButton(
                                                         onPressed: () {
                                                           (_data?[i]
-                                                                      .downloaded
-                                                                      .value ??
-                                                                  false)
+                                                              .downloaded
+                                                              .value ??
+                                                              false)
                                                               ? controller
-                                                                  .openFile(_data?[i].path)
+                                                              .openFile(
+                                                              _data?[i]
+                                                                  .id,
+                                                              _data?[i]
+                                                                  .path)
+                                                              : (mode ==
+                                                              "studentsFiles")
+                                                              ? controller
+                                                              .downloadStudentAssignmentFile(
+                                                              _data?[
+                                                              i])
                                                               : controller
-                                                                  .downloadAttachment();
+                                                              .downloadAssignmentFile(
+                                                              _data?[
+                                                              i]);
                                                         },
                                                         icon: Icon((_data?[i]
-                                                                    .downloaded
-                                                                    .value ??
-                                                                false)
+                                                            .downloaded
+                                                            .value ??
+                                                            false)
                                                             ? (Icons
-                                                                .folder_open)
+                                                            .folder_open)
                                                             : (Icons
-                                                                .download))),
+                                                            .download))),),
                                                     SizedBox(
                                                       height: 24,
                                                       width: 24,
@@ -203,34 +218,29 @@ class AssignmentsShowFilesCard extends GetView<AssignmentsTabController> {
                                                         color: AppColors
                                                             .inverseCardColor,
                                                         itemBuilder: (ctx) => [
-                                                          (mode =="studentsFiles")?PopupMenuItem(
-                                                              value: "DeleteStudentAssignmentFile",
-                                                              child: CustomText(
-                                                                "Delete".tr,
-                                                                style: AppTextStyles.mainStyle(
-                                                                    textHeader:
-                                                                    AppTextHeaders
-                                                                        .h3Bold),
-                                                              )):PopupMenuItem(
-                                                              value:
-                                                              "DeleteAttachmentFile",
-                                                              child: CustomText(
-                                                                "Delete".tr,
-                                                                style: AppTextStyles.mainStyle(
-                                                                    textHeader:
-                                                                    AppTextHeaders
-                                                                        .h3Bold),
-                                                              )),
-                                                          PopupMenuItem(
-                                                              value:
-                                                                  "reUploadFile",
-                                                              child: CustomText(
-                                                                "ReUpload".tr,
-                                                                style: AppTextStyles.mainStyle(
-                                                                    textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
-                                                              )),
+                                                          (mode ==
+                                                                  "studentsFiles")
+                                                              ? PopupMenuItem(
+                                                                  value:
+                                                                      "DeleteStudentAssignmentFile",
+                                                                  child:
+                                                                      CustomText(
+                                                                    "Delete".tr,
+                                                                    style: AppTextStyles.mainStyle(
+                                                                        textHeader:
+                                                                            AppTextHeaders.h3Bold),
+                                                                  ))
+                                                              : PopupMenuItem(
+                                                                  value:
+                                                                      "DeleteAttachmentFileFromStorage",
+                                                                  child:
+                                                                      CustomText(
+                                                                    "Delete From Storage"
+                                                                        .tr,
+                                                                    style: AppTextStyles.mainStyle(
+                                                                        textHeader:
+                                                                            AppTextHeaders.h3Bold),
+                                                                  )),
                                                         ],
                                                         child: Icon(
                                                           Icons.more_horiz,

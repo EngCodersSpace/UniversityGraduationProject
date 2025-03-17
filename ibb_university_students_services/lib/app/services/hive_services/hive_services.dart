@@ -7,11 +7,13 @@ import 'package:ibb_university_students_services/app/models/grads_model/grads_mo
 import 'package:ibb_university_students_services/app/models/helper_models/assignments_cache/assignments_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/exams_cache/exams_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/lectures_cache/lectures_cache.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/library_files_cache/library_files_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/students_fee_cache/student_fee_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/student_assignments_file_model/student_assignments_file_model.dart';
@@ -58,6 +60,8 @@ class HiveServices{
     Hive.registerAdapter(StudentAssignmentsFileAdapter());
     Hive.registerAdapter(StudentAssignmentStateAdapter());
     Hive.registerAdapter(RoleAdapter());
+    Hive.registerAdapter(LibraryFileAdapter());
+    Hive.registerAdapter(LibraryFilesCacheAdapter());
   }
   static openGlobalBoxes()async{
     await SubjectRepository.openBox();

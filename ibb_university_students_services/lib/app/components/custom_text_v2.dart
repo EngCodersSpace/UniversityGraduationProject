@@ -10,11 +10,13 @@ class CustomText extends StatelessWidget {
         this.style ,
         this.textAlign = TextAlign.center,
         this.softWrap = true,
+        this.maxLines,
       }){
     style?? AppTextStyles.mainStyle();
   }
   String text;
   TextStyle? style;
+  int? maxLines;
   TextAlign textAlign;
   bool softWrap;
 
@@ -23,8 +25,9 @@ class CustomText extends StatelessWidget {
     return Text(
       text,
       style: style,
+      maxLines: maxLines,
       textAlign: textAlign,
-      overflow: (!softWrap)?TextOverflow.ellipsis:null,
+      overflow: TextOverflow.ellipsis,
       softWrap: softWrap,
     );
   }
