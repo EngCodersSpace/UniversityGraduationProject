@@ -1,8 +1,8 @@
 // controllers/userController.js
 // const bcrypt = require('bcrypt');
 const { user, doctor , student ,study_plan,level,section,phone_number,role} = require('../models'); 
-const { Sequelize} = require('sequelize');
-const { Op } = require("sequelize");
+const { Sequelize,Op} = require('sequelize');
+const {filterJsonColumn} = require('../middleware/filterJsonCol')
 
 
 exports.getUserById = async (req, res) => {
@@ -246,20 +246,11 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
 
     const lang = req.headers["accept-language"] || "en"; 
     const whereClause = {};
-
-    const filterJsonColumn = (columnName, lang, value) => {
-      return Sequelize.where(
-        Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${columnName}, '$.${lang}'))`),
-        { [Op.like]: `%${value}%` }
-      );
-    };
     
     // Applying the filter
     if (doctor_id) whereClause.doctor_id = doctor_id;
     if (academic_degree) whereClause.academic_degree = filterJsonColumn('academic_degree', lang, academic_degree);
     if (administrative_position) whereClause.administrative_position = filterJsonColumn('administrative_position', lang, administrative_position);
-
-
 
 
     // Search condition
