@@ -208,8 +208,8 @@ exports.getAllDoctors = async (req, res) => {
     }
 };
 
-
-exports.getDoctorsByCriteriaPanle1 = async (req, res) => {
+ 
+exports.getDoctorsByCriteriaPanle = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "doctor_id",
     "academic_degree",
@@ -244,105 +244,52 @@ exports.getDoctorsByCriteriaPanle1 = async (req, res) => {
       search,
     } = req.query;
 
-    const lang = req.headers["accept-language"] || "en"; // Default to 'en' if no language is specified
+    const lang = req.headers["accept-language"] || "en"; 
+    const whereClause = {};
 
-    const whereClause = {};    
-    if (doctor_id) whereClause.doctor_id = doctor_id;    
-    if (academic_degree) {
-      whereClause.academic_degree = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('academic_degree'), `$.${lang}`)),
-        { [Op.like]: `%${academic_degree}%` }
+    const filterJsonColumn = (columnName, lang, value) => {
+      return Sequelize.where(
+        Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${columnName}, '$.${lang}'))`),
+        { [Op.like]: `%${value}%` }
       );
-    }
+    };
     
-    if (administrative_position) {
-      whereClause.administrative_position = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('administrative_position'), `$.en`)),
-        { [Op.like]: `%${administrative_position}%` }
-      );
-    }
-    
-    if (user_name) {
-      whereClause['$user.user_name$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.user_name'), `$.en`)),
-        { [Op.like]: `%${user_name}%` }
-      );
-    }
-    
-    if (collegeName) {
-      whereClause['$user.collegeName$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.collegeName'), `$.en`)),
-        { [Op.like]: `%${collegeName}%` }
-      );
-    }
-    
-    if (Role) {
-      whereClause['$user.role.roleName$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.role.roleName'), `$.en`)),
-        { [Op.like]: `%${Role}%` }
-      );
-    }
-    
-    if (sectionName) {
-      whereClause['$user.section.section_name$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.section.section_name'), `$.en`)),
-        { [Op.like]: `%${sectionName}%` }
-      );
-    }
-    
-    // Fields in the `phone_number` table (nested association)
-    if (phoneNumber) whereClause['$user.phone_numbers.phone_number$'] = phoneNumber;
-    
+    // Applying the filter
+    if (doctor_id) whereClause.doctor_id = doctor_id;
+    if (academic_degree) whereClause.academic_degree = filterJsonColumn('academic_degree', lang, academic_degree);
+    if (administrative_position) whereClause.administrative_position = filterJsonColumn('administrative_position', lang, administrative_position);
+
+
+
+
     // Search condition
-    const searchCondition = search
-      ? {
-          [Op.or]: [
-            // Search by doctor_id (non-JSON field)
-            { doctor_id: { [Op.like]: `%${search}%` } },
-    
-            // Search within JSON fields
-            Sequelize.where(
-              Sequelize.col('academic_degree'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-            Sequelize.where(
-              Sequelize.col('administrative_position'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-            Sequelize.where(
-              Sequelize.col('user.user_name'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-            Sequelize.where(
-              Sequelize.col('user.collegeName'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-            Sequelize.where(
-              Sequelize.col('user.role.roleName'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-            Sequelize.where(
-              Sequelize.col('user.section.section_name'), // Access the JSON field
-              { [Op.like]: `%${search}%` } // Search within the JSON object
-            ),
-    
-            // Search within phone_number (non-JSON field)
-            { '$user.phone_numbers.phone_number$': { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : undefined;
-    
-    // Combine `whereClause` and `searchCondition`
-    const where = {};
-    
-    if (Object.keys(whereClause).length > 0 || searchCondition) {
-      where[Op.and] = [];
-      if (Object.keys(whereClause).length > 0) where[Op.and].push(whereClause);
-      if (searchCondition) where[Op.and].push(searchCondition);
-    }
+      const searchCondition = search
+        ? {
+            [Op.or]: [
+              { doctor_id: { [Op.like]: `%${search}%` } },
+              // { '$user.email$': { [Op.like]: `%${search}%` } },
+              // { '$user.date_of_birth$': { [Op.like]: `%${search}%` } },
+              // { '$user.phone_numbers.phone_number$': { [Op.like]: `%${search}%` } },
+              Sequelize.where(
+                Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'academic_degree'}, '$.${lang}'))`),
+                { [Op.like]: `%${search}%` }
+              ),
+              Sequelize.where(
+                Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'administrative_position'}, '$.${lang}'))`),
+                { [Op.like]:`%${search}%` }
+              ),
+              // Sequelize.where(
+              //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+              //   { [Op.like]: `%${search}%` }
+              // ),
+              // Sequelize.where(
+              //   Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.user_name'), `$.${lang}`)),
+              //   { [Op.like]: `%${search}%` }
+              // ),
+            ],
+          }
+        : {};
 
-    console.log('\n \n \n where:', where ,'\n \n \n ')
-    console.log('\n \n \n searchCondition:', searchCondition ,'\n \n \n ')
 
     // Pagination and sorting
     const pageNumber = parseInt(page, 10);
@@ -359,35 +306,14 @@ exports.getDoctorsByCriteriaPanle1 = async (req, res) => {
     const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "doctor_id";
     const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
 
-    // Step 1: Perform a separate count query
-    const totalDoctors = await doctor.count({
-      where: Object.keys(where).length > 0 ? where : undefined,
-      include: [
-        {
-          model: user,
-          as: 'user',
-          include: [
-            {
-              model: section,
-              as: 'section',
-            },
-            {
-              model: role,
-              as: 'role',
-            },
-            {
-              model: phone_number,
-              as: 'phone_numbers',
-            },
-          ],
-        },
-      ],
-      distinct: true, // Ensure distinct counting
-    });
 
-    // Step 2: Fetch paginated data
-    const doctors = await doctor.findAll({
-      where: Object.keys(where).length > 0 ? where : undefined,
+    const { count, rows: doctors }= await doctor.findAndCountAll({
+      where: {
+        [Op.and]: [
+          whereClause,
+          searchCondition,
+        ],
+      },
       include: [
         {
           model: user,
@@ -444,8 +370,8 @@ exports.getDoctorsByCriteriaPanle1 = async (req, res) => {
       message: "Doctors retrieved successfully",
       data: doctorList,
       pagination: {
-        totalDoctors: totalDoctors,
-        totalPages: Math.ceil(totalDoctors / limitNumber),
+        totalDoctors: count,
+        totalPages: Math.ceil(count / limitNumber),
         currentPage: pageNumber,
         perPage: limitNumber,
       },
@@ -454,265 +380,7 @@ exports.getDoctorsByCriteriaPanle1 = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error retrieving doctors", error: error.message });
   }
-};
-
-
-exports.getDoctorsByCriteriaPanle = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = [
-    "doctor_id",
-    "academic_degree",
-    "administrative_position",
-    "user_name",
-    "email",
-    "date_of_birth",
-    "roleId",
-    "collegeName",
-    "phone_number",
-    "section_name",
-    "Role",
-  ];
-  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
-
-  try {
-    const {
-      doctor_id,
-      academic_degree,
-      administrative_position,
-      user_name,
-      date_of_birth,
-      roleId,
-      collegeName,
-      phoneNumber,
-      sectionName,
-      Role,
-      page = 1,
-      limit = 10,
-      orderBy = "doctor_id",
-      sort = "ASC",
-      search,
-    } = req.query;
-
-    const lang = req.headers["accept-language"] || "en";
-    console.log('\n \n \n req.query:', req.query, '\n \n \n ');
-
-    const whereClause = {};
-
-    // Top-level fields
-    if (doctor_id) whereClause.doctor_id = doctor_id;
-
-    // JSON fields in doctor
-    if (academic_degree) {
-      whereClause.academic_degree = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('academic_degree'), `$.${lang}`)),
-        { [Op.like]: `%${academic_degree}%` }
-      );
-    }
-
-    if (administrative_position) {
-      whereClause.administrative_position = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('administrative_position'), `$.${lang}`)),
-        { [Op.like]: `%${administrative_position}%` }
-      );
-    }
-
-    // User fields (JSON)
-    if (user_name) {
-      whereClause['$user.user_name$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.user_name'), `$.${lang}`)),
-        { [Op.like]: `%${user_name}%` }
-      );
-    }
-
-    if (date_of_birth) whereClause['$user.date_of_birth$'] = date_of_birth;
-    if (roleId) whereClause['$user.roleId$'] = roleId;
-
-    if (collegeName) {
-      whereClause['$user.collegeName$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.collegeName'), `$.${lang}`)),
-        { [Op.like]: `%${collegeName}%` }
-      );
-    }
-
-    // Role (nested association)
-    if (Role) {
-      whereClause['$user.role.roleName$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.role.roleName'), `$.${lang}`)),
-        { [Op.like]: `%${Role}%` }
-      );
-    }
-
-    // Section (nested association)
-    if (sectionName) {
-      whereClause['$user.section.section_name$'] = Sequelize.where(
-        Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.section.section_name'), `$.${lang}`)),
-        { [Op.like]: `%${sectionName}%` }
-      );
-    }
-
-    if (phoneNumber) whereClause['$user.phone_numbers.phone_number$'] = phoneNumber;
-
-    // Search condition
-    const searchCondition = search
-      ? {
-          [Op.or]: [
-            { doctor_id: { [Op.like]: `%${search}%` } },
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('academic_degree'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('administrative_position'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.user_name'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.collegeName'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.role.roleName'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            Sequelize.where(
-              Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.section.section_name'), `$.${lang}`)),
-              { [Op.like]: `%${search}%` }
-            ),
-            { '$user.phone_numbers.phone_number$': { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : undefined;
-
-    // Combine conditions
-    const where = {};
-    const conditions = [];
-
-    if (Object.keys(whereClause).length > 0) conditions.push(whereClause);
-    if (searchCondition) conditions.push(searchCondition);
-
-    if (conditions.length > 0) {
-      where[Op.and] = conditions; // Ensure `Op.and` is added to the `where` object
-    }
-
-    console.log('\n \n \n where:', JSON.stringify(where, null, 2), '\n \n \n ');
-    console.log('\n \n \n searchCondition:', JSON.stringify(searchCondition, null, 2), '\n \n \n ');
-    console.log('\n \n \n conditions:', JSON.stringify(conditions, null, 2), '\n \n \n ');
-    console.log('\n \n \n whereClause:', JSON.stringify(whereClause, null, 2), '\n \n \n ');
-
-    // 
-    if (Object.keys(where).length === 0) {
-      console.log('\n \n \n No filters applied \n \n \n ');;
-    }
-
-    // Pagination and sorting
-    const pageNumber = parseInt(page, 10);
-    let limitNumber = parseInt(limit, 10);
-
-    const LOWER_LIMIT = 10;
-    const UPPER_LIMIT = 250;
-    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
-    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
-    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
-
-    const offset = (pageNumber - 1) * limitNumber;
-
-    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "doctor_id";
-    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
-
-    // Count query with required includes
-    const totalDoctors = await doctor.count({
-      where: where,
-      include: [
-        {
-          model: user,
-          as: 'user',
-          required: true, // Ensure INNER JOIN
-          include: [
-            { model: section, as: 'section', required: !!sectionName }, // Conditionally required
-            { model: role, as: 'role', required: !!Role },
-            { model: phone_number, as: 'phone_numbers', required: !!phoneNumber },
-          ],
-        },
-      ],
-      distinct: true,
-    });
-
-    // Find all doctors with required includes
-    const doctors = await doctor.findAll({
-      where: where,
-      include: [
-        {
-          model: user,
-          as: 'user',
-          required: true,
-          attributes: ['user_name', 'email', 'date_of_birth', 'roleId', 'collegeName'],
-          include: [
-            {
-              model: section,
-              as: 'section',
-              attributes: ['section_name'],
-              required: !!sectionName,
-            },
-            {
-              model: role,
-              as: 'role',
-              attributes: ['roleName'],
-              required: !!Role,
-            },
-            {
-              model: phone_number,
-              as: 'phone_numbers',
-              attributes: ['phone_number'],
-              required: !!phoneNumber,
-            },
-          ],
-        },
-      ],
-      limit: limitNumber,
-      offset: offset,
-      order: [[validOrderBy, validSort]],
-      logging: console.log,
-    });
-
-    if (!doctors.length) {
-      return res.status(404).json({ message: "No doctors found for the specified criteria" });
-    }
-
-    // Format response
-    const doctorList = doctors.map((doc) => ({
-      doctor_id: doc.doctor_id,
-      academic_degree: doc.academic_degree,
-      administrative_position: doc.administrative_position,
-      user: {
-        name: doc.user.user_name,
-        email: doc.user.email,
-        date_of_birth: doc.user.date_of_birth,
-        roleId: doc.user.roleId,
-        collegeName: doc.user.collegeName,
-        section: doc.user.section?.section_name,
-        Role: doc.user.role?.roleName,
-        phone_number: doc.user.phone_numbers?.map(pn => pn.phone_number) || [],
-      },
-    }));
-
-    res.status(200).json({
-      message: "Doctors retrieved successfully",
-      data: doctorList,
-      pagination: {
-        totalDoctors: totalDoctors,
-        totalPages: Math.ceil(totalDoctors / limitNumber),
-        currentPage: pageNumber,
-        perPage: limitNumber,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error retrieving doctors", error: error.message });
-  }
-};
-
+};  
 
 
 
