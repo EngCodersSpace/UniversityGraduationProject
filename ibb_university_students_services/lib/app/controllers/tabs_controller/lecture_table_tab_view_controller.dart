@@ -316,8 +316,8 @@ class LectureController extends GetxController {
       if (selectedSection.value == null) return;
       if (selectedYear.value == null) return;
       selectedLecture = data?["id"];
-      Result<void> res = await LectureRepository.deleteLecture(
-          id: selectedLecture);
+      Result<void> res =
+          await LectureRepository.deleteLecture(id: selectedLecture);
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?.remove(selectedLecture);
@@ -343,8 +343,7 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureRepository.changeLectureState(
-          id: selectedLecture!,
-          action: 'confirm');
+          id: selectedLecture!, action: 'confirm');
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?[selectedLecture]?.lectureStatus = true;
@@ -357,8 +356,7 @@ class LectureController extends GetxController {
       selectedLecture = data?["id"];
       if (selectedLecture == null) return;
       Result<void> res = await LectureRepository.changeLectureState(
-          id: selectedLecture!,
-          action: 'cancel');
+          id: selectedLecture!, action: 'cancel');
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 200) {
         selectedDay(selected.value)?[selectedLecture]?.lectureStatus = false;

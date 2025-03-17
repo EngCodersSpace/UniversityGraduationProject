@@ -75,7 +75,7 @@ class WebLectureCard extends GetView<LectureController> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(30)),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: CustomText(
                               "${DateTimeUtils.formatStringTime(time: content.value?.startTime ?? "00:00:00")} - ${DateTimeUtils.addToStringTime(
                                 time: content.value?.startTime ?? "00:00:00",

@@ -6,7 +6,10 @@ import 'package:ibb_university_students_services/app/bindings/library_binding.da
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_users_table_view.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_view.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
@@ -21,11 +24,10 @@ import 'bindings/student_fees_binding.dart';
 
 class AppRoutes {
   static final routes = [
-
     GetPage(
       name: '/splash_screen',
       page: () => const SplashScreen(),
-      binding:  InitAppBinding(),
+      binding: InitAppBinding(),
     ),
 
     GetPage(
@@ -75,11 +77,25 @@ class AppRoutes {
       page: () => DashboardMainView(),
       binding: MainViewBinding(),
     ),
+    GetPage(
+      name: "/dashboard_role_user_view",
+      page: () => RoleUsersTableView(),
+      binding: MainViewBinding(),
+    ),
+    GetPage(
+      name: "/dashboard_doctor_view",
+      page: () => DoctorTableView(),
+      binding: MainViewBinding(),
+    ),
+    GetPage(
+      name: "/dashboard_student_view",
+      page: () => StudentTableView(),
+      binding: MainViewBinding(),
+    ),
 
     // Add more routes here
   ];
 }
-
 
 class RouteGuard extends NavigatorObserver {
   @override

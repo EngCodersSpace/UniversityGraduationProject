@@ -405,7 +405,7 @@ class LectureRepository {
       );
       Map<int, Lecture> lectures = {};
 
-      if (response?.statusCode == 200) {
+       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsLecture in response?.data['data']) {
           Subject? subject =
               await SubjectRepository.fetchSubject(id: jsLecture["subject_id"])
@@ -413,13 +413,21 @@ class LectureRepository {
           lectures[jsLecture['id']] =
               Lecture.fromJson(jsLecture, subject: subject);
         }
+        return Result(
+            data: {
+              "lectures": lectures,
+              "totalLectures": response?.data["pagination"]["totalLectures"],
+            },
+            hasError: false,
+            statusCode: response?.statusCode ?? _updateError,
+            message: response?.data["message"] ?? "error");
       }
       return Result(
           data: {
             "lectures": lectures,
-            "totalLectures": response?.data["pagination"]["totalLectures"],
+            "totalLectures": 0,
           },
-          hasError: true,
+          hasError: false,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
     } catch (error) {

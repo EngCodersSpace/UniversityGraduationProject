@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_component/add_lecture_table_card.dart';
 import '../../components/custom_text_v2.dart';
 import '../../models/helper_models/result.dart';
 import '../../models/lecture_model/lecture_model.dart';
@@ -31,7 +34,7 @@ class DashboardLectureTableController extends GetxController
   RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "Term 1".obs;
+  RxString selectedTerm = "".obs;
   RxString selectedOrder = "lecture_time".obs;
   RxString selectedSort = "DESC".obs;
   List<DropdownMenuItem<int>> sections = [];
@@ -137,6 +140,126 @@ class DashboardLectureTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   Timer? _debounce;
+
+  //Lecture popCard variables
+  Map<String, Subject>? subjects;
+  Map<int, Section> section = <int, Section>{}.obs;
+  List<Level>? level;
+  RxString selectedDayName = "Sunday".obs;
+  Rx<String?> subjectId = Rx(null);
+  Rx<int?> doctorId = Rx(null);
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
+  // ignore: non_constant_identifier_names
+  Rx<int?> LevelId = Rx(null);
+  // ignore: non_constant_identifier_names
+  RxString TermId = "".obs;
+  TextEditingController timeController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController hallController = TextEditingController();
+  FocusNode nameFocus = FocusNode();
+  FocusNode timeFocus = FocusNode();
+  FocusNode durationFocus = FocusNode();
+  FocusNode entryYearFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  int? selectedLecture;
+  String mode = "Edit";
+  bool submitting = false;
+  List<DropdownMenuItem<String>> terms = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "1st",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "2ec",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+  ];
+
+  List<DropdownMenuItem<String>> days = [
+    DropdownMenuItem<String>(
+        value: "Saturday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Saturday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Sunday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Sunday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Monday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Monday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Tuseday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Tuseday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Wednesday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Wednesday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Thursday",
+        child: SizedBox(
+            width: (Get.width / 3) * 0.6,
+            child: CustomText(
+              "Thursday",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+  ];
 
   @override
   void onInit() async {
@@ -255,10 +378,10 @@ class DashboardLectureTableController extends GetxController
         hardFetch: false);
     if (res.statusCode == 200) {
       lectures.value = res.data["lectures"] ?? {};
-      availableRows.value = res.data["totalLectures"];
-      update(["DataTable"]);
+      availableRows.value = res.data["totalLectures"] ?? 0;
     } else if (res.statusCode == 404) {
       lectures.value = {};
+      availableRows.value = 0;
       fieldMessage.value = "this section and level not has Lectures";
       if (showSnakeBars) {
         showSnakeBar(
@@ -267,6 +390,7 @@ class DashboardLectureTableController extends GetxController
       }
     } else {
       lectures.value = {};
+      availableRows.value = res.data["totalLectures"] ?? 0;
       fieldMessage.value = "fetching lectures failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
@@ -274,6 +398,7 @@ class DashboardLectureTableController extends GetxController
             message: "fetching lectures failed please check connection ");
       }
     }
+    update(["DataTable"]);
   }
 
   void onPageChange(int page) async {
@@ -384,6 +509,9 @@ class DashboardLectureTableController extends GetxController
   void import() {}
 
   String prevTxt = "";
+
+  get jsdata => null;
+
   @override
   void onSearch() {
     if (searchController.text == prevTxt) return;
@@ -394,10 +522,243 @@ class DashboardLectureTableController extends GetxController
     });
   }
 
-  void addLecture() {}
+  Future<void> addClick() async {
+    await getSection();
+    await getLevel();
+    await getSubjects();
+    timeController.text = DateTimeUtils.formatTimeOfDay(time: TimeOfDay.now());
+    Get.dialog(const PopUpAddLectureCard());
+  }
+
+  void changeAddTerm(String? val) async {
+    if (val == null) return;
+    TermId.value = val;
+  }
+
+  void changeAddDay(String? val) async {
+    if (val == null) return;
+    selectedDayName.value = val;
+  }
+
+  Future<void> getSubjects() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+      if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&
+          subjects?.values.first.instructors?.values.first != null) {
+        doctorId.value = subjects?.values.first.instructors?.values.first.id;
+      } else {
+        doctorId.value = null;
+      }
+    } else {
+      subjectId.value = null;
+    }
+  }
+
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels(hardFetch: false)
+        .then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      LevelId = RxInt(level?.first.id ?? 0);
+    } else {
+      LevelId.value = null;
+    }
+  }
+
+  Future<void> addlecture() async {
+    Result<Lecture> res = await LectureRepository.createLecture(
+      sectionId: SectionId.value!,
+      levelId: LevelId.value!,
+      term: TermId.value,
+      year: "",
+      day: selectedDayName.value,
+      subjectId: subjectId.value!,
+      doctorId: doctorId.value!,
+      lectureTime: timeController.text,
+      lectureDuration: int.tryParse(durationController.text) ?? -999,
+      lectureRoom: hallController.text,
+    );
+
+    // ignore: unused_local_variable
+    Lecture? createLecture;
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      createLecture = res.data;
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+    update(["DataTable"]);
+  }
+
+  // Future<void> more(String val, {Map<String, dynamic>? data}) async {
+  //   if (val == "Edit") {
+  //     await getSubjects();
+  //     mode = "Edit";
+  //     if (data != null) {
+  //       selectedLecture = data["id"];
+  //       doctorId.value = data["doctor_id"];
+  //       subjectId.value = data["subject"]["subject_id"];
+  //       timeController.text =
+  //           DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+  //       durationController.text = data["duration"].toString();
+  //       hallController.text = data["lecture_room"].toString();
+  //     }
+  //     Get.dialog(const PopUpAddLectureCard());
+  //   } else if (val == "Delete") {
+  //     if (selectedLevel.value == null) return;
+  //     if (selectedSection.value == null) return;
+
+  //     selectedLecture = data?["id"];
+  //     Result<void> res =
+  //         await LectureRepository.deleteLecture(id: selectedLecture);
+  //     Navigator.of(Get.overlayContext!).pop();
+  //     if (res.statusCode == 200) {
+  //       lectures.remove(selectedLecture);
+  //       showSnakeBar(message: "Delete successfully");
+  //     } else {
+  //       showSnakeBar(message: "Delete failed");
+  //     }
+  //   } else if (val == "TemporaryReplace") {
+  //     await getSubjects();
+  //     mode = "Replace";
+  //     if (data != null) {
+  //       selectedLecture = data["id"];
+  //       doctorId.value = data["doctor_id"];
+  //       subjectId.value = data["subject"]["subject_id"];
+  //       timeController.text =
+  //           DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+  //       durationController.text = data["duration"].toString();
+  //       hallController.text = data["lecture_room"].toString();
+  //     }
+  //     Get.dialog(const PopUpAddLectureCard());
+  //   } else if (val == "Confirm") {
+  //     selectedLecture = data?["id"];
+  //     if (selectedLecture == null) return;
+  //     Result<void> res = await LectureRepository.changeLectureState(
+  //         id: selectedLecture!, action: 'confirm');
+  //     Navigator.of(Get.overlayContext!).pop();
+  //     if (res.statusCode == 200) {
+  //       lectures[selectedLecture]?.lectureStatus == true;
+  //       showSnakeBar(message: "Confirm successfully");
+  //     } else {
+  //       showSnakeBar(message: "Confirm failed");
+  //     }
+  //   } else if (val == "Cancel") {
+  //     selectedLecture = data?["id"];
+  //     if (selectedLecture == null) return;
+  //     Result<void> res = await LectureRepository.changeLectureState(
+  //         id: selectedLecture!, action: 'cancel');
+  //     Navigator.of(Get.overlayContext!).pop();
+  //     if (res.statusCode == 200) {
+  //       lectures[selectedLecture]?.lectureStatus = false;
+  //       showSnakeBar(message: "Cancel successfully");
+  //     } else {
+  //       showSnakeBar(message: "Cancel failed");
+  //     }
+  //   }
+  // }
+
+  // void onSelectedOperation() {
+  //   if ((PermissionUtils.checkPermission(
+  //       target: "Lectures", action: "write"))) {
+  //     [
+  //       SizedBox(
+  //           height: 24,
+  //           width: 24,
+  //           child: PopupMenuButton<String>(
+  //             onSelected: (val) => more(val, data: lectures.toJson()),
+  //             color: AppColors.inverseCardColor,
+  //             itemBuilder: (ctx) => [
+  //               PopupMenuItem(
+  //                   value: "TemporaryReplace",
+  //                   child: CustomText(
+  //                     "Temporary Replace".tr,
+  //                     style: AppTextStyles.mainStyle(
+  //                         textHeader: AppTextHeaders.h3Bold),
+  //                   )),
+  //               PopupMenuItem(
+  //                   value: "Edit",
+  //                   child: CustomText(
+  //                     "Edit".tr,
+  //                     style: AppTextStyles.mainStyle(
+  //                         textHeader: AppTextHeaders.h3Bold),
+  //                   )),
+  //               PopupMenuItem(
+  //                   value: "Delete",
+  //                   child: CustomText(
+  //                     "Delete".tr,
+  //                     style: AppTextStyles.mainStyle(
+  //                         textHeader: AppTextHeaders.h3Bold),
+  //                   )),
+  //               PopupMenuItem(
+  //                   value: "Confirm",
+  //                   child: CustomText(
+  //                     "Confirm".tr,
+  //                     style: AppTextStyles.mainStyle(
+  //                         textHeader: AppTextHeaders.h3Bold),
+  //                   )),
+  //               PopupMenuItem(
+  //                   value: "Cancel",
+  //                   child: CustomText(
+  //                     "Cancel".tr,
+  //                     style: AppTextStyles.mainStyle(
+  //                         textHeader: AppTextHeaders.h3Bold),
+  //                   )),
+  //             ],
+  //           ))
+  //     ];
+  //   }
+  // }
+
+  // void submit() async {
+  //   if (submitting) return;
+  //   submitting = true;
+  //   if (formKey.currentState!.validate()) {
+  //     switch (mode) {
+  //       case ("Edit"):
+  //         submitEdit();
+  //         break;
+  //       case ("Replace"):
+  //         submitReplace();
+  //         break;
+  //     }
+  //   }
+  //   submitting = false;
+  //   popCardCleare();
+  // }
+
+  // void submitEdit() async {}
+  // void submitReplace() async {}
+
+  void popCardCleare() {
+    timeController.clear();
+    durationController.clear();
+    hallController.clear();
+  }
 
   @override
   void onClose() {
     searchController.dispose();
+    popCardCleare();
+    timeController.dispose();
+    durationController.dispose();
+    hallController.dispose();
+    nameFocus.dispose();
+    timeFocus.dispose();
+    durationFocus.dispose();
+    entryYearFocus.dispose();
+    phoneFocus.dispose();
   }
 }

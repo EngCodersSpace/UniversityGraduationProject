@@ -27,7 +27,6 @@ class ExamTableWebView extends GetView<ExamTableController> {
                 width: width,
                 height: height,
                 color: AppColors.tabBackColor,
-                alignment: Alignment.bottomLeft,
                 child: Column(
                   children: [
                     Container(
@@ -49,7 +48,6 @@ class ExamTableWebView extends GetView<ExamTableController> {
                       ),
                       padding: const EdgeInsets.only(left: 70),
                       child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           CustomText(
                             "Section".tr,

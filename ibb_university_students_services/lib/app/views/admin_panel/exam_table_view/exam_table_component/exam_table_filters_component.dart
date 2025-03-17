@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashbord_lecture_table_controller.dart';
-// import '../../../../components/custom_text_v2.dart';
-import '../../../../styles/app_colors.dart';
-// import '../../../../styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_exam_table_controller.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
-class LectureTableFilterComponent
-    extends GetView<DashboardLectureTableController> {
-  const LectureTableFilterComponent({super.key});
+class ExamTableFiltersComponent extends GetView<DashboardExamTableController> {
+  const ExamTableFiltersComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // CustomText(
-          //   "Section".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.12,
@@ -71,13 +62,6 @@ class LectureTableFilterComponent
           SizedBox(
             width: Get.width * 0.01,
           ),
-          // CustomText(
-          //   "Term".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.08,
@@ -87,7 +71,7 @@ class LectureTableFilterComponent
             ),
             child: Center(
               child: Obx(() => DropdownButton(
-                    items: controller.term,
+                    items: controller.terms,
                     onChanged: controller.changeTerm,
                     value: controller.selectedTerm.value,
                     underline: const SizedBox(),
@@ -99,13 +83,6 @@ class LectureTableFilterComponent
           SizedBox(
             width: Get.width * 0.01,
           ),
-          // CustomText(
-          //   "Order".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.11,
@@ -127,13 +104,6 @@ class LectureTableFilterComponent
           SizedBox(
             width: Get.width * 0.01,
           ),
-          // CustomText(
-          //   "Sort".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.11,
@@ -153,7 +123,7 @@ class LectureTableFilterComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.19,
+            width: Get.width * 0.15,
           ),
           IconButton(
             onPressed: () {

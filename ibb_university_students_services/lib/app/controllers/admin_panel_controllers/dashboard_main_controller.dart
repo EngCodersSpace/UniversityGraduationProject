@@ -1,22 +1,20 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
-
 import 'dashboard_exam_table_controller.dart';
 import 'dashboard_grad_table_controller.dart';
 import 'dashboard_library_table_controller.dart';
 import 'dashboard_notification_table_controller.dart';
 import 'dashboard_payment_table_controller.dart';
 import 'dashboard_phone_number_table_controller.dart';
-import 'dashboard_student_table_controller.dart';
 import 'dashboard_study_plan_table_controller.dart';
 import 'dashboard_subjects_table_controller.dart';
 import 'dashbord_lecture_table_controller.dart';
 
 class DashboardMainController extends GetxController {
-  RxInt selectedindex = 2.obs;
+  RxInt selectedindex = 0.obs;
   RxBool connected = false.obs;
   TextEditingController search = TextEditingController();
 
@@ -42,19 +40,19 @@ class DashboardMainController extends GetxController {
         if (controller != null) {
           controller.dispose();
         }
-        controller = Get.put<DashboardDoctorTableController>(
-          DashboardDoctorTableController(),
+        controller = Get.put<DashboardRoleUsersTableController>(
+          DashboardRoleUsersTableController(),
         );
         break;
-      case 1:
-        // ignore: unnecessary_null_comparison
-        if (controller != null) {
-          controller.dispose();
-        }
-        controller = Get.put<DashboardStudentTableController>(
-          DashboardStudentTableController(),
-        );
-        break;
+      // case 1:
+      //   // ignore: unnecessary_null_comparison
+      //   if (controller != null) {
+      //     controller.dispose();
+      //   }
+      //   controller = Get.put<DashboardStudentTableController>(
+      //     DashboardStudentTableController(),
+      //   );
+      //   break;
       case 2:
         // ignore: unnecessary_null_comparison
         if (controller != null) {
