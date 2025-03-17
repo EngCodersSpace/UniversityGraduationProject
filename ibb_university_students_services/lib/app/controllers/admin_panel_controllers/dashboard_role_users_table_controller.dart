@@ -12,6 +12,7 @@ class DashboardRoleUsersTableController extends GetxController
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
   RxInt selectedIndex = 0.obs;
+  RxBool loadingState = true.obs;
   RxMap<int, Role> roles = RxMap({});
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
@@ -118,6 +119,7 @@ class DashboardRoleUsersTableController extends GetxController
       )),
     ];
     await fetchRoleData();
+    loadingState.value = false;
     super.onInit();
   }
 
