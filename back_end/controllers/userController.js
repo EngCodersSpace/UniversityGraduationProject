@@ -6,47 +6,53 @@ const {filterJsonColumn} = require('../middleware/filterJsonCol')
 
 
 exports.getUserById = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const foundUser = await user.findOne({
-            where:{user_id:id},
-            include: [
-                {model: student, as : 'student'},
-                {model: doctor , as : 'doctor' },
-                {model: student , as : 'student' }
-            ],
-        });
-        if (!foundUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(foundUser);
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+  const { id } = req.params;
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id: id },
+      include: [
+        { model: student, as: "student" },
+        { model: doctor, as: "doctor" },
+        { model: student, as: "student" },
+      ],
+    });
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+    res.status(200).json(foundUser);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.getAllUsers = async (req, res) => {
-    try {
-        const users = await user.findAll();
-        res.status(200).json(users);
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
+  try {
+    const users = await user.findAll();
+    res.status(200).json(users);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.deleteUser = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const foundUser = await user.findByPk(id);
-        if (!foundUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        await foundUser.destroy();
-        res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+  const { id } = req.params;
+  try {
+    const foundUser = await user.findByPk(id);
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    await foundUser.destroy();
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,8 +98,8 @@ exports.deleteUser = async (req, res) => {
 //             date_of_birth: Doctor.user.date_of_birth,
 //             email: Doctor.user.email,
 //             doctor: {
-//                 academic_degree: Doctor.academic_degree,  
-//                 administrative_position: Doctor.administrative_position      
+//                 academic_degree: Doctor.academic_degree,
+//                 administrative_position: Doctor.administrative_position
 //             }
 //         };
 
@@ -108,104 +114,122 @@ exports.deleteUser = async (req, res) => {
 // };
 
 exports.getDoctorById = async (req, res) => {
-    const { id: user_id } = req.params;
+  const { id: user_id } = req.params;
 
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{ model: doctor, as: 'doctor' }],
-        });
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id },
+      include: [{ model: doctor, as: "doctor" }],
+    });
 
-        if (!foundUser || !foundUser.doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-
-        res.status(200).json(foundUser);
-    } catch (error) {
-        console.error("Error fetching doctor:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundUser || !foundUser.doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
     }
+
+    res.status(200).json(foundUser);
+  } catch (error) {
+    console.error("Error fetching doctor:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.updateDoctor = async (req, res) => {
-    const {  id: user_id  } = req.params;
-    const { user_name, date_of_birth,collegeName, email,profile_picture, doctor: doctorData } = req.body;
+  const { id: user_id } = req.params;
+  const {
+    user_name,
+    date_of_birth,
+    collegeName,
+    email,
+    profile_picture,
+    doctor: doctorData,
+  } = req.body;
 
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{model: doctor,as: 'doctor',}],
-            attributes: { exclude: ['resetToken', 'resetTokenExpiry', 'updatedAt'] }, 
-        });
-        
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id },
+      include: [{ model: doctor, as: "doctor" }],
+      attributes: { exclude: ["resetToken", "resetTokenExpiry", "updatedAt"] },
+    });
 
-        if (!foundUser || !foundUser.doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-
-        await foundUser.update({
-            user_name,
-            date_of_birth,
-            collegeName,
-            email,
-            profile_picture,
-        });
-
-        if (doctorData) {
-            await foundUser.doctor.update({
-                department: doctorData.department,
-                academic_degree: doctorData.academic_degree,
-                administrative_position: doctorData.administrative_position,
-            });
-        }
-
-        res.status(200).json({ message: "Doctor updated successfully", user: foundUser });
-    } catch (error) {
-        console.error("Error updating doctor:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundUser || !foundUser.doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
     }
+
+    await foundUser.update({
+      user_name,
+      date_of_birth,
+      collegeName,
+      email,
+      profile_picture,
+    });
+
+    if (doctorData) {
+      await foundUser.doctor.update({
+        department: doctorData.department,
+        academic_degree: doctorData.academic_degree,
+        administrative_position: doctorData.administrative_position,
+      });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Doctor updated successfully", user: foundUser });
+  } catch (error) {
+    console.error("Error updating doctor:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.deleteDoctor = async (req, res) => {
-    const { id: user_id } = req.params;
+  const { id: user_id } = req.params;
 
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{ model: doctor, as: 'doctor' }],
-        });
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id },
+      include: [{ model: doctor, as: "doctor" }],
+    });
 
-        if (!foundUser || !foundUser.doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-
-        await foundUser.doctor.destroy();
-
-        await foundUser.destroy();
-
-        res.status(200).json({ message: "Doctor deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting doctor:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundUser || !foundUser.doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
     }
+
+    await foundUser.doctor.destroy();
+
+    await foundUser.destroy();
+
+    res.status(200).json({ message: "Doctor deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting doctor:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.getAllDoctors = async (req, res) => {
-    try {
-        const doctors = await user.findAll({
-            include: [{ 
-                model: doctor, 
-                as: 'doctor'
-            }],
-            where: { permission: 'teacher' }, 
-        });
+  try {
+    const doctors = await user.findAll({
+      include: [
+        {
+          model: doctor,
+          as: "doctor",
+        },
+      ],
+      where: { permission: "teacher" },
+    });
 
-        const doctorsData = doctors.map(u => u.doctor?.getFullData() || {});
-        res.status(200).json(doctorsData);
-    } catch (error) {
-        console.error("Error fetching doctors:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
+    const doctorsData = doctors.map((u) => u.doctor?.getFullData() || {});
+    res.status(200).json(doctorsData);
+  } catch (error) {
+    console.error("Error fetching doctors:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
  
@@ -294,8 +318,12 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
 
     const offset = (pageNumber - 1) * limitNumber;
 
-    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "doctor_id";
-    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "doctor_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
 
 
     const { count, rows: doctors }= await doctor.findAndCountAll({
@@ -308,23 +336,29 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
       include: [
         {
           model: user,
-          as: 'user',
-          attributes: ['user_name', 'email', 'date_of_birth', 'roleId', 'collegeName'],
+          as: "user",
+          attributes: [
+            "user_name",
+            "email",
+            "date_of_birth",
+            "roleId",
+            "collegeName",
+          ],
           include: [
             {
               model: section,
-              as: 'section',
-              attributes: ['section_name'],
+              as: "section",
+              attributes: ["section_name"],
             },
             {
               model: role,
-              as: 'role',
-              attributes: ['roleName'],
+              as: "role",
+              attributes: ["roleName"],
             },
             {
               model: phone_number,
-              as: 'phone_numbers',
-              attributes: ['phone_number'],
+              as: "phone_numbers",
+              attributes: ["phone_number"],
             },
           ],
         },
@@ -336,7 +370,9 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     });
 
     if (!doctors.length) {
-      return res.status(404).json({ message: "No doctors found for the specified criteria" });
+      return res
+        .status(404)
+        .json({ message: "No doctors found for the specified criteria" });
     }
 
     // Format the response
@@ -352,7 +388,8 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
         collegeName: doctor.user.collegeName,
         section: doctor.user.section?.section_name,
         Role: doctor.user.role?.roleName,
-        phone_number: doctor.user.phone_numbers?.map(pn => pn.phone_number) || [],
+        phone_number:
+          doctor.user.phone_numbers?.map((pn) => pn.phone_number) || [],
       },
     }));
 
@@ -369,15 +406,188 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error retrieving doctors", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving doctors", error: error.message });
   }
 };  
 
+exports.getDoctorsByCriteriaPanle3 = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = [
+    "doctor_id",
+    "academic_degree",
+    "administrative_position",
+    "user_name",
+    "email",
+    "date_of_birth",
+    "roleId",
+    "collegeName",
+    "phone_number",
+    "section_name",
+    "Role",
+  ];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      doctor_id,
+      academic_degree,
+      administrative_position,
+      user_name,
+      date_of_birth,
+      roleId,
+      collegeName,
+      phoneNumber,
+      sectionName,
+      Role,
+      page = 1,
+      limit = 10,
+      orderBy = "doctor_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const lang = req.headers["accept-language"] || "en"; // Default to 'en' if no language is specified
 
 
+    
 
+    // // If no filters are provided, return an error
+    // if (Object.keys(where).length === 0) {
+    //   return res.status(400).json({ message: "No filters provided" });
+    // }
 
+    // Pagination and sorting
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
 
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "doctor_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
+
+    
+
+    // Step 2: Fetch paginated data
+    const doctors = await doctor.findAll({
+      where: {
+        ...(academic_degree && {
+          academic_degree: {
+            [lang]: academic_degree,
+          },
+        }),
+
+        ...(administrative_position && {
+          administrative_position: {
+            [lang]: administrative_position,
+          },
+        }),
+        
+      },
+      include: [
+        {
+          model: user,
+          as: "user",
+          required: true,
+          attributes: [
+            "user_name",
+            "email",
+            "date_of_birth",            
+            "collegeName",
+            "user_section_id",
+            "roleId",
+          ],
+          include: [
+            {
+              model: section,
+              as: "section",
+              attributes: ["section_name"],
+              required: true,
+              where: {
+                ...(sectionName && {
+                  section_name: {
+                    [lang]: sectionName,
+                  },
+                }),
+                ...(search && {
+                  [Op.or]: [
+                    { section_name: { [Op.like]: `%${search}%` } },
+                  ],
+                }),
+              },
+            },
+            {
+              model: role,
+              as: "role",
+              attributes: ["roleName"],
+              required: true,
+            },
+            {
+              model: phone_number,
+              as: "phone_numbers",
+              attributes: ["phone_number"],
+              required: true,
+            },
+          ],
+
+          where: { 
+            ...(search && {
+              user_name: { [lang]:{[Op.like]: `%${search}%`}},
+            }),
+          },
+        },
+      ],
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+      logging: console.log,
+    });
+
+    if (!doctors.length) {
+      return res
+        .status(404)
+        .json({ message: "No doctors found for the specified criteria ",s:search,n:user_name });
+    }
+
+    // // Format the response
+    // const doctorList = doctors.map((doctor) => ({
+    //   doctor_id: doctor.doctor_id,
+    //   academic_degree: doctor.academic_degree,
+    //   administrative_position: doctor.administrative_position,
+    //   user: {
+    //     name: doctor.user.user_name,
+    //     email: doctor.user.email,
+    //     date_of_birth: doctor.user.date_of_birth,
+    //     roleId: doctor.user.roleId,
+    //     collegeName: doctor.user.collegeName,
+    //     section: doctor.user.section?.section_name,
+    //     Role: doctor.user.role?.roleName,
+    //     phone_number: doctor.user.phone_numbers?.map(pn => pn.phone_number) || [],
+    //   },
+    // }));
+
+    // Return the response
+    res.status(200).json({
+      message: "Doctors retrieved successfully",
+      data: doctors,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error retrieving doctors", error: error.message });
+  }
+};
 
 // exports.getAllDoctors = async (req, res) => {
 //     const { language } = req.query;
@@ -430,269 +640,315 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
 //     }
 // };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 exports.getStudentById = async (req, res) => {
-    const { id: user_id } = req.params;
+  const { id: user_id } = req.params;
 
-    try {
-        const foundStudent = await student.findOne({
-            where: { student_id:user_id },
-            include: [{ model: user, as: 'user' }],
-        });
+  try {
+    const foundStudent = await student.findOne({
+      where: { student_id: user_id },
+      include: [{ model: user, as: "user" }],
+    });
 
-        if (!foundStudent || !foundStudent.user) {
-            return res.status(404).json({ message: "Student not found" });
-        }
-
-        res.status(200).json(foundStudent.getFullData());
-    } catch (error) {
-        console.error("Error fetching student:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundStudent || !foundStudent.user) {
+      return res.status(404).json({ message: "Student not found" });
     }
+
+    res.status(200).json(foundStudent.getFullData());
+  } catch (error) {
+    console.error("Error fetching student:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.updateStudent = async (req, res) => {
-    const { id: user_id } = req.params;
-    const { user_name, date_of_birth,collegeName, email, profile_picture, student: studentData } = req.body;
+  const { id: user_id } = req.params;
+  const {
+    user_name,
+    date_of_birth,
+    collegeName,
+    email,
+    profile_picture,
+    student: studentData,
+  } = req.body;
 
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{ model: student, as: 'student' }],
-        });
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id },
+      include: [{ model: student, as: "student" }],
+    });
 
-        if (!foundUser || !foundUser.student) {
-            return res.status(404).json({ message: "Student not found" });
-        }
-
-        const [sectionFound, levelFound, study_planFound] = await Promise.all([
-            section.findOne({ where: { section_name: studentData.student_section_id } }),
-            level.findOne({ where: { level_name: studentData.student_level_id } }),
-            study_plan.findOne({ where: { study_plan_name: studentData.study_plan_id } })
-        ]);
-
-        if (!sectionFound) {
-            return res.status(400).json({ message: `Section '${studentData.student_section_id}' not found` });
-        }
-        if (!levelFound) {
-            return res.status(400).json({ message: `Level '${studentData.student_level_id}' not found` });
-        }
-        if (!study_planFound) {
-            return res.status(400).json({ message: `Study plan '${studentData.study_plan_id}' not found` });
-        }
-
-        await foundUser.update({
-            user_name,
-            date_of_birth,
-            collegeName,
-            email,
-            profile_picture,
-        });
-
-        await foundUser.student.update({
-            student_section_id: sectionFound.id,
-            enrollment_year: studentData.enrollment_year,
-            student_level_id: levelFound.id,
-            student_system: studentData.student_system,
-            study_plan_id: study_planFound.study_plan_id,
-        });
-
-        const responseUser = {
-            user_id: foundUser.user_id,
-            user_name: foundUser.user_name,
-            date_of_birth: foundUser.date_of_birth,
-            collegeName:foundUser.collegeName,
-            email: foundUser.email,
-            profile_picture: foundUser.profile_picture,
-            student_section_id: sectionFound.section_name,
-            enrollment_year: foundUser.student.enrollment_year,
-            student_level_id: levelFound.level_name,
-            student_system: foundUser.student.student_system,
-            study_plan_id: study_planFound.study_plan_name,
-        };
-
-        res.status(200).json({
-            message: "Student updated successfully",
-            user: responseUser,
-        });
-    } catch (error) {
-        console.error("Error updating student:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundUser || !foundUser.student) {
+      return res.status(404).json({ message: "Student not found" });
     }
+
+    const [sectionFound, levelFound, study_planFound] = await Promise.all([
+      section.findOne({
+        where: { section_name: studentData.student_section_id },
+      }),
+      level.findOne({ where: { level_name: studentData.student_level_id } }),
+      study_plan.findOne({
+        where: { study_plan_name: studentData.study_plan_id },
+      }),
+    ]);
+
+    if (!sectionFound) {
+      return res
+        .status(400)
+        .json({
+          message: `Section '${studentData.student_section_id}' not found`,
+        });
+    }
+    if (!levelFound) {
+      return res
+        .status(400)
+        .json({ message: `Level '${studentData.student_level_id}' not found` });
+    }
+    if (!study_planFound) {
+      return res
+        .status(400)
+        .json({
+          message: `Study plan '${studentData.study_plan_id}' not found`,
+        });
+    }
+
+    await foundUser.update({
+      user_name,
+      date_of_birth,
+      collegeName,
+      email,
+      profile_picture,
+    });
+
+    await foundUser.student.update({
+      student_section_id: sectionFound.id,
+      enrollment_year: studentData.enrollment_year,
+      student_level_id: levelFound.id,
+      student_system: studentData.student_system,
+      study_plan_id: study_planFound.study_plan_id,
+    });
+
+    const responseUser = {
+      user_id: foundUser.user_id,
+      user_name: foundUser.user_name,
+      date_of_birth: foundUser.date_of_birth,
+      collegeName: foundUser.collegeName,
+      email: foundUser.email,
+      profile_picture: foundUser.profile_picture,
+      student_section_id: sectionFound.section_name,
+      enrollment_year: foundUser.student.enrollment_year,
+      student_level_id: levelFound.level_name,
+      student_system: foundUser.student.student_system,
+      study_plan_id: study_planFound.study_plan_name,
+    };
+
+    res.status(200).json({
+      message: "Student updated successfully",
+      user: responseUser,
+    });
+  } catch (error) {
+    console.error("Error updating student:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.deleteStudent = async (req, res) => {
-    const { id: user_id } = req.params;
+  const { id: user_id } = req.params;
 
-    try {
-        const foundUser = await user.findOne({
-            where: { user_id },
-            include: [{ model: student, as: 'student' }],
-        });
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id },
+      include: [{ model: student, as: "student" }],
+    });
 
-        if (!foundUser || !foundUser.student) {
-            return res.status(404).json({ message: "Student not found" });
-        }
-
-        await foundUser.student.destroy();
-        await foundUser.destroy();
-
-        res.status(200).json({ message: "Student deleted successfully" });
-    } catch (error) {
-        console.error("Error deleting student:", error.message);
-        res.status(500).json({ message: "Internal server error", error: error.message });
+    if (!foundUser || !foundUser.student) {
+      return res.status(404).json({ message: "Student not found" });
     }
+
+    await foundUser.student.destroy();
+    await foundUser.destroy();
+
+    res.status(200).json({ message: "Student deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting student:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
 
 exports.getAllStudents = async (req, res) => {
-    try {
-        const users = await user.findAll({
-            include: [{
-                model: student,
-                as: 'student',
-            }],
-            where: { permission: 'student' },
-        });
+  try {
+    const users = await user.findAll({
+      include: [
+        {
+          model: student,
+          as: "student",
+        },
+      ],
+      where: { permission: "student" },
+    });
 
-        const students = users.map(u => u.student?.getFullData() || {});
+    const students = users.map((u) => u.student?.getFullData() || {});
 
-        res.status(200).json(students);
-    } catch (error) {
-        console.error("Error fetching students:", error);
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
+    res.status(200).json(students);
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };
-
-
 
 exports.getStudentsByCriteriaPanle = async (req, res) => {
-    const ALLOWED_ORDER_FIELDS = ["enrollment_year", "student_id", "student_level_id", "repeat_years_count",'user_name', 'email','date_of_birth','roleId','collegeName'];
-    const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
-  
-    try {
-      const {
-        student_id,
-        study_plan_id,
-        student_level_id,
-        enrollment_year,
-        repeat_years_count,
-        user_name,
-        date_of_birth,
-        roleId,
-        collegeName,
-        phone_number,
-        page = 1,
-        limit = 10,
-        orderBy = "enrollment_year",
-        sort = "ASC",
-        search,
-      } = req.query;
-  
-      const whereClause = {};
-      if (student_id) whereClause.student_id = student_id;
-      if (study_plan_id) whereClause.study_plan_id = study_plan_id;
-      if (student_level_id) whereClause.student_level_id = student_level_id;
-      if (enrollment_year) whereClause.enrollment_year = enrollment_year;
-      if (repeat_years_count) whereClause.repeat_years_count = repeat_years_count;
-      if (user_name) whereClause.user_name =user_name ;
-      if (date_of_birth) whereClause.date_of_birth =date_of_birth ;
-      if (roleId) whereClause.roleId = roleId;
-      if (collegeName) whereClause.collegeName =collegeName ;
+  const ALLOWED_ORDER_FIELDS = [
+    "enrollment_year",
+    "student_id",
+    "student_level_id",
+    "repeat_years_count",
+    "user_name",
+    "email",
+    "date_of_birth",
+    "roleId",
+    "collegeName",
+  ];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      student_id,
+      study_plan_id,
+      student_level_id,
+      enrollment_year,
+      repeat_years_count,
+      user_name,
+      date_of_birth,
+      roleId,
+      collegeName,
+      phone_number,
+      page = 1,
+      limit = 10,
+      orderBy = "enrollment_year",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const whereClause = {};
+    if (student_id) whereClause.student_id = student_id;
+    if (study_plan_id) whereClause.study_plan_id = study_plan_id;
+    if (student_level_id) whereClause.student_level_id = student_level_id;
+    if (enrollment_year) whereClause.enrollment_year = enrollment_year;
+    if (repeat_years_count) whereClause.repeat_years_count = repeat_years_count;
+    if (user_name) whereClause.user_name = user_name;
+    if (date_of_birth) whereClause.date_of_birth = date_of_birth;
+    if (roleId) whereClause.roleId = roleId;
+    if (collegeName) whereClause.collegeName = collegeName;
     //   if (phone_number) whereClause.phone_number =phone_number ;
-  
-      const pageNumber = parseInt(page, 10);
-      let limitNumber = parseInt(limit, 10);
-  
-      const LOWER_LIMIT = 10;
-      const UPPER_LIMIT = 250;
-      if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
-      if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
-      if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
-  
-      const offset = (pageNumber - 1) * limitNumber;
-  
-      const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "enrollment_year";
-      const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
-  
-      const searchCondition = search
-        ? {
-            [Op.or]: [
-              { student_id: { [Op.like]: `%${search}%` } },
-              { student_system: { [Op.like]: `%${search}%` } },
-              { user_name: { [Op.like]: `%${search}%` }},
-              { date_of_birth: { [Op.like]: `%${search}%` }},
-              { roleId: { [Op.like]: `%${search}%` }},
-              { collegeName: { [Op.like]: `%${search}%` }},
 
-            ],
-          }
-        : {};
-  
-      const { count, rows: students } = await student.findAndCountAll({
-        where: {
-          [Op.and]: [whereClause, searchCondition],
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "enrollment_year";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
+
+    const searchCondition = search
+      ? {
+          [Op.or]: [
+            { student_id: { [Op.like]: `%${search}%` } },
+            { student_system: { [Op.like]: `%${search}%` } },
+            { user_name: { [Op.like]: `%${search}%` } },
+            { date_of_birth: { [Op.like]: `%${search}%` } },
+            { roleId: { [Op.like]: `%${search}%` } },
+            { collegeName: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
+    const { count, rows: students } = await student.findAndCountAll({
+      where: {
+        [Op.and]: [whereClause, searchCondition],
+      },
+      include: [
+        {
+          model: user,
+          as: "user",
+          attributes: [
+            "user_name",
+            "email",
+            "date_of_birth",
+            "roleId",
+            "collegeName",
+          ],
+          // include:[
+          //     {
+          //     model:phone_number,
+          //     as:'phone_numbers',
+          //     attributes:['phone_number']
+          //     }
+          // ]
         },
-        include: [
-          { model: user,
-            as: "user" ,
-            attributes: [ 'user_name', 'email','date_of_birth','roleId','collegeName'], 
-            // include:[
-            //     {
-            //     model:phone_number,
-            //     as:'phone_numbers',
-            //     attributes:['phone_number']
-            //     }
-            // ]
-
-          },
         //   { model: study_plan, as: "study_plan" },
         //   { model: level, as: "level" },
-        ],
-        limit: limitNumber,
-        offset: offset,
-        order: [[validOrderBy, validSort]],
-      });
-  
-      if (!students.length) {
-        return res.status(404).json({ message: "No students found for the specified criteria" });
-      }
-  
-      const studentList = students.map((student) => ({
-        student_id: student.student_id,
-        study_plan_id: student.study_plan_id,
-        student_level_id: student.student_level_id,
-        enrollment_year: student.enrollment_year,
-        student_system: student.student_system,
-        repeat_years_count: student.repeat_years_count,
-        user:{
-            name: student.user.user_name,
-            email: student.user.email,
-            date_of_birth:student.user.date_of_birth,
-            roleId:student.user.roleId,
-            collegeName:student.user.collegeName,
-            //   phone_number:student.user.phone_numbers.map(pn => pn.phone_number)
-        }
-      }));
-  
-      res.status(200).json({
-        message: "Students retrieved successfully",
-        data: studentList,
-        pagination: {
-          totalStudents: count,
-          totalPages: Math.ceil(count / limitNumber),
-          currentPage: pageNumber,
-          perPage: limitNumber,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Error retrieving students", error: error.message });
+      ],
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!students.length) {
+      return res
+        .status(404)
+        .json({ message: "No students found for the specified criteria" });
     }
+
+    const studentList = students.map((student) => ({
+      student_id: student.student_id,
+      study_plan_id: student.study_plan_id,
+      student_level_id: student.student_level_id,
+      enrollment_year: student.enrollment_year,
+      student_system: student.student_system,
+      repeat_years_count: student.repeat_years_count,
+      user: {
+        name: student.user.user_name,
+        email: student.user.email,
+        date_of_birth: student.user.date_of_birth,
+        roleId: student.user.roleId,
+        collegeName: student.user.collegeName,
+        //   phone_number:student.user.phone_numbers.map(pn => pn.phone_number)
+      },
+    }));
+
+    res.status(200).json({
+      message: "Students retrieved successfully",
+      data: studentList,
+      pagination: {
+        totalStudents: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error retrieving students", error: error.message });
+  }
 };
-
-
-
-
-
