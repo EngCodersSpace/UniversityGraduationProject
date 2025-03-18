@@ -177,6 +177,17 @@ class MyData extends DataTableSource {
                   initialValue: items[index % controller.rowsPerPage.value]
                       .phones
                       .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  onTapOutside: (e) {
+                    // ignore: invalid_use_of_protected_member
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].system)),
         ]);
   }
 

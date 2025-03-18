@@ -14,11 +14,13 @@ import 'package:ibb_university_students_services/app/repositories/section_reposi
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/add_student_table_card.dart';
 
 class DashboardStudentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
+  GlobalKey<FormState> formKey = GlobalKey();
   ScrollController vertical = ScrollController();
   ScrollController horizontal = ScrollController();
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
@@ -102,6 +104,23 @@ class DashboardStudentTableController extends GetxController
   RxBool loadingState = true.obs;
   Timer? _debounce;
 
+  //popup student component
+  TextEditingController studentId = TextEditingController();
+  TextEditingController studentName = TextEditingController();
+  TextEditingController studentDOB = TextEditingController();
+  TextEditingController studentEmail = TextEditingController();
+  TextEditingController studentPhone = TextEditingController();
+  FocusNode idFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
+  FocusNode dateFocus = FocusNode();
+  FocusNode emailFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  Map<int, Section> section = <int, Section>{}.obs;
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
+  List<Level>? level;
+  Rx<int?> levelId = Rx(null);
+
   @override
   void onInit() async {
     searchController.addListener(() {
@@ -154,6 +173,12 @@ class DashboardStudentTableController extends GetxController
       DataColumn(
         label: CustomText(
           "Phone Number",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Student System",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
@@ -316,7 +341,32 @@ class DashboardStudentTableController extends GetxController
     update(["DataTable"]);
   }
 
-  Future<void> addClick() async {}
+  Future<void> addClick() async {
+    await getSection();
+    await getLevel();
+    Get.dialog(PopUpAddStudentCard());
+  }
+
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels(hardFetch: false)
+        .then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      levelId = Rx(level?.first.id ?? 0);
+    } else {
+      levelId.value = null;
+    }
+  }
+
+  Future<void> addStudent() async {}
 
   @override
   void export() {}

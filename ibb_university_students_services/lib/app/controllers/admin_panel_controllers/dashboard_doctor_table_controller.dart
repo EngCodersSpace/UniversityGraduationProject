@@ -29,24 +29,6 @@ class DashboardDoctorTableController extends GetxController
   RxInt availableRows = 0.obs;
   List<DataColumn> kTableColumn = [];
   Timer? _debounce;
-  TextEditingController doctorId = TextEditingController();
-  TextEditingController name = TextEditingController();
-  TextEditingController dateOfBirth = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController role = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
-  TextEditingController college = TextEditingController();
-  TextEditingController acadimicDegree = TextEditingController();
-  TextEditingController adminPosition = TextEditingController();
-  FocusNode doctorIdFocus = FocusNode();
-  FocusNode nameFocus = FocusNode();
-  FocusNode dateOfBirthFocus = FocusNode();
-  FocusNode emailFocus = FocusNode();
-  FocusNode roleFocus = FocusNode();
-  FocusNode phoneFocus = FocusNode();
-  FocusNode collegeFocus = FocusNode();
-  FocusNode acadimicFocus = FocusNode();
-  FocusNode administrativeFocus = FocusNode();
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "doctor_id",
@@ -105,6 +87,26 @@ class DashboardDoctorTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   RxSet<int> selectedRows = RxSet({});
+
+  //popup add doctor card
+  TextEditingController doctorId = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController dateOfBirth = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController role = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+  TextEditingController college = TextEditingController();
+  TextEditingController acadimicDegree = TextEditingController();
+  TextEditingController adminPosition = TextEditingController();
+  FocusNode doctorIdFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
+  FocusNode dateOfBirthFocus = FocusNode();
+  FocusNode emailFocus = FocusNode();
+  FocusNode roleFocus = FocusNode();
+  FocusNode phoneFocus = FocusNode();
+  FocusNode collegeFocus = FocusNode();
+  FocusNode acadimicFocus = FocusNode();
+  FocusNode administrativeFocus = FocusNode();
   Map<int, Section> section = <int, Section>{}.obs;
   // ignore: non_constant_identifier_names
   Rx<int?> SectionId = Rx(null);
