@@ -233,6 +233,7 @@ exports.getAllDoctors = async (req, res) => {
 };
 
  
+
 exports.getDoctorsByCriteriaPanle = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "doctor_id",
@@ -269,42 +270,6 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     } = req.query;
 
     const lang = req.headers["accept-language"] || "en"; 
-    const whereClause = {};
-    
-    // Applying the filter
-    if (doctor_id) whereClause.doctor_id = doctor_id;
-    if (academic_degree) whereClause.academic_degree = filterJsonColumn('academic_degree', lang, academic_degree);
-    if (administrative_position) whereClause.administrative_position = filterJsonColumn('administrative_position', lang, administrative_position);
-
-
-    // Search condition
-      const searchCondition = search
-        ? {
-            [Op.or]: [
-              { doctor_id: { [Op.like]: `%${search}%` } },
-              // { '$user.email$': { [Op.like]: `%${search}%` } },
-              // { '$user.date_of_birth$': { [Op.like]: `%${search}%` } },
-              // { '$user.phone_numbers.phone_number$': { [Op.like]: `%${search}%` } },
-              Sequelize.where(
-                Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'academic_degree'}, '$.${lang}'))`),
-                { [Op.like]: `%${search}%` }
-              ),
-              Sequelize.where(
-                Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'administrative_position'}, '$.${lang}'))`),
-                { [Op.like]:`%${search}%` }
-              ),
-              // Sequelize.where(
-              //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
-              //   { [Op.like]: `%${search}%` }
-              // ),
-              // Sequelize.where(
-              //   Sequelize.fn('JSON_UNQUOTE', Sequelize.fn('JSON_EXTRACT', Sequelize.col('user.user_name'), `$.${lang}`)),
-              //   { [Op.like]: `%${search}%` }
-              // ),
-            ],
-          }
-        : {};
-
 
     // Pagination and sorting
     const pageNumber = parseInt(page, 10);
@@ -328,41 +293,68 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
 
     const { count, rows: doctors }= await doctor.findAndCountAll({
       where: {
-        [Op.and]: [
-          whereClause,
-          searchCondition,
-        ],
+        ...(academic_degree && {
+          academic_degree: { [lang]: academic_degree }
+        }),
+        ...(administrative_position && {
+          administrative_position: { [lang]: administrative_position }
+        }),
+    
+        ...(search && {
+          [Op.or]: [
+            // Doctor's JSON fields
+            // Sequelize.where(
+            //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'academic_degree'}, '$.${lang}'))`),
+            //   { [Op.like]: `%${search}%` }
+            // ),
+
+            // Sequelize.where(
+            //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'administrative_position'}, '$.${lang}'))`),
+            //   { [Op.like]: `%${search}%` }
+            // ),
+
+            Sequelize.where(
+              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+              { [Op.like]: `%${search}%` }
+            ),
+
+          ]
+        })
       },
       include: [
         {
           model: user,
           as: "user",
-          attributes: [
-            "user_name",
-            "email",
-            "date_of_birth",
-            "roleId",
-            "collegeName",
-          ],
+          required: true,
+          attributes: ["user_name", "email", "date_of_birth", "collegeName", "user_section_id", "roleId"],
           include: [
             {
               model: section,
               as: "section",
               attributes: ["section_name"],
+              required: true,
+              where: {
+                ...(sectionName && {
+                  section_name: { [lang]: sectionName }
+                })
+              }
             },
             {
               model: role,
               as: "role",
               attributes: ["roleName"],
+              required: true,
             },
             {
               model: phone_number,
               as: "phone_numbers",
               attributes: ["phone_number"],
-            },
-          ],
-        },
+              required: true,
+            }
+          ]
+        }
       ],
+      distinct: true, 
       limit: limitNumber,
       offset: offset,
       order: [[validOrderBy, validSort]],
@@ -372,31 +364,12 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     if (!doctors.length) {
       return res
         .status(404)
-        .json({ message: "No doctors found for the specified criteria" });
+        .json({ message: "No doctors found for the specified criteria ",s:search,n:user_name });
     }
-
-    // Format the response
-    const doctorList = doctors.map((doctor) => ({
-      doctor_id: doctor.doctor_id,
-      academic_degree: doctor.academic_degree,
-      administrative_position: doctor.administrative_position,
-      user: {
-        name: doctor.user.user_name,
-        email: doctor.user.email,
-        date_of_birth: doctor.user.date_of_birth,
-        roleId: doctor.user.roleId,
-        collegeName: doctor.user.collegeName,
-        section: doctor.user.section?.section_name,
-        Role: doctor.user.role?.roleName,
-        phone_number:
-          doctor.user.phone_numbers?.map((pn) => pn.phone_number) || [],
-      },
-    }));
-
     // Return the response
     res.status(200).json({
       message: "Doctors retrieved successfully",
-      data: doctorList,
+      data: doctors,
       pagination: {
         totalDoctors: count,
         totalPages: Math.ceil(count / limitNumber),
@@ -410,237 +383,12 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
       .status(500)
       .json({ message: "Error retrieving doctors", error: error.message });
   }
-};  
-
-exports.getDoctorsByCriteriaPanle3 = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = [
-    "doctor_id",
-    "academic_degree",
-    "administrative_position",
-    "user_name",
-    "email",
-    "date_of_birth",
-    "roleId",
-    "collegeName",
-    "phone_number",
-    "section_name",
-    "Role",
-  ];
-  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
-
-  try {
-    const {
-      doctor_id,
-      academic_degree,
-      administrative_position,
-      user_name,
-      date_of_birth,
-      roleId,
-      collegeName,
-      phoneNumber,
-      sectionName,
-      Role,
-      page = 1,
-      limit = 10,
-      orderBy = "doctor_id",
-      sort = "ASC",
-      search,
-    } = req.query;
-
-    const lang = req.headers["accept-language"] || "en"; // Default to 'en' if no language is specified
-
-
-    
-
-    // // If no filters are provided, return an error
-    // if (Object.keys(where).length === 0) {
-    //   return res.status(400).json({ message: "No filters provided" });
-    // }
-
-    // Pagination and sorting
-    const pageNumber = parseInt(page, 10);
-    let limitNumber = parseInt(limit, 10);
-
-    const LOWER_LIMIT = 10;
-    const UPPER_LIMIT = 250;
-    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
-    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
-    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
-
-    const offset = (pageNumber - 1) * limitNumber;
-
-    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
-      ? orderBy
-      : "doctor_id";
-    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
-      ? sort.toUpperCase()
-      : "ASC";
-
-    
-
-    // Step 2: Fetch paginated data
-    const doctors = await doctor.findAll({
-      where: {
-        ...(academic_degree && {
-          academic_degree: {
-            [lang]: academic_degree,
-          },
-        }),
-
-        ...(administrative_position && {
-          administrative_position: {
-            [lang]: administrative_position,
-          },
-        }),
-        
-      },
-      include: [
-        {
-          model: user,
-          as: "user",
-          required: true,
-          attributes: [
-            "user_name",
-            "email",
-            "date_of_birth",            
-            "collegeName",
-            "user_section_id",
-            "roleId",
-          ],
-          include: [
-            {
-              model: section,
-              as: "section",
-              attributes: ["section_name"],
-              required: true,
-              where: {
-                ...(sectionName && {
-                  section_name: {
-                    [lang]: sectionName,
-                  },
-                }),
-                ...(search && {
-                  [Op.or]: [
-                    { section_name: { [Op.like]: `%${search}%` } },
-                  ],
-                }),
-              },
-            },
-            {
-              model: role,
-              as: "role",
-              attributes: ["roleName"],
-              required: true,
-            },
-            {
-              model: phone_number,
-              as: "phone_numbers",
-              attributes: ["phone_number"],
-              required: true,
-            },
-          ],
-
-          where: { 
-            ...(search && {
-              user_name: { [lang]:{[Op.like]: `%${search}%`}},
-            }),
-          },
-        },
-      ],
-      limit: limitNumber,
-      offset: offset,
-      order: [[validOrderBy, validSort]],
-      logging: console.log,
-    });
-
-    if (!doctors.length) {
-      return res
-        .status(404)
-        .json({ message: "No doctors found for the specified criteria ",s:search,n:user_name });
-    }
-
-    // // Format the response
-    // const doctorList = doctors.map((doctor) => ({
-    //   doctor_id: doctor.doctor_id,
-    //   academic_degree: doctor.academic_degree,
-    //   administrative_position: doctor.administrative_position,
-    //   user: {
-    //     name: doctor.user.user_name,
-    //     email: doctor.user.email,
-    //     date_of_birth: doctor.user.date_of_birth,
-    //     roleId: doctor.user.roleId,
-    //     collegeName: doctor.user.collegeName,
-    //     section: doctor.user.section?.section_name,
-    //     Role: doctor.user.role?.roleName,
-    //     phone_number: doctor.user.phone_numbers?.map(pn => pn.phone_number) || [],
-    //   },
-    // }));
-
-    // Return the response
-    res.status(200).json({
-      message: "Doctors retrieved successfully",
-      data: doctors,
-    });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error retrieving doctors", error: error.message });
-  }
 };
 
-// exports.getAllDoctors = async (req, res) => {
-//     const { language } = req.query;
 
-//     if (!language) {
-//         return res.status(400).json({ message: "Language parameter is required" });
-//     }
 
-//     try {
-//         const doctors = await doctor.findAll({
-//             attributes: [
-//                     [Sequelize.json(`academic_degree.${language}`), 'academic_degree'],
-//                     [Sequelize.json(`administrative_position.${language}`), 'administrative_position']
-//                 ],
-//             include: [
-//                 {
-//                     model: user,
-//                     as: 'user',
-//                     attributes: [
-//                         'user_id',
-//                         [Sequelize.json(`user_name.${language}`), 'user_name'],
-//                         [Sequelize.json(`collegeName.${language}`), 'collegeName'],
-//                         'date_of_birth',
-//                         'email'
-//                     ],
-//                 },
-//             ],
-//         });
+//////////////////////////////////////////////
 
-//         if (doctors.length === 0) {
-//             return res.status(404).json({ message: 'No doctors found' });
-//         }
-
-//         const doctorsData = doctors.map(doctor => ({
-//             user_name: doctor.user.user_name,
-//             collegeName: doctor.user.collegeName,
-//             date_of_birth: doctor.user.date_of_birth,
-//             email: doctor.user.email,
-//             academic_degree: doctor.academic_degree,
-//             administrative_position: doctor.administrative_position
-//         }));
-
-//         res.status(200).json({
-//             message: 'Doctors found',
-//             data: doctorsData,
-//         });
-//     } catch (error) {
-//         console.error('Error fetching doctors:', error.message);
-//         res.status(500).json({ message: 'Internal server error', error: error.message });
-//     }
-// };
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 exports.getStudentById = async (req, res) => {
   const { id: user_id } = req.params;
@@ -815,6 +563,7 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
     "email",
     "date_of_birth",
     "roleId",
+    "section_name",
     "collegeName",
   ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
@@ -830,6 +579,7 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
       date_of_birth,
       roleId,
       collegeName,
+      sectionName,
       phone_number,
       page = 1,
       limit = 10,
@@ -837,18 +587,6 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
       sort = "ASC",
       search,
     } = req.query;
-
-    const whereClause = {};
-    if (student_id) whereClause.student_id = student_id;
-    if (study_plan_id) whereClause.study_plan_id = study_plan_id;
-    if (student_level_id) whereClause.student_level_id = student_level_id;
-    if (enrollment_year) whereClause.enrollment_year = enrollment_year;
-    if (repeat_years_count) whereClause.repeat_years_count = repeat_years_count;
-    if (user_name) whereClause.user_name = user_name;
-    if (date_of_birth) whereClause.date_of_birth = date_of_birth;
-    if (roleId) whereClause.roleId = roleId;
-    if (collegeName) whereClause.collegeName = collegeName;
-    //   if (phone_number) whereClause.phone_number =phone_number ;
 
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
@@ -868,45 +606,60 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
       ? sort.toUpperCase()
       : "ASC";
 
-    const searchCondition = search
-      ? {
-          [Op.or]: [
-            { student_id: { [Op.like]: `%${search}%` } },
-            { student_system: { [Op.like]: `%${search}%` } },
-            { user_name: { [Op.like]: `%${search}%` } },
-            { date_of_birth: { [Op.like]: `%${search}%` } },
-            { roleId: { [Op.like]: `%${search}%` } },
-            { collegeName: { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : {};
 
     const { count, rows: students } = await student.findAndCountAll({
       where: {
-        [Op.and]: [whereClause, searchCondition],
+        ...(student_level_id && {
+          student_level_id: student_level_id 
+        }),
+        ...(enrollment_year && {
+          enrollment_year:  enrollment_year 
+        }),
+    
+        // ...(search && {
+        //   [Op.or]: [
+        //     Sequelize.where(
+        //       Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+        //       { [Op.like]: `%${search}%` }
+        //     ),
+
+        //   ]
+        // })
       },
       include: [
         {
           model: user,
           as: "user",
-          attributes: [
-            "user_name",
-            "email",
-            "date_of_birth",
-            "roleId",
-            "collegeName",
-          ],
-          // include:[
-          //     {
-          //     model:phone_number,
-          //     as:'phone_numbers',
-          //     attributes:['phone_number']
-          //     }
-          // ]
-        },
-        //   { model: study_plan, as: "study_plan" },
-        //   { model: level, as: "level" },
+          required: true,
+          attributes: ["user_name", "email", "date_of_birth", "collegeName", "user_section_id", "roleId"],
+          include: [
+            {
+              model: section,
+              as: "section",
+              attributes: ["section_name"],
+              required: true,
+              where: {
+                ...(sectionName && {
+                  section_name: { [lang]: sectionName }
+                })
+              }
+            },
+            {
+              model: role,
+              as: "role",
+              attributes: ["roleName"],
+              required: true,
+            },
+            {
+              model: phone_number,
+              as: "phone_numbers",
+              attributes: ["phone_number"],
+              required: true,
+            }
+          ]
+        }
       ],
+      distinct: true, 
       limit: limitNumber,
       offset: offset,
       order: [[validOrderBy, validSort]],
@@ -918,26 +671,9 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
         .json({ message: "No students found for the specified criteria" });
     }
 
-    const studentList = students.map((student) => ({
-      student_id: student.student_id,
-      study_plan_id: student.study_plan_id,
-      student_level_id: student.student_level_id,
-      enrollment_year: student.enrollment_year,
-      student_system: student.student_system,
-      repeat_years_count: student.repeat_years_count,
-      user: {
-        name: student.user.user_name,
-        email: student.user.email,
-        date_of_birth: student.user.date_of_birth,
-        roleId: student.user.roleId,
-        collegeName: student.user.collegeName,
-        //   phone_number:student.user.phone_numbers.map(pn => pn.phone_number)
-      },
-    }));
-
     res.status(200).json({
       message: "Students retrieved successfully",
-      data: studentList,
+      data: students,
       pagination: {
         totalStudents: count,
         totalPages: Math.ceil(count / limitNumber),

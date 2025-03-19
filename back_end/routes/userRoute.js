@@ -18,7 +18,7 @@ router.delete('/users/:id', CRUD.deleteUser);
 
 router.get('/doctor', CRUD.getAllDoctors);
 router.get('/doctor/:id', CRUD.getDoctorById);
-router.get('/get-doctors-panle', CRUD.getDoctorsByCriteriaPanle3);
+router.get('/get-doctors-panle', CRUD.getDoctorsByCriteriaPanle);
 
 router.put('/doctor/:id', CRUD.updateDoctor);
 router.delete('/doctor/:id', CRUD.deleteDoctor);

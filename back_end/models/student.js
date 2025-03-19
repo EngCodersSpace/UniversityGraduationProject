@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       student.belongsTo(models.user, {
         foreignKey: 'student_id',//the foreign Key in the student table refers to user table
         targetKey: 'user_id',     //the pwimary Key in the user
+        as: 'user',
       });
 
       //(2)Relationship One-to-Many between "student table" and  "study_plan table"
