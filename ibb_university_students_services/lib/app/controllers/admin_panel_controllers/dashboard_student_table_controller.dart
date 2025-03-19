@@ -194,6 +194,7 @@ class DashboardStudentTableController extends GetxController
 
   void refrech() async {
     await fetchStudentData();
+    super.refresh();
   }
 
   void onPageChange(int page) async {

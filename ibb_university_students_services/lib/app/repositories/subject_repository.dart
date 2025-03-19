@@ -137,4 +137,34 @@ class SubjectRepository {
           data: null);
     }
   }
+
+  static Future<Result<Map>> fetchDashboardSubject({
+    hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("get-subject-panle");
+      Map<int, Subject> subjects = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jSubject in response?.data["data"]) {
+          subjects[jSubject["id"]] = Subject.fromJson(jSubject);
+        }
+      }
+      return Result(
+        data: {
+          "subject": subjects,
+          "totalSubject": response?.data["pagination"]["totalSubjects"],
+        },
+        hasError: true,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
 }
