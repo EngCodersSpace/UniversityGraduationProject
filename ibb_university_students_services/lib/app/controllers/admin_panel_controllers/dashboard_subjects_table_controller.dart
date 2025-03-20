@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
@@ -12,8 +13,10 @@ import 'package:ibb_university_students_services/app/models/subject_model/subjec
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/subject_table_view/subject_table_component/add_subject_table_card.dart';
 
 class DashboardSubjectsTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -102,6 +105,22 @@ class DashboardSubjectsTableController extends GetxController
   RxBool loadingState = true.obs;
   RxString fieldMessage = "".obs;
   Timer? _debounce;
+
+  //popup add subject
+  TextEditingController subjectId = TextEditingController();
+  TextEditingController subjectName = TextEditingController();
+  TextEditingController subjectUnit = TextEditingController();
+  TextEditingController subjectDescription = TextEditingController();
+  FocusNode idFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
+  FocusNode unitFocus = FocusNode();
+  FocusNode descriptionFocus = FocusNode();
+  Map<int, Section> addSection = <int, Section>{};
+  Rx<int?> sectionId = Rx(null);
+  List<Level>? addLevel;
+  Rx<int?> levelId = Rx(null);
+  Map<int, Doctor> doctors = <int, Doctor>{};
+  Rx<int?> doctorId = Rx(null);
 
   void oninit() async {
     searchController.addListener(() {
@@ -310,7 +329,43 @@ class DashboardSubjectsTableController extends GetxController
     selectedLevel.value = levelsData.first.id;
   }
 
-  void addClick() {}
+  void addClick() async {
+    await getLevel();
+    await getSection();
+    // await getDoctor();
+    Get.dialog(PopUpAddSubjectCard());
+  }
+
+  Future<void> getSection() async {
+    addSection =
+        await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (addSection.isNotEmpty) {
+      sectionId = Rx(addSection.values.first.id);
+    } else {
+      sectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    addLevel = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    if (addLevel?.isNotEmpty ?? false) {
+      levelId = Rx(addLevel?.first.id ?? 0);
+    } else {
+      levelId.value = null;
+    }
+  }
+
+  // Future<void> getDoctor() async {
+  //   doctors =
+  //       await UserRepository.fetchDashboardDoctors().then((e) => e.data);
+  //   if (doctors.isNotEmpty) {
+  //     doctorId = Rx(doctors.values.first.id);
+  //   } else {
+  //     doctorId.value = null;
+  //   }
+  // }
+
+  Future<void> addSubject() async {}
 
   @override
   void export() {}
