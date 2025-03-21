@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       user.hasOne(models.student, {
         foreignKey: 'student_id', //the foreign Key in the student table refers to user table
         sourceKey: 'user_id',     //the primary key in the user table
+        as:'student',
         //onDelete:'CASCADE',      //if a user is delete the student associated with him will be deleted 
         //onUpdate:'CASCADE',      //if a user is update the student associated with him will be updated
       });

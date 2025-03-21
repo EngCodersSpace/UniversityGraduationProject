@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       //(5)Relationship One-to-Many between "student table" and  "level table"
       student.belongsTo(models.level, {
         foreignKey: 'student_level_id',//the foreign Key in the student table refers to level table
+        as:'level'
       });
 
       student.belongsToMany(models.assignment, {

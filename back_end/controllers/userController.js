@@ -212,18 +212,18 @@ exports.deleteDoctor = async (req, res) => {
 
 exports.getAllDoctors = async (req, res) => {
   try {
-    const doctors = await user.findAll({
+    const doctors = await doctor.findAll({
       include: [
         {
-          model: doctor,
-          as: "doctor",
+          model: user,
+          as: "user",
         },
       ],
-      where: { permission: "teacher" },
     });
 
-    const doctorsData = doctors.map((u) => u.doctor?.getFullData() || {});
-    res.status(200).json(doctorsData);
+    // const doctorsData = doctors.map((u) => u.doctor?.getFullData() || {});
+    res.status(200).json(doctors);
+
   } catch (error) {
     console.error("Error fetching doctors:", error.message);
     res
@@ -240,28 +240,19 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     "academic_degree",
     "administrative_position",
     "user_name",
-    "email",
-    "date_of_birth",
-    "roleId",
     "collegeName",
     "phone_number",
     "section_name",
-    "Role",
   ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
     const {
-      doctor_id,
       academic_degree,
       administrative_position,
       user_name,
-      date_of_birth,
-      roleId,
-      collegeName,
-      phoneNumber,
+      rolename,
       sectionName,
-      Role,
       page = 1,
       limit = 10,
       orderBy = "doctor_id",
@@ -344,6 +335,11 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
               as: "role",
               attributes: ["roleName"],
               required: true,
+              where: {
+                ...(rolename && {
+                  roleName: rolename
+                })
+              }
             },
             {
               model: phone_number,
@@ -532,17 +528,17 @@ exports.deleteStudent = async (req, res) => {
 
 exports.getAllStudents = async (req, res) => {
   try {
-    const users = await user.findAll({
+    const students = await student.findAll({
       include: [
         {
-          model: student,
-          as: "student",
+          model: user,
+          as: "user",
         },
       ],
-      where: { permission: "student" },
+      
     });
 
-    const students = users.map((u) => u.student?.getFullData() || {});
+    // const students = users.map((u) => u.student?.getFullData() || {});
 
     res.status(200).json(students);
   } catch (error) {
@@ -560,33 +556,27 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
     "student_level_id",
     "repeat_years_count",
     "user_name",
-    "email",
-    "date_of_birth",
-    "roleId",
     "section_name",
-    "collegeName",
   ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
     const {
-      student_id,
       study_plan_id,
       student_level_id,
       enrollment_year,
-      repeat_years_count,
-      user_name,
-      date_of_birth,
-      roleId,
-      collegeName,
+      studentSystem,
       sectionName,
-      phone_number,
+      rolename,
       page = 1,
       limit = 10,
       orderBy = "enrollment_year",
       sort = "ASC",
       search,
     } = req.query;
+
+    const lang = req.headers["accept-language"] || "en"; 
+
 
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
@@ -601,7 +591,7 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
 
     const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
       ? orderBy
-      : "enrollment_year";
+      : "student_id";
     const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
       ? sort.toUpperCase()
       : "ASC";
@@ -612,19 +602,25 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
         ...(student_level_id && {
           student_level_id: student_level_id 
         }),
+        ...(study_plan_id && {
+          study_plan_id: study_plan_id 
+        }),
         ...(enrollment_year && {
           enrollment_year:  enrollment_year 
         }),
+        ...(studentSystem && {
+          student_system:  { [lang]: studentSystem  }
+        }),
     
-        // ...(search && {
-        //   [Op.or]: [
-        //     Sequelize.where(
-        //       Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
-        //       { [Op.like]: `%${search}%` }
-        //     ),
+        ...(search && {
+          [Op.or]: [
+            Sequelize.where(
+              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+              { [Op.like]: `%${search}%` }
+            ),
 
-        //   ]
-        // })
+          ]
+        })
       },
       include: [
         {
@@ -649,13 +645,18 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
               as: "role",
               attributes: ["roleName"],
               required: true,
+              where: {
+                ...(rolename && {
+                  roleName: rolename
+                })
+              }
             },
             {
               model: phone_number,
               as: "phone_numbers",
               attributes: ["phone_number"],
-              required: true,
-            }
+              // required: true,
+            },
           ]
         }
       ],
