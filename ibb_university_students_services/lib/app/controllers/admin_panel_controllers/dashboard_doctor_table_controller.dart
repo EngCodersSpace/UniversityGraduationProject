@@ -35,7 +35,7 @@ class DashboardDoctorTableController extends GetxController
         child: SizedBox(
             width: (Get.width / 3) * 0.3,
             child: CustomText(
-              "Doctor Id",
+              "Doctor ID",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -144,7 +144,6 @@ class DashboardDoctorTableController extends GetxController
           "Date of Birth",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
-        numeric: true,
       ),
       DataColumn(
         label: CustomText(
@@ -157,14 +156,12 @@ class DashboardDoctorTableController extends GetxController
           "Role",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
-        // numeric: true,
       ),
       DataColumn(
         label: CustomText(
           "Phone Number",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
-        // numeric: true,
       ),
       DataColumn(
         label: CustomText(
@@ -205,29 +202,33 @@ class DashboardDoctorTableController extends GetxController
   }
 
   Future<void> fetchDoctoreData({bool showSnakeBars = true}) async {
-    Result results = await UserRepository.fetchDashboardDoctors();
+    Result results = await UserRepository.fetchDashboardDoctors(
+        order: selectedOrder.value,
+        sort: selectedSort.value,
+        search: searchController.text,
+        limit: rowsPerPage.value,
+        page: currentPage);
     if (results.statusCode == 200) {
       doctors.value = results.data["Doctors"] ?? {};
+      availableRows.value = results.data["totalDoctor"] ?? 0;
     } else if (results.statusCode == 404) {
       doctors.value = {};
-      availableRows.value = results.data["totalLectures"];
-      update(["DataTable"]);
-
-      fieldMessage.value = "this section and level not has Lectures";
+      availableRows.value = results.data["totalDoctor"];
+      fieldMessage.value = "there is no doctors";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
-            message: "this section and level doesn't has Lectures ");
+            title: "Not Found doctors", message: "there is no doctors ");
       }
     } else {
       doctors.value = {};
-      fieldMessage.value = "fetching lectures failed please check connection";
+      fieldMessage.value = "fetching Doctors failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Lectures Failed",
-            message: "fetching lectures failed please check connection ");
+            title: "Fetch Doctors Failed",
+            message: "fetching Doctors failed please check connection ");
       }
     }
+    update(["DataTable"]);
   }
 
   void onPageChange(int page) async {
@@ -245,12 +246,6 @@ class DashboardDoctorTableController extends GetxController
     if (val == null) return;
     selectedSort.value = val;
     fetchDoctoreData();
-  }
-
-  @override
-  // ignore: unnecessary_overrides
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> getSection() async {
@@ -275,6 +270,8 @@ class DashboardDoctorTableController extends GetxController
   @override
   void import() {}
 
+  get jsdata => null;
+
   String prevTxt = "";
 
   @override
@@ -289,4 +286,10 @@ class DashboardDoctorTableController extends GetxController
 
   @override
   TextEditingController searchController = TextEditingController(text: "");
+
+  @override
+  // ignore: unnecessary_overrides
+  void onClose() {
+    super.onClose();
+  }
 }
