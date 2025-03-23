@@ -107,6 +107,50 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
                 ),
               ),
             ),
+            Obx(
+              () => InkWell(
+                onTap: () => controller.changeStudentTableView(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24), // Top-left corner rounded
+                      bottomLeft:
+                          Radius.circular(24), // Bottom-left corner rounded
+                    ),
+                    color: (controller.selectedIndex.value == 1)
+                        ? AppColors.tabBackColor
+                        : AppColors.inverseTabBackColor,
+                  ),
+                  padding: const EdgeInsets.only(left: 25),
+                  margin: const EdgeInsets.only(left: 16),
+                  height: Get.height * 0.08,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Icon(
+                      //   Icons.library_books_outlined,
+                      //   color: (controller.selectedindex.value == int)
+                      //       ? AppColors.secTextColor
+                      //       : AppColors.mainTextColor,
+                      // ),
+                      SizedBox(
+                        width: Get.width * 0.005,
+                      ),
+                      CustomText(
+                        "Student".tr,
+                        style: AppTextStyles.customColorStyle(
+                          color: (controller.selectedIndex.value == 1)
+                              ? AppColors.secTextColor
+                              : AppColors.mainTextColor,
+                          textHeader: AppTextHeaders.h6Bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

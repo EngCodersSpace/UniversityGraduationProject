@@ -40,7 +40,7 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           PopupAddStudentComponent(
-                            name: "Doctor ID",
+                            name: "Student ID",
                             controlName: controller.studentId,
                             focusName: controller.idFocus,
                             inputType: TextInputType.number,

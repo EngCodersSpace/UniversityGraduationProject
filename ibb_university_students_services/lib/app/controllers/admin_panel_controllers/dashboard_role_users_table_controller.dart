@@ -154,9 +154,9 @@ class DashboardRoleUsersTableController extends GetxController
     Get.offNamed("/dashboard_doctor_view");
   }
 
-  // void changeStudentTableView() {
-  //   Get.offNamed("/dashboard_student_view");
-  // }
+  void changeStudentTableView() {
+    Get.offNamed("/dashboard_student_view");
+  }
 
   Future<void> fetchRoleData() async {}
 

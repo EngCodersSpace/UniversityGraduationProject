@@ -33,41 +33,21 @@ class DashboardStudentTableController extends GetxController
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "lecture_time",
+        value: "student_id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Time",
+              "Student id",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "lecture_day",
+        value: "student_system",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Day",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_room",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Room",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "subject_id",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Subject",
+              "Student system",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -97,7 +77,7 @@ class DashboardStudentTableController extends GetxController
   ];
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedOrder = "student_id".obs;
   RxString selectedSort = "DESC".obs;
   RxInt availableRows = 0.obs;
   RxString fieldMessage = "".obs;
@@ -318,25 +298,25 @@ class DashboardStudentTableController extends GetxController
 
     Result res = await UserRepository.fetchDashboardStudent();
     if (res.statusCode == 200) {
-      student.value = res.data["students"];
+      student.value = res.data["students"] ?? {};
       availableRows.value = res.data["totalStudent"] ?? 0;
     } else if (res.statusCode == 404) {
       student.value = {};
       availableRows.value = 0;
-      fieldMessage.value = "this section and level not has Lectures";
+      fieldMessage.value = "this section and level not has Student";
       if (showSnakeBars) {
         showSnakeBar(
             title: "Not Found Lectures",
-            message: "this section and level doesn't has Lectures ");
+            message: "this section and level doesn't has Student ");
       }
     } else {
       student.value = {};
       availableRows.value = res.data["totalLectures"] ?? 0;
-      fieldMessage.value = "fetching lectures failed please check connection";
+      fieldMessage.value = "fetching Student failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Lectures Failed",
-            message: "fetching lectures failed please check connection ");
+            title: "Fetch Student Failed",
+            message: "fetching Student failed please check connection ");
       }
     }
     update(["DataTable"]);

@@ -204,13 +204,22 @@ class UserRepository {
         for (Map<String, dynamic> jsStudent in response?.data['data']) {
           student[jsStudent['student_id']] = Student.fromJson(jsStudent);
         }
+        return Result(
+          data: {
+            "students": student,
+            "totalStudent": response?.data["pagination"]["totalstudents"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
       }
       return Result(
         data: {
           "students": student,
-          "totalStudent": response?.data["pagination"]["totalstudents"],
+          "totalStudent": 0,
         },
-        hasError: true,
+        hasError: false,
         statusCode: response?.statusCode,
         message: response?.data["message"] ?? "error",
       );
