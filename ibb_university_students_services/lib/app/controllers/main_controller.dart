@@ -20,15 +20,15 @@ class MainController extends GetxController {
   RxBool isConnect = false.obs;
   @override
   void onInit() async {
-     isConnect.value= await checkInternetConnection();
-     // Listen for connectivity changes
-     Connectivity().onConnectivityChanged.listen((result) {
-       if (result.contains(ConnectivityResult.none)) {
-         isConnect.value = false;
-       } else {
-         isConnect.value = true;
-       }
-     });
+    isConnect.value = await checkInternetConnection();
+    // Listen for connectivity changes
+    Connectivity().onConnectivityChanged.listen((result) {
+      if (result.contains(ConnectivityResult.none)) {
+        isConnect.value = false;
+      } else {
+        isConnect.value = true;
+      }
+    });
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
@@ -43,30 +43,30 @@ class MainController extends GetxController {
     if (index == 0) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1))
+              x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.85) - 28, y: Get.height - (Get.height * 0.1));
+              x: (Get.width * 0.85) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 1) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.32) - 36, y: Get.height - (Get.height * 0.1))
+              x: (Get.width * 0.32) - 36, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.71) - 36, y: Get.height - (Get.height * 0.1));
+              x: (Get.width * 0.71) - 36, y: Get.height - (Get.height * 0.1));
     } else if (index == 2) {
       currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.45)-12, y: Get.height - (Get.height * 0.1));
+          x: (Get.width * 0.45) - 12, y: Get.height - (Get.height * 0.1));
     } else if (index == 3) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.71) - 32, y: Get.height - (Get.height * 0.1))
+              x: (Get.width * 0.71) - 32, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.31) - 28, y: Get.height - (Get.height * 0.1));
+              x: (Get.width * 0.31) - 28, y: Get.height - (Get.height * 0.1));
     } else if (index == 4) {
       (Get.locale?.languageCode == 'en')
           ? currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.9) - 48, y: Get.height - (Get.height * 0.1))
+              x: (Get.width * 0.9) - 48, y: Get.height - (Get.height * 0.1))
           : currentPos = CustomFloatActionButtonLocation(
-          x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1));
+              x: (Get.width * 0.1) - 23, y: Get.height - (Get.height * 0.1));
     }
 
     if (ScreenUtils.isWebScreen()) {
@@ -127,7 +127,7 @@ class MainController extends GetxController {
 
   void routeAdmainPanel() {
     Get.offNamed(
-      "/dashboard_main_view",
+      "/dashboard_doctor_view",
     );
   }
 

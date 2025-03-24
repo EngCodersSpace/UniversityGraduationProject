@@ -194,6 +194,7 @@ class UserRepository {
   }
 
   static Future<Result<Map>> fetchDashboardStudent({
+    int? studentId,
     bool hardFetch = false,
   }) async {
     late Response? response;
