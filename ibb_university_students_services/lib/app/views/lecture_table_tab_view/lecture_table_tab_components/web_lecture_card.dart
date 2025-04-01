@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:intl/intl.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
@@ -9,7 +10,6 @@ import '../../../models/lecture_model/lecture_model.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/date_time_utils.dart';
-import '../../../utils/permission_checker.dart';
 
 class WebLectureCard extends GetView<LectureController> {
   Rx<Lecture?> content;
@@ -85,7 +85,7 @@ class WebLectureCard extends GetView<LectureController> {
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h7Bold)),
                         ),
-                        if ((PermissionUtils.checkPermission(
+                        if ((UserRepository.checkPermission(
                             target: "Lectures", action: "write"))) ...[
                           const SizedBox(
                             width: 0,

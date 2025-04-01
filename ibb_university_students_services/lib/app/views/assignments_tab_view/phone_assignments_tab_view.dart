@@ -10,7 +10,6 @@ import '../../components/custom_text_v2.dart';
 import '../../models/doctor_model/doctor.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
-import '../../utils/permission_checker.dart';
 import '../../utils/screen_utils.dart';
 
 class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
@@ -224,7 +223,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                             style: AppTextStyles.highlightStyle(
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
-                          if ((PermissionUtils.checkPermission(
+                          if ((UserRepository.checkPermission(
                               target: "Assignments", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,
@@ -239,7 +238,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
                       width: width,
-                      height: (PermissionUtils.checkPermission(
+                      height: (UserRepository.checkPermission(
                               target: "Assignments", action: "write"))
                           ? Get.height * 0.64
                           : Get.height * 0.666,

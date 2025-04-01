@@ -11,7 +11,6 @@ import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../../models/assignment_model/assignment_model.dart';
 import '../../../models/doctor_model/doctor.dart';
 import '../../../styles/app_colors.dart';
-import '../../../utils/permission_checker.dart';
 
 class AssignmentsCard extends GetView<AssignmentsTabController> {
   Rx<Assignment?> content;
@@ -105,7 +104,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                   ),
                                 ],
                               ),
-                            if ((PermissionUtils.checkPermission(
+                            if ((UserRepository.checkPermission(
                                 target: "Assignments", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,
@@ -137,7 +136,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                       color: AppColors.mainTextColor),
                                 ),
                               )
-                            ]else if (PermissionUtils.checkPermission(
+                            ]else if (UserRepository.checkPermission(
                                 target: "Assignments", action: "setCompletion"))...[
                               const SizedBox(
                                 width: 8,

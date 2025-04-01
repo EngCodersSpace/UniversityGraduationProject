@@ -7,10 +7,10 @@ import 'package:ibb_university_students_services/app/controllers/student_fees_co
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:ibb_university_students_services/app/utils/dobule_digits_parse.dart';
 import 'package:intl/intl.dart';
+import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 import '../../../utils/maping_data.dart';
-import '../../../utils/permission_checker.dart';
 
 class StudentFeeCard extends GetView<StudentFeeController> {
   Rx<StudentFee> studentFee;
@@ -91,7 +91,7 @@ class StudentFeeCard extends GetView<StudentFeeController> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: CustomText("${mappingTerms(studentFee.value.term)} Semester".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
-                        if ((PermissionUtils.checkPermission(
+                        if ((UserRepository.checkPermission(
                             target: "Payments", action: "write"))) ...[
                           const SizedBox(
                             width: 8,

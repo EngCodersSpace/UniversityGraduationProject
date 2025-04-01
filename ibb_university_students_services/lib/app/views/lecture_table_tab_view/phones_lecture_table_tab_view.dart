@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
+import '../../repositories/user_repository.dart';
 import 'lecture_table_tab_components/day_cards.dart';
 import '../../controllers/tabs_controller/lecture_table_tab_view_controller.dart';
 import '../../styles/app_colors.dart';
@@ -233,7 +233,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                       children: [
                           CustomText(controller.selectedDayName.value.tr,
                               style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),),
-                        if ((PermissionUtils.checkPermission(
+                        if ((UserRepository.checkPermission(
                             target: "Lectures", action: "write")))
                           CustomButton(
                             onPress: controller.addButtonClick,

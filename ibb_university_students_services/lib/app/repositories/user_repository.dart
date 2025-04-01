@@ -267,4 +267,13 @@ class UserRepository {
   static Type? currentUserType() {
     return _userBox?.get('currentUser')?.runtimeType;
   }
+
+  static bool checkPermission({
+    required String target,
+    required String action,
+  }) {
+    return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
+        false;
+  }
+
 }

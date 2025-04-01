@@ -5,10 +5,10 @@ import 'package:ibb_university_students_services/app/controllers/student_fees_co
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/utils/permission_checker.dart';
 
 import '../../components/buttons.dart';
 import '../../components/text_field.dart';
+import '../../repositories/user_repository.dart';
 import '../../utils/validators.dart';
 import 'student_fees_view_components/student_fees_card.dart';
 
@@ -49,7 +49,7 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                       ),
                     ],
                   ),
-                  if (PermissionUtils.checkPermission(
+                  if (UserRepository.checkPermission(
                       target: "Payments", action: "studentSearch")) ...[
                     const SizedBox(
                       height: 18,
@@ -83,7 +83,7 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                           style: AppTextStyles.highlightStyle(
                               textHeader: AppTextHeaders.h2Bold),
                         ),
-                        if ((PermissionUtils.checkPermission(
+                        if ((UserRepository.checkPermission(
                             target: "Exams", action: "write")))
                           CustomButton(
                             onPress: controller.addButtonClick,
