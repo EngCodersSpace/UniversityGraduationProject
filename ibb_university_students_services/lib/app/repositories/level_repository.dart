@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import '../models/helper_models/result.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 import '../utils/internet_connection_cheker.dart';
 
 

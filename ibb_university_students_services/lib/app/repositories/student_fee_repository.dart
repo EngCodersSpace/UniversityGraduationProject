@@ -8,7 +8,7 @@ import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_fee/student_fee.dart';
 import '../utils/internet_connection_cheker.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 
 class StudentFeeRepository {
   static const int _fetchAllError = 611;

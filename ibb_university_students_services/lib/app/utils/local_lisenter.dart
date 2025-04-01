@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/services/http_provider/http_provider.dart';
+import 'package:ibb_university_students_services/app/services/http_provider.dart';
 
 class LocaleListener {
   static Rx<Locale?> currentLocal = Get.locale.obs;

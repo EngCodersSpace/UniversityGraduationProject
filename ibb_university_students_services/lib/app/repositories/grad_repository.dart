@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 
 
 class GradRepository {
