@@ -5,6 +5,7 @@ import 'package:ibb_university_students_services/app/models/student_fee/student_
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/utils/dobule_digits_parse.dart';
 import '../models/helper_models/result.dart';
+import '../models/student_model/student.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/user_repository.dart';
 import '../utils/snake_bar.dart';
@@ -35,11 +36,11 @@ class StudentFeeController extends GetxController {
   @override
   void onInit() async {
     await StudentFeeRepository.openBox();
-    if (UserRepository.userRule == "student") {
+    await fetchLevels();
+    if (UserRepository.currentUserType() == Student) {
       studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
       await fetchStudentFees();
     }
-    await fetchLevels();
     super.onInit();
     loadingState.value = false;
   }
@@ -59,6 +60,7 @@ class StudentFeeController extends GetxController {
   }
 
   Future<void> fetchStudentFees() async {
+    loadingState.value = true;
     if (studentId == null) {
       fieldMessage.value = "enter student id first ";
       showSnakeBar(
@@ -81,6 +83,7 @@ class StudentFeeController extends GetxController {
           title: "Fetch Fees Failed",
           message: "fetching fees failed please check connection ");
     }
+    loadingState.value = false;
   }
 
   void findButtonClick() {

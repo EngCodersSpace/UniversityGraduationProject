@@ -6,8 +6,12 @@ import 'package:ibb_university_students_services/app/controllers/student_result_
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_card.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_header_card.dart';
+import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
+import '../../components/text_field.dart';
+import '../../repositories/user_repository.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/validators.dart';
 
 class PhoneStudentResultView extends GetView<StudentResultController> {
   PhoneStudentResultView({super.key});
@@ -25,7 +29,6 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
           : Column(
               children: [
                 Container(
-                    height: Get.height * 0.25,
                     width: width,
                     decoration: BoxDecoration(
                       color: AppColors.mainCardColor,
@@ -44,7 +47,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(height: 8,),
+                        const SizedBox(height: 16,),
                         Row(
                           children: [
                             IconButton(
@@ -60,6 +63,31 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                             ),
                           ],
                         ),
+                        if (UserRepository.checkPermission(
+                            target: "Payments", action: "studentSearch")) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomTextFormField(
+                                controller: controller.idController,
+                                validator: (id) => Validators.validateID(id),
+                                labelText: "Student ID".tr,
+                                keyboardType: TextInputType.number,
+                                icon: Icons.account_circle_outlined,
+                                color: AppColors.inverseIconColor,
+                                width: Get.width * 0.65,
+                                onFieldSubmitted: (e) {
+                                  controller.findButtonClick();
+                                },
+                              ),
+                              CustomButton(
+                                onPress: controller.findButtonClick,
+                                text: "Find".tr,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8,),
+                        ],
                         Row(
                           children: [
                             SizedBox(
@@ -137,9 +165,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 )),
                           ],
                         ),
-                        SizedBox(
-                          height: Get.height * 0.03,
-                        ),
+                        const SizedBox(height: 8,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -181,54 +207,53 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 8,),
                       ],
                     )),
-                const SizedBox(height: 32,),
-                Align(
-                  alignment: Alignment.bottomCenter,
+                const SizedBox(height: 16,),
+                Expanded(
                   child: Container(
-                    width: width,
-                    height: Get.height * 0.65,
                     padding: const EdgeInsets.only(top: 8, bottom: 32),
                     margin: const EdgeInsets.all(8),
                     child: Column(
                       children: [
-                        const ResultHeaderCard(),
-                        RefreshIndicator(
-                          onRefresh: () async => controller.refresh(),
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 6),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: Get.height * 0.015),
-                                if((controller.grads?.value.isEmpty??true) )...[
-                                  SizedBox(height: Get.height*0.2,),
-                                  Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),)),
-                                  IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
-                                ],
-                                for (int i = 0;
-                                i < (controller.grads?.value.length ?? 0);
-                                i++) ...[
-                                  (i % 2 == 0)
-                                      ? ResultCard(
+                        ResultHeaderCard(),
+                        Expanded(
+                          child: RefreshIndicator(
+                            onRefresh: () async => controller.refresh(),
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 6),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 8),
+                                  if((controller.grads?.value.isEmpty??true) )...[
+                                    SizedBox(height: Get.height*0.2,),
+                                    Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),)),
+                                    IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
+                                  ],
+                                  for (int i = 0;
+                                  i < (controller.grads?.value.length ?? 0);
+                                  i++) ...[
+                                    (i % 2 == 0)
+                                        ? ResultCard(
+                                        grad:
+                                        Rx(controller.grads!.value[i]))
+                                        : ResultCard(
                                       grad:
-                                      Rx(controller.grads!.value[i]))
-                                      : ResultCard(
-                                    grad:
-                                    Rx(controller.grads!.value[i]),
-                                    type: "odd",
-                                  ),
-                                  if (i <
-                                      ((controller.grads?.value.length ?? 0) -
-                                          1))
-                                    SizedBox(
-                                      height: Get.height * 0.005,
-                                    )
-                                ]
-                              ],
+                                      Rx(controller.grads!.value[i]),
+                                      type: "odd",
+                                    ),
+                                    if (i <
+                                        ((controller.grads?.value.length ?? 0) -
+                                            1))
+                                      SizedBox(
+                                        height: Get.height * 0.005,
+                                      )
+                                  ]
+                                ],
+                              ),
                             ),
                           ),
                         ),

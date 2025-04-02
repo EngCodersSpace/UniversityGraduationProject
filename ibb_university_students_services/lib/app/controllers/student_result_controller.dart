@@ -5,13 +5,16 @@ import '../components/custom_text_v2.dart';
 import '../models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
+import '../models/student_model/student.dart';
 import '../repositories/level_repository.dart';
+import '../repositories/user_repository.dart';
 import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
 
 class StudentResultController extends GetxController {
   RxBool loadingState = true.obs;
   RxInt selected = 3.obs;
+  TextEditingController idController = TextEditingController();
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Rx<List<Grad>>? grads = Rx([]);
@@ -20,11 +23,15 @@ class StudentResultController extends GetxController {
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> terms = [];
   RxString failedMessage = "".obs;
+  int? studentId;
 
   @override
   void onInit() async {
     await initDropdownMenuLists();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
+    if (UserRepository.currentUserType() == Student) {
+      studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+    }
     await fetchStudentGrads();
     super.onInit();
     loadingState.value = false;
@@ -39,9 +46,12 @@ class StudentResultController extends GetxController {
   Future<void> fetchStudentGrads() async {
     gpa.value = 0.0;
     summation.value = 0;
+    if (studentId == null) return;
     if (selectedLevel.value == null) return;
     Result res = await GradRepository.fetchStudentGrads(
-        levelId: selectedLevel.value!, term: selectedTerm.value);
+        studentID: studentId!,
+        levelId: selectedLevel.value!,
+        term: selectedTerm.value);
     if (res.statusCode == 200) {
       int unitSum = 0;
       grads?.value = res.data ?? [];
@@ -119,6 +129,11 @@ class StudentResultController extends GetxController {
                 ),
               ))),
     ];
+  }
+
+  void findButtonClick() {
+    studentId = int.tryParse(idController.text);
+    fetchStudentGrads();
   }
 
   @override
