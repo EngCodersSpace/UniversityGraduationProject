@@ -173,7 +173,6 @@ class MyData extends DataTableSource {
                   enableBorder: false,
                   initialValue:
                       items[index % controller.rowsPerPage.value].hall ?? "")),
-          // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
           DataCell(
               onTap: () {},
               CustomTextFormField(

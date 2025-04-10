@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_subjects_table_controller.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/popup_add_component.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/popup_add_student_component.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/subject_table_view/subject_table_component/popup_add_subject_component.dart';
 
-class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
-  const PopUpAddDoctorCard({super.key});
+class PopUpAddSubjectCard extends GetView<DashboardSubjectsTableController> {
+  const PopUpAddSubjectCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,48 +40,25 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          PopupAddComponent(
-                            name: "Doctor ID",
-                            controlName: controller.doctorId,
-                            focusName: controller.doctorIdFocus,
+                          PopupAddSubjectComponent(
+                            name: "Subject ID",
+                            controlName: controller.subjectId,
+                            focusName: controller.idFocus,
                             inputType: TextInputType.number,
                           ),
-                          PopupAddComponent(
+                          PopupAddSubjectComponent(
                             name: "Name",
-                            controlName: controller.name,
+                            controlName: controller.subjectName,
                             focusName: controller.nameFocus,
                             inputType: TextInputType.name,
                           ),
-                          PopupAddComponent(
-                            name: "Date Of Birth",
-                            controlName: controller.dateOfBirth,
-                            focusName: controller.dateOfBirthFocus,
-                            inputType: TextInputType.datetime,
-                          ),
-                          PopupAddComponent(
-                            name: "Email",
-                            controlName: controller.email,
-                            focusName: controller.emailFocus,
-                            inputType: TextInputType.emailAddress,
-                          ),
-                          PopupAddComponent(
-                            name: "Role",
-                            controlName: controller.role,
-                            focusName: controller.roleFocus,
+                          PopupAddSubjectComponent(
+                            name: "Number Of Unit",
+                            controlName: controller.subjectUnit,
+                            focusName: controller.unitFocus,
                             inputType: TextInputType.number,
                           ),
-                          PopupAddComponent(
-                            name: "Phone Number",
-                            controlName: controller.phoneNumber,
-                            focusName: controller.phoneFocus,
-                            inputType: TextInputType.phone,
-                          ),
-                          PopupAddComponent(
-                            name: "College",
-                            controlName: controller.college,
-                            focusName: controller.collegeFocus,
-                            inputType: TextInputType.text,
-                          ),
+                          //there is a missed fiald is the doctor filed
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -93,7 +72,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                   // const SizedBox(
                                   //   width: 10,
                                   // ),
-                                  CustomText("Doctor Section".tr,
+                                  CustomText("Section".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(
@@ -110,21 +89,21 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                     borderRadius: BorderRadius.circular(24)),
                                 child: Center(
                                   child: Obx(() => DropdownButton<int?>(
-                                        value: controller.SectionId.value,
+                                        value: controller.sectionId.value,
                                         icon: Icon(Icons.arrow_drop_down_sharp,
                                             color: AppColors.inverseCardColor),
                                         underline: const SizedBox(),
                                         dropdownColor: AppColors.mainCardColor,
                                         onChanged: (val) {
                                           if (val == null) return;
-                                          controller.SectionId.value = val;
+                                          controller.sectionId.value = val;
                                         },
                                         isExpanded: true,
                                         menuWidth: Get.width * 0.3,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
-                                          for (Section sectionI
-                                              in (controller.section.values)) {
+                                          for (Section sectionI in (controller
+                                              .addSection.values)) {
                                             items.add(DropdownMenuItem<int?>(
                                               value: sectionI.id,
                                               child: SizedBox(
@@ -145,7 +124,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                         },
                                         items: [
                                           for (Section sectionI in (controller
-                                              .section.values)) ...[
+                                              .addSection.values)) ...[
                                             DropdownMenuItem<int?>(
                                                 value: sectionI.id,
                                                 child: Column(
@@ -169,23 +148,105 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                               )
                             ],
                           ),
-                          PopupAddComponent(
-                            name: "Acadimic Degree",
-                            controlName: controller.acadimicDegree,
-                            focusName: controller.acadimicFocus,
-                            inputType: TextInputType.text,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  // Icon(
+                                  //   Icons.menu_book,
+                                  //   size: 40,
+                                  //   color: AppColors.inverseIconColor,
+                                  // ),
+                                  // const SizedBox(
+                                  //   width: 10,
+                                  // ),
+                                  CustomText("Level".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold)),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                width: Get.width * 0.23,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(24)),
+                                child: Center(
+                                  child: Obx(() => DropdownButton<int?>(
+                                        value: controller.levelId.value,
+                                        icon: Icon(Icons.arrow_drop_down_sharp,
+                                            color: AppColors.inverseCardColor),
+                                        underline: const SizedBox(),
+                                        dropdownColor: AppColors.mainCardColor,
+                                        onChanged: (val) {
+                                          if (val == null) return;
+                                          controller.levelId.value = val;
+                                        },
+                                        isExpanded: true,
+                                        menuWidth: Get.width * 0.3,
+                                        selectedItemBuilder: (_) {
+                                          List<Widget> items = [];
+                                          for (Level levelI
+                                              in (controller.addLevel ?? [])) {
+                                            items.add(DropdownMenuItem<int?>(
+                                              value: levelI.id,
+                                              child: SizedBox(
+                                                  width: Get.width * 0.28,
+                                                  child: CustomText(
+                                                    levelI.name ?? "Unknown".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                    softWrap: false,
+                                                  )),
+                                            ));
+                                          }
+                                          return items;
+                                        },
+                                        items: [
+                                          for (Level levelI
+                                              in (controller.addLevel ??
+                                                  [])) ...[
+                                            DropdownMenuItem<int?>(
+                                                value: levelI.id,
+                                                child: Column(
+                                                  children: [
+                                                    CustomText(
+                                                      levelI.name ?? "Unknown",
+                                                      style: AppTextStyles
+                                                          .secStyle(
+                                                              textHeader:
+                                                                  AppTextHeaders
+                                                                      .h3Bold),
+                                                    ),
+                                                    // Divider(color: AppColors.highlightTextColor,)
+                                                  ],
+                                                )),
+                                          ]
+                                        ],
+                                      )),
+                                ),
+                              )
+                            ],
                           ),
-                          PopupAddComponent(
-                            name: "Administrative Position",
-                            controlName: controller.adminPosition,
-                            focusName: controller.administrativeFocus,
+                          PopupAddStudentComponent(
+                            name: "Description",
+                            controlName: controller.subjectDescription,
+                            focusName: controller.descriptionFocus,
                             inputType: TextInputType.text,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomButton(
-                                  onPress: controller.addDoctor, text: "Add"),
+                                  onPress: controller.addSubject, text: "Add"),
                               CustomButton(
                                 onPress: () =>
                                     Navigator.of(Get.overlayContext!).pop(),

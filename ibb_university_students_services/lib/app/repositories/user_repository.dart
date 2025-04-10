@@ -141,23 +141,47 @@ class UserRepository {
   }
 
   static Future<Result<Map>> fetchDashboardDoctors({
+    int? doctorId,
+    String? acadimicDegree,
+    String? postion,
+    String? name,
+    String? email,
+    int? dateOfBirth,
+    int? roleId,
+    int? sectionName,
+    String? college,
+    int? phoneNumber,
+    String? order,
+    String? sort,
+    String? search,
+    int limit = 20,
+    int? page,
     bool hardfetch = false,
   }) async {
     late Response? response;
     try {
       Map<int, Doctor> doctor = {};
-      response = await HttpProvider.get("get-doctors-panle");
+      response = await HttpProvider.get(
+          "get-doctors-panle?doctor_id=${doctorId ?? ''}&academic_degree=${acadimicDegree ?? ''}&administrative_position=${postion ?? ''}&user_name=${name ?? ''}&email=${email ?? ''}&data_of_birth=${dateOfBirth ?? ''}&roleId=${roleId ?? ''}&sectionName=${sectionName ?? ''}&collegeName=${college ?? ''}&phoneNumber=${phoneNumber ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page");
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsDoctor in response?.data['data']) {
           doctor[jsDoctor["doctor_id"]] = Doctor.fromJson(jsDoctor);
         }
+        return Result(
+            data: {
+              "Doctors": doctor,
+              "totalDoctor": response?.data["pagination"]["totalDoctors"],
+            },
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
       }
       return Result(
           data: {
             "Doctors": doctor,
-            "totalDoctor": response?.data["pagination"]["totalDoctors"],
+            "totalDoctor": 0,
           },
-          hasError: true,
+          hasError: false,
           statusCode: response?.statusCode,
           message: response?.data["message"] ?? "error");
     } catch (error) {
@@ -170,6 +194,7 @@ class UserRepository {
   }
 
   static Future<Result<Map>> fetchDashboardStudent({
+    int? studentId,
     bool hardFetch = false,
   }) async {
     late Response? response;
@@ -180,13 +205,22 @@ class UserRepository {
         for (Map<String, dynamic> jsStudent in response?.data['data']) {
           student[jsStudent['student_id']] = Student.fromJson(jsStudent);
         }
+        return Result(
+          data: {
+            "students": student,
+            "totalStudent": response?.data["pagination"]["totalstudents"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
       }
       return Result(
         data: {
           "students": student,
-          "totalStudent": response?.data["pagination"]["totalstudents"],
+          "totalStudent": 0,
         },
-        hasError: true,
+        hasError: false,
         statusCode: response?.statusCode,
         message: response?.data["message"] ?? "error",
       );
