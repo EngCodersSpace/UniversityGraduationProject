@@ -6,9 +6,10 @@ import 'package:ibb_university_students_services/app/controllers/exam_table_cont
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../models/exam_model/exam_model.dart';
+import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/permission_checker.dart';
+
 
 class ExamCard extends GetView<ExamTableController> {
   Rx<Exam?> content;
@@ -82,7 +83,7 @@ class ExamCard extends GetView<ExamTableController> {
                                   const EdgeInsets.symmetric(horizontal: 8),
                               child: CustomText("${content.value?.day}".tr),
                             ),
-                            if ((PermissionUtils.checkPermission(
+                            if ((UserRepository.checkPermission(
                                 target: "Exams", action: "write"))) ...[
                               const SizedBox(
                                 width: 8,

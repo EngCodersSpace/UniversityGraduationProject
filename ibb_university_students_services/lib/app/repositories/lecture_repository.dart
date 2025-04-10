@@ -12,7 +12,7 @@ import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../utils/date_time_utils.dart';
 import '../utils/internet_connection_cheker.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 
 class LectureRepository {
   static const int _fetchAllError = 611;

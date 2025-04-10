@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
+import '../../repositories/user_repository.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
-import '../../utils/permission_checker.dart';
 import 'exam_table_view_components/exam_card.dart';
 
 class PhoneExamTableView extends GetView<ExamTableController> {
@@ -167,7 +167,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                             style: AppTextStyles.highlightStyle(
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
-                          if ((PermissionUtils.checkPermission(
+                          if ((UserRepository.checkPermission(
                               target: "Exams", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,

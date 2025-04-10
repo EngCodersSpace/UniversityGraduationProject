@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
-import 'package:ibb_university_students_services/app/services/hive_services/hive_services.dart';
+import 'package:ibb_university_students_services/app/services/hive_services.dart';
 import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
 import '../utils/internet_connection_cheker.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 
 class UserRepository {
   static Box<User>? _userBox;
@@ -267,4 +267,14 @@ class UserRepository {
   static Type? currentUserType() {
     return _userBox?.get('currentUser')?.runtimeType;
   }
+
+  static bool checkPermission({
+    required String target,
+    required String action,
+  }) {
+    return true;
+    // return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
+    //     false;
+  }
+
 }

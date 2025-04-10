@@ -12,7 +12,7 @@ class Responsivity {
       if(ratio < 0.6) ratio = 0.6;
       return fontSize * ratio;
     } else {
-      double ratio = Get.width / 411;
+      double ratio = Get.width / 1920;
       if(ratio > 1.2) ratio = 1.2;
       if(ratio < 0.6) ratio = 0.6;
       return fontSize * ratio;

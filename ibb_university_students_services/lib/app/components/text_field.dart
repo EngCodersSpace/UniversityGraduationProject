@@ -67,7 +67,6 @@ class CustomTextFormField extends StatelessWidget {
       width: width,
       child: (isPassword)
           ? Obx(() => TextFormField(
-                key: UniqueKey(),
                 controller: controller,
                 initialValue: initialValue,
                 style: style,
@@ -124,7 +123,6 @@ class CustomTextFormField extends StatelessWidget {
                     })),
               ))
           : TextFormField(
-              key: UniqueKey(),
               initialValue: initialValue,
               controller: controller,
               style: style,

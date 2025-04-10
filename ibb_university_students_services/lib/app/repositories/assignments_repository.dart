@@ -16,8 +16,8 @@ import '../models/helper_models/assignments_cache/assignments_cache.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_assignments_file_model/student_assignments_file_model.dart';
 import '../models/subject_model/subject_model.dart';
-import '../services/http_provider/http_provider.dart';
-import '../services/notification_services/notification_services.dart';
+import '../services/http_provider.dart';
+import '../services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
 
 class AssignmentsRepository {
