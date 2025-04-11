@@ -32,12 +32,15 @@ class HeaderOfViewComponent extends GetView {
                 child: CustomText(
                   tableName,
                   style: AppTextStyles.secStyle(
-                    textHeader: AppTextHeaders.h1Bold,
+                    textHeader: AppTextHeaders.h1headers,
                   ),
                 ),
               ),
               CustomTextFormField(
                 labelText: "Search",
+                // labelStyle: AppTextStyles.mainStyle(
+                //   textHeader: AppTextHeaders.h2Bold,
+                // ),
                 controller: controller.searchController,
                 // icon: Icons.search_rounded,
                 color: AppColors.inverseCardColor,

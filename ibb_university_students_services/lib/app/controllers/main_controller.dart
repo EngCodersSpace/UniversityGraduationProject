@@ -127,7 +127,7 @@ class MainController extends GetxController {
 
   void routeAdmainPanel() {
     Get.offNamed(
-      "/dashboard_doctor_view",
+      "/dashboard_main_view",
     );
   }
 

@@ -19,14 +19,11 @@ class InitAppController extends GetxController {
   Future<void> _initializeApp() async {
     Connectivity().onConnectivityChanged.listen((result) {
       if (result.contains(ConnectivityResult.none)) {
-
-      } else {
-
-      }
+      } else {}
     });
     try {
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
+      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
@@ -47,7 +44,7 @@ class InitAppController extends GetxController {
       }
     }
     if (await UserRepository.isCredentialsCached()) {
-      Get.offNamed("/main");
+      Get.offNamed("/dashboard_main_view");
     } else {
       Get.offNamed("/login");
     }

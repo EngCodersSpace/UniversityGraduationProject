@@ -193,6 +193,11 @@ class DashboardDoctorTableController extends GetxController
     super.onInit();
   }
 
+  @override
+  void refresh() async {
+    await fetchDoctoreData();
+  }
+
   void onRowChange(int? value) async {
     if (value != null) {
       rowsPerPage.value = value;

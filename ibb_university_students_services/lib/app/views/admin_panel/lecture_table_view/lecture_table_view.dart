@@ -101,18 +101,15 @@ class MyData extends DataTableSource {
                   },
                 )),
           ),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .id
-                      .toString())),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].id.toString())),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -162,17 +159,15 @@ class MyData extends DataTableSource {
                   initialValue:
                       items[index % controller.rowsPerPage.value].startTime ??
                           "")),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].hall ?? "")),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].hall ?? "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
