@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 
 
 class GradRepository {
@@ -12,6 +12,7 @@ class GradRepository {
   static Future<Result<List<Grad>>> fetchStudentGrads({
     required int levelId,
     required String? term,
+    required int studentID,
     bool hardFetch = false,
   }) async {
     if (_gradsByLevels?[levelId] != null && (_gradsByLevels?[levelId]?.isNotEmpty??false) && !hardFetch){
@@ -25,7 +26,7 @@ class GradRepository {
     late Response? response;
     try {
 
-      response = await HttpProvider.get("get-grades?levelID=$levelId&Term=$term");
+      response = await HttpProvider.get("get-grades?studentID=$studentID&levelID=$levelId&Term=$term");
       // print(response?.data);
       if (response?.statusCode == 200) {
         _gradsByLevels ??= {};

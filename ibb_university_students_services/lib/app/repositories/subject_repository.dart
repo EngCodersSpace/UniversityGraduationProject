@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
-import '../services/http_provider/http_provider.dart';
+import '../services/http_provider.dart';
 import '../utils/internet_connection_cheker.dart';
 
 class SubjectRepository {

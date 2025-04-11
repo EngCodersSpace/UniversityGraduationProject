@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
 import 'package:ibb_university_students_services/app/views/library_view/components/book_filter_card.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/lecture_tab.dart';
-import 'package:ibb_university_students_services/app/views/library_view/library_tabs/refreneces_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
+import 'package:ibb_university_students_services/app/views/library_view/library_tabs/refreneces_tab.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/library_files_model/library_files_model.dart';
@@ -26,7 +26,7 @@ class LibraryController extends GetxController
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
   RxString? selectedSubjectId = "all-option".obs;
-  RxString? selectedAddSubjectId;
+  RxString? selectedAddSubjectId ;
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
@@ -41,7 +41,7 @@ class LibraryController extends GetxController
   PageController refPagesController = PageController();
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
-  Map<String, Subject> subjects = {};
+  Map<String,Subject> subjects = {};
   RxList<Map<String, int>> groups = RxList();
 
   List<String> categories = [
@@ -67,6 +67,7 @@ class LibraryController extends GetxController
 
   @override
   void onInit() async {
+    // TODO: implement onInit
     loadingState.value = false;
     tapController = TabController(
       length: 3,
@@ -75,8 +76,8 @@ class LibraryController extends GetxController
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
-    subjects =
-        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    subjects = await SubjectRepository.fetchSubjects()
+        .then((e) => e.data??{});
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
@@ -328,10 +329,10 @@ class LibraryController extends GetxController
     }
     for (PlatformFile file in (selectedFiles)) {
       await LibraryRepository.uploadLibraryFile(
-              file: file,
-              groups: groups,
-              category: categories[selectedCategory.value ?? 0])
-          .then((e) {});
+        file: file,
+        groups: groups,
+        category: categories[selectedCategory.value??0]
+      ).then((e) {});
     }
   }
 

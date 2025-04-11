@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
-import '../../components/pop_up_cards/alert_message_card.dart';
-import '../../repositories/user_repository.dart';
+import '../components/pop_up_cards/alert_message_card.dart';
+import '../repositories/user_repository.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
