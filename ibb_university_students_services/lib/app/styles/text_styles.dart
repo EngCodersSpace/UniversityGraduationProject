@@ -9,10 +9,6 @@ class TextHeaders {
 }
 
 class AppTextHeaders {
-  static TextHeaders h1headers =
-      TextHeaders(fontSize: 28, fontWeight: FontWeight.bold);
-  static TextHeaders h1web =
-      TextHeaders(fontSize: 22, fontWeight: FontWeight.bold);
   static TextHeaders h1Bold =
       TextHeaders(fontSize: 24, fontWeight: FontWeight.bold);
   static TextHeaders h2Bold =

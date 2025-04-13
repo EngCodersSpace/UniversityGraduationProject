@@ -49,7 +49,7 @@ class TabViewComponent extends GetView<DashboardMainController> {
                   color: (controller.selectedindex.value == index)
                       ? AppColors.secTextColor
                       : AppColors.mainTextColor,
-                  textHeader: AppTextHeaders.h3Bold,
+                  textHeader: AppTextHeaders.h5Bold,
                 ),
               ),
             ],

@@ -47,7 +47,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "All",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -57,7 +57,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -67,7 +67,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
@@ -79,7 +79,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Lecture Time",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -89,7 +89,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Lecture Day",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -99,7 +99,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Lecture Room",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -109,7 +109,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Subject",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
@@ -121,7 +121,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Descending",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -131,7 +131,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Ascending",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
   ];
@@ -173,7 +173,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "All",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -183,7 +183,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "1st",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -193,7 +193,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "2ec",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
   ];
@@ -206,7 +206,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Saturday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -216,7 +216,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Sunday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -226,7 +226,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Monday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -236,7 +236,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Tuseday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -246,7 +246,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Wednesday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -256,7 +256,7 @@ class DashboardLectureTableController extends GetxController
             child: CustomText(
               "Thursday",
               style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h2Bold,
+                textHeader: AppTextHeaders.h3Bold,
               ),
             ))),
   ];
@@ -280,47 +280,47 @@ class DashboardLectureTableController extends GetxController
       DataColumn(
         label: CustomText(
           "Lecture ID",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
         numeric: true,
       ),
       DataColumn(
           label: CustomText(
         "Subject",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
       DataColumn(
         label: CustomText(
           "Doctor ID",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
         numeric: true,
       ),
       DataColumn(
         label: CustomText(
           "Duration",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
         // numeric: true,
       ),
       DataColumn(
         label: CustomText(
           "Start Time",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
         // numeric: true,
       ),
       DataColumn(
         label: CustomText(
           "Hall",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
         // numeric: true,
       ),
       DataColumn(
         label: CustomText(
           "Decsription",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1web),
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
     ];
@@ -447,7 +447,7 @@ class DashboardLectureTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "All",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
             ),
           )),
     ];
@@ -460,7 +460,7 @@ class DashboardLectureTableController extends GetxController
               child: CustomText(
                 section.name ?? "unknown",
                 style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
               ),
             )),
       );
@@ -478,7 +478,7 @@ class DashboardLectureTableController extends GetxController
             width: (Get.width / 8) * 0.4,
             child: CustomText(
               "All",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
             ),
           )),
     ];
@@ -491,7 +491,7 @@ class DashboardLectureTableController extends GetxController
               child: CustomText(
                 level.name ?? "unknown",
                 style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
               ),
             )),
       );

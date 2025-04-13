@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
@@ -13,7 +12,6 @@ import 'package:ibb_university_students_services/app/models/subject_model/subjec
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/subject_table_view/subject_table_component/add_subject_table_card.dart';

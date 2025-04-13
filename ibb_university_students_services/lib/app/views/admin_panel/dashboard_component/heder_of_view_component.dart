@@ -32,7 +32,7 @@ class HeaderOfViewComponent extends GetView {
                 child: CustomText(
                   tableName,
                   style: AppTextStyles.secStyle(
-                    textHeader: AppTextHeaders.h1headers,
+                    textHeader: AppTextHeaders.h1Bold,
                   ),
                 ),
               ),
