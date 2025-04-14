@@ -1,3 +1,4 @@
+// dbService.js
 const db = require('../models');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
@@ -62,6 +63,9 @@ const insertData = async (modelName, data) => {
       await Model.create(data);
     }
 
+
+
+
     return { status: 'inserted' };
 
   } catch (error) {
@@ -77,6 +81,28 @@ const insertData = async (modelName, data) => {
     }
     return { status: 'skipped', reason };
   }
+};
+
+
+const getProcessingOrder = (models) => {
+  const sortedModels = [];
+  const visited = new Set();
+
+  function visit(model) {
+    if (visited.has(model)) return;
+    visited.add(model);
+
+    // Get dependencies (models we belong to)
+    const associations = Object.values(models[model].associations)
+      .filter(a => a.associationType === 'BelongsTo')
+      .map(a => a.target.name);
+
+    associations.forEach(visit);
+    sortedModels.push(model);
+  }
+
+  Object.keys(models).forEach(model => visit(model));
+  return sortedModels;
 };
 
 

@@ -1,3 +1,4 @@
+// excelService.js
 const xlsx = require('xlsx');
 
 const readExcelFile = (filePath) => {
@@ -11,10 +12,5 @@ const readExcelFile = (filePath) => {
 
   return sheetsData;
 };
-
-
-
-
-
 
 module.exports = { readExcelFile };

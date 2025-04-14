@@ -3,7 +3,7 @@ const router = express.Router();
 const validate = require('../validations/examvalidation');
 const CRUD = require('../controllers/examController');
 const { verifyToken } = require('../middleware/authMiddleware');
-// const checkPermission = require('../middlewares/checkPermission');
+// const {checkPermission} = require('../middleware/roleMiddleware');
 const checkRole = require('../middleware/roleMiddleware').checkRole;
 
 router.use(verifyToken);

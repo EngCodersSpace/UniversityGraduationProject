@@ -1,6 +1,5 @@
 const { body } = require('express-validator');
 
-const { Op } = require('sequelize');
 const {user} = require('../models'); 
 
 const validateRequestPasswordReset = [

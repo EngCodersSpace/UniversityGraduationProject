@@ -12,11 +12,8 @@ const {
   level,
   study_plan,
 } = require("../models");
-// const crypto = require('crypto');
 const nodemailer = require("nodemailer");
-// const { Op, where } = require("sequelize");
 const { validationResult } = require("express-validator");
-// const { sequelize} = require('sequelize');
 const { Op, Sequelize } = require("sequelize");
 const path = require('path');
 const fs = require("fs");
@@ -520,64 +517,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 ///////////////////////////
-// Function to get the currently logged-in user based on JWT token (me)
-exports.getCurrentUser = (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) {
-    return res.status(401).json({ message: "Access token is missing" });
-  }
-
-  jwt.verify(token, SECRET_KEY, async (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: "Invalid token" });
-    }
-
-    try {
-      const foundUser = await user.findOne({
-        where: { user_id: decoded.user_id },
-        include: [
-          { model: doctor, as: "doctor" },
-          { model: student, as: "student" },
-          { model: section, as: "section" },
-          { model: role },
-        ],
-      });
-
-      if (!foundUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (foundUser.doctor == null) {
-        responseUser = foundUser.toJSON();
-        user_type = "student";
-        tempStudent = responseUser.student;
-        delete responseUser.student;
-        delete responseUser.doctor;
-        responseUser = { ...responseUser, ...tempStudent };
-      } else if (foundUser.student == null) {
-        responseUser = foundUser.toJSON();
-        user_type = "doctor";
-        tempDoctor = responseUser.doctor;
-        delete responseUser.student;
-        delete responseUser.doctor;
-        responseUser = { ...responseUser, ...tempDoctor };
-      }
-
-      res.json({
-        message: "Login successful",
-        user: responseUser,
-        user_type: user_type,
-      });
-    } catch (error) {
-      console.error("Error fetching user:", error.message);
-      res
-        .status(500)
-        .json({ message: "Internal server error", error: error.message });
-    }
-  });
-};
 
 
 exports.logout = async (req, res) => {
