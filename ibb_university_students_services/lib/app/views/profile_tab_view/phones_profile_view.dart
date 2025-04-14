@@ -18,20 +18,7 @@ class PhoneProfileView extends GetView<ProfileController> {
 
   double height = Get.height;
   double width = Get.width;
-  List<DropdownMenuItem<String>> dropdownMenuItems = [
-    DropdownMenuItem<String>(
-        value: "en",
-        child: CustomText(
-          "English",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),
-        )),
-    DropdownMenuItem<String>(
-        value: "ar",
-        child: CustomText(
-          "العربية",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),
-        )),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,34 +176,6 @@ class PhoneProfileView extends GetView<ProfileController> {
                             controller.user?.phones?.first ?? "Unknown".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: width * 0.4,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.language),
-                                SizedBox(
-                                  width: width * 0.02,
-                                ),
-                                CustomText(
-                                  "Language".tr,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          DropdownButton(
-                            items: dropdownMenuItems,
-                            underline: const SizedBox(),
-                            onChanged: (val) {
-                              controller.changeLang(val.toString());
-                            },
-                            value: controller.language.value,
                           ),
                         ],
                       ),

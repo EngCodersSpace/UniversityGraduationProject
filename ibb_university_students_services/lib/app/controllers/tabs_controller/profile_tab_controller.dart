@@ -7,7 +7,6 @@ import '../main_controller.dart';
 
 class ProfileController extends GetxController {
   User? user;
-  RxString language = (Get.locale?.languageCode ?? "en").obs;
   RxBool initState = false.obs;
 
   @override
@@ -28,12 +27,6 @@ class ProfileController extends GetxController {
       user = res.data;
     }
     initState.value = true;
-  }
-
-  void changeLang(String lang) {
-    LocaleListener.updateLocale(lang);
-    language.value = lang;
-    Get.find<MainController>().changeTabIndex(4);
   }
 
   void logout() async {

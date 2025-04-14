@@ -105,8 +105,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               ],
                             ),
                             IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.notifications),
+                              onPressed: controller.showSettings,
+                              icon: const Icon(Icons.settings),
                               color: AppColors.inverseIconColor,
                             )
                           ],
@@ -350,10 +350,17 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                   image: const AssetImage(
                                       "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
-                                CustomText(
-                                  "Library".tr,
-                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
-                                ),
+                                if (Get.locale?.languageCode == "en") ...[
+                                  CustomText(
+                                      "${"Academic".tr}\n${"Transactions".tr}",
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
+                                  ),
+                                ] else ...[
+                                  CustomText(
+                                      "${"Transactions".tr}\n${"Academic".tr}",
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
+                                  ),
+                                ]
                               ],
                             ),
                           ],
