@@ -317,12 +317,10 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
           model: user,
           as: "user",
           required: true,
-          attributes: ["user_name", "email", "date_of_birth", "collegeName", "user_section_id", "roleId"],
           include: [
             {
               model: section,
               as: "section",
-              attributes: ["section_name"],
               required: true,
               where: {
                 ...(sectionName && {
@@ -333,7 +331,6 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
             {
               model: role,
               as: "role",
-              attributes: ["roleName"],
               required: true,
               where: {
                 ...(rolename && {
@@ -350,6 +347,7 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
           ]
         }
       ],
+      flatten: true,
       distinct: true, 
       limit: limitNumber,
       offset: offset,
@@ -365,7 +363,7 @@ exports.getDoctorsByCriteriaPanle = async (req, res) => {
     // Return the response
     res.status(200).json({
       message: "Doctors retrieved successfully",
-      data: doctors,
+      data: doctors.map((doc) => doc.getFullData()),
       pagination: {
         totalDoctors: count,
         totalPages: Math.ceil(count / limitNumber),
