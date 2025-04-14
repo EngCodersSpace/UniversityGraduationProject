@@ -7,7 +7,6 @@ class NotificationHandler {
       FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  static String? token;
 
   static Future<void> initialize() async {
     // Request notification permissions
@@ -24,11 +23,6 @@ class NotificationHandler {
       // print(res.notificationResponseType);
       // print(res.id);
       // print(res.actionId);
-    });
-
-    await FirebaseMessaging.instance.getToken().then((val) {
-      token = val;
-      // print(token);
     });
 
     // Handle foreground messages
@@ -138,6 +132,10 @@ class NotificationHandler {
       '',
       notificationDetails,
     );
+  }
+
+  static Future<String?> getDeviceToken() async{
+    return await FirebaseMessaging.instance.getToken();
   }
 }
 
