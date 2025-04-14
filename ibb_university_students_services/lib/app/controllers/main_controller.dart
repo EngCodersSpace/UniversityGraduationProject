@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_float_action_button_location.dart';
+import 'package:ibb_university_students_services/app/views/main_view/main_view_components/custom_float_action_button_location.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
 import '../models/helper_models/result.dart';
 import '../models/user_model/user.dart';
