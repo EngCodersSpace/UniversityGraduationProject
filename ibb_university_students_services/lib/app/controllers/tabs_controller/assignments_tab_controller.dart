@@ -197,6 +197,7 @@ class AssignmentsTabController extends GetxController {
             value: subj.id,
             child: CustomText(
               subj.subjectName ?? "unknown".tr,
+              softWrap: false,
               style:
                   AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
             )),
@@ -207,9 +208,9 @@ class AssignmentsTabController extends GetxController {
           width: (Get.width / 3) - 30,
           child: CustomText(
             subj.subjectName ?? "",
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
             textAlign: TextAlign.center,
-            softWrap: false,
           ),
         ),
       ));

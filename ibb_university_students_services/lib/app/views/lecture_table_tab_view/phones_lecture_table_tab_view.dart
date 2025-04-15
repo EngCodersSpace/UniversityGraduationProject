@@ -87,7 +87,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                                                   "unknown",
                                                               style: AppTextStyles.mainStyle(
                                                                   textHeader:
-                                                                  AppTextHeaders.h6Bold),
+                                                                  AppTextHeaders.h5Bold),
                                                             ),
                                                           )))
                                                       .toList(),

@@ -60,7 +60,7 @@ class ExamTableController extends GetxController {
 
   //Exam popCard variables
   Map<String, Subject>? subjects;
-  late RxString subject;
+  late RxString subjectId;
 
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
@@ -216,7 +216,7 @@ class ExamTableController extends GetxController {
         subjects = {};
         subjects =
             await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
-        subject = RxString(data["subject"]["subject_id"]);
+        subjectId = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
         timeController.text =
             DateTimeUtils.formatStringTime(time: data["exam_time"]);
@@ -251,7 +251,7 @@ class ExamTableController extends GetxController {
     subjects =
         await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {
-      subject = RxString(subjects!.values.first.id);
+      subjectId = RxString(subjects!.values.first.id);
     }
     Get.dialog(const PopUpIAddAndUpdateExamCard());
   }
@@ -261,8 +261,8 @@ class ExamTableController extends GetxController {
     if (formKey.currentState!.validate()) {
       jsData["exam_section_id"] = selectedSection.value;
       jsData["exam_level_id"] = selectedLevel.value;
-      (subject.value.isNotEmpty && subject.value != "Unknown".tr)
-          ? jsData["subject_id"] = subject.value
+      (subjectId.value.isNotEmpty && subjectId.value != "Unknown".tr)
+          ? jsData["subject_id"] = subjectId.value
           : null;
       (dateController.text.isNotEmpty && dateController.text != "Unknown".tr)
           ? jsData["exam_date"] = dateController.text
