@@ -26,12 +26,12 @@ class LevelRepository {
     }
   }
 
-  static Future<Result<List<Level>>> fetchLevels({
+  static Future<Result<Map<int,Level>>> fetchLevels({
     bool hardFetch = false,
   }) async {
     if ((_levelBox?.values.isNotEmpty??true) &&(!hardFetch|| !(await checkInternetConnection())) ) {
       return Result(
-        data: _levelBox?.values.toList()??[],
+        data: _levelBox?.toMap().cast<int,Level>(),
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -46,7 +46,7 @@ class LevelRepository {
           await _levelBox?.put(level.id, level) ;
         }
         return Result(
-            data:  _levelBox?.values.toList()??[],
+            data:  _levelBox?.toMap().cast<int,Level>(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

@@ -73,17 +73,35 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                         child: Center(
                                           child: Obx(
                                                 () => DropdownButton(
-                                              items: controller.sections,
-                                              onChanged:
-                                              controller.changeDepartment,
-                                              value: controller
-                                                  .selectedSection.value,
-                                              underline: const SizedBox(),
-                                              iconEnabledColor:
-                                              AppColors.mainCardColor,
-                                              dropdownColor:
-                                              AppColors.inverseCardColor,
-                                            ),
+                                                  items: controller.sections.values
+                                                      .map((section) =>
+                                                      DropdownMenuItem<
+                                                          int>(
+                                                          value:
+                                                          section.id,
+                                                          child: SizedBox(
+                                                            width: (((Get.width - 16) / 7) * 4) * 0.48,
+                                                            child:
+                                                            CustomText(
+                                                              section.name ??
+                                                                  "unknown",
+                                                              style: AppTextStyles.mainStyle(
+                                                                  textHeader:
+                                                                  AppTextHeaders.h6Bold),
+                                                            ),
+                                                          )))
+                                                      .toList(),
+                                                  onChanged:
+                                                  controller.changeDepartment,
+                                                  value: controller
+                                                      .selectedSection.value,
+                                                  underline: const SizedBox(),
+                                                  iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                                  dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                                  // menuWidth: 300,
+                                                ),
                                           ),
                                         ),
                                       ),

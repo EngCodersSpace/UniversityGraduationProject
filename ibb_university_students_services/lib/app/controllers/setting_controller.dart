@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-
 import '../utils/local_lisenter.dart';
-import 'main_controller.dart';
 
 
 class SettingController extends GetxController {

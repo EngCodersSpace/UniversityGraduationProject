@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
-import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
 import 'package:ibb_university_students_services/app/services/hive_services.dart';
 import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';

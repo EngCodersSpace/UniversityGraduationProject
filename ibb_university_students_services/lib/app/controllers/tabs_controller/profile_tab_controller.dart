@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../models/helper_models/result.dart';
-import '../main_controller.dart';
+
 
 class ProfileController extends GetxController {
   User? user;

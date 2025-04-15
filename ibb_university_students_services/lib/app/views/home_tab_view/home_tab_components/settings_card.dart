@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/setting_controller.dart';
-import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';

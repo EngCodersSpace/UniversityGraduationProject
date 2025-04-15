@@ -150,7 +150,7 @@ class LibraryController extends GetxController
 
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     levels = {};
     for (Level level in levelsData) {
       levels[level.id] = false.obs;

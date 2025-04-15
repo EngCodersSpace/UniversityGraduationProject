@@ -30,7 +30,7 @@ class LectureController extends GetxController {
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
-  List<DropdownMenuItem<int>> sections = [];
+  Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
@@ -87,7 +87,7 @@ class LectureController extends GetxController {
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchTableData();
     loadState.value = false;
@@ -113,7 +113,7 @@ class LectureController extends GetxController {
     if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
       if (sections.isNotEmpty) {
-        selectedSection.value = sections.first.value;
+        selectedSection.value = sections.values.first.id;
       }
     }
 
@@ -226,32 +226,15 @@ class LectureController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
-    List<Section> sectionsData =
+     sections =
         await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data?.values.toList() ?? []);
-    sections = [];
-    for (Section section in sectionsData) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 7) * 0.6,
-              child: CustomText(
-                section.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
-    }
-    selectedSection.value = sectionsData.first.id;
+            .then((e) => e.data??{});
+    selectedSection.value = sections.values.first.id;
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];

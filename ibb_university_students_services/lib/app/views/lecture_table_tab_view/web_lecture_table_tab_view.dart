@@ -121,7 +121,24 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             child: Center(
                               child: Obx(
                                 () => DropdownButton(
-                                  items: controller.sections,
+                                  items: controller.sections.values
+                                      .map((section) =>
+                                      DropdownMenuItem<
+                                          int>(
+                                          value:
+                                          section.id,
+                                          child: SizedBox(
+                                            width: (Get.width / 7.3) * 0.7,
+                                            child:
+                                            CustomText(
+                                              section.name ??
+                                                  "unknown",
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                  AppTextHeaders.h6Bold),
+                                            ),
+                                          )))
+                                      .toList(),
                                   onChanged: controller.changeDepartment,
                                   value: controller.selectedSection.value,
                                   underline: const SizedBox(),

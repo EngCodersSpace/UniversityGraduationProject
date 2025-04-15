@@ -27,7 +27,7 @@ class ExamTableController extends GetxController {
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Rx<Map<int, Exam>>? exams = Rx({});
-  List<DropdownMenuItem<int>> sections = [];
+  Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
@@ -82,7 +82,7 @@ class ExamTableController extends GetxController {
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
@@ -155,31 +155,14 @@ class ExamTableController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList() async {
-    List<Section> sectionsData = await SectionRepository.fetchSections()
-        .then((e) => e.data?.values.toList() ?? []);
-    sections = [];
-    for (Section section in sectionsData) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 7.3) * 0.7,
-              child: CustomText(
-                section.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
-    }
-    selectedSection.value = sectionsData.first.id;
+    sections = await SectionRepository.fetchSections()
+        .then((e) => e.data??{});
+    selectedSection.value = sections.values.first.id;
   }
 
   Future<void> initLevelDropdownMenuList() async {
     List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
