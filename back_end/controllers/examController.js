@@ -16,8 +16,10 @@ exports.createExam = async (req, res) => {
             include: [{ model: subject, as: 'subject' }], 
         });
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
-
+        await upsertRefreshState("exam", {
+          section_id: req.body.exam_section_id , 
+          level_id: req.body.exam_level_id       
+        });
 
         res.status(201).json({
             message: 'Exam created successfully',
@@ -246,16 +248,20 @@ exports.updateExam = async (req, res) => {
 
 exports.deleteExam = async (req, res) => {
     try {
-        const foundExam = await exam.destroy({
-            where: { exam_id: req.query.exam_id },
-        });
+        const foundExam = await exam.findByPk(req.query.exam_id);
 
         if (!foundExam) {
             return res.status(404).json({ message: 'Exam not found' });
         }
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
+        await upsertRefreshState("exam", {
+          section_id: foundExam.exam_section_id , 
+          level_id: foundExam.exam_level_id       
+        });
 
+
+
+        await foundExam.destroy();
         res.status(200).json({
             message: 'Exam deleted successfully',
         });
@@ -264,3 +270,10 @@ exports.deleteExam = async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+
+
+
+
+
+

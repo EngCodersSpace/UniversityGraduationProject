@@ -672,7 +672,7 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
 
     res.status(200).json({
       message: "Students retrieved successfully",
-      data: students,
+      data: students.map((stu) => stu.getFullData()),
       pagination: {
         totalStudents: count,
         totalPages: Math.ceil(count / limitNumber),

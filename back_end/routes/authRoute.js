@@ -5,13 +5,13 @@ const vali = require('../validations/authvalidation');
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
 const { uploadPhoto } = require('../utils/multerConfig');
-const uploadProfilePicture = uploadPhoto('profile_pictures', 'students');
+const uploadProfilePicture = uploadPhoto('profile_pictures', 'user');
 
 
 router.post('/login', authController.login);
 router.post('/login/authToken', authMiddleware.verifyToken);
 router.post('/logout', authController.logout);
-router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
+// router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
 router.post('/refresh', authController.refreshToken);
 
 // router.post('/register', uploadProfilePicture.single('profile_picture'), (req, res) => {exports.registerStudent(req, res);});

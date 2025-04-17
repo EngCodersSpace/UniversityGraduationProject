@@ -265,7 +265,10 @@ exports.uploadFileForAssignment = async (req, res) => {
           original_name:req.file.originalName
         });
 
-        await upsertRefreshState("assignment",`section_id : ${req.query.section_id} - level_id : ${req.query.level_id}`);
+        await upsertRefreshState("assignment", {
+          section_id: sectionName , 
+          level_id:  levelName     
+        });
 
         res.status(201).json({
           message: 'File uploaded successfully.',
@@ -338,8 +341,20 @@ exports.createAssignment = async (req, res) => {
       createdAssignments.push(assignmentRecord);
     }
 
-    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
-    
+
+    // Refresh state for each section-level combination
+    if (req.body.sectionsAndLevels && Array.isArray(req.body.sectionsAndLevels)) {
+      await Promise.all(
+          req.body.sectionsAndLevels.map(async (item) => {
+              await upsertRefreshState("assignment", {
+                  section_id: item.section_id ?? null,
+                  level_id: item.level_id ?? null
+              });
+          })
+      );
+    }
+
+
     res.status(201).json({
       message: 'Assignments created successfully for the specified sections and levels.',
       data: createdAssignments,
@@ -494,7 +509,11 @@ exports.updateAssigment=async(req,res)=>{
       level_id: req.body.level_id || Assignment.level_id,
     };
 
-    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
+    await upsertRefreshState("assignment", {
+      section_id: Assignment.section_id , 
+      level_id:  Assignment.level_id     
+    });
+    
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
 
 
@@ -534,7 +553,10 @@ exports.deleteAssignment = async (req, res) => {
     }
 
     // await assignment_file.destroy({where:{assignment_id: Assignment.id}});
-    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
+    await upsertRefreshState("assignment", {
+      section_id: Assignment.section_id , 
+      level_id:  Assignment.level_id     
+    });
     await Assignment.destroy();
 
     res.status(200).json({ message: 'Assignment deleted successfully.' });
