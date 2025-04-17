@@ -35,7 +35,9 @@ exports.welcome = (req, res) => {
 
 exports.login = async (req, res) => {
   const { user_id, password ,fcm_token} = req.body;
-
+  console.log("____________________________________\n");
+  console.log(fcm_token,"\n");
+  console.log("____________________________________\n");
   try {
     const foundUser = await user.scope("with_hidden_data").findOne({
       where: { user_id },

@@ -108,7 +108,6 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
        include: [
           {
             model: student_assignment_file, 
-            attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
           },
           {
             model:student.scope(null),as:'student',
