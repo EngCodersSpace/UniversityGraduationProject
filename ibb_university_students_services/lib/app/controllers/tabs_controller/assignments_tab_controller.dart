@@ -71,9 +71,9 @@ class AssignmentsTabController extends GetxController {
   }
 
   @override
-  void refresh() async {
+  void refresh({bool force = true}) async {
     loadingState.value = true;
-    await fetchAssignmentsData(force: true);
+    await fetchAssignmentsData(force: force);
     super.refresh();
     loadingState.value = false;
   }

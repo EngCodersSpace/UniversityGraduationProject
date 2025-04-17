@@ -132,8 +132,6 @@ class LectureController extends GetxController {
     Result res = await LectureRepository.fetchTableTime(
         sectionId: selectedSection.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value!,
-        term: selectedTerm.value,
         hardFetch: force);
     if (res.statusCode == 200) {
       tableTime = res.data;

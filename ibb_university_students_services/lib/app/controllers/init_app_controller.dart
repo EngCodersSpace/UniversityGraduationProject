@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ibb_university_students_services/app/services/data_sync_services.dart';
 import '../../firebase_options.dart';
 import '../services/hive_services.dart';
 import '../services/http_provider.dart';
@@ -39,9 +40,9 @@ class InitAppController extends GetxController {
         }
       }
       await NotificationHandler.initialize();
-      // Set initialization complete
+
+      await DataSyncServices.startSync();
     } catch (e) {
-      // Handle errors if needed
       if (kDebugMode) {
         print('Initialization error: $e');
       }

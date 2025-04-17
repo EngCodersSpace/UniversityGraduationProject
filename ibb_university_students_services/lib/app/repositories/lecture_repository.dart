@@ -52,8 +52,6 @@ class LectureRepository {
   static Future<Result<TableDays>> fetchTableTime({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     bool hardFetch = false,
   }) async {
     LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
@@ -78,7 +76,7 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
+          "lectures/grouped?section_id=$sectionId&level_id=$levelId");
       if (response?.statusCode == 200) {
         LecturesCache dayLectures = LecturesCache(
             key:

@@ -39,6 +39,7 @@ class ExamRepository {
     }
   }
 
+
   static Future<Result<Map<int, Exam>>> fetchExamsGroup({
     required int sectionId,
     required int levelId,
@@ -63,7 +64,7 @@ class ExamRepository {
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         for (Map<String, dynamic> jsExam in response?.data["data"]) {
           Subject? subject =
-              await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
+              await SubjectRepository.fetchSubject(id: jsExam["subject_id"],hardFetch: hardFetch)
                   .then((e) {
             return e.data;
           });

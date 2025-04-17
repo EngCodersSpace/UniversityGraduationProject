@@ -1,23 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'refresh_state.dart';
+part of 'data_sync.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class RefreshStateAdapter extends TypeAdapter<RefreshState> {
+class DataSyncAdapter extends TypeAdapter<DataSync> {
   @override
   final int typeId = 30;
 
   @override
-  RefreshState read(BinaryReader reader) {
+  DataSync read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return RefreshState(
-      id: fields[0] as int,
+    return DataSync(
+      id: fields[0] as String,
       target: fields[2] as String?,
       filters: (fields[1] as Map?)?.cast<String, dynamic>(),
       createdAt: fields[3] as String?,
@@ -26,7 +26,7 @@ class RefreshStateAdapter extends TypeAdapter<RefreshState> {
   }
 
   @override
-  void write(BinaryWriter writer, RefreshState obj) {
+  void write(BinaryWriter writer, DataSync obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -47,7 +47,7 @@ class RefreshStateAdapter extends TypeAdapter<RefreshState> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RefreshStateAdapter &&
+      other is DataSyncAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
