@@ -128,19 +128,19 @@ class MyData extends DataTableSource {
                   initialValue: items[index % controller.rowsPerPage.value]
                       .units
                       .toString())),
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .instructors
-                      ?.values
-                      .first
-                      .name)),
+          // DataCell(
+          //     onTap: () {},
+          //     CustomTextFormField(
+          //         onTapOutside: (e) {
+          //           controller.refresh();
+          //         },
+          //         onFieldSubmitted: (str) {},
+          //         enableBorder: false,
+          //         initialValue: items[index % controller.rowsPerPage.value]
+          //             .instructors
+          //             ?.values
+          //             .first
+          //             .name)),
           // DataCell(
           //     onTap: () {},
           //     CustomTextFormField(

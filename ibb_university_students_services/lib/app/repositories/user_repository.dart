@@ -195,12 +195,30 @@ class UserRepository {
 
   static Future<Result<Map>> fetchDashboardStudent({
     int? studentId,
+    String? name,
+    String? email,
+    int? dateOfBirth,
+    String? college,
+    int? phoneNumber,
+    int? page,
+    int? level,
+    int? section,
+    int? studyPlan,
+    int? roleId,
+    int? limit,
+    int? repeatYear,
+    String? enrollment,
+    String? studySystem,
+    String? sort,
+    String? order,
+    String? search,
     bool hardFetch = false,
   }) async {
     late Response? response;
     try {
       Map<int, Student> student = {};
-      response = await HttpProvider.get("get-student-panle");
+      response = await HttpProvider.get(
+          "get-student-panle?student_id=${studentId ?? ''}&study_plan_id=${studyPlan ?? ''}&student_level_id=${level ?? ''}&enrollment_year=${enrollment ?? ''}&sectionName=${section ?? ''}&studentSystem=${studySystem ?? ''}&user_name=${name ?? ''}&email=${email ?? ''}&data_of_birth=${dateOfBirth ?? ''}&collegeName=${college ?? ''}&phoneNumber=${phoneNumber ?? ''}&rolename=${roleId ?? ""}&repeat_years_count=${repeatYear ?? ""}&limit=${limit ?? ""}&orderBy=${order ?? ""}&sort=${sort ?? ""}&search=${search ?? ""}&page=$page");
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsStudent in response?.data['data']) {
           student[jsStudent['student_id']] = Student.fromJson(jsStudent);
@@ -310,5 +328,4 @@ class UserRepository {
     // return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
     //     false;
   }
-
 }

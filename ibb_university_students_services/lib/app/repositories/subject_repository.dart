@@ -139,11 +139,21 @@ class SubjectRepository {
   }
 
   static Future<Result<Map>> fetchDashboardSubject({
+    int? subjectId,
+    String? subjectName,
+    int? numberOfUnit,
+    String? description,
+    String? order,
+    String? sort,
+    String? search,
+    int? limit,
+    int? page,
     hardFetch = false,
   }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("get-subject-panle");
+      response = await HttpProvider.get(
+          "get-subject-panle?subject_id=${subjectId ?? ""}&subject_name=${subjectName ?? ""}&number_of_units=${numberOfUnit ?? ""}&subject_description=${description ?? ""}&orderBy=${order ?? ""}&sort=${sort ?? ""}&limit=${limit ?? ""}&search=${search ?? ""}&page=$page ");
       Map<int, Subject> subjects = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jSubject in response?.data["data"]) {

@@ -33,41 +33,31 @@ class DashboardSubjectsTableController extends GetxController
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "lecture_time",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Time",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_day",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Day",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_room",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Room",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
         value: "subject_id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Subject",
+              "Subject Id",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "subject_name",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Subject Name",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "number_of_units",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "The Units",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -97,7 +87,7 @@ class DashboardSubjectsTableController extends GetxController
   ];
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedOrder = "subject_id".obs;
   RxString selectedSort = "DESC".obs;
   RxInt availableRows = 0.obs;
   RxBool loadingState = true.obs;
@@ -147,21 +137,21 @@ class DashboardSubjectsTableController extends GetxController
         "Number Of Unit",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
-      DataColumn(
-          label: CustomText(
-        "Doctor",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Section",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Level",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
+      // DataColumn(
+      //     label: CustomText(
+      //   "Doctor",
+      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      // )),
+      // DataColumn(
+      //     label: CustomText(
+      //   "Section",
+      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      // )),
+      // DataColumn(
+      //     label: CustomText(
+      //   "Level",
+      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      // )),
       DataColumn(
           label: CustomText(
         "Description",
@@ -221,20 +211,20 @@ class DashboardSubjectsTableController extends GetxController
     } else if (res.statusCode == 404) {
       subjects.value = {};
       availableRows.value = 0;
-      fieldMessage.value = "this section and level not has Lectures";
+      fieldMessage.value = "this section and level not has Subjects";
       if (showSnakeBars) {
         showSnakeBar(
             title: "Not Found Lectures",
-            message: "this section and level doesn't has Lectures ");
+            message: "this section and level doesn't has Subjects ");
       }
     } else {
       subjects.value = {};
       availableRows.value = res.data["totalLectures"] ?? 0;
-      fieldMessage.value = "fetching lectures failed please check connection";
+      fieldMessage.value = "fetching Subjects failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Lectures Failed",
-            message: "fetching lectures failed please check connection ");
+            title: "Fetch Subjects Failed",
+            message: "fetching Subjects failed please check connection ");
       }
     }
     update(["DataTable"]);
@@ -355,7 +345,7 @@ class DashboardSubjectsTableController extends GetxController
 
   // Future<void> getDoctor() async {
   //   doctors =
-  //       await UserRepository.fetchDashboardDoctors().then((e) => e.data);
+  // await UserRepository.fetchDashboardDoctors().then((e) => e.data);
   //   if (doctors.isNotEmpty) {
   //     doctorId = Rx(doctors.values.first.id);
   //   } else {

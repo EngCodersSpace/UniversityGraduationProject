@@ -145,9 +145,10 @@ class MyData extends DataTableSource {
               },
               onFieldSubmitted: (str) {},
               enableBorder: false,
-              initialValue:
-                  items[index % controller.rowsPerPage.value].role?.name ??
-                      "")),
+              initialValue: items[index % controller.rowsPerPage.value]
+                  .role
+                  ?.nameData
+                  .toString())),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {

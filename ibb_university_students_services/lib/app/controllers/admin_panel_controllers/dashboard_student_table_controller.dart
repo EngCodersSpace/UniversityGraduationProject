@@ -140,6 +140,12 @@ class DashboardStudentTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
+          "college Name",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Section",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
@@ -152,13 +158,31 @@ class DashboardStudentTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
+          "Role",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Phone Number",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
       DataColumn(
         label: CustomText(
+          "Enrollment Year",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Student System",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Repeat Years",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
