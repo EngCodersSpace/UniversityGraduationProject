@@ -171,10 +171,10 @@ exports.getSubjectsByCriteriaPanle = async (req, res) => {
               Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_name'}, '$.${lang}'))`),
               { [Op.like]: `%${search}%` }
             ),
-            Sequelize.where(
-              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_description'}, '$.${lang}'))`),
-              { [Op.like]: `%${search}%` }
-            ),
+            // Sequelize.where(
+            //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'number_of_units'}, '$.${lang}'))`),
+            //   { [Op.like]: `%${search}%` }
+            // ),
 
           ]
         })

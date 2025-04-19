@@ -36,7 +36,6 @@ const checkPermission = (target, action) => async (req, res, next) => {
             return res.status(403).json({ error: 'Permission denied: Role not found' });
         }
 
-        console.log('\n \n \n \n userRole = ', userRole ,' \n \n \n \n ');
 
         const userPermissions = userRole.permissions
         .map(permission => permission.dataValues)  
