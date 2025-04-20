@@ -1,4 +1,4 @@
-const {subject,doctor,user,study_plan_elment}=require('../models');
+const {subject,doctor,user,section,level,study_plan_elment}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
 const { Sequelize,Op } = require("sequelize");
@@ -12,9 +12,10 @@ exports.createSubject=async (req, res) => {
         }
         const {} = req.body;
 
-        const targetLanguage = req.body.language === 'en'?'ar':'en';
-        const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
-        const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+        const targetLanguage = req.headers["accept-language"] === "en" ? "ar" : "en";
+
+        const translatedName = await translateText(req.body.subject_name, req.headers["accept-language"], targetLanguage);
+        const translatedDesc = await translateText(req.body.subject_description, req.headers["accept-language"], targetLanguage);
 
         const newSubject = await subject.create({
           subject_id: req.body.subject_id,
@@ -123,6 +124,8 @@ exports.getSubjectsByCriteriaPanle = async (req, res) => {
       subject_id,
       subject_name,
       number_of_units,
+      level_id,
+      section_id,
       page = 1,
       limit = 10,
       orderBy = "subject_id",
@@ -149,18 +152,14 @@ exports.getSubjectsByCriteriaPanle = async (req, res) => {
     const { count, rows: subjects } = await subject.findAndCountAll({
       where: {
         ...(subject_id && {
-          subject_id:  subject_id  
+          subject_id: subject_id  
         }),
-
         ...(subject_name && {
-          subject_name:  { [lang]: subject_name  }
+          subject_name: { [lang]: subject_name }
         }),
-
         ...(number_of_units && {
-          number_of_units:  number_of_units  
+          number_of_units: number_of_units  
         }),
-
-    
         ...(search && {
           [Op.or]: [
             Sequelize.where(
@@ -171,15 +170,26 @@ exports.getSubjectsByCriteriaPanle = async (req, res) => {
               Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_name'}, '$.${lang}'))`),
               { [Op.like]: `%${search}%` }
             ),
-            // Sequelize.where(
-            //   Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'number_of_units'}, '$.${lang}'))`),
-            //   { [Op.like]: `%${search}%` }
-            // ),
-
           ]
         })
       },
-      distinct: true, 
+      include: [
+        {
+          model: study_plan_elment,
+          // as: "study_plan_elment",
+          attributes: ["section_id","level_id"], 
+          required: true, 
+          where: {
+            ...(section_id && {
+              section_id: section_id
+            }),
+            ...(level_id &&{
+              level_id:level_id
+            })
+          }
+        }
+      ],
+      distinct: true,
       limit: limitNumber,
       offset: offset,
       order: [[validOrderBy, validSort]],
@@ -216,9 +226,10 @@ exports.updateSubject = async (req, res) => {
         return res.status(400).json({ message: 'Subject ID is required' });
       }
 
-      const targetLanguage = req.body.language === 'en'?'ar':'en';
-      const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
-      const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+      const targetLanguage = req.headers["accept-language"] === "en" ? "ar" : "en";
+
+      const translatedName = await translateText(req.body.subject_name, req.headers["accept-language"], targetLanguage);
+      const translatedDesc = await translateText(req.body.subject_description, req.headers["accept-language"], targetLanguage);
 
       const updateSubject = await subject.update({
         subject_id: req.body.subject_id,
