@@ -320,7 +320,16 @@ class DashboardStudentTableController extends GetxController
       return;
     }
 
-    Result res = await UserRepository.fetchDashboardStudent();
+    Result res = await UserRepository.fetchDashboardStudent(
+      section: (selectedSection.value == 0) ? null : selectedSection.value,
+      level: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+      hardFetch: false,
+    );
     if (res.statusCode == 200) {
       student.value = res.data["students"] ?? {};
       availableRows.value = res.data["totalStudent"] ?? 0;

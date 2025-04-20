@@ -204,7 +204,15 @@ class DashboardSubjectsTableController extends GetxController
       return;
     }
 
-    Result res = await SubjectRepository.fetchDashboardSubject();
+    Result res = await SubjectRepository.fetchDashboardSubject(
+      sectionid: (selectedSection.value == 0) ? null : selectedSection.value,
+      levelid: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+    );
     if (res.statusCode == 200) {
       subjects.value = res.data["subject"];
       availableRows.value = res.data["totalSubjects"] ?? 0;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/exam_table_view/exam_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/grad_table_view/grad_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/lecture_table_view/lecture_table_view.dart';
@@ -10,7 +11,6 @@ import 'package:ibb_university_students_services/app/views/admin_panel/library_t
 import 'package:ibb_university_students_services/app/views/admin_panel/main_view/main_view_component/tab_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/notification_table_view/notification_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/payment_table_view/payment_table_view.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/phone_number_table_view/phone_number_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_users_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/subject_table_view/subject_table_view.dart';
@@ -38,8 +38,9 @@ class DashboardMainView extends GetView<DashboardMainController> {
                   color: AppColors.inverseTabBackColor,
                   child: Column(
                     children: [
-                      TabViewComponent(tablename: "Rols Table", index: 0),
-                      // TabViewComponent(tablename: "Student Table", index: 1),
+                      TabViewComponent(tablename: "Rols Table", index: 9),
+                      TabViewComponent(tablename: "Doctor Table", index: 0),
+                      TabViewComponent(tablename: "Student Table", index: 1),
                       TabViewComponent(tablename: "Subject Table", index: 2),
                       TabViewComponent(tablename: "Study plan Table", index: 3),
                       TabViewComponent(tablename: "Lecture Table", index: 4),
@@ -48,8 +49,6 @@ class DashboardMainView extends GetView<DashboardMainController> {
                       TabViewComponent(tablename: "Library Table", index: 7),
                       TabViewComponent(
                           tablename: "Notification Table", index: 8),
-                      TabViewComponent(
-                          tablename: "Phone Number Table", index: 9),
                       TabViewComponent(tablename: "Payment Table", index: 10),
                     ],
                   ),
@@ -67,7 +66,7 @@ class DashboardMainView extends GetView<DashboardMainController> {
   }
 
   List screens = [
-    RoleUsersTableView(),
+    DoctorTableView(),
     const StudentTableView(),
     const SubjectTableView(),
     const StudyPlanTableView(),
@@ -76,7 +75,7 @@ class DashboardMainView extends GetView<DashboardMainController> {
     const GradTableView(),
     const LibraryTableView(),
     const NotificationTableView(),
-    const PhoneNumberTableView(),
+    RoleUsersTableView(),
     const PaymentTableView(),
   ];
 }

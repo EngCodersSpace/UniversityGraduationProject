@@ -208,11 +208,13 @@ class DashboardDoctorTableController extends GetxController
 
   Future<void> fetchDoctoreData({bool showSnakeBars = true}) async {
     Result results = await UserRepository.fetchDashboardDoctors(
-        order: selectedOrder.value,
-        sort: selectedSort.value,
-        search: searchController.text,
-        limit: rowsPerPage.value,
-        page: currentPage);
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      hardfetch: false,
+    );
     if (results.statusCode == 200) {
       doctors.value = results.data["Doctors"] ?? {};
       availableRows.value = results.data["totalDoctor"] ?? 0;
