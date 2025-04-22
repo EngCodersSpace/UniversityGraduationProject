@@ -49,7 +49,7 @@ class ExamTableView extends GetView<DashboardExamTableController> {
                           rowsPerPage: controller.rowsPerPage.value,
                           columnSpacing: controller.width * 0.05,
                           onPageChanged: controller.onPageChange,
-                          availableRowsPerPage: const <int>[5, 10, 20, 30],
+                          availableRowsPerPage: const <int>[5, 10, 20],
                           onRowsPerPageChanged: controller.onRowChange,
                           showCheckboxColumn: false,
                           columns: controller.kTableColumn,
@@ -105,6 +105,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -116,6 +117,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -127,6 +129,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -137,6 +140,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -147,6 +151,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -157,6 +162,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },

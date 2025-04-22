@@ -50,7 +50,7 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "All",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -60,7 +60,7 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -70,7 +70,7 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
   ];
@@ -420,24 +420,24 @@ class DashboardExamTableController extends GetxController
         hardFetch: false);
     if (res.statusCode == 200) {
       exams.value = res.data["exams"] ?? {};
+      availableRows.value = res.data["totalExams"];
     } else if (res.statusCode == 404) {
       exams.value = {};
-      availableRows.value = res.data["totalLectures"];
+      availableRows.value = 0;
       update(["DataTable"]);
-
-      fieldMessage.value = "this section and level not has Lectures";
+      fieldMessage.value = "this section and level not has Exams";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
-            message: "this section and level doesn't has Lectures ");
+            title: "Not Found Exams",
+            message: "this section and level doesn't has Exams ");
       }
     } else {
       exams.value = {};
-      fieldMessage.value = "fetching lectures failed please check connection";
+      fieldMessage.value = "fetching Exams failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Lectures Failed",
-            message: "fetching lectures failed please check connection ");
+            title: "Fetch Exams Failed",
+            message: "fetching exams failed please check connection ");
       }
     }
     update(["DataTable"]);

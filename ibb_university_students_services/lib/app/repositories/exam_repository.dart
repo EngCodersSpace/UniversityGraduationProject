@@ -278,7 +278,7 @@ class ExamRepository {
           Subject? subject =
               await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
                   .then((e) => e.data);
-          exams[jsExam["id"]] = Exam.fromJson(jsExam, subject: subject);
+          exams[jsExam['id']] = Exam.fromJson(jsExam, subject: subject);
         }
         return Result(
             data: {

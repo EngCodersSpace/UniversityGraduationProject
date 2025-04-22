@@ -227,7 +227,7 @@ class DashboardSubjectsTableController extends GetxController
       }
     } else {
       subjects.value = {};
-      availableRows.value = res.data["totalLectures"] ?? 0;
+      availableRows.value = res.data["totalSubjects"] ?? 0;
       fieldMessage.value = "fetching Subjects failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
