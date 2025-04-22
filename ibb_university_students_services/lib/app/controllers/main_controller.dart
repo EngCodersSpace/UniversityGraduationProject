@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_components/custom_float_action_button_location.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
@@ -32,9 +33,11 @@ class MainController extends GetxController {
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
-    Result res = await UserRepository.fetchUser();
-    if (res.statusCode == 200) {
-      user = res.data;
+    if(kIsWeb){
+      Result res = await UserRepository.fetchUser();
+      if (res.statusCode == 200) {
+        user = res.data;
+      }
     }
   }
 

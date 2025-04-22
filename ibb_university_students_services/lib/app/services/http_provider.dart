@@ -20,8 +20,8 @@ class HttpProvider {
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration? connectTimeout = const Duration(seconds: 10),
-    Duration? sendTimeout,
-    Duration? receiveTimeout,
+    Duration? sendTimeout = const Duration(seconds: 5),
+    Duration? receiveTimeout = const Duration(seconds: 5),
   }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
@@ -49,6 +49,11 @@ class HttpProvider {
           }
           return handler.resolve(
               Response(requestOptions: error.requestOptions, statusCode: 900));
+        }
+
+        if (error.type == DioExceptionType.connectionTimeout || error.type == DioExceptionType.receiveTimeout || error.type == DioExceptionType.sendTimeout ){
+          return handler.resolve(
+              Response(requestOptions: error.requestOptions, statusCode: 901,data: error.response?.data));
         }
 
         if (error.response?.statusCode == 401 &&

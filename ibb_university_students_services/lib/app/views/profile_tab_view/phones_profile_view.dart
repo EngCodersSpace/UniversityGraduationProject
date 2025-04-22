@@ -179,7 +179,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                           ),
                         ],
                       ),
-                      if (controller.user is Student) ...[
+                      if (controller.user != null && controller.user is Student) ...[
                         Row(
                           children: [
                             SizedBox(
@@ -252,8 +252,8 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ),
                             ),
                             CustomText(
-                              (controller.user as Doctor).academicDegree?.tr ??
-                                  "Unknown".tr,
+                              (controller.user != null)?(controller.user as Doctor).academicDegree?.tr ??
+                                  "Unknown".tr:"Unknown".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                             ),
@@ -280,10 +280,10 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ),
                             ),
                             CustomText(
-                              (controller.user as Doctor)
+                              (controller.user != null)?(controller.user as Doctor)
                                       .administrativePosition
                                       ?.tr ??
-                                  "Unknown".tr,
+                                  "Unknown".tr:"Unknown".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                             ),

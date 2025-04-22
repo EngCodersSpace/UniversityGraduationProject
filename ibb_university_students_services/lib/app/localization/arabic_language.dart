@@ -108,7 +108,7 @@ class Arabic {
     'Division': 'الشعبة',
     'Program': 'التخصص',
     'Year': 'السنة',
-    'Term': 'الفصل',
+    'Semester': 'الفصل',
     'Time': 'الوقت',
     'Date': 'التاريخ',
     '2ec': 'الثاني',

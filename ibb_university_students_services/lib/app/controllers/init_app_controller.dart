@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:ibb_university_students_services/app/services/data_sync_services.dart';
 import '../../firebase_options.dart';
 import '../services/hive_services.dart';
 import '../services/http_provider.dart';
@@ -25,8 +24,10 @@ class InitAppController extends GetxController {
 
       }
     });
+
     try {
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      await HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
       // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
@@ -41,7 +42,7 @@ class InitAppController extends GetxController {
       }
       await NotificationHandler.initialize();
 
-      await DataSyncServices.startSync();
+      // await DataSyncServices.startSync();
     } catch (e) {
       if (kDebugMode) {
         print('Initialization error: $e');

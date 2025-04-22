@@ -224,16 +224,6 @@ class WebLectureTableTabView extends GetView<LectureController> {
                               color: AppColors.inverseIconColor,
                               borderRadius: BorderRadius.circular(24),
                             ),
-                            child: Center(
-                              child: Obx(() => DropdownButton(
-                                    items: controller.years,
-                                    onChanged: controller.changeYear,
-                                    value: controller.selectedYear.value,
-                                    underline: const SizedBox(),
-                                    iconEnabledColor: AppColors.mainCardColor,
-                                    dropdownColor: AppColors.inverseCardColor,
-                                  )),
-                            ),
                           ),
                         ],
                       ),

@@ -143,7 +143,7 @@ class UserRepository {
   }
 
   static Future<Result<Map>> fetchDashboardDoctors({
-    bool hardfetch = false,
+    bool hardFetch = false,
   }) async {
     late Response? response;
     try {
@@ -202,6 +202,7 @@ class UserRepository {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
+
     if (_userBox?.get('currentUser') != null &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
@@ -237,7 +238,7 @@ class UserRepository {
           data: null,
           hasError: true,
           statusCode: response?.statusCode ?? 604,
-          message: response?.data["message"] ?? "error");
+          message: response?.statusMessage ?? "error");
     } catch (error) {
       return Result(
           hasError: true,

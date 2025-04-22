@@ -91,7 +91,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                         Row(
                           children: [
                             SizedBox(
-                                width: ((Get.width - 16) / 7) * 3.1,
+                                width: ((Get.width - 32) / 7) * 3,
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -106,7 +106,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width / 3.3,
+                                      width: ((Get.width - 16) / 7) * 3 *0.6,
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
@@ -126,15 +126,15 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                   ],
                                 )),
                             SizedBox(
-                              width: ((Get.width - 16) / 7) * 0.4,
+                              width: ((Get.width - 32) / 7) * 0.1,
                             ),
                             SizedBox(
-                                width: ((Get.width - 16) / 7) * 3.1,
+                                width: ((Get.width - 32) / 7) * 3.9,
                                 child: Row(
                                   children: [
                                     Expanded(
                                       child: CustomText(
-                                        "Term:",
+                                        "${"Semester".tr}:",
                                         style: AppTextStyles.secStyle(
                                             textHeader: AppTextHeaders.h3Bold),
                                       ),
@@ -144,7 +144,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: Get.width / 3.3,
+                                      width: ((Get.width - 16) / 7) * 3.8 * 0.6,
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
