@@ -5,23 +5,37 @@ import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
+import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
 class DashboardGradTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
   RxBool loadingState = true.obs;
+  RxMap<int, Grad> grads = RxMap({});
+  RxInt availableRows = 0.obs;
+  RxString fieldMessage = "".obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "".obs;
   RxString selectedOrder = "subject_id".obs;
   RxString selectedSort = "DESC".obs;
   Timer? _debounce;
+  RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
+  int currentPage = 1;
+  List<DataColumn> kTableColumn = [];
+  RxBool selectAll = false.obs;
+  RxSet<int> selectedRows = RxSet({});
+  ScrollController horizontal = ScrollController();
+  ScrollController vertical = ScrollController();
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
@@ -126,6 +140,78 @@ class DashboardGradTableController extends GetxController
     searchController.addListener(() {
       onSearch();
     });
+    kTableColumn = <DataColumn>[
+      DataColumn(
+        label: Obx(() => Checkbox(
+              value: selectAll.value,
+              onChanged: (isSelected) {
+                if (isSelected == null) return;
+                selectAll.value = isSelected;
+              },
+            )),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Grad ID",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        numeric: true,
+      ),
+      DataColumn(
+        label: CustomText(
+          "Student Name",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Subject Name",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Exam Grad",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Work Grad",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Term",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Section",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Level",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Year issue",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Status",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+    ];
     await initLevelDashboardMenuList();
     await initSectionDashboardMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
@@ -158,6 +244,54 @@ class DashboardGradTableController extends GetxController
     if (selectedLevel.value == null || selectedSection.value == null) {
       return;
     }
+
+    Result res = await GradRepository.fetchDashboardGrad(
+      sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
+      levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      term: (selectedTerm.value == "") ? "" : selectedTerm.value,
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      search: searchController.text,
+      hardfetch: false,
+    );
+    if (res.statusCode == 200) {
+      grads.value = res.data["grads"] ?? {};
+      availableRows.value = res.data["totalGrades"] ?? 0;
+    } else if (res.statusCode == 404) {
+      grads.value = {};
+      availableRows.value = 0;
+      fieldMessage.value = "this section and level not has Grads";
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Not Found Grads",
+            message: "this section and level doesn't has Grads ");
+      }
+    } else {
+      grads.value = {};
+      availableRows.value = res.data["totalGrades"] ?? 0;
+      fieldMessage.value = "fetching Grads failed please check connection";
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Fetch Grads Failed",
+            message: "fetching grad failed please check connection ");
+      }
+    }
+    update(["DataTable"]);
+  }
+
+  void onRowChange(int? value) async {
+    if (value != null) {
+      rowsPerPage.value = value;
+      await fetchGradData();
+      update(["DataTable"]);
+    }
+  }
+
+  void onPageChange(int page) async {
+    currentPage = (page ~/ rowsPerPage.value) + 1;
+    await fetchGradData();
   }
 
   void changeSection(int? val) async {

@@ -1,9 +1,9 @@
-
-
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 
 import '../subject_model/subject_model.dart';
 part 'grads_model.g.dart';
+
 @HiveType(typeId: 7)
 class Grad {
   Grad({
@@ -34,7 +34,7 @@ class Grad {
   @HiveField(7)
   int? workGrad;
 
-  factory Grad.fromJson(Map<String, dynamic> json) {
+  factory Grad.fromJson(Map<String, dynamic> json, {Student? student}) {
     return Grad(
       id: json['grad_id'],
       levelId: json['level_id'],

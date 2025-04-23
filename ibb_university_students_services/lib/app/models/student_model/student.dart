@@ -45,7 +45,9 @@ class Student extends User {
     super.updatedAt,
   });
 
-  factory Student.fromJson(Map<String, dynamic> json) {
+  factory Student.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return Student(
       id: json['user_id'],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
