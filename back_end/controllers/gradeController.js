@@ -52,7 +52,7 @@ exports.getAllGrades = async (req, res) => {
 
 
 exports.getGradesByCriteriaPanle = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade", "work_grade", "term", "subject_id"];
+  const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade","section_id","level_id", "work_grade", "term", "subject_id"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
@@ -95,6 +95,7 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
     const searchCondition = search
       ? {
           [Op.or]: [
+            { student_id: { [Op.like]: `%${search}%` } },
             { subject_id: { [Op.like]: `%${search}%` } },
             { term: { [Op.like]: `%${search}%` } },
             { status: { [Op.like]: `%${search}%` } },

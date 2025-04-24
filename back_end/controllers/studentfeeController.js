@@ -1,6 +1,5 @@
 // controllers/studentFeeController.js
 const { student_fee, student } = require('../models');
-// const { validationResult } = require('express-validator');
 
 exports.createStudentFee = async (req, res) => {
     try {
@@ -16,6 +15,7 @@ exports.createStudentFee = async (req, res) => {
                 Fee     :   fee
         });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -25,6 +25,7 @@ exports.getAllFees = async (req, res) => {
     try {
         const fees = await student_fee.findAll({
             where:{student_id:req.user.user_id},
+
         });
         res.status(200).json({
             message:'These all your Fees',
@@ -40,6 +41,7 @@ exports.getAllFeesOfStudent = async (req, res) => {
     try {
         const FEES = await student_fee.findAll({
             where:{student_id:req.body.student_id},
+            
         });
         if (!FEES.length) {
             return res.status(404).json({ message: 'No Fee found for this Student' });
@@ -49,6 +51,7 @@ exports.getAllFeesOfStudent = async (req, res) => {
             Fees:FEES
         });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -172,9 +175,6 @@ exports.getStudentFeesByCriteriaanle = async (req, res) => {
       res.status(500).json({ message: "Error retrieving student fees", error: error.message });
     }
 };
-
-
-
 
 exports.updateFee = async (req, res) => {
     try {

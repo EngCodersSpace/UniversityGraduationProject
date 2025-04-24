@@ -272,6 +272,8 @@ exports.registerDoctor = async (req, res) => {
       message: "Doctor registered successfully",
       user: newDoctor,
     });
+  
+    
   } catch (error) {
     console.error("Error during user registration:", error.message);
     res
