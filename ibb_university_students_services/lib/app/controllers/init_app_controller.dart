@@ -19,10 +19,7 @@ class InitAppController extends GetxController {
   Future<void> _initializeApp() async {
     Connectivity().onConnectivityChanged.listen((result) {
       if (result.contains(ConnectivityResult.none)) {
-
-      } else {
-
-      }
+      } else {}
     });
 
     try {

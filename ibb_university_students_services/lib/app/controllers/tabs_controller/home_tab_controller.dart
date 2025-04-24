@@ -150,4 +150,7 @@ class HomeTabController extends GetxController
     Get.toNamed("/student_result");
   }
 
+  void pepperTransactionsRoute() {
+    Get.toNamed("/pepper_transactions");
+  }
 }
