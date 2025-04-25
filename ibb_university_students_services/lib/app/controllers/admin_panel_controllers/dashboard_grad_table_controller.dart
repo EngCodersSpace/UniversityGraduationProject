@@ -9,9 +9,11 @@ import 'package:ibb_university_students_services/app/models/grads_model/grads_mo
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
@@ -134,8 +136,18 @@ class DashboardGradTableController extends GetxController
               ),
             ))),
   ];
+
+  //popup component
+  Map<String, Subject>? subjects;
+  Rx<String?> subjectId = Rx(null);
+  Map<int, Section> section = <int, Section>{}.obs;
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
+  List<Level>? level;
+  // ignore: non_constant_identifier_names
+  Rx<int?> LevelId = Rx(null);
+
   @override
-  // ignore: unnecessary_overrides
   void onInit() async {
     searchController.addListener(() {
       onSearch();
@@ -388,6 +400,37 @@ class DashboardGradTableController extends GetxController
   }
 
   Future<void> addClick() async {}
+
+  Future<void> getSubjects() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+    } else {
+      subjectId.value = null;
+    }
+  }
+
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels(hardFetch: false)
+        .then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      LevelId = RxInt(level?.first.id ?? 0);
+    } else {
+      LevelId.value = null;
+    }
+  }
+
   @override
   void export() {}
 

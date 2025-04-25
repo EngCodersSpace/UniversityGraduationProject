@@ -4,7 +4,7 @@ import 'package:ibb_university_students_services/app/models/student_model/studen
 import '../subject_model/subject_model.dart';
 part 'grads_model.g.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 9)
 class Grad {
   Grad({
     required this.id,
@@ -15,6 +15,8 @@ class Grad {
     this.examGrad,
     this.workGrad,
     this.isAbsent,
+    this.sectionId,
+    this.studentId,
   });
 
   @HiveField(0)
@@ -33,6 +35,10 @@ class Grad {
   int? examGrad;
   @HiveField(7)
   int? workGrad;
+  @HiveField(8)
+  int? sectionId;
+  @HiveField(9)
+  int? studentId;
 
   factory Grad.fromJson(Map<String, dynamic> json, {Student? student}) {
     return Grad(
@@ -44,6 +50,8 @@ class Grad {
       examGrad: json['exam_grade'],
       workGrad: json['work_grade'],
       isAbsent: json['is_absent'],
+      sectionId: json['section_id'],
+      studentId: json['student_id'],
     );
   }
 

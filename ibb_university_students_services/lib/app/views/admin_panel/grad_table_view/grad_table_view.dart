@@ -116,7 +116,7 @@ class MyData extends DataTableSource {
           //         },
           //         onFieldSubmitted: (str) {},
           //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value].student)),
+          //         initialValue: items[index % controller.rowsPerPage.value].stuent)),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -173,7 +173,7 @@ class MyData extends DataTableSource {
           //         onFieldSubmitted: (str) {},
           //         enableBorder: false,
           //         initialValue:
-          //             items[index % controller.rowsPerPage.value].setion )),
+          //             items[index % controller.rowsPerPage.value].section )),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {
