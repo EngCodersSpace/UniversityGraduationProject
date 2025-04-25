@@ -344,7 +344,6 @@ class DashboardStudentTableController extends GetxController
       }
     } else {
       student.value = {};
-      availableRows.value = res.data["totalLectures"] ?? 0;
       fieldMessage.value = "fetching Student failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(

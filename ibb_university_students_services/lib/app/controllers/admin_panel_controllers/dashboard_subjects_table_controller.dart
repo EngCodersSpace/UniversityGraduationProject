@@ -214,20 +214,19 @@ class DashboardSubjectsTableController extends GetxController
       search: searchController.text,
     );
     if (res.statusCode == 200) {
-      subjects.value = res.data["subject"];
-      availableRows.value = res.data["totalSubjects"] ?? 0;
+      subjects.value = res.data["subject"] ?? {};
+      availableRows.value = res.data["totalSubject"] ?? 0;
     } else if (res.statusCode == 404) {
       subjects.value = {};
       availableRows.value = 0;
       fieldMessage.value = "this section and level not has Subjects";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
+            title: "Not Found Subjects",
             message: "this section and level doesn't has Subjects ");
       }
     } else {
       subjects.value = {};
-      availableRows.value = res.data["totalSubjects"] ?? 0;
       fieldMessage.value = "fetching Subjects failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(

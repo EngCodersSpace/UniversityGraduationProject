@@ -270,7 +270,7 @@ class DashboardGradTableController extends GetxController
     );
     if (res.statusCode == 200) {
       grads.value = res.data["grads"] ?? {};
-      availableRows.value = res.data["totalGrades"] ?? 0;
+      availableRows.value = res.data["totalGrads"] ?? 0;
     } else if (res.statusCode == 404) {
       grads.value = {};
       availableRows.value = 0;
@@ -282,7 +282,6 @@ class DashboardGradTableController extends GetxController
       }
     } else {
       grads.value = {};
-      availableRows.value = res.data["totalGrades"] ?? 0;
       fieldMessage.value = "fetching Grads failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(

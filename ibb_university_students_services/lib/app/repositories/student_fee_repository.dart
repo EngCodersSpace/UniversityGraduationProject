@@ -227,4 +227,48 @@ class StudentFeeRepository {
           data: null);
     }
   }
+
+  static Future<Result<Map>> fetchDashboardPayment({
+    int? page,
+    int? limit,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("url"); //the url from post man
+      Map<int, StudentFee>? studentFee = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsStudentfee in response?.data['data']) {
+          studentFee[jsStudentfee["id"]] = StudentFee.fromJson(jsStudentfee);
+        }
+        return Result(
+          data: {
+            "studentFee": studentFee,
+            "totalStudentFee": response?.data["pagination"]["totalStudentFee"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "studentFee": studentFee,
+          "totalStudentFee": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
 }
