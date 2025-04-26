@@ -229,6 +229,13 @@ class StudentFeeRepository {
   }
 
   static Future<Result<Map>> fetchDashboardPayment({
+    int? studentId,
+    int? levelId,
+    String? term,
+    int? totalAmount,
+    int? amountPaid,
+    int? remainAmount,
+    String? receiptNum,
     int? page,
     int? limit,
     String? order,
@@ -238,7 +245,8 @@ class StudentFeeRepository {
   }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("url"); //the url from post man
+      response = await HttpProvider.get(
+          "get-Fees-panle?student_id=${studentId ?? ''}&level_fees_id=${levelId ?? ''}&term=${term ?? ''}&total_amount=${totalAmount ?? ''}&amount_paid=${amountPaid ?? ''}&remaining_amount=${remainAmount ?? ''}&receipt_number=${receiptNum ?? ''}&order=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&page=$page&seadrch=$search"); //the url from post man
       Map<int, StudentFee>? studentFee = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsStudentfee in response?.data['data']) {
@@ -247,7 +255,7 @@ class StudentFeeRepository {
         return Result(
           data: {
             "studentFee": studentFee,
-            "totalStudentFee": response?.data["pagination"]["totalStudentFee"],
+            "totalStudentFee": response?.data["pagination"]["totalStudentFees"],
           },
           hasError: false,
           statusCode: response?.statusCode,

@@ -141,7 +141,7 @@ class UserRepository {
   }
 
   static Future<Result<Student>> fetchStudents({
-    required int id,
+    int? id,
     bool hardfetch = false,
   }) async {
     late Response? response;

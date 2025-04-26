@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
+import 'package:ibb_university_students_services/app/models/student_model/student.dart';
+import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
@@ -29,31 +32,41 @@ class DashboardPaymentTableController extends GetxController
   List<DataColumn> kTableColumn = [];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "subject_id",
+        value: "payment_date",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Subject Id",
+              "payment date",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "subject_name",
+        value: "total_amount",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Subject Name",
+              "Total amount",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "number_of_units",
+        value: "amount_paid",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "The Units",
+              "Amount paid",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "receipt_number",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Receipt number",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -81,9 +94,16 @@ class DashboardPaymentTableController extends GetxController
               ),
             ))),
   ];
-  RxString selectedOrder = "subject_id".obs;
+  RxString selectedOrder = "payment_date".obs;
   RxString selectedSort = "DESC".obs;
   Timer? _debounce;
+
+  //popup component
+  List<Level>? level;
+  Rx<int?> levelId = Rx(null);
+  Map<int, Student> student = <int, Student>{};
+  Rx<int?> studentId = Rx(null);
+
   @override
   void onInit() async {
     searchController.addListener(() {
@@ -210,6 +230,19 @@ class DashboardPaymentTableController extends GetxController
   }
 
   void addClick() async {}
+
+  Future<void> getStudent() async {
+    student = await UserRepository.fetchStudents().then((e) => e.data ?? {});
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      levelId = Rx(level?.first.id ?? 0);
+    } else {
+      levelId.value = null;
+    }
+  }
 
   @override
   void export() {}
