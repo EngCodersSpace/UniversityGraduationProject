@@ -10,7 +10,6 @@ import 'package:ibb_university_students_services/app/models/student_fee/student_
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
@@ -231,9 +230,9 @@ class DashboardPaymentTableController extends GetxController
 
   void addClick() async {}
 
-  Future<void> getStudent() async {
-    student = await UserRepository.fetchStudents().then((e) => e.data ?? {});
-  }
+  // Future<void> getStudent() async {
+  //   student = await UserRepository.fetchAllStudent().then((e) => e.data ?? {});
+  // }
 
   Future<void> getLevel() async {
     level = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
