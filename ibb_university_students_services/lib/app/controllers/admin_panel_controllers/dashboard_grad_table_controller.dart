@@ -20,6 +20,7 @@ class DashboardGradTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxBool loadingState = true.obs;
   RxMap<int, Grad> grads = RxMap({});
   RxInt availableRows = 0.obs;

@@ -1,14 +1,16 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 part 'role.g.dart';
+
 @HiveType(typeId: 33)
 class Role {
   @HiveField(0)
   int id;
   @HiveField(1)
-  Map<String,dynamic>? nameData;
+  Map<String, dynamic>? nameData;
   @HiveField(2)
-  Map<String,List<String>> permissions;
+  Map<String, List<String>> permissions;
   @HiveField(3)
   String? createdAt;
   @HiveField(4)
@@ -22,15 +24,15 @@ class Role {
     this.updatedAt,
   });
 
-  String? get name{
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+  String? get name {
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return nameData?[currentLang];
   }
 
   factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
       id: json['id'],
-      // nameData: JsonUtils.tryJsonDecode(json['role_name']),
+      nameData: JsonUtils.tryJsonDecode(json['roleName']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       permissions: {},
@@ -45,9 +47,4 @@ class Role {
       "updated_at": updatedAt,
     };
   }
-
 }
-
-
-
-

@@ -255,7 +255,7 @@ class UserRepository {
         return Result(
           data: {
             "students": student,
-            "totalStudent": response?.data["pagination"]["totalstudents"],
+            "totalStudent": response?.data["pagination"]["totalStudents"],
           },
           hasError: false,
           statusCode: response?.statusCode,

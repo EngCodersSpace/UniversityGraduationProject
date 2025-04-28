@@ -15,7 +15,7 @@ import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
 class DashboardPaymentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
-  double get width => (Get.width - (Get.width * 2));
+  double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
   RxMap<int, StudentFee> studentFee = RxMap({});
   RxBool loadingstate = true.obs;

@@ -107,16 +107,18 @@ class MyData extends DataTableSource {
               enableBorder: false,
               initialValue:
                   items[index % controller.rowsPerPage.value].id.toString())),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value].stuent)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .studentId
+                      .toString())),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -163,17 +165,18 @@ class MyData extends DataTableSource {
               enableBorder: false,
               initialValue:
                   items[index % controller.rowsPerPage.value].term ?? "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].section )),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .sectionId
+                      .toString())),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {

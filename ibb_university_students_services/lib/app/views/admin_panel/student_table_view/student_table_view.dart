@@ -196,7 +196,7 @@ class MyData extends DataTableSource {
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
                       .role
-                      ?.nameData
+                      ?.name
                       .toString())),
           DataCell(
               onTap: () {},
