@@ -15,17 +15,17 @@ class SubjectTableView extends GetView<DashboardSubjectsTableController> {
     return Scaffold(
       body: Container(
         color: AppColors.tabBackColor,
-        width: Get.width,
-        height: Get.height,
+        width: controller.width,
+        height: controller.height,
         child: Column(
           children: [
             HeaderOfViewComponent(tableName: "Subject", controller: controller),
             SizedBox(
-              height: Get.height * 0.01,
+              height: controller.height * 0.01,
             ),
             SubjectTableFiltersComponent(),
             SizedBox(
-              height: Get.height * 0.01,
+              height: controller.height * 0.01,
             ),
             Expanded(
                 child: Scrollbar(
@@ -34,7 +34,7 @@ class SubjectTableView extends GetView<DashboardSubjectsTableController> {
                     trackVisibility: true,
                     child: SingleChildScrollView(
                       controller: controller.vertical,
-                      child: GetBuilder(
+                      child: GetBuilder<DashboardSubjectsTableController>(
                           id: "DataTable",
                           builder: (ctx) => Scrollbar(
                               controller: controller.horizontal,
@@ -73,25 +73,22 @@ class MyData extends DataTableSource {
     return DataRow.byIndex(
         index: index % controller.rowsPerPage.value,
         selected: controller.selectedRow
-            .contains(items[index % controller.rowsPerPage.value].id as int),
+            .contains(items[index % controller.rowsPerPage.value].id),
         onSelectChanged: (selected) {},
         cells: [
           DataCell(
             onTap: () {},
             Obx(() => Checkbox(
                   value: controller.selectedRow.contains(
-                          items[index % controller.rowsPerPage.value].id
-                              as int) ||
+                          items[index % controller.rowsPerPage.value].id) ||
                       controller.selectedAll.value,
                   onChanged: (isSelected) {
                     if (isSelected == true) {
-                      controller.selectedRow.add(
-                          items[index % controller.rowsPerPage.value].id
-                              as int);
+                      controller.selectedRow
+                          .add(items[index % controller.rowsPerPage.value].id);
                     } else {
                       controller.selectedRow.remove(
-                          items[index % controller.rowsPerPage.value].id
-                              as int);
+                          items[index % controller.rowsPerPage.value].id);
                     }
                   },
                 )),
@@ -130,39 +127,6 @@ class MyData extends DataTableSource {
                   initialValue: items[index % controller.rowsPerPage.value]
                       .units
                       .toString())),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value]
-          //             .instructors
-          //             ?.values
-          //             .first
-          //             .name)),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].Section.name)),//import the section name
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].Level.name)),//import the level name
           DataCell(
               onTap: () {},
               CustomTextFormField(

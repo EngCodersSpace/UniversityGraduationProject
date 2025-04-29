@@ -171,7 +171,7 @@ class DashboardGradTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
-          "Student Name",
+          "Student Id",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),

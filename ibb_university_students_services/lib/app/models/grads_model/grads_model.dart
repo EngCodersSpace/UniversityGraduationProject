@@ -40,13 +40,13 @@ class Grad {
   @HiveField(9)
   int? studentId;
 
-  factory Grad.fromJson(Map<String, dynamic> json, {Student? student}) {
+  factory Grad.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return Grad(
       id: json['grad_id'],
       levelId: json['level_id'],
       term: json['term'],
       yearOfIssue: json['year_of_issue'],
-      subject: Subject.fromJson(json['subject']),
+      subject: subject,
       examGrad: json['exam_grade'],
       workGrad: json['work_grade'],
       isAbsent: json['is_absent'],

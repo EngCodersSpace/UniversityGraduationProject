@@ -130,7 +130,7 @@ class MyData extends DataTableSource {
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
                       .subject
-                      ?.subjectNameData
+                      ?.subjectName
                       .toString())),
           DataCell(
               onTap: () {},
@@ -195,7 +195,8 @@ class MyData extends DataTableSource {
               onFieldSubmitted: (str) {},
               enableBorder: false,
               initialValue:
-                  items[index % controller.rowsPerPage.value].yearOfIssue)),
+                  items[index % controller.rowsPerPage.value].yearOfIssue ??
+                      "")),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {

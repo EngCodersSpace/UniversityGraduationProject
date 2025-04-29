@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
 import '../services/http_provider.dart';
@@ -77,10 +79,13 @@ class GradRepository {
       Map<int, Grad> grad = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsGrad in response?.data['data']) {
-          Student? student =
-              await UserRepository.fetchStudents(id: jsGrad["student_id"])
+          Subject? subject =
+              await SubjectRepository.fetchSubject(id: jsGrad["subject_id"])
                   .then((e) => e.data);
-          grad[jsGrad['id']] = Grad.fromJson(jsGrad, student: student);
+          grad[jsGrad['grad_id']] = Grad.fromJson(
+            jsGrad,
+            subject: subject,
+          );
         }
         return Result(
             data: {

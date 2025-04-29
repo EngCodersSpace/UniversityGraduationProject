@@ -156,10 +156,10 @@ class SubjectRepository {
     try {
       response = await HttpProvider.get(
           "get-subject-panle?subject_id=${subjectId ?? ''}&subject_name=${subjectName ?? ''}&number_of_units=${numberOfUnit ?? ''}&subject_description=${description ?? ''}&section_id=${sectionid ?? ''}&level_id=${levelid ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=${limit ?? ''}&search=${search ?? ''}&page=$page ");
-      Map<int, Subject> subjects = {};
+      Map<String, Subject> subjects = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jSubject in response?.data['data']) {
-          subjects[jSubject['id']] = Subject.fromJson(jSubject);
+          subjects[jSubject['subject_id']] = Subject.fromJson(jSubject);
         }
         return Result(
           data: {

@@ -260,9 +260,7 @@ class ExamRepository {
     int? levelId,
     int limit = 20,
     int? page,
-    String? year,
     String? term,
-    String? day,
     String? order,
     String? sort,
     String? search,
@@ -271,14 +269,14 @@ class ExamRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-exam-grouped-Panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page"); //add the required;
+          "get-exam-grouped-Panle"); //add the required; the issue of filters from ahmed
       Map<int, Exam> exams = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsExam in response?.data['data']) {
           Subject? subject =
               await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
                   .then((e) => e.data);
-          exams[jsExam['id']] = Exam.fromJson(jsExam, subject: subject);
+          exams[jsExam['exam_id']] = Exam.fromJson(jsExam, subject: subject);
         }
         return Result(
             data: {

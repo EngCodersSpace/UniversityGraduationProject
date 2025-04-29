@@ -420,7 +420,7 @@ class DashboardExamTableController extends GetxController
         hardFetch: false);
     if (res.statusCode == 200) {
       exams.value = res.data["exams"] ?? {};
-      availableRows.value = res.data["totalExams"];
+      availableRows.value = res.data["totalExams"] ?? 0;
     } else if (res.statusCode == 404) {
       exams.value = {};
       availableRows.value = 0;

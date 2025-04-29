@@ -124,8 +124,9 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
-                      .subject
-                      ?.subjectName)),
+                          .subject
+                          ?.subjectName ??
+                      "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -136,7 +137,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].date)),
+                      items[index % controller.rowsPerPage.value].date ?? "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -147,7 +148,8 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].day)),
+                      items[index % controller.rowsPerPage.value].examTime ??
+                          "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -158,7 +160,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].examTime)),
+                      items[index % controller.rowsPerPage.value].day ?? "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
@@ -169,7 +171,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].hall)),
+                      items[index % controller.rowsPerPage.value].hall ?? "")),
         ]);
   }
 

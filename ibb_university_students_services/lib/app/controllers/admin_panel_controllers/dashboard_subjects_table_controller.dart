@@ -27,8 +27,8 @@ class DashboardSubjectsTableController extends GetxController
   int currentPage = 1;
   List<DataColumn> kTableColumn = [];
   RxBool selectedAll = false.obs;
-  RxSet<int> selectedRow = RxSet({});
-  RxMap<int, Subject> subjects = RxMap({});
+  RxSet<String> selectedRow = RxSet({});
+  RxMap<String, Subject> subjects = RxMap({});
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> orderBy = [
@@ -110,7 +110,8 @@ class DashboardSubjectsTableController extends GetxController
   Map<int, Doctor> doctors = <int, Doctor>{};
   Rx<int?> doctorId = Rx(null);
 
-  void oninit() async {
+  @override
+  void onInit() async {
     searchController.addListener(() {
       onSearch();
     });
@@ -137,21 +138,6 @@ class DashboardSubjectsTableController extends GetxController
         "Number Of Unit",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
-      // DataColumn(
-      //     label: CustomText(
-      //   "Doctor",
-      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      // )),
-      // DataColumn(
-      //     label: CustomText(
-      //   "Section",
-      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      // )),
-      // DataColumn(
-      //     label: CustomText(
-      //   "Level",
-      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      // )),
       DataColumn(
           label: CustomText(
         "Description",
