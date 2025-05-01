@@ -34,7 +34,7 @@ class AssignmentsTabController extends GetxController {
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedSubject = Rx(null);
-  List<DropdownMenuItem<String>> subjectsItems = [];
+  Map<String, Subject>? subjects;
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
   Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
@@ -81,8 +81,8 @@ class AssignmentsTabController extends GetxController {
   Future<void> fetchAssignmentsData({bool force = false}) async {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
-      if (subjectsItems.isNotEmpty) {
-        selectedSubject.value = subjectsItems.first.value;
+      if (subjects?.values.isNotEmpty??false) {
+        selectedSubject.value = subjects?.values.first.value;
       }
     }
     if (selectedLevel.value == null) {
@@ -187,33 +187,13 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initSubjectDropdownMenuList() async {
-    List<Subject> subjects = await SubjectRepository.fetchSubjects()
-        .then((e) => e.data?.values.toList() ?? []);
-    subjectsItems = [];
-    selectedSubjectsItems = [];
-    for (Subject subj in subjects) {
-      subjectsItems.add(
-        DropdownMenuItem<String>(
-            value: subj.id,
-            child: CustomText(
-              subj.subjectName ?? "unknown".tr,
-              softWrap: false,
-              style:
-                  AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
-            )),
-      );
-      selectedSubjectsItems.add(DropdownMenuItem<String>(
-        value: subj.id,
-        child: SizedBox(
-          width: (Get.width / 3) - 30,
-          child: CustomText(
-            subj.subjectName ?? "",
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ));
+    subjects = {};
+    subjects =
+    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      selectedSubject = RxString(subjects!.values.first.id);
+    } else {
+      selectedSubject.value = null;
     }
   }
 

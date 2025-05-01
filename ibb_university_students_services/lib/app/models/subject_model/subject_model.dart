@@ -69,6 +69,8 @@ class Subject {
     );
   }
 
+  String? get value => null;
+
   /// Converts the Subject instance to a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
