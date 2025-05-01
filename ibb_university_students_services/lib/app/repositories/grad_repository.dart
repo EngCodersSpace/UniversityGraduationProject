@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
-import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
 import '../services/http_provider.dart';
 
@@ -75,7 +73,7 @@ class GradRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-grades-grouped-panle?student_id=${studentId ?? ''}&subject_id=${subjectId ?? ''}&section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&term=${term ?? ''}&order=${order ?? ''}&sort=${sort ?? ''}&search=${search ?? ''}&limit=$limit&page=$page&");
+          "get-grades-grouped-panle?student_id=${studentId ?? ''}&subject_id=${subjectId ?? ''}&section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&term=${term ?? ''}&order=${order ?? ''}&sort=${sort ?? ''}&search=$search &limit=$limit&page=$page&");
       Map<int, Grad> grad = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsGrad in response?.data['data']) {

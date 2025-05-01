@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 
 import '../subject_model/subject_model.dart';
 part 'grads_model.g.dart';

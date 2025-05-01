@@ -125,9 +125,8 @@ class MyData extends DataTableSource {
               },
               onFieldSubmitted: (str) {},
               enableBorder: false,
-              initialValue: items[index % controller.rowsPerPage.value]
-                  .dateOfBrith
-                  .toString())),
+              initialValue:
+                  items[index % controller.rowsPerPage.value].dateOfBrith)),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {
@@ -146,9 +145,10 @@ class MyData extends DataTableSource {
               onFieldSubmitted: (str) {},
               enableBorder: false,
               initialValue: items[index % controller.rowsPerPage.value]
-                  .role
-                  ?.nameData
-                  .toString())),
+                      .role
+                      ?.name
+                      .toString() ??
+                  "")),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {
@@ -166,9 +166,8 @@ class MyData extends DataTableSource {
               },
               onFieldSubmitted: (str) {},
               enableBorder: false,
-              initialValue: items[index % controller.rowsPerPage.value]
-                  .collegeNameData
-                  .toString())),
+              initialValue:
+                  items[index % controller.rowsPerPage.value].collegeName)),
           DataCell(CustomTextFormField(
               key: UniqueKey(),
               onTapOutside: (e) {

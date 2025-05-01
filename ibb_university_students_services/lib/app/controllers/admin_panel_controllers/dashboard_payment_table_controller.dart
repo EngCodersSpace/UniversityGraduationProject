@@ -29,6 +29,39 @@ class DashboardPaymentTableController extends GetxController
   RxSet<int> selectedRows = RxSet({});
   RxBool selectAll = false.obs;
   List<DataColumn> kTableColumn = [];
+  List<DropdownMenuItem<int>> levels = [];
+  List<DropdownMenuItem<String>> term = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "1st",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "2ec",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+  ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "payment_date",
@@ -95,6 +128,8 @@ class DashboardPaymentTableController extends GetxController
   ];
   RxString selectedOrder = "payment_date".obs;
   RxString selectedSort = "DESC".obs;
+  Rx<int?> selectedLevel = Rx(null);
+  Rx<String?> selectedTerm = Rx(null);
   Timer? _debounce;
 
   //popup component
@@ -157,6 +192,8 @@ class DashboardPaymentTableController extends GetxController
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
     ];
+    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
+    await initLevelDashboardMenuList();
     await fetchPaymentData();
     loadingstate.value = false;
     super.onInit();
@@ -171,7 +208,20 @@ class DashboardPaymentTableController extends GetxController
   Future<void> fetchPaymentData({
     bool showSnakeBars = true,
   }) async {
+    if (selectedLevel.value == null) {
+      await initLevelDashboardMenuList();
+      if (levels.isNotEmpty) {
+        selectedLevel.value = levels.first.value;
+      }
+    }
+
+    if (selectedLevel.value == null) {
+      return;
+    }
+
     Result res = await StudentFeeRepository.fetchDashboardPayment(
+      levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      term: (selectedTerm.value == "") ? "" : selectedTerm.value,
       order: selectedOrder.value,
       sort: selectedSort.value,
       limit: rowsPerPage.value,
@@ -201,6 +251,49 @@ class DashboardPaymentTableController extends GetxController
       }
     }
     update(["DataTable"]);
+  }
+
+  void changeTerm(String? val) async {
+    if (val == null) return;
+    selectedTerm.value = val;
+    await fetchPaymentData();
+  }
+
+  void changeLevel(int? val) async {
+    if (val == null) return;
+    selectedLevel.value = val;
+    await fetchPaymentData();
+  }
+
+  Future<void> initLevelDashboardMenuList({bool force = false}) async {
+    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
+        .then((e) => e.data ?? []);
+    levels = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
+    for (Level level in levelsData) {
+      levels.add(
+        DropdownMenuItem<int>(
+            value: level.id,
+            child: SizedBox(
+              width: (Get.width / 8) * 0.4,
+              child: CustomText(
+                level.name ?? "unknown",
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+              ),
+            )),
+      );
+    }
+    selectedLevel.value = levelsData.first.id;
   }
 
   void onPageChang(int page) async {

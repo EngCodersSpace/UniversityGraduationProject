@@ -219,7 +219,7 @@ class DashboardGradTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
-          "Status",
+          "Pass ",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),

@@ -31,7 +31,7 @@ class ExamTableView extends GetView<DashboardExamTableController> {
             Expanded(
               // ignore: sized_box_for_whitespace
               child: Container(
-                width: Get.width * 0.6,
+                width: Get.width * 0.7,
                 child: Scrollbar(
                   controller: controller.vertical,
                   thumbVisibility: true,

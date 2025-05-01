@@ -258,6 +258,9 @@ class ExamRepository {
   static Future<Result<Map>> fetchDashboardExam({
     int? sectionId,
     int? levelId,
+    String? subjectId,
+    int? examDay,
+    int? examDate,
     int limit = 20,
     int? page,
     String? term,
@@ -269,7 +272,7 @@ class ExamRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-exam-grouped-Panle"); //add the required; the issue of filters from ahmed
+          "get-exam-grouped-Panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&subject_id=${subjectId ?? ''}&exam_date${examDate ?? ''}&exam_day=${examDay ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=$search&page=$page"); //add the required; the issue of filters from ahmed
       Map<int, Exam> exams = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsExam in response?.data['data']) {
