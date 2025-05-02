@@ -19,12 +19,6 @@ module.exports = {
           },
           {
             target: 'lectures',
-            action: 'view',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            target: 'lectures',
             action: 'accessOldTables',
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -38,35 +32,11 @@ module.exports = {
           },
           {
             target: 'exams',
-            action: 'view',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            target: 'exams',
             action: 'accessOldTables',
             createdAt: new Date(),
             updatedAt: new Date(),
           },
-          /////////////payments/////////////
-          {
-            target: 'payments',
-            action: 'write',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            target: 'payments',
-            action: 'view',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            target: 'payments',
-            action: 'studentSearch',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
+
           ///////////////////////////assignments/////////
           {
             target: 'assignments',
@@ -83,6 +53,116 @@ module.exports = {
           {
             target: 'assignments',
             action: 'setStatus',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+
+
+          {
+            target: 'notification',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'sections',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'levels',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'study_plans',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'permissions',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'roles',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'users',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'subjects',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'students',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'phone_numbers',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'doctors',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'grades',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'study_plan_elments',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'prerequisites',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'student_fees',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'books',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'student_assignments',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'refresh_states',
+            action: 'write',
             createdAt: new Date(),
             updatedAt: new Date(),
           },

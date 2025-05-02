@@ -25,10 +25,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull:false,
       },
-      is_read:{
-        type:Sequelize.BOOLEAN,
-        defaultValue:false
-      },
+      // is_read:{
+      //   type:Sequelize.BOOLEAN,
+      //   defaultValue:false
+      // },
       type:{
         type:Sequelize.ENUM('System','Reminder','Alert'),
         defaultValue:'System',

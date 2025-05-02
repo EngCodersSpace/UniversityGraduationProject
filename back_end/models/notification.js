@@ -46,10 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull:false,
     },
-    is_read:{
-      type:DataTypes.BOOLEAN,
-      defaultValue:false
-    },
+    // is_read:{
+    //   type:DataTypes.BOOLEAN,
+    //   defaultValue:false
+    // },
     type:{
       type:DataTypes.ENUM('System','Reminder','Alert'),
       defaultValue:'System',
