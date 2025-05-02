@@ -58,6 +58,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'roleId',
       });
 
+      user.hasMany(models.paper_form, {
+        foreignKey: 'user_id',
+      });
+
+      user.hasMany(models.paper_form, {
+        foreignKey: 'current_user_id',
+      });
+
+      user.hasMany(models.paper_form_forward_step, {
+        foreignKey: 'user_id',
+      });
+      user.hasMany(models.paper_form_activitie, {
+        foreignKey: 'user_id',
+      });
+
+      
 
     }
   }
