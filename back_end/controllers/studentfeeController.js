@@ -25,7 +25,6 @@ exports.getAllFees = async (req, res) => {
     try {
         const fees = await student_fee.findAll({
             where:{student_id:req.user.user_id},
-
         });
         res.status(200).json({
             message:'These all your Fees',

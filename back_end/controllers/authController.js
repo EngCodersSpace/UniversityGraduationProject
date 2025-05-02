@@ -392,7 +392,6 @@ exports.uploadPhotoForuser = async (req, res) => {
 };
 
 ///////////////////////////
-
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
     host: "localhost", // MailHog or other SMTP server

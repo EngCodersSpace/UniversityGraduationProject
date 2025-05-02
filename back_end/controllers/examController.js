@@ -156,7 +156,6 @@ exports.getExamGroupedByCriteriaPanel = async (req, res) => {
         search,
       } = req.query;
   
-
   
       const pageNumber = parseInt(page, 10);
       let limitNumber = parseInt(limit, 10);
