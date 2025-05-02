@@ -436,6 +436,22 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  void _moreDeleteStudentAssignmentFileFromStorage(Map<String, dynamic>? data) async {
+    if (data == null) return;
+    if (data["id"] < 0) {
+      showSnakeBar(message: "File not Store Yet");
+    } else {
+      bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+          ?.studentFiles?[data["id"]]?.path);
+      if(res){
+        showSnakeBar(message: "File Deleted");
+        await assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+            ?.studentFiles?[data["id"]]?.checkDownloaded();
+      }
+      }
+    }
+
+
   void _moreSetCompletion(bool stat, Map<String, dynamic>? data) async {
     if (data?["assignment_id"] == null) return;
     if (((data?["studentsStatus"] ?? {}) as Map).isEmpty) return;
@@ -477,6 +493,9 @@ class AssignmentsTabController extends GetxController {
         break;
         case "DeleteAttachmentFileFromStorage":
         _moreDeleteAttachmentFileFromStorage(data);
+        break;
+      case "DeleteStudentAssignmentFileFromStorage":
+        _moreDeleteStudentAssignmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFile":
         _moreDeleteStudentAssignmentFile(data);
