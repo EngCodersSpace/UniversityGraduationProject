@@ -4,6 +4,6 @@ const CRUD = require('../controllers/notificationController');
 const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
-router.post('/create-notification', CRUD.createNotification);
+// router.post('/create-notification', CRUD.createNotification);
 
 module.exports = router;
