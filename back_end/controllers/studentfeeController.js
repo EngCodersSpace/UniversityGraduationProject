@@ -79,7 +79,7 @@ exports.getLastPayment = async (req, res) => {
 };
 
 
-exports.getStudentFeesByCriteriaanle = async (req, res) => {
+exports.getStudentFeesByCriteriaPanel = async (req, res) => {
     const ALLOWED_ORDER_FIELDS = ["payment_date", "total_amount", "amount_paid", "remaining_amount", "receipt_number"];
     const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
   
@@ -99,14 +99,14 @@ exports.getStudentFeesByCriteriaanle = async (req, res) => {
         search,
       } = req.query;
   
-      const whereClause = {};
-      if (student_id) whereClause.student_id = student_id;
-      if (level_fees_id) whereClause.level_fees_id = level_fees_id;
-      if (term) whereClause.term = term;
-      if (total_amount) whereClause.total_amount = total_amount;
-      if (amount_paid) whereClause.amount_paid = amount_paid;
-      if (remaining_amount) whereClause.remaining_amount = remaining_amount;
-      if (receipt_number) whereClause.receipt_number = receipt_number;
+    //   const whereClause = {};
+    //   if (student_id) whereClause.student_id = student_id;
+    //   if (level_fees_id) whereClause.level_fees_id = level_fees_id;
+    //   if (term) whereClause.term = term;
+    //   if (total_amount) whereClause.total_amount = total_amount;
+    //   if (amount_paid) whereClause.amount_paid = amount_paid;
+    //   if (remaining_amount) whereClause.remaining_amount = remaining_amount;
+    //   if (receipt_number) whereClause.receipt_number = receipt_number;
   
       const pageNumber = parseInt(page, 10);
       let limitNumber = parseInt(limit, 10);
@@ -133,12 +133,30 @@ exports.getStudentFeesByCriteriaanle = async (req, res) => {
   
       const { count, rows: studentFees } = await student_fee.findAndCountAll({
         where: {
-          [Op.and]: [whereClause, searchCondition],
+            ...(amount_paid&&{
+                amount_paid:amount_paid,
+            }),
+            ...(term&&{
+                term:term,
+            }),
+
+            ...(search &&{
+                [Op.or]: [
+                    { receipt_number: { [Op.like]: `%${search}%` } },
+                    { term: { [Op.like]: `%${search}%` } },
+                    { amount_paid:{ [Op.like]: `%${search}%` } },
+                    { amount_paid:{ [Op.like]: `%${search}%` } },
+                    { amount_paid:{ [Op.like]: `%${search}%` } },
+                    { amount_paid:{ [Op.like]: `%${search}%` } },
+                    { amount_paid:{ [Op.like]: `%${search}%` } },
+                ],
+            })
         },
         include: [
-          { model: student, as: "student" }, // Assuming 'student' is the associated model
-          { model: level, as: "level" }, // Assuming 'level' is the associated model
+          { model: student, as: "student" }, 
+          { model: level, as: "level" }, 
         ],
+        distinct: true,
         limit: limitNumber,
         offset: offset,
         order: [[validOrderBy, validSort]],
@@ -148,21 +166,21 @@ exports.getStudentFeesByCriteriaanle = async (req, res) => {
         return res.status(404).json({ message: "No student fees found for the specified criteria" });
       }
   
-      const studentFeeList = studentFees.map((fee) => ({
-        id: fee.id,
-        student_id: fee.student_id,
-        level_fees_id: fee.level_fees_id,
-        term: fee.term,
-        total_amount: fee.total_amount,
-        amount_paid: fee.amount_paid,
-        remaining_amount: fee.remaining_amount,
-        payment_date: fee.payment_date,
-        receipt_number: fee.receipt_number,
-      }));
+    //   const studentFeeList = studentFees.map((fee) => ({
+    //     id: fee.id,
+    //     student_id: fee.student_id,
+    //     level_fees_id: fee.level_fees_id,
+    //     term: fee.term,
+    //     total_amount: fee.total_amount,
+    //     amount_paid: fee.amount_paid,
+    //     remaining_amount: fee.remaining_amount,
+    //     payment_date: fee.payment_date,
+    //     receipt_number: fee.receipt_number,
+    //   }));
   
       res.status(200).json({
         message: "Student fees retrieved successfully",
-        data: studentFeeList,
+        data: studentFees,
         pagination: {
           totalStudentFees: count,
           totalPages: Math.ceil(count / limitNumber),

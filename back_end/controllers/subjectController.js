@@ -115,7 +115,7 @@ exports.getSubjectByfilter = async (req,res) => {
   }
 };
 
-exports.getSubjectsByCriteriaPanle = async (req, res) => {
+exports.getSubjectsByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["subject_id", "subject_name", "number_of_units"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
@@ -162,10 +162,8 @@ exports.getSubjectsByCriteriaPanle = async (req, res) => {
         }),
         ...(search && {
           [Op.or]: [
-            Sequelize.where(
-              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_id'}, '$.${lang}'))`),
-              { [Op.like]: `%${search}%` }
-            ),
+            { number_of_units: { [Op.like]: `%${search}%` } },
+            { subject_id: { [Op.like]: `%${search}%` } },
             Sequelize.where(
               Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_name'}, '$.${lang}'))`),
               { [Op.like]: `%${search}%` }

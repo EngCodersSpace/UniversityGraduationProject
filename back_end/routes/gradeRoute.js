@@ -15,7 +15,7 @@ router.get('/get-grade/:id',    CRUD.getGradeById);
 router.get('/get-grade-year',    CRUD.getGradeYear);
 router.get('/get-doctor-grades',  CRUD.getDoctorGrades);
 
-router.get('/get-grades-grouped-panle',   CRUD.getGradesByCriteriaPanle);
+router.get('/get-grades-grouped-panle',   CRUD.getGradesByCriteriaPanel);
 
 
 router.get('/get-section',    CRUD.getSectionOfCurrentUser);

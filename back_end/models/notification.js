@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull:false,
     },
+    //go to relation
     is_read:{
       type:DataTypes.BOOLEAN,
       defaultValue:false
@@ -54,6 +55,9 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.ENUM('System','Reminder','Alert'),
       defaultValue:'System',
     },
+
+
+
 
   }, {
     sequelize,

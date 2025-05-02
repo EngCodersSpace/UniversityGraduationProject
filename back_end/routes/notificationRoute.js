@@ -5,6 +5,5 @@ const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
 router.post('/create-notification', CRUD.createNotification);
-router.post('/insert-notification', CRUD.insertFCMToken);
 
 module.exports = router;

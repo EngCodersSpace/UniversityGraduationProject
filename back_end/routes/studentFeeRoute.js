@@ -10,7 +10,7 @@ router.post('/create-student-fee',  CRUD.createStudentFee);
 router.get('/get-all-fee', CRUD.getAllFees);
 router.get('/get-allFeeOfStudent', CRUD.getAllFeesOfStudent);
 router.get('/get-allFeeOfStudent-orderd', CRUD.getLastPayment);
-router.get('/get-Fees-panle', CRUD.getStudentFeesByCriteriaanle);
+router.get('/get-Fees-panle', CRUD.getStudentFeesByCriteriaPanel);
 
 router.put('/update-fee', CRUD.updateFee);
 router.delete('/delete-fee',  CRUD.deleteFee);

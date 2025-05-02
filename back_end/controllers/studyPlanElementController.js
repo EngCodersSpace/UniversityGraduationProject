@@ -113,10 +113,3 @@ exports.deleteStudyPlanElement = async (req, res) => {
     }
   
 };
-  
-
-  
-
-
-
-

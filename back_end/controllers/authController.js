@@ -507,7 +507,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Update the user's password
-    foundUser.password = bcrypt.hashSync(newPassword, 10);
+    foundUser.password = newPassword;
     foundUser.resetToken = null;
     foundUser.resetTokenExpiry = null; // Invalidate the token
     await foundUser.save();
@@ -522,6 +522,54 @@ exports.resetPassword = async (req, res) => {
 };
 ///////////////////////////
 
+// focus on resetPassword?
+
+exports.changePass = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    const token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Authorization token is required." });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.user_id;
+
+
+    const foundUser = await user.findOne({
+      where: { user_id: userId },
+      attributes: ['user_id', 'password'],
+    });
+    
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found " });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, foundUser.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Password is not Match with password in DATABASE" });
+    }
+
+    if (newPassword!==confirmPassword){
+      return res.status(404).json({ message: "New Password Do's not Match Confirm Password" });
+    }
+
+    foundUser.password = newPassword;
+    foundUser.resetToken = null;
+    foundUser.resetTokenExpiry = null; 
+    await foundUser.save();
+
+    res.status(200).json({
+      message: "change Password successful" 
+    });
+  } catch (error) {
+    console.error("Error during changing password:", error.message);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
 
 
 exports.logout = async (req, res) => {

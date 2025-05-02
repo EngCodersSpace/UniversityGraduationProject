@@ -18,7 +18,7 @@ router.delete('/users/:id', CRUD.deleteUser);
 
 router.get('/doctor', CRUD.getAllDoctors);
 router.get('/doctor/:id', CRUD.getDoctorById);
-router.get('/get-doctors-panle', CRUD.getDoctorsByCriteriaPanle);
+router.get('/get-doctors-panle', CRUD.getDoctorsByCriteriaPanel);
 
 router.put('/doctor/:id', CRUD.updateDoctor);
 router.delete('/doctor/:id', CRUD.deleteDoctor);
@@ -27,7 +27,7 @@ router.delete('/doctor/:id', CRUD.deleteDoctor);
 
 router.get('/student', CRUD.getAllStudents);
 router.get('/student/:id', CRUD.getStudentById);
-router.get('/get-student-panle', CRUD.getStudentsByCriteriaPanle);
+router.get('/get-student-panle', CRUD.getStudentsByCriteriaPanel);
 
 router.put('/student/:id', CRUD.updateStudent);
 router.delete('/student/:id', CRUD.deleteStudent);

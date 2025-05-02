@@ -234,7 +234,7 @@ exports.getAllDoctors = async (req, res) => {
 
  
 
-exports.getDoctorsByCriteriaPanle = async (req, res) => {
+exports.getDoctorsByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "doctor_id",
     "academic_degree",
@@ -547,7 +547,7 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
-exports.getStudentsByCriteriaPanle = async (req, res) => {
+exports.getStudentsByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "enrollment_year",
     "student_id",
@@ -641,7 +641,6 @@ exports.getStudentsByCriteriaPanle = async (req, res) => {
             {
               model: role,
               as: "role",
-              attributes: ["roleName"],
               required: true,
               where: {
                 ...(rolename && {

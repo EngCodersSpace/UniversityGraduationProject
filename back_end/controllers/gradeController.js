@@ -51,7 +51,7 @@ exports.getAllGrades = async (req, res) => {
 }; 
 
 
-exports.getGradesByCriteriaPanle = async (req, res) => {
+exports.getGradesByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade","section_id","level_id", "work_grade", "term", "subject_id"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
@@ -77,6 +77,9 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
     if (section_id) whereClause.section_id = section_id;
     if (level_id) whereClause.level_id = level_id;
     // if (year_of_issue) whereClause.year_of_issue = year_of_issue;
+
+    // const lang = req.headers["accept-language"] || "en"; 
+
 
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
@@ -118,6 +121,78 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
       order: [[validOrderBy, validSort]],
     });
 
+
+    // const { count1, rows: students } = await student.findAndCountAll({
+    //   where: {
+    //     ...(student_level_id && {
+    //       student_level_id: student_level_id 
+    //     }),
+    //     ...(study_plan_id && {
+    //       study_plan_id: study_plan_id 
+    //     }),
+    //     ...(enrollment_year && {
+    //       enrollment_year:  enrollment_year 
+    //     }),
+    //     ...(studentSystem && {
+    //       student_system:  { [lang]: studentSystem  }
+    //     }),
+    
+    //     ...(search && {
+    //       [Op.or]: [
+    //         Sequelize.where(
+    //           Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+    //           { [Op.like]: `%${search}%` }
+    //         ),
+
+    //       ]
+    //     })
+    //   },
+    //   include: [
+    //     {
+    //       model: user,
+    //       as: "user",
+    //       required: true,
+    //       attributes: ["user_name", "email", "date_of_birth", "collegeName", "user_section_id", "roleId"],
+    //       include: [
+    //         {
+    //           model: section,
+    //           as: "section",
+    //           attributes: ["section_name"],
+    //           required: true,
+    //           where: {
+    //             ...(sectionName && {
+    //               section_name: { [lang]: sectionName }
+    //             })
+    //           }
+    //         },
+    //         {
+    //           model: role,
+    //           as: "role",
+    //           attributes: ["roleName"],
+    //           required: true,
+    //           where: {
+    //             ...(rolename && {
+    //               roleName: rolename
+    //             })
+    //           }
+    //         },
+    //         {
+    //           model: phone_number,
+    //           as: "phone_numbers",
+    //           attributes: ["phone_number"],
+    //           // required: true,
+    //         },
+    //       ]
+    //     }
+    //   ],
+    //   distinct: true, 
+    //   limit: limitNumber,
+    //   offset: offset,
+    //   order: [[validOrderBy, validSort]],
+    // });
+
+
+
     if (!grades.length) {
       return res.status(404).json({ message: "No grades found for the specified criteria" });
     }
@@ -151,6 +226,9 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
     res.status(500).json({ message: "Error retrieving grades", error: error.message });
   }
 };
+
+
+
 
 
 //   additional function i will deleted if it is unneccessary 
