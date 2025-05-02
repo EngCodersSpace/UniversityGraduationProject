@@ -1,135 +1,129 @@
 const { notification, user ,student} = require('../models');
 const admin = require('../config/firebase'); 
 
-// Create a new notification and send it to users based on section_id, level_id, or roleId    info type
-exports.createNotification = async (req, res) => {
 
-  try {
-    const newNotification = await notification.create({
-      sender_id :req.user.user_id,
-      title:req.body.title,
-      message:req.body.message,
-      type:req.body.type,
-    });
-
-    const whereClause = {};
-    if (req.body.section_id) whereClause.user_section_id = req.body.section_id;
-    if (req.body.roleId) whereClause.roleId = req.body.roleId;
-
-    const includeClause = [];
-    if (req.body.level_id) {
-      includeClause.push({
-        model: student, 
-        where: { level_id :req.body.level_id}, 
-        include: [
-          {
-            model: level, 
-            as: 'level',
-          },
-        ],
-      });
-    }
-
-    const recipientUsers = await user.findAll({
-      where: whereClause, 
-      include: includeClause,
-      attributes: ['user_id', 'fcm_token'], 
-    });
-
-    if (!recipientUsers || recipientUsers.length === 0) {
-      return res.status(404).json({ message: 'No valid recipients found' });
-    }
-
-    const fcmTokens = recipientUsers
-      .map((user) => user.fcm_token)
-      .filter((token) => token); 
-
-    if (fcmTokens.length === 0) {
-      return res.status(404).json({ message: 'No valid FCM tokens found' });
-    }
-
-    const payload = {
-      notification: {
-        title: req.body.title,
-        body: req.body.message,
-      },
-      data: { // message to refresh   handel (use collapse )auto delay before sending data 
-        type: req.body.type, 
-        sender_id:req.user.user_id.toString(),
-      },
-      tokens: fcmTokens, 
-    };
-
-    const response = await admin.messaging().sendMulticast(payload);
-    console.log('Notifications sent successfully:', response);
-
-    res.status(201).json({ message: 'Notification created and sent successfully', data: newNotification });
-  } catch (error) {
-    console.error('Error creating or sending notifications:', error.message);
-    res.status(500).json({ message: 'Error creating or sending notifications', error: error.message });
-  }
-};
-// add ( topic - specific - condition)   (byrole=topic in frontend)
-// specific -> user_id
-// topic    -> (is student or doctor)
-// if s     -> ( sections - levels )
-// 
-
-// push data without add to db after each refresh  ()
-// push notification when important things
-
-
-
-
-// Get all notifications
+// GET all notifications
 exports.getAllNotifications = async (req, res) => {
   try {
-    const notifications = await notification.findAll({
-      include: {
-        model: user,
-        attributes: ['user_id', 'name', 'email'], // Add user fields you want to include
-      },
-    });
-    res.status(200).json({ data: notifications });
+    const notifications = await notification.findAll();
+    res.status(200).json({  message: 'retrieving notifications Successfully', data: notifications });
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving notifications', error: error.message });
   }
 };
 
-// Get a single notification by ID user_is
+// GET a single notification by ID (mesaage_id)
 exports.getNotificationById = async (req, res) => {
   try {
     const { id } = req.params;
     const notif = await notification.findOne({
       where: { message_id: id },
-      include: {
-        model: user,
-        attributes: ['user_id', 'name', 'email'],
-      },
     });
 
     if (!notif) {
       return res.status(404).json({ message: 'Notification not found' });
     }
 
-    res.status(200).json({ data: notif });
+    res.status(200).json({ message: 'Get Notification Successfully',data: notif });
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving notification', error: error.message });
   }
 };
 
-// Update a notification  //?
+// GET by (user_id)
+exports.getNotificationsBySender = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await notification.findAndCountAll({
+      where: { sender_id: user_id },
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+      include: [{
+        model: user,
+        as: 'user',
+        attributes: ['user_id']
+      }]
+    });
+
+    res.status(200).json({
+      total: count,
+      page,
+      totalPages: Math.ceil(count / limit),
+      notifications: rows
+    });
+
+  } catch (error) {
+    console.error('[Get Notifications Error]', error);
+    res.status(500).json({
+      message: 'Failed to fetch notifications',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// GET by (Topic)
+exports.getNotificationsByTopic = async (req, res) => {
+  try {
+    const { topic } = req.params;
+    const { type } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const whereClause = {
+      targetType: 'topic',
+      targetValue: topic
+    };
+
+    if (type) {
+      whereClause.type = type;
+    }
+
+    const { count, rows } = await notification.findAndCountAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset,
+      include: [{
+        model: user,
+        as: 'user',
+        attributes: ['user_id']
+      }]
+    });
+
+    res.status(200).json({
+      total: count,
+      page,
+      totalPages: Math.ceil(count / limit),
+      notifications: rows
+    });
+
+  } catch (error) {
+    console.error('[Get Notifications Error]', error);
+    res.status(500).json({
+      message: 'Failed to fetch notifications', error:error.message
+    });
+  }
+};
+
+
+// Update a notification  
 exports.updateNotification = async (req, res) => {
   try {
     const { id } = req.params;
-    const { sender_id, title, message, is_read, type } = req.body;
+    const { sender_id, title, message, type } = req.body;
 
     const notif = await notification.findByPk(id);
     if (!notif) {
       return res.status(404).json({ message: 'Notification not found' });
     }
 
-    await notif.update({ sender_id, title, message, is_read, type });
+    await notif.update({ sender_id, title, message, type });
     res.status(200).json({ message: 'Notification updated successfully', data: notif });
   } catch (error) {
     res.status(500).json({ message: 'Error updating notification', error: error.message });
@@ -155,13 +149,127 @@ exports.deleteNotification = async (req, res) => {
 
 
 
+// Middleware function
+async function getNotificationRecipients({ targetType, roleid, user_id, section_id, level_id }) {
+  switch (targetType) {
+    case 'topic':
+      return await user.findAll({ 
+        where: { roleId: roleid },
+        attributes: ['user_id', 'fcm_token'] 
+      });
+      
+    case 'specific':
+      const userData = await user.findOne({ 
+        where: { user_id },
+        attributes: ['user_id', 'fcm_token'] 
+      });
+      return userData ? [userData] : [];
+      
+    case 'condition':
+      return await user.findAll({
+        where: { user_section_id: section_id },
+        include: [{
+          model: student,
+          where: { student_level_id:level_id }
+        }],
+        attributes: ['user_id', 'fcm_token']
+      });
+      
+    default:
+      return [];
+  }
+}
+
+
+
+// system type
+exports.sendSystemNotification = async (req, res) => {
+  try {
+    const recipients = await getNotificationRecipients(req.body);
+    const fcmTokens = recipients.map(u => u.fcm_token).filter(Boolean);
+
+    if (!fcmTokens.length) {
+      return res.status(404).json({ message: 'No active devices found' });
+    }
+
+    const response = await admin.messaging().sendMulticast({
+      data: {
+        type: 'system_refresh',
+        message: req.body.message || 'Data updated'
+      },
+      android: {
+        collapseKey: 'data_refresh',
+        priority: 'normal'
+      },
+      tokens: fcmTokens
+    });
+
+    res.status(200).json({
+      devices: fcmTokens.length,
+      failed: response.failureCount
+    });
+    
+  } catch (error) {
+    console.error('[System Push Error]', error);
+    res.status(500).json({ 
+      error: 'System notification failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : null
+    });
+  }
+};
+
+// info type
+exports.createInfoNotification = async (req, res) => {
+  try {
+    const dbRecord = await notification.create({
+      sender_id: req.user.user_id,
+      title: req.body.title,
+      message: req.body.message,
+      type: 'info'
+    });
+
+    const recipients = await getNotificationRecipients(req.body);
+    const fcmTokens = recipients.map(u => u.fcm_token).filter(Boolean);
+
+    if (fcmTokens.length) {
+      await admin.messaging().sendMulticast({
+        notification: {
+          title: req.body.title,
+          body: req.body.message
+        },
+        data: {
+          notification_id: dbRecord.message_id.toString(),
+          type: 'user_alert'
+        },
+        tokens: fcmTokens
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      notification: dbRecord,
+      recipients: recipients.length
+    });
+    
+  } catch (error) {
+    console.error('[Info Push Error]', error);
+    res.status(500).json({
+      error: 'Notification failed',
+      saved_to_db: !!dbRecord, 
+      details: process.env.NODE_ENV === 'development' ? error.message : null
+    });
+  }
+};
+
+
+
+// admin panel
 exports.getNotificationsByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "message_id",
     "sender_id",
     "title",
     "message",
-    "is_read",
     "type",
   ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
@@ -172,7 +280,6 @@ exports.getNotificationsByCriteriaPanel = async (req, res) => {
       sender_id,
       title,
       message,
-      is_read,
       type,
       page = 1,
       limit = 10,
@@ -209,9 +316,6 @@ exports.getNotificationsByCriteriaPanel = async (req, res) => {
         ...(sender_id && {
           sender_id: sender_id 
         }),
-        ...(is_read && {
-          is_read: is_read 
-        }),
         ...(type && {
           type: type 
         }),
@@ -222,7 +326,6 @@ exports.getNotificationsByCriteriaPanel = async (req, res) => {
             { sender_id: { [Op.like]: `%${search}%` } },
             { title: { [Op.like]: `%${search}%` } },
             { message: { [Op.like]: `%${search}%` } },
-            { is_read: { [Op.like]: `%${search}%` } },
             { type: { [Op.like]: `%${search}%` } },        
           ]
         })
