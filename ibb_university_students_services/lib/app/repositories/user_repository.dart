@@ -169,6 +169,65 @@ class UserRepository {
     }
   }
 
+  // static Future<Result<Student>> fetchStudentsForPayment({
+  //   bool hardfetch = false,
+  // }) async {
+  //   late Response? response;
+  //   try {
+  //     response = await HttpProvider.get("student/200");
+  //     if (response?.statusCode == 200) {
+  //       Student? student = Student.fromJson(response?.data["data"]);
+  //       return Result(
+  //           data: student,
+  //           hasError: false,
+  //           statusCode: response?.statusCode,
+  //           message: response?.data["message"] ?? "error");
+  //     }
+  //     return Result(
+  //         data: null,
+  //         hasError: true,
+  //         statusCode: response?.statusCode,
+  //         message: response?.data["message"] ?? "error");
+  //   } catch (error) {
+  //     return Result(
+  //         hasError: true,
+  //         statusCode: response?.statusCode,
+  //         message: error.toString(),
+  //         data: null);
+  //   }
+  // }
+
+  // static Future<Result<Student>> fetchAllStudent({
+  //   bool hardFetch = false,
+  // }) async {
+  //   late Response? response;
+  //   try {
+  //     response = await HttpProvider.get("student");
+  //     if (response?.statusCode == 200) {
+  //       Student student = Student.fromJson(response?.data);
+  //       return Result(
+  //         data: student,
+  //         hasError: false,
+  //         statusCode: response?.statusCode,
+  //         message: response?.data["message"] ?? "error",
+  //       );
+  //     }
+  //     return Result(
+  //       data: null,
+  //       hasError: true,
+  //       statusCode: response?.statusCode,
+  //       message: response?.data["message"] ?? "error",
+  //     );
+  //   } catch (error) {
+  //     return Result(
+  //       hasError: true,
+  //       statusCode: response?.statusCode,
+  //       message: error.toString(),
+  //       data: null,
+  //     );
+  //   }
+  // }
+
   static Future<Result<Map>> fetchDashboardDoctors({
     int? doctorId,
     String? acadimicDegree,

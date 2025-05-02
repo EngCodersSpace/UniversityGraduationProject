@@ -29,7 +29,7 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                   width: 3,
                 )),
             child: SizedBox(
-                height: Get.height * 0.9,
+                height: Get.height * 0.99,
                 width: Get.width * 0.4,
                 child: SafeArea(
                     minimum: const EdgeInsets.all(12),
@@ -63,6 +63,16 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                             focusName: controller.emailFocus,
                             inputType: TextInputType.emailAddress,
                           ),
+                          PopupAddStudentComponent(
+                              name: "Role",
+                              controlName: controller.studentrole,
+                              focusName: controller.roleFocus,
+                              inputType: TextInputType.number),
+                          PopupAddStudentComponent(
+                              name: "college",
+                              controlName: controller.studentcollege,
+                              focusName: controller.collegeFocus,
+                              inputType: TextInputType.text),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -244,6 +254,12 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                             controlName: controller.studentPhone,
                             focusName: controller.phoneFocus,
                             inputType: TextInputType.phone,
+                          ),
+                          PopupAddStudentComponent(
+                            name: "Student System",
+                            controlName: controller.studentsystem,
+                            focusName: controller.systemFocus,
+                            inputType: TextInputType.text,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

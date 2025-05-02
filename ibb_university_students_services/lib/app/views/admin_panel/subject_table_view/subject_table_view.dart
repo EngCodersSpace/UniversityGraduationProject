@@ -28,30 +28,34 @@ class SubjectTableView extends GetView<DashboardSubjectsTableController> {
               height: controller.height * 0.01,
             ),
             Expanded(
-                child: Scrollbar(
+                child: Container(
+              width: controller.width * 0.9,
+              padding: EdgeInsets.all(5),
+              child: Scrollbar(
+                  controller: controller.vertical,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
                     controller: controller.vertical,
-                    thumbVisibility: true,
-                    trackVisibility: true,
-                    child: SingleChildScrollView(
-                      controller: controller.vertical,
-                      child: GetBuilder<DashboardSubjectsTableController>(
-                          id: "DataTable",
-                          builder: (ctx) => Scrollbar(
+                    child: GetBuilder<DashboardSubjectsTableController>(
+                        id: "DataTable",
+                        builder: (ctx) => Scrollbar(
+                            controller: controller.horizontal,
+                            thumbVisibility: true,
+                            trackVisibility: true,
+                            child: PaginatedDataTable(
                               controller: controller.horizontal,
-                              thumbVisibility: true,
-                              trackVisibility: true,
-                              child: PaginatedDataTable(
-                                controller: controller.horizontal,
-                                rowsPerPage: controller.rowsPerPage.value,
-                                columnSpacing: controller.width * 0.05,
-                                onPageChanged: controller.onPageChang,
-                                availableRowsPerPage: <int>[5, 10, 20, 30],
-                                onRowsPerPageChanged: controller.onRowChange,
-                                showCheckboxColumn: false,
-                                columns: controller.kTableColumn,
-                                source: MyData(),
-                              ))),
-                    )))
+                              rowsPerPage: controller.rowsPerPage.value,
+                              columnSpacing: controller.width * 0.05,
+                              onPageChanged: controller.onPageChang,
+                              availableRowsPerPage: <int>[5, 10, 20, 30],
+                              onRowsPerPageChanged: controller.onRowChange,
+                              showCheckboxColumn: false,
+                              columns: controller.kTableColumn,
+                              source: MyData(),
+                            ))),
+                  )),
+            ))
           ],
         ),
       ),

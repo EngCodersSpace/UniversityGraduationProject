@@ -12,6 +12,7 @@ import 'package:ibb_university_students_services/app/repositories/level_reposito
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/payment_table_view/payment_table_component/add_payment_table_card.dart';
 
 class DashboardPaymentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -129,14 +130,54 @@ class DashboardPaymentTableController extends GetxController
   RxString selectedOrder = "payment_date".obs;
   RxString selectedSort = "DESC".obs;
   Rx<int?> selectedLevel = Rx(null);
-  Rx<String?> selectedTerm = Rx(null);
+  Rx<String?> selectedTerm = "".obs;
   Timer? _debounce;
 
   //popup component
   List<Level>? level;
   Rx<int?> levelId = Rx(null);
-  Map<int, Student> student = <int, Student>{};
-  Rx<int?> studentId = Rx(null);
+  Student? student;
+  RxString addTerm = "".obs;
+  List<DropdownMenuItem<String>> addterm = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "1st",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "2ec",
+              style: AppTextStyles.secStyle(
+                textHeader: AppTextHeaders.h3Bold,
+              ),
+            ))),
+  ];
+  TextEditingController studentId = TextEditingController();
+  TextEditingController amountPaid = TextEditingController();
+  TextEditingController payDate = TextEditingController();
+  TextEditingController reciptNum = TextEditingController();
+  FocusNode idFocus = FocusNode();
+  FocusNode amountFocus = FocusNode();
+  FocusNode dateFocus = FocusNode();
+  FocusNode reciptFocus = FocusNode();
 
   @override
   void onInit() async {
@@ -192,8 +233,8 @@ class DashboardPaymentTableController extends GetxController
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
     ];
-    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     await initLevelDashboardMenuList();
+    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     await fetchPaymentData();
     loadingstate.value = false;
     super.onInit();
@@ -215,9 +256,7 @@ class DashboardPaymentTableController extends GetxController
       }
     }
 
-    if (selectedLevel.value == null) {
-      return;
-    }
+    if (selectedLevel.value == null) return;
 
     Result res = await StudentFeeRepository.fetchDashboardPayment(
       levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
@@ -256,7 +295,7 @@ class DashboardPaymentTableController extends GetxController
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    await fetchPaymentData();
+    fetchPaymentData();
   }
 
   void changeLevel(int? val) async {
@@ -321,10 +360,19 @@ class DashboardPaymentTableController extends GetxController
     fetchPaymentData();
   }
 
-  void addClick() async {}
+  void addClick() async {
+    await getLevel();
+    Get.dialog(PopUpAddPaymentCard());
+  }
+
+  void changeAddTerm(String? val) async {
+    if (val == null) return;
+    addTerm.value = val;
+  }
 
   // Future<void> getStudent() async {
-  //   student = await UserRepository.fetchAllStudent().then((e) => e.data ?? {});
+  //   student =
+  //       await UserRepository.fetchStudentsForPayment().then((e) => e.data);
   // }
 
   Future<void> getLevel() async {
@@ -335,6 +383,8 @@ class DashboardPaymentTableController extends GetxController
       levelId.value = null;
     }
   }
+
+  Future<void> addPayment() async {}
 
   @override
   void export() {}

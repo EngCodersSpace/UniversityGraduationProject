@@ -90,6 +90,12 @@ class DashboardStudentTableController extends GetxController
   TextEditingController studentDOB = TextEditingController();
   TextEditingController studentEmail = TextEditingController();
   TextEditingController studentPhone = TextEditingController();
+  TextEditingController studentsystem = TextEditingController();
+  TextEditingController studentrole = TextEditingController();
+  TextEditingController studentcollege = TextEditingController();
+  FocusNode roleFocus = FocusNode();
+  FocusNode collegeFocus = FocusNode();
+  FocusNode systemFocus = FocusNode();
   FocusNode idFocus = FocusNode();
   FocusNode nameFocus = FocusNode();
   FocusNode dateFocus = FocusNode();

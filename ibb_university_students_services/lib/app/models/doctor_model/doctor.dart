@@ -44,9 +44,15 @@ class Doctor extends User {
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     List<String> numbers = [];
-    for (Map num in json['phone_numbers']) {
-      numbers.add(num["phone_number"]);
+
+    if (json['phone_numbers'] != null && json['phone_numbers'] is List) {
+      for (var item in json['phone_numbers']) {
+        if (item is Map && item.containsKey("phone_number")) {
+          numbers.add(item["phone_number"]);
+        }
+      }
     }
+
     return Doctor(
       id: json['user_id'],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),

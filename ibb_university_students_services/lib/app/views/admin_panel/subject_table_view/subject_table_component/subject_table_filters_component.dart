@@ -125,7 +125,7 @@ class SubjectTableFiltersComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.19,
+            width: Get.width * 0.27,
           ),
           IconButton(
             onPressed: () {
