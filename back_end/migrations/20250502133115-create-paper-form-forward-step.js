@@ -2,14 +2,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('notifications', {
-      message_id: {
+    await queryInterface.createTable('paper_form_forward_steps', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sender_id: {
+      form_type_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'paper_form_types',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      },
+      step_order:{
+        type:Sequelize.INTEGER,
+      },
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
@@ -18,23 +30,18 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      title: {
-        type: Sequelize.STRING(100)
-      },
-      message: {
-        type: Sequelize.TEXT,
+      is_final_step:{
+        type:Sequelize.BOOLEAN,
         allowNull:false,
+        defaultValue:false,
       },
-      // is_read:{
-      //   type:Sequelize.BOOLEAN,
-      //   defaultValue:false
-      // },
-      type:{
-        type:Sequelize.ENUM('System','Reminder','Alert'),
-        defaultValue:'System',
+      not:{
+        type:Sequelize.TEXT,
+        allowNull:true,
       },
+      
 
-
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -46,6 +53,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('notifications');
+    await queryInterface.dropTable('paper_form_forward_steps');
   }
 };

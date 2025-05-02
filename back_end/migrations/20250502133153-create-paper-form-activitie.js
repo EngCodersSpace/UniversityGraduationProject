@@ -2,14 +2,23 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('notifications', {
-      message_id: {
+    await queryInterface.createTable('paper_form_activities', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sender_id: {
+      form_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'paper_forms',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      },
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
@@ -18,21 +27,14 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      title: {
-        type: Sequelize.STRING(100)
+      action:{
+        type:Sequelize.ENUM('approved','rejected','commented'),
       },
-      message: {
-        type: Sequelize.TEXT,
-        allowNull:false,
+      comment:{
+        type:Sequelize.TEXT,
+        allowNull:true,
       },
-      // is_read:{
-      //   type:Sequelize.BOOLEAN,
-      //   defaultValue:false
-      // },
-      type:{
-        type:Sequelize.ENUM('System','Reminder','Alert'),
-        defaultValue:'System',
-      },
+
 
 
       createdAt: {
@@ -46,6 +48,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('notifications');
+    await queryInterface.dropTable('paper_form_activities');
   }
 };

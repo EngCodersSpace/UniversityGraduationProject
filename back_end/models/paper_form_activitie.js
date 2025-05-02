@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class notification extends Model {
+  class paper_form_activitie extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,26 +11,32 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
-      //(1)Relationship One-to-Many between "notification table" and  "user table"
-      notification.belongsTo(models.user, {
-        foreignKey: 'sender_id',
-        targetKey: 'user_id',
-
+      paper_form_activitie.belongsTo(models.paper_form, {
+        foreignKey: 'form_id',
       });
 
+      paper_form_activitie.belongsTo(models.user, {
+        foreignKey: 'user_id',
+      });
     }
   }
-  notification.init({
-
-
-    message_id: {
+  paper_form_activitie.init({
+    id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    sender_id: {
+    form_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'paper_forms',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    user_id: {
       type: DataTypes.INTEGER,
       references: {
         model: 'users',
@@ -39,25 +45,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    title: {
-      type: DataTypes.STRING(100)
+    action: {
+      type: Sequelize.ENUM('approved', 'rejected', 'commented'),
     },
-    message: {
+    comment: {
       type: DataTypes.TEXT,
-      allowNull:false,
+      allowNull: true,
     },
-    // is_read:{
-    //   type:DataTypes.BOOLEAN,
-    //   defaultValue:false
-    // },
-    type:{
-      type:DataTypes.ENUM('System','Reminder','Alert'),
-      defaultValue:'System',
-    },
-
   }, {
     sequelize,
-    modelName: 'notification',
+    modelName: 'paper_form_activitie',
   });
-  return notification;
+  return paper_form_activitie;
 };

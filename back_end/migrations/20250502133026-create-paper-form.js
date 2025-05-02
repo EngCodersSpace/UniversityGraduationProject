@@ -2,45 +2,51 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('student_assignments', {
+    await queryInterface.createTable('paper_forms', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      student_id: {
+      form_type_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          model: 'students',
-          key: 'student_id',
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-      },
-      assignment_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'assignments',
+          model: 'paper_form_types',
           key: 'id',
         },
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'user_id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      },
+      form_data: {
+        type: Sequelize.JSON,
+      },
       status: {
-        type: Sequelize.ENUM('accepted', 'rejected', 'not submitted', 'pending'),
-        allowNull: false,
-        defaultValue: 'not submitted',
+        type: Sequelize.ENUM('pending', 'approved', 'rejected', 'cancelled')
       },
-      is_completed: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
+      current_user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'user_id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
-
-
+      current_step: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
 
 
 
@@ -55,6 +61,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('student_assignments');
+    await queryInterface.dropTable('paper_forms');
   }
 };
