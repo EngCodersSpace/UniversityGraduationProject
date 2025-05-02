@@ -236,17 +236,8 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
-    const levelName = await level.findOne({ where: { id: req.query.level_id } });
-
-    if (!sectionName || !levelName) {
-      throw new Error("Section or Level not found with the provided IDs.");
-    }
-    const sectionNameObj = JSON.parse(sectionName.section_name); 
-    const sectionName1 = sectionNameObj.en; 
-    const request=`${sectionName1}/${levelName.level_name}`;
     
-    uploadFields('assignments/attachment-files', request ).single('file')(req, res, async (err) => {
+    uploadFields('assignments', 'attachment-files' ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -254,28 +245,78 @@ exports.uploadFileForAssignment = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ message: 'No file provided for upload.' });
       }
-
+     
       try {
-        const newFile = await assignment_file.create({
-          assignment_id: req.query.assignment_id,
-          attachment: req.file.path,
-          attachment_hash: req.file.hash,
-          original_name:req.file.originalName
+        const assignmentIds = req.query.assignment_ids ? req.query.assignment_ids.split(',') : [];
+    
+        if (assignmentIds.length === 0) {
+          return res.status(400).json({ message: 'No assignment IDs provided.' });
+        }
+    
+        // Process file upload if present
+        let fileData = null;
+        if (req.file) {
+          fileData = {
+            path: req.file.path,
+            hash: req.file.hash,
+            original_name: req.file.originalname
+          };
+        }
+    
+        const assignments = await assignment.findAll({
+          where: { id: assignmentIds },
+          attributes: ['id', 'section_id', 'level_id']
         });
-
-        await upsertRefreshState("assignment", {
-          section_id: sectionName , 
-          level_id:  levelName     
-        });
-
-        res.status(201).json({
-          message: 'File uploaded successfully.',
-          file: {
-            id: newFile.id,
-            path: newFile.attachment,
-            hash: newFile.attachment_hash,
-          },
-        });
+    
+        if (assignments.length !== assignmentIds.length) {
+          return res.status(404).json({ message: 'One or more assignment IDs not found' });
+        }
+    
+        const fileRecords = [];
+        const refreshStates = new Set();
+    
+        // Create file records only if file was uploaded
+        if (fileData) {
+          for (const assignmentRecord of assignments) {
+            const newFile = await assignment_file.create({
+              assignment_id: assignmentRecord.id,
+              attachment: fileData.path,  // Same path for all
+              attachment_hash: fileData.hash,
+              original_name: fileData.original_name
+            });
+            fileRecords.push(newFile);
+            refreshStates.add(`${assignmentRecord.section_id}_${assignmentRecord.level_id}`);
+          }
+        }
+    
+        // Refresh states if needed
+        if (refreshStates.size > 0) {
+          await Promise.all(
+            Array.from(refreshStates).map(combo => {
+              const [section_id, level_id] = combo.split('_');
+              return upsertRefreshState("assignment", { section_id, level_id });
+            })
+          );
+        }
+    
+        const response = {
+          message: fileData 
+            ? 'File uploaded and attached to assignments successfully.' 
+            : 'Assignments processed successfully (no file uploaded).',
+        };
+    
+        if (fileData) {
+          response.file = {
+            path: fileData.path,
+            hash: fileData.hash,
+            original_name: fileData.original_name,
+            assignment_count: fileRecords.length
+          };
+          response.assignment_files = fileRecords.map(f => f.id);
+        }
+    
+        res.status(201).json(response);
+        
       } catch(error){
         res.status(500).json({ message: 'Internal server Error.', error: error.message });
       }
@@ -382,18 +423,18 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    // const sectionName = await section.findOne({ where: { id: req.query.section_id } });
-    // const levelName = await level.findOne({ where: { id: req.query.level_id } });
+    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
+    const levelName = await level.findOne({ where: { id: req.query.level_id } });
 
-    // if (!sectionName || !levelName) {
-    //   throw new Error("Section or Level not found with the provided IDs.");
-    // }
+    if (!sectionName || !levelName) {
+      throw new Error("Section or Level not found with the provided IDs.");
+    }
 
-    // const sectionNameObj = JSON.parse(sectionName.section_name); 
-    // const sectionName1 = sectionNameObj.en; 
-    // const request=`${sectionName1}/${levelName.level_name}`;
+    const sectionNameObj = JSON.parse(sectionName.section_name); 
+    const sectionName1 = sectionNameObj.en; 
+    const request=`${sectionName1}/${levelName.level_name}`;
 
-    uploadFields('assignments/students-attachment-files', '' ).single('file')(req, res, async (err) => {
+    uploadFields('assignments/students-attachment-files', request ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
