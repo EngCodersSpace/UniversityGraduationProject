@@ -248,6 +248,40 @@ class UserRepository {
     }
   }
 
+  static Future<Result<void>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String passwordConfirmation,
+}) async {
+
+    late Response? response;
+    try {
+      response = await HttpProvider.get("reset-password",data: {
+        "oldPassword":oldPassword,
+        "newPassword":newPassword,
+        "confirmPassword":passwordConfirmation,
+
+});
+      if (response?.statusCode == 200) {
+          return Result(
+              hasError: false,
+              statusCode: response?.statusCode,
+              message: "successful");
+
+      }
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? 604,
+          message: response?.statusMessage ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: 604,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<bool> isCredentialsCached() async {
     Box box = await Hive.openBox('rememberMe');
     bool isCredentialsCached =

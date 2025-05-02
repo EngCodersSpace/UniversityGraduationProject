@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,26 +61,20 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               ? AppColors.tabBackColor
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage: ((controller
-                                                      .user?.profileImage !=
-                                                  null) &&
-                                              (controller.user?.profileImage !=
-                                                  ""))
-                                          ? AssetImage(
-                                              controller.user?.profileImage ??
-                                                  "")
-                                          : null,
-                                      child: ((controller.user?.profileImage !=
-                                                  null) &&
-                                              (controller.user?.profileImage !=
-                                                  ""))
-                                          ? null
-                                          : CustomText(
-                                              controller.user?.name?[0] ??
-                                                  "".toUpperCase(),
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
-                                            ),
+                                      child:CachedNetworkImage(
+                                        imageUrl: controller.user?.profileImage??"",
+                                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) => CustomText(
+                                            controller.user?.name?[0] ??
+                                                "".toUpperCase(),
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
+                                        ),
+                                        // height: (Get.height/5)*0.4,
+
+                                        fit: BoxFit.cover,
+                                      )
+
                                     )
                                   ],
                                 ),

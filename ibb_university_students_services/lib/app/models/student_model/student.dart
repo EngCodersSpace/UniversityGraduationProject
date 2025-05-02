@@ -53,7 +53,7 @@ class Student extends User {
       email: json['email'],
       role: Role.fromJson(json['role']),
       phones: json['phones'],
-      // profileImage: json['profile_picture'],
+      profileImage: json['profile_picture'],
       studyPlaneId: json['study_plan_id'],
       level: Level.fromJson(json["level"]),
       collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
