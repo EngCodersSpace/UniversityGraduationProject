@@ -392,6 +392,7 @@ exports.uploadPhotoForuser = async (req, res) => {
 };
 
 ///////////////////////////
+
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
     host: "localhost", // MailHog or other SMTP server
@@ -482,16 +483,18 @@ exports.verifyResetToken = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     // Get the JWT token from headers
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Authorization token is required." });
-    }
+    // const token = req.headers.authorization.split(" ")[1];
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: "Authorization token is required." });
+    // }
+    // // Verify the JWT token
+    // const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    // const userId1 = decoded.user_id;
 
-    // Verify the JWT token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const userId = decoded.user_id;
+    const userId = req.user.user_id ;
+
 
     // Validate passwords
     const { newPassword, confirmPassword } = req.body;
@@ -520,6 +523,7 @@ exports.resetPassword = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
 ///////////////////////////
 
 // focus on resetPassword?
@@ -528,16 +532,16 @@ exports.changePass = async (req, res) => {
   try {
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Authorization token is required." });
-    }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const userId = decoded.user_id;
-
+    // const token = req.headers.authorization.split(" ")[1];
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: "Authorization token is required." });
+    // }
+    // const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    // const userId = decoded.user_id;
+    
+    const userId = req.user.user_id ;
 
     const foundUser = await user.findOne({
       where: { user_id: userId },

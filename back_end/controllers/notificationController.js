@@ -9,7 +9,6 @@ exports.createNotification = async (req, res) => {
       sender_id :req.user.user_id,
       title:req.body.title,
       message:req.body.message,
-      is_read:req.body.is_read,
       type:req.body.type,
     });
 
@@ -54,7 +53,7 @@ exports.createNotification = async (req, res) => {
         title: req.body.title,
         body: req.body.message,
       },
-      data: {
+      data: { // message to refresh   handel (use collapse )auto delay before sending data 
         type: req.body.type, 
         sender_id:req.user.user_id.toString(),
       },
@@ -70,9 +69,15 @@ exports.createNotification = async (req, res) => {
     res.status(500).json({ message: 'Error creating or sending notifications', error: error.message });
   }
 };
-
-
+// add ( topic - specific - condition)   (byrole=topic in frontend)
+// specific -> user_id
+// topic    -> (is student or doctor)
+// if s     -> ( sections - levels )
 // 
+
+// push data without add to db after each refresh  ()
+// push notification when important things
+
 
 
 
@@ -251,7 +256,3 @@ exports.getNotificationsByCriteriaPanel = async (req, res) => {
       .json({ message: "Error retrieving notifications", error: error.message });
   }
 };
-
-
-
-
