@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     action: {
-      type: Sequelize.ENUM('approved', 'rejected', 'commented'),
+      type: DataTypes.ENUM('approved', 'rejected', 'commented'),
     },
     comment: {
       type: DataTypes.TEXT,
