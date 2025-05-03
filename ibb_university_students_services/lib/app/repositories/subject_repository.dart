@@ -183,7 +183,7 @@ class SubjectRepository {
     } catch (error) {
       return Result(
           hasError: true,
-          statusCode: response?.statusCode,
+          statusCode: _fetchError,
           message: error.toString(),
           data: null);
     }
