@@ -323,7 +323,7 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
                                           ? controller.uploadAssignmentsFiles()
                                           : controller
                                               .uploadStudentAssignmentsFiles(),
-                                      text: "Upload All".tr,
+                                      text: "Upload".tr,
                                     ),
                                     CustomButton(
                                       onPress: () => Get.back(result: null),

@@ -84,7 +84,7 @@ class AssignmentStudentList extends GetView<AssignmentsTabController> {
                   ),
                 ),
                 Divider(
-                  color: AppColors.inverseCardColor,
+                  color: AppColors.inverseCardColor.withAlpha(30),
                 ),
               ],
             );

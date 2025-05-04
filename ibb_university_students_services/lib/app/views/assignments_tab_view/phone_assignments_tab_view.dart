@@ -78,6 +78,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
@@ -125,7 +126,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width / 4,
+                                    width: Get.width / 5,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
@@ -143,7 +144,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   ),
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
-                                    width: (Get.width * 0.45),
+                                    width: (Get.width /3),
                                     onSelected: (String i,v){
                                       controller.selectedSubject.value = i;
                                     },

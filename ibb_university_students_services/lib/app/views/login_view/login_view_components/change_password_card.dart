@@ -57,9 +57,10 @@ class PopUpChangePasswordCard extends GetView<ProfileController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.oldPassword,
+                                isPassword: true,
                                 validator: Validators.validatePassword,
                                 labelText: "Old Password".tr,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 focusNode: controller.oldPasswordFocus,
                                 onFieldSubmitted: (e) {
                                   controller.newPasswordFocus.requestFocus();
@@ -82,6 +83,7 @@ class PopUpChangePasswordCard extends GetView<ProfileController> {
                               CustomTextFormField(
                                 controller: controller.newPassword,
                                 validator: Validators.validatePassword,
+                                isPassword: true,
                                 keyboardType: TextInputType.text,
                                 labelText: "New Password".tr,
                                 focusNode: controller.newPasswordFocus,
@@ -106,11 +108,12 @@ class PopUpChangePasswordCard extends GetView<ProfileController> {
                               CustomTextFormField(
                                 controller: controller.passwordConfirmation,
                                 validator: (conf)=>Validators.confirmPassword(controller.newPassword.text, conf??""),
+                                isPassword: true,
                                 keyboardType: TextInputType.text,
                                 labelText: "Password Confirmation".tr,
                                 focusNode: controller.passwordConfirmationFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.passwordConfirmationFocus.requestFocus();
+                                  controller.changePassword();
                                 },
                                 width: (Get.width-12)*0.46,
                               ),

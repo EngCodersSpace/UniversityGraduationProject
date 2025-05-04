@@ -39,37 +39,33 @@ class PhoneProfileView extends GetView<ProfileController> {
                           SizedBox(
                             height: height * 0.06,
                           ),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                height: height * 0.2,
-                                width: width * 0.7,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                      width: 3, color: AppColors.tabBackColor),
+                          Container(
+                            height: height * 0.2,
+                            width: width * 0.7,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(
+                                  width: 3, color: AppColors.tabBackColor),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: CachedNetworkImage(
+                                imageUrl: controller.user?.profileImage ?? "",
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Center(
+                                  child: CustomText(
+                                      controller.user?.name?[0] ??
+                                          "".toUpperCase(),
+                                      style: AppTextStyles.mainStyle(
+                                          textHeader: TextHeaders(
+                                              fontSize: 80,
+                                              fontWeight: FontWeight.bold),
+                                          height: 0)),
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: controller.user?.profileImage ?? "",
-                                  placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) => Center(
-                                    child: CustomText(
-                                        controller.user?.name?[0] ??
-                                            "".toUpperCase(),
-                                        style: AppTextStyles.mainStyle(
-                                            textHeader: TextHeaders(
-                                                fontSize: 80,
-                                                fontWeight: FontWeight.bold),
-                                            height: 0)),
-                                  ),
-                                  // height: (Get.height/5)*0.4,
-
-                                  fit: BoxFit.cover,
-                                ),
+                                fit: BoxFit.cover,
                               ),
-                            ],
+                            ),
                           ),
                           SizedBox(
                             height: height * 0.01,

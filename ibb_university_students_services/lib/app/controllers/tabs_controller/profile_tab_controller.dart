@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../../models/helper_models/result.dart';
 import '../../views/login_view/login_view_components/change_password_card.dart';
 
@@ -40,12 +41,17 @@ class ProfileController extends GetxController {
     Get.dialog(PopUpChangePasswordCard());
   }
 
-  void changePassword() {
-    if (formKey.currentState!.validate()) {
-      UserRepository.changePassword(
+  void changePassword() async{
+    if (formKey.currentState!.validate()){
+      Result res = await UserRepository.changePassword(
           oldPassword: oldPassword.text,
           newPassword: newPassword.text,
           passwordConfirmation: passwordConfirmation.text);
+      if(res.statusCode == 200){
+        showSnakeBar(message: "Password Changed successfully");
+      }else {
+        showSnakeBar(message: "Password Change Failed");
+      }
     }
   }
 

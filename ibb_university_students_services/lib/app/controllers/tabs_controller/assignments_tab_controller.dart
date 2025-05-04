@@ -98,13 +98,6 @@ class AssignmentsTabController extends GetxController {
       }
     }
 
-    // if (selectedYear.value == null) {
-    //   await initYearDropdownMenuList();
-    //   if(years.isNotEmpty) {
-    //     selectedYear.value = years.first.value;
-    //   }
-    // }
-
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
         selectedSubject.value == null) {
@@ -173,7 +166,7 @@ class AssignmentsTabController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 4) - 30
+                  ? (Get.width / 5) - 30
                   : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",

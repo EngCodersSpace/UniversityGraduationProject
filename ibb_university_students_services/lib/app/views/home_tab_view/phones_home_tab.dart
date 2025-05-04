@@ -61,19 +61,21 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               ? AppColors.tabBackColor
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      child:CachedNetworkImage(
-                                        imageUrl: controller.user?.profileImage??"",
-                                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                                        errorWidget: (context, url, error) => CustomText(
-                                            controller.user?.name?[0] ??
-                                                "".toUpperCase(),
-                                            style: AppTextStyles.secStyle(
-                                                textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
+                                      child:ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: controller.user?.profileImage??"",
+                                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) => CustomText(
+                                              controller.user?.name?[0] ??
+                                                  "".toUpperCase(),
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
+                                          ),
+                                          height: width * 0.1*2,
+                                          width: width * 0.1*2,
+                                          fit: BoxFit.cover,
                                         ),
-                                        // height: (Get.height/5)*0.4,
-
-                                        fit: BoxFit.cover,
-                                      )
+                                      ),
 
                                     )
                                   ],

@@ -45,6 +45,7 @@ class Arabic {
     'Payments': 'الدفع',
     'Academic': 'الاكاديمية',
     'Transactions':'المعاملات',
+    'Academic Transactions':'المعاملات الاكاديمية',
     'Card': 'البطاقة',
     'Student': 'الطالب',
     'Degrees': 'الدرجات',

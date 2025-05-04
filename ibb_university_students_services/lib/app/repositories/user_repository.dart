@@ -41,7 +41,7 @@ class UserRepository {
     try {
       final String? fcmToken = await NotificationHandler.getDeviceToken();
       response = await HttpProvider.post("login",
-          data: {"user_id": id, "password": password,"fcm_token": fcmToken});
+          data: {"user_id": id, "password": password, "fcm_token": fcmToken});
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
@@ -202,7 +202,6 @@ class UserRepository {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-
     if (_userBox?.get('currentUser') != null &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
@@ -252,22 +251,19 @@ class UserRepository {
     required String oldPassword,
     required String newPassword,
     required String passwordConfirmation,
-}) async {
-
+  }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("reset-password",data: {
-        "oldPassword":oldPassword,
-        "newPassword":newPassword,
-        "confirmPassword":passwordConfirmation,
-
-});
+      response = await HttpProvider.post("change-password", data: {
+        "oldPassword": oldPassword,
+        "newPassword": newPassword,
+        "confirmPassword": passwordConfirmation,
+      });
       if (response?.statusCode == 200) {
-          return Result(
-              hasError: false,
-              statusCode: response?.statusCode,
-              message: "successful");
-
+        return Result(
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: "successful");
       }
       return Result(
           hasError: true,
@@ -313,5 +309,4 @@ class UserRepository {
     // return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
     //     false;
   }
-
 }
