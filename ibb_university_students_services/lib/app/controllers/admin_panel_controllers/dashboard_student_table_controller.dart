@@ -408,9 +408,36 @@ class DashboardStudentTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    studentId.clear();
+    studentName.clear();
+    studentDOB.clear();
+    studentEmail.clear();
+    studentPhone.clear();
+    studentcollege.clear();
+    studentsystem.clear();
+    studentrole.clear();
+  }
+
   @override
   void onClose() {
-    //
-    super.onClose();
+    searchController.dispose();
+    popupClear();
+    studentId.dispose();
+    studentName.dispose();
+    studentDOB.dispose();
+    studentEmail.dispose();
+    studentPhone.dispose();
+    studentcollege.dispose();
+    studentsystem.dispose();
+    studentrole.dispose();
+    idFocus.dispose();
+    nameFocus.dispose();
+    dateFocus.dispose();
+    emailFocus.dispose();
+    phoneFocus.dispose();
+    collegeFocus.dispose();
+    systemFocus.dispose();
+    roleFocus.dispose();
   }
 }

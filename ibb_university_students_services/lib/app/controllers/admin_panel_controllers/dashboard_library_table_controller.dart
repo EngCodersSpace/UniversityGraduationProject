@@ -9,11 +9,14 @@ import 'package:ibb_university_students_services/app/models/helper_models/result
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/library_table_view/library_table_component/add_library_table_card.dart';
 
 class DashboardLibraryTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -135,6 +138,32 @@ class DashboardLibraryTableController extends GetxController
   ];
   List<DataColumn> kTableColumn = [];
   Timer? _debounce;
+
+  //popup card component
+  Map<String, Subject>? subjects;
+  Map<int, Section> section = <int, Section>{}.obs;
+  List<Level>? level;
+  Rx<String?> subjectId = Rx(null);
+  Rx<int?> sectionId = Rx(null);
+  Rx<int?> levelId = Rx(null);
+  TextEditingController title = TextEditingController();
+  TextEditingController author = TextEditingController();
+  TextEditingController pages = TextEditingController();
+  TextEditingController edition = TextEditingController();
+  TextEditingController category = TextEditingController();
+  TextEditingController size = TextEditingController();
+  TextEditingController path = TextEditingController();
+  TextEditingController image = TextEditingController();
+  TextEditingController name = TextEditingController();
+  FocusNode titleFocus = FocusNode();
+  FocusNode authorFocus = FocusNode();
+  FocusNode pageFocus = FocusNode();
+  FocusNode editionFocus = FocusNode();
+  FocusNode categoryFocus = FocusNode();
+  FocusNode sizeFocus = FocusNode();
+  FocusNode pathFocus = FocusNode();
+  FocusNode imageFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
 
   @override
   void onInit() async {
@@ -385,7 +414,45 @@ class DashboardLibraryTableController extends GetxController
     selectedLevel.value = levelsData.first.id;
   }
 
-  Future<void> addClick() async {}
+  Future<void> addClick() async {
+    await getSection();
+    await getLevel();
+    await getSubject();
+    Get.dialog(PopUpAddLibraryCard());
+  }
+
+  Future<void> getSubject() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+    } else {
+      subjectId.value = null;
+    }
+  }
+
+  Future<void> getSection() async {
+    section = {};
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      sectionId = RxInt(section.values.first.id);
+    } else {
+      sectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = [];
+    level = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      levelId = RxInt(level?.first.id ?? 0);
+    } else {
+      levelId.value = null;
+    }
+  }
+
+  Future<void> addBook() async {}
 
   @override
   void export() {}
@@ -408,6 +475,39 @@ class DashboardLibraryTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    title.clear();
+    author.clear();
+    pages.clear();
+    edition.clear();
+    category.clear();
+    size.clear();
+    path.clear();
+    image.clear();
+    name.clear();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    searchController.dispose();
+    popupClear();
+    title.dispose();
+    author.dispose();
+    pages.dispose();
+    edition.dispose();
+    category.dispose();
+    size.dispose();
+    path.dispose();
+    image.dispose();
+    name.dispose();
+    titleFocus.dispose();
+    authorFocus.dispose();
+    pageFocus.dispose();
+    editionFocus.dispose();
+    categoryFocus.dispose();
+    sizeFocus.dispose();
+    pathFocus.dispose();
+    imageFocus.dispose();
+    nameFocus.dispose();
+  }
 }

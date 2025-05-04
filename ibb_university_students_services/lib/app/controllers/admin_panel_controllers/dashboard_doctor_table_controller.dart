@@ -294,9 +294,39 @@ class DashboardDoctorTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupCardClear() {
+    doctorId.clear();
+    name.clear();
+    dateOfBirth.clear();
+    email.clear();
+    role.clear();
+    phoneNumber.clear();
+    college.clear();
+    acadimicDegree.clear();
+    adminPosition.clear();
+  }
+
   @override
-  // ignore: unnecessary_overrides
   void onClose() {
-    super.onClose();
+    searchController.dispose();
+    popupCardClear();
+    doctorId.dispose();
+    name.dispose();
+    dateOfBirth.dispose();
+    email.dispose();
+    role.dispose();
+    phoneNumber.dispose();
+    college.dispose();
+    acadimicDegree.dispose();
+    adminPosition.dispose();
+    doctorIdFocus.dispose();
+    nameFocus.dispose();
+    dateOfBirthFocus.dispose();
+    emailFocus.dispose();
+    roleFocus.dispose();
+    phoneFocus.dispose();
+    collegeFocus.dispose();
+    acadimicFocus.dispose();
+    administrativeFocus.dispose();
   }
 }

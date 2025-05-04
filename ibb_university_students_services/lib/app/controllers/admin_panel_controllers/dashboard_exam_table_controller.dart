@@ -568,6 +568,21 @@ class DashboardExamTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupCardClear() {
+    dateController.clear();
+    timeController.clear();
+    hallController.clear();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    searchController.dispose();
+    popupCardClear();
+    dateController.dispose();
+    timeController.dispose();
+    hallController.dispose();
+    dateFocus.dispose();
+    timeFocus.dispose();
+    hallFocus.dispose();
+  }
 }

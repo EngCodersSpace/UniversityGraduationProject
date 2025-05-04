@@ -369,6 +369,24 @@ class DashboardSubjectsTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    subjectId.clear();
+    subjectName.clear();
+    subjectUnit.clear();
+    subjectDescription.clear();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    searchController.dispose();
+    popupClear();
+    subjectId.dispose();
+    subjectName.dispose();
+    subjectUnit.dispose();
+    subjectDescription.dispose();
+    idFocus.dispose();
+    nameFocus.dispose();
+    unitFocus.dispose();
+    descriptionFocus.dispose();
+  }
 }

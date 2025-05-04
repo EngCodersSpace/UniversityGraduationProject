@@ -407,6 +407,24 @@ class DashboardPaymentTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    studentId.clear();
+    amountPaid.clear();
+    payDate.clear();
+    reciptNum.clear();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    searchController.dispose();
+    popupClear();
+    studentId.dispose();
+    amountPaid.dispose();
+    payDate.dispose();
+    reciptNum.dispose();
+    idFocus.dispose();
+    amountFocus.dispose();
+    dateFocus.dispose();
+    reciptFocus.dispose();
+  }
 }
