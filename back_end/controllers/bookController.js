@@ -107,56 +107,152 @@ exports.uploadFile1 = async (req, res) => {
   }
 };  
 
+exports.uploadFile2 = async (req, res) => {
+  try {
+    if (!req.query.category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
+    // Process file upload
+    uploadFields(`library/${req.query.category}`, "books").single("file")(
+      req,
+      res,
+      async (err) => {
+        if (err)
+          return res
+            .status(400)
+            .json({ message: "Upload failed", error: err.message });
+        if (!req.file)
+          return res.status(400).json({ message: "No file provided" });
+        try {
+          const filepath = path.join("storage", req.file.path);
+          const bookDetails = await extractBookDetails(filepath);
+
+          // Create display image only once
+          const displayImagePath = path.join(
+            "storage",
+            `library/${req.query.category}/photos`,
+            `${req.file.hash}.png`
+          );
+          await mkdirAsync(path.dirname(displayImagePath), { recursive: true });
+
+          // Only extract image if it doesn't exist yet
+          try {
+            await fs.promises.access(displayImagePath);
+            console.log("Display image already exists, skipping extraction");
+          } catch {
+            await extractDisplayImage(filepath, displayImagePath);
+          }
+          
+          const sectionsAndLevels = JSON.parse(req.query.sectionsAndLevels);
+          const newBook = null;
+          console.log("\n", sectionsAndLevels, "  ________________\n");
+          // for (const group of sectionsAndLevels) {
+            try {
+              newBook = await book.create(
+                {
+                  title: bookDetails.title || req.file.originalname,
+                  category: req.query.category,
+                  subject_id: req.query.subject_id || null,
+                  added_by: req.user.user_id,
+                  section_id: 1,
+                  level_id: 1,
+                  original_name: req.file.originalname,
+                  file_path: filepath,
+                  author: bookDetails.author,
+                  edition: bookDetails.edition,
+                  numberOfPages: bookDetails.totalPages,
+                  file_size: bookDetails.file_size,
+                  display_image: displayImagePath,
+                  bookSectionLevel: sectionsAndLevels
+                },
+                {
+                  include: [
+                    { model: bookSectionLevel, as: "bookSectionLevel" },
+                  ],
+                }
+              );
+
+            } catch (error) {
+              console.error(
+                `Failed to create book record for section ${1}, level ${1}:`,
+                error
+              );
+            }
+          // }
+
+          // if (createdBooks.length === 0) {
+          //   return res
+          //     .status(500)
+          //     .json({ message: "Failed to create any book records" });
+          // }
+
+          // Refresh states for affected sections/levels
+          const refreshPromises = [];
+          const processedCombinations = new Set();
+
+          for (const book of sectionsAndLevels) {
+            const comboKey = `${book["sectionId"]}-${book["levelId"]}`;
+            if (!processedCombinations.has(comboKey)) {
+              refreshPromises.push(
+                upsertRefreshState(
+                  "book",
+                  `section_id:${book["sectionId"]}-level_id:${book["levelId"]}`
+                )
+              );
+              processedCombinations.add(comboKey);
+            }
+          }
+
+          await Promise.all(refreshPromises);
+
+          res.status(201).json({
+            message: `Book uploaded successfully to ${sectionsAndLevels.length} combinations`,
+            file_info: {
+              path: filepath,
+              size: req.file.size,
+              hash: req.file.hash,
+            },
+            books: newBook,
+          });
+        } catch (error) {
+          console.error("Book processing error:", error);
+          res.status(500).json({
+            message: "Error processing book",
+            error: error.message,
+            stack:
+              process.env.NODE_ENV === "development" ? error.stack : undefined,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({
+      message: "Server error during upload setup",
+      error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
 exports.uploadFile = async (req, res) => {
   try {
     if (!req.query.category) {
       return res.status(400).json({ message: 'Category is required' });
     }
-
-    // Parse section and level IDs from query
-    const sectionIds = req.query.section_ids ? [...new Set(req.query.section_ids.split(','))] : [];
-    const levelIds = req.query.level_ids ? [...new Set(req.query.level_ids.split(','))] : [];
-
-    // Determine if book is shared (multiple sections/levels) or specific
-    const isSharedBook = sectionIds.length > 1 || levelIds.length > 1;
-
-    // Get all sections and levels data
-    const [sections, levels] = await Promise.all([
-      sectionIds.length ? section.findAll({ where: { id: sectionIds } }) : Promise.resolve([]),
-      levelIds.length ? level.findAll({ where: { id: levelIds } }) : Promise.resolve([])
-    ]);
-
-    // Validate all sections/levels exist if IDs were provided
-    if ((sectionIds.length && sections.length !== sectionIds.length) || 
-        (levelIds.length && levels.length !== levelIds.length)) {
-      return res.status(404).json({ message: 'One or more sections/levels not found' });
-    }
-
-    // Determine upload folder path
-    let uploadPath;
-    let displayImageBasePath;
-    
-    if (isSharedBook) {
-      uploadPath = `library/${req.query.category}/shared/books`;
-      displayImageBasePath = `library/${req.query.category}/shared/photos`;
-    } else {
-      const sectionName = sections[0] ? JSON.parse(sections[0].section_name).en : 'common';
-      const levelName = levels[0] ? levels[0].level_name : 'common';
-      uploadPath = `library/${req.query.category}/${sectionName}/${levelName}/books`;
-      displayImageBasePath = `library/${req.query.category}/${sectionName}/${levelName}/photos`;
-    }
+  
 
     // Process file upload
-    uploadFields(uploadPath, '').single('file')(req, res, async (err) => {
+    uploadFields( `library/${req.query.category}`, 'books').single('file')(req, res, async (err) => {
       if (err) return res.status(400).json({ message: 'Upload failed', error: err.message });
       if (!req.file) return res.status(400).json({ message: 'No file provided' });
-
       try {
         const filepath = path.join('storage', req.file.path);
         const bookDetails = await extractBookDetails(filepath);
 
         // Create display image only once
-        const displayImagePath = path.join('storage', displayImageBasePath, `${req.file.hash}.png`);
+        const displayImagePath = path.join('storage', `library/${req.query.category}/photos`, `${req.file.hash}.png`);
         await mkdirAsync(path.dirname(displayImagePath), { recursive: true });
         
         // Only extract image if it doesn't exist yet
@@ -166,36 +262,20 @@ exports.uploadFile = async (req, res) => {
         } catch {
           await extractDisplayImage(filepath, displayImagePath);
         }
-
-        // Create book records for all section-level combinations
-        const sectionLevelCombinations = [];
-        
-        if (sectionIds.length === 0 && levelIds.length === 0) {
-          sectionLevelCombinations.push({ sectionId: null, levelId: null });
-        } else {
-          const effectiveSections = sections.length ? sections : [{ id: null }];
-          const effectiveLevels = levels.length ? levels : [{ id: null }];
-          
-          for (const section of effectiveSections) {
-            for (const level of effectiveLevels) {
-              sectionLevelCombinations.push({
-                sectionId: section.id,
-                levelId: level.id
-              });
-            }
-          }
-        }
-
+      
         const createdBooks = [];
-        for (const { sectionId, levelId } of sectionLevelCombinations) {
+        console.log("\n",req.query,"  ________________\n");
+        const sectionsAndLevels = JSON.parse( req.query.sectionsAndLevels);
+        for (const group of sectionsAndLevels) {
+          console.log("\n",group,"  ________________\n");
           try {
             const newBook = await book.create({
               title: bookDetails.title || req.file.originalname,
               category: req.query.category,
-              subject_id: req.body.subject_id || null,
+              subject_id: req.query.subject_id || null,
               added_by: req.user.user_id,
-              section_id: sectionId,
-              level_id: levelId,
+              section_id: group["sectionId"],
+              level_id: group["levelId"],
               original_name: req.file.originalname,
               file_path: filepath,
               author: bookDetails.author,
@@ -203,11 +283,11 @@ exports.uploadFile = async (req, res) => {
               numberOfPages: bookDetails.totalPages,
               file_size: bookDetails.file_size,
               display_image: displayImagePath,
-              is_shared: isSharedBook
+
             });
             createdBooks.push(newBook);
           } catch (error) {
-            console.error(`Failed to create book record for section ${sectionId}, level ${levelId}:`, error);
+            console.error(`Failed to create book record for section ${group["sectionId"]}, level ${group["levelId"]}:`, error);
           }
         }
 
@@ -231,7 +311,6 @@ exports.uploadFile = async (req, res) => {
 
         res.status(201).json({
           message: `Book uploaded successfully to ${createdBooks.length} combinations`,
-          storage_type: isSharedBook ? 'shared' : 'specific',
           file_info: {
             path: filepath,
             size: req.file.size,

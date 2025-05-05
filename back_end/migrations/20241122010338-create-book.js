@@ -73,7 +73,7 @@ module.exports = {
       },
       subject_id: {
         type: Sequelize.STRING(10),
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'subjects',
           key: 'subject_id',
