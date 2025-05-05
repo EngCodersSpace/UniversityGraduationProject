@@ -531,17 +531,18 @@ exports.changePass = async (req, res) => {
   try {
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
-    // const token = req.headers.authorization.split(" ")[1];
-    // if (!token) {
-    //   return res
-    //     .status(401)
-    //     .json({ message: "Authorization token is required." });
-    // }
-    // const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    // const userId = decoded.user_id;
+    if (!req.headers.authorization) {
+      return res
+        .status(401)
+        .json({ message: "Authorization token is required." });
+    }
+    console.log(req.headers);
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.user_id;
     
-    const userId = req.user.user_id ;
-
+    // const userId = req.user.user_id ;
+    
     const foundUser = await user.findOne({
       where: { user_id: userId },
       attributes: ['user_id', 'password'],
@@ -553,11 +554,11 @@ exports.changePass = async (req, res) => {
 
     const isMatch = await bcrypt.compare(oldPassword, foundUser.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Password is not Match with password in DATABASE" });
+      return res.status(422).json({ message: "Password is not Match with password in DATABASE" });
     }
 
     if (newPassword!==confirmPassword){
-      return res.status(404).json({ message: "New Password Do's not Match Confirm Password" });
+      return res.status(422).json({ message: "New Password Do's not Match Confirm Password" });
     }
 
     foundUser.password = newPassword;

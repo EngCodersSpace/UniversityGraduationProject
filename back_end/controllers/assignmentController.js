@@ -236,7 +236,6 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-    
     uploadFields('assignments', 'attachment-files' ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
@@ -373,18 +372,8 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
-    const levelName = await level.findOne({ where: { id: req.query.level_id } });
-
-    if (!sectionName || !levelName) {
-      throw new Error("Section or Level not found with the provided IDs.");
-    }
-
-    const sectionNameObj = JSON.parse(sectionName.section_name); 
-    const sectionName1 = sectionNameObj.en; 
-    const request=`${sectionName1}/${levelName.level_name}`;
-
-    uploadFields('assignments/students-attachment-files', request ).single('file')(req, res, async (err) => {
+    
+    uploadFields('assignments','students-attachment-files').single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -560,6 +549,7 @@ exports.deleteAssigmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await assignment_file.findAll({
       where:{id: req.query.id},
+      where:{id: req.query.assignment_id},
     });
 
     for (const file of AssignFiles) {

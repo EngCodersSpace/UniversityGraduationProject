@@ -34,7 +34,7 @@ exports.checkFileDuplicate = async (req, res) => {
 };
 
 // not needed this 
-exports.uploadFile = async (req, res) => {
+exports.uploadFile1 = async (req, res) => {
   try {
     const sectionData = await section.findOne({ where: { id: req.query.section_id } });
     const levelData = await level.findOne({ where: { id: req.query.level_id } });
@@ -106,6 +106,244 @@ exports.uploadFile = async (req, res) => {
     });
   }
 };  
+
+exports.uploadFile2 = async (req, res) => {
+  try {
+    if (!req.query.category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
+    // Process file upload
+    uploadFields(`library/${req.query.category}`, "books").single("file")(
+      req,
+      res,
+      async (err) => {
+        if (err)
+          return res
+            .status(400)
+            .json({ message: "Upload failed", error: err.message });
+        if (!req.file)
+          return res.status(400).json({ message: "No file provided" });
+        try {
+          const filepath = path.join("storage", req.file.path);
+          const bookDetails = await extractBookDetails(filepath);
+
+          // Create display image only once
+          const displayImagePath = path.join(
+            "storage",
+            `library/${req.query.category}/photos`,
+            `${req.file.hash}.png`
+          );
+          await mkdirAsync(path.dirname(displayImagePath), { recursive: true });
+
+          // Only extract image if it doesn't exist yet
+          try {
+            await fs.promises.access(displayImagePath);
+            console.log("Display image already exists, skipping extraction");
+          } catch {
+            await extractDisplayImage(filepath, displayImagePath);
+          }
+          
+          const sectionsAndLevels = JSON.parse(req.query.sectionsAndLevels);
+          const newBook = null;
+          console.log("\n", sectionsAndLevels, "  ________________\n");
+          // for (const group of sectionsAndLevels) {
+            try {
+              newBook = await book.create(
+                {
+                  title: bookDetails.title || req.file.originalname,
+                  category: req.query.category,
+                  subject_id: req.query.subject_id || null,
+                  added_by: req.user.user_id,
+                  section_id: 1,
+                  level_id: 1,
+                  original_name: req.file.originalname,
+                  file_path: filepath,
+                  author: bookDetails.author,
+                  edition: bookDetails.edition,
+                  numberOfPages: bookDetails.totalPages,
+                  file_size: bookDetails.file_size,
+                  display_image: displayImagePath,
+                  bookSectionLevel: sectionsAndLevels
+                },
+                {
+                  include: [
+                    { model: bookSectionLevel, as: "bookSectionLevel" },
+                  ],
+                }
+              );
+
+            } catch (error) {
+              console.error(
+                `Failed to create book record for section ${1}, level ${1}:`,
+                error
+              );
+            }
+          // }
+
+          // if (createdBooks.length === 0) {
+          //   return res
+          //     .status(500)
+          //     .json({ message: "Failed to create any book records" });
+          // }
+
+          // Refresh states for affected sections/levels
+          const refreshPromises = [];
+          const processedCombinations = new Set();
+
+          for (const book of sectionsAndLevels) {
+            const comboKey = `${book["sectionId"]}-${book["levelId"]}`;
+            if (!processedCombinations.has(comboKey)) {
+              refreshPromises.push(
+                upsertRefreshState(
+                  "book",
+                  `section_id:${book["sectionId"]}-level_id:${book["levelId"]}`
+                )
+              );
+              processedCombinations.add(comboKey);
+            }
+          }
+
+          await Promise.all(refreshPromises);
+
+          res.status(201).json({
+            message: `Book uploaded successfully to ${sectionsAndLevels.length} combinations`,
+            file_info: {
+              path: filepath,
+              size: req.file.size,
+              hash: req.file.hash,
+            },
+            books: newBook,
+          });
+        } catch (error) {
+          console.error("Book processing error:", error);
+          res.status(500).json({
+            message: "Error processing book",
+            error: error.message,
+            stack:
+              process.env.NODE_ENV === "development" ? error.stack : undefined,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({
+      message: "Server error during upload setup",
+      error: error.message,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+exports.uploadFile = async (req, res) => {
+  try {
+    if (!req.query.category) {
+      return res.status(400).json({ message: 'Category is required' });
+    }
+  
+
+    // Process file upload
+    uploadFields( `library/${req.query.category}`, 'books').single('file')(req, res, async (err) => {
+      if (err) return res.status(400).json({ message: 'Upload failed', error: err.message });
+      if (!req.file) return res.status(400).json({ message: 'No file provided' });
+      try {
+        const filepath = path.join('storage', req.file.path);
+        const bookDetails = await extractBookDetails(filepath);
+
+        // Create display image only once
+        const displayImagePath = path.join('storage', `library/${req.query.category}/photos`, `${req.file.hash}.png`);
+        await mkdirAsync(path.dirname(displayImagePath), { recursive: true });
+        
+        // Only extract image if it doesn't exist yet
+        try {
+          await fs.promises.access(displayImagePath);
+          console.log('Display image already exists, skipping extraction');
+        } catch {
+          await extractDisplayImage(filepath, displayImagePath);
+        }
+      
+        const createdBooks = [];
+        console.log("\n",req.query,"  ________________\n");
+        const sectionsAndLevels = JSON.parse( req.query.sectionsAndLevels);
+        for (const group of sectionsAndLevels) {
+          console.log("\n",group,"  ________________\n");
+          try {
+            const newBook = await book.create({
+              title: bookDetails.title || req.file.originalname,
+              category: req.query.category,
+              subject_id: req.query.subject_id || null,
+              added_by: req.user.user_id,
+              section_id: group["sectionId"],
+              level_id: group["levelId"],
+              original_name: req.file.originalname,
+              file_path: filepath,
+              author: bookDetails.author,
+              edition: bookDetails.edition,
+              numberOfPages: bookDetails.totalPages,
+              file_size: bookDetails.file_size,
+              display_image: displayImagePath,
+
+            });
+            createdBooks.push(newBook);
+          } catch (error) {
+            console.error(`Failed to create book record for section ${group["sectionId"]}, level ${group["levelId"]}:`, error);
+          }
+        }
+
+        if (createdBooks.length === 0) {
+          return res.status(500).json({ message: 'Failed to create any book records' });
+        }
+
+        // Refresh states for affected sections/levels
+        const refreshPromises = [];
+        const processedCombinations = new Set();
+        
+        for (const book of createdBooks) {
+          const comboKey = `${book.section_id}-${book.level_id}`;
+          if (!processedCombinations.has(comboKey)) {
+            refreshPromises.push(upsertRefreshState("book", `section_id:${book.section_id}-level_id:${book.level_id}`));
+            processedCombinations.add(comboKey);
+          }
+        }
+        
+        await Promise.all(refreshPromises);
+
+        res.status(201).json({
+          message: `Book uploaded successfully to ${createdBooks.length} combinations`,
+          file_info: {
+            path: filepath,
+            size: req.file.size,
+            hash: req.file.hash
+          },
+          books: createdBooks.map(b => ({
+            id: b.id,
+            title: b.title,
+            section_id: b.section_id,
+            level_id: b.level_id,
+            is_shared: b.is_shared
+          }))
+        });
+
+      } catch (error) {
+        console.error('Book processing error:', error);
+        res.status(500).json({ 
+          message: 'Error processing book', 
+          error: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+      }
+    });
+
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ 
+      message: 'Server error during upload setup', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+};
 
 
 exports.downloadFile = async (req, res) => {

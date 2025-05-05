@@ -117,7 +117,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     subject_id: {
       type: DataTypes.STRING(10),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'subjects',
         key: 'subject_id',
