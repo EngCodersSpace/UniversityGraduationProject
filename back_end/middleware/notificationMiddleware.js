@@ -2,110 +2,172 @@
 const { notification, user ,student} = require('../models');
 const admin = require('../config/firebase'); 
 
-const notificationMiddleware = async (req, res, next) => {
-    try {
-      // Extract necessary data from request or pass explicitly
-      const notificationData = {
-        sender_id: req.user?.user_id || req.body.sender_id,
-        title: req.body.title,
-        message: req.body.message,
-        is_read: req.body.is_read || false,
-        type: req.body.type,
-        section_id: req.body.section_id,
-        level_id: req.body.level_id,
-        roleId: req.body.roleId
-      };
-  
-      // Validate required fields
-      if (!notificationData.title || !notificationData.message || !notificationData.type) {
-        console.log('Notification middleware skipped - missing required fields');
-        return next();
-      }
-  
-      // Create the notification record
-      const newNotification = await notification.create({
-        sender_id: notificationData.sender_id,
-        title: notificationData.title,
-        message: notificationData.message,
-        is_read: notificationData.is_read,
-        type: notificationData.type,
+// Middleware function
+async function getNotificationRecipients({ targetType, roleId, userId, sectionId, levelId }) {
+  switch (targetType) {
+    case 'user_type':
+      return await user.findAll({ 
+        where: { 
+          roleId: {
+            [Op.in]: roleId === 'doctors' ? [1, 2, 3] : [4, 5] 
+          }
+        },
+        attributes: ['user_id', 'fcm_token'] 
       });
-  
-      // Build query to find recipients
-      const whereClause = {};
-      if (notificationData.section_id) whereClause.user_section_id = notificationData.section_id;
-      if (notificationData.roleId) whereClause.roleId = notificationData.roleId;
-  
-      const includeClause = [];
-      if (notificationData.level_id) {
-        includeClause.push({
+
+    // Case 2: Specific roles (dean, controller etc.)
+    case 'role':
+      return await user.findAll({ 
+        where: { roleId },
+        attributes: ['user_id', 'fcm_token'] 
+      });
+
+    // Case 3: By section and level (e.g. Civil_3)
+    case 'section_level':
+      return await user.findAll({
+        where: { user_section_id: sectionId },
+        include: [{
           model: student,
-          where: { level_id: notificationData.level_id },
-          include: [
-            {
-              model: level,
-              as: 'level',
-            },
-          ],
-        });
-      }
-  
-      // Find recipient users
-      const recipientUsers = await user.findAll({
-        where: whereClause,
-        include: includeClause,
-        attributes: ['user_id', 'fcm_token'],
+          where: { student_level_id: levelId },
+          required: true
+        }],
+        attributes: ['user_id', 'fcm_token']
       });
-  
-      if (!recipientUsers || recipientUsers.length === 0) {
-        console.log('No valid recipients found for notification');
-        return next();
-      }
-  
-      // Prepare FCM tokens
-      const fcmTokens = recipientUsers
-        .map((user) => user.fcm_token)
-        .filter((token) => token);
-  
-      if (fcmTokens.length === 0) {
-        console.log('No valid FCM tokens found for notification');
-        return next();
-      }
-  
-      // Prepare and send notification
+
+    // Case 4: Broadcast to all users
+    case 'broadcast':
+      return await user.findAll({
+        attributes: ['user_id', 'fcm_token']
+      });
+
+    // Case 5: Specific user
+    case 'specific':
+      const userData = await user.findOne({ 
+        where: { user_id: userId },
+        attributes: ['user_id', 'fcm_token'] 
+      });
+      return userData ? [userData] : [];
+
+    default:
+      return [];
+  }
+}
+
+// System Refresh Middleware (Silent Push)
+const systemRefresh = (options = {}) => {
+  return async (req, res, next) => {
+    try {
+      // 1. Skip if no refresh needed
+      if (options.condition && !options.condition(req)) return next();
+
+      // 2. Prepare refresh payload
       const payload = {
-        notification: {
-          title: notificationData.title,
-          body: notificationData.message,
-        },
         data: {
-          type: notificationData.type,
-          sender_id: notificationData.sender_id.toString(),
+          type: 'system_refresh',
+          entity: options.entity || req.body?.entity_type,
+          action: options.action || 'update',
+          timestamp: Date.now().toString()
         },
-        tokens: fcmTokens,
+        android: {
+          priority: 'high',
+          ttl: 3600 
+        },
+        apns: {
+          headers: {
+            'apns-priority': '5', // Silent push
+            'apns-push-type': 'background'
+          },
+          payload: {
+            aps: {
+              'content-available': 1 // iOS background fetch
+            }
+          }
+        }
       };
-  
-      const response = await admin.messaging().sendMulticast(payload);
-      console.log('Notifications sent successfully:', response);
-  
-      // Attach notification data to request for use in route handler if needed
-      req.notificationResult = {
-        success: true,
-        notification: newNotification,
-        recipients: recipientUsers.length,
-        fcmResponse: response
-      };
-  
+
+      // 3. Determine recipients
+      if (options.targetType === 'broadcast') {
+        // Send to all devices (system-wide refresh)
+        await admin.messaging().sendToTopic('system_refreshes', payload);
+      } else {
+        // Targeted refresh (section/level/role)
+        const recipients = await getNotificationRecipients({
+          targetType: options.targetType,
+          sectionId: req.body?.section_id,
+          levelId: req.body?.level_id,
+          roleId: req.body?.role_id
+        });
+        
+        const tokens = recipients.map(u => u.fcm_token).filter(Boolean);
+        if (tokens.length) {
+          await admin.messaging().sendMulticast({ ...payload, tokens });
+        }
+      }
+
       next();
     } catch (error) {
-      console.error('Error in notification middleware:', error.message);
-      // Don't fail the request if notification fails - just log and continue
-      next();
+      console.error(`[SystemRefresh] ${options.entity}`, error);
+      next(); // Fail silently
     }
+  };
 };
 
 
+// Info Notification Middleware (Topic-Based)
+const createInfoNotifi = (options = {}) => {
+  return async (req, res, next) => {
+    try {
+      // 1. Create database record
+      const dbRecord = await notification.create({
+        sender_id: req.user?.user_id || null,
+        title: req.body.title || options.defaultTitle,
+        message: req.body.message,
+        type: options.notificationType || 'info',
+        metadata: options.metadata?.(req) || null
+      });
+
+      // 2. Determine recipients (default to topic targeting)
+      const recipients = await getNotificationRecipients({
+        targetType: 'topic',
+        topic: req.body.topic || options.defaultTopic
+      });
+
+      // 3. Send FCM notifications
+      const fcmTokens = recipients.map(u => u.fcm_token).filter(Boolean);
+      if (fcmTokens.length) {
+        await admin.messaging().sendMulticast({
+          notification: {
+            title: dbRecord.title,
+            body: dbRecord.message,
+            imageUrl: options.imageUrl
+          },
+          data: {
+            notification_id: dbRecord.id.toString(),
+            type: dbRecord.type,
+            ...(options.additionalData?.(req) || {})
+          },
+          tokens: fcmTokens,
+          android: {
+            channelId: options.androidChannel || 'info_channel'
+          }
+        });
+      }
+
+      // 4. Attach results to request
+      req.notificationResult = {
+        dbRecord,
+        recipients: recipients.length,
+        successfulDeliveries: fcmTokens.length
+      };
+
+      next();
+    } catch (error) {
+      console.error('[InfoNotification]', error);
+      req.notificationError = error;
+      next(); // Continue to next middleware/route
+    }
+  };
+};
 
 
-
-module.exports = {notificationMiddleware};
+module.exports = {getNotificationRecipients , systemRefresh ,createInfoNotifi};

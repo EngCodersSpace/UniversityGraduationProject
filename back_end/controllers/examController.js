@@ -3,40 +3,7 @@ const { upsertRefreshState} = require('../controllers/refreshController');
 
 const { Sequelize} = require('sequelize');
 const { Op } = require("sequelize");
-const {notificationMiddleware} = require('../middleware/notificationMiddleware');
-
-// create exam with notification still editing..
-exports.createExam1 = async (req, res) => {
-    try {
-        const newExam = await exam.create(req.body, {
-            include: [{ model: subject, as: 'subject' }], 
-        });
-
-        await upsertRefreshState("exam", {
-            section_id: req.body.exam_section_id, 
-            level_id: req.body.exam_level_id       
-        });
-
-        // Prepare notification data
-        req.body.title = "New Exam Scheduled";
-        req.body.message = `You have a new ${req.body.exam_type} exam for ${newExam.subject?.name || 'a subject'} on ${newExam.exam_date}`;
-        req.body.type = "exam";
-        req.body.section_id = req.body.exam_section_id;
-        req.body.level_id = req.body.exam_level_id;
-
-        // Use the notification middleware
-        await notificationMiddleware(req, res, () => {});
-
-        res.status(201).json({
-            message: 'Exam created successfully',
-            exam: newExam,
-            notification: req.notificationResult // Optional: include notification details
-        });
-    } catch (error) {
-        console.error('Error creating exam:', error.message);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-};
+const {systemRefresh} = require('../middleware/notificationMiddleware');
 
 
 //  All Functions are perfict right now 2024-12-10
@@ -50,6 +17,16 @@ exports.createExam = async (req, res) => {
         await upsertRefreshState("exam", {
           section_id: req.body.exam_section_id , 
           level_id: req.body.exam_level_id       
+        });
+
+        await systemRefresh({ 
+          entity: 'exam',
+          targetType: 'section_level', 
+          sectionId: req.body.exam_section_id, 
+          levelId: req.body.exam_level_id,     
+          action: 'create'
+        }).catch(err => {
+          console.error('Refresh notification failed (non-critical):', err);
         });
 
         res.status(201).json({

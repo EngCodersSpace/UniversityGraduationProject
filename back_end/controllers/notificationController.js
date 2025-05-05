@@ -1,5 +1,6 @@
-const { notification, user ,student} = require('../models');
+const { notification, user } = require('../models');
 const admin = require('../config/firebase'); 
+const {getNotificationRecipients} = require('../middleware/notificationMiddleware');
 
 
 // GET all notifications
@@ -111,7 +112,6 @@ exports.getNotificationsByTopic = async (req, res) => {
   }
 };
 
-
 // Update a notification  
 exports.updateNotification = async (req, res) => {
   try {
@@ -149,118 +149,93 @@ exports.deleteNotification = async (req, res) => {
 
 
 
-// Middleware function
-async function getNotificationRecipients({ targetType, roleid, user_id, section_id, level_id }) {
-  switch (targetType) {
-    case 'topic':
-      return await user.findAll({ 
-        where: { roleId: roleid },
-        attributes: ['user_id', 'fcm_token'] 
-      });
-      
-    case 'specific':
-      const userData = await user.findOne({ 
-        where: { user_id },
-        attributes: ['user_id', 'fcm_token'] 
-      });
-      return userData ? [userData] : [];
-      
-    case 'condition':
-      return await user.findAll({
-        where: { user_section_id: section_id },
-        include: [{
-          model: student,
-          where: { student_level_id:level_id }
-        }],
-        attributes: ['user_id', 'fcm_token']
-      });
-      
-    default:
-      return [];
-  }
-}
+// //examples:
+// // 1. Get all doctors
+// const doctors = await getNotificationRecipients({
+//   targetType: 'user_type',
+//   roleId: 'doctors'
+// });
+// // 2. Get all deans (roleId = 1)
+// const deans = await getNotificationRecipients({
+//   targetType: 'role',
+//   roleId: 1
+// });
+// // 3. Get Civil Engineering level 3 students
+// const civil3 = await getNotificationRecipients({
+//   targetType: 'section_level',
+//   sectionId: 'civil',
+//   levelId: 3
+// });
+// // 4. Broadcast to everyone
+// const allUsers = await getNotificationRecipients({
+//   targetType: 'broadcast'
+// });
 
 
 
-// system type
-exports.sendSystemNotification = async (req, res) => {
-  try {
-    const recipients = await getNotificationRecipients(req.body);
-    const fcmTokens = recipients.map(u => u.fcm_token).filter(Boolean);
-
-    if (!fcmTokens.length) {
-      return res.status(404).json({ message: 'No active devices found' });
-    }
-
-    const response = await admin.messaging().sendMulticast({
-      data: {
-        type: 'system_refresh',
-        message: req.body.message || 'Data updated'
-      },
-      android: {
-        collapseKey: 'data_refresh',
-        priority: 'normal'
-      },
-      tokens: fcmTokens
-    });
-
-    res.status(200).json({
-      devices: fcmTokens.length,
-      failed: response.failureCount
-    });
-    
-  } catch (error) {
-    console.error('[System Push Error]', error);
-    res.status(500).json({ 
-      error: 'System notification failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : null
-    });
-  }
-};
-
-// info type
+// Info Notification Controller (Topic-Based)
 exports.createInfoNotification = async (req, res) => {
+  const options = {
+    defaultTitle: req.body.defaultTitle || 'Notification',
+    notificationType: req.body.notificationType || 'info',
+    androidChannel: req.body.androidChannel || 'info_channel'
+  };
+
   try {
     const dbRecord = await notification.create({
-      sender_id: req.user.user_id,
-      title: req.body.title,
+      sender_id: req.user?.user_id || null,
+      title: req.body.title || options.defaultTitle,
       message: req.body.message,
-      type: 'info'
+      type: options.notificationType,
     });
 
-    const recipients = await getNotificationRecipients(req.body);
+    const recipients = await getNotificationRecipients({
+      targetType: req.body.targetType || 'topic',
+      topic: req.body.topic,
+      roleId: req.body.roleId,
+      sectionId: req.body.sectionId,
+      levelId: req.body.levelId
+    });
+
     const fcmTokens = recipients.map(u => u.fcm_token).filter(Boolean);
+    let deliveryResult = null;
 
     if (fcmTokens.length) {
-      await admin.messaging().sendMulticast({
+      deliveryResult = await admin.messaging().sendMulticast({
         notification: {
-          title: req.body.title,
-          body: req.body.message
+          title: dbRecord.title,
+          body: dbRecord.message,
         },
         data: {
-          notification_id: dbRecord.message_id.toString(),
-          type: 'user_alert'
+          notification_id: dbRecord.id.toString(),
+          type: dbRecord.type,
+          ...(req.body.additionalData || {})
         },
-        tokens: fcmTokens
+        tokens: fcmTokens,
+        android: {
+          channelId: options.androidChannel
+        }
       });
     }
 
     res.status(201).json({
-      success: true,
       notification: dbRecord,
-      recipients: recipients.length
+      stats: {
+        targeted: recipients.length,
+        delivered: fcmTokens.length,
+        failed: deliveryResult?.failureCount || 0
+      }
     });
-    
+
   } catch (error) {
-    console.error('[Info Push Error]', error);
+    console.error('[InfoNotification]', error);
     res.status(500).json({
-      error: 'Notification failed',
-      saved_to_db: !!dbRecord, 
+      success: false,
+      error: 'Notification processing failed',
       details: process.env.NODE_ENV === 'development' ? error.message : null
     });
   }
 };
-
 
 
 // admin panel

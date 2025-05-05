@@ -559,7 +559,7 @@ exports.deleteAssignment = async (req, res) => {
 exports.deleteAssigmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await assignment_file.findAll({
-      where:{assignment_id: req.query.assignment_id},
+      where:{id: req.query.id},
     });
 
     for (const file of AssignFiles) {
@@ -582,7 +582,7 @@ exports.deleteAssigmentFiles=async(req,res)=>{
 exports.deleteAttachmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await student_assignment_file.findAll({
-      where:{student_assignment_id: req.query.id},
+      where:{id: req.query.id},
     });
  
     for (const file of AssignFiles) {
