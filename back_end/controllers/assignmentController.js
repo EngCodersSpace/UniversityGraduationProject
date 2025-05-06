@@ -549,7 +549,6 @@ exports.deleteAssigmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await assignment_file.findAll({
       where:{id: req.query.id},
-      where:{id: req.query.assignment_id},
     });
 
     for (const file of AssignFiles) {

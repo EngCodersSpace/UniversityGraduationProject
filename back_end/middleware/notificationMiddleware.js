@@ -1,6 +1,7 @@
 
-const { notification, user ,student} = require('../models');
-const admin = require('../config/firebase'); 
+const { Op } = require('sequelize');
+const { notification, user } = require('../models');
+const admin = require('../config/firebase');
 
 // Middleware function
 async function getNotificationRecipients({ targetType, roleId, userId, sectionId, levelId }) {
@@ -168,6 +169,160 @@ const createInfoNotifi = (options = {}) => {
     }
   };
 };
+
+
+
+
+
+
+
+// // Middleware للتحقق من صحة Topics
+// exports.validateNotificationTopics = (req, res, next) => {
+//   const validPatterns = [
+//     /^userType_(doctor|student)$/,
+//     /^role_\d+$/,
+//     /^section_level_\w+_\d+$/,
+//     /^all_users$/
+//   ];
+  
+//   if (req.body.topic && !validPatterns.some(p => p.test(req.body.topic))) {
+//     return res.status(400).json({
+//       success: false,
+//       error: 'Invalid topic format',
+//       validExamples: [
+//         'userType_doctor',
+//         'role_1',
+//         'section_level_civil_3',
+//         'all_users'
+//       ]
+//     });
+//   }
+//   next();
+// };
+
+// // Middleware لتسجيل الإشعار في DB
+// exports.logNotification = async (req, res, next) => {
+//   try {
+//     const { title, message, topic, data } = req.body;
+    
+//     req.notificationRecord = await notification.create({
+//       sender_id: req.user?.user_id,
+//       title,
+//       message,
+//       type: topic ? 'topic' : 'direct',
+//       target: topic || req.body.userId?.toString(),
+//       metadata: data
+//     });
+    
+//     next();
+//   } catch (error) {
+//     console.error('[Notification Log Error]', error);
+//     next(error);
+//   }
+// };
+
+// // Middleware لإرسال الإشعارات عبر Topics
+// exports.sendTopicNotification = async (req, res, next) => {
+//   try {
+//     if (!req.body.topic) return next();
+    
+//     const message = {
+//       topic: req.body.topic,
+//       notification: {
+//         title: req.body.title,
+//         body: req.body.message
+//       },
+//       data: {
+//         notification_id: req.notificationRecord.id.toString(),
+//         type: 'topic_alert',
+//         ...req.body.data
+//       },
+//       android: {
+//         priority: 'high'
+//       }
+//     };
+
+//     req.fcmResponse = await admin.messaging().send(message);
+//     next();
+//   } catch (error) {
+//     console.error('[FCM Topic Error]', error);
+//     next(error);
+//   }
+// };
+
+// // Middleware لإرسال إشعارات مباشرة
+// exports.sendDirectNotification = async (req, res, next) => {
+//   try {
+//     if (!req.body.userId) return next();
+    
+//     const userData = await user.findOne({
+//       where: { user_id: req.body.userId },
+//       attributes: ['fcm_token']
+//     });
+
+//     if (!userData?.fcm_token) {
+//       return next(new Error('User device not registered'));
+//     }
+
+//     const message = {
+//       token: userData.fcm_token,
+//       notification: {
+//         title: req.body.title,
+//         body: req.body.message
+//       },
+//       data: {
+//         notification_id: req.notificationRecord.id.toString(),
+//         type: 'direct_alert',
+//         ...req.body.data
+//       }
+//     };
+
+//     req.fcmResponse = await admin.messaging().send(message);
+//     next();
+//   } catch (error) {
+//     console.error('[FCM Direct Error]', error);
+//     next(error);
+//   }
+// };
+
+// // Middleware لجلب الإشعارات
+// exports.fetchUserNotifications = async (req, res, next) => {
+//   try {
+//     const { userId } = req.params;
+//     const { topics } = req.query;
+
+//     if (!topics) {
+//       return res.status(400).json({
+//         success: false,
+//         error: 'Topics parameter is required'
+//       });
+//     }
+
+//     req.notifications = await notification.findAll({
+//       where: {
+//         [Op.or]: [
+//           { target: { [Op.in]: topics.split(',') } },
+//           { target: userId, type: 'direct' }
+//         ]
+//       },
+//       order: [['createdAt', 'DESC']],
+//       limit: parseInt(req.query.limit) || 20,
+//       offset: parseInt(req.query.offset) || 0
+//     });
+    
+//     next();
+//   } catch (error) {
+//     console.error('[Fetch Notifications Error]', error);
+//     next(error);
+//   }
+// };
+
+
+
+
+
+
+
 
 
 module.exports = {getNotificationRecipients , systemRefresh ,createInfoNotifi};

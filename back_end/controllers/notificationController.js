@@ -149,30 +149,6 @@ exports.deleteNotification = async (req, res) => {
 
 
 
-// //examples:
-// // 1. Get all doctors
-// const doctors = await getNotificationRecipients({
-//   targetType: 'user_type',
-//   roleId: 'doctors'
-// });
-// // 2. Get all deans (roleId = 1)
-// const deans = await getNotificationRecipients({
-//   targetType: 'role',
-//   roleId: 1
-// });
-// // 3. Get Civil Engineering level 3 students
-// const civil3 = await getNotificationRecipients({
-//   targetType: 'section_level',
-//   sectionId: 'civil',
-//   levelId: 3
-// });
-// // 4. Broadcast to everyone
-// const allUsers = await getNotificationRecipients({
-//   targetType: 'broadcast'
-// });
-
-
-
 // Info Notification Controller (Topic-Based)
 exports.createInfoNotification = async (req, res) => {
   const options = {
@@ -236,6 +212,124 @@ exports.createInfoNotification = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+const validateTopic = (topic) => {
+  const validPatterns = [
+    /^userType_(doctor|student)$/,
+    /^role_\d+$/,
+    /^section_level_\w+_\d+$/,
+    /^all_users$/
+  ];
+  return validPatterns.some(pattern => pattern.test(topic));
+};
+
+exports.sendTopicNotification = async (req, res) => {
+  try {
+    const { topic, title, message, data } = req.body;
+
+    // التحقق من صيغة الـ Topic
+    if (!validateTopic(topic)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid topic format',
+        validExamples: [
+          'userType_doctor',
+          'role_1',
+          'section_level_civil_3',
+          'all_users'
+        ]
+      });
+    }
+
+    // 1. حفظ الإشعار في قاعدة البيانات
+    const dbRecord = await notification.create({
+      sender_id: req.user?.user_id,
+      title,
+      message,
+      type: 'topic',
+      target: topic,
+      metadata: data
+    });
+
+    // 2. الإرسال عبر FCM
+    const messageId = await admin.messaging().send({
+      topic,
+      notification: { title, body: message },
+      data: {
+        notification_id: dbRecord.id.toString(),
+        type: 'topic_alert',
+        ...data
+      },
+      android: { priority: 'high' }
+    });
+
+    res.status(201).json({
+      success: true,
+      notification: dbRecord,
+      fcm_message_id: messageId
+    });
+
+  } catch (error) {
+    console.error('[Topic Notification Error]', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to send topic notification'
+    });
+  }
+};
+
+exports.getUserNotifications = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { topics } = req.query; // يتم إرسال الـ Topics من Frontend
+
+    if (!topics) {
+      return res.status(400).json({
+        success: false,
+        error: 'Topics parameter is required'
+      });
+    }
+
+    const topicArray = topics.split(',');
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await notification.findAndCountAll({
+      where: {
+        target: { [Op.in]: [...topicArray, userId.toString()] }
+      },
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset
+    });
+
+    res.status(200).json({
+      total: count,
+      page,
+      totalPages: Math.ceil(count / limit),
+      notifications: rows
+    });
+
+  } catch (error) {
+    console.error('[Get Notifications Error]', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch notifications'
+    });
+  }
+};
+
+
+
+
+
+
 
 
 // admin panel
