@@ -1,41 +1,40 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'role.dart';
+part of 'permission.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class RoleAdapter extends TypeAdapter<Role> {
+class PermissionAdapter extends TypeAdapter<Permission> {
   @override
-  final int typeId = 33;
+  final int typeId = 34;
 
   @override
-  Role read(BinaryReader reader) {
+  Permission read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Role(
+    return Permission(
       id: fields[0] as int,
-      permissions: (fields[2] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<Permission>())),
-      name: fields[1] as String?,
+      target: fields[1] as String?,
+      action: fields[2] as String?,
       createdAt: fields[3] as String?,
       updatedAt: fields[4] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Role obj) {
+  void write(BinaryWriter writer, Permission obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.target)
       ..writeByte(2)
-      ..write(obj.permissions)
+      ..write(obj.action)
       ..writeByte(3)
       ..write(obj.createdAt)
       ..writeByte(4)
@@ -48,7 +47,7 @@ class RoleAdapter extends TypeAdapter<Role> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RoleAdapter &&
+      other is PermissionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -85,7 +85,6 @@ class Assignment {
 
 
   void updateFromJson(Map<String, dynamic> json,{Subject? subject}){
-
     Map<int, AttachmentFile> files = {};
     for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
       files[file["id"]] = AttachmentFile(

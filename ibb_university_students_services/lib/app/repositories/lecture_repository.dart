@@ -171,7 +171,6 @@ class LectureRepository {
     required int doctorId,
     required int lectureDuration,
     String? lectureRoom,
-    bool hardFetch = false,
     bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
