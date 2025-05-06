@@ -1,38 +1,37 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/models/data_sync/data_sync.dart';
 import '../models/helper_models/result.dart';
-import '../models/refrech_state_model/refresh_state.dart';
 import '../utils/internet_connection_cheker.dart';
 import '../services/http_provider.dart';
 
-class RefreshStateRepository {
+class DataSyncRepository {
   static const int _fetchAllError = 621;
 
   // ignore: unused_field
   static const int _fetchError = 622;
 
-
-  static Box<RefreshState>? _refreshState;
+  static Box<DataSync>? _dataSync;
 
   static Future<void> openBox() async {
-    _refreshState = await Hive.openBox<RefreshState>("RefreshState");
+    _dataSync = await Hive.openBox<DataSync>("RefreshState");
   }
 
   static Future<void> clearBox() async {
-    _refreshState = await Hive.openBox<RefreshState>("RefreshState");
-    _refreshState?.clear();
+    _dataSync = await Hive.openBox<DataSync>("RefreshState");
+    _dataSync?.clear();
   }
 
   static Future<void> closeBox() async {
-    if (_refreshState?.isOpen ?? false) {
-      await _refreshState?.close();
+    if (_dataSync?.isOpen ?? false) {
+      await _dataSync?.close();
     }
   }
 
-  static Future<Result> fetchCachedRefreshStateRecord({
-    required int id,
+  static Future<Result> fetchCachedDataSyncRecord({
+    required String id,
   }) async {
-    RefreshState? refreshState = _refreshState?.get(id);
+    DataSync? refreshState = _dataSync?.get(id);
     return Result(
       data: refreshState,
       statusCode: 200,
@@ -41,15 +40,13 @@ class RefreshStateRepository {
     );
   }
 
-  static Future<void> cacheRefreshStateRecord({
-    required RefreshState state,
+  static Future<void> cacheDataSyncRecord({
+    required DataSync state,
   }) async {
-   await  _refreshState?.put(state.id,state) ;
-
+    await _dataSync?.put(state.id, state);
   }
 
-  static Future<Result> fetchLastRefreshStates() async {
-
+  static Future<Result<Map<String,DataSync>>> fetchLastDataSyncs() async {
     if ((!(await checkInternetConnection()))) {
       return Result(
         data: null,
@@ -60,10 +57,14 @@ class RefreshStateRepository {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("");
+      response = await HttpProvider.get("get-all-refresh");
       if (response?.statusCode == 200) {
+        Map<String,DataSync> dataSyncs = {};
+        for(Map<String, dynamic> jsDataSync in response?.data["data"]){
+          dataSyncs[jsDataSync['id']] = DataSync.fromJson(jsDataSync);
+        }
         return Result(
-            data: null,
+            data: dataSyncs,
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

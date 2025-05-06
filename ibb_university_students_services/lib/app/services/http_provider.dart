@@ -20,8 +20,8 @@ class HttpProvider {
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration? connectTimeout = const Duration(seconds: 10),
-    Duration? sendTimeout,
-    Duration? receiveTimeout,
+    Duration? sendTimeout = const Duration(seconds: 5),
+    Duration? receiveTimeout = const Duration(seconds: 5),
   }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
@@ -49,6 +49,11 @@ class HttpProvider {
           }
           return handler.resolve(
               Response(requestOptions: error.requestOptions, statusCode: 900));
+        }
+
+        if (error.type == DioExceptionType.connectionTimeout || error.type == DioExceptionType.receiveTimeout || error.type == DioExceptionType.sendTimeout ){
+          return handler.resolve(
+              Response(requestOptions: error.requestOptions, statusCode: 901,data: error.response?.data));
         }
 
         if (error.response?.statusCode == 401 &&
@@ -144,22 +149,24 @@ class HttpProvider {
     required File file,
     required String uploadUrl,
     required void Function(int, int)? onSendProgress,
+    Map<String,dynamic> data =const {},
     int? fileSize,
   }) async {
     try {
       fileSize ??= await file.length();
 
       cancelTokens[file.path.hashCode] = CancelToken();
+      Map<String,dynamic> dataMap = {
+        'file': [
+          MultipartFile.fromStream(() => file.openRead(), fileSize,
+              filename: file.path.split("/").last)
+        ],
+      };
+      dataMap.addAll(data);
       final response = await _dio.post(
         uploadUrl,
         cancelToken: cancelTokens[file.path.hashCode],
-        data: FormData.fromMap({
-          'file': [
-            MultipartFile.fromStream(() => file.openRead(), fileSize,
-                filename: file.path.split("/").last)
-          ],
-          'assignment_id': '45'
-        }),
+        data: FormData.fromMap(dataMap),
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',

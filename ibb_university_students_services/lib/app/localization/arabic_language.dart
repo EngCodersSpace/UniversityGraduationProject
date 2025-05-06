@@ -23,11 +23,18 @@ class Arabic {
     /////////////////////////////////////////
     'Email': 'البريد الالكتروني',
     'UserName': 'اسم المستخدم',
+    'User Identifier':'معرف المستخدم',
     'Phone': 'الجوال',
     'Language': 'اللغة',
     'Logout': 'تسجيل الخروج',
     'Academic Degree': 'الدرجة الاكادمية',
     'Administrative Position': 'المنصب الاداري',
+    'Change Password':'تغيير الرمز',
+    'Old Password':'الرمز القديم',
+    'New Password':'الرمز الجديد',
+    'Password Confirmation':'التحقق من الرمز',
+    'Confirmation':'التحقق',
+    'Change':'تغيير',
     //////////////////////////////////////////
     //            home tab view           ////
     /////////////////////////////////////////
@@ -37,11 +44,14 @@ class Arabic {
     'Lectures': 'المحاضرات',
     'Payments': 'الدفع',
     'Academic': 'الاكاديمية',
+    'Transactions':'المعاملات',
+    'Academic Transactions':'المعاملات الاكاديمية',
     'Card': 'البطاقة',
     'Student': 'الطالب',
     'Degrees': 'الدرجات',
     'Exam': 'الاختبارات',
     'Schedule': 'جدول',
+    'Settings':'الإعدادت',
     //////////////////////////////////////////
     //         lecture table tab view     ////
     /////////////////////////////////////////
@@ -106,7 +116,7 @@ class Arabic {
     'Division': 'الشعبة',
     'Program': 'التخصص',
     'Year': 'السنة',
-    'Term': 'الفصل',
+    'Semester': 'الفصل',
     'Time': 'الوقت',
     'Date': 'التاريخ',
     '2ec': 'الثاني',

@@ -7,6 +7,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/assignments_card.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
+import '../../components/typeahead.dart';
 import '../../models/doctor_model/doctor.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
@@ -77,6 +78,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
@@ -124,7 +126,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width / 4,
+                                    width: Get.width / 5,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
@@ -140,31 +142,23 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.inverseCardColor,
-                                      borderRadius: BorderRadius.circular(24),
+                                  TypeAhead<String>(
+                                    value: controller.selectedSubject.value,
+                                    width: (Get.width /3),
+                                    onSelected: (String i,v){
+                                      controller.selectedSubject.value = i;
+                                    },
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                      color: AppColors.mainTextColor,
+                                      size: 25,
                                     ),
-                                    width: Get.width / 3,
-                                    child: Center(
-                                      child: Obx(
-                                        () => DropdownButton<String>(
-                                          items: controller.subjectsItems,
-                                          selectedItemBuilder: (_) {
-                                            return controller
-                                                .selectedSubjectsItems;
-                                          },
-                                          onChanged: controller.changeSubject,
-                                          value:
-                                              controller.selectedSubject.value,
-                                          underline: const SizedBox(),
-                                          iconEnabledColor:
-                                              AppColors.mainCardColor,
-                                          dropdownColor:
-                                              AppColors.inverseCardColor,
-                                        ),
-                                      ),
-                                    ),
+                                    label: "Select Subject",
+                                    items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
+                                    color: AppColors.inverseCardColor,
+                                    menuColor: AppColors.inverseCardColor,
+                                    textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                    menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
                               ),
@@ -178,31 +172,23 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h2Bold),
                                   ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.inverseCardColor,
-                                      borderRadius: BorderRadius.circular(24),
+                                  TypeAhead<String>(
+                                    value: controller.selectedSubject.value,
+                                    width: (Get.width * 0.45),
+                                    onSelected: (String i,v){
+                                      controller.selectedSubject.value = i;
+                                    },
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_outlined,
+                                      color: AppColors.mainTextColor,
+                                      size: 25,
                                     ),
-                                    width: Get.width * 0.65,
-                                    child: Center(
-                                      child: Obx(
-                                        () => DropdownButton<String>(
-                                          items: controller.subjectsItems,
-                                          selectedItemBuilder: (_) {
-                                            return controller
-                                                .selectedSubjectsItems;
-                                          },
-                                          onChanged: controller.changeSubject,
-                                          value:
-                                              controller.selectedSubject.value,
-                                          underline: const SizedBox(),
-                                          iconEnabledColor:
-                                              AppColors.mainCardColor,
-                                          dropdownColor:
-                                              AppColors.inverseCardColor,
-                                        ),
-                                      ),
-                                    ),
+                                    label: "Select Subject",
+                                    items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
+                                    color: AppColors.inverseCardColor,
+                                    menuColor: AppColors.inverseCardColor,
+                                    textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                    menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
                               ),

@@ -10,6 +10,7 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import '../../../models/assignment_model/assignment_model.dart';
 import '../../../models/doctor_model/doctor.dart';
+import '../../../models/student_model/student.dart';
 import '../../../styles/app_colors.dart';
 
 class AssignmentsCard extends GetView<AssignmentsTabController> {
@@ -70,105 +71,110 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                         ),
                         Row(
                           children: [
-                            if( (UserRepository.isCurrentUser(content.value?.studentsStatus?.entries.first.value.studentId)??false))
+                            if ((UserRepository.isCurrentUser(content
+                                    .value
+                                    ?.studentsStatus
+                                    ?.entries
+                                    .first
+                                    .value
+                                    .studentId) ??
+                                false))
                               Row(
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
                                       color: AppColors.mainCardColor,
-                                      borderRadius:
-                                      const BorderRadius.all(Radius.circular(32)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(32)),
                                     ),
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                     child: CustomText(
-                                      (content.value?.studentsStatus?.entries.first.value.isCompleted??false)?"Completed".tr:"Not Completed".tr,
+                                      (content.value?.studentsStatus?.entries
+                                                  .first.value.isCompleted ??
+                                              false)
+                                          ? "Completed".tr
+                                          : "Not Completed".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold),
                                     ),
                                   ),
-                                  SizedBox(width: 8,),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
                                   Container(
                                     decoration: BoxDecoration(
                                       color: AppColors.mainCardColor,
-                                      borderRadius:
-                                      const BorderRadius.all(Radius.circular(32)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(32)),
                                     ),
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                     child: CustomText(
-                                      (content.value?.studentsStatus?.entries.first.value.state??"Unknown".tr),
+                                      (content.value?.studentsStatus?.entries
+                                              .first.value.state ??
+                                          "Unknown".tr),
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold),
                                     ),
                                   ),
                                 ],
                               ),
-                            if ((UserRepository.checkPermission(
-                                target: "Assignments", action: "write"))) ...[
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: PopupMenuButton<String>(
-                                  onSelected: (val) => controller.more(val,
-                                      data: content.toJson()),
-                                  color: AppColors.inverseCardColor,
-                                  itemBuilder: (ctx) => [
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: PopupMenuButton<String>(
+                                onSelected: (val) => controller.more(val,
+                                    data: content.toJson()),
+                                color: AppColors.inverseCardColor,
+                                itemBuilder: (ctx) => [
+                                  if ((UserRepository.checkPermission(
+                                      target: "Assignments",
+                                      action: "write"))) ...[
                                     PopupMenuItem(
                                         value: "Edit",
                                         child: CustomText(
                                           "Edit".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "Delete",
                                         child: CustomText(
                                           "Delete".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
                                   ],
-                                  child: Icon(Icons.more_vert_outlined,
-                                      color: AppColors.mainTextColor),
-                                ),
-                              )
-                            ]else if (UserRepository.checkPermission(
-                                target: "Assignments", action: "setCompletion"))...[
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: PopupMenuButton<String>(
-                                  onSelected: (val) => controller.more(val,
-                                      data: content.toJson()),
-                                  color: AppColors.inverseCardColor,
-                                  itemBuilder: (ctx) => [
+                                  if (UserRepository.currentUserType() ==
+                                      Student) ...[
                                     PopupMenuItem(
                                         value: "setComplete",
                                         child: CustomText(
                                           "Set Complete".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
                                     PopupMenuItem(
                                         value: "setNotComplete",
                                         child: CustomText(
                                           "Set Not Complete".tr,
                                           style: AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         )),
-                                  ],
-                                  child: Icon(Icons.more_vert_outlined,
-                                      color: AppColors.mainTextColor),
-                                ),
-                              )
-                            ]
+                                  ]
+                                ],
+                                child: Icon(Icons.more_vert_outlined,
+                                    color: AppColors.mainTextColor),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -176,7 +182,18 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                     const SizedBox(
                       height: 8,
                     ),
-                    Padding(padding: (LocaleListener.currentLocal.value?.languageCode == "en")?EdgeInsets.only(left: 32):EdgeInsets.only(right: 32) ,child: CustomText(content.value?.title ?? "Unknown".tr,style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold,),)),
+                    Padding(
+                        padding:
+                            (LocaleListener.currentLocal.value?.languageCode ==
+                                    "en")
+                                ? EdgeInsets.only(left: 32)
+                                : EdgeInsets.only(right: 32),
+                        child: CustomText(
+                          content.value?.title ?? "Unknown".tr,
+                          style: AppTextStyles.mainStyle(
+                            textHeader: AppTextHeaders.h1Bold,
+                          ),
+                        )),
                   ],
                 ),
               ),
@@ -252,32 +269,37 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                           ),
                         ],
                       ),
-
                       const SizedBox(
                         height: 16,
                       ),
                       if (UserRepository.currentUserType() == Doctor) ...[
                         CustomButton(
-                          onPress: ()=>controller.showAttachmentsFiles(content.value?.id),
+                          onPress: () => controller
+                              .showAttachmentsFiles(content.value?.id),
                           text: "Attachments".tr,
                         ),
                         const SizedBox(
                           height: 8,
                         ),
                         CustomButton(
-                          onPress: ()=>controller.routeStudentList(content.value?.id),
+                          onPress: () =>
+                              controller.routeStudentList(content.value?.id),
                           text: "Students".tr,
                         ),
                       ] else ...[
                         CustomButton(
-                          onPress: ()=>controller.showAttachmentsFiles(content.value?.id),
+                          onPress: () => controller
+                              .showAttachmentsFiles(content.value?.id),
                           text: "Attachments".tr,
                         ),
                         const SizedBox(
                           height: 8,
                         ),
                         CustomButton(
-                          onPress: ()=>controller.showStudentFiles(content.value?.id,stateId: content.value?.studentsStatus?.values.first.id),
+                          onPress: () => controller.showStudentFiles(
+                              content.value?.id,
+                              stateId: content
+                                  .value?.studentsStatus?.values.first.id),
                           text: "Assignment Files".tr,
                         ),
                       ],

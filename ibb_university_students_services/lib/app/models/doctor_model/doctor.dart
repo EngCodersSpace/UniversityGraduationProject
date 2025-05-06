@@ -49,7 +49,7 @@ class Doctor extends User {
       email: json['email'],
       role: Role.fromJson(json['role']),
       phones: json['phones'],
-      // profileImage: json['profile_picture'],
+      profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
       academicDegreeData: JsonUtils.tryJsonDecode(json['academic_degree']),
       administrativePositionData:

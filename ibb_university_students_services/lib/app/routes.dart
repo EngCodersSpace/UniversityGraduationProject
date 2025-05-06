@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/bindings/exam_table_binding
 import 'package:ibb_university_students_services/app/bindings/init_app_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/library_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
+import 'package:ibb_university_students_services/app/bindings/pepper_transactions_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_view.dart';
@@ -15,6 +16,7 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/login_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
+import 'package:ibb_university_students_services/app/views/pepper_transactions_view/pepper_transactions_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
@@ -91,6 +93,11 @@ class AppRoutes {
       name: "/dashboard_student_view",
       page: () => StudentTableView(),
       binding: MainViewBinding(),
+    ),
+    GetPage(
+      name: "/pepper_transactions",
+      page: () => PepperTransactionsViewLoader(),
+      binding: PepperTransactionsBinding(),
     ),
 
     // Add more routes here

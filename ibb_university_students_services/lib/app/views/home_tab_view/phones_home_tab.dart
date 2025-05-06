@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,26 +61,22 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               ? AppColors.tabBackColor
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
-                                      backgroundImage: ((controller
-                                                      .user?.profileImage !=
-                                                  null) &&
-                                              (controller.user?.profileImage !=
-                                                  ""))
-                                          ? AssetImage(
-                                              controller.user?.profileImage ??
-                                                  "")
-                                          : null,
-                                      child: ((controller.user?.profileImage !=
-                                                  null) &&
-                                              (controller.user?.profileImage !=
-                                                  ""))
-                                          ? null
-                                          : CustomText(
+                                      child:ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: controller.user?.profileImage??"",
+                                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) => CustomText(
                                               controller.user?.name?[0] ??
                                                   "".toUpperCase(),
-                                          style: AppTextStyles.secStyle(
-                                              textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
-                                            ),
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader: TextHeaders(fontSize: 50, fontWeight: FontWeight.bold),height: 0)
+                                          ),
+                                          height: width * 0.1*2,
+                                          width: width * 0.1*2,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+
                                     )
                                   ],
                                 ),
@@ -105,8 +102,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               ],
                             ),
                             IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.notifications),
+                              onPressed: controller.showSettings,
+                              icon: const Icon(Icons.settings),
                               color: AppColors.inverseIconColor,
                             )
                           ],
@@ -344,16 +341,23 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             Column(
                               children: [
                                 ServicesCard(
-                                  onTap: () {},
+                                  onTap: controller.pepperTransactionsRoute,
                                   size: cardSize,
                                   color: Colors.transparent,
                                   image: const AssetImage(
                                       "assets/images/services_cards/bookshelf_4797659.png"),
                                 ),
-                                CustomText(
-                                  "Library".tr,
-                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
-                                ),
+                                if (Get.locale?.languageCode == "en") ...[
+                                  CustomText(
+                                      "${"Academic".tr}\n${"Transactions".tr}",
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
+                                  ),
+                                ] else ...[
+                                  CustomText(
+                                      "${"Transactions".tr}\n${"Academic".tr}",
+                                      style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)
+                                  ),
+                                ]
                               ],
                             ),
                           ],

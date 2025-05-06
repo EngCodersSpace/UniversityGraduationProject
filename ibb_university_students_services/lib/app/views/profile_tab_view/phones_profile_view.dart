@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
@@ -18,20 +19,6 @@ class PhoneProfileView extends GetView<ProfileController> {
 
   double height = Get.height;
   double width = Get.width;
-  List<DropdownMenuItem<String>> dropdownMenuItems = [
-    DropdownMenuItem<String>(
-        value: "en",
-        child: CustomText(
-          "English",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),
-        )),
-    DropdownMenuItem<String>(
-        value: "ar",
-        child: CustomText(
-          "العربية",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal),
-        )),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,49 +39,36 @@ class PhoneProfileView extends GetView<ProfileController> {
                           SizedBox(
                             height: height * 0.06,
                           ),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                height: height * 0.16,
-                                width: width * 0.6,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                      width: 3, color: AppColors.tabBackColor),
-                                  image: ((controller.user?.profileImage !=
-                                              null) &&
-                                          (controller.user?.profileImage != ""))
-                                      ? DecorationImage(
-                                          image: AssetImage(
-                                              controller.user!.profileImage!),
-                                          fit: BoxFit.fill)
-                                      : null,
+                          Container(
+                            height: height * 0.2,
+                            width: width * 0.7,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(
+                                  width: 3, color: AppColors.tabBackColor),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: CachedNetworkImage(
+                                imageUrl: controller.user?.profileImage ?? "",
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Center(
+                                  child: CustomText(
+                                      controller.user?.name?[0] ??
+                                          "".toUpperCase(),
+                                      style: AppTextStyles.mainStyle(
+                                          textHeader: TextHeaders(
+                                              fontSize: 80,
+                                              fontWeight: FontWeight.bold),
+                                          height: 0)),
                                 ),
-                                child: ((controller.user?.profileImage !=
-                                            null) &&
-                                        (controller.user?.profileImage != ""))
-                                    ? null
-                                    : Center(
-                                        child: CustomText(
-                                          controller.user?.name?[0] ??
-                                              "".toUpperCase(),
-                                          style: AppTextStyles.mainStyle(
-                                              textHeader: TextHeaders(
-                                                  fontSize: 50,
-                                                  fontWeight: FontWeight.bold)),
-                                        ),
-                                      ),
+                                fit: BoxFit.cover,
                               ),
-                            ],
+                            ),
                           ),
                           SizedBox(
                             height: height * 0.01,
-                          ),
-                          CustomText(
-                            "User ID: ${controller.user?.id}",
-                            style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h3Bold),
                           ),
                         ],
                       ),
@@ -119,6 +93,33 @@ class PhoneProfileView extends GetView<ProfileController> {
                             width: width * 0.4,
                             child: Row(
                               children: [
+                                const Icon(Icons.numbers),
+                                SizedBox(
+                                  width: width * 0.02,
+                                ),
+                                Flexible(
+                                  child: CustomText(
+                                    "User Identifier".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          CustomText(
+                            controller.user?.id.toString() ?? "Unknown",
+                            style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: width * 0.4,
+                            child: Row(
+                              children: [
                                 const Icon(Icons.account_circle),
                                 SizedBox(
                                   width: width * 0.02,
@@ -134,7 +135,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           CustomText(
-                            controller.user?.name??"Unknown",
+                            controller.user?.name ?? "Unknown",
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
                           ),
@@ -192,35 +193,8 @@ class PhoneProfileView extends GetView<ProfileController> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: width * 0.4,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.language),
-                                SizedBox(
-                                  width: width * 0.02,
-                                ),
-                                CustomText(
-                                  "Language".tr,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                          DropdownButton(
-                            items: dropdownMenuItems,
-                            underline: const SizedBox(),
-                            onChanged: (val) {
-                              controller.changeLang(val.toString());
-                            },
-                            value: controller.language.value,
-                          ),
-                        ],
-                      ),
-                      if (controller.user is Student) ...[
+                      if (controller.user != null &&
+                          controller.user is Student) ...[
                         Row(
                           children: [
                             SizedBox(
@@ -293,8 +267,12 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ),
                             ),
                             CustomText(
-                              (controller.user as Doctor).academicDegree?.tr ??
-                                  "Unknown".tr,
+                              (controller.user != null)
+                                  ? (controller.user as Doctor)
+                                          .academicDegree
+                                          ?.tr ??
+                                      "Unknown".tr
+                                  : "Unknown".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                             ),
@@ -321,19 +299,29 @@ class PhoneProfileView extends GetView<ProfileController> {
                               ),
                             ),
                             CustomText(
-                              (controller.user as Doctor)
-                                      .administrativePosition
-                                      ?.tr ??
-                                  "Unknown".tr,
+                              (controller.user != null)
+                                  ? (controller.user as Doctor)
+                                          .administrativePosition
+                                          ?.tr ??
+                                      "Unknown".tr
+                                  : "Unknown".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                             ),
                           ],
                         )
                       ],
-                      CustomButton(
-                        onPress: controller.logout,
-                        text: "Logout".tr,
+                      Column(
+                        children: [
+                          CustomButton(
+                            onPress: controller.changedPasswordClick,
+                            text: "Change Password".tr,
+                          ),
+                          CustomButton(
+                            onPress: controller.logout,
+                            text: "Logout".tr,
+                          )
+                        ],
                       )
                     ],
                   ),

@@ -53,7 +53,7 @@ class StudentFeeController extends GetxController {
 
   Future<void> fetchLevels() async {
     levels = [];
-    levels = await LevelRepository.fetchLevels().then((e) => e.data);
+    levels = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList());
     if (levels?.first != null) {
       level = RxInt(levels!.first.id);
     }

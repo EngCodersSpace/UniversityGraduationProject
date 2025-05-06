@@ -42,7 +42,8 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           borderRadius: const BorderRadius.vertical(
                               bottom: Radius.circular(32)),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -75,7 +76,8 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             "${"Program".tr}:",
                                             textAlign: TextAlign.start,
                                             style: AppTextStyles.secStyle(
-                                                textHeader: AppTextHeaders.h3Bold),
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
@@ -84,11 +86,32 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             borderRadius:
                                                 BorderRadius.circular(24),
                                           ),
-                                          width: (((Get.width - 16) / 7) * 4)*0.63,
+                                          width: (((Get.width - 16) / 7) * 4) *
+                                              0.63,
                                           child: Center(
                                             child: Obx(
                                               () => DropdownButton(
-                                                items: controller.sections,
+                                                items: controller
+                                                    .sections.values
+                                                    .map((section) =>
+                                                        DropdownMenuItem<int>(
+                                                            value: section.id,
+                                                            child: SizedBox(
+                                                              width: (((Get.width -
+                                                                              16) /
+                                                                          7) *
+                                                                      4) *
+                                                                  0.48,
+                                                              child: CustomText(
+                                                                section.name ??
+                                                                    "unknown",
+                                                                style: AppTextStyles.mainStyle(
+                                                                    textHeader:
+                                                                        AppTextHeaders
+                                                                            .h5Bold),
+                                                              ),
+                                                            )))
+                                                    .toList(),
                                                 onChanged:
                                                     controller.changeDepartment,
                                                 value: controller
@@ -103,7 +126,8 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: (((Get.width - 16) / 7) * 4) * 0.04,
+                                          width: (((Get.width - 16) / 7) * 4) *
+                                              0.04,
                                         ),
                                       ],
                                     )),
@@ -119,7 +143,8 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             "${"Level".tr}:",
                                             textAlign: TextAlign.start,
                                             style: AppTextStyles.secStyle(
-                                                textHeader: AppTextHeaders.h3Bold),
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold),
                                           ),
                                         ),
                                         Container(
@@ -128,7 +153,9 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                             borderRadius:
                                                 BorderRadius.circular(24),
                                           ),
-                                          width: (((Get.width - 16) / 7) * 2.5)*0.6,
+                                          width:
+                                              (((Get.width - 16) / 7) * 2.5) *
+                                                  0.6,
                                           child: Center(
                                             child: Obx(
                                               () => DropdownButton(
@@ -148,7 +175,6 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                         ),
                                       ],
                                     )),
-
                               ],
                             ),
                             const SizedBox(
@@ -180,7 +206,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                 ),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: () async =>  controller.refresh(),
+                    onRefresh: () async => controller.refresh(),
                     child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         padding: EdgeInsets.symmetric(
@@ -190,8 +216,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                           () => Column(
                             children: [
                               SizedBox(height: Get.height * 0.01),
-                              if (controller.exams?.value.isEmpty ??
-                                  true) ...[
+                              if (controller.exams?.value.isEmpty ?? true) ...[
                                 SizedBox(
                                   height: Get.height * 0.2,
                                 ),
@@ -202,8 +227,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                       textHeader: AppTextHeaders.h2Bold),
                                 )),
                                 IconButton(
-                                    onPressed: () async =>
-                                        controller.refresh(),
+                                    onPressed: () async => controller.refresh(),
                                     icon: const Icon(Icons.refresh))
                               ],
                               for (int i = 0;
@@ -214,8 +238,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                       .toList()[i]),
                                 ),
                                 if (i <
-                                    ((controller.exams?.value.length ?? 0) -
-                                        1))
+                                    ((controller.exams?.value.length ?? 0) - 1))
                                   SizedBox(
                                     height: Get.height * 0.03,
                                   )

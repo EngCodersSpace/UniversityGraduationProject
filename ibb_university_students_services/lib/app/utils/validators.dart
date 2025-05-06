@@ -24,5 +24,11 @@ class Validators{
       return null;
     }
   }
+  static String? confirmPassword(String? password,String confirm) {
+    if (confirm != password) {
+      return "not match";
+    }
+      return null;
+  }
 
 }

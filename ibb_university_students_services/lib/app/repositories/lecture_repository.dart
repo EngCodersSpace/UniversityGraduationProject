@@ -52,8 +52,6 @@ class LectureRepository {
   static Future<Result<TableDays>> fetchTableTime({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     bool hardFetch = false,
   }) async {
     LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
@@ -78,7 +76,7 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "lectures/grouped?section_id=$sectionId&level_id=$levelId&term=$term");
+          "lectures/grouped?section_id=$sectionId&level_id=$levelId");
       if (response?.statusCode == 200) {
         LecturesCache dayLectures = LecturesCache(
             key:
@@ -167,15 +165,12 @@ class LectureRepository {
   static Future<Result<Lecture>> createLecture({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     required String day,
     required String subjectId,
     required String lectureTime,
     required int doctorId,
     required int lectureDuration,
     String? lectureRoom,
-    bool hardFetch = false,
     bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
@@ -184,8 +179,6 @@ class LectureRepository {
       response = await HttpProvider.post("create-lecture", data: {
         "lecture_section_id": sectionId,
         "lecture_level_id": levelId,
-        "year": year,
-        "term": term,
         "lecture_day": day,
         "subject_id": sectionId,
         "doctor_id": doctorId,
@@ -237,8 +230,6 @@ class LectureRepository {
   static Future<Result<Lecture>> updateLecture({
     required int sectionId,
     required int levelId,
-    required String year,
-    required String term,
     required String day,
     required String subjectId,
     required String lectureTime,
@@ -256,8 +247,6 @@ class LectureRepository {
       response = await HttpProvider.put("update-lecture?id=$id", data: {
         "lecture_section_id": sectionId,
         "lecture_level_id": levelId,
-        "year": year,
-        "term": term,
         "lecture_day": day,
         "subject_id": sectionId,
         "doctor_id": doctorId,

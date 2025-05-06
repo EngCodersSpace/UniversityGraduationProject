@@ -223,6 +223,7 @@ class AssignmentsRepository {
       required String assignmentDate,
       required String assignmentsDueDate,
       required List<Map<String, int>> sectionsAndLevels,
+      bool withCache = true,
       String year = ""}) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
@@ -245,22 +246,24 @@ class AssignmentsRepository {
               group["level_id"] == levelId) {
             newAssignment = assignment;
           }
-          AssignmentsCache? cachedAssignments = _assignmentsGroupsBox?.get(
-              "${group["section_id"]}_${group["level_id"]}_${year}_${subjectId}_Assignments");
-          cachedAssignments ??
-              AssignmentsCache(
-                  key:
-                      "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
-                  data: []);
-          await _assignmentsBox?.put(
-            assignment.id,
-            assignment,
-          );
-          cachedAssignments?.data.add(assignment.id);
-          if (cachedAssignments != null) {
-            await _assignmentsGroupsBox?.put(
-                "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
-                cachedAssignments);
+          if (withCache) {
+            AssignmentsCache? cachedAssignmentsGroups = _assignmentsGroupsBox?.get(
+                "${group["section_id"]}_${group["level_id"]}_${year}_${subjectId}_Assignments");
+            cachedAssignmentsGroups ??
+                AssignmentsCache(
+                    key:
+                        "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                    data: []);
+            await _assignmentsBox?.put(
+              assignment.id,
+              assignment,
+            );
+            cachedAssignmentsGroups?.data.add(assignment.id);
+            if (cachedAssignmentsGroups != null) {
+              await _assignmentsGroupsBox?.put(
+                  "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
+                  cachedAssignmentsGroups);
+            }
           }
           i++;
         }
@@ -291,6 +294,7 @@ class AssignmentsRepository {
       required String assignmentDate,
       required String assignmentsDueDate,
       required List<Map<String, int>> sectionsAndLevels,
+      bool withCache = true,
       String year = ""}) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
@@ -305,13 +309,20 @@ class AssignmentsRepository {
         "sectionsAndLevels": sectionsAndLevels
       });
       if (response?.statusCode == 200) {
-        _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
-
+        if(withCache){
+          _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
+          return Result(
+              data: _assignmentsBox?.get(id),
+              hasError: true,
+              statusCode: response?.statusCode ?? _createError,
+              message: response?.data["message"] ?? "error");
+        }
         return Result(
-            data: _assignmentsBox?.get(id),
+            data: Assignment.fromJson(response?.data["data"]),
             hasError: true,
             statusCode: response?.statusCode ?? _createError,
             message: response?.data["message"] ?? "error");
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -333,7 +344,6 @@ class AssignmentsRepository {
   static Future<Result<void>> deleteAssignment({
     required id,
     String year = "",
-    bool hardFetch = false,
     bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
@@ -392,7 +402,7 @@ class AssignmentsRepository {
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
-              "upload-files-assignment-doctor?assignment_id=${attachment.assignmentId}&section_id=$sectionId&level_id=$levelId",
+              "upload-files-assignment-doctor?assignment_id=${attachment.assignmentId}",
           file: file,
           onSendProgress: (sent, total) {
             double progress = (sent / total) * 100;
@@ -446,7 +456,7 @@ class AssignmentsRepository {
     late Response? response;
     try {
       file.progress = get_x.RxInt(0);
-      file.status??=get_x.RxString("");
+      file.status ??= get_x.RxString("");
       file.status?.value = "Downloading";
       response = await HttpProvider.downloadFile(
         downloadUrl: "download-files-doctor?id=${file.id}",
@@ -491,8 +501,7 @@ class AssignmentsRepository {
       }
       file.status?.value = "None";
       return Result(
-          hasError: false,
-          statusCode: response?.statusCode ?? _createError);
+          hasError: false, statusCode: response?.statusCode ?? _createError);
     } catch (error) {
       return Result(
           statusCode: _createError, message: error.toString(), data: null);
@@ -636,6 +645,7 @@ class AssignmentsRepository {
   static Future<Result<void>> deleteAssignmentFile({
     required int assignmentId,
     required id,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -643,7 +653,7 @@ class AssignmentsRepository {
     try {
       response = await HttpProvider.delete(
           "delete-assignment-files?assignment_id=$id");
-      if (response?.statusCode == 200) {
+      if (response?.statusCode == 200 && withCache) {
         _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -665,6 +675,7 @@ class AssignmentsRepository {
   static Future<Result<void>> deleteStudentAssignmentFile({
     required int assignmentId,
     required id,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -672,7 +683,7 @@ class AssignmentsRepository {
     try {
       response = await HttpProvider.delete(
           "delete-attachment-files?assignment_id=$id");
-      if (response?.statusCode == 200) {
+      if (response?.statusCode == 200 && withCache) {
         _assignmentsBox?.get(assignmentId)?.attachments?.remove(id);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(

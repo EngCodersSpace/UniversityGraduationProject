@@ -239,15 +239,28 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
                                                                         textHeader:
                                                                             AppTextHeaders.h3Bold),
                                                                   )),
+                                                          (mode ==
+                                                              "attachmentsFiles")?
                                                           PopupMenuItem(
                                                               value:
-                                                                  "reUploadFile",
-                                                              child: CustomText(
-                                                                "ReUpload".tr,
+                                                              "DeleteAttachmentFileFromStorage",
+                                                              child:
+                                                              CustomText(
+                                                                "Delete From Storage"
+                                                                    .tr,
                                                                 style: AppTextStyles.mainStyle(
                                                                     textHeader:
-                                                                        AppTextHeaders
-                                                                            .h3Bold),
+                                                                    AppTextHeaders.h3Bold),
+                                                              )):PopupMenuItem(
+                                                              value:
+                                                              "DeleteStudentAssignmentFileFromStorage",
+                                                              child:
+                                                              CustomText(
+                                                                "Delete From Storage"
+                                                                    .tr,
+                                                                style: AppTextStyles.mainStyle(
+                                                                    textHeader:
+                                                                    AppTextHeaders.h3Bold),
                                                               )),
                                                         ],
                                                         child: Icon(
@@ -310,7 +323,7 @@ class AssignmentsAddFilesCard extends GetView<AssignmentsTabController> {
                                           ? controller.uploadAssignmentsFiles()
                                           : controller
                                               .uploadStudentAssignmentsFiles(),
-                                      text: "Upload All".tr,
+                                      text: "Upload".tr,
                                     ),
                                     CustomButton(
                                       onPress: () => Get.back(result: null),

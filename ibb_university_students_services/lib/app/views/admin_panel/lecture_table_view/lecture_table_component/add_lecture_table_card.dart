@@ -566,7 +566,7 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomButton(
-                                  onPress: controller.addlecture, text: "Add"),
+                                  onPress: controller.addLecture, text: "Add"),
                               CustomButton(
                                 onPress: () =>
                                     Navigator.of(Get.overlayContext!).pop(),

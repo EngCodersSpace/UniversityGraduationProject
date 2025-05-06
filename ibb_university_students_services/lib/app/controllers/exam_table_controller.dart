@@ -27,7 +27,7 @@ class ExamTableController extends GetxController {
   Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Rx<Map<int, Exam>>? exams = Rx({});
-  List<DropdownMenuItem<int>> sections = [];
+  Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
@@ -60,7 +60,7 @@ class ExamTableController extends GetxController {
 
   //Exam popCard variables
   Map<String, Subject>? subjects;
-  late RxString subject;
+  late RxString subjectId;
 
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
@@ -82,7 +82,7 @@ class ExamTableController extends GetxController {
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
@@ -155,31 +155,14 @@ class ExamTableController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList() async {
-    List<Section> sectionsData = await SectionRepository.fetchSections()
-        .then((e) => e.data?.values.toList() ?? []);
-    sections = [];
-    for (Section section in sectionsData) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 7.3) * 0.7,
-              child: CustomText(
-                section.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
-    }
-    selectedSection.value = sectionsData.first.id;
+    sections = await SectionRepository.fetchSections()
+        .then((e) => e.data??{});
+    selectedSection.value = sections.values.first.id;
   }
 
   Future<void> initLevelDropdownMenuList() async {
     List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -233,7 +216,7 @@ class ExamTableController extends GetxController {
         subjects = {};
         subjects =
             await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
-        subject = RxString(data["subject"]["subject_id"]);
+        subjectId = RxString(data["subject"]["subject_id"]);
         dateController.text = data["exam_date"].toString();
         timeController.text =
             DateTimeUtils.formatStringTime(time: data["exam_time"]);
@@ -268,7 +251,7 @@ class ExamTableController extends GetxController {
     subjects =
         await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if (subjects?.values.first != null) {
-      subject = RxString(subjects!.values.first.id);
+      subjectId = RxString(subjects!.values.first.id);
     }
     Get.dialog(const PopUpIAddAndUpdateExamCard());
   }
@@ -278,8 +261,8 @@ class ExamTableController extends GetxController {
     if (formKey.currentState!.validate()) {
       jsData["exam_section_id"] = selectedSection.value;
       jsData["exam_level_id"] = selectedLevel.value;
-      (subject.value.isNotEmpty && subject.value != "Unknown".tr)
-          ? jsData["subject_id"] = subject.value
+      (subjectId.value.isNotEmpty && subjectId.value != "Unknown".tr)
+          ? jsData["subject_id"] = subjectId.value
           : null;
       (dateController.text.isNotEmpty && dateController.text != "Unknown".tr)
           ? jsData["exam_date"] = dateController.text

@@ -19,17 +19,17 @@ class InitAppController extends GetxController {
   Future<void> _initializeApp() async {
     Connectivity().onConnectivityChanged.listen((result) {
       if (result.contains(ConnectivityResult.none)) {
-
-      } else {
-
-      }
+      } else {}
     });
+
     try {
-      await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
+      // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
+      // await HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
+      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
+
       try {
         await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform);
@@ -39,9 +39,9 @@ class InitAppController extends GetxController {
         }
       }
       await NotificationHandler.initialize();
-      // Set initialization complete
+
+      // await DataSyncServices.startSync();
     } catch (e) {
-      // Handle errors if needed
       if (kDebugMode) {
         print('Initialization error: $e');
       }

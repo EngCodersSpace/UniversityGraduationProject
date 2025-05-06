@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/controllers/setting_controller.dart';
+import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/settings_card.dart';
 import '../../models/helper_models/result.dart';
 import '../../repositories/user_repository.dart';
 import '../../models/user_model/user.dart';
@@ -68,6 +70,10 @@ class HomeTabController extends GetxController
     return false;
   }
 
+  showSettings(){
+    Get.put(SettingController());
+    Get.dialog(PopUpSettingsCard()).then((_) => Get.delete<SettingController>());
+  }
   void _setUpTimer() {
     try {
       const duration = Duration(seconds: 5);
@@ -131,6 +137,7 @@ class HomeTabController extends GetxController
   void academicCardRoute() {
     Get.toNamed("/academic_card");
   }
+
   void paymentsRoute() {
     Get.toNamed("/student_payments");
   }
@@ -143,4 +150,7 @@ class HomeTabController extends GetxController
     Get.toNamed("/student_result");
   }
 
+  void pepperTransactionsRoute() {
+    Get.toNamed("/pepper_transactions");
+  }
 }

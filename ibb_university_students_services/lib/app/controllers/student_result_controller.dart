@@ -9,6 +9,7 @@ import '../models/student_model/student.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/user_repository.dart';
 import '../styles/text_styles.dart';
+import '../utils/maping_data.dart';
 import '../utils/snake_bar.dart';
 
 class StudentResultController extends GetxController {
@@ -90,14 +91,14 @@ class StudentResultController extends GetxController {
 
   Future<void> initDropdownMenuLists() async {
     List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: ((((Get.width - 32) / 7) * 3)-50)*0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(
@@ -111,9 +112,9 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 1",
           child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: ((((Get.width - 32) / 7) * 3.8)-50)*0.6,
               child: CustomText(
-                "Term 1",
+                mappingTerms("Term 1"),
                 style: AppTextStyles.mainStyle(
                   textHeader: AppTextHeaders.h5Bold,
                 ),
@@ -121,9 +122,9 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
-              width: (Get.width / 3.3) * 0.75,
+              width: ((((Get.width - 32) / 7) * 3.8)-50)*0.6,
               child: CustomText(
-                "Term 2",
+                mappingTerms("Term 2"),
                 style: AppTextStyles.mainStyle(
                   textHeader: AppTextHeaders.h5Bold,
                 ),

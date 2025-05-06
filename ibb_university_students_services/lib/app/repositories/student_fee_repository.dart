@@ -127,7 +127,7 @@ class StudentFeeRepository {
   static Future<Result<StudentFee>> createStudentFee({
     required int studentId,
     required data,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
@@ -136,10 +136,12 @@ class StudentFeeRepository {
       StudentFee? newStudentFee;
       if (response?.statusCode == 201) {
         newStudentFee = StudentFee.fromJson(response?.data["Fee"]);
-        StudentFeeCache? cachedFees = _studentFeeBox?.get(studentId);
-        cachedFees?.data[newStudentFee.id] = newStudentFee;
-        if (cachedFees != null) {
-          await _studentFeeBox?.put(studentId, cachedFees);
+        if(withCache){
+          StudentFeeCache? cachedFees = _studentFeeBox?.get(studentId);
+          cachedFees?.data[newStudentFee.id] = newStudentFee;
+          if (cachedFees != null) {
+            await _studentFeeBox?.put(studentId, cachedFees);
+          }
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
@@ -163,7 +165,7 @@ class StudentFeeRepository {
     required int studentId,
     required id,
     required data,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -172,16 +174,25 @@ class StudentFeeRepository {
     try {
       response = await HttpProvider.put("update-fee", data: data);
       if (response?.statusCode == 200) {
-        cachedFees?.data[id] = StudentFee.fromJson(response?.data["data"]);
-        if (cachedFees != null) {
-          await _studentFeeBox?.put(studentId, cachedFees);
+        StudentFee newFee = StudentFee.fromJson(response?.data["data"]);
+        if(withCache){
+          cachedFees?.data[id] = newFee;
+          if (cachedFees != null) {
+            await _studentFeeBox?.put(studentId, cachedFees);
+          }
         }
+        return Result(
+            data: newFee,
+            hasError: false,
+            statusCode: response?.statusCode ?? _updateError,
+            message: response?.data["message"] ?? "error");
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       return Result(
-          data: cachedFees?.data[id],
+          data: null,
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
@@ -197,7 +208,7 @@ class StudentFeeRepository {
   static Future<Result<void>> deleteStudentFee({
     required int studentId,
     required id,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -207,9 +218,11 @@ class StudentFeeRepository {
 
       response = await HttpProvider.delete("delete-fee?id=$id");
       if (response?.statusCode == 200) {
-        cachedFees?.data.remove(id);
-        if (cachedFees != null) {
-          await _studentFeeBox?.put(studentId, cachedFees);
+        if(withCache){
+          cachedFees?.data.remove(id);
+          if (cachedFees != null) {
+            await _studentFeeBox?.put(studentId, cachedFees);
+          }
         }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
