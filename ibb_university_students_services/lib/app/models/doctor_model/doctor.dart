@@ -24,6 +24,7 @@ class Doctor extends User {
     super.profileImage,
     super.role,
     super.section,
+    super.collegeNameData,
     this.status,
     this.administrativePositionData,
     this.academicDegreeData,
@@ -42,14 +43,25 @@ class Doctor extends User {
   }
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
+    List<String> numbers = [];
+
+    if (json['phone_numbers'] != null && json['phone_numbers'] is List) {
+      for (var item in json['phone_numbers']) {
+        if (item is Map && item.containsKey("phone_number")) {
+          numbers.add(item["phone_number"]);
+        }
+      }
+    }
+
     return Doctor(
       id: json['user_id'],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
-      dateOfBrith: json['date_of_brith'],
+      dateOfBrith: json['date_of_birth'],
       email: json['email'],
       role: Role.fromJson(json['role']),
-      phones: json['phones'],
-      profileImage: json['profile_picture'],
+      phones: numbers,
+      collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
+      // profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
       academicDegreeData: JsonUtils.tryJsonDecode(json['academic_degree']),
       administrativePositionData:
@@ -69,6 +81,7 @@ class Doctor extends User {
       "role": role?.toJson(),
       "profile_image": profileImage,
       "phones": phones,
+      // "college_name": collegeName,
       "student_section": section,
       "status": status,
       "section": section,

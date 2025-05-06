@@ -15,43 +15,47 @@ class SubjectTableView extends GetView<DashboardSubjectsTableController> {
     return Scaffold(
       body: Container(
         color: AppColors.tabBackColor,
-        width: Get.width,
-        height: Get.height,
+        width: controller.width,
+        height: controller.height,
         child: Column(
           children: [
             HeaderOfViewComponent(tableName: "Subject", controller: controller),
             SizedBox(
-              height: Get.height * 0.01,
+              height: controller.height * 0.01,
             ),
             SubjectTableFiltersComponent(),
             SizedBox(
-              height: Get.height * 0.01,
+              height: controller.height * 0.01,
             ),
             Expanded(
-                child: Scrollbar(
+                child: Container(
+              width: controller.width * 0.9,
+              padding: EdgeInsets.all(5),
+              child: Scrollbar(
+                  controller: controller.vertical,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
                     controller: controller.vertical,
-                    thumbVisibility: true,
-                    trackVisibility: true,
-                    child: SingleChildScrollView(
-                      controller: controller.vertical,
-                      child: GetBuilder(
-                          id: "DataTable",
-                          builder: (ctx) => Scrollbar(
+                    child: GetBuilder<DashboardSubjectsTableController>(
+                        id: "DataTable",
+                        builder: (ctx) => Scrollbar(
+                            controller: controller.horizontal,
+                            thumbVisibility: true,
+                            trackVisibility: true,
+                            child: PaginatedDataTable(
                               controller: controller.horizontal,
-                              thumbVisibility: true,
-                              trackVisibility: true,
-                              child: PaginatedDataTable(
-                                controller: controller.horizontal,
-                                rowsPerPage: controller.rowsPerPage.value,
-                                columnSpacing: controller.width * 0.05,
-                                onPageChanged: controller.onPageChang,
-                                availableRowsPerPage: <int>[5, 10, 20, 30],
-                                onRowsPerPageChanged: controller.onRowChange,
-                                showCheckboxColumn: false,
-                                columns: controller.kTableColumn,
-                                source: MyData(),
-                              ))),
-                    )))
+                              rowsPerPage: controller.rowsPerPage.value,
+                              columnSpacing: controller.width * 0.05,
+                              onPageChanged: controller.onPageChang,
+                              availableRowsPerPage: <int>[5, 10, 20, 30],
+                              onRowsPerPageChanged: controller.onRowChange,
+                              showCheckboxColumn: false,
+                              columns: controller.kTableColumn,
+                              source: MyData(),
+                            ))),
+                  )),
+            ))
           ],
         ),
       ),
@@ -73,25 +77,22 @@ class MyData extends DataTableSource {
     return DataRow.byIndex(
         index: index % controller.rowsPerPage.value,
         selected: controller.selectedRow
-            .contains(items[index % controller.rowsPerPage.value].id as int),
+            .contains(items[index % controller.rowsPerPage.value].id),
         onSelectChanged: (selected) {},
         cells: [
           DataCell(
             onTap: () {},
             Obx(() => Checkbox(
                   value: controller.selectedRow.contains(
-                          items[index % controller.rowsPerPage.value].id
-                              as int) ||
+                          items[index % controller.rowsPerPage.value].id) ||
                       controller.selectedAll.value,
                   onChanged: (isSelected) {
                     if (isSelected == true) {
-                      controller.selectedRow.add(
-                          items[index % controller.rowsPerPage.value].id
-                              as int);
+                      controller.selectedRow
+                          .add(items[index % controller.rowsPerPage.value].id);
                     } else {
                       controller.selectedRow.remove(
-                          items[index % controller.rowsPerPage.value].id
-                              as int);
+                          items[index % controller.rowsPerPage.value].id);
                     }
                   },
                 )),
@@ -99,17 +100,18 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .id
-                      .toString())),
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].id)),
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -120,6 +122,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -131,39 +134,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .instructors
-                      ?.values
-                      .first
-                      .name)),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].Section.name)),//import the section name
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].Level.name)),//import the level name
-          DataCell(
-              onTap: () {},
-              CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },

@@ -1,48 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
-// import '../../../../components/custom_text_v2.dart';
-import '../../../../styles/app_colors.dart';
-// import '../../../../styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_payment_table_controller.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
-class StudentTableFiltersComponent
-    extends GetView<DashboardStudentTableController> {
-  const StudentTableFiltersComponent({super.key});
+class PaymentTableFilterComponent
+    extends GetView<DashboardPaymentTableController> {
+  const PaymentTableFilterComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // CustomText(
-          //   "Section".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
-          Container(
-            height: Get.height * 0.06,
-            width: Get.width * 0.12,
-            decoration: BoxDecoration(
-              color: AppColors.inverseIconColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Obx(() => DropdownButton(
-                    items: controller.sections,
-                    onChanged: controller.changeSection,
-                    value: controller.selectedSection.value,
-                    underline: const SizedBox(),
-                    iconEnabledColor: AppColors.mainCardColor,
-                    dropdownColor: AppColors.inverseCardColor,
-                  )),
-            ),
-          ),
-          SizedBox(
-            width: Get.width * 0.01,
-          ),
           // CustomText(
           //   "Level".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
@@ -72,7 +43,7 @@ class StudentTableFiltersComponent
             width: Get.width * 0.01,
           ),
           // CustomText(
-          //   "Order".tr,
+          //   "Term".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
@@ -80,7 +51,28 @@ class StudentTableFiltersComponent
           // ),
           Container(
             height: Get.height * 0.06,
-            width: Get.width * 0.11,
+            width: Get.width * 0.08,
+            decoration: BoxDecoration(
+              color: AppColors.inverseIconColor,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Center(
+              child: Obx(() => DropdownButton(
+                    items: controller.term,
+                    onChanged: controller.changeTerm,
+                    value: controller.selectedTerm.value,
+                    underline: const SizedBox(),
+                    iconEnabledColor: AppColors.mainCardColor,
+                    dropdownColor: AppColors.inverseCardColor,
+                  )),
+            ),
+          ),
+          SizedBox(
+            width: Get.width * 0.01,
+          ),
+          Container(
+            height: Get.height * 0.06,
+            width: Get.width * 0.15,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -125,7 +117,7 @@ class StudentTableFiltersComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.27,
+            width: controller.width * 0.25,
           ),
           IconButton(
             onPressed: () {

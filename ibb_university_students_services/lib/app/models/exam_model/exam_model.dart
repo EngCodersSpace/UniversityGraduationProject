@@ -1,9 +1,8 @@
-
-
 import 'package:hive/hive.dart';
 
 import '../subject_model/subject_model.dart';
 part 'exam_model.g.dart';
+
 @HiveType(typeId: 6)
 class Exam {
   Exam({
@@ -28,27 +27,24 @@ class Exam {
   @HiveField(5)
   String? hall;
 
-
-  factory Exam.fromJson(Map<String, dynamic> json,{Subject? subject}) {
+  factory Exam.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return Exam(
         id: json['exam_id'],
         subject: subject,
         date: json['exam_date'],
         day: json['exam_day'],
         examTime: json['exam_time'],
-        hall: json['exam_room']
-    );
+        hall: json['exam_room']);
   }
 
   Map<String, dynamic> toJson() {
     return {
       "exam_id": id,
-      "subject":subject?.toJson(),
+      "subject": subject?.toJson(),
       "exam_date": date,
       "exam_day": day,
       "exam_time": examTime,
       "exam_room": hall,
     };
   }
-
 }

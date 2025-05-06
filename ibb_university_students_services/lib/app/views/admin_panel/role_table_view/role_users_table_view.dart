@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_table_component/role_table_filter_component.dart';
 
@@ -63,94 +61,94 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
                 ),
               ),
             ),
-            Obx(
-              () => InkWell(
-                onTap: () => controller.changeDoctorTableView(),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24), // Top-left corner rounded
-                      bottomLeft:
-                          Radius.circular(24), // Bottom-left corner rounded
-                    ),
-                    color: (controller.selectedIndex.value == 0)
-                        ? AppColors.tabBackColor
-                        : AppColors.inverseTabBackColor,
-                  ),
-                  padding: const EdgeInsets.only(left: 25),
-                  margin: const EdgeInsets.only(left: 16),
-                  height: Get.height * 0.08,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Icon(
-                      //   Icons.library_books_outlined,
-                      //   color: (controller.selectedindex.value == int)
-                      //       ? AppColors.secTextColor
-                      //       : AppColors.mainTextColor,
-                      // ),
-                      SizedBox(
-                        width: Get.width * 0.005,
-                      ),
-                      CustomText(
-                        "Doctor".tr,
-                        style: AppTextStyles.customColorStyle(
-                          color: (controller.selectedIndex.value == 0)
-                              ? AppColors.secTextColor
-                              : AppColors.mainTextColor,
-                          textHeader: AppTextHeaders.h6Bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Obx(
-              () => InkWell(
-                onTap: () => controller.changeStudentTableView(),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24), // Top-left corner rounded
-                      bottomLeft:
-                          Radius.circular(24), // Bottom-left corner rounded
-                    ),
-                    color: (controller.selectedIndex.value == 1)
-                        ? AppColors.tabBackColor
-                        : AppColors.inverseTabBackColor,
-                  ),
-                  padding: const EdgeInsets.only(left: 25),
-                  margin: const EdgeInsets.only(left: 16),
-                  height: Get.height * 0.08,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Icon(
-                      //   Icons.library_books_outlined,
-                      //   color: (controller.selectedindex.value == int)
-                      //       ? AppColors.secTextColor
-                      //       : AppColors.mainTextColor,
-                      // ),
-                      SizedBox(
-                        width: Get.width * 0.005,
-                      ),
-                      CustomText(
-                        "Student".tr,
-                        style: AppTextStyles.customColorStyle(
-                          color: (controller.selectedIndex.value == 1)
-                              ? AppColors.secTextColor
-                              : AppColors.mainTextColor,
-                          textHeader: AppTextHeaders.h6Bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => InkWell(
+            //     onTap: () => controller.changeDoctorTableView(),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         borderRadius: const BorderRadius.only(
+            //           topLeft: Radius.circular(24), // Top-left corner rounded
+            //           bottomLeft:
+            //               Radius.circular(24), // Bottom-left corner rounded
+            //         ),
+            //         color: (controller.selectedIndex.value == 0)
+            //             ? AppColors.tabBackColor
+            //             : AppColors.inverseTabBackColor,
+            //       ),
+            //       padding: const EdgeInsets.only(left: 25),
+            //       margin: const EdgeInsets.only(left: 16),
+            //       height: Get.height * 0.08,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //           // Icon(
+            //           //   Icons.library_books_outlined,
+            //           //   color: (controller.selectedindex.value == int)
+            //           //       ? AppColors.secTextColor
+            //           //       : AppColors.mainTextColor,
+            //           // ),
+            //           SizedBox(
+            //             width: Get.width * 0.005,
+            //           ),
+            //           CustomText(
+            //             "Doctor".tr,
+            //             style: AppTextStyles.customColorStyle(
+            //               color: (controller.selectedIndex.value == 0)
+            //                   ? AppColors.secTextColor
+            //                   : AppColors.mainTextColor,
+            //               textHeader: AppTextHeaders.h6Bold,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Obx(
+            //   () => InkWell(
+            //     onTap: () => controller.changeStudentTableView(),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         borderRadius: const BorderRadius.only(
+            //           topLeft: Radius.circular(24), // Top-left corner rounded
+            //           bottomLeft:
+            //               Radius.circular(24), // Bottom-left corner rounded
+            //         ),
+            //         color: (controller.selectedIndex.value == 1)
+            //             ? AppColors.tabBackColor
+            //             : AppColors.inverseTabBackColor,
+            //       ),
+            //       padding: const EdgeInsets.only(left: 25),
+            //       margin: const EdgeInsets.only(left: 16),
+            //       height: Get.height * 0.08,
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //           // Icon(
+            //           //   Icons.library_books_outlined,
+            //           //   color: (controller.selectedindex.value == int)
+            //           //       ? AppColors.secTextColor
+            //           //       : AppColors.mainTextColor,
+            //           // ),
+            //           SizedBox(
+            //             width: Get.width * 0.005,
+            //           ),
+            //           CustomText(
+            //             "Student".tr,
+            //             style: AppTextStyles.customColorStyle(
+            //               color: (controller.selectedIndex.value == 1)
+            //                   ? AppColors.secTextColor
+            //                   : AppColors.mainTextColor,
+            //               textHeader: AppTextHeaders.h6Bold,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -195,6 +193,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -206,6 +205,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },

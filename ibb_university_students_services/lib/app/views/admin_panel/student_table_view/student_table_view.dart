@@ -98,6 +98,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -110,6 +111,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -121,6 +123,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -132,6 +135,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -143,6 +147,20 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    // ignore: invalid_use_of_protected_member
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].collegeName ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -156,6 +174,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -168,6 +187,21 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    // ignore: invalid_use_of_protected_member
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .role
+                      ?.name
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -180,6 +214,20 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    // ignore: invalid_use_of_protected_member
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                          .enrollmentYear ??
+                      "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     // ignore: invalid_use_of_protected_member
                     controller.refresh();
@@ -188,6 +236,19 @@ class MyData extends DataTableSource {
                   enableBorder: false,
                   initialValue:
                       items[index % controller.rowsPerPage.value].system)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    // ignore: invalid_use_of_protected_member
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .repeatYearsCount
+                      .toString())),
         ]);
   }
 

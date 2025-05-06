@@ -193,6 +193,11 @@ class DashboardDoctorTableController extends GetxController
     super.onInit();
   }
 
+  @override
+  void refresh() async {
+    await fetchDoctoreData();
+  }
+
   void onRowChange(int? value) async {
     if (value != null) {
       rowsPerPage.value = value;
@@ -203,11 +208,13 @@ class DashboardDoctorTableController extends GetxController
 
   Future<void> fetchDoctoreData({bool showSnakeBars = true}) async {
     Result results = await UserRepository.fetchDashboardDoctors(
-        order: selectedOrder.value,
-        sort: selectedSort.value,
-        search: searchController.text,
-        limit: rowsPerPage.value,
-        page: currentPage);
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      hardfetch: false,
+    );
     if (results.statusCode == 200) {
       doctors.value = results.data["Doctors"] ?? {};
       availableRows.value = results.data["totalDoctor"] ?? 0;
@@ -287,9 +294,39 @@ class DashboardDoctorTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupCardClear() {
+    doctorId.clear();
+    name.clear();
+    dateOfBirth.clear();
+    email.clear();
+    role.clear();
+    phoneNumber.clear();
+    college.clear();
+    acadimicDegree.clear();
+    adminPosition.clear();
+  }
+
   @override
-  // ignore: unnecessary_overrides
   void onClose() {
-    super.onClose();
+    searchController.dispose();
+    popupCardClear();
+    doctorId.dispose();
+    name.dispose();
+    dateOfBirth.dispose();
+    email.dispose();
+    role.dispose();
+    phoneNumber.dispose();
+    college.dispose();
+    acadimicDegree.dispose();
+    adminPosition.dispose();
+    doctorIdFocus.dispose();
+    nameFocus.dispose();
+    dateOfBirthFocus.dispose();
+    emailFocus.dispose();
+    roleFocus.dispose();
+    phoneFocus.dispose();
+    collegeFocus.dispose();
+    acadimicFocus.dispose();
+    administrativeFocus.dispose();
   }
 }

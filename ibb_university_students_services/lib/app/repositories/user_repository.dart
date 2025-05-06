@@ -7,7 +7,6 @@ import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
-import '../services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
 import '../services/http_provider.dart';
 
@@ -39,9 +38,8 @@ class UserRepository {
       {bool rememberMe = false}) async {
     late Response? response;
     try {
-      final String? fcmToken = await NotificationHandler.getDeviceToken();
       response = await HttpProvider.post("login",
-          data: {"user_id": id, "password": password, "fcm_token": fcmToken});
+          data: {"user_id": id, "password": password});
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
@@ -142,23 +140,23 @@ class UserRepository {
     }
   }
 
-  static Future<Result<Map>> fetchDashboardDoctors({
-    bool hardFetch = false,
+  static Future<Result<Student>> fetchStudents({
+    required int id,
+    bool hardfetch = false,
   }) async {
     late Response? response;
     try {
-      Map<int, Doctor> doctor = {};
-      response = await HttpProvider.get("get-doctors-panle");
+      response = await HttpProvider.get("student/200?student_id=$id");
       if (response?.statusCode == 200) {
-        for (Map<String, dynamic> jsDoctor in response?.data['data']) {
-          doctor[jsDoctor["doctor_id"]] = Doctor.fromJson(jsDoctor);
-        }
+        Student? student = Student.fromJson(response?.data["data"]);
+        return Result(
+            data: student,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
       }
       return Result(
-          data: {
-            "Doctors": doctor,
-            "totalDoctor": response?.data["pagination"]["totalDoctors"],
-          },
+          data: null,
           hasError: true,
           statusCode: response?.statusCode,
           message: response?.data["message"] ?? "error");
@@ -171,24 +169,163 @@ class UserRepository {
     }
   }
 
+  // static Future<Result<Student>> fetchStudentsForPayment({
+  //   bool hardfetch = false,
+  // }) async {
+  //   late Response? response;
+  //   try {
+  //     response = await HttpProvider.get("student/200");
+  //     if (response?.statusCode == 200) {
+  //       Student? student = Student.fromJson(response?.data["data"]);
+  //       return Result(
+  //           data: student,
+  //           hasError: false,
+  //           statusCode: response?.statusCode,
+  //           message: response?.data["message"] ?? "error");
+  //     }
+  //     return Result(
+  //         data: null,
+  //         hasError: true,
+  //         statusCode: response?.statusCode,
+  //         message: response?.data["message"] ?? "error");
+  //   } catch (error) {
+  //     return Result(
+  //         hasError: true,
+  //         statusCode: response?.statusCode,
+  //         message: error.toString(),
+  //         data: null);
+  //   }
+  // }
+
+  // static Future<Result<Student>> fetchAllStudent({
+  //   bool hardFetch = false,
+  // }) async {
+  //   late Response? response;
+  //   try {
+  //     response = await HttpProvider.get("student");
+  //     if (response?.statusCode == 200) {
+  //       Student student = Student.fromJson(response?.data);
+  //       return Result(
+  //         data: student,
+  //         hasError: false,
+  //         statusCode: response?.statusCode,
+  //         message: response?.data["message"] ?? "error",
+  //       );
+  //     }
+  //     return Result(
+  //       data: null,
+  //       hasError: true,
+  //       statusCode: response?.statusCode,
+  //       message: response?.data["message"] ?? "error",
+  //     );
+  //   } catch (error) {
+  //     return Result(
+  //       hasError: true,
+  //       statusCode: response?.statusCode,
+  //       message: error.toString(),
+  //       data: null,
+  //     );
+  //   }
+  // }
+
+  static Future<Result<Map>> fetchDashboardDoctors({
+    int? doctorId,
+    String? acadimicDegree,
+    String? postion,
+    String? name,
+    String? email,
+    int? dateOfBirth,
+    int? roleId,
+    int? sectionName,
+    int? phoneNumber,
+    String? order,
+    String? sort,
+    String? search,
+    int limit = 20,
+    int? page,
+    bool hardfetch = false,
+  }) async {
+    late Response? response;
+    try {
+      Map<int, Doctor> doctor = {};
+      response = await HttpProvider.get(
+          "get-doctors-panle?doctor_id=${doctorId ?? ''}&academic_degree=${acadimicDegree ?? ''}&administrative_position=${postion ?? ''}&user_name=${name ?? ''}&email=${email ?? ''}&data_of_birth=${dateOfBirth ?? ''}&roleId=${roleId ?? ''}&sectionName=${sectionName ?? ''}&phoneNumber=${phoneNumber ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page");
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsDoctor in response?.data['data']) {
+          doctor[jsDoctor["doctor_id"]] = Doctor.fromJson(jsDoctor);
+        }
+        return Result(
+            data: {
+              "Doctors": doctor,
+              "totalDoctor": response?.data["pagination"]["totalDoctors"],
+            },
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+      return Result(
+          data: {
+            "Doctors": doctor,
+            "totalDoctor": 0,
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
   static Future<Result<Map>> fetchDashboardStudent({
+    int? studentId,
+    String? name,
+    String? email,
+    int? dateOfBirth,
+    String? college,
+    int? phoneNumber,
+    int? page,
+    int? level,
+    int? section,
+    int? studyPlan,
+    int? roleId,
+    int? limit,
+    int? repeatYear,
+    String? enrollment,
+    String? studySystem,
+    String? sort,
+    String? order,
+    String? search,
     bool hardFetch = false,
   }) async {
     late Response? response;
     try {
       Map<int, Student> student = {};
-      response = await HttpProvider.get("get-student-panle");
+      response = await HttpProvider.get(
+          "get-student-panle?student_id=${studentId ?? ''}&study_plan_id=${studyPlan ?? ''}&student_level_id=${level ?? ''}&enrollment_year=${enrollment ?? ''}&sectionName=${section ?? ''}&studentSystem=${studySystem ?? ''}&user_name=${name ?? ''}&email=${email ?? ''}&data_of_birth=${dateOfBirth ?? ''}&collegeName=${college ?? ''}&phoneNumber=${phoneNumber ?? ''}&rolename=${roleId ?? ""}&repeat_years_count=${repeatYear ?? ""}&limit=${limit ?? ""}&orderBy=${order ?? ""}&sort=${sort ?? ""}&search=${search ?? ""}&page=$page");
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsStudent in response?.data['data']) {
           student[jsStudent['student_id']] = Student.fromJson(jsStudent);
         }
+        return Result(
+          data: {
+            "students": student,
+            "totalStudent": response?.data["pagination"]["totalStudents"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
       }
       return Result(
         data: {
           "students": student,
-          "totalStudent": response?.data["pagination"]["totalstudents"],
+          "totalStudent": 0,
         },
-        hasError: true,
+        hasError: false,
         statusCode: response?.statusCode,
         message: response?.data["message"] ?? "error",
       );
@@ -237,38 +374,7 @@ class UserRepository {
           data: null,
           hasError: true,
           statusCode: response?.statusCode ?? 604,
-          message: response?.statusMessage ?? "error");
-    } catch (error) {
-      return Result(
-          hasError: true,
-          statusCode: 604,
-          message: error.toString(),
-          data: null);
-    }
-  }
-
-  static Future<Result<void>> changePassword({
-    required String oldPassword,
-    required String newPassword,
-    required String passwordConfirmation,
-  }) async {
-    late Response? response;
-    try {
-      response = await HttpProvider.post("change-password", data: {
-        "oldPassword": oldPassword,
-        "newPassword": newPassword,
-        "confirmPassword": passwordConfirmation,
-      });
-      if (response?.statusCode == 200) {
-        return Result(
-            hasError: false,
-            statusCode: response?.statusCode,
-            message: "successful");
-      }
-      return Result(
-          hasError: true,
-          statusCode: response?.statusCode ?? 604,
-          message: response?.statusMessage ?? "error");
+          message: response?.data["message"] ?? "error");
     } catch (error) {
       return Result(
           hasError: true,

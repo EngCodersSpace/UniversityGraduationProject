@@ -185,6 +185,48 @@ class LibraryRepository {
     }
   }
 
+  static Future<Result<Map>> fetchDashboardLibrary({
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("url"); //get the url from bachend
+      Map<int, LibraryFile> library = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsLib in response?.data['data']) {
+          library[jsLib["library_id"]] =
+              LibraryFile.fromJson(jsLib); //get the name of id from backend
+        }
+        return Result(
+          data: {
+            "library": library,
+            "totalbooks": response?.data["pagination"]
+                ["totalbooks"], //get the name of id from backend
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "library": library,
+          "totalbooks": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _fetchError,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
+
 //
 // static Future<Result<Assignment>> createAssignment(
 //     {required int sectionId,

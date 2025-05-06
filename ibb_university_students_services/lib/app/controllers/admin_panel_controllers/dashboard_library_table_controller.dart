@@ -1,15 +1,513 @@
-import 'package:get/get.dart';
+import 'dart:async';
 
-class DashboardLibraryTableController extends GetxController {
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/editable_text.dart';
+import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
+import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/library_table_view/library_table_component/add_library_table_card.dart';
+
+class DashboardLibraryTableController extends GetxController
+    implements HeaderOfViewControllerInterface {
+  double get width => (Get.width - (Get.width * 2));
+  double get height => Get.height;
+  RxMap<int, LibraryFile> library = RxMap({});
+  RxString faildMessage = "".obs;
+  RxSet<int> selectedRows = RxSet({});
+  RxInt availableRows = 0.obs;
+  ScrollController vertical = ScrollController();
+  ScrollController horizontal = ScrollController();
+  RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
+  int currentPage = 1;
+  RxBool selectAll = false.obs;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  RxBool loadingstate = true.obs;
+  Rx<int?> selectedSection = Rx(null);
+  Rx<int?> selectedLevel = Rx(null);
+  RxString selectedTerm = "".obs;
+  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedSort = "DESC".obs;
+  List<DropdownMenuItem<int>> sections = [];
+  List<DropdownMenuItem<int>> levels = [];
+  List<DropdownMenuItem<String>> term = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 1",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "1st",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Term 2",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "2ec",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+  ];
+  List<DropdownMenuItem<String>> orderBy = [
+    DropdownMenuItem<String>(
+        value: "lecture_time",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Lecture Time",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "lecture_day",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Lecture Day",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "lecture_room",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Lecture Room",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "subject_id",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Subject",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+  ];
+  List<DropdownMenuItem<String>> sort = [
+    DropdownMenuItem<String>(
+        value: "DESC",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Descending",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "ASC",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Ascending",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+  ];
+  List<DataColumn> kTableColumn = [];
+  Timer? _debounce;
+
+  //popup card component
+  Map<String, Subject>? subjects;
+  Map<int, Section> section = <int, Section>{}.obs;
+  List<Level>? level;
+  Rx<String?> subjectId = Rx(null);
+  Rx<int?> sectionId = Rx(null);
+  Rx<int?> levelId = Rx(null);
+  TextEditingController title = TextEditingController();
+  TextEditingController author = TextEditingController();
+  TextEditingController pages = TextEditingController();
+  TextEditingController edition = TextEditingController();
+  TextEditingController category = TextEditingController();
+  TextEditingController size = TextEditingController();
+  TextEditingController path = TextEditingController();
+  TextEditingController image = TextEditingController();
+  TextEditingController name = TextEditingController();
+  FocusNode titleFocus = FocusNode();
+  FocusNode authorFocus = FocusNode();
+  FocusNode pageFocus = FocusNode();
+  FocusNode editionFocus = FocusNode();
+  FocusNode categoryFocus = FocusNode();
+  FocusNode sizeFocus = FocusNode();
+  FocusNode pathFocus = FocusNode();
+  FocusNode imageFocus = FocusNode();
+  FocusNode nameFocus = FocusNode();
+
   @override
-  // ignore: unnecessary_overrides
-  void onInit() {
+  void onInit() async {
+    searchController.addListener(() {
+      onSearch();
+    });
+    kTableColumn = <DataColumn>[
+      DataColumn(
+        label: Obx(() => Checkbox(
+              value: selectAll.value,
+              onChanged: (isSelected) {
+                if (isSelected == null) return;
+                selectAll.value = isSelected;
+              },
+            )),
+      ),
+      DataColumn(
+          label: CustomText(
+        "ID",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Section",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Level",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Title",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "pages",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Edation",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Category",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Size",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Path",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Image",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Added By",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Subject id",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Name",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+    ];
+    await initLevelDashboardMenuList();
+    await initSectionDashboardMenuList();
+    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
+    await fetchLibraryData();
+    loadingstate.value = false;
     super.onInit();
   }
 
   @override
-  // ignore: unnecessary_overrides
+  void refresh() async {
+    await fetchLibraryData();
+    super.refresh();
+  }
+
+  Future<void> fetchLibraryData({bool showSnakeBars = true}) async {
+    if (selectedLevel.value == null) {
+      await initLevelDashboardMenuList();
+      if (levels.isNotEmpty) {
+        selectedLevel.value = levels.first.value;
+      }
+    }
+
+    if (selectedSection.value == null) {
+      await initSectionDashboardMenuList();
+      if (sections.isNotEmpty) {
+        selectedSection.value = sections.first.value;
+      }
+    }
+
+    if (selectedLevel.value == null || selectedSection.value == null) {
+      return;
+    }
+
+    Result res = await LibraryRepository
+        .fetchDashboardLibrary(); //assigning values to variables
+    if (res.statusCode == 200) {
+      library.value = res.data["library"] ?? {};
+      availableRows.value = res.data["totalboods"] ?? 0;
+    } else if (res.statusCode == 404) {
+      library.value = {};
+      availableRows.value = 0;
+      faildMessage.value = "this section and level not have Books";
+      if (showSnakeBars) {
+        showSnakeBar(
+          title: "Not Found Books",
+          message: "this section and level not have Books",
+        );
+      }
+    } else {
+      library.value = {};
+      availableRows.value = 0;
+      faildMessage.value = "fetching Books faild please check connection";
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Fetch Books Faild",
+            message: "fetching Books faild please check connection");
+      }
+    }
+    update(["DataTable"]);
+  }
+
+  void onRowChange(int? val) async {
+    if (val != null) {
+      rowsPerPage.value = val;
+      await fetchLibraryData();
+      update(["DataTable"]);
+    }
+  }
+
+  void onPageChange(int page) async {
+    currentPage = (page ~/ rowsPerPage.value) + 1;
+    await fetchLibraryData();
+  }
+
+  void changeSection(int? val) async {
+    if (val == null) return;
+    selectedSection.value = val;
+    await fetchLibraryData();
+  }
+
+  void changeLevel(int? val) async {
+    if (val == null) return;
+    selectedLevel.value = val;
+    await fetchLibraryData();
+  }
+
+  void changeTerm(String? val) async {
+    if (val == null) return;
+    selectedTerm.value = val;
+    fetchLibraryData();
+  }
+
+  void changeOrder(String? val) async {
+    if (val == null) return;
+    selectedOrder.value = val;
+    fetchLibraryData();
+  }
+
+  void changeSort(String? val) async {
+    if (val == null) return;
+    selectedSort.value = val;
+    fetchLibraryData();
+  }
+
+  Future<void> initSectionDashboardMenuList({bool force = false}) async {
+    Map<int, Section> sectionsData =
+        await SectionRepository.fetchSections(hardFetch: force)
+            .then((e) => e.data ?? {});
+    sections = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
+    for (Section section in sectionsData.values.toList()) {
+      sections.add(
+        DropdownMenuItem<int>(
+            value: section.id,
+            child: SizedBox(
+              width: (Get.width / 6) * 0.5,
+              child: CustomText(
+                section.name ?? "unknown",
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+              ),
+            )),
+      );
+    }
+    selectedSection.value = sectionsData.values.first.id;
+  }
+
+  Future<void> initLevelDashboardMenuList({bool force = false}) async {
+    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
+        .then((e) => e.data ?? []);
+    levels = [
+      DropdownMenuItem<int>(
+          value: 0,
+          child: SizedBox(
+            width: (Get.width / 8) * 0.4,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+            ),
+          )),
+    ];
+    for (Level level in levelsData) {
+      levels.add(
+        DropdownMenuItem<int>(
+            value: level.id,
+            child: SizedBox(
+              width: (Get.width / 8) * 0.4,
+              child: CustomText(
+                level.name ?? "unknown",
+                style:
+                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
+              ),
+            )),
+      );
+    }
+    selectedLevel.value = levelsData.first.id;
+  }
+
+  Future<void> addClick() async {
+    await getSection();
+    await getLevel();
+    await getSubject();
+    Get.dialog(PopUpAddLibraryCard());
+  }
+
+  Future<void> getSubject() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+    } else {
+      subjectId.value = null;
+    }
+  }
+
+  Future<void> getSection() async {
+    section = {};
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      sectionId = RxInt(section.values.first.id);
+    } else {
+      sectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = [];
+    level = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    if (level?.isNotEmpty ?? false) {
+      levelId = RxInt(level?.first.id ?? 0);
+    } else {
+      levelId.value = null;
+    }
+  }
+
+  Future<void> addBook() async {}
+
+  @override
+  void export() {}
+
+  @override
+  void import() {}
+
+  String prevTxt = "";
+
+  @override
+  void onSearch() {
+    if (searchController.text == prevTxt) return;
+    prevTxt = searchController.text;
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(Duration(milliseconds: 600), () async {
+      await fetchLibraryData();
+    });
+  }
+
+  @override
+  TextEditingController searchController = TextEditingController(text: "");
+
+  void popupClear() {
+    title.clear();
+    author.clear();
+    pages.clear();
+    edition.clear();
+    category.clear();
+    size.clear();
+    path.clear();
+    image.clear();
+    name.clear();
+  }
+
+  @override
   void onClose() {
-    super.onClose();
+    searchController.dispose();
+    popupClear();
+    title.dispose();
+    author.dispose();
+    pages.dispose();
+    edition.dispose();
+    category.dispose();
+    size.dispose();
+    path.dispose();
+    image.dispose();
+    name.dispose();
+    titleFocus.dispose();
+    authorFocus.dispose();
+    pageFocus.dispose();
+    editionFocus.dispose();
+    categoryFocus.dispose();
+    sizeFocus.dispose();
+    pathFocus.dispose();
+    imageFocus.dispose();
+    nameFocus.dispose();
   }
 }

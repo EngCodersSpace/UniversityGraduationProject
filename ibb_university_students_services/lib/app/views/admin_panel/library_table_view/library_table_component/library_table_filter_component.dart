@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_library_table_controller.dart';
 // import '../../../../components/custom_text_v2.dart';
 import '../../../../styles/app_colors.dart';
 // import '../../../../styles/text_styles.dart';
 
-class StudentTableFiltersComponent
-    extends GetView<DashboardStudentTableController> {
-  const StudentTableFiltersComponent({super.key});
+class LibraryTableFilterComponent
+    extends GetView<DashboardLibraryTableController> {
+  const LibraryTableFilterComponent({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -72,6 +72,34 @@ class StudentTableFiltersComponent
             width: Get.width * 0.01,
           ),
           // CustomText(
+          //   "Term".tr,
+          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+          // ),
+          // SizedBox(
+          //   width: Get.width * 0.002,
+          // ),
+          Container(
+            height: Get.height * 0.06,
+            width: Get.width * 0.08,
+            decoration: BoxDecoration(
+              color: AppColors.inverseIconColor,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Center(
+              child: Obx(() => DropdownButton(
+                    items: controller.term,
+                    onChanged: controller.changeTerm,
+                    value: controller.selectedTerm.value,
+                    underline: const SizedBox(),
+                    iconEnabledColor: AppColors.mainCardColor,
+                    dropdownColor: AppColors.inverseCardColor,
+                  )),
+            ),
+          ),
+          SizedBox(
+            width: Get.width * 0.01,
+          ),
+          // CustomText(
           //   "Order".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
@@ -125,7 +153,7 @@ class StudentTableFiltersComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.27,
+            width: Get.width * 0.19,
           ),
           IconButton(
             onPressed: () {

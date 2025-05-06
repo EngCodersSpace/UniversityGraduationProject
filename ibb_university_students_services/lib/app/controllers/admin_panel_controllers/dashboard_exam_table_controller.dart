@@ -29,7 +29,7 @@ class DashboardExamTableController extends GetxController
   RxBool loadingState = true.obs;
   Timer? _debounce;
   int currentPage = 1;
-  RxString selectedOrder = "doctor_id".obs;
+  RxString selectedOrder = "exam_date".obs;
   RxString selectedSort = "DESC".obs;
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   ScrollController vertical = ScrollController();
@@ -50,7 +50,7 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "All",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -60,7 +60,7 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
     DropdownMenuItem<String>(
@@ -70,37 +70,37 @@ class DashboardExamTableController extends GetxController
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h3Bold,
+                textHeader: AppTextHeaders.h5Bold,
               ),
             ))),
   ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "doctor_id",
+        value: "exam_date",
         child: SizedBox(
             width: (Get.width / 4) * 0.3,
             child: CustomText(
-              "Doctor Id",
+              "Exam date",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "academic_degree",
+        value: "exam_day",
         child: SizedBox(
             width: (Get.width / 4) * 0.3,
             child: CustomText(
-              "Academic Degree",
+              "Exam day",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "administrative_position",
+        value: "subject_id",
         child: SizedBox(
             width: (Get.width / 3) * 0.2,
             child: CustomText(
-              "Administrative Position",
+              "Subject",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -420,24 +420,24 @@ class DashboardExamTableController extends GetxController
         hardFetch: false);
     if (res.statusCode == 200) {
       exams.value = res.data["exams"] ?? {};
+      availableRows.value = res.data["totalExams"] ?? 0;
     } else if (res.statusCode == 404) {
       exams.value = {};
-      availableRows.value = res.data["totalLectures"];
+      availableRows.value = 0;
       update(["DataTable"]);
-
-      fieldMessage.value = "this section and level not has Lectures";
+      fieldMessage.value = "this section and level not has Exams";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
-            message: "this section and level doesn't has Lectures ");
+            title: "Not Found Exams",
+            message: "this section and level doesn't has Exams ");
       }
     } else {
       exams.value = {};
-      fieldMessage.value = "fetching lectures failed please check connection";
+      fieldMessage.value = "fetching Exams failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Lectures Failed",
-            message: "fetching lectures failed please check connection ");
+            title: "Fetch Exams Failed",
+            message: "fetching exams failed please check connection ");
       }
     }
     update(["DataTable"]);
@@ -568,6 +568,21 @@ class DashboardExamTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupCardClear() {
+    dateController.clear();
+    timeController.clear();
+    hallController.clear();
+  }
+
   @override
-  void onClose() {}
+  void onClose() {
+    searchController.dispose();
+    popupCardClear();
+    dateController.dispose();
+    timeController.dispose();
+    hallController.dispose();
+    dateFocus.dispose();
+    timeFocus.dispose();
+    hallFocus.dispose();
+  }
 }

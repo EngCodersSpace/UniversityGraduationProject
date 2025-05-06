@@ -90,6 +90,12 @@ class DashboardStudentTableController extends GetxController
   TextEditingController studentDOB = TextEditingController();
   TextEditingController studentEmail = TextEditingController();
   TextEditingController studentPhone = TextEditingController();
+  TextEditingController studentsystem = TextEditingController();
+  TextEditingController studentrole = TextEditingController();
+  TextEditingController studentcollege = TextEditingController();
+  FocusNode roleFocus = FocusNode();
+  FocusNode collegeFocus = FocusNode();
+  FocusNode systemFocus = FocusNode();
   FocusNode idFocus = FocusNode();
   FocusNode nameFocus = FocusNode();
   FocusNode dateFocus = FocusNode();
@@ -140,6 +146,12 @@ class DashboardStudentTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
+          "college Name",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Section",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
@@ -152,13 +164,31 @@ class DashboardStudentTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
+          "Role",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Phone Number",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
       DataColumn(
         label: CustomText(
+          "Enrollment Year",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
           "Student System",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+      ),
+      DataColumn(
+        label: CustomText(
+          "Repeat Years",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
@@ -296,7 +326,16 @@ class DashboardStudentTableController extends GetxController
       return;
     }
 
-    Result res = await UserRepository.fetchDashboardStudent();
+    Result res = await UserRepository.fetchDashboardStudent(
+      section: (selectedSection.value == 0) ? null : selectedSection.value,
+      level: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+      hardFetch: false,
+    );
     if (res.statusCode == 200) {
       student.value = res.data["students"] ?? {};
       availableRows.value = res.data["totalStudent"] ?? 0;
@@ -311,7 +350,6 @@ class DashboardStudentTableController extends GetxController
       }
     } else {
       student.value = {};
-      availableRows.value = res.data["totalLectures"] ?? 0;
       fieldMessage.value = "fetching Student failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
@@ -370,9 +408,36 @@ class DashboardStudentTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    studentId.clear();
+    studentName.clear();
+    studentDOB.clear();
+    studentEmail.clear();
+    studentPhone.clear();
+    studentcollege.clear();
+    studentsystem.clear();
+    studentrole.clear();
+  }
+
   @override
   void onClose() {
-    //
-    super.onClose();
+    searchController.dispose();
+    popupClear();
+    studentId.dispose();
+    studentName.dispose();
+    studentDOB.dispose();
+    studentEmail.dispose();
+    studentPhone.dispose();
+    studentcollege.dispose();
+    studentsystem.dispose();
+    studentrole.dispose();
+    idFocus.dispose();
+    nameFocus.dispose();
+    dateFocus.dispose();
+    emailFocus.dispose();
+    phoneFocus.dispose();
+    collegeFocus.dispose();
+    systemFocus.dispose();
+    roleFocus.dispose();
   }
 }
