@@ -281,7 +281,7 @@ class DashboardSubjectsTableController extends GetxController
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [
       DropdownMenuItem<int>(
           value: 0,
@@ -328,7 +328,7 @@ class DashboardSubjectsTableController extends GetxController
   }
 
   Future<void> getLevel() async {
-    addLevel = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    addLevel = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     if (addLevel?.isNotEmpty ?? false) {
       levelId = Rx(addLevel?.first.id ?? 0);
     } else {
