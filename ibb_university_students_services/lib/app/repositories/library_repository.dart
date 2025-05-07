@@ -186,22 +186,34 @@ class LibraryRepository {
   }
 
   static Future<Result<Map>> fetchDashboardLibrary({
+    int? levelId,
+    int? sectionId,
+    int? addedby,
+    String? author,
+    String? edition,
+    String? category,
+    String? order,
+    String? sort,
+    String? search,
+    int? limit,
+    int? page,
     bool hardFetch = false,
   }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("url"); //get the url from bachend
+      response = await HttpProvider.get(
+          "get-bookPanel?level_id=${levelId ?? ''}&section_id=${sectionId ?? ''}&author=${author ?? ''}&edition=${edition ?? ''}&category=${category ?? ''}&added_by=${addedby ?? ''}&orderBy=${order ?? ''}&sort==${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from bachend
       Map<int, LibraryFile> library = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsLib in response?.data['data']) {
-          library[jsLib["library_id"]] =
+          library[jsLib["id"]] =
               LibraryFile.fromJson(jsLib); //get the name of id from backend
         }
         return Result(
           data: {
             "library": library,
             "totalbooks": response?.data["pagination"]
-                ["totalbooks"], //get the name of id from backend
+                ["totalBooks"], //get the name of id from backend
           },
           hasError: false,
           statusCode: response?.statusCode,
@@ -331,9 +343,9 @@ class LibraryRepository {
         );
         if (response?.statusCode == 201) {
           LibraryFile resFile = LibraryFile.fromJson(response?.data["books"]);
-          if(withCache){
+          if (withCache) {
             await FileUtils.saveFiles(
-              fileRelativePath: resFile.filePath, file: file);
+                fileRelativePath: resFile.filePath, file: file);
           }
           NotificationHandler.showProgressNotification(
             uniqueId: file.path.hashCode,

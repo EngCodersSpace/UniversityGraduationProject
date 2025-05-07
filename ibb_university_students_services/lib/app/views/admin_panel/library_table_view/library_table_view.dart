@@ -25,11 +25,11 @@ class LibraryTableView extends GetView<DashboardLibraryTableController> {
               controller: controller,
             ),
             SizedBox(
-              height: controller.height * 0.1,
+              height: controller.height * 0.01,
             ),
             LibraryTableFilterComponent(),
             SizedBox(
-              height: controller.height * 0.1,
+              height: controller.height * 0.01,
             ),
             Expanded(
               child: Scrollbar(
@@ -120,66 +120,148 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
-                          .subject
-                          ?.subjectName ??
+                      .sectionId
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .levelId
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].title ?? "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].author ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .numberOfPages
+                      .toString())),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].edition ?? "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].category ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .fileSize
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].filePath ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                          .displayImage ??
                       "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value]
-          //             .instructorId
-          //             .toString())),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value]
-          //             .duration
-          //             .toString())),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].startTime ??
-          //                 "")),
-          // DataCell(CustomTextFormField(
-          //     key: UniqueKey(),
-          //     onTapOutside: (e) {
-          //       controller.refresh();
-          //     },
-          //     onFieldSubmitted: (str) {},
-          //     enableBorder: false,
-          //     initialValue:
-          //         items[index % controller.rowsPerPage.value].hall ?? "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].description ??
-          //                 "there is not descroiption")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .addedBy
+                      .toString())),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].subject?.id ??
+                          "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                          .originalName ??
+                      "")),
         ]);
   }
 

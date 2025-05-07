@@ -19,7 +19,7 @@ import 'package:ibb_university_students_services/app/views/admin_panel/library_t
 
 class DashboardLibraryTableController extends GetxController
     implements HeaderOfViewControllerInterface {
-  double get width => (Get.width - (Get.width * 2));
+  double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
   RxMap<int, LibraryFile> library = RxMap({});
   RxString faildMessage = "".obs;
@@ -35,7 +35,7 @@ class DashboardLibraryTableController extends GetxController
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "".obs;
-  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedOrder = "id".obs;
   RxString selectedSort = "DESC".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
@@ -73,31 +73,31 @@ class DashboardLibraryTableController extends GetxController
   ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "lecture_time",
+        value: "id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Time",
+              "ID",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "lecture_day",
+        value: "edition",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Day",
+              "Edition",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "lecture_room",
+        value: "added_by",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Room",
+              "Added By",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -201,6 +201,11 @@ class DashboardLibraryTableController extends GetxController
       )),
       DataColumn(
           label: CustomText(
+        "Author",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
         "pages",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
@@ -279,11 +284,19 @@ class DashboardLibraryTableController extends GetxController
       return;
     }
 
-    Result res = await LibraryRepository
-        .fetchDashboardLibrary(); //assigning values to variables
+    Result res = await LibraryRepository.fetchDashboardLibrary(
+      sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
+      levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      order: selectedOrder.value,
+      sort: selectedSort.value,
+      search: searchController.text,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      hardFetch: false,
+    ); //assigning values to variables
     if (res.statusCode == 200) {
       library.value = res.data["library"] ?? {};
-      availableRows.value = res.data["totalboods"] ?? 0;
+      availableRows.value = res.data["totalbooks"] ?? 0;
     } else if (res.statusCode == 404) {
       library.value = {};
       availableRows.value = 0;
@@ -443,7 +456,8 @@ class DashboardLibraryTableController extends GetxController
 
   Future<void> getLevel() async {
     level = [];
-    level = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    level = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     if (level?.isNotEmpty ?? false) {
       levelId = RxInt(level?.first.id ?? 0);
     } else {
