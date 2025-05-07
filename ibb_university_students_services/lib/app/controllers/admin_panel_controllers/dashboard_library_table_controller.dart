@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
@@ -385,7 +384,7 @@ class DashboardLibraryTableController extends GetxController
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [
       DropdownMenuItem<int>(
           value: 0,
@@ -444,7 +443,7 @@ class DashboardLibraryTableController extends GetxController
 
   Future<void> getLevel() async {
     level = [];
-    level = await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+    level = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     if (level?.isNotEmpty ?? false) {
       levelId = RxInt(level?.first.id ?? 0);
     } else {

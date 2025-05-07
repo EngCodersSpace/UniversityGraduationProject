@@ -108,5 +108,14 @@ class DateTimeUtils {
 
     return "$year/${year + 1}";
   }
+  
+  static bool stringDataIsAfter(String firstDate, String secondDate){
+    DateTime d1 = DateTime.parse(firstDate);
+    DateTime d2 = DateTime.parse(secondDate);
+    if(d1.isAfter(d2)){
+      return true;
+    }
+    return false;
+  }
 
 }

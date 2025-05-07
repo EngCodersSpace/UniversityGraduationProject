@@ -10,6 +10,7 @@ class CustomText extends StatelessWidget {
         this.style ,
         this.textAlign = TextAlign.center,
         this.softWrap = true,
+        this.overflow ,
         this.maxLines,
       }){
     style?? AppTextStyles.mainStyle();
@@ -19,6 +20,8 @@ class CustomText extends StatelessWidget {
   int? maxLines;
   TextAlign textAlign;
   bool softWrap;
+  TextOverflow? overflow;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class CustomText extends StatelessWidget {
       style: style,
       maxLines: maxLines,
       textAlign: textAlign,
-      overflow: TextOverflow.ellipsis,
+      overflow: overflow,
       softWrap: softWrap,
     );
   }

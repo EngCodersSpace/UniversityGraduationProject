@@ -39,6 +39,7 @@ class ExamRepository {
     }
   }
 
+
   static Future<Result<Map<int, Exam>>> fetchExamsGroup({
     required int sectionId,
     required int levelId,
@@ -63,7 +64,7 @@ class ExamRepository {
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         for (Map<String, dynamic> jsExam in response?.data["data"]) {
           Subject? subject =
-              await SubjectRepository.fetchSubject(id: jsExam["subject_id"])
+              await SubjectRepository.fetchSubject(id: jsExam["subject_id"],hardFetch: hardFetch)
                   .then((e) {
             return e.data;
           });
@@ -103,7 +104,7 @@ class ExamRepository {
     String? subjectId,
     String? examTime,
     String? examRoom,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -112,15 +113,17 @@ class ExamRepository {
       response = await HttpProvider.post("create-exam", data: data);
       Exam? newExam;
       if (response?.statusCode == 201) {
-        ExamsCache? cachedExams =
-            _examsBox?.get("${sectionId}_${levelId}_Exams");
-        cachedExams ??=
-            ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
-        cachedExams.data[newExam.id] = newExam;
+        if(withCache){
+          ExamsCache? cachedExams =
+          _examsBox?.get("${sectionId}_${levelId}_Exams");
+          cachedExams ??=
+              ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
+          cachedExams.data[newExam.id] = newExam;
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -144,7 +147,7 @@ class ExamRepository {
     required int levelId,
     required data,
     required id,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(),
         barrierDismissible: false, name: "loadingDialog");
@@ -153,13 +156,15 @@ class ExamRepository {
       response = await HttpProvider.put("update-exam?exam_id=$id", data: data);
       Exam? newExam;
       if (response?.statusCode == 200) {
-        ExamsCache? cachedExams =
-            _examsBox?.get("${sectionId}_${levelId}_Exams");
         Subject? subject = await SubjectRepository.fetchSubject(
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
-        cachedExams?.data[newExam.id] = newExam;
+        if(withCache){
+          ExamsCache? cachedExams =
+          _examsBox?.get("${sectionId}_${levelId}_Exams");
+          cachedExams?.data[newExam.id] = newExam;
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -182,14 +187,16 @@ class ExamRepository {
     required int sectionId,
     required int levelId,
     required id,
-    bool hardFetch = false,
+    bool withCache = true,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
       response = await HttpProvider.delete("delete-exam?exam_id=$id");
       if (response?.statusCode == 200) {
-        _examsBox?.get("${sectionId}_${levelId}_Exams")?.data.remove(id);
+        if(withCache) {
+          _examsBox?.get("${sectionId}_${levelId}_Exams")?.data.remove(id);
+        }
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));

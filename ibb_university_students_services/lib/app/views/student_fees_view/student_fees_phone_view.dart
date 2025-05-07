@@ -84,10 +84,10 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                         textHeader: AppTextHeaders.h2Bold),
                   ),
                   if ((UserRepository.checkPermission(
-                      target: "Exams", action: "write")))
+                      target: "StudentFee", action: "write")))
                     CustomButton(
                       onPress: controller.addButtonClick,
-                      text: "Add Exam".tr,
+                      text: "Add Payment".tr,
                     ),
                 ],
               ),

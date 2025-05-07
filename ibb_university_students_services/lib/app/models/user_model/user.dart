@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../role_model/role.dart';
 import '../section_model/section.dart';
-// @HiveType(typeId: 0)
+
 abstract class User {
   @HiveField(0)
   int id;
   @HiveField(1)
-  Map<String,dynamic>? nameData;
+  Map<String, dynamic>? nameData;
   @HiveField(2)
   String? dateOfBrith;
   @HiveField(3)
@@ -19,7 +19,7 @@ abstract class User {
   @HiveField(6)
   List<String>? phones;
   @HiveField(7)
-  Map<String,dynamic>? collegeNameData;
+  Map<String, dynamic>? collegeNameData;
   @HiveField(8)
   Section? section;
   @HiveField(9)
@@ -42,17 +42,12 @@ abstract class User {
   });
 
   String? get name {
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return nameData?[currentLang];
   }
 
   String? get collegeName {
-    String currentLang = Get.locale?.languageCode.toString()??"en";
+    String currentLang = Get.locale?.languageCode.toString() ?? "en";
     return collegeNameData?[currentLang];
   }
-
 }
-
-
-
-

@@ -26,7 +26,7 @@ class LibraryController extends GetxController
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
   RxString? selectedSubjectId = "all-option".obs;
-  RxString? selectedAddSubjectId;
+  RxString? selectedAddSubjectId ;
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
@@ -41,7 +41,7 @@ class LibraryController extends GetxController
   PageController refPagesController = PageController();
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
-  Map<String, Subject> subjects = {};
+  Map<String,Subject> subjects = {};
   RxList<Map<String, int>> groups = RxList();
 
   List<String> categories = [
@@ -67,6 +67,7 @@ class LibraryController extends GetxController
 
   @override
   void onInit() async {
+    // TODO: implement onInit
     loadingState.value = false;
     tapController = TabController(
       length: 3,
@@ -75,8 +76,8 @@ class LibraryController extends GetxController
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
-    subjects =
-        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    subjects = await SubjectRepository.fetchSubjects()
+        .then((e) => e.data??{});
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
@@ -149,7 +150,7 @@ class LibraryController extends GetxController
 
   Future<void> initLevelDropdownMenuLists() async {
     List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data ?? []);
+        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
     levels = {};
     for (Level level in levelsData) {
       levels[level.id] = false.obs;
@@ -328,10 +329,10 @@ class LibraryController extends GetxController
     }
     for (PlatformFile file in (selectedFiles)) {
       await LibraryRepository.uploadLibraryFile(
-              file: file,
-              groups: groups,
-              category: categories[selectedCategory.value ?? 0])
-          .then((e) {});
+        file: file,
+        groups: groups,
+        category: categories[selectedCategory.value??0]
+      ).then((e) {});
     }
   }
 

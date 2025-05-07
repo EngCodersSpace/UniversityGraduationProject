@@ -1,14 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../../models/helper_models/result.dart';
-import '../main_controller.dart';
+import '../../views/login_view/login_view_components/change_password_card.dart';
 
 class ProfileController extends GetxController {
   User? user;
-  RxString language = (Get.locale?.languageCode ?? "en").obs;
   RxBool initState = false.obs;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController oldPassword = TextEditingController();
+  TextEditingController newPassword = TextEditingController();
+  TextEditingController passwordConfirmation = TextEditingController();
+  FocusNode oldPasswordFocus = FocusNode();
+  FocusNode newPasswordFocus = FocusNode();
+  FocusNode passwordConfirmationFocus = FocusNode();
 
   @override
   void onInit() async {
@@ -30,10 +37,22 @@ class ProfileController extends GetxController {
     initState.value = true;
   }
 
-  void changeLang(String lang) {
-    LocaleListener.updateLocale(lang);
-    language.value = lang;
-    Get.find<MainController>().changeTabIndex(4);
+  void changedPasswordClick() {
+    Get.dialog(PopUpChangePasswordCard());
+  }
+
+  void changePassword() async{
+    if (formKey.currentState!.validate()){
+      Result res = await UserRepository.changePassword(
+          oldPassword: oldPassword.text,
+          newPassword: newPassword.text,
+          passwordConfirmation: passwordConfirmation.text);
+      if(res.statusCode == 200){
+        showSnakeBar(message: "Password Changed successfully");
+      }else {
+        showSnakeBar(message: "Password Change Failed");
+      }
+    }
   }
 
   void logout() async {

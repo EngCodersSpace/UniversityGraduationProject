@@ -299,6 +299,7 @@ class LibraryRepository {
     required PlatformFile file,
     required String category,
     required List<Map<String, int>> groups,
+    bool withCache = true,
   }) async {
     late Response? response;
     try {
@@ -316,8 +317,9 @@ class LibraryRepository {
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
-              "upload?category=$category&section_id=${groups.first["section_id"]}&level_id=${groups.first["level_id"]}",
+              "upload?category=$category&sectionsAndLevels=${json.encode(groups.asMap())}",
           file: fileData,
+          fileSize: fileSize,
           onSendProgress: (sent, total) {
             double progress = (sent / total) * 100;
             NotificationHandler.showProgressNotification(
@@ -329,8 +331,10 @@ class LibraryRepository {
         );
         if (response?.statusCode == 201) {
           LibraryFile resFile = LibraryFile.fromJson(response?.data["books"]);
-          await FileUtils.saveFiles(
+          if(withCache){
+            await FileUtils.saveFiles(
               fileRelativePath: resFile.filePath, file: file);
+          }
           NotificationHandler.showProgressNotification(
             uniqueId: file.path.hashCode,
             title: "successful upload ",

@@ -27,10 +27,9 @@ class LectureController extends GetxController {
   RxString selectedDayName = "Sunday".obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
-  List<DropdownMenuItem<int>> sections = [];
+  Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
@@ -85,10 +84,8 @@ class LectureController extends GetxController {
     });
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
-    await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
-    (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
+    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
     await fetchTableData();
     loadState.value = false;
     super.onInit();
@@ -113,27 +110,17 @@ class LectureController extends GetxController {
     if (selectedSection.value == null) {
       await initSectionDropdownMenuList();
       if (sections.isNotEmpty) {
-        selectedSection.value = sections.first.value;
-      }
-    }
-
-    if (selectedYear.value == null) {
-      await initYearDropdownMenuList();
-      if (years.isNotEmpty) {
-        selectedYear.value = years.first.value;
+        selectedSection.value = sections.values.first.id;
       }
     }
 
     if (selectedSection.value == null ||
-        selectedLevel.value == null ||
-        selectedYear.value == null) {
+        selectedLevel.value == null ) {
       return;
     }
     Result res = await LectureRepository.fetchTableTime(
         sectionId: selectedSection.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value!,
-        term: selectedTerm.value,
         hardFetch: force);
     if (res.statusCode == 200) {
       tableTime = res.data;
@@ -164,12 +151,6 @@ class LectureController extends GetxController {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchTableData();
-  }
-
-  void changeYear(String? val) {
-    if (val == null) return;
-    selectedYear.value = val;
-    fetchTableData();
   }
 
   void changeTerm(String? val) async {
@@ -226,32 +207,17 @@ class LectureController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
-    List<Section> sectionsData =
+     sections =
         await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data?.values.toList() ?? []);
-    sections = [];
-    for (Section section in sectionsData) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 7) * 0.6,
-              child: CustomText(
-                section.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
-    }
-    selectedSection.value = sectionsData.first.id;
+            .then((e) => e.data??{});
+     if(sections.isNotEmpty){
+     selectedSection.value = sections.values.first.id;
+     }
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];
@@ -271,31 +237,11 @@ class LectureController extends GetxController {
             )),
       );
     }
-    selectedLevel.value = levelsData.first.id;
-  }
-
-  Future<void> initYearDropdownMenuList({bool force = false}) async {
-    List<String> yearData =
-        await LectureRepository.fetchLectureYears(hardFetch: force)
-            .then((e) => e.data ?? []);
-    years = [];
-    for (String year in yearData) {
-      years.add(
-        DropdownMenuItem(
-            value: year,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 7) * 0.6,
-              child: CustomText(
-                year,
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
+    if(levelsData.isNotEmpty) {
+      selectedLevel.value = levelsData.first.id;
     }
   }
+
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
     if (val == "Edit") {
@@ -314,7 +260,6 @@ class LectureController extends GetxController {
     } else if (val == "Delete") {
       if (selectedLevel.value == null) return;
       if (selectedSection.value == null) return;
-      if (selectedYear.value == null) return;
       selectedLecture = data?["id"];
       Result<void> res =
           await LectureRepository.deleteLecture(id: selectedLecture);
@@ -400,8 +345,6 @@ class LectureController extends GetxController {
     Result<Lecture> res = await LectureRepository.createLecture(
       sectionId: selectedSection.value!,
       levelId: selectedLevel.value!,
-      year: selectedYear.value ?? "2024",
-      term: selectedTerm.value,
       day: selectedDayName.value,
       subjectId: subjectId.value!,
       doctorId: doctorId.value!,
@@ -425,8 +368,6 @@ class LectureController extends GetxController {
     Result<Lecture> res = await LectureRepository.updateLecture(
         sectionId: selectedSection.value!,
         levelId: selectedLevel.value!,
-        year: selectedYear.value ?? "2024",
-        term: selectedTerm.value,
         day: selectedDayName.value,
         subjectId: subjectId.value!,
         doctorId: doctorId.value!,

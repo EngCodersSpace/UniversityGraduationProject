@@ -230,11 +230,11 @@ class DashboardLectureTableController extends GetxController
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "Tuseday",
+        value: "Tuesday",
         child: SizedBox(
             width: (Get.width / 3) * 0.6,
             child: CustomText(
-              "Tuseday",
+              "Tuesday".tr,
               style: AppTextStyles.secStyle(
                 textHeader: AppTextHeaders.h3Bold,
               ),
@@ -319,7 +319,7 @@ class DashboardLectureTableController extends GetxController
       ),
       DataColumn(
         label: CustomText(
-          "Decsription",
+          "Description",
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
@@ -331,7 +331,6 @@ class DashboardLectureTableController extends GetxController
     await fetchDashboardData();
     loadingState.value = false;
     super.onInit();
-    // filteredlectures.assignAll(lectures);
   }
 
   @override
@@ -470,7 +469,7 @@ class DashboardLectureTableController extends GetxController
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [
       DropdownMenuItem<int>(
           value: 0,
@@ -510,7 +509,7 @@ class DashboardLectureTableController extends GetxController
 
   String prevTxt = "";
 
-  get jsdata => null;
+  get jsData => null;
 
   @override
   void onSearch() {
@@ -568,7 +567,7 @@ class DashboardLectureTableController extends GetxController
 
   Future<void> getLevel() async {
     level = await LevelRepository.fetchLevels(hardFetch: false)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     if (level?.isNotEmpty ?? false) {
       LevelId = RxInt(level?.first.id ?? 0);
     } else {
@@ -576,12 +575,10 @@ class DashboardLectureTableController extends GetxController
     }
   }
 
-  Future<void> addlecture() async {
+  Future<void> addLecture() async {
     Result<Lecture> res = await LectureRepository.createLecture(
       sectionId: SectionId.value!,
       levelId: LevelId.value!,
-      term: TermId.value,
-      year: "",
       day: selectedDayName.value,
       subjectId: subjectId.value!,
       doctorId: doctorId.value!,
@@ -736,13 +733,13 @@ class DashboardLectureTableController extends GetxController
   //     }
   //   }
   //   submitting = false;
-  //   popCardCleare();
+  //   popCardClear();
   // }
 
   // void submitEdit() async {}
   // void submitReplace() async {}
 
-  void popCardCleare() {
+  void popCardClear() {
     timeController.clear();
     durationController.clear();
     hallController.clear();
@@ -751,7 +748,7 @@ class DashboardLectureTableController extends GetxController
   @override
   void onClose() {
     searchController.dispose();
-    popCardCleare();
+    popCardClear();
     timeController.dispose();
     durationController.dispose();
     hallController.dispose();

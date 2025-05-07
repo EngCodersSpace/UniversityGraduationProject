@@ -34,7 +34,7 @@ class AssignmentsTabController extends GetxController {
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedSubject = Rx(null);
-  List<DropdownMenuItem<String>> subjectsItems = [];
+  Map<String, Subject>? subjects;
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
   Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
@@ -71,9 +71,9 @@ class AssignmentsTabController extends GetxController {
   }
 
   @override
-  void refresh() async {
+  void refresh({bool force = true}) async {
     loadingState.value = true;
-    await fetchAssignmentsData(force: true);
+    await fetchAssignmentsData(force: force);
     super.refresh();
     loadingState.value = false;
   }
@@ -81,8 +81,8 @@ class AssignmentsTabController extends GetxController {
   Future<void> fetchAssignmentsData({bool force = false}) async {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
-      if (subjectsItems.isNotEmpty) {
-        selectedSubject.value = subjectsItems.first.value;
+      if (subjects?.values.isNotEmpty??false) {
+        selectedSubject.value = subjects?.values.first.id;
       }
     }
     if (selectedLevel.value == null) {
@@ -97,13 +97,6 @@ class AssignmentsTabController extends GetxController {
         selectedDepartment.value = sections.values.first.id;
       }
     }
-
-    // if (selectedYear.value == null) {
-    //   await initYearDropdownMenuList();
-    //   if(years.isNotEmpty) {
-    //     selectedYear.value = years.first.value;
-    //   }
-    // }
 
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
@@ -165,7 +158,7 @@ class AssignmentsTabController extends GetxController {
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
     List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data ?? []);
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
@@ -173,7 +166,7 @@ class AssignmentsTabController extends GetxController {
             value: level.id,
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
-                  ? (Get.width / 4) - 30
+                  ? (Get.width / 5) - 30
                   : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
@@ -187,32 +180,13 @@ class AssignmentsTabController extends GetxController {
   }
 
   Future<void> initSubjectDropdownMenuList() async {
-    List<Subject> subjects = await SubjectRepository.fetchSubjects()
-        .then((e) => e.data?.values.toList() ?? []);
-    subjectsItems = [];
-    selectedSubjectsItems = [];
-    for (Subject subj in subjects) {
-      subjectsItems.add(
-        DropdownMenuItem<String>(
-            value: subj.id,
-            child: CustomText(
-              subj.subjectName ?? "unknown".tr,
-              style:
-                  AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Normal),
-            )),
-      );
-      selectedSubjectsItems.add(DropdownMenuItem<String>(
-        value: subj.id,
-        child: SizedBox(
-          width: (Get.width / 3) - 30,
-          child: CustomText(
-            subj.subjectName ?? "",
-            style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-            textAlign: TextAlign.center,
-            softWrap: false,
-          ),
-        ),
-      ));
+    subjects = {};
+    subjects =
+    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      selectedSubject = RxString(subjects!.values.first.id);
+    } else {
+      selectedSubject.value = null;
     }
   }
 
@@ -455,6 +429,22 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  void _moreDeleteStudentAssignmentFileFromStorage(Map<String, dynamic>? data) async {
+    if (data == null) return;
+    if (data["id"] < 0) {
+      showSnakeBar(message: "File not Store Yet");
+    } else {
+      bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+          ?.studentFiles?[data["id"]]?.path);
+      if(res){
+        showSnakeBar(message: "File Deleted");
+        await assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+            ?.studentFiles?[data["id"]]?.checkDownloaded();
+      }
+      }
+    }
+
+
   void _moreSetCompletion(bool stat, Map<String, dynamic>? data) async {
     if (data?["assignment_id"] == null) return;
     if (((data?["studentsStatus"] ?? {}) as Map).isEmpty) return;
@@ -496,6 +486,9 @@ class AssignmentsTabController extends GetxController {
         break;
         case "DeleteAttachmentFileFromStorage":
         _moreDeleteAttachmentFileFromStorage(data);
+        break;
+      case "DeleteStudentAssignmentFileFromStorage":
+        _moreDeleteStudentAssignmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFile":
         _moreDeleteStudentAssignmentFile(data);

@@ -30,7 +30,7 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                         children: [
                           CustomText(
                             "Notifications".tr,
-                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold,),
+                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1Bold,),
                           ),
                           if(["teacher","doctor"].contains(UserRepository.userRule))...[
                             IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))

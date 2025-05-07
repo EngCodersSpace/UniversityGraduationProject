@@ -19,8 +19,8 @@ class RoleAdapter extends TypeAdapter<Role> {
     return Role(
       id: fields[0] as int,
       permissions: (fields[2] as Map).map((dynamic k, dynamic v) =>
-          MapEntry(k as String, (v as List).cast<String>())),
-      nameData: (fields[1] as Map?)?.cast<String, dynamic>(),
+          MapEntry(k as String, (v as List).cast<Permission>())),
+      name: fields[1] as String?,
       createdAt: fields[3] as String?,
       updatedAt: fields[4] as String?,
     );
@@ -33,7 +33,7 @@ class RoleAdapter extends TypeAdapter<Role> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.nameData)
+      ..write(obj.name)
       ..writeByte(2)
       ..write(obj.permissions)
       ..writeByte(3)
