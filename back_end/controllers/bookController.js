@@ -519,7 +519,7 @@ exports.getBookGroupedByCriteriaPanel = async (req, res) => {
       added_by,
       page = 1,
       limit = 10,
-      orderBy = "exam_date",
+      orderBy = "id",
       sort = "ASC",
       search,
     } = req.query;

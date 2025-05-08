@@ -18,7 +18,15 @@ exports.createRole = async (req, res) => {
 // Get all roles
 exports.getRoles = async (req, res) => {
   try {
-    const roles = await role.findAll();
+    const roles = await role.findAll(
+      {
+        include: [ 
+        { model: permission, 
+          through:{ attributes: [] },
+          required: true}
+        ],
+      }
+    );
     res.json({
         message:'get all roles successfully',
         data: roles
@@ -113,4 +121,213 @@ exports.removePermissionFromRole = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Error removing permission',  error:error.messag });
     }
+};
+
+
+// for Admin panel 
+exports.getRolesPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["id","roleName"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      roleName,
+      page = 1,
+      limit = 10,
+      orderBy = "id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+    const offset = (pageNumber - 1) * limitNumber;
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const { count, rows: Roles } = await role.findAndCountAll({
+      where: {
+        ...(roleName && {
+          roleName: roleName  
+        }),
+       
+        ...(search &&{
+          [Op.or]: [
+            { roleName: { [Op.like]: `%${search}%` } },
+          ],
+        }),
+      },
+      
+      include: [ 
+        { model: permission, 
+          through:{ attributes: [] },
+          required: true}
+        ],
+      distinct: true,
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!Roles.length) {
+      return res.status(404).json({ message: "No Roles found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "Role retrieved successfully",
+      data: Roles,
+      pagination: {
+        totalRoles: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving Roles", error: error.message });
+  }
+};
+
+// 
+exports.getPermissionsPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["id","target","action"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      target,
+      action,
+      page = 1,
+      limit = 10,
+      orderBy = "id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+    const offset = (pageNumber - 1) * limitNumber;
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const { count, rows: Permissions } = await permission.findAndCountAll({
+      where: {
+        ...(target && {
+          target: target  
+        }),
+        ...(action && {
+          action: action  
+        }),
+       
+        ...(search &&{
+          [Op.or]: [
+            { target: { [Op.like]: `%${search}%` } },
+            { action: { [Op.like]: `%${search}%` } },
+          ],
+        }),
+      },
+      
+      // include: [ { model: user, as: "user",required: true}],
+      distinct: true,
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!Permissions.length) {
+      return res.status(404).json({ message: "No Permissions found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "Permissions retrieved successfully",
+      data: Permissions,
+      pagination: {
+        totalPermissions: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving Roles", error: error.message });
+  }
+};
+
+// 
+exports.getRolesPermissionsPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["id","roleId","permissionId"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      roleId,
+      permissionId,
+      page = 1,
+      limit = 10,
+      orderBy = "id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+    const offset = (pageNumber - 1) * limitNumber;
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const { count, rows: RolesPermissions } = await role_permission.findAndCountAll({
+      where: {
+        ...(roleId && {
+          roleId: roleId  
+        }),
+        ...(permissionId && {
+          permissionId: permissionId  
+        }),
+       
+        // ...(search &&{
+        //   [Op.or]: [
+        //     { roleId: { [Op.like]: `%${search}%` } },
+        //     { permissionId: { [Op.like]: `%${search}%` } },
+        //   ],
+        // }),
+      },
+      include: [{model: role, as: "role",required: true},{model: permision, as: "permision",required: true} ],
+      distinct: true,
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!RolesPermissions.length) {
+      return res.status(404).json({ message: "No Permissions found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "Roles-Permissions retrieved successfully",
+      data: RolesPermissions,
+      pagination: {
+        total: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving RolesPermissions", error: error.message });
+  }
 };

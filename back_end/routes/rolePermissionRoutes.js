@@ -8,7 +8,7 @@ router.use(verifyToken);
 
 // Role Routes
 router.post('/create-roles',  checkPermission('role', 'create'), CRUD.createRole);
-router.get('/get-roles',      checkPermission('role', 'get'),    CRUD.getRoles);
+router.get('/get-roles',         CRUD.getRoles);
 router.delete('/delete-roles',checkPermission('role', 'delete'), CRUD.deleteRole);
 
 // Permission Routes
@@ -20,5 +20,8 @@ router.delete('/delete-permissions', CRUD.deletePermission);
 router.post('/assign-permissions-role', CRUD.assignPermissionToRole);
 router.get('/get-rolePermission', CRUD.getRolePermissions);
 router.delete('/delete-permissionsFromRole', CRUD.removePermissionFromRole);
+
+// for Admin panel
+router.get('/get-roles-panel', CRUD.getRolesPanel);
 
 module.exports = router;
