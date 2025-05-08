@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
-
+import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import '../models/helper_models/result.dart';
 import '../models/role_model/role.dart';
 import '../services/http_provider.dart';
 
-class RoleRepository{
+class RoleRepository {
   static const int _fetchError = 611;
 
-  static Future<Result<Map<int,Role>>> fetchRoles({
+  static Future<Result<Map<int, Role>>> fetchRoles({
     bool hardFetch = false,
   }) async {
     // if ((_levelBox?.values.isNotEmpty??true) &&(!hardFetch|| !(await checkInternetConnection())) ) {
@@ -22,13 +22,13 @@ class RoleRepository{
     try {
       response = await HttpProvider.get("get-roles");
       if (response?.statusCode == 200) {
-        Map<int,Role> roles = {};
+        Map<int, Role> roles = {};
         for (Map<String, dynamic> jsRoles in response?.data["data"]) {
           Role role = Role.fromJson(jsRoles);
-          roles[role.id] = role ;
+          roles[role.id] = role;
         }
         return Result(
-            data:  roles,
+            data: roles,
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -45,6 +45,86 @@ class RoleRepository{
           statusCode: _fetchError,
           message: error.toString(),
           data: null);
+    }
+  }
+
+  static Future<Result<Map>> fetchDashboardRole({
+    int? limit,
+    int? page,
+    String? sort,
+    String? search,
+    bool hardFech = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("url"); //get the url from backend
+      Map<int, Role> role = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsRole in response?.data["data"]) {
+          role[jsRole["id"]] =
+              Role.fromJson(jsRole); //get the name of id from backend
+        }
+        return Result(
+          data: {
+            "roles": role,
+            "totalroles": response?.data["pagination"]
+                ["totalroles"], //get the name of total from backend
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "roles": role,
+          "totalroles": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _fetchError,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
+
+  static Future<Result<Permission>> fetchDashbordPermition({
+    required int id,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "url"); //get the url of permition and the id is the roleid
+      if (response?.statusCode == 200) {
+        Permission permission = Permission.fromJson(
+            response?.data["data"]); //get the id name from backend
+        return Result(
+          data: permission,
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: null,
+        hasError: true,
+        statusCode: response?.statusCode ?? _fetchError,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _fetchError,
+        message: error.toString(),
+        data: null,
+      );
     }
   }
 }

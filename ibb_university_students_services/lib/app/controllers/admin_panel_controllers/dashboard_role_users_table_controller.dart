@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
+import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
+import 'package:ibb_university_students_services/app/repositories/role_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 
 class DashboardRoleUsersTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  RxInt selectedIndex = 0.obs;
+  RxInt roleId = 0.obs;
   RxBool loadingState = true.obs;
   RxMap<int, Role> roles = RxMap({});
   ScrollController horizontal = ScrollController();
@@ -26,6 +30,7 @@ class DashboardRoleUsersTableController extends GetxController
   RxInt availableRows = 0.obs;
   RxString selectedOrder = "lecture_time".obs;
   RxString selectedSort = "DESC".obs;
+  RxString faildMessage = "".obs;
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "lecture_time",
@@ -129,37 +134,44 @@ class DashboardRoleUsersTableController extends GetxController
     await fetchRoleData();
   }
 
-  // void changeTableView(int index) {
-  //   GetxController? controller;
-  //   switch (index) {
-  //     case 0:
-  //       // ignore: unnecessary_null_comparison
-  //       if (controller != null) {
-  //         controller.dispose();
-  //       }
-  //       controller = Get.put<DashboardDoctorTableController>(
-  //           DashboardDoctorTableController());
-  //       break;
-  //     case 1:
-  //       // ignore: unnecessary_null_comparison
-  //       if (controller != null) {
-  //         controller.dispose();
-  //       }
-  //       controller = Get.put<DashboardStudentTableController>(
-  //           DashboardStudentTableController());
-  //   }
-  //   selectedIndex.value = index;
+  Future<void> fetchRoleData({bool showSnakeBars = true}) async {
+    Result res = await RoleRepository.fetchDashboardRole(
+      sort: selectedSort.value,
+      limit: rowsPerPage.value,
+      page: currentPage,
+      search: searchController.text,
+      hardFech: false,
+    );
+    if (res.statusCode == 200) {
+      roles.value = res.data["roles"] ?? {};
+      availableRows.value = res.data["totalroles"] ?? 0;
+    } else if (res.statusCode == 401) {
+      roles.value = {};
+      availableRows.value = 0;
+      faildMessage.value = "there is no roles";
+      if (showSnakeBars) {
+        showSnakeBar(
+          title: "Not Found Roles",
+          message: "there is not a Role can fetch",
+        );
+      }
+    } else {
+      roles.value = {};
+      availableRows.value = 0;
+      faildMessage.value = "fetching Roles faild please check connection";
+      if (showSnakeBars) {
+        showSnakeBar(
+            title: "Fetch Role Faild",
+            message: "fetching Roles faild please check connection");
+      }
+    }
+    update(["DataTable"]);
+  }
+
+  // Future<void> showPermition() async {
+  //   Permission? permitionData=await RoleRepository.fetchDashbordPermition(id: roleId.value).then((e)=>e.data);
+
   // }
-
-  void changeDoctorTableView() {
-    Get.offNamed("/dashboard_doctor_view");
-  }
-
-  void changeStudentTableView() {
-    Get.offNamed("/dashboard_student_view");
-  }
-
-  Future<void> fetchRoleData() async {}
 
   void onPageChange(int page) async {
     currentPage = (page ~/ rowsPerPage.value) + 1;

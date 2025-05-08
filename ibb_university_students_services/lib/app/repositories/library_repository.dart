@@ -202,7 +202,7 @@ class LibraryRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-bookPanel?level_id=${levelId ?? ''}&section_id=${sectionId ?? ''}&author=${author ?? ''}&edition=${edition ?? ''}&category=${category ?? ''}&added_by=${addedby ?? ''}&orderBy=${order ?? ''}&sort==${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from bachend
+          "get-bookPanel?level_id=${levelId ?? ''}&section_id=${sectionId ?? ''}&author=${author ?? ''}&edition=${edition ?? ''}&category=${category ?? ''}&added_by=${addedby ?? ''}&orderBy=${order ?? ''}&sort==${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from backend
       Map<int, LibraryFile> library = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsLib in response?.data['data']) {
@@ -213,7 +213,7 @@ class LibraryRepository {
           data: {
             "library": library,
             "totalbooks": response?.data["pagination"]
-                ["totalBooks"], //get the name of id from backend
+                ["totalBooks"], //get the name of total from backend
           },
           hasError: false,
           statusCode: response?.statusCode,
