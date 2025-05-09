@@ -1,6 +1,7 @@
 const { study_plan_elment, study_plan, subject, doctor,section,level } = require('../models'); 
 const { validationResult } = require('express-validator');
-
+const { Sequelize} = require('sequelize');
+const { Op } = require("sequelize");
 
 // when you Create a new study plan element befor see the (study plan id,subject id , doctor id )
 exports.createStudyPlanElement = async (req, res) => {
@@ -112,4 +113,101 @@ exports.deleteStudyPlanElement = async (req, res) => {
       res.status(500).json({ message: 'Error deleting study plan element', error: err.message });
     }
   
+};
+
+exports.getStudyPlanElementPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["study_plan_elment_id", "study_plan_id", "subject_id", "doctor_id", "section_id",
+    "level_id","number_of_units","term",
+  ];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      section_id,
+      level_id,
+      subject_id,
+      study_plan_id,
+      doctor_id,
+      number_of_units,
+      term,
+      page = 1,
+      limit = 10,
+      orderBy = "study_plan_elment_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "study_plan_elment_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+   
+
+    const { count, rows: Elements } = await study_plan_elment.findAndCountAll({
+      where: {
+        ...(subject_id && {
+          subject_id: subject_id  
+        }),
+
+        ...(level_id && {
+          level_id: level_id  
+        }),
+        ...(study_plan_id && {
+          study_plan_id: study_plan_id  
+        }),
+        ...(doctor_id && {
+          doctor_id: doctor_id  
+        }),
+        ...(number_of_units && {
+          number_of_units: number_of_units  
+        }),
+        ...(term && {
+          term: term  
+        }),
+
+      },
+      include: [
+        { model: section, as: "section", required: true, 
+          where: {
+          ...(section_id && { id: section_id}),
+          }
+        },
+
+
+      ],
+      distinct: true,
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!Elements.length) {
+      return res.status(404).json({ message: "No Elements found for the specified criteria" });
+    }
+
+
+    res.status(200).json({
+      message: "Elements retrieved successfully",
+      data: Elements,
+      pagination: {
+        total: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving exams", error: error.message });
+  }
 };
