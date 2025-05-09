@@ -25,7 +25,7 @@ const examRoute=require('./routes/examRoute')
 const gradeRoute=require('./routes/gradeRoute')
 const lectureRoute=require('./routes/lectureRoute')
 const phoneNumber=require('./routes/phoneNumberRoute')
-const getAllData=require('./routes/dataRoute')
+const getData=require('./routes/dataRoute')
 const subject=require('./routes/subjectRoute')
 const studyPlaneRoute=require('./routes/studyPlaneRoute')
 const studentFeeRoute=require('./routes/studentFeeRoute')
@@ -34,10 +34,9 @@ const assignmentRoutes = require('./routes/assignmentRoute');
 const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 const notificationRoute= require('./routes/notificationRoute');
 const refreshRoute=require('./routes/refreshRoute')
-const controllPanel=require('./routes/controllPanelRoute')
 
 
-app.use(getAllData);
+app.use(getData);
 app.use(mainRouter);
 app.use(authRoutes);
 app.use(userRoutes);
@@ -54,7 +53,6 @@ app.use(assignmentRoutes);
 app.use(rolePermissionRoutes);
 app.use(notificationRoute);
 app.use(refreshRoute);
-app.use(controllPanel);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {

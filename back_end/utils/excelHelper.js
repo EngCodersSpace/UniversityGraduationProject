@@ -68,23 +68,23 @@ function flattenMultilingualFields(obj, lang = 'en') {
  * @returns 
  */
 function reconstructMultilingualFields(flatRow) {
-    const result = {};
-  
-    for (const key in flatRow) {
-      if (key.endsWith('_en') || key.endsWith('_ar')) {
-        const base = key.slice(0, -3);
-        const lang = key.endsWith('_en') ? 'en' : 'ar';
-  
-        if (!result[base]) result[base] = {};
-        result[base][lang] = flatRow[key];
-      } else {
-        result[key] = flatRow[key];
-      }
+  const result = {};
+
+  for (const key in flatRow) {
+    if (key.endsWith('_en') || key.endsWith('_ar')) {
+      const base = key.slice(0, -3); // Remove _en or _ar
+      const lang = key.endsWith('_en') ? 'en' : 'ar';
+
+      if (!result[base]) result[base] = {};
+      result[base][lang] = flatRow[key];
+    } else {
+      result[key] = flatRow[key];
     }
-  
-    return result;
-};
-  
+  }
+
+  return result;
+}
+
 module.exports = {
     flattenMultilingualFields,
     reconstructMultilingualFields,

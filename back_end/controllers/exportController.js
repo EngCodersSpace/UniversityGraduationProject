@@ -24,10 +24,7 @@ exports.exportData = async (req, res) => {
       return res.status(400).json({ message: 'No tables specified or found' });
     }
 
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename="exported_data.xlsx"`
-    );
+
     res.setHeader(
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
