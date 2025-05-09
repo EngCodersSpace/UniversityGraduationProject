@@ -7,14 +7,14 @@ const {checkPermission} = require('../middleware/roleMiddleware');
 router.use(verifyToken);
 
 // Role Routes
-router.post('/create-roles',  checkPermission('role', 'create'), CRUD.createRole);
+router.post('/create-roles',  checkPermission('roles', 'write'), CRUD.createRole);
 router.get('/get-roles',         CRUD.getRoles);
-router.delete('/delete-roles',checkPermission('role', 'delete'), CRUD.deleteRole);
+router.delete('/delete-roles',checkPermission('roles', 'write'), CRUD.deleteRole);
 
 // Permission Routes
-router.post('/create-permissions', CRUD.createPermission);
+router.post('/create-permissions',checkPermission('permissions', 'write'), CRUD.createPermission);
 router.get('/get-permissions', CRUD.getPermissions);
-router.delete('/delete-permissions', CRUD.deletePermission);
+router.delete('/delete-permissions',checkPermission('permissions', 'write'), CRUD.deletePermission);
 
 // Role-Permission Routes
 router.post('/assign-permissions-role', CRUD.assignPermissionToRole);

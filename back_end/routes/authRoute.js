@@ -2,36 +2,23 @@
 const express = require('express');
 const router = express.Router();
 const vali = require('../validations/authvalidation');
-const authController = require('../controllers/authController');
+const CRUD = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
-const { uploadPhoto } = require('../utils/multerConfig');
-const uploadProfilePicture = uploadPhoto('profile_pictures', 'user');
+const {checkPermission} = require('../middleware/roleMiddleware');
 
 
-router.post('/login', authController.login);
+router.get('/', CRUD.welcome);
+router.post('/login', CRUD.login);
 router.post('/login/authToken', authMiddleware.verifyToken);//
-router.post('/logout', authController.logout);
-// router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
-router.post('/refresh', authController.refreshToken);
-
-// router.post('/register', uploadProfilePicture.single('profile_picture'), (req, res) => {exports.registerStudent(req, res);});
-
-router.post(
-    '/registerDoctor',
-    authController.registerDoctor
-); //    uploadProfilePicture.single('profile_picture'),
-
-
-router.post(
-    '/registerStudent', 
-    authController.registerStudent 
-); // uploadProfilePicture.single('profile_picture'), 
-
-router.post('/upload-photo-user',authController.uploadPhotoForuser);
-router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
-router.get('/verify-reset-token',authController.verifyResetToken);
-router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
-router.post('/change-password', authController.changePass);
+router.post('/logout', CRUD.logout);
+router.post('/refresh', CRUD.refreshToken);
+router.post('/registerDoctor',checkPermission('users', 'write'),CRUD.registerDoctor); 
+router.post('/registerStudent',checkPermission('users', 'write'), CRUD.registerStudent ); 
+router.post('/upload-photo-user',checkPermission('users', 'write'),CRUD.uploadPhotoForuser);
+router.post('/request-password-reset', vali.validateRequestPasswordReset , CRUD.requestPasswordReset);
+router.get('/verify-reset-token',CRUD.verifyResetToken);
+router.post('/reset-password', vali.validateResetPassword , CRUD.resetPassword);
+router.post('/change-password', CRUD.changePass);
 
 
 module.exports = router;

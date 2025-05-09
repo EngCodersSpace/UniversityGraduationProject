@@ -17,7 +17,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); 
 
-const mainRouter = require('./routes/mainRoute')
 const authRoutes = require('./routes/authRoute')
 const userRoutes = require('./routes/userRoute')
 const studyPlanElementRoute=require('./routes/studyPlaneElementRoute')
@@ -37,7 +36,6 @@ const refreshRoute=require('./routes/refreshRoute')
 
 
 app.use(getData);
-app.use(mainRouter);
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(studyPlanElementRoute);

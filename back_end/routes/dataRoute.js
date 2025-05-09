@@ -1,12 +1,11 @@
 // routes/dataRoute.js
 const express = require('express');
 const router = express.Router();
-const exportController = require('../controllers/exportController');
-const importController = require('../controllers/importController'); 
+const Export = require('../controllers/exportController');
+const Import = require('../controllers/importController'); 
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
-
-
+const {checkPermission} = require('../middleware/roleMiddleware');
 const CRUD = require('../controllers/dataControll');
 const CRUD2 = require('../controllers/subjectController');
   
@@ -20,9 +19,9 @@ router.get('/get-all-doctors', CRUD.getAllDoctors);
 router.get('/get-all-students', CRUD.getAllStudents); 
 
 // Route: Export selected tables (with or without relations), as Excel
-router.get('/export-to-excel', exportController.exportData);
+router.get('/export-to-excel',checkPermission('users', 'write'), Export.exportData);
 
 //  Route: Import Excel file to DB
-router.post('/import-to-db', upload.single('file'), importController.importData);
+router.post('/import-to-db', upload.single('file'),checkPermission('users', 'write'), Import.importData);
 
 module.exports = router;

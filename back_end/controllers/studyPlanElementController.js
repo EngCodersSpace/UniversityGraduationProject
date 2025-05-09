@@ -134,7 +134,6 @@ exports.getStudyPlanElementPanel = async (req, res) => {
       limit = 10,
       orderBy = "study_plan_elment_id",
       sort = "ASC",
-      search,
     } = req.query;
 
 
@@ -155,19 +154,6 @@ exports.getStudyPlanElementPanel = async (req, res) => {
 
     const { count, rows: Elements } = await study_plan_elment.findAndCountAll({
       where: {
-        ...(subject_id && {
-          subject_id: subject_id  
-        }),
-
-        ...(level_id && {
-          level_id: level_id  
-        }),
-        ...(study_plan_id && {
-          study_plan_id: study_plan_id  
-        }),
-        ...(doctor_id && {
-          doctor_id: doctor_id  
-        }),
         ...(number_of_units && {
           number_of_units: number_of_units  
         }),
@@ -175,13 +161,34 @@ exports.getStudyPlanElementPanel = async (req, res) => {
           term: term  
         }),
 
-      },
+      }, 
       include: [
         { model: section, as: "section", required: true, 
           where: {
           ...(section_id && { id: section_id}),
           }
         },
+        { model: level, as: "level", required: true, 
+          where: {
+          ...(level_id && { id: level_id}),
+          }
+        },
+        { model: subject, as: "subject", required: true, 
+          where: {
+          ...(subject_id && { subject_id: subject_id}),
+          }
+        },
+        { model: study_plan, as: "study_plan", required: true, 
+          where: {
+          ...(study_plan_id && { study_plan_id: study_plan_id}),
+          }
+        },
+        { model: doctor, as: "doctor", required: true, 
+          where: {
+          ...(doctor_id && { doctor_id: doctor_id}),
+          }
+        },
+
 
 
       ],
