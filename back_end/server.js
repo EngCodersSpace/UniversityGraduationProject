@@ -34,7 +34,7 @@ const assignmentRoutes = require('./routes/assignmentRoute');
 const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 const notificationRoute= require('./routes/notificationRoute');
 const refreshRoute=require('./routes/refreshRoute')
-const controllPanel=require('./routes/controllPanel')
+const controllPanel=require('./routes/controllPanelRoute')
 
 
 app.use(getAllData);
