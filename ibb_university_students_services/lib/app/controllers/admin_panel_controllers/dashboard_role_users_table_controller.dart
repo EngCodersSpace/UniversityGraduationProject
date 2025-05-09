@@ -28,46 +28,26 @@ class DashboardRoleUsersTableController extends GetxController
   RxBool selectAll = false.obs;
   RxSet<int> selectedRows = RxSet({});
   RxInt availableRows = 0.obs;
-  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedOrder = "id".obs;
   RxString selectedSort = "DESC".obs;
   RxString faildMessage = "".obs;
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "lecture_time",
+        value: "id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Time",
+              "ID",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "lecture_day",
+        value: "roleName",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Day",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_room",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Room",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "subject_id",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Subject",
+              "Role Name",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),

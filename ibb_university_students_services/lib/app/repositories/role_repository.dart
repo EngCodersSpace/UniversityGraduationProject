@@ -49,15 +49,18 @@ class RoleRepository {
   }
 
   static Future<Result<Map>> fetchDashboardRole({
+    String? rolename,
     int? limit,
     int? page,
+    String? order,
     String? sort,
     String? search,
     bool hardFech = false,
   }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("url"); //get the url from backend
+      response = await HttpProvider.get(
+          "get-roles-panel?roleName=${rolename ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from backend
       Map<int, Role> role = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsRole in response?.data["data"]) {
@@ -68,7 +71,7 @@ class RoleRepository {
           data: {
             "roles": role,
             "totalroles": response?.data["pagination"]
-                ["totalroles"], //get the name of total from backend
+                ["totalRoles"], //get the name of total from backend
           },
           hasError: false,
           statusCode: response?.statusCode,

@@ -85,7 +85,9 @@ class LectureController extends GetxController {
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
+    (sections.isNotEmpty)
+        ? selectedSection.value = sections.values.first.id
+        : null;
     await fetchTableData();
     loadState.value = false;
     super.onInit();
@@ -114,8 +116,7 @@ class LectureController extends GetxController {
       }
     }
 
-    if (selectedSection.value == null ||
-        selectedLevel.value == null ) {
+    if (selectedSection.value == null || selectedLevel.value == null) {
       return;
     }
     Result res = await LectureRepository.fetchTableTime(
@@ -207,12 +208,11 @@ class LectureController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
-     sections =
-        await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data??{});
-     if(sections.isNotEmpty){
-     selectedSection.value = sections.values.first.id;
-     }
+    sections = await SectionRepository.fetchSections(hardFetch: force)
+        .then((e) => e.data ?? {});
+    if (sections.isNotEmpty) {
+      selectedSection.value = sections.values.first.id;
+    }
   }
 
   Future<void> initLevelDropdownMenuList({bool force = false}) async {
@@ -237,11 +237,10 @@ class LectureController extends GetxController {
             )),
       );
     }
-    if(levelsData.isNotEmpty) {
+    if (levelsData.isNotEmpty) {
       selectedLevel.value = levelsData.first.id;
     }
   }
-
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
     if (val == "Edit") {

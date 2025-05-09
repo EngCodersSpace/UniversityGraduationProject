@@ -54,8 +54,8 @@ class LectureRepository {
     required int levelId,
     bool hardFetch = false,
   }) async {
-    LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
-        "${sectionId}_${levelId}_Lectures");
+    LecturesCache? cachedDayLectures =
+        _lecturesGroupsBox?.get("${sectionId}_${levelId}_Lectures");
     Map<String, Map<int, Lecture>> lectures = {};
     if ((cachedDayLectures != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
@@ -78,10 +78,8 @@ class LectureRepository {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId");
       if (response?.statusCode == 200) {
-        LecturesCache dayLectures = LecturesCache(
-            key:
-                "${sectionId}_${levelId}_Lectures",
-            data: {});
+        LecturesCache dayLectures =
+            LecturesCache(key: "${sectionId}_${levelId}_Lectures", data: {});
 
         for (String day in (response?.data["data"] as Map).keys) {
           dayLectures.data[day] = [];
@@ -196,12 +194,9 @@ class LectureRepository {
             .then((e) => e.data);
         newLecture = Lecture.fromJson(response?.data["data"], subject: subject);
         if (withCache) {
-          LecturesCache? cachedDayLectures = _lecturesGroupsBox?.get(
-                  "${sectionId}_${levelId}_Lectures") ??
-              LecturesCache(
-                  key:
-                      "${sectionId}_${levelId}_Lectures",
-                  data: {});
+          LecturesCache? cachedDayLectures = _lecturesGroupsBox
+                  ?.get("${sectionId}_${levelId}_Lectures") ??
+              LecturesCache(key: "${sectionId}_${levelId}_Lectures", data: {});
           cachedDayLectures.data[day]?.add(newLecture.id);
           await _lecturesBox?.put(newLecture.id, newLecture);
           await _lecturesGroupsBox?.put(
@@ -295,12 +290,13 @@ class LectureRepository {
       response = await HttpProvider.delete("delete-lecture?id=$id");
       if (response?.statusCode == 200 && withCache) {
         Lecture? lecture = _lecturesBox?.get(id);
-        if(lecture != null){
-          _lecturesGroupsBox?.get(
-              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data.remove(id) ;
+        if (lecture != null) {
+          _lecturesGroupsBox
+              ?.get("${lecture.sectionId}_${lecture.levelId}_Lectures")
+              ?.data
+              .remove(id);
           _lecturesBox?.delete(id);
         }
-
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -394,7 +390,7 @@ class LectureRepository {
       );
       Map<int, Lecture> lectures = {};
 
-       if (response?.statusCode == 200) {
+      if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsLecture in response?.data['data']) {
           Subject? subject =
               await SubjectRepository.fetchSubject(id: jsLecture["subject_id"])
@@ -441,13 +437,12 @@ class LectureRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response =
-          await HttpProvider.post("replaceOne-lecture?id=$id", data: {
-            " subject_id ": subjectId,
-            " doctor_id  ": doctorId,
-            " lecture_time ": lectureTime,
-            " lecture_duration ": lectureDuration
-          });
+      response = await HttpProvider.post("replaceOne-lecture?id=$id", data: {
+        " subject_id ": subjectId,
+        " doctor_id  ": doctorId,
+        " lecture_time ": lectureTime,
+        " lecture_duration ": lectureDuration
+      });
 
       Lecture? newLecture;
       if (response?.statusCode == 200) {
@@ -458,19 +453,22 @@ class LectureRepository {
             subject: subject);
 
         Lecture? lecture = _lecturesBox?.get(id);
-        _lecturesBox?.put(newLecture.id,newLecture);
-        if(lecture != null){
-          _lecturesGroupsBox?.get(
-              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data[lecture.day]?.add(newLecture.id) ;
-          _lecturesGroupsBox?.get(
-              "${lecture.sectionId}_${lecture.levelId}_Lectures")?.data[lecture.day]?.remove(id) ;
+        _lecturesBox?.put(newLecture.id, newLecture);
+        if (lecture != null) {
+          _lecturesGroupsBox
+              ?.get("${lecture.sectionId}_${lecture.levelId}_Lectures")
+              ?.data[lecture.day]
+              ?.add(newLecture.id);
+          _lecturesGroupsBox
+              ?.get("${lecture.sectionId}_${lecture.levelId}_Lectures")
+              ?.data[lecture.day]
+              ?.remove(id);
         }
         return Result(
             data: newLecture,
             hasError: true,
             statusCode: response?.statusCode ?? _updateError,
             message: response?.data["message"] ?? "error");
-
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -479,7 +477,6 @@ class LectureRepository {
           hasError: true,
           statusCode: response?.statusCode ?? _updateError,
           message: response?.data["message"] ?? "error");
-
     } catch (error) {
       return Result(
           hasError: true,

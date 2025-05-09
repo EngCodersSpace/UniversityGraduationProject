@@ -82,7 +82,9 @@ class ExamTableController extends GetxController {
     await initLevelDropdownMenuList();
     await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.values.first.id : null;
+    (sections.isNotEmpty)
+        ? selectedSection.value = sections.values.first.id
+        : null;
     (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
@@ -113,7 +115,7 @@ class ExamTableController extends GetxController {
       hardFetch: force,
     );
     if (res.statusCode == 200) {
-      exams?.value = {};
+      // exams?.value = {};
       exams?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
       exams?.value = res.data ?? {};
@@ -155,14 +157,14 @@ class ExamTableController extends GetxController {
   }
 
   Future<void> initSectionDropdownMenuList() async {
-    sections = await SectionRepository.fetchSections()
-        .then((e) => e.data??{});
+    sections =
+        await SectionRepository.fetchSections().then((e) => e.data ?? {});
     selectedSection.value = sections.values.first.id;
   }
 
   Future<void> initLevelDropdownMenuList() async {
-    List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     // List<String> yearData =
     //     await AppDataServices.fetchLectureYears().then((e) => e.data ?? []);
     levels = [];

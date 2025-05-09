@@ -29,7 +29,8 @@ class HttpProvider {
     _dio.options.connectTimeout = connectTimeout;
     _dio.options.sendTimeout = sendTimeout;
     _dio.options.receiveTimeout = receiveTimeout;
-    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
+    _dio.options.headers["Accept-Language"] =
+        LocaleListener.currentLocal.value?.languageCode ?? "en";
     if (kIsWeb) {
       await reSetAccessToken();
     }
@@ -51,9 +52,13 @@ class HttpProvider {
               Response(requestOptions: error.requestOptions, statusCode: 900));
         }
 
-        if (error.type == DioExceptionType.connectionTimeout || error.type == DioExceptionType.receiveTimeout || error.type == DioExceptionType.sendTimeout ){
-          return handler.resolve(
-              Response(requestOptions: error.requestOptions, statusCode: 901,data: error.response?.data));
+        if (error.type == DioExceptionType.connectionTimeout ||
+            error.type == DioExceptionType.receiveTimeout ||
+            error.type == DioExceptionType.sendTimeout) {
+          return handler.resolve(Response(
+              requestOptions: error.requestOptions,
+              statusCode: 901,
+              data: error.response?.data));
         }
 
         if (error.response?.statusCode == 401 &&
@@ -89,9 +94,10 @@ class HttpProvider {
     ));
   }
 
-  static Future<Response?> get(String url, {dynamic data ,Options? options}) async {
+  static Future<Response?> get(String url,
+      {dynamic data, Options? options}) async {
     try {
-      final response = await _dio.get(url, data: data,options:options);
+      final response = await _dio.get(url, data: data, options: options);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -149,14 +155,14 @@ class HttpProvider {
     required File file,
     required String uploadUrl,
     required void Function(int, int)? onSendProgress,
-    Map<String,dynamic> data =const {},
+    Map<String, dynamic> data = const {},
     int? fileSize,
   }) async {
     try {
       fileSize ??= await file.length();
 
       cancelTokens[file.path.hashCode] = CancelToken();
-      Map<String,dynamic> dataMap = {
+      Map<String, dynamic> dataMap = {
         'file': [
           MultipartFile.fromStream(() => file.openRead(), fileSize,
               filename: file.path.split("/").last)
@@ -185,6 +191,7 @@ class HttpProvider {
     }
     return null;
   }
+
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
@@ -192,14 +199,12 @@ class HttpProvider {
     int? fileSize,
   }) async {
     try {
-
       cancelTokens[savePath.hashCode] = CancelToken();
       final response = await _dio.download(
         downloadUrl,
         savePath,
         // cancelToken: cancelTokens[file.path.hashCode],
         onReceiveProgress: onReceiveProgress,
-
       );
 
       return response;
@@ -286,8 +291,8 @@ class HttpProvider {
     _dio.options.headers["Authorization"] = null;
   }
 
-  static void updateLangHeader(){
-    _dio.options.headers["Accept-Language"] = LocaleListener.currentLocal.value?.languageCode ?? "en";
+  static void updateLangHeader() {
+    _dio.options.headers["Accept-Language"] =
+        LocaleListener.currentLocal.value?.languageCode ?? "en";
   }
-
 }

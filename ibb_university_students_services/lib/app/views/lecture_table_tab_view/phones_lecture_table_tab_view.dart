@@ -60,53 +60,60 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                           "${"Program".tr}:",
                                           textAlign: TextAlign.start,
                                           style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         ),
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
                                           borderRadius:
-                                          BorderRadius.circular(24),
+                                              BorderRadius.circular(24),
                                         ),
-                                        width: (((Get.width - 16) / 7) * 4)*0.63,
+                                        width:
+                                            (((Get.width - 16) / 7) * 4) * 0.63,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
-                                                  items: controller.sections.values
-                                                      .map((section) =>
-                                                      DropdownMenuItem<
-                                                          int>(
-                                                          value:
-                                                          section.id,
-                                                          child: SizedBox(
-                                                            width: (((Get.width - 16) / 7) * 4) * 0.48,
-                                                            child:
-                                                            CustomText(
-                                                              section.name ??
-                                                                  "unknown",
-                                                              style: AppTextStyles.mainStyle(
-                                                                  textHeader:
-                                                                  AppTextHeaders.h5Bold),
-                                                            ),
-                                                          )))
-                                                      .toList(),
-                                                  onChanged:
+                                            () => DropdownButton(
+                                              items: controller.sections.values
+                                                  .map(
+                                                      (section) =>
+                                                          DropdownMenuItem<int>(
+                                                              value: section.id,
+                                                              child: SizedBox(
+                                                                width: (((Get.width -
+                                                                                16) /
+                                                                            7) *
+                                                                        4) *
+                                                                    0.48,
+                                                                child:
+                                                                    CustomText(
+                                                                  section.name ??
+                                                                      "unknown",
+                                                                  style: AppTextStyles.mainStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h5Bold),
+                                                                ),
+                                                              )))
+                                                  .toList(),
+                                              onChanged:
                                                   controller.changeDepartment,
-                                                  value: controller
-                                                      .selectedSection.value,
-                                                  underline: const SizedBox(),
-                                                  iconEnabledColor:
+                                              value: controller
+                                                  .selectedSection.value,
+                                              underline: const SizedBox(),
+                                              iconEnabledColor:
                                                   AppColors.mainCardColor,
-                                                  dropdownColor:
+                                              dropdownColor:
                                                   AppColors.inverseCardColor,
-                                                  // menuWidth: 300,
-                                                ),
+                                              // menuWidth: 300,
+                                            ),
                                           ),
                                         ),
                                       ),
                                       SizedBox(
-                                        width: (((Get.width - 16) / 7) * 4) * 0.04,
+                                        width:
+                                            (((Get.width - 16) / 7) * 4) * 0.04,
                                       ),
                                     ],
                                   )),
@@ -122,29 +129,30 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                           "${"Level".tr}:",
                                           textAlign: TextAlign.start,
                                           style: AppTextStyles.secStyle(
-                                              textHeader: AppTextHeaders.h3Bold),
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
                                         ),
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
                                           borderRadius:
-                                          BorderRadius.circular(24),
+                                              BorderRadius.circular(24),
                                         ),
-                                        width: (((Get.width - 16) / 7) * 2.5)*0.6,
+                                        width: (((Get.width - 16) / 7) * 2.5) *
+                                            0.6,
                                         child: Center(
                                           child: Obx(
-                                                () => DropdownButton(
+                                            () => DropdownButton(
                                               items: controller.levels,
-                                              onChanged:
-                                              controller.changeLevel,
+                                              onChanged: controller.changeLevel,
                                               value: controller
                                                   .selectedLevel.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                              AppColors.mainCardColor,
+                                                  AppColors.mainCardColor,
                                               dropdownColor:
-                                              AppColors.inverseCardColor,
+                                                  AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
@@ -217,7 +225,6 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                                             controller.selectedDayChange(4);
                                           }),
                                       DayCard(
-
                                           text: "thu".tr,
                                           selected:
                                               (controller.selected.value == 5),
@@ -249,8 +256,11 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                          CustomText(controller.selectedDayName.value.tr,
-                              style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold),),
+                        CustomText(
+                          controller.selectedDayName.value.tr,
+                          style: AppTextStyles.highlightStyle(
+                              textHeader: AppTextHeaders.h2Bold),
+                        ),
                         if ((UserRepository.checkPermission(
                             target: "Lectures", action: "write")))
                           CustomButton(

@@ -16,7 +16,7 @@ class RoleTableFilterComponent
         children: [
           Container(
             height: Get.height * 0.06,
-            width: Get.width * 0.15,
+            width: Get.width * 0.12,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),

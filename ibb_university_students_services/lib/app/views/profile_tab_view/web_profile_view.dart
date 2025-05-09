@@ -118,8 +118,11 @@ class WebProfileView extends GetView<ProfileController> {
                                 Row(
                                   children: [
                                     CustomText(
-                                      controller.user?.phones?.first ??
-                                          "Unknown".tr,
+                                      (controller.user?.phones != null &&
+                                              controller
+                                                  .user!.phones!.isNotEmpty)
+                                          ? controller.user!.phones!.first
+                                          : "No phone number",
                                       style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h3Normal,
                                       ),
