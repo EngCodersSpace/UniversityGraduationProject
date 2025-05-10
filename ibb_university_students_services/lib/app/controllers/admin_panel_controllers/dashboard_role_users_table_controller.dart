@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
-import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/repositories/role_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';

@@ -68,22 +68,18 @@ class ExamTableWebView extends GetView<ExamTableController> {
                               child: Obx(
                                 () => DropdownButton(
                                   items: controller.sections.values
-                                      .map((section) =>
-                                      DropdownMenuItem<int>(
+                                      .map((section) => DropdownMenuItem<int>(
                                           value: section.id,
                                           child: SizedBox(
                                             width: (Get.width / 7.3) * 0.7,
                                             child: CustomText(
-                                              section.name ??
-                                                  "unknown",
-                                              style:
-                                              AppTextStyles
-                                                  .mainStyle(
-                                                  textHeader: AppTextHeaders
-                                                      .h6Bold),
+                                              section.name ?? "unknown",
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h6Bold),
                                             ),
-                                          ))
-                                  ).toList(),
+                                          )))
+                                      .toList(),
                                   onChanged: controller.changeDepartment,
                                   value: controller.selectedSection.value,
                                   underline: const SizedBox(),
@@ -154,32 +150,6 @@ class ExamTableWebView extends GetView<ExamTableController> {
                           SizedBox(
                             width: width * 0.03,
                           ),
-                          CustomText(
-                            "Year".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          SizedBox(
-                            width: width * 0.008,
-                          ),
-                          Container(
-                            height: height * 0.08,
-                            width: width * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.inverseIconColor,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Center(
-                              child: Obx(() => DropdownButton(
-                                    items: controller.years,
-                                    onChanged: controller.changeYear,
-                                    value: controller.selectedYear.value,
-                                    underline: const SizedBox(),
-                                    iconEnabledColor: AppColors.mainCardColor,
-                                    dropdownColor: AppColors.inverseCardColor,
-                                  )),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -204,12 +174,34 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             ),
                             for (int i = 0;
                                 i < controller.exams!.value.length;
-                                i++) ...[
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                width: (width * 0.6) * 1 / 2,
-                                child: ExamCard(
-                                    content: Rx(controller.exams?.value[i])),
+                                i += 2) ...[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: (width * 0.6) * 1 / 2,
+                                        child: ExamCard(
+                                            content:
+                                                Rx(controller.exams?.value[i])),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width: (width * 0.6) * 1 / 2,
+                                        child: ExamCard(
+                                            content: Rx(controller
+                                                .exams?.value[i + 1])),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
                               SizedBox(
                                 height: height * 0.02,

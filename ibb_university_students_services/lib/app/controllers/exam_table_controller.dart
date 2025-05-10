@@ -24,12 +24,10 @@ class ExamTableController extends GetxController {
   String selectedDayName = "Sunday".tr;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  Rx<String?> selectedYear = Rx(null);
   RxString selectedTerm = "Term 1".obs;
   Rx<Map<int, Exam>>? exams = Rx({});
   Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> years = [];
   List<DropdownMenuItem<String>> terms = [
     DropdownMenuItem<String>(
         value: "Term 1",
@@ -80,12 +78,10 @@ class ExamTableController extends GetxController {
     await ExamRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
-    await initYearDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (sections.isNotEmpty)
         ? selectedSection.value = sections.values.first.id
         : null;
-    (years.isNotEmpty) ? selectedYear.value = years.first.value! : null;
     await fetchExamsData();
     super.onInit();
     loadingState.value = false;
@@ -115,7 +111,6 @@ class ExamTableController extends GetxController {
       hardFetch: force,
     );
     if (res.statusCode == 200) {
-      // exams?.value = {};
       exams?.value = res.data ?? {};
     } else if (res.statusCode == 404) {
       exams?.value = res.data ?? {};
@@ -142,12 +137,6 @@ class ExamTableController extends GetxController {
     if (val == null) return;
     selectedLevel.value = val;
     await fetchExamsData();
-  }
-
-  void changeYear(String? val) {
-    if (val == null) return;
-    selectedYear.value = val;
-    fetchExamsData();
   }
 
   void changeTerm(String? val) async {
@@ -185,29 +174,6 @@ class ExamTableController extends GetxController {
       );
     }
     selectedLevel.value = levelsData.first.id;
-  }
-
-  Future<void> initYearDropdownMenuList({bool force = false}) async {
-    List<String> yearData =
-        await ExamRepository.fetchLectureYears(hardFetch: force)
-            .then((e) => e.data ?? []);
-    years = [];
-    for (String year in yearData) {
-      years.add(
-        DropdownMenuItem(
-            value: year,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? (((Get.width - 16) / 7) * 4) * 0.48
-                  : (Get.width / 7) * 0.6,
-              child: CustomText(
-                year,
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h5Bold),
-              ),
-            )),
-      );
-    }
   }
 
   void more(String val, {Map<String, dynamic>? data}) async {
