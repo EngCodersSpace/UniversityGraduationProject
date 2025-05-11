@@ -137,4 +137,55 @@ class SubjectRepository {
           data: null);
     }
   }
+
+  static Future<Result<Map>> fetchDashboardSubject({
+    int? sectionid,
+    int? levelid,
+    String? subjectId,
+    String? subjectName,
+    int? numberOfUnit,
+    String? description,
+    String? order,
+    String? sort,
+    String? search,
+    int? limit,
+    int? page,
+    hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "get-subject-panle?subject_id=${subjectId ?? ''}&subject_name=${subjectName ?? ''}&number_of_units=${numberOfUnit ?? ''}&subject_description=${description ?? ''}&section_id=${sectionid ?? ''}&level_id=${levelid ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=${limit ?? ''}&search=${search ?? ''}&page=$page ");
+      Map<String, Subject> subjects = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jSubject in response?.data['data']) {
+          subjects[jSubject['subject_id']] = Subject.fromJson(jSubject);
+        }
+        return Result(
+          data: {
+            "subject": subjects,
+            "totalSubject": response?.data["pagination"]["totalSubjects"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "subject": subjects,
+          "totalSubject": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
 }

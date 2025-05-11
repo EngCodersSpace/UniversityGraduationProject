@@ -38,6 +38,9 @@ class HeaderOfViewComponent extends GetView {
               ),
               CustomTextFormField(
                 labelText: "Search",
+                // labelStyle: AppTextStyles.mainStyle(
+                //   textHeader: AppTextHeaders.h2Bold,
+                // ),
                 controller: controller.searchController,
                 // icon: Icons.search_rounded,
                 color: AppColors.inverseCardColor,

@@ -31,7 +31,7 @@ class ExamTableView extends GetView<DashboardExamTableController> {
             Expanded(
               // ignore: sized_box_for_whitespace
               child: Container(
-                width: Get.width * 0.6,
+                width: Get.width * 0.7,
                 child: Scrollbar(
                   controller: controller.vertical,
                   thumbVisibility: true,
@@ -49,7 +49,7 @@ class ExamTableView extends GetView<DashboardExamTableController> {
                           rowsPerPage: controller.rowsPerPage.value,
                           columnSpacing: controller.width * 0.05,
                           onPageChanged: controller.onPageChange,
-                          availableRowsPerPage: const <int>[5, 10, 20, 30],
+                          availableRowsPerPage: const <int>[5, 10, 20],
                           onRowsPerPageChanged: controller.onRowChange,
                           showCheckboxColumn: false,
                           columns: controller.kTableColumn,
@@ -105,6 +105,7 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
@@ -116,54 +117,61 @@ class MyData extends DataTableSource {
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
-                      .subject
-                      ?.subjectName)),
+                          .subject
+                          ?.subjectName ??
+                      "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].date)),
+                      items[index % controller.rowsPerPage.value].date ?? "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].day)),
+                      items[index % controller.rowsPerPage.value].examTime ??
+                          "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].examTime)),
+                      items[index % controller.rowsPerPage.value].day ?? "")),
           DataCell(
               onTap: () {},
               CustomTextFormField(
+                  key: UniqueKey(),
                   onTapOutside: (e) {
                     controller.refresh();
                   },
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].hall)),
+                      items[index % controller.rowsPerPage.value].hall ?? "")),
         ]);
   }
 

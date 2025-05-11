@@ -185,6 +185,48 @@ class LibraryRepository {
     }
   }
 
+  static Future<Result<Map>> fetchDashboardLibrary({
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("url"); //get the url from bachend
+      Map<int, LibraryFile> library = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsLib in response?.data['data']) {
+          library[jsLib["library_id"]] =
+              LibraryFile.fromJson(jsLib); //get the name of id from backend
+        }
+        return Result(
+          data: {
+            "library": library,
+            "totalbooks": response?.data["pagination"]
+                ["totalbooks"], //get the name of id from backend
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "library": library,
+          "totalbooks": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _fetchError,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
+
 //
 // static Future<Result<Assignment>> createAssignment(
 //     {required int sectionId,
@@ -257,6 +299,7 @@ class LibraryRepository {
     required PlatformFile file,
     required String category,
     required List<Map<String, int>> groups,
+    bool withCache = true,
   }) async {
     late Response? response;
     try {
@@ -274,8 +317,9 @@ class LibraryRepository {
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
-              "upload?category=$category&section_id=${groups.first["section_id"]}&level_id=${groups.first["level_id"]}",
+              "upload?category=$category&sectionsAndLevels=${json.encode(groups.asMap())}",
           file: fileData,
+          fileSize: fileSize,
           onSendProgress: (sent, total) {
             double progress = (sent / total) * 100;
             NotificationHandler.showProgressNotification(
@@ -287,8 +331,10 @@ class LibraryRepository {
         );
         if (response?.statusCode == 201) {
           LibraryFile resFile = LibraryFile.fromJson(response?.data["books"]);
-          await FileUtils.saveFiles(
+          if(withCache){
+            await FileUtils.saveFiles(
               fileRelativePath: resFile.filePath, file: file);
+          }
           NotificationHandler.showProgressNotification(
             uniqueId: file.path.hashCode,
             title: "successful upload ",

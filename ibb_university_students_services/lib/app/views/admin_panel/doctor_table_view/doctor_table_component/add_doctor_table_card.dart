@@ -48,7 +48,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                             name: "Name",
                             controlName: controller.name,
                             focusName: controller.nameFocus,
-                            inputType: TextInputType.text,
+                            inputType: TextInputType.name,
                           ),
                           PopupAddComponent(
                             name: "Date Of Birth",
@@ -93,7 +93,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                   // const SizedBox(
                                   //   width: 10,
                                   // ),
-                                  CustomText("Doctor ID".tr,
+                                  CustomText("Doctor Section".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(

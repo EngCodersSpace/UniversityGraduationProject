@@ -11,7 +11,9 @@ class DashboardRoleUsersTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxInt selectedIndex = 0.obs;
+  RxBool loadingState = true.obs;
   RxMap<int, Role> roles = RxMap({});
   ScrollController horizontal = ScrollController();
   ScrollController vertical = ScrollController();
@@ -118,6 +120,7 @@ class DashboardRoleUsersTableController extends GetxController
       )),
     ];
     await fetchRoleData();
+    loadingState.value = false;
     super.onInit();
   }
 
@@ -152,9 +155,9 @@ class DashboardRoleUsersTableController extends GetxController
     Get.offNamed("/dashboard_doctor_view");
   }
 
-  // void changeStudentTableView() {
-  //   Get.offNamed("/dashboard_student_view");
-  // }
+  void changeStudentTableView() {
+    Get.offNamed("/dashboard_student_view");
+  }
 
   Future<void> fetchRoleData() async {}
 

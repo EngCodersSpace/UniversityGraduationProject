@@ -21,10 +21,10 @@ class StudyPlane {
 
   factory StudyPlane.fromJson(Map<String, dynamic> json) {
     return StudyPlane(
-      id: json['id'],
-      name: json['name'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: json['study_plan_id'],
+      name: json['study_plan_name'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 
@@ -36,9 +36,4 @@ class StudyPlane {
       "updated_at": updatedAt,
     };
   }
-
 }
-
-
-
-

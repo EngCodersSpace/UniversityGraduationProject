@@ -149,22 +149,24 @@ class HttpProvider {
     required File file,
     required String uploadUrl,
     required void Function(int, int)? onSendProgress,
+    Map<String,dynamic> data =const {},
     int? fileSize,
   }) async {
     try {
       fileSize ??= await file.length();
 
       cancelTokens[file.path.hashCode] = CancelToken();
+      Map<String,dynamic> dataMap = {
+        'file': [
+          MultipartFile.fromStream(() => file.openRead(), fileSize,
+              filename: file.path.split("/").last)
+        ],
+      };
+      dataMap.addAll(data);
       final response = await _dio.post(
         uploadUrl,
         cancelToken: cancelTokens[file.path.hashCode],
-        data: FormData.fromMap({
-          'file': [
-            MultipartFile.fromStream(() => file.openRead(), fileSize,
-                filename: file.path.split("/").last)
-          ],
-          'assignment_id': '45'
-        }),
+        data: FormData.fromMap(dataMap),
         options: Options(
           headers: {
             'Content-Type': 'application/octet-stream',

@@ -8,7 +8,7 @@ part of 'grads_model.dart';
 
 class GradAdapter extends TypeAdapter<Grad> {
   @override
-  final int typeId = 7;
+  final int typeId = 9;
 
   @override
   Grad read(BinaryReader reader) {
@@ -25,13 +25,15 @@ class GradAdapter extends TypeAdapter<Grad> {
       examGrad: fields[6] as int?,
       workGrad: fields[7] as int?,
       isAbsent: fields[4] as bool?,
+      sectionId: fields[8] as int?,
+      studentId: fields[9] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Grad obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class GradAdapter extends TypeAdapter<Grad> {
       ..writeByte(6)
       ..write(obj.examGrad)
       ..writeByte(7)
-      ..write(obj.workGrad);
+      ..write(obj.workGrad)
+      ..writeByte(8)
+      ..write(obj.sectionId)
+      ..writeByte(9)
+      ..write(obj.studentId);
   }
 
   @override

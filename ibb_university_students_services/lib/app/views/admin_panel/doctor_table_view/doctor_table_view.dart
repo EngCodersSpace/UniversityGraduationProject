@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
@@ -100,55 +100,104 @@ class MyData extends DataTableSource {
                   },
                 )),
           ),
-          DataCell(
-              onTap: () {},
-              CustomText(
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
                   items[index % controller.rowsPerPage.value].id.toString())),
-          DataCell(
-              onTap: () {},
-              CustomText(
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
                   items[index % controller.rowsPerPage.value].name ?? "")),
-          DataCell(
-              onTap: () {},
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .dateOfBrith
-                  .toString())),
-          DataCell(
-              onTap: () {},
-              CustomText(items[index % controller.rowsPerPage.value]
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].dateOfBrith)),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue: items[index % controller.rowsPerPage.value]
                   .email
                   .toString())),
-          DataCell(
-              onTap: () {},
-              CustomText(
-                  items[index % controller.rowsPerPage.value].role?.name ??
-                      "")),
-          DataCell(
-              onTap: () {},
-              CustomText(
-                  items[index % controller.rowsPerPage.value].phones?.first ??
-                      "")),
-          // DataCell(CustomText(items[index%controller.rowsPerPage.value]. "mcklsadjaiochvasnvbiuwehsvbiewcjasnwegcfoiwqjnaSVCHQWJPOHFDCIU")),
-          DataCell(
-              onTap: () {},
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .collegeName
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue: items[index % controller.rowsPerPage.value]
+                      .role
+                      ?.name
+                      .toString() ??
+                  "")),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue: items[index % controller.rowsPerPage.value]
+                  .phones
                   .toString())),
-          DataCell(
-              onTap: () {},
-              CustomText(
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].collegeName)),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
                   items[index % controller.rowsPerPage.value].section?.name ??
                       "")),
-          DataCell(
-              onTap: () {},
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .academicDegreeData
-                  .toString())),
-          DataCell(
-              onTap: () {},
-              CustomText(items[index % controller.rowsPerPage.value]
-                  .administrativePositionData
-                  .toString())),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue:
+                  items[index % controller.rowsPerPage.value].academicDegree ??
+                      "")),
+          DataCell(CustomTextFormField(
+              key: UniqueKey(),
+              onTapOutside: (e) {
+                controller.refresh();
+              },
+              onFieldSubmitted: (str) {},
+              enableBorder: false,
+              initialValue: items[index % controller.rowsPerPage.value]
+                      .administrativePosition ??
+                  "")),
         ]);
   }
 

@@ -82,7 +82,7 @@ class AssignmentsTabController extends GetxController {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
       if (subjects?.values.isNotEmpty??false) {
-        selectedSubject.value = subjects?.values.first.value;
+        selectedSubject.value = subjects?.values.first.id;
       }
     }
     if (selectedLevel.value == null) {

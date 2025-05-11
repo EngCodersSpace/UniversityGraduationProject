@@ -135,7 +135,13 @@ class NotificationHandler {
   }
 
   static Future<String?> getDeviceToken() async{
-    return await FirebaseMessaging.instance.getToken();
+    try{
+      return await FirebaseMessaging.instance.getToken();
+    }
+    catch(e){
+      //
+    }
+    return null;
   }
 }
 

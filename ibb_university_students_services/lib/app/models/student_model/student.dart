@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
+import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
 import 'package:ibb_university_students_services/app/models/user_model/user.dart';
 import '../../utils/json_utils.dart';
 import '../role_model/role.dart';
@@ -11,7 +12,7 @@ part 'student.g.dart';
 @HiveType(typeId: 3)
 class Student extends User {
   @HiveField(11)
-  int? studyPlaneId;
+  StudyPlane? studyPlane;
   @HiveField(12)
   Level? level;
   @HiveField(13)
@@ -34,7 +35,7 @@ class Student extends User {
     super.phones,
     super.profileImage,
     super.role,
-    this.studyPlaneId,
+    this.studyPlane,
     this.level,
     super.collegeNameData,
     super.section,
@@ -45,16 +46,28 @@ class Student extends User {
     super.updatedAt,
   });
 
-  factory Student.fromJson(Map<String, dynamic> json) {
+  factory Student.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    List<String> numbers = [];
+
+    if (json['phone_numbers'] != null && json['phone_numbers'] is List) {
+      for (var item in json['phone_numbers']) {
+        if (item is Map && item.containsKey("phone_number")) {
+          numbers.add(item["phone_number"]);
+        }
+      }
+    }
+
     return Student(
       id: json['user_id'],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
-      dateOfBrith: json['date_of_brith'],
+      dateOfBrith: json['date_of_birth'],
       email: json['email'],
       role: Role.fromJson(json['role']),
-      phones: json['phones'],
-      profileImage: json['profile_picture'],
-      studyPlaneId: json['study_plan_id'],
+      phones: numbers,
+      // profileImage: json['profile_picture'],
+      studyPlane: StudyPlane.fromJson(json['study_plan']),
       level: Level.fromJson(json["level"]),
       collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
       section: Section.fromJson(json["section"]),
@@ -75,7 +88,7 @@ class Student extends User {
       "role": role?.toJson(),
       "profile_image": profileImage,
       "phones": phones,
-      "study_plan_id": studyPlaneId,
+      "study_plan_id": studyPlane,
       "student_level": level,
       "student_section": section,
       "student_system": systemData,
