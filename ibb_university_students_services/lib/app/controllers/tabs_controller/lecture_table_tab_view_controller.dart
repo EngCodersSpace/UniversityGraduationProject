@@ -154,12 +154,6 @@ class LectureController extends GetxController {
     await fetchTableData();
   }
 
-  void changeYear(String? val) {
-    if (val == null) return;
-    selectedYear.value = val;
-    fetchTableData();
-  }
-
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
