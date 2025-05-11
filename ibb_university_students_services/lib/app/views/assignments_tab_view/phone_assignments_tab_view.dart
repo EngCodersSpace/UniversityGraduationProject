@@ -210,7 +210,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((UserRepository.checkPermission(
-                              target: "Assignments", action: "write")))
+                              target: "assignments", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,
                               text: "Add Assignment".tr,
@@ -225,7 +225,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                   child: SizedBox(
                       width: width,
                       height: (UserRepository.checkPermission(
-                              target: "Assignments", action: "write"))
+                              target: "assignments", action: "write"))
                           ? Get.height * 0.64
                           : Get.height * 0.666,
                       child: RefreshIndicator(

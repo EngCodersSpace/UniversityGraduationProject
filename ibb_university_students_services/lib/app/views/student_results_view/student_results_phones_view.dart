@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/student_result_controller.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_card.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_header_card.dart';
@@ -47,7 +48,9 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(height: 16,),
+                        const SizedBox(
+                          height: 16,
+                        ),
                         Row(
                           children: [
                             IconButton(
@@ -63,8 +66,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                             ),
                           ],
                         ),
-                        if (UserRepository.checkPermission(
-                            target: "Payments", action: "studentSearch")) ...[
+                        if (UserRepository.currentUserType() == Doctor) ...[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -86,7 +88,9 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8,),
+                          const SizedBox(
+                            height: 8,
+                          ),
                         ],
                         Row(
                           children: [
@@ -106,7 +110,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                         color: AppColors.inverseCardColor,
                                         borderRadius: BorderRadius.circular(24),
                                       ),
-                                      width: ((Get.width - 16) / 7) * 3 *0.6,
+                                      width: ((Get.width - 16) / 7) * 3 * 0.6,
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
@@ -165,7 +169,9 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 )),
                           ],
                         ),
-                        const SizedBox(height: 8,),
+                        const SizedBox(
+                          height: 8,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -180,11 +186,13 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 const SizedBox(
                                   width: 4,
                                 ),
-                                Obx(()=>CustomText(
-                                  "${controller.gpa.value.toStringAsFixed(2)}%",
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),)
+                                Obx(
+                                  () => CustomText(
+                                    "${controller.gpa.value.toStringAsFixed(2)}%",
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                )
                               ],
                             ),
                             Row(
@@ -198,19 +206,25 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                 const SizedBox(
                                   width: 4,
                                 ),
-                                Obx(()=>CustomText(
-                                  "${controller.summation.value}",
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),)
+                                Obx(
+                                  () => CustomText(
+                                    "${controller.summation.value}",
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                )
                               ],
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8,),
+                        const SizedBox(
+                          height: 8,
+                        ),
                       ],
                     )),
-                const SizedBox(height: 16,),
+                const SizedBox(
+                  height: 16,
+                ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(top: 8, bottom: 32),
@@ -224,27 +238,42 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                             child: SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),
                               padding:
-                              const EdgeInsets.symmetric(horizontal: 6),
+                                  const EdgeInsets.symmetric(horizontal: 6),
                               child: Column(
                                 children: [
                                   SizedBox(height: 8),
-                                  if((controller.grads?.value.isEmpty??true) )...[
-                                    SizedBox(height: Get.height*0.2,),
-                                    Center(child: CustomText(controller.failedMessage.value,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),)),
-                                    IconButton(onPressed: ()async=>controller.refresh(), icon: const Icon(Icons.refresh,size: 40,))
+                                  if ((controller.grads?.value.isEmpty ??
+                                      true)) ...[
+                                    SizedBox(
+                                      height: Get.height * 0.2,
+                                    ),
+                                    Center(
+                                        child: CustomText(
+                                      controller.failedMessage.value,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h2Bold),
+                                    )),
+                                    if (controller.studentId != null)
+                                      IconButton(
+                                          onPressed: () async =>
+                                              controller.refresh(),
+                                          icon: const Icon(
+                                            Icons.refresh,
+                                            size: 40,
+                                          ))
                                   ],
                                   for (int i = 0;
-                                  i < (controller.grads?.value.length ?? 0);
-                                  i++) ...[
+                                      i < (controller.grads?.value.length ?? 0);
+                                      i++) ...[
                                     (i % 2 == 0)
                                         ? ResultCard(
-                                        grad:
-                                        Rx(controller.grads!.value[i]))
+                                            grad:
+                                                Rx(controller.grads!.value[i]))
                                         : ResultCard(
-                                      grad:
-                                      Rx(controller.grads!.value[i]),
-                                      type: "odd",
-                                    ),
+                                            grad:
+                                                Rx(controller.grads!.value[i]),
+                                            type: "odd",
+                                          ),
                                     if (i <
                                         ((controller.grads?.value.length ?? 0) -
                                             1))

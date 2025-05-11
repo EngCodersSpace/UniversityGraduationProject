@@ -194,7 +194,7 @@ class PhoneExamTableView extends GetView<ExamTableController> {
                                 textHeader: AppTextHeaders.h2Bold),
                           ),
                           if ((UserRepository.checkPermission(
-                              target: "Exams", action: "write")))
+                              target: "exams", action: "write")))
                             CustomButton(
                               onPress: controller.addButtonClick,
                               text: "Add Exam".tr,

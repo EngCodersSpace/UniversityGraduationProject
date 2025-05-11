@@ -14,6 +14,7 @@ import 'package:ibb_university_students_services/app/models/instructor_model/ins
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
+import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/student_assignments_file_model/student_assignments_file_model.dart';
@@ -61,6 +62,7 @@ class HiveServices{
     Hive.registerAdapter(StudentAssignmentsFileAdapter());
     Hive.registerAdapter(StudentAssignmentStateAdapter());
     Hive.registerAdapter(RoleAdapter());
+    Hive.registerAdapter(PermissionAdapter());
     Hive.registerAdapter(LibraryFileAdapter());
     Hive.registerAdapter(LibraryFilesCacheAdapter());
     Hive.registerAdapter(DataSyncAdapter());

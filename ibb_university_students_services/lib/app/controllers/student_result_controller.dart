@@ -23,7 +23,7 @@ class StudentResultController extends GetxController {
   RxDouble gpa = 0.0.obs;
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> terms = [];
-  RxString failedMessage = "".obs;
+  RxString failedMessage = "Empty".tr.obs;
   int? studentId;
 
   @override
@@ -90,15 +90,15 @@ class StudentResultController extends GetxController {
   }
 
   Future<void> initDropdownMenuLists() async {
-    List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     levels = [];
     for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3)-50)*0.6,
+              width: ((((Get.width - 32) / 7) * 3) - 50) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(
@@ -112,7 +112,7 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 1",
           child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3.8)-50)*0.6,
+              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
               child: CustomText(
                 mappingTerms("Term 1"),
                 style: AppTextStyles.mainStyle(
@@ -122,7 +122,7 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3.8)-50)*0.6,
+              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
               child: CustomText(
                 mappingTerms("Term 2"),
                 style: AppTextStyles.mainStyle(
@@ -133,6 +133,13 @@ class StudentResultController extends GetxController {
   }
 
   void findButtonClick() {
+    if (!UserRepository.checkPermission(
+        target: "grades", action: "student_search")) {
+      showSnakeBar(
+          title: "Unauthorizes Access",
+          message: "you don't have permission for search student grads");
+      return;
+    }
     studentId = int.tryParse(idController.text);
     fetchStudentGrads();
   }

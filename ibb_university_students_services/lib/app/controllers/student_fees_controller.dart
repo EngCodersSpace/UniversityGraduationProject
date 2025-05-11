@@ -24,7 +24,7 @@ class StudentFeeController extends GetxController {
   FocusNode receiptNumberFocus = FocusNode();
   FocusNode totalAmountFocus = FocusNode();
   FocusNode payedAmountFocus = FocusNode();
-  RxString fieldMessage = "".obs;
+  RxString fieldMessage = "Empty".tr.obs;
   RxString selectedTerm = "Term 1".obs;
   List<Level>? levels;
   late RxInt level;
@@ -85,8 +85,15 @@ class StudentFeeController extends GetxController {
     }
     loadingState.value = false;
   }
-
   void findButtonClick() {
+
+    if (!UserRepository.checkPermission(
+        target: "student_fees", action: "student_search")) {
+      showSnakeBar(
+          title: "Unauthorizes Access",
+          message: "you don't have permission for search student payments");
+       return;
+    }
     studentId = int.tryParse(idController.text);
     fetchStudentFees();
   }

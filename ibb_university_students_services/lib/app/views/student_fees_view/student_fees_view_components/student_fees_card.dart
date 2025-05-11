@@ -92,7 +92,7 @@ class StudentFeeCard extends GetView<StudentFeeController> {
                           child: CustomText("${mappingTerms(studentFee.value.term)} Semester".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
                         ),
                         if ((UserRepository.checkPermission(
-                            target: "Payments", action: "write"))) ...[
+                            target: "student_fees", action: "write"))) ...[
                           const SizedBox(
                             width: 8,
                           ),

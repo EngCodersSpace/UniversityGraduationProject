@@ -442,8 +442,6 @@ class UserRepository {
     required String target,
     required String action,
   }) {
-    return true;
-    // return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
-    //     false;
+    return _userBox?.get('currentUser')?.role?.permissions[target]?.any((e)=>e.action == action)??false;
   }
 }
