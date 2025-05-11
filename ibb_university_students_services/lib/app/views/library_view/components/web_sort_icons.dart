@@ -7,8 +7,8 @@ import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
-class SortIcon extends GetView {
-  SortIcon(
+class WebSortIcons extends GetView {
+  WebSortIcons(
       {required this.icon,
       this.selected = false,
       this.onTap,
@@ -28,7 +28,7 @@ class SortIcon extends GetView {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: 30,
             color: (selected) ? Colors.blueAccent : AppColors.inverseCardColor,
           ),
           CustomText(

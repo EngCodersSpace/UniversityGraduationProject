@@ -20,7 +20,6 @@ class ExamRepository {
   static const int _createError = 623;
   static const int _updateError = 624;
   static const int _deleteError = 625;
-  static const int _fetchYearsError = 629;
 
   static Box<ExamsCache>? _examsBox;
 
@@ -38,7 +37,6 @@ class ExamRepository {
       await _examsBox?.close();
     }
   }
-
 
   static Future<Result<Map<int, Exam>>> fetchExamsGroup({
     required int sectionId,
@@ -63,9 +61,9 @@ class ExamRepository {
         ExamsCache exams =
             ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
         for (Map<String, dynamic> jsExam in response?.data["data"]) {
-          Subject? subject =
-              await SubjectRepository.fetchSubject(id: jsExam["subject_id"],hardFetch: hardFetch)
-                  .then((e) {
+          Subject? subject = await SubjectRepository.fetchSubject(
+                  id: jsExam["subject_id"], hardFetch: hardFetch)
+              .then((e) {
             return e.data;
           });
           Exam exam = Exam.fromJson(jsExam, subject: subject);
@@ -117,9 +115,9 @@ class ExamRepository {
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
-        if(withCache){
+        if (withCache) {
           ExamsCache? cachedExams =
-          _examsBox?.get("${sectionId}_${levelId}_Exams");
+              _examsBox?.get("${sectionId}_${levelId}_Exams");
           cachedExams ??=
               ExamsCache(key: "${sectionId}_${levelId}_Exams", data: {});
           cachedExams.data[newExam.id] = newExam;
@@ -160,9 +158,9 @@ class ExamRepository {
                 id: response?.data["exam"]["subject_id"])
             .then((e) => e.data);
         newExam = Exam.fromJson(response?.data["exam"], subject: subject);
-        if(withCache){
+        if (withCache) {
           ExamsCache? cachedExams =
-          _examsBox?.get("${sectionId}_${levelId}_Exams");
+              _examsBox?.get("${sectionId}_${levelId}_Exams");
           cachedExams?.data[newExam.id] = newExam;
         }
       } else if (response?.statusCode == 403) {
@@ -194,7 +192,7 @@ class ExamRepository {
     try {
       response = await HttpProvider.delete("delete-exam?exam_id=$id");
       if (response?.statusCode == 200) {
-        if(withCache) {
+        if (withCache) {
           _examsBox?.get("${sectionId}_${levelId}_Exams")?.data.remove(id);
         }
       } else if (response?.statusCode == 403) {
@@ -209,54 +207,6 @@ class ExamRepository {
       return Result(
           hasError: true,
           statusCode: _deleteError,
-          message: error.toString(),
-          data: null);
-    }
-  }
-
-  static Future<Result<List<String>>> fetchLectureYears({
-    bool hardFetch = false,
-  }) async {
-    Box lecturesYearsBox = await Hive.openBox<List<String>>("lectureYearsBox");
-    List<String>? years;
-    try {
-      years = lecturesYearsBox.get("lectureYears");
-    } catch (e) {
-      //
-    }
-    if (years != null && !hardFetch && !(await checkInternetConnection())) {
-      await lecturesYearsBox.close();
-      return Result(
-        data: years,
-        statusCode: 200,
-        hasError: false,
-        message: "successful",
-      );
-    }
-    late Response? response;
-    try {
-      response = await HttpProvider.get("lecture/year");
-      if (response?.statusCode == 200) {
-        List<String> years = List<String>.from(response?.data["data"]);
-        await lecturesYearsBox.put("lectureYears", years);
-        lecturesYearsBox.close();
-        return Result(
-            data: years,
-            hasError: true,
-            statusCode: response?.statusCode,
-            message: response?.data["message"] ?? "error");
-      }
-      lecturesYearsBox.close();
-      return Result(
-          data: null,
-          hasError: true,
-          statusCode: response?.statusCode ?? _fetchYearsError,
-          message: response?.data["message"] ?? "error");
-    } catch (error) {
-      lecturesYearsBox.close();
-      return Result(
-          hasError: true,
-          statusCode: _fetchYearsError,
           message: error.toString(),
           data: null);
     }

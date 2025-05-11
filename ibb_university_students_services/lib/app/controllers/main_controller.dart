@@ -33,7 +33,7 @@ class MainController extends GetxController {
     changeTabIndex(selectedIndex.value);
     super.onInit();
     loading.value = false;
-    if(kIsWeb){
+    if (kIsWeb) {
       Result res = await UserRepository.fetchUser();
       if (res.statusCode == 200) {
         user = res.data;
@@ -114,17 +114,6 @@ class MainController extends GetxController {
           AcademicCardController(),
         );
         break;
-      // case 9:
-      //   if (controller != null) {
-      //     controller.dispose();
-      //   }
-      //   // controller = Get.put<DashboardMainController>(
-      //   //   DashboardMainController(),
-      //   // );
-      //   Get.offNamed(
-      //     "/dashboard_main_view",
-      //   );
-      //   break;
     }
   }
 
