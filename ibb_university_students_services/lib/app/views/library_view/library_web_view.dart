@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 class LibraryWebView extends GetView<LibraryController> {
   const LibraryWebView({super.key});
@@ -15,7 +17,7 @@ class LibraryWebView extends GetView<LibraryController> {
         child: Column(
           children: [
             Container(
-              height: Get.height * 0.2,
+              height: Get.height * 0.18,
               decoration: BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage("assets/images/library/weblibrarybottom.png"),
@@ -141,11 +143,55 @@ class LibraryWebView extends GetView<LibraryController> {
               ),
             ),
             SizedBox(
-              height: Get.height * 0.6,
+              height: Get.height * 0.7,
               child: TabBarView(
                   controller: controller.tapController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: controller.myTabs),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        "assets/images/library/weblibrarybottom.png"),
+                    fit: BoxFit.fill),
+              ),
+              height: Get.height * 0.1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      controller.booksPagesController.previousPage(
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.ease);
+                    },
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    color: AppColors.backColor,
+                    iconSize: 30,
+                  ),
+                  SizedBox(
+                    width: Get.width * 0.1,
+                  ),
+                  CustomText(
+                    "0",
+                    style: AppTextStyles.mainStyle(
+                        textHeader: AppTextHeaders.h1Bold),
+                  ),
+                  SizedBox(
+                    width: Get.width * 0.1,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        controller.booksPagesController.nextPage(
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.ease);
+                      },
+                      icon: const Icon(Icons.arrow_forward_rounded),
+                      color: AppColors.backColor,
+                      iconSize: 30)
+                ],
+              ),
             ),
           ],
         ),

@@ -2,7 +2,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import 'package:ibb_university_students_services/app/views/library_view/components/book_filter_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_add_books_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_book_filter_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_book_info_card.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/lecture_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/refreneces_tab.dart';
@@ -214,17 +218,23 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) {
     selectedBook = book;
-    Get.dialog(PopUpBookInfoCard());
+    (ScreenUtils.isPhoneScreen())
+        ? Get.dialog(PopUpBookInfoCard())
+        : Get.dialog(WebBookInfoCard());
   }
 
   void searching(String? val) {}
 
   void filteringIconClick() {
-    Get.dialog(PopUpBookFilterCard());
+    (ScreenUtils.isPhoneScreen())
+        ? Get.dialog(PopUpBookFilterCard())
+        : Get.dialog(WebBookFilterCard());
   }
 
   void addIconClick() async {
-    await Get.dialog(BooksAddFilesCard());
+    (ScreenUtils.isPhoneScreen())
+        ? await Get.dialog(BooksAddFilesCard())
+        : await Get.dialog(WebAddBooksCard());
   }
 
   void filesMore(String? val, int index) {
