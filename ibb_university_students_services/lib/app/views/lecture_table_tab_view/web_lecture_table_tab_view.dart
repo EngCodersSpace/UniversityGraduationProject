@@ -24,6 +24,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
+                  color: AppColors.tabBackColor,
                   width: width,
                   height: height * 0.8,
                   padding: const EdgeInsets.only(left: 2, right: 2, top: 10),
@@ -122,20 +123,15 @@ class WebLectureTableTabView extends GetView<LectureController> {
                               child: Obx(
                                 () => DropdownButton(
                                   items: controller.sections.values
-                                      .map((section) =>
-                                      DropdownMenuItem<
-                                          int>(
-                                          value:
-                                          section.id,
+                                      .map((section) => DropdownMenuItem<int>(
+                                          value: section.id,
                                           child: SizedBox(
                                             width: (Get.width / 7.3) * 0.7,
-                                            child:
-                                            CustomText(
-                                              section.name ??
-                                                  "unknown",
+                                            child: CustomText(
+                                              section.name ?? "unknown",
                                               style: AppTextStyles.mainStyle(
                                                   textHeader:
-                                                  AppTextHeaders.h6Bold),
+                                                      AppTextHeaders.h6Bold),
                                             ),
                                           )))
                                       .toList(),

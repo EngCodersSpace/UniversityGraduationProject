@@ -2,7 +2,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import 'package:ibb_university_students_services/app/views/library_view/components/book_filter_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_add_books_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_book_filter_card.dart';
+import 'package:ibb_university_students_services/app/views/library_view/components/web_book_info_card.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/lecture_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/exam_forms_tab.dart';
 import 'package:ibb_university_students_services/app/views/library_view/library_tabs/refreneces_tab.dart';
@@ -26,7 +30,7 @@ class LibraryController extends GetxController
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
   RxString? selectedSubjectId = "all-option".obs;
-  RxString? selectedAddSubjectId ;
+  RxString? selectedAddSubjectId;
   FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
@@ -41,7 +45,7 @@ class LibraryController extends GetxController
   PageController refPagesController = PageController();
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
-  Map<String,Subject> subjects = {};
+  Map<String, Subject> subjects = {};
   RxList<Map<String, int>> groups = RxList();
 
   List<String> categories = [
@@ -67,7 +71,6 @@ class LibraryController extends GetxController
 
   @override
   void onInit() async {
-    // TODO: implement onInit
     loadingState.value = false;
     tapController = TabController(
       length: 3,
@@ -76,8 +79,8 @@ class LibraryController extends GetxController
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
-    subjects = await SubjectRepository.fetchSubjects()
-        .then((e) => e.data??{});
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
@@ -149,8 +152,8 @@ class LibraryController extends GetxController
   }
 
   Future<void> initLevelDropdownMenuLists() async {
-    List<Level> levelsData =
-        await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    List<Level> levelsData = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     levels = {};
     for (Level level in levelsData) {
       levels[level.id] = false.obs;
@@ -215,17 +218,23 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) {
     selectedBook = book;
-    Get.dialog(PopUpBookInfoCard());
+    (ScreenUtils.isPhoneScreen())
+        ? Get.dialog(PopUpBookInfoCard())
+        : Get.dialog(WebBookInfoCard());
   }
 
   void searching(String? val) {}
 
   void filteringIconClick() {
-    Get.dialog(PopUpBookFilterCard());
+    (ScreenUtils.isPhoneScreen())
+        ? Get.dialog(PopUpBookFilterCard())
+        : Get.dialog(WebBookFilterCard());
   }
 
   void addIconClick() async {
-    await Get.dialog(BooksAddFilesCard());
+    (ScreenUtils.isPhoneScreen())
+        ? await Get.dialog(BooksAddFilesCard())
+        : await Get.dialog(WebAddBooksCard());
   }
 
   void filesMore(String? val, int index) {
@@ -329,10 +338,10 @@ class LibraryController extends GetxController
     }
     for (PlatformFile file in (selectedFiles)) {
       await LibraryRepository.uploadLibraryFile(
-        file: file,
-        groups: groups,
-        category: categories[selectedCategory.value??0]
-      ).then((e) {});
+              file: file,
+              groups: groups,
+              category: categories[selectedCategory.value ?? 0])
+          .then((e) {});
     }
   }
 

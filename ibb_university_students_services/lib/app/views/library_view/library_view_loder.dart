@@ -11,16 +11,14 @@ class LibraryViewLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (ScreenUtils.isPhoneScreen()) {
-            return   LibraryPhonesView();
+            return LibraryPhonesView();
           } else {
-            return   LibraryWebView();
+            return LibraryWebView();
           }
         },
       ),
