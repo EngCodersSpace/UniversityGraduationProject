@@ -115,6 +115,7 @@ class DashboardRoleUsersTableController extends GetxController
 
   Future<void> fetchRoleData({bool showSnakeBars = true}) async {
     Result res = await RoleRepository.fetchDashboardRole(
+      order: selectedOrder.value,
       sort: selectedSort.value,
       limit: rowsPerPage.value,
       page: currentPage,

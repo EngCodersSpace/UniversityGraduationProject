@@ -2,25 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ibb_university_students_services/app/views/student_results_view/student_results_web_view.dart';
 import '../../utils/screen_utils.dart';
 import 'student_results_phones_view.dart';
-
 
 class StudentResultViewLoader extends StatelessWidget {
   const StudentResultViewLoader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (ScreenUtils.isPhoneScreen()) {
-            return   PhoneStudentResultView();
+            return PhoneStudentResultView();
           } else {
-            return   Placeholder();
+            return StudentResultsWebView();
           }
         },
       ),

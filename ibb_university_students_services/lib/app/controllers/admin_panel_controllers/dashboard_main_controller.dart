@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_assignment_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
@@ -135,6 +136,14 @@ class DashboardMainController extends GetxController {
           DashboardPaymentTableController(),
         );
         break;
+      case 11:
+        // ignore: unnecessary_null_comparison
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<DashboardAssignmentTableController>(
+          DashboardAssignmentTableController(),
+        );
     }
     selectedindex.value = index;
   }
