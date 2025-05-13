@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -307,29 +306,26 @@ class LibraryRepository {
 //   }
 // }
 //
-  static Future<Result<LibraryFile>> uploadLibraryFile({
+  static Future<Result<List<LibraryFile>>> uploadLibraryFile({
     required PlatformFile file,
     required String category,
     required List<Map<String, int>> groups,
     bool withCache = true,
   }) async {
-    late Response? response;
+    Response? response;
     try {
       File fileData = File(file.path ?? "");
       int fileSize = await fileData.length();
       response = await HttpProvider.post("checkFileDuplicate", data: {
         "originalname": file.path?.split("/").last,
         "size": fileSize.toString(),
-        "mimetype": "text/plain",
-        "section_id": groups.first["section_id"],
-        "level_id": groups.first["level_id"]
+        "sectionsAndLevels": groups,
       });
-
       if (response?.statusCode == 200) {
         response = null;
         response = await HttpProvider.uploadFile(
           uploadUrl:
-              "upload?category=$category&sectionsAndLevels=${json.encode(groups.asMap())}",
+              "upload?category=$category&sectionsAndLevels=${json.encode(groups)}",
           file: fileData,
           fileSize: fileSize,
           onSendProgress: (sent, total) {
@@ -342,10 +338,14 @@ class LibraryRepository {
           },
         );
         if (response?.statusCode == 201) {
-          LibraryFile resFile = LibraryFile.fromJson(response?.data["books"]);
-          if (withCache) {
-            await FileUtils.saveFiles(
-                fileRelativePath: resFile.filePath, file: file);
+          List<LibraryFile> libFiles = [];
+          for(Map<String,dynamic> book in (response?.data["books"]??[]) ){
+            LibraryFile resFile = LibraryFile.fromJson(book);
+            if (withCache) {
+              await FileUtils.saveFiles(
+                  fileRelativePath: resFile.filePath, file: file);
+            }
+            libFiles.add(resFile);
           }
           NotificationHandler.showProgressNotification(
             uniqueId: file.path.hashCode,
@@ -353,7 +353,7 @@ class LibraryRepository {
             message: file.path?.split("/").last,
           );
           return Result(
-              data: resFile,
+              data: libFiles,
               hasError: false,
               statusCode: response?.statusCode ?? _uploadError,
               message: response?.data["message"] ?? "error");
@@ -364,6 +364,7 @@ class LibraryRepository {
             message: file.path?.split("/").last,
           );
         }
+
         return Result(
             data: null,
             hasError: false,
@@ -373,12 +374,20 @@ class LibraryRepository {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
-      showSnakeBar(message: "Failed Upload");
+      if(response?.data != null){
+      showSnakeBar(title: "Failed Upload",message: response?.data["message"]??"");
+      }else{
+        showSnakeBar(title: "Failed Upload",message:"");
+      }
+
+
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _uploadError,
           message: response?.data["message"] ?? "error");
+
     } catch (error) {
+
       return Result(
           statusCode: _uploadError, message: error.toString(), data: null);
     }

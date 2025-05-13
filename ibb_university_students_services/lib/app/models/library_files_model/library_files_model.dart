@@ -86,6 +86,8 @@ class LibraryFile {
       subject: subject,
       title: json['title'],
       author: json['author'],
+      numberOfPages: json['numberOfPages'],
+      addedBy: json['added_by'],
       filePath: json['file_path'],
       fileSize: json['file_size'],
       edition: json['edition'],

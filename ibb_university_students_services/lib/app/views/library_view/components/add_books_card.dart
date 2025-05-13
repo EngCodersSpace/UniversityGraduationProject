@@ -73,9 +73,7 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                               underline: const SizedBox(),
                                               dropdownColor:
                                                   AppColors.inverseCardColor,
-                                              onChanged: (val) {
-                                                if (val == null) return;
-                                              },
+                                              onChanged: controller.changeSelectedCategory,
                                               isExpanded: true,
                                               menuWidth: Get.width * 0.7,
                                               items: [
@@ -118,9 +116,11 @@ class BooksAddFilesCard extends GetView<LibraryController> {
                                     TypeAhead(
                                       width: (Get.width * 0.5),
                                       onSelected: (i,v){
+                                        controller.selectedAddSubjectId??= RxString("");
                                         controller.selectedAddSubjectId?.value = i;
                                       },
                                       label: "Select Subject",
+                                      value: controller.selectedAddSubjectId?.value,
                                       items: controller.subjects.map((i,e)=>MapEntry(i, e.subjectName??"")),
                                       color: AppColors.inverseCardColor,
                                       menuColor: AppColors.inverseCardColor,

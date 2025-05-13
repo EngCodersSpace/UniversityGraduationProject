@@ -70,13 +70,9 @@ class LecturesTab extends GetView<LibraryController> {
                                   spacing: Get.width * 0.03,
                                   runSpacing: Get.height * 0.045,
                                   children: [
-                                    for (int p = 0;
-                                        p < controller.books.length;
-                                        p += 12)
-                                      for (int i = p;
-                                          (i < controller.books.length) &&
-                                              (i < p + 12);
-                                          i++)
+                                    for (int i = 0;
+                                        i < controller.books.length;
+                                        i ++)
                                         if (controller.books.values.toList()[i].category ==
                                                 controller.categories[0] &&
                                             (controller.books.values.toList()[i].sectionId ==
@@ -97,19 +93,20 @@ class LecturesTab extends GetView<LibraryController> {
                                                     controller.selectedSubjectId
                                                         ?.value ||
                                                 controller.selectedSubjectId?.value ==
-                                                    "all-option"))
+                                                    "all-option"))...[
                                           Obx(
-                                            () => (ScreenUtils.isPhoneScreen())
+                                                () => (ScreenUtils.isPhoneScreen())
                                                 ? BookContainer(
-                                                    book: controller
-                                                        .books.values
-                                                        .toList()[i],
-                                                  )
+                                              book: controller
+                                                  .books.values
+                                                  .toList()[i],
+                                            )
                                                 : WebBookContainar(
-                                                    book: controller
-                                                        .books.values
-                                                        .toList()[i]),
+                                                book: controller
+                                                    .books.values
+                                                    .toList()[i]),
                                           )
+                                        ]
                                   ]),
                             ),
                           ],

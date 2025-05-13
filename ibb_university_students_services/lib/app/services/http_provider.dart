@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../repositories/user_repository.dart';
 
@@ -14,6 +15,9 @@ class HttpProvider {
   static final Dio _dio = Dio();
   static int _refreshTries = 5;
   static Map<int, CancelToken> cancelTokens = {};
+  static int onProcessUploads = 0;
+
+  static int onProcessDownloads = 0;
 
   static Future<void> init({
     String baseUrl = '',
@@ -160,7 +164,6 @@ class HttpProvider {
   }) async {
     try {
       fileSize ??= await file.length();
-
       cancelTokens[file.path.hashCode] = CancelToken();
       Map<String, dynamic> dataMap = {
         'file': [
@@ -169,7 +172,13 @@ class HttpProvider {
         ],
       };
       dataMap.addAll(data);
-      final response = await _dio.post(
+      onProcessUploads++;
+      showSnakeBar(
+          title: "$onProcessUploads Files Uploading ",
+          message: "for details look on notifications");
+
+      final response = await _dio
+          .post(
         uploadUrl,
         cancelToken: cancelTokens[file.path.hashCode],
         data: FormData.fromMap(dataMap),
@@ -181,6 +190,7 @@ class HttpProvider {
         ),
         onSendProgress: onSendProgress,
       );
+      HttpProvider.onProcessUploads--;
       return response;
     } on DioException catch (error) {
       if (error.response != null) {

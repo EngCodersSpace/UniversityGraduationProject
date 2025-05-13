@@ -63,7 +63,7 @@ class LibraryController extends GetxController
   };
   RxMap<int, LibraryFile> books = RxMap();
   RxList<Widget> myTabs = RxList([
-    const LecturesTab(),
+     LecturesTab(),
     const ReferencesTab(),
     const ExamFormsTab(),
   ]);
@@ -102,7 +102,8 @@ class LibraryController extends GetxController
 
   @override
   void refresh() async {
-    await fetchLibraryData();
+     fetchLibraryData(force: true);
+     await Future.delayed(Duration(seconds: 2));
   }
 
   Future<void> fetchLibraryData({bool force = false}) async {
@@ -165,6 +166,11 @@ class LibraryController extends GetxController
   void changeDepartment(int? val) async {
     if (val == null) return;
     selectedDepartment.value = val;
+  }
+
+  void changeSelectedCategory(int? val) async {
+    if (val == null) return;
+    selectedCategory.value = val;
   }
 
   void changeSelectedSortOption(String? val) async {
@@ -242,11 +248,16 @@ class LibraryController extends GetxController
       case "reName":
         break;
       case "Delete":
+        fileDelete(index);
         break;
     }
   }
 
   void fileRename() {}
+  void fileDelete(int index) {
+    selectedFiles.removeAt(index);
+    update(["BooksPiker"]);
+  }
 
   void libraryMore(String? val) async {
     switch (val) {
@@ -335,13 +346,22 @@ class LibraryController extends GetxController
     if (groups.isEmpty) {
       showSnakeBar(
           title: "Validation Error", message: "Should add at least one group");
+      return;
+    }
+    if (selectedAddSubjectId == null) {
+      showSnakeBar(
+          title: "Validation Error", message: "Should select subject ");
+      return;
     }
     for (PlatformFile file in (selectedFiles)) {
-      await LibraryRepository.uploadLibraryFile(
+       List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
               file: file,
               groups: groups,
               category: categories[selectedCategory.value ?? 0])
-          .then((e) {});
+          .then((e) =>e.data??[]);
+       for (LibraryFile e in files) {
+         books[e.id] = e;
+       }
     }
   }
 

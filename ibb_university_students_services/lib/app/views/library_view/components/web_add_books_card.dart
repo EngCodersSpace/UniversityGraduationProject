@@ -118,7 +118,7 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                     TypeAhead(
                                       width: (Get.width * 0.2),
                                       onSelected: (i, v) {
-                                        controller.selectedAddSubjectId?.value =
+                                        controller.selectedSubjectId?.value =
                                             i;
                                       },
                                       label: "Select Subject",
