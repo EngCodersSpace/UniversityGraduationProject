@@ -1,22 +1,3 @@
-// utils/imageExtractor.js
-
-// const { convertFromPath } = require('pdf2image');
-// const fs = require('fs');
-
-// async function extractDisplayImage(pdfPath, outputPath) {
-//   try {
-//     const images = await convertFromPath(pdfPath, { dpi: 300 });
-//     await images[0].save(outputPath, 'JPEG');
-//   } catch (error) {
-//     console.error('Error extracting display image:', error);
-//     throw error;
-//   }
-// }
-
-// module.exports = extractDisplayImage;
-
-// utils/imageExtractor.js
-
 
 // utils/imageExtractor.js
 
@@ -33,33 +14,33 @@ const { PDFDocument } = require('pdf-lib');
 async function extractDisplayImage(pdfPath, outputPath) {
   try {
     const outputDir = path.dirname(outputPath);
-
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true });
+    }
     const options = {
       format: 'png', // Output format (e.g., png or jpeg)
       out_dir: outputDir, // Directory to save the image
       out_prefix: path.basename(pdfPath, '.pdf'), // Image file prefix
       page: 1 // Extract only the first page
     };
-
+       
+    // Convert the first page of the PDF to an image
     await pdfPoppler.convert(pdfPath, options);
 
-    const finalImageName = `${path.basename(pdfPath, '.pdf')}.${options.format}`;
-    const generatedImagePath = path.join(outputDir, finalImageName);
-
+    // Find the generated image file (which includes the page number suffix)
     const generatedImageFiles = fs.readdirSync(outputDir).filter(file => file.startsWith(options.out_prefix));
     if (generatedImageFiles.length > 0) {
       const tempImagePath = path.join(outputDir, generatedImageFiles[0]);
-      await fs.promises.rename(tempImagePath, generatedImagePath);
+
+      // Rename the file to remove the page number suffix
+      const finalImagePath = path.join(outputDir, `${path.basename(pdfPath, '.pdf')}.${options.format}`);
+      await fs.promises.rename(tempImagePath, finalImagePath);
+
+      console.log(`First page saved as an image at: ${finalImagePath}`);
+      return finalImagePath;
+    } else {
+      throw new Error('No image file was generated.');
     }
-
-
-    console.log(`\n \n outputPath: ${outputPath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpg
-    console.log(`\n \n options.out_prefix: ${options.out_prefix}`);  // Data_Structure
-    console.log(`\n \n options.format: ${options.format}`);          // jpeg
-    console.log(`\n \n First page saved as an image at: ${generatedImagePath}`); // ..\storage\library\Lecture\photos\Data_Structure.jpeg
-
-    return generatedImagePath; 
-
   } catch (error) {
     console.error('Error extracting display image:', error.message);
     throw error;
@@ -93,7 +74,9 @@ async function extractBookDetails(filePath) {
 
     // Calculate file size (in MB)
     const fileSizeInBytes = fs.statSync(filePath).size;
-    const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+    const fileSizeInMB =  double.parse(((fileSizeInBytes / (1024 * 1024)).toFixed(2)));
+    
+
 
     // Additional details (can be customized manually or fetched from a database)
     const additionalDetails = {

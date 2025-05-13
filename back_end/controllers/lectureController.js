@@ -1,9 +1,9 @@
 const { validationResult } = require("express-validator");
 const { lecture, subject, doctor, section, level, user } = require("../models");
 const { Sequelize } = require("sequelize");
-// const { } = require('../middleware/helperLecture');
 const { Op } = require("sequelize");
 const cron = require("node-cron");
+const { upsertRefreshState } = require("../controllers/refreshController");
 
 const createLecture = async (req, res) => {
   const errors = validationResult(req);
@@ -12,6 +12,11 @@ const createLecture = async (req, res) => {
   }
   try {
     const newLecture = await lecture.create(req.body);
+    await upsertRefreshState(
+      "lecture",
+      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
+    );
+
     res.status(201).json({
       message: "Lecture created successfully",
       data: newLecture,
@@ -75,13 +80,13 @@ const replaceOne = async (req, res) => {
       subject_id: req.body.subject_id || originalLecture.subject_id,
       doctor_id: req.body.doctor_id || originalLecture.doctor_id,
       lecture_time: req.body.lecture_time || originalLecture.lecture_time,
-      lecture_duration:req.body.lecture_duration || originalLecture.lecture_duration,
+      lecture_duration:
+        req.body.lecture_duration || originalLecture.lecture_duration,
       lecture_day: req.body.lecture_day || originalLecture.lecture_day,
       lecture_room: req.body.lecture_room || originalLecture.lecture_room,
     };
     const replacedLecture = await lecture.create(updateFields, { transaction });
 
-    
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     const [hours, minutes, seconds] = originalLecture.lecture_time
       .split(":")
@@ -138,12 +143,10 @@ const changeLecStatus = async (req, res) => {
       .json({ message: `Lecture ${req.body.action}ed successfully` });
   } catch (error) {
     console.error("Error during lecture status update:", error);
-    return res
-      .status(500)
-      .json({
-        message: "Failed to update lecture status",
-        error: error.message,
-      });
+    return res.status(500).json({
+      message: "Failed to update lecture status",
+      error: error.message,
+    });
   }
 };
 
@@ -157,6 +160,10 @@ const updateLecture = async (req, res) => {
       where: { id: req.query.id },
       returning: true,
     });
+    await upsertRefreshState(
+      "lecture",
+      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
+    );
 
     res.status(200).json({
       message: "Lecture updated successfully",
@@ -178,6 +185,10 @@ const deleteLecture = async (req, res) => {
     if (deleted === 0) {
       return res.status(404).json({ message: "Lecture not found" });
     }
+    await upsertRefreshState(
+      "lecture",
+      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
+    );
 
     res.status(200).json({
       message: "Lecture deleted successfully",
@@ -273,6 +284,9 @@ const getLecturesGroupedByCriteria = async (req, res) => {
 
       organizedLectures[day].push({
         id: lec.id,
+        section_id: lec.lecture_section_id,
+        level_id: lec.lecture_level_id,
+        day: lec.lecture_day,
         subject_id: lec.subject_id,
         lecture_time: lec.lecture_time,
         lecture_duration: lec.lecture_duration,
@@ -282,12 +296,10 @@ const getLecturesGroupedByCriteria = async (req, res) => {
       });
     });
 
-    res
-      .status(200)
-      .json({
-        message: `Lectures of section: ${req.query.section_id}, & level: ${req.query.level_id}, & ${req.query.term} & ${req.query.year} retrieved successfully   `,
-        data: organizedLectures,
-      });
+    res.status(200).json({
+      message: `Lectures of section: ${req.query.section_id}, & level: ${req.query.level_id}, & ${req.query.term} & ${req.query.year} retrieved successfully   `,
+      data: organizedLectures,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -374,9 +386,13 @@ const getDoctorLectures = async (req, res) => {
   }
 };
 
-
 const getLecturesByCriteriaPanle = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = ["lecture_time", "lecture_day", "lecture_room", "subject_id"];
+  const ALLOWED_ORDER_FIELDS = [
+    "lecture_time",
+    "lecture_day",
+    "lecture_room",
+    "subject_id",
+  ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
@@ -390,7 +406,7 @@ const getLecturesByCriteriaPanle = async (req, res) => {
       limit = 10,
       orderBy = "lecture_time",
       sort = "ASC",
-      search 
+      search,
     } = req.query;
 
     const whereClause = {};
@@ -400,28 +416,31 @@ const getLecturesByCriteriaPanle = async (req, res) => {
     if (term) whereClause.Term = term;
     if (day) whereClause.lecture_day = day;
 
-
-
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
 
     const LOWER_LIMIT = 10;
     const UPPER_LIMIT = 250;
-    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (isNaN(limitNumber) || limitNumber < LOWER_LIMIT)
+      limitNumber = LOWER_LIMIT;
     if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
 
     const offset = (pageNumber - 1) * limitNumber;
 
-    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "lecture_time";
-    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "lecture_time";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
 
     const searchCondition = search
       ? {
           [Op.or]: [
             { lecture_room: { [Op.like]: `%${search}%` } },
             { lecture_time: { [Op.like]: `%${search}%` } },
-            { lecture_day : { [Op.like]: `%${search}%` } }, 
-            { subject_id : { [Op.like]: `%${search}%` } }, 
+            { lecture_day: { [Op.like]: `%${search}%` } },
+            { subject_id: { [Op.like]: `%${search}%` } },
           ],
         }
       : {};
@@ -431,7 +450,7 @@ const getLecturesByCriteriaPanle = async (req, res) => {
         [Op.and]: [
           whereClause,
           { isReplaced: { [Op.ne]: true } },
-          searchCondition, 
+          searchCondition,
         ],
       },
       include: [
@@ -445,11 +464,16 @@ const getLecturesByCriteriaPanle = async (req, res) => {
     });
 
     if (!lectures.length) {
-      return res.status(404).json({ message: "No lectures found for the specified criteria" });
+      return res
+        .status(404)
+        .json({ message: "No lectures found for the specified criteria" });
     }
 
     const lectureList = lectures.map((lec) => ({
       id: lec.id,
+      section_id: lec.section_id,
+      level_id: lec.level_id,
+      day: lec.lectureDay,
       subject_id: lec.subject_id,
       lecture_time: lec.lecture_time,
       lecture_duration: lec.lecture_duration,
@@ -470,10 +494,11 @@ const getLecturesByCriteriaPanle = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error retrieving lectures", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving lectures", error: error.message });
   }
 };
-
 
 module.exports = {
   createLecture,

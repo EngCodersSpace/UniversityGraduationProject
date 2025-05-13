@@ -18,6 +18,14 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
+      receiver_id: {
+        type: Sequelize.INTEGER,
+        allowNull:true,
+      },
+      topic_name: {
+        type: Sequelize.STRING,
+        allowNull:true,
+      },
       title: {
         type: Sequelize.STRING(100)
       },
@@ -25,12 +33,8 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull:false,
       },
-      is_read:{
-        type:Sequelize.BOOLEAN,
-        defaultValue:false
-      },
       type:{
-        type:Sequelize.ENUM('System','Reminder','Alert'),
+        type:Sequelize.ENUM('single','topic'),
         defaultValue:'System',
       },
 

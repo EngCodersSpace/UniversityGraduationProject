@@ -61,7 +61,7 @@ module.exports = {
         user_name: userNameLocalized, // Assign user name in JSON format
         user_section_id: sections[i % sections.length].id,
         date_of_birth: faker.date.past(20),
-        profile_picture: faker.internet.url(),
+        profile_picture: faker.image.url(300, 300, "abstract", true),
         email: faker.internet.email(),
         password: '1234pass@',
         collegeName: college, // Assign college name in JSON format

@@ -7,19 +7,20 @@ const {
   student,
   section,
   role,
+  permission,
   student_assignment,
   assignment,
   level,
   study_plan,
 } = require("../models");
-// const crypto = require('crypto');
 const nodemailer = require("nodemailer");
-// const { Op, where } = require("sequelize");
 const { validationResult } = require("express-validator");
-// const { sequelize} = require('sequelize');
 const { Op, Sequelize } = require("sequelize");
-
+const path = require("path");
+const fs = require("fs");
 const { translateText } = require("../middleware/translationServices");
+const { uploadPhoto } = require("../utils/multerConfig");
+// const { permission } = require("process");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const JWT_EXPIRY = "10m";
@@ -35,8 +36,10 @@ exports.welcome = (req, res) => {
 ///////////////////////////
 
 exports.login = async (req, res) => {
-  const { user_id, password } = req.body;
-
+  const { user_id, password, fcm_token } = req.body;
+  console.log("____________________________________\n");
+  console.log(fcm_token, "\n");
+  console.log("____________________________________\n");
   try {
     const foundUser = await user.scope("with_hidden_data").findOne({
       where: { user_id },
@@ -53,7 +56,17 @@ exports.login = async (req, res) => {
           ],
         },
         { model: section, as: "section" },
-        { model: role },
+
+        {
+          model: role,
+          include: [
+            {
+              model: permission,
+              as: "permissions",
+              through: { attributes: [] },
+            },
+          ],
+        },
       ],
     });
 
@@ -78,12 +91,14 @@ exports.login = async (req, res) => {
     const refreshToken = jwt.sign(
       {
         user_id: foundUser.user_id,
+        permission: foundUser.role.roleName,
       },
       REFRESH_SECRET_KEY,
       { expiresIn: "1d" }
     );
 
     foundUser.refreshToken = refreshToken;
+    foundUser.fcm_token = fcm_token;
     await foundUser.save();
 
     let responseUser = {};
@@ -162,7 +177,7 @@ exports.refreshToken = async (req, res) => {
     try {
       const foundUser = await user.findOne({
         where: { user_id: decoded.user_id },
-        include:{ model: role },
+        include: { model: role },
       });
 
       if (!foundUser) {
@@ -234,14 +249,13 @@ exports.registerDoctor = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
+      roleId: req.body.roleId,
       doctor: {
         academic_degree: {
           [req.headers["accept-language"]]: req.body.doctor.academic_degree,
@@ -308,14 +322,14 @@ exports.registerStudent = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      profile_picture: req.body.profile_picture,
+      // profile_picture: req.body.profile_picture,
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
       },
       email: req.body.email,
       password: req.body.password,
-      permission: req.body.permission,
+      roleId: req.body.roleId,
       student: {
         study_plan_id: req.body.student.study_plan_id,
         student_level_id: req.body.student.student_level_id,
@@ -342,6 +356,66 @@ exports.registerStudent = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
+exports.uploadPhotoForuser = async (req, res) => {
+  try {
+    const newUser = await user.findOne({
+      where: { user_id: req.query.user_id },
+    });
+
+    if (!newUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    uploadPhoto("profile_picture", "user").single("file")(
+      req,
+      res,
+      async (err) => {
+        if (err) {
+          return res
+            .status(400)
+            .json({
+              message: "Error during photo upload.",
+              error: err.message,
+            });
+        }
+
+        if (!req.file) {
+          return res
+            .status(400)
+            .json({ message: "No photo provided for upload." });
+        }
+
+        try {
+          const oldFilePath = req.file.path;
+          const fileExtension = path.extname(req.file.originalname);
+          const newFileName = `${newUser.user_id}${fileExtension}`;
+          const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
+
+          fs.renameSync(oldFilePath, newFilePath);
+          newUser.profile_picture = `profile_picture/user/${newFileName}`;
+          await newUser.save();
+
+          res.status(201).json({
+            message: "Photo uploaded successfully.",
+            filePath: newUser.profile_picture,
+          });
+        } catch (error) {
+          console.error("Error while uploading photo:", error.message);
+          res
+            .status(500)
+            .json({ message: "Internal server error.", error: error.message });
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error while uploading photo:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
@@ -433,16 +507,17 @@ exports.verifyResetToken = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   try {
     // Get the JWT token from headers
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Authorization token is required." });
-    }
+    // const token = req.headers.authorization.split(" ")[1];
+    // if (!token) {
+    //   return res
+    //     .status(401)
+    //     .json({ message: "Authorization token is required." });
+    // }
+    // // Verify the JWT token
+    // const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    // const userId1 = decoded.user_id;
 
-    // Verify the JWT token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const userId = decoded.user_id;
+    const userId = req.user.user_id;
 
     // Validate passwords
     const { newPassword, confirmPassword } = req.body;
@@ -458,7 +533,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // Update the user's password
-    foundUser.password = bcrypt.hashSync(newPassword, 10);
+    foundUser.password = newPassword;
     foundUser.resetToken = null;
     foundUser.resetTokenExpiry = null; // Invalidate the token
     await foundUser.save();
@@ -471,61 +546,84 @@ exports.resetPassword = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
+
 ///////////////////////////
-// Function to get the currently logged-in user based on JWT token (me)
-exports.getCurrentUser = (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
 
-  if (!token) {
-    return res.status(401).json({ message: "Access token is missing" });
+// focus on resetPassword?
+
+exports.changePass = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!req.headers.authorization) {
+      return res
+        .status(401)
+        .json({ message: "Authorization token is required." });
+    }
+    console.log(req.headers);
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.user_id;
+
+    // const userId = req.user.user_id ;
+
+    const foundUser = await user.findOne({
+      where: { user_id: userId },
+      attributes: ["user_id", "password"],
+    });
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found " });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, foundUser.password);
+    if (!isMatch) {
+      return res
+        .status(422)
+        .json({ message: "Password is not Match with password in DATABASE" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(422)
+        .json({ message: "New Password Do's not Match Confirm Password" });
+    }
+
+    foundUser.password = newPassword;
+    foundUser.resetToken = null;
+    foundUser.resetTokenExpiry = null;
+    await foundUser.save();
+
+    res.status(200).json({
+      message: "change Password successful",
+    });
+  } catch (error) {
+    console.error("Error during changing password:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
+};
 
-  jwt.verify(token, SECRET_KEY, async (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ message: "Invalid token" });
+exports.logout = async (req, res) => {
+  try {
+    const foundUser = await user.findOne({
+      where: { user_id: req.query.user_id },
+    });
+
+    if (!foundUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    try {
-      const foundUser = await user.findOne({
-        where: { user_id: decoded.user_id },
-        include: [
-          { model: doctor, as: "doctor" },
-          { model: student, as: "student" },
-          { model: section, as: "section" },
-        ],
-      });
+    foundUser.refreshToken = null;
 
-      if (!foundUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
+    await foundUser.save();
 
-      if (foundUser.doctor == null) {
-        responseUser = foundUser.toJSON();
-        user_type = "student";
-        tempStudent = responseUser.student;
-        delete responseUser.student;
-        delete responseUser.doctor;
-        responseUser = { ...responseUser, ...tempStudent };
-      } else if (foundUser.student == null) {
-        responseUser = foundUser.toJSON();
-        user_type = "doctor";
-        tempDoctor = responseUser.doctor;
-        delete responseUser.student;
-        delete responseUser.doctor;
-        responseUser = { ...responseUser, ...tempDoctor };
-      }
-
-      res.json({
-        message: "Login successful",
-        user: responseUser,
-        user_type: user_type,
-      });
-    } catch (error) {
-      console.error("Error fetching user:", error.message);
-      res
-        .status(500)
-        .json({ message: "Internal server error", error: error.message });
-    }
-  });
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
 };

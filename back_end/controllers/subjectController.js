@@ -1,6 +1,7 @@
-const {subject,doctor,user,study_plan_elment}=require('../models');
+const {subject,doctor,user,section,level,study_plan_elment}=require('../models');
 const { validationResult } = require('express-validator');
 const {  translateText } = require('../middleware/translationServices');
+const { Sequelize,Op } = require("sequelize");
 
 
 exports.createSubject=async (req, res) => {
@@ -11,9 +12,10 @@ exports.createSubject=async (req, res) => {
         }
         const {} = req.body;
 
-        const targetLanguage = req.body.language === 'en'?'ar':'en';
-        const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
-        const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+        const targetLanguage = req.headers["accept-language"] === "en" ? "ar" : "en";
+
+        const translatedName = await translateText(req.body.subject_name, req.headers["accept-language"], targetLanguage);
+        const translatedDesc = await translateText(req.body.subject_description, req.headers["accept-language"], targetLanguage);
 
         const newSubject = await subject.create({
           subject_id: req.body.subject_id,
@@ -113,6 +115,106 @@ exports.getSubjectByfilter = async (req,res) => {
   }
 };
 
+exports.getSubjectsByCriteriaPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["subject_id", "subject_name", "number_of_units"];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      subject_id,
+      subject_name,
+      number_of_units,
+      level_id,
+      section_id,
+      page = 1,
+      limit = 10,
+      orderBy = "subject_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+
+    const lang = req.headers["accept-language"] || "en"; 
+
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+
+    const offset = (pageNumber - 1) * limitNumber;
+
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "subject_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
+
+    const { count, rows: subjects } = await subject.findAndCountAll({
+      where: {
+        ...(subject_id && {
+          subject_id: subject_id  
+        }),
+        ...(subject_name && {
+          subject_name: { [lang]: subject_name }
+        }),
+        ...(number_of_units && {
+          number_of_units: number_of_units  
+        }),
+        ...(search && {
+          [Op.or]: [
+            { number_of_units: { [Op.like]: `%${search}%` } },
+            { subject_id: { [Op.like]: `%${search}%` } },
+            Sequelize.where(
+              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'subject_name'}, '$.${lang}'))`),
+              { [Op.like]: `%${search}%` }
+            ),
+          ]
+        })
+      },
+      include: [
+        {
+          model: study_plan_elment,
+          // as: "study_plan_elment",
+          attributes: ["section_id","level_id"], 
+          required: true, 
+          where: {
+            ...(section_id && {
+              section_id: section_id
+            }),
+            ...(level_id &&{
+              level_id:level_id
+            })
+          }
+        }
+      ],
+      distinct: true,
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!subjects.length) {
+      return res.status(404).json({ message: "No subjects found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "Subjects retrieved successfully",
+      data: subjects,
+      pagination: {
+        totalSubjects: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving subjects", error: error.message });
+  }
+};
+
+
+
 exports.updateSubject = async (req, res) => {
     try {
       const { id } = req.query;
@@ -122,9 +224,10 @@ exports.updateSubject = async (req, res) => {
         return res.status(400).json({ message: 'Subject ID is required' });
       }
 
-      const targetLanguage = req.body.language === 'en'?'ar':'en';
-      const translatedName = await translateText(req.body.subject_name, req.body.language, targetLanguage);
-      const translatedDesc = await translateText(req.body.subject_description, req.body.language, targetLanguage);
+      const targetLanguage = req.headers["accept-language"] === "en" ? "ar" : "en";
+
+      const translatedName = await translateText(req.body.subject_name, req.headers["accept-language"], targetLanguage);
+      const translatedDesc = await translateText(req.body.subject_description, req.headers["accept-language"], targetLanguage);
 
       const updateSubject = await subject.update({
         subject_id: req.body.subject_id,

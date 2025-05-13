@@ -22,13 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   notification.init({
-
-
     message_id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     sender_id: {
       type: DataTypes.INTEGER,
@@ -39,22 +37,25 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
+    receiver_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    topic_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     title: {
-      type: DataTypes.STRING(100)
+      type: DataTypes.STRING(100),
     },
     message: {
       type: DataTypes.TEXT,
-      allowNull:false,
+      allowNull: false,
     },
-    is_read:{
-      type:DataTypes.BOOLEAN,
-      defaultValue:false
-    },
-    type:{
-      type:DataTypes.ENUM('System','Reminder','Alert'),
-      defaultValue:'System',
-    },
-
+    type: {
+      type: DataTypes.ENUM('single', 'topic'),
+      allowNull: false,
+    },    
   }, {
     sequelize,
     modelName: 'notification',

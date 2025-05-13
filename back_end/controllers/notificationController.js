@@ -1,90 +1,181 @@
+// notificationController.js
 const { notification, user } = require('../models');
+const admin = require('../config/firebase');
+const { Op } = require('sequelize');
+const { debounceSend } = require('../utils/debounceKey');
 
-// Create a new notification
-exports.createNotification = async (req, res) => {
+// Send a single direct user notification
+const sendSingleNotification = async (req, res) => {
   try {
-    const { sender_id, title, message, is_read, type } = req.body;
-    const newNotification = await notification.create({
+    const { title, message, sender_id, receiver_id, token, metadata } = req.body;
+
+    const payload = {
+      notification: { title, body: message },
+      data: {
+        type: 'single',
+        ...metadata,
+      },
+      token,
+    };
+
+    // Send to FCM
+    await admin.messaging().send(payload);
+
+    // Save to DB
+    await notification.create({
       sender_id,
+      receiver_id,
+      topic_name: null,
       title,
       message,
-      is_read,
-      type,
+      type: 'single',
     });
-    res.status(201).json({ message: 'Notification created successfully', data: newNotification });
+
+    res.json({ message: "Send notification Successfully",data:notification });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating notification', error: error.message });
+    console.error('Single notification failed:', error);
+    res.status(500).json({ error: 'Sending single notification failed' });
   }
 };
 
-// Get all notifications
-exports.getAllNotifications = async (req, res) => {
-  try {
-    const notifications = await notification.findAll({
-      include: {
-        model: user,
-        attributes: ['user_id', 'name', 'email'], // Add user fields you want to include
+// SYSTEM Notification (not stored in DB)
+const sendSystemNotification = async ({
+  target,
+  topicType = 'topic',
+  metadata = {},
+  debounceKey = null,
+  delay = 1000,
+}) => {
+  const send = async () => {
+    const payload = {
+      data: {
+        type: 'system',
+        ...metadata,
       },
-    });
-    res.status(200).json({ data: notifications });
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving notifications', error: error.message });
+    };
+
+    if (topicType === 'topic') {
+      payload.topic = target;
+    } else {
+      payload.token = target;
+    }
+
+    try {
+      await admin.messaging().send(payload);
+    } catch (error) {
+      console.error('System notification failed:', error);
+    }
+  };
+
+  if (debounceKey) {
+    debounceSend(`system-${debounceKey}`, delay, send);
+  } else {
+    await send();
   }
 };
 
-// Get a single notification by ID
-exports.getNotificationById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const notif = await notification.findOne({
-      where: { message_id: id },
-      include: {
-        model: user,
-        attributes: ['user_id', 'name', 'email'],
+// INFORMATION Notification (stored in DB and sent)
+const sendInfoNotification = async ({
+  title,
+  message,
+  sender_id,
+  type = 'single', // 'single' or 'topic'
+  receiver_id = null,
+  topic_name = null,
+  target,
+  metadata = {},
+  debounceKey = null,
+  delay = 1000,
+}) => {
+  const send = async () => {
+    const payload = {
+      notification: { title, body: message },
+      data: {
+        type: 'information',
+        ...metadata,
       },
-    });
+    };
 
-    if (!notif) {
-      return res.status(404).json({ message: 'Notification not found' });
+    if (type === 'topic') {
+      payload.topic = target;
+    } else {
+      payload.token = target;
     }
 
-    res.status(200).json({ data: notif });
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving notification', error: error.message });
+    try {
+      await notification.create({
+        sender_id,
+        receiver_id: type === 'single' ? receiver_id : null,
+        topic_name: type === 'topic' ? topic_name : null,
+        title,
+        message,
+        type,
+      });
+
+      await admin.messaging().send(payload);
+    } catch (error) {
+      console.error('Info notification failed:', error);
+    }
+  };
+
+  if (debounceKey) {
+    debounceSend(`info-${debounceKey}`, delay, send);
+  } else {
+    await send();
   }
 };
 
-// Update a notification
-exports.updateNotification = async (req, res) => {
+// Fetch notifications for a user and subscribed topics
+const fetchNotifications = async (userId, topicNames = []) => {
+  return notification.findAll({
+    where: {
+      [Op.or]: [
+        { receiver_id: userId },
+        { topic_name: { [Op.in]: topicNames } },
+      ],
+    },
+    order: [['createdAt', 'DESC']],
+  });
+};
+
+// HANDLERS
+const sendInfoHandler = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { sender_id, title, message, is_read, type } = req.body;
-
-    const notif = await notification.findByPk(id);
-    if (!notif) {
-      return res.status(404).json({ message: 'Notification not found' });
-    }
-
-    await notif.update({ sender_id, title, message, is_read, type });
-    res.status(200).json({ message: 'Notification updated successfully', data: notif });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating notification', error: error.message });
+    await sendInfoNotification(req.body);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Send info failed:', err);
+    res.status(500).json({ error: 'Sending info notification failed' });
   }
 };
 
-// Delete a notification
-exports.deleteNotification = async (req, res) => {
+const sendSystemHandler = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const notif = await notification.findByPk(id);
-    if (!notif) {
-      return res.status(404).json({ message: 'Notification not found' });
-    }
-
-    await notif.destroy();
-    res.status(200).json({ message: 'Notification deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting notification', error: error.message });
+    await sendSystemNotification(req.body);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Send system failed:', err);
+    res.status(500).json({ error: 'Sending system notification failed' });
   }
+};
+
+const fetchHandler = async (req, res) => {
+  try {
+    const { userId, topics } = req.body;
+    const notifications = await fetchNotifications(userId, topics);
+    res.json(notifications);
+  } catch (err) {
+    console.error('Fetch notifications failed:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = {
+  sendSingleNotification,
+  sendSystemNotification,
+  sendInfoNotification,
+  fetchNotifications,
+  sendInfoHandler,
+  sendSystemHandler,
+  fetchHandler,
 };

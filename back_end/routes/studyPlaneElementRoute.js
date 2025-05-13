@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const s_p_c = require('../controllers/studyPlanElementController');
+const CRUD = require('../controllers/studyPlanElementController');
 const vali= require('../validations/studyPlanElementValidation');
+const { verifyToken } = require('../middleware/authMiddleware');
+const {checkPermission} = require('../middleware/roleMiddleware');
 
+router.use(verifyToken);
 
-router.post('/study-plan-element',vali.studyPlanElementValidation,s_p_c.createStudyPlanElement);
-router.get('/study-plan-element/:id', s_p_c.getStudyPlanElement);
-router.put('/study-plan-element/:id', s_p_c.updateStudyPlanElement);
-router.delete('/study-plan-element/:id', s_p_c.deleteStudyPlanElement);
+router.post('/study-plan-element',checkPermission('study_plan_elments', 'write'),vali.studyPlanElementValidation,CRUD.createStudyPlanElement);
+router.get('/study-plan-element/:id', CRUD.getStudyPlanElement);
+router.put('/study-plan-element/:id',checkPermission('study_plan_elments', 'write'), CRUD.updateStudyPlanElement);
+router.delete('/study-plan-element/:id',checkPermission('study_plan_elments', 'write'), CRUD.deleteStudyPlanElement);
+
+router.get('/study-plan-element-Panel', CRUD.getStudyPlanElementPanel);
 
 module.exports = router;

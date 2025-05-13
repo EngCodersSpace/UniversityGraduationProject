@@ -3,13 +3,15 @@
 "use strict";
 
 const { faker } = require("@faker-js/faker");
-const { user, subject, book } = require("../models");
+const { user, subject, book, section, level } = require("../models");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Fetch all users and subjects to associate with books
     const users = await user.findAll();
     const subjects = await subject.findAll();
+    const sections = await section.findAll();
+    const levels = await level.findAll();
 
     const books = [];
     for (let i = 0; i < 20; i++) {
@@ -17,14 +19,16 @@ module.exports = {
       const subjectData = faker.helpers.arrayElement(subjects); // Randomly select a subject
 
       books.push({
+        section_id: sections[i % sections.length].id,
+        level_id: levels[i % levels.length].id,
         title: faker.lorem.words(5), // Generate a random title
         author: faker.person.fullName(), // Generate a random author name
-        numberOfPages: faker.number.int({min:10 , max:1000}), // Generate a random ISBN
+        isbn: faker.string.uuid(), // Generate a random ISBN
         edition: faker.helpers.arrayElement(["1st", "2nd", "3rd", "Revised"]), // Random edition
         category: faker.helpers.arrayElement([
-          "Reference",
+          "Book",
           "Lecture",
-          "ExamForm",
+          "Exams Forms",
         ]), // Random category
         file_size: faker.number.float({ min: 0.5, max: 20, precision: 0.1 }), // Random file size in MB
         file_path: faker.system.filePath(), // Generate a random file path
@@ -37,7 +41,7 @@ module.exports = {
     }
 
     // Bulk insert all book records
-    await book.bulkCreate(books);
+    // await book.bulkCreate(books);
   },
 
   down: async (queryInterface, Sequelize) => {

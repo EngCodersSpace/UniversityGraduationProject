@@ -48,16 +48,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
-    // section_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    //   references: {
-    //     model: 'sections',
-    //     key: 'id',
-    //   },
-    //   onDelete: 'NO ACTION',
-    //   onUpdate: 'CASCADE',
-    // },
 
     level_fees_id: {
       type: DataTypes.INTEGER,
@@ -85,10 +75,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(8, 2),
       allowNull: false,
     },
-    // payment_status: {
-    //   type: DataTypes.JSON,
-    //   allowNull: false,
-    // },
     payment_date: {
       type: DataTypes.DATEONLY,
       allowNull: true,

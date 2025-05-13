@@ -1,5 +1,5 @@
 // const { default: translate } = require('translate');
-const { translation } = require('../models'); 
+// const { translation } = require('../models'); 
 // const { translateText } = require('translator');
 // const translator = require('google-translator');
 
@@ -42,7 +42,7 @@ const { translation } = require('../models');
 // }
 
 
-
+// middleware/translationServices
 const translateTex = require('translate-google');
 
 async function translateText(anystring, fromLang, toLang) {
@@ -54,60 +54,45 @@ async function translateText(anystring, fromLang, toLang) {
   }
 }
 
-
-
-// async function addTranslation(tableName, recordId, field, value, language) {
-//   try {
-//     if (language === 'ar') {
-//       await translation.create({
-//         tableName,
-//         recordId,
-//         field,
-//         value,
-//         language,
-//       });
-//     }
-//   } catch (error) {
-//     throw new Error(Error `addingtranslation: ${error.message}`);
-//   }
-// }
-
-// async function getTranslation(tableName, recordId, field, language) {
-//   try {
-//     const translationRecord = await translation.findOne({
-//       where: { tableName, recordId, field, language },
-//     });
-
-//     return translationRecord ? translationRecord.value : null;
-//   } catch (error) {
-//     throw new Error('Error fetching translation');
-//   }
-// }
-
-// async function updateTranslation(tableName, recordId, field, value, language) {
-//   try {
-//     await translation.update(
-//       { value },
-//       { where: { tableName, recordId, field, language } }
-//     );
-
-//     const targetLanguage = language === 'ar' ? 'en' : 'ar';
-//     const translatedValue = await translateText(value, targetLanguage);
-
-//     await translation.update(
-//       { value: translatedValue },
-//       { where: { tableName, recordId, field, language: targetLanguage } }
-//     );
-//   } catch (error) {
-//     throw new Error('Error updating translation');
-//   }
-// }
-
-module.exports = {
-  translateText
+const detectLanguage = (req, res, next) => {
+  req.language = req.headers['accept-language']?.startsWith('ar') ? 'ar' : 'en';
+  next();
 };
 
+const translateResponse = (req, res, next) => {
+  const originalSend = res.send;
+  
+  res.send = function (data) {
+    if (typeof data === 'object' && req.language) {
+      data = translateObject(data, req.language);
+    }
+    originalSend.call(this, data);
+  };
+  
+  next();
+};
 
+async function translateObject(obj, targetLanguage) {
+  const sourceLanguage = targetLanguage === 'ar' ? 'en' : 'ar';
+  const result = {};
+  
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'string') {
+      try {
+        result[key] = await translateText(value, sourceLanguage, targetLanguage);
+      } catch (error) {
+        result[key] = value;
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+  
+  return result;
+}
 
-
-
+module.exports = { 
+  translateText, 
+  detectLanguage, 
+  translateResponse 
+};

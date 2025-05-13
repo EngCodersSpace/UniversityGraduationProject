@@ -27,15 +27,14 @@ module.exports = {
       attachment_hash:{
         type:Sequelize.STRING(64),
         allowNull:false,
-      }
+      },
+      original_name:{
+        type:Sequelize.STRING,
+        allowNull:false
+      },
 
 
 
-    });
-    await queryInterface.addConstraint('assignment_files', {
-      fields: ['assignment_id', 'attachment_hash'],
-      type: 'unique',
-      name: 'assignment_file_unique',
     });
   },
   async down(queryInterface, Sequelize) {
