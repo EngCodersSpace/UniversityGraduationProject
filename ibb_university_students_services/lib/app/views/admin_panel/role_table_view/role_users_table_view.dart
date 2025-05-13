@@ -31,7 +31,7 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(5),
-                width: Get.width * 0.3,
+                width: Get.width * 0.6,
                 child: Scrollbar(
                   controller: controller.vertical,
                   thumbVisibility: true,
@@ -73,6 +73,7 @@ class MyData extends DataTableSource {
       Get.find<DashboardRoleUsersTableController>(); // GetX Controller
 
   MyData();
+  List<String> permitionActions = [];
 
   @override
   DataRow? getRow(int index) {
@@ -125,6 +126,16 @@ class MyData extends DataTableSource {
                   enableBorder: false,
                   initialValue:
                       items[index % controller.rowsPerPage.value].name)),
+          DataCell(Row(
+            spacing: 6,
+            children: items[index % controller.rowsPerPage.value]
+                .permissions
+                .entries
+                .expand((entry) {
+              return entry.value
+                  .map((perm) => Chip(label: Text(perm.action.toString())));
+            }).toList(),
+          ))
         ]);
   }
 

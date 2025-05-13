@@ -7,6 +7,8 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/validators.dart';
+import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_card.dart';
+import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_header_card.dart';
 
 import '../../controllers/student_result_controller.dart';
 
@@ -27,6 +29,7 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                 children: [
                   Container(
                     width: Get.width,
+                    height: Get.height * 0.17,
                     decoration: BoxDecoration(
                       color: AppColors.mainCardColor,
                       boxShadow: const [
@@ -40,53 +43,71 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                       borderRadius: const BorderRadius.vertical(
                           bottom: Radius.circular(32)),
                     ),
-                    padding: EdgeInsets.all(12),
+                    padding: EdgeInsets.only(top: 20, left: 12, right: 12),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            CustomText(
-                              "Level",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
+                            Row(
+                              children: [
+                                CustomText(
+                                  "Level",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24)),
+                                  width: Get.width * 0.07,
+                                  child: Obx(() => Center(
+                                        child: DropdownButton(
+                                          items: controller.levels,
+                                          onChanged: controller.changeLevel,
+                                          value: controller.selectedLevel.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      )),
+                                ),
+                              ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.inverseCardColor,
-                                  borderRadius: BorderRadius.circular(24)),
-                              width: Get.width * 0.08,
-                              child: Obx(() => Center(
-                                    child: DropdownButton(
-                                      items: controller.levels,
-                                      onChanged: controller.changeLevel,
-                                      value: controller.selectedLevel.value,
-                                      underline: const SizedBox(),
-                                      iconEnabledColor: AppColors.mainCardColor,
-                                      dropdownColor: AppColors.inverseCardColor,
-                                    ),
-                                  )),
-                            ),
-                            CustomText(
-                              "Term",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.inverseCardColor,
-                                  borderRadius: BorderRadius.circular(24)),
-                              width: Get.width * 0.1,
-                              child: Obx(() => Center(
-                                    child: DropdownButton(
-                                      items: controller.terms,
-                                      onChanged: controller.changeTerm,
-                                      value: controller.selectedTerm.value,
-                                      underline: const SizedBox(),
-                                      iconEnabledColor: AppColors.mainCardColor,
-                                      dropdownColor: AppColors.inverseCardColor,
-                                    ),
-                                  )),
+                            Row(
+                              children: [
+                                CustomText(
+                                  "Term",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24)),
+                                  width: Get.width * 0.08,
+                                  child: Obx(() => Center(
+                                        child: DropdownButton(
+                                          items: controller.terms,
+                                          onChanged: controller.changeTerm,
+                                          value: controller.selectedTerm.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      )),
+                                ),
+                              ],
                             ),
                             if (UserRepository.checkPermission(
                                 target: "Payments",
@@ -97,7 +118,7 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                                 labelText: "Student ID",
                                 keyboardType: TextInputType.number,
                                 color: AppColors.inverseIconColor,
-                                width: Get.width * 0.5,
+                                width: Get.width * 0.3,
                                 onFieldSubmitted: (e) =>
                                     controller.findButtonClick(),
                               ),
@@ -107,18 +128,18 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                               )
                             ],
                             SizedBox(
-                              height: 8,
+                              height: 16,
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 16,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CustomText(
-                              "Sumation",
+                              "Sumation :",
                               style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold,
                               ),
@@ -133,10 +154,10 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                                   ),
                                 )),
                             SizedBox(
-                              width: Get.width * 0.3,
+                              width: Get.width * 0.2,
                             ),
                             CustomText(
-                              "Percentage",
+                              "Percentage :",
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h3Bold),
                             ),
@@ -153,7 +174,74 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                         )
                       ],
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 8, bottom: 32),
+                      margin: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          ResultHeaderCard(),
+                          Expanded(
+                            child: RefreshIndicator(
+                              onRefresh: () async => controller.refresh(),
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: 8),
+                                    if ((controller.grads?.value.isEmpty ??
+                                        true)) ...[
+                                      SizedBox(
+                                        height: Get.height * 0.2,
+                                      ),
+                                      Center(
+                                          child: CustomText(
+                                        controller.failedMessage.value,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h2Bold),
+                                      )),
+                                      IconButton(
+                                          onPressed: () async =>
+                                              controller.refresh(),
+                                          icon: const Icon(
+                                            Icons.refresh,
+                                            size: 40,
+                                          ))
+                                    ],
+                                    for (int i = 0;
+                                        i <
+                                            (controller.grads?.value.length ??
+                                                0);
+                                        i++) ...[
+                                      (i % 2 == 0)
+                                          ? ResultCard(
+                                              grad: Rx(
+                                                  controller.grads!.value[i]))
+                                          : ResultCard(
+                                              grad: Rx(
+                                                  controller.grads!.value[i]),
+                                              type: "odd",
+                                            ),
+                                      if (i <
+                                          ((controller.grads?.value.length ??
+                                                  0) -
+                                              1))
+                                        SizedBox(
+                                          height: Get.height * 0.005,
+                                        )
+                                    ]
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
       ),

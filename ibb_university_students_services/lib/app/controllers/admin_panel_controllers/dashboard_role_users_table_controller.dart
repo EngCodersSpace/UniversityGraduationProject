@@ -102,6 +102,11 @@ class DashboardRoleUsersTableController extends GetxController
         "Name",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
+      DataColumn(
+          label: CustomText(
+        "permision",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
     ];
     await fetchRoleData();
     loadingState.value = false;

@@ -61,7 +61,7 @@ class RoleRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-roles-panel?id=${roleId ?? ''}&roleName=${rolename ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from backend
+          "get-roles-panel?orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=$search&page=$page"); //get the url from backend
       Map<int, Role> role = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsRole in response?.data["data"]) {
