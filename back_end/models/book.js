@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     category: {
-      type: DataTypes.ENUM('Book', 'Reference', 'Lecture', 'Summary', 'Exam', 'Other'),
+      type: DataTypes.ENUM('Reference', 'Lecture', 'Exams Forms'),
       allowNull: false,
     },
     file_size: {

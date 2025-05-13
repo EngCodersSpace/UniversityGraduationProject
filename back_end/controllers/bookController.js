@@ -14,19 +14,23 @@ const mkdirAsync = promisify(fs.mkdir);
 exports.checkFileDuplicate = async (req, res) => {
   try {
     const hash = crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
-    const existingFile = await book.findOne({
+    for (const group of req.body.sectionsAndLevels) {
+      const existingFile = await book.findOne({
       where: {
         file_path: { [Op.like]: `%${hash}%` }, 
-        section_id: req.body.section_id, 
-        level_id: req.body.level_id, 
+        section_id: group["section_id"], 
+        level_id: group["level_id"], 
       },
     });
 
     if (existingFile) {
       return res.status(400).json({ message: 'Sorry, this file has already been uploaded.' });
-    } else {
-      return res.status(200).json({ message: 'File is ready to be uploaded successfully.' });
     }
+    }
+
+  
+      return res.status(200).json({ message: 'File is ready to be uploaded successfully.' });
+    
   } catch (error) {
     console.error('Error while checking file duplicates:', error.message);
     res.status(500).json({ message: 'Internal server error', error: error.message });
@@ -274,8 +278,8 @@ exports.uploadFile = async (req, res) => {
               category: req.query.category,
               subject_id: req.query.subject_id || null,
               added_by: req.user.user_id,
-              section_id: group["sectionId"],
-              level_id: group["levelId"],
+              section_id: group["section_id"],
+              level_id: group["level_id"],
               original_name: req.file.originalname,
               file_path: filepath,
               author: bookDetails.author,
@@ -287,7 +291,7 @@ exports.uploadFile = async (req, res) => {
             });
             createdBooks.push(newBook);
           } catch (error) {
-            console.error(`Failed to create book record for section ${group["sectionId"]}, level ${group["levelId"]}:`, error);
+            console.error(`Failed to create book record for section ${group["section_id"]}, level ${group["level_id"]}:`, error);
           }
         }
 
@@ -316,13 +320,7 @@ exports.uploadFile = async (req, res) => {
             size: req.file.size,
             hash: req.file.hash
           },
-          books: createdBooks.map(b => ({
-            id: b.id,
-            title: b.title,
-            section_id: b.section_id,
-            level_id: b.level_id,
-            is_shared: b.is_shared
-          }))
+          books: createdBooks
         });
 
       } catch (error) {
