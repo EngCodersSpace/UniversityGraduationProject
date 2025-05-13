@@ -27,11 +27,8 @@ module.exports = {
         edition: faker.helpers.arrayElement(["1st", "2nd", "3rd", "Revised"]), // Random edition
         category: faker.helpers.arrayElement([
           "Book",
-          "Reference",
           "Lecture",
-          "Summary",
-          "Exam",
-          "Other",
+          "Exams Forms",
         ]), // Random category
         file_size: faker.number.float({ min: 0.5, max: 20, precision: 0.1 }), // Random file size in MB
         file_path: faker.system.filePath(), // Generate a random file path
@@ -44,7 +41,7 @@ module.exports = {
     }
 
     // Bulk insert all book records
-    await book.bulkCreate(books);
+    // await book.bulkCreate(books);
   },
 
   down: async (queryInterface, Sequelize) => {
