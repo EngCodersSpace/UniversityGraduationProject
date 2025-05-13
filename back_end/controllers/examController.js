@@ -1,23 +1,33 @@
 const { exam, subject , section,level } = require('../models'); 
-const { validationResult } = require('express-validator'); 
 const { upsertRefreshState} = require('../controllers/refreshController');
+
 const { Sequelize} = require('sequelize');
 const { Op } = require("sequelize");
+const {systemRefresh} = require('../middleware/notificationMiddleware');
+
 
 //  All Functions are perfict right now 2024-12-10
 exports.createExam = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     try {
 
         const newExam = await exam.create(req.body,{
             include: [{ model: subject, as: 'subject' }], 
         });
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
+        await upsertRefreshState("exam", {
+          section_id: req.body.exam_section_id , 
+          level_id: req.body.exam_level_id       
+        });
 
+        // await systemRefresh({ 
+        //   entity: 'exam',
+        //   targetType: 'section_level', 
+        //   sectionId: req.body.exam_section_id, 
+        //   levelId: req.body.exam_level_id,     
+        //   action: 'create'
+        // }).catch(err => {
+        //   console.error('Refresh notification failed (non-critical):', err);
+        // });
 
         res.status(201).json({
             message: 'Exam created successfully',
@@ -103,7 +113,7 @@ exports.getExamGroupedByCriteria = async (req, res) => {
     }
 };
 
-exports.getExamGroupedByCriteriaPanle = async (req, res) => {
+exports.getExamGroupedByCriteriaPanel = async (req, res) => {
     const ALLOWED_ORDER_FIELDS = ["exam_date", "exam_time", "exam_day", "exam_room", "subject_id"];
     const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
   
@@ -111,6 +121,11 @@ exports.getExamGroupedByCriteriaPanle = async (req, res) => {
       const {
         section_id,
         level_id,
+        subject_id,
+        exam_date,
+        exam_day,
+        exam_time,
+        exam_room,
         page = 1,
         limit = 10,
         orderBy = "exam_date",
@@ -118,9 +133,6 @@ exports.getExamGroupedByCriteriaPanle = async (req, res) => {
         search,
       } = req.query;
   
-      const whereClause = {};
-      if (section_id) whereClause.exam_section_id = section_id;
-      if (level_id) whereClause.exam_level_id = level_id;
   
       const pageNumber = parseInt(page, 10);
       let limitNumber = parseInt(limit, 10);
@@ -135,26 +147,56 @@ exports.getExamGroupedByCriteriaPanle = async (req, res) => {
       const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "exam_date";
       const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
   
-      const searchCondition = search
-        ? {
+     
+  
+      const { count, rows: exams } = await exam.findAndCountAll({
+        where: {
+          ...(exam_room && {
+            exam_room: exam_room  
+          }),
+          ...(exam_date && {
+            exam_date: exam_date  
+          }),
+          ...(exam_time && {
+            exam_time: exam_time  
+          }),
+          ...(exam_day && {
+            exam_day: exam_day  
+          }),
+          ...(subject_id && {
+            subject_id: subject_id  
+          }),
+
+          ...(search &&{
             [Op.or]: [
               { exam_room: { [Op.like]: `%${search}%` } },
               { exam_time: { [Op.like]: `%${search}%` } },
               { exam_day: { [Op.like]: `%${search}%` } },
-              { subject_id: { [Op.like]: `%${search}%` } },
+              { subject_id: { [Op.like]: `%${search}%` } }, 
             ],
-          }
-        : {};
-  
-      const { count, rows: exams } = await exam.findAndCountAll({
-        where: {
-          [Op.and]: [whereClause, searchCondition],
+          }),
         },
         include: [
           { model: subject, as: "subject" },
-          { model: section, as: "section" },
-          { model: level, as: "level" },
+          { model: section,
+            as: "section",
+            required: true, 
+            where: {
+            ...(section_id && {
+              id: section_id
+            }),
+          }
+          },
+          { model: level, as: "level",
+            required: true, 
+            where: {
+            ...(level_id && {
+              id: level_id
+            }),
+          }
+          },
         ],
+        distinct: true,
         limit: limitNumber,
         offset: offset,
         order: [[validOrderBy, validSort]],
@@ -164,18 +206,10 @@ exports.getExamGroupedByCriteriaPanle = async (req, res) => {
         return res.status(404).json({ message: "No exams found for the specified criteria" });
       }
   
-      const examList = exams.map((exam) => ({
-        exam_id: exam.exam_id,
-        subject_id: exam.subject_id,
-        exam_date: exam.exam_date,
-        exam_time: exam.exam_time,
-        exam_day: exam.exam_day,
-        exam_room: exam.exam_room,
-      }));
   
       res.status(200).json({
         message: "Exams retrieved successfully",
-        data: examList,
+        data: exams,
         pagination: {
           totalExams: count,
           totalPages: Math.ceil(count / limitNumber),
@@ -188,8 +222,6 @@ exports.getExamGroupedByCriteriaPanle = async (req, res) => {
       res.status(500).json({ message: "Error retrieving exams", error: error.message });
     }
 };
-
-
 
 
 
@@ -216,11 +248,6 @@ exports.getExamYear = async (req, res) => {
 };
 
 exports.updateExam = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
     try {   
         await exam.update(req.body, {
             where: { exam_id: req.query.exam_id },
@@ -246,16 +273,20 @@ exports.updateExam = async (req, res) => {
 
 exports.deleteExam = async (req, res) => {
     try {
-        const foundExam = await exam.destroy({
-            where: { exam_id: req.query.exam_id },
-        });
+        const foundExam = await exam.findByPk(req.query.exam_id);
 
         if (!foundExam) {
             return res.status(404).json({ message: 'Exam not found' });
         }
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
+        await upsertRefreshState("exam", {
+          section_id: foundExam.exam_section_id , 
+          level_id: foundExam.exam_level_id       
+        });
 
+
+
+        await foundExam.destroy();
         res.status(200).json({
             message: 'Exam deleted successfully',
         });

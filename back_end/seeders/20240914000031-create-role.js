@@ -131,6 +131,12 @@ module.exports = {
             updatedAt: new Date(),
           },
           {
+            target: 'grades',
+            action: 'student_search',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
             target: 'study_plan_elments',
             action: 'write',
             createdAt: new Date(),
@@ -145,6 +151,12 @@ module.exports = {
           {
             target: 'student_fees',
             action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            target: 'student_fees',
+            action: 'student_search',
             createdAt: new Date(),
             updatedAt: new Date(),
           },

@@ -2,55 +2,23 @@
 const express = require('express');
 const router = express.Router();
 const vali = require('../validations/authvalidation');
-const authController = require('../controllers/authController');
+const CRUD = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware');
-const { uploadPhoto } = require('../utils/multerConfig');
-const uploadProfilePicture = uploadPhoto('profile_pictures', 'students');
+const {checkPermission} = require('../middleware/roleMiddleware');
 
 
-router.post('/login', authController.login);
-
-router.post('/login/authToken', authMiddleware.verifyToken);
-router.post('/logout', authController.logout);
-
-router.get('/me', authMiddleware.verifyToken, authController.getCurrentUser);
-
-router.post('/refresh', authController.refreshToken);
-
-
-
-
-
-router.post('/register', uploadProfilePicture.single('profile_picture'), (req, res) => {exports.registerStudent(req, res);});
-
-
-router.post('/registerDoctor',vali.validateDoctorRegistration,authController.registerDoctor);
-
-// router.post('/registerStudent',uploadProfilePicture.single('profile_picture'),(req, res) => {exports.registerStudent(req, res);},vali.validateStudentRegistration,authController.registerStudent);
-router.post(
-    '/registerStudent', 
-    uploadProfilePicture.single('profile_picture'), 
-    authController.registerStudent 
-);
-
-router.post('/upload-photo-user',authController.uploadPhotoForuser);
-
-
-router.post('/request-password-reset', vali.validateRequestPasswordReset , authController.requestPasswordReset);
-
-router.get('/verify-reset-token',authController.verifyResetToken);
-
-router.post('/reset-password', vali.validateResetPassword , authController.resetPassword);
+router.get('/', CRUD.welcome);
+router.post('/login', CRUD.login);
+router.post('/login/authToken', authMiddleware.verifyToken);//
+router.post('/logout', CRUD.logout);
+router.post('/refresh', CRUD.refreshToken);
+router.post('/registerDoctor',checkPermission('users', 'write'),CRUD.registerDoctor); 
+router.post('/registerStudent',checkPermission('users', 'write'), CRUD.registerStudent ); 
+router.post('/upload-photo-user',checkPermission('users', 'write'),CRUD.uploadPhotoForuser);
+router.post('/request-password-reset', vali.validateRequestPasswordReset , CRUD.requestPasswordReset);
+router.get('/verify-reset-token',CRUD.verifyResetToken);
+router.post('/reset-password', vali.validateResetPassword , CRUD.resetPassword);
+router.post('/change-password', CRUD.changePass);
 
 
 module.exports = router;
-
-
-
-
-
-
-// const checkRole = require('./middleware/role');
-// router.get('/admin-only', checkRole(['admin']), adminController.getAdminData);
-// router.get('/doctor-data', checkRole(['doctor']), doctorController.getDoctorData);
-

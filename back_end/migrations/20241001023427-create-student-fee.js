@@ -19,16 +19,6 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
-      // section_id: {
-      //   type: Sequelize.INTEGER,
-      //   allowNull: false,
-      //   references: {
-      //     model: 'sections',
-      //     key: 'id',
-      //   },
-      //   onDelete: 'NO ACTION',
-      //   onUpdate: 'CASCADE',
-      // },
       level_fees_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -55,12 +45,8 @@ module.exports = {
         type: Sequelize.DECIMAL(8, 2),
         allowNull: false,
       },
-      // payment_status: {
-      //   type: Sequelize.JSON,
-      //   allowNull: false,
-      // },
       payment_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       receipt_number: {

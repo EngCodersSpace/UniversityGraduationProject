@@ -2,13 +2,11 @@
 const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
-const fs = require("fs");
+const fs = require('fs');
 const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
-const { Worker } = require("worker_threads");
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
-
 
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
@@ -110,7 +108,6 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
        include: [
           {
             model: student_assignment_file, 
-            attributes: ['id', 'student_assignment_id', 'attachment', 'attachment_hash'],
           },
           {
             model:student.scope(null),as:'student',
@@ -151,33 +148,31 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
 exports.downloadFile = async (req, res) => {
   try {
     const fileData = await student_assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= path.resolve(__dirname,'..',`${fileData.attachment}`);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
+    if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { filePath },
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const fileSize = fs.statSync(filePath).size;
+
+    // Set headers to instruct the browser to download the file
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSize);
+
+    // Create a read stream and pipe it directly to the response
+    const readStream = fs.createReadStream(filePath);
+    readStream.pipe(res);
+
+    readStream.on('error', (err) => {
+      console.error("Error during streaming:", err);
+      res.status(500).end('Error reading file.');
     });
-    console.log(`\n \n worker find path ${filePath} \n \n` );
-    worker.on("message", (message) => {
-      if (message.status === "success") {
-        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
-        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
-      }
-    });
-    worker.on("error", (err) => {
-      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
-      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
-    });
-    
-    res.status(200).json({ message: "Download Finish " });
+
   } catch (error) {
     console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
+    res.status(500).json({ 
+      error: "Download failed",
+      details: error.message 
+    });
   }
 };
 
@@ -185,36 +180,33 @@ exports.downloadFile = async (req, res) => {
 exports.doctorDownloadFile = async (req, res) => {
   try {
     const fileData = await assignment_file.findByPk(req.query.id);
-    if (!fileData) {
-      return res.status(404).json({ message: "File not found in database." });
-    }
-    const filePath= fileData.attachment;
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ message: "File not found on server." });
-    }
+    if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const worker = new Worker(path.join(__dirname, "../utils/downloadWorker.js"), {
-      workerData: { filePath },
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.attachment}`);
+    const fileSize = fs.statSync(filePath).size;
+
+    // Set headers to instruct the browser to download the file
+    res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSize);
+
+    // Create a read stream and pipe it directly to the response
+    const readStream = fs.createReadStream(filePath);
+    readStream.pipe(res);
+
+    readStream.on('error', (err) => {
+      console.error("Error during streaming:", err);
+      res.status(500).end('Error reading file.');
     });
-    console.log(`\n \n worker find path ${filePath} \n \n` );
-    worker.on("message", (message) => {
-      if (message.status === "success") {
-        console.log(`\n \n \nDownload started in the background.${message.status} \n ${message.filePath}\n \n` );
-        // res.status(200).json({ message: "Download started in the background.", path: message.filePath });
-      }
-    });
-    worker.on("error", (err) => {
-      console.log(`\n \n \n Error occurred during the download process.${err.message} \n \n \n `);
-      // res.status(500).json({ message: "Error occurred during the download process.", error: err.message });
-    });
-    
-    res.status(200).json({ message: "Download started in the background." });
+
   } catch (error) {
     console.error("Error during download:", error);
-    res.status(500).json({ message: "Failed to start download.", error: error.message });
+    res.status(500).json({ 
+      error: "Download failed",
+      details: error.message 
+    });
   }
 };
-
 
 // to checks if file duplicate or not
 exports.getFileDetails = async (req, res) => {
@@ -244,18 +236,7 @@ exports.getFileDetails = async (req, res) => {
 
 exports.uploadFileForAssignment = async (req, res) => {
   try {
-    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
-    const levelName = await level.findOne({ where: { id: req.query.level_id } });
-
-    if (!sectionName || !levelName) {
-      throw new Error("Section or Level not found with the provided IDs.");
-    }
-
-    const sectionNameObj = JSON.parse(sectionName.section_name); 
-    const sectionName1 = sectionNameObj.en; 
-    const request=`${sectionName1}/${levelName.level_name}`;
-    
-    uploadFields('assignments/attachment-files', request ).single('file')(req, res, async (err) => {
+    uploadFields('assignments', 'attachment-files' ).single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -272,7 +253,10 @@ exports.uploadFileForAssignment = async (req, res) => {
           original_name:req.file.originalName
         });
 
-        await upsertRefreshState("assignment",`section_id : ${req.query.section_id} - level_id : ${req.query.level_id}`);
+        // await upsertRefreshState("assignment", {
+        //   section_id: sectionName, 
+        //   level_id:  levelName     
+        // });
 
         res.status(201).json({
           message: 'File uploaded successfully.',
@@ -285,7 +269,7 @@ exports.uploadFileForAssignment = async (req, res) => {
       } catch(error){
         res.status(500).json({ message: 'Internal server Error.', error: error.message });
       }
-    });
+    });     
   } catch (error) {
     console.error('Error while uploading file:', error.message);
     res.status(500).json({ message: 'Internal server error.', error: error.message });
@@ -345,8 +329,20 @@ exports.createAssignment = async (req, res) => {
       createdAssignments.push(assignmentRecord);
     }
 
-    await upsertRefreshState("assignment",`section_id : ${req.body.section_id} - level_id : ${req.body.level_id}`);
-    
+
+    // Refresh state for each section-level combination
+    if (req.body.sectionsAndLevels && Array.isArray(req.body.sectionsAndLevels)) {
+      await Promise.all(
+          req.body.sectionsAndLevels.map(async (item) => {
+              await upsertRefreshState("assignment", {
+                  section_id: item.section_id ?? null,
+                  level_id: item.level_id ?? null
+              });
+          })
+      );
+    }
+
+
     res.status(201).json({
       message: 'Assignments created successfully for the specified sections and levels.',
       data: createdAssignments,
@@ -376,18 +372,8 @@ exports.createAssignment = async (req, res) => {
 // when student upload files of specific assignment attachement
 exports.uploadFilesAttachment = async (req, res) => {
   try {
-    const sectionName = await section.findOne({ where: { id: req.query.section_id } });
-    const levelName = await level.findOne({ where: { id: req.query.level_id } });
-
-    if (!sectionName || !levelName) {
-      throw new Error("Section or Level not found with the provided IDs.");
-    }
-
-    const sectionNameObj = JSON.parse(sectionName.section_name); 
-    const sectionName1 = sectionNameObj.en; 
-    const request=`${sectionName1}/${levelName.level_name}`;
-
-    uploadFields('assignments/students-attachment-files', request ).single('file')(req, res, async (err) => {
+    
+    uploadFields('assignments','students-attachment-files').single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ message: 'Error during file upload.', error: err.message });
       }
@@ -501,7 +487,11 @@ exports.updateAssigment=async(req,res)=>{
       level_id: req.body.level_id || Assignment.level_id,
     };
 
-    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
+    await upsertRefreshState("assignment", {
+      section_id: Assignment.section_id , 
+      level_id:  Assignment.level_id     
+    });
+    
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
 
 
@@ -540,7 +530,11 @@ exports.deleteAssignment = async (req, res) => {
       await file.destroy();
     }
 
-    await upsertRefreshState("assignment",`section_id : ${Assignment.section_id} - level_id : ${Assignment.level_id}`);
+    // await assignment_file.destroy({where:{assignment_id: Assignment.id}});
+    await upsertRefreshState("assignment", {
+      section_id: Assignment.section_id , 
+      level_id:  Assignment.level_id     
+    });
     await Assignment.destroy();
 
     res.status(200).json({ message: 'Assignment deleted successfully.' });
@@ -554,7 +548,7 @@ exports.deleteAssignment = async (req, res) => {
 exports.deleteAssigmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await assignment_file.findAll({
-      where:{assignment_id: req.query.assignment_id},
+      where:{id: req.query.id},
     });
 
     for (const file of AssignFiles) {
@@ -577,7 +571,7 @@ exports.deleteAssigmentFiles=async(req,res)=>{
 exports.deleteAttachmentFiles=async(req,res)=>{
   try {
     const AssignFiles= await student_assignment_file.findAll({
-      where:{student_assignment_id: req.query.id},
+      where:{id: req.query.id},
     });
  
     for (const file of AssignFiles) {

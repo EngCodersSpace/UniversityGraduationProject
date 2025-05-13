@@ -14,8 +14,6 @@ const createFolderIfNotExists = async (folderPath) => {
   }
 };
 
-
-
 const getStorageForPath = (baseFolder = 'temp', subFolder) => {
   return {
     _handleFile(req, file, cb) {
@@ -98,7 +96,6 @@ const getStorageForPathPhoto = (baseFolder = 'temp', subFolder) => {
     },
   });
 };
-
 
 const getStorageForPathExcel = (baseFolder = 'temp', subFolder) => {
   return {

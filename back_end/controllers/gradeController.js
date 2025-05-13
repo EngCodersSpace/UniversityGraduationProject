@@ -1,23 +1,17 @@
 
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
-const { validationResult } = require('express-validator');
-const { Sequelize} = require('sequelize');
+const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
-
-
-
-
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
 exports.getGrades = async (req, res) => {
   try {
-      const userId = req.user.user_id; 
-      const {levelID , Term} = req.query; 
+      const {studentID,levelID , Term} = req.query; 
 
       // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: {student_id:userId , level_id:levelID , term:Term }, 
+          where: {student_id:studentID , level_id:levelID , term:Term }, 
           include: [
               { model: subject, as: 'subject' },
             ],
@@ -52,8 +46,8 @@ exports.getAllGrades = async (req, res) => {
 }; 
 
 
-exports.getGradesByCriteriaPanle = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade", "work_grade", "term", "subject_id"];
+exports.getGradesByCriteriaPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = ["student_id", "exam_grade","section_id","level_id", "work_grade", "term", "subject_id"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
@@ -79,6 +73,9 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
     if (level_id) whereClause.level_id = level_id;
     // if (year_of_issue) whereClause.year_of_issue = year_of_issue;
 
+    // const lang = req.headers["accept-language"] || "en"; 
+
+
     const pageNumber = parseInt(page, 10);
     let limitNumber = parseInt(limit, 10);
 
@@ -96,6 +93,7 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
     const searchCondition = search
       ? {
           [Op.or]: [
+            { student_id: { [Op.like]: `%${search}%` } },
             { subject_id: { [Op.like]: `%${search}%` } },
             { term: { [Op.like]: `%${search}%` } },
             { status: { [Op.like]: `%${search}%` } },
@@ -117,6 +115,78 @@ exports.getGradesByCriteriaPanle = async (req, res) => {
       offset: offset,
       order: [[validOrderBy, validSort]],
     });
+
+
+    // const { count1, rows: students } = await student.findAndCountAll({
+    //   where: {
+    //     ...(student_level_id && {
+    //       student_level_id: student_level_id 
+    //     }),
+    //     ...(study_plan_id && {
+    //       study_plan_id: study_plan_id 
+    //     }),
+    //     ...(enrollment_year && {
+    //       enrollment_year:  enrollment_year 
+    //     }),
+    //     ...(studentSystem && {
+    //       student_system:  { [lang]: studentSystem  }
+    //     }),
+    
+    //     ...(search && {
+    //       [Op.or]: [
+    //         Sequelize.where(
+    //           Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'user.user_name'}, '$.${lang}'))`),
+    //           { [Op.like]: `%${search}%` }
+    //         ),
+
+    //       ]
+    //     })
+    //   },
+    //   include: [
+    //     {
+    //       model: user,
+    //       as: "user",
+    //       required: true,
+    //       attributes: ["user_name", "email", "date_of_birth", "collegeName", "user_section_id", "roleId"],
+    //       include: [
+    //         {
+    //           model: section,
+    //           as: "section",
+    //           attributes: ["section_name"],
+    //           required: true,
+    //           where: {
+    //             ...(sectionName && {
+    //               section_name: { [lang]: sectionName }
+    //             })
+    //           }
+    //         },
+    //         {
+    //           model: role,
+    //           as: "role",
+    //           attributes: ["roleName"],
+    //           required: true,
+    //           where: {
+    //             ...(rolename && {
+    //               roleName: rolename
+    //             })
+    //           }
+    //         },
+    //         {
+    //           model: phone_number,
+    //           as: "phone_numbers",
+    //           attributes: ["phone_number"],
+    //           // required: true,
+    //         },
+    //       ]
+    //     }
+    //   ],
+    //   distinct: true, 
+    //   limit: limitNumber,
+    //   offset: offset,
+    //   order: [[validOrderBy, validSort]],
+    // });
+
+
 
     if (!grades.length) {
       return res.status(404).json({ message: "No grades found for the specified criteria" });
@@ -245,13 +315,7 @@ exports.getSectionOfCurrentUser = (req, res) => {
 //  when i deal with grades doctor  how i do (create , update and get ) functions ?????
 // 
 exports.createGrade = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-  }
   try {
-    const { } = req.body;
-
     const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
     if (!studentExists) {
       return res.status(404).json({ message: 'Student not found' });
@@ -263,7 +327,6 @@ exports.createGrade = async (req, res) => {
     }
 
     const newGrade = await grade.create(req.body);
-
     res.status(201).json({
       message: 'Grade created successfully',
       grade: newGrade,
@@ -314,10 +377,6 @@ exports.getDoctorGrades = async (req, res) => {
 };
 
 exports.updateGrade = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     try {
       const { id } = req.params;
       const {

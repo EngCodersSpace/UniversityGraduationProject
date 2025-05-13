@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     category: {
-      type: DataTypes.ENUM('Book', 'Reference', 'Lecture', 'Summary', 'Exam', 'Other'),
+      type: DataTypes.ENUM('Reference', 'Lecture', 'Exams Forms'),
       allowNull: false,
     },
     file_size: {
@@ -117,7 +117,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     subject_id: {
       type: DataTypes.STRING(10),
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'subjects',
         key: 'subject_id',
