@@ -7,10 +7,10 @@ const { verifyToken  } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
 router.post('/create-student-fee', checkPermission('student_fees', 'write'), CRUD.createStudentFee);
-router.get('/get-all-fee', CRUD.getAllFees);
-router.get('/get-allFeeOfStudent', CRUD.getAllFeesOfStudent);
+router.get('/get-all-fee',checkPermission('student_fees', 'write'), CRUD.getAllFees);
+router.get('/get-allFeeOfStudent',checkPermission('student_fees', 'write'), CRUD.getAllFeesOfStudent);
 router.get('/get-allFeeOfStudent-orderd', CRUD.getLastPayment);
-router.get('/get-Fees-panle', CRUD.getStudentFeesByCriteriaPanel);
+router.get('/get-Fees-panle',checkPermission('student_fees', 'write'), CRUD.getStudentFeesByCriteriaPanel);
 
 router.put('/update-fee', checkPermission('student_fees', 'write'),CRUD.updateFee);
 router.delete('/delete-fee', checkPermission('student_fees', 'write'), CRUD.deleteFee);

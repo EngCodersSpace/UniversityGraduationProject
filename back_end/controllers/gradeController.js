@@ -1,13 +1,8 @@
 
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
-const { validationResult } = require('express-validator');
 const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
-
-
-
-
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
 exports.getGrades = async (req, res) => {
@@ -228,9 +223,6 @@ exports.getGradesByCriteriaPanel = async (req, res) => {
 };
 
 
-
-
-
 //   additional function i will deleted if it is unneccessary 
 exports.getGradeById = async (req, res) => {
     try {
@@ -323,13 +315,7 @@ exports.getSectionOfCurrentUser = (req, res) => {
 //  when i deal with grades doctor  how i do (create , update and get ) functions ?????
 // 
 exports.createGrade = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-  }
   try {
-    const { } = req.body;
-
     const studentExists = await student.findOne({ where: {student_id:req.body.student_id}});
     if (!studentExists) {
       return res.status(404).json({ message: 'Student not found' });
@@ -341,7 +327,6 @@ exports.createGrade = async (req, res) => {
     }
 
     const newGrade = await grade.create(req.body);
-
     res.status(201).json({
       message: 'Grade created successfully',
       grade: newGrade,
@@ -392,10 +377,6 @@ exports.getDoctorGrades = async (req, res) => {
 };
 
 exports.updateGrade = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
     try {
       const { id } = req.params;
       const {

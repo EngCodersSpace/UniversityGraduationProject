@@ -7,7 +7,6 @@ const { verifyToken  } = require('../middleware/authMiddleware');
 const {checkPermission} = require('../middleware/roleMiddleware');
 
 router.use(verifyToken);
-
 router.post('/create-grade',checkPermission('grades', 'write'), vali.createGrade,   CRUD.createGrade);
 router.get('/get-grades',    CRUD.getGrades);
 router.get('/get-all-grades',   CRUD.getAllGrades);
@@ -20,7 +19,3 @@ router.put('/update-grade/:id',checkPermission('grades', 'write'),vali.updateGra
 router.delete('/delete-grade/:id',checkPermission('grades', 'write'),  CRUD.deleteGrade);
  
 module.exports = router;
-
-
- 
-
