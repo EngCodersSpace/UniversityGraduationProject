@@ -74,7 +74,9 @@ async function extractBookDetails(filePath) {
 
     // Calculate file size (in MB)
     const fileSizeInBytes = fs.statSync(filePath).size;
-    const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+    const fileSizeInMB =  double.parse(((fileSizeInBytes / (1024 * 1024)).toFixed(2)));
+    
+
 
     // Additional details (can be customized manually or fetched from a database)
     const additionalDetails = {
