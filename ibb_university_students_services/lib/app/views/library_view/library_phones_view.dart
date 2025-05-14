@@ -54,6 +54,12 @@ class LibraryPhonesView extends GetView<LibraryController> {
                               controller: controller.searchText,
                               focusNode: controller.searchFocus,
                               onChange: controller.searching,
+                              labelStyle: AppTextStyles.mainStyle(
+                                  textHeader: AppTextHeaders.h3Normal
+                              ),
+                              style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h3Normal
+                              ),
                               onTapOutside: (e){controller.searchFocus.unfocus();},
                               labelText: "Search",
                               color: AppColors.mainCardColor,

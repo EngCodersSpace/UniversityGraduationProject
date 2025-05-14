@@ -76,41 +76,40 @@ class LecturesTab extends GetView<LibraryController> {
                                   children: [
                                     for (int i = 0;
                                         i < controller.books.length;
-                                        i ++)
-                                        if (controller.books.values.toList()[i].category ==
-                                                controller.categories[0] &&
-                                            (controller.books.values.toList()[i].sectionId ==
-                                                    controller
-                                                        .selectedDepartment
-                                                        .value ||
-                                                controller.selectedDepartment.value ==
-                                                    -1) &&
-                                            (controller.books.values.toList()[i].levelId ==
-                                                    controller
-                                                        .selectedLevel.value ||
-                                                controller.selectedLevel.value ==
-                                                    -1) &&
-                                            (controller.books.values
-                                                        .toList()[i]
-                                                        .subject
-                                                        ?.id ==
-                                                    controller.selectedSubjectId
-                                                        ?.value ||
-                                                controller.selectedSubjectId?.value ==
-                                                    "all-option"))...[
-                                          Obx(
-                                                () => (ScreenUtils.isPhoneScreen())
-                                                ? BookContainer(
-                                              book: controller
-                                                  .books.values
-                                                  .toList()[i],
-                                            )
-                                                : WebBookContainar(
-                                                book: controller
-                                                    .books.values
-                                                    .toList()[i]),
-                                          )
-                                        ]
+                                        i++)
+                                      if (controller.books.values.toList()[i].category ==
+                                              controller.categories[0] &&
+                                          (controller.books.values.toList()[i].sectionId ==
+                                                  controller.selectedDepartment
+                                                      .value ||
+                                              controller.selectedDepartment.value ==
+                                                  -1) &&
+                                          (controller.books.values.toList()[i].levelId ==
+                                                  controller
+                                                      .selectedLevel.value ||
+                                              controller.selectedLevel.value ==
+                                                  -1) &&
+                                          (controller.books.values
+                                                      .toList()[i]
+                                                      .subject
+                                                      ?.id ==
+                                                  controller.selectedSubjectId
+                                                      ?.value ||
+                                              controller.selectedSubjectId?.value ==
+                                                  "all-option") &&
+                                          ((controller.books.values.toList()[i].title?.contains(controller.searchText.text)??false) ||
+                                              controller.searchText.text == "")) ...[
+                                        Obx(
+                                          () => (ScreenUtils.isPhoneScreen())
+                                              ? BookContainer(
+                                                  book: controller.books.values
+                                                      .toList()[i],
+                                                )
+                                              : WebBookContainar(
+                                                  book: controller.books.values
+                                                      .toList()[i]),
+                                        )
+                                      ]
                                   ]),
                             ),
                           ],

@@ -97,7 +97,9 @@ class ReferencesTab extends GetView<LibraryController> {
                                             .selectedLevel.value ||
                                         controller
                                             .selectedLevel.value ==
-                                            -1)) ...[
+                                            -1)&&
+                                    ((controller.books.values.toList()[i].title?.contains(controller.searchText.text)??false) ||
+                                        controller.searchText.text == "")) ...[
                                   Obx(
                                         () => (ScreenUtils.isPhoneScreen())
                                         ? BookContainer(

@@ -227,7 +227,9 @@ class LibraryController extends GetxController
         : Get.dialog(WebBookInfoCard());
   }
 
-  void searching(String? val) {}
+  void searching(String? val) {
+    update();
+  }
 
   void filteringIconClick() {
     (ScreenUtils.isPhoneScreen())
