@@ -53,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM('single', 'topic'),
+      type: DataTypes.ENUM('single', 'topic','System'),
+      defaultValue:'System',
       allowNull: false,
     },    
   }, {
