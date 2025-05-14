@@ -38,6 +38,8 @@ const sendSingleNotification = async (req, res) => {
   }
 };
 
+// as Middleware  :
+
 // SYSTEM Notification (not stored in DB)
 const sendSystemNotification = async ({
   target,
@@ -79,7 +81,7 @@ const sendInfoNotification = async ({
   title,
   message,
   sender_id,
-  type = 'single', // 'single' or 'topic'
+  type = 'topic', 
   receiver_id = null,
   topic_name = null,
   target,
@@ -138,7 +140,9 @@ const fetchNotifications = async (userId, topicNames = []) => {
   });
 };
 
-// HANDLERS
+
+// HANDLERS :
+
 const sendInfoHandler = async (req, res) => {
   try {
     await sendInfoNotification(req.body);

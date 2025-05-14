@@ -19,15 +19,6 @@ exports.createExam = async (req, res) => {
           level_id: req.body.exam_level_id       
         });
 
-        // await systemRefresh({ 
-        //   entity: 'exam',
-        //   targetType: 'section_level', 
-        //   sectionId: req.body.exam_section_id, 
-        //   levelId: req.body.exam_level_id,     
-        //   action: 'create'
-        // }).catch(err => {
-        //   console.error('Refresh notification failed (non-critical):', err);
-        // });
 
         res.status(201).json({
             message: 'Exam created successfully',
