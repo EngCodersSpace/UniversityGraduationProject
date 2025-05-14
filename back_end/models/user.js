@@ -73,6 +73,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id',
       });
 
+      user.hasMany(models.news, {
+        foreignKey: 'publisher_id',  
+      });
+
       
 
     }
