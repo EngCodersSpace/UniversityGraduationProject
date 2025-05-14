@@ -79,6 +79,7 @@ class LibraryFile {
 
   factory LibraryFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {
 
+
     return LibraryFile(
       id: json['id'],
       sectionId: json['section_id'],
@@ -89,7 +90,7 @@ class LibraryFile {
       numberOfPages: json['numberOfPages'],
       addedBy: json['added_by'],
       filePath: json['file_path'],
-      fileSize: json['file_size'],
+      fileSize: json['file_size'].toDouble(),
       edition: json['edition'],
       category: json['category'],
       displayImage: json['display_image'],

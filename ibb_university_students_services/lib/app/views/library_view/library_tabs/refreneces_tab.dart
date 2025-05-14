@@ -49,17 +49,21 @@ class ReferencesTab extends GetView<LibraryController> {
                         SizedBox(
                           height: Get.height * 0.3,
                         ),
-                        CustomText(
-                          controller.fieldMessage.value,
-                          style: AppTextStyles.mainStyle(
-                              textHeader: AppTextHeaders.h2Bold),
+                        Center(
+                          child: CustomText(
+                            controller.fieldMessage.value,
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h2Bold),
+                          ),
                         ),
-                        IconButton(
-                            onPressed: () async => controller.refresh(),
-                            icon: Icon(
-                              Icons.refresh,
-                              color: AppColors.inverseCardColor,
-                            ))
+                        Center(
+                          child: IconButton(
+                              onPressed: () async => controller.refresh(),
+                              icon: Icon(
+                                Icons.refresh,
+                                color: AppColors.mainCardColor,
+                              )),
+                        )
                       ],
                       SizedBox(
                         height: 24,

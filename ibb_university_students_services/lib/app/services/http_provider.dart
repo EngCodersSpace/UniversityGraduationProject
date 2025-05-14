@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -24,8 +25,8 @@ class HttpProvider {
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration? connectTimeout = const Duration(seconds: 10),
-    Duration? sendTimeout = const Duration(seconds: 5),
-    Duration? receiveTimeout = const Duration(seconds: 5),
+    Duration? sendTimeout = const Duration(seconds: 30),
+    Duration? receiveTimeout = const Duration(seconds: 30),
   }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
@@ -187,16 +188,21 @@ class HttpProvider {
             'Content-Type': 'application/octet-stream',
             'Content-Length': fileSize.toString(),
           },
+          // receiveTimeout: Duration(),
+          sendTimeout: null
+
         ),
         onSendProgress: onSendProgress,
       );
       HttpProvider.onProcessUploads--;
       return response;
     } on DioException catch (error) {
+      HttpProvider.onProcessUploads--;
       if (error.response != null) {
         return error.response;
       }
     } catch (e) {
+      HttpProvider.onProcessUploads--;
       rethrow;
     }
     return null;
@@ -305,4 +311,28 @@ class HttpProvider {
     _dio.options.headers["Accept-Language"] =
         LocaleListener.currentLocal.value?.languageCode ?? "en";
   }
+
+  static String parseUrl(String endPoint){
+    return _dio.options.baseUrl+endPoint;
+  }
+
+  static CachedNetworkImage httpImage({
+    required String imageUrl,
+    Widget Function(BuildContext, String)? placeholder,
+    Widget Function(BuildContext, String, dynamic)? errorWidget,
+    BoxFit fit = BoxFit.cover,
+  }) {
+    return CachedNetworkImage(
+      imageUrl: "${_dio.options.baseUrl}$imageUrl",
+      httpHeaders: {
+        'Authorization': _dio.options.headers["Authorization"],
+      },
+      placeholder: placeholder ??
+              (context, url) => const Center(child: CircularProgressIndicator()),
+      errorWidget: errorWidget ??
+              (context, url, error) => const Icon(Icons.error),
+      fit: fit,
+    );
+  }
+
 }

@@ -26,10 +26,10 @@ import 'package:ibb_university_students_services/app/models/subject_model/subjec
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
-
 import '../models/data_sync/data_sync.dart';
 import '../models/helper_models/subjects_cache/subjects_cache.dart';
 import '../repositories/level_repository.dart';
@@ -87,6 +87,7 @@ class HiveServices{
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
     await UserRepository.clearBox();
+    await LibraryRepository.clearBox();
 
   }
 

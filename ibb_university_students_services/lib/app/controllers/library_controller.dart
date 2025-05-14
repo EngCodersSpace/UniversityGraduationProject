@@ -19,6 +19,7 @@ import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
 import '../repositories/subject_repository.dart';
 import '../styles/app_colors.dart';
+import '../utils/file_utils.dart';
 import '../utils/snake_bar.dart';
 import '../views/library_view/components/add_books_card.dart';
 import '../views/library_view/components/book_info_card.dart';
@@ -63,7 +64,7 @@ class LibraryController extends GetxController
   };
   RxMap<int, LibraryFile> books = RxMap();
   RxList<Widget> myTabs = RxList([
-     LecturesTab(),
+    LecturesTab(),
     const ReferencesTab(),
     const ExamFormsTab(),
   ]);
@@ -102,8 +103,8 @@ class LibraryController extends GetxController
 
   @override
   void refresh() async {
-     fetchLibraryData(force: true);
-     await Future.delayed(Duration(seconds: 2));
+    fetchLibraryData(force: true);
+    await Future.delayed(Duration(seconds: 2));
   }
 
   Future<void> fetchLibraryData({bool force = false}) async {
@@ -132,13 +133,9 @@ class LibraryController extends GetxController
     if (res.statusCode == 200) {
     } else if (res.statusCode == 204) {
       books.value = res.data ?? {};
-      fieldMessage.value = "this section and level not has Document";
-      showSnakeBar(
-          title: "Not Found Document  ",
-          message: "this section and level doesn't has Document ");
+      fieldMessage.value = "Empty ";
     } else {
-      fieldMessage.value =
-          "fetching assignments failed please check connection";
+      fieldMessage.value = "fetching Library Document please check connection";
       showSnakeBar(
           title: "Fetch Library Document Failed",
           message: "fetching Document failed please check connection ");
@@ -222,8 +219,9 @@ class LibraryController extends GetxController
     selectedLevel.value = val;
   }
 
-  void showBookInfo(LibraryFile book) {
+  void showBookInfo(LibraryFile book) async {
     selectedBook = book;
+    await selectedBook?.checkDownloaded();
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookInfoCard())
         : Get.dialog(WebBookInfoCard());
@@ -254,6 +252,7 @@ class LibraryController extends GetxController
   }
 
   void fileRename() {}
+
   void fileDelete(int index) {
     selectedFiles.removeAt(index);
     update(["BooksPiker"]);
@@ -354,15 +353,27 @@ class LibraryController extends GetxController
       return;
     }
     for (PlatformFile file in (selectedFiles)) {
-       List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
+      List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
               file: file,
               groups: groups,
-              category: categories[selectedCategory.value ?? 0])
-          .then((e) =>e.data??[]);
-       for (LibraryFile e in files) {
-         books[e.id] = e;
-       }
+              category: categories[selectedCategory.value ?? 0],
+              subjectId: selectedAddSubjectId?.value)
+          .then((e) => e.data ?? []);
+      for (LibraryFile e in files) {
+        books[e.id] = e;
+      }
     }
+  }
+
+  void downloadBooks() async {
+    if (selectedBook == null) return;
+    LibraryRepository.downloadLibraryFile(file: selectedBook!);
+  }
+
+  void openFile() async {
+    if (selectedBook?.filePath == null) return;
+
+    await FileUtils.openFile(selectedBook?.filePath);
   }
 
   void addGroup(int sectionId, int levelId) {
