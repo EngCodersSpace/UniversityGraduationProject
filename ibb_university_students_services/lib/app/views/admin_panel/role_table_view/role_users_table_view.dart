@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
@@ -31,7 +32,7 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(5),
-                width: Get.width * 0.6,
+                width: Get.width * 0.3,
                 child: Scrollbar(
                   controller: controller.vertical,
                   thumbVisibility: true,
@@ -47,13 +48,13 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
                         child: PaginatedDataTable(
                           controller: controller.horizontal,
                           rowsPerPage: controller.rowsPerPage.value,
-                          columnSpacing: controller.width * 0.06,
+                          columnSpacing: controller.width * 0.1,
                           onPageChanged: controller.onPageChange,
                           availableRowsPerPage: const <int>[5, 10],
                           onRowsPerPageChanged: controller.onRowChange,
                           showCheckboxColumn: false,
                           columns: controller.kTableColumn,
-                          source: MyData(),
+                          source: MyData(context),
                         ),
                       ),
                     ),
@@ -69,10 +70,11 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
 }
 
 class MyData extends DataTableSource {
+  final BuildContext context;
   final DashboardRoleUsersTableController controller =
       Get.find<DashboardRoleUsersTableController>(); // GetX Controller
 
-  MyData();
+  MyData(this.context);
   List<String> permitionActions = [];
 
   @override
@@ -104,39 +106,76 @@ class MyData extends DataTableSource {
                 )),
           ),
           DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .id
-                      .toString())),
+            onTap: () => _showPermissionPopup(
+                context, items[index % controller.rowsPerPage.value]),
+            CustomText(
+                items[index % controller.rowsPerPage.value].id.toString()),
+          ),
+          // DataCell(onTap: () {
+          //   _showPermissionPopup(
+          //       context, items[index % controller.rowsPerPage.value]);
+          // },
+          //     CustomTextFormField(
+          //         key: UniqueKey(),
+          //         onTapOutside: (e) {
+          //           controller.refresh();
+          //         },
+          //         onFieldSubmitted: (str) {},
+          //         enableBorder: false,
+          //         initialValue: items[index % controller.rowsPerPage.value]
+          //             .id
+          //             .toString())),
           DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].name)),
-          DataCell(Row(
-            spacing: 6,
-            children: items[index % controller.rowsPerPage.value]
-                .permissions
-                .entries
-                .expand((entry) {
-              return entry.value
-                  .map((perm) => Chip(label: Text(perm.action.toString())));
-            }).toList(),
-          ))
+            onTap: () => _showPermissionPopup(
+                context, items[index % controller.rowsPerPage.value]),
+            CustomText(
+                key: UniqueKey(),
+                items[index % controller.rowsPerPage.value].name.toString()),
+          ),
+          // DataCell(
+          //     onTap: () {},
+          //     CustomTextFormField(
+          //         key: UniqueKey(),
+          //         onTapOutside: (e) {
+          //           controller.refresh();
+          //         },
+          //         onFieldSubmitted: (str) {},
+          //         enableBorder: false,
+          //         initialValue:
+          //             items[index % controller.rowsPerPage.value].name)),
         ]);
+  }
+
+  void _showPermissionPopup(BuildContext context, Role role) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Permissions for: ${role.name}'),
+          content: SizedBox(
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: role.permissions.entries.expand((entry) {
+                  return entry.value.map((perm) => ListTile(
+                        leading: Icon(Icons.security),
+                        title: Text(perm.action.toString()),
+                        subtitle: Text('Module: ${perm.target}'),
+                      ));
+                }).toList(),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   List<Role> get items => controller.roles.values.toList();

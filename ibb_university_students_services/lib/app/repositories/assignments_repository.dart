@@ -309,7 +309,7 @@ class AssignmentsRepository {
         "sectionsAndLevels": sectionsAndLevels
       });
       if (response?.statusCode == 200) {
-        if(withCache){
+        if (withCache) {
           _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
           return Result(
               data: _assignmentsBox?.get(id),
@@ -322,7 +322,6 @@ class AssignmentsRepository {
             hasError: true,
             statusCode: response?.statusCode ?? _createError,
             message: response?.data["message"] ?? "error");
-
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
@@ -771,6 +770,56 @@ class AssignmentsRepository {
           statusCode: _updateError,
           message: error.toString(),
           data: null);
+    }
+  }
+
+  static Future<Result<Map>> fetchDashboardAssignment({
+    int? section,
+    int? level,
+    int? limit,
+    int? page,
+    String? term,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get("url"); //get the url from backend
+      Map<int, Assignment> assignment = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsAssignment in response?.data['data']) {
+          assignment[jsAssignment["id"]] =
+              Assignment.fromJson(jsAssignment); //get id
+        }
+        return Result(
+          data: {
+            "assignment": assignment,
+            "totalassignment": response?.data["pagination"]
+                ["totalassignment"], //get names
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "assignment": assignment,
+          "totalassignment": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: response?.statusCode ?? _fetchError,
+        message: error.toString(),
+        data: null,
+      );
     }
   }
 }
