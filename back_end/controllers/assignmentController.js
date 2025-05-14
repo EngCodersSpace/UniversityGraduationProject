@@ -12,7 +12,7 @@ const { upsertRefreshState} = require('../controllers/refreshController');
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
-    
+    // permission here == roleName
     if (req.user.permission == 'Student' || req.user.permission =='Student Representative'){
       const AllAssignmentSub = await assignment.findAll({
         where: {
@@ -93,6 +93,85 @@ exports.getAssignmentsOfSubject = async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching assignments:', error);
+    res.status(500).json({
+      message: 'Error fetching assignments.',
+      error: error.message,
+    });
+  }
+};
+
+// i'm split (getAssignmentsOfSubject) to two functions  1-for student's-roles
+exports.getAssignmentsForStudent = async (req, res) => {
+  try {
+    const assignments = await assignment.findAll({
+      where: {
+        subject_id: req.query.subject_id,
+        level_id: req.query.level_id,
+        section_id: req.query.section_id,
+      },
+      include: [
+        { model: assignment_file },
+        {
+          model: student_assignment,
+          where: { student_id: req.user.user_id },
+          include: [
+            { model: student_assignment_file },
+            {
+              model: student.scope(null),
+              as: 'student',
+              attributes: ['student_id'],
+              include: [
+                {
+                  model: user,
+                  as: 'user',
+                  attributes: ['user_name'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(204).send(); // No content
+    }
+
+    res.status(200).json({
+      message: 'Assignments retrieved successfully for student.',
+      data: assignments,
+    });
+  } catch (error) {
+    console.error('Error fetching student assignments:', error);
+    res.status(500).json({
+      message: 'Error fetching assignments.',
+      error: error.message,
+    });
+  }
+};
+
+//2- for doctor's-roles
+exports.getAssignmentsForDoctor = async (req, res) => {
+  try {
+    const assignments = await assignment.findAll({
+      where: {
+        subject_id: req.query.subject_id,
+        level_id: req.query.level_id,
+        section_id: req.query.section_id,
+      },
+      include: [{ model: assignment_file }],
+    });
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(204).send(); // No content
+    }
+
+    res.status(200).json({
+      message: 'Assignments retrieved successfully for doctor.',
+      data: assignments,
+    });
+  } catch (error) {
+    console.error('Error fetching doctor assignments:', error);
     res.status(500).json({
       message: 'Error fetching assignments.',
       error: error.message,

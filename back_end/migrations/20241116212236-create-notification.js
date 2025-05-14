@@ -35,7 +35,7 @@ module.exports = {
       },
       type:{
         type:Sequelize.ENUM('single','topic'),
-        defaultValue:'System',
+        defaultValue:'topic',
       },
 
 
