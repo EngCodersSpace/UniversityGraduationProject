@@ -541,9 +541,9 @@ class DashboardExamTableController extends GetxController
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 201 && res.data != null) {
       createExam = res.data;
-      showSnakeBar(message: "Add successfully");
+      showSnakeBar(title: "Add Successfully",message: "Exam added successfully");
     } else {
-      showSnakeBar(message: "Add failed");
+      showSnakeBar(title: "Add Failed",message: "Exam adding filed");
     }
     update(["DataTable"]);
   }

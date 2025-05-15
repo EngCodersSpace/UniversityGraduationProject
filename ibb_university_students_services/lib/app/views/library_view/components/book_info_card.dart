@@ -313,11 +313,11 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                             )),
                             CustomButton(
                               text: "Delete From Disk",
-                              onPress: () {},
+                              onPress: controller.deleteBooksFromStorage,
                             ),
                             CustomButton(
                               text: "Delete From Server",
-                              onPress: () {},
+                              onPress: controller.deleteBooksFromServer,
                             ),
                           ],
                         )

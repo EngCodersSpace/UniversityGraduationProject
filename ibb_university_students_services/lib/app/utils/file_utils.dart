@@ -11,11 +11,11 @@ class FileUtils {
   static Future<bool> requestStoragePermission() async {
     final status = await Permission.manageExternalStorage.status;
 
-    if (status.isGranted) {
+    if (status.isGranted || status.isRestricted) {
       return true;
     }
 
-    if (status.isDenied || status.isRestricted || status.isLimited) {
+    if (status.isDenied ) {
       final result = await Permission.manageExternalStorage.request();
       return result.isGranted;
     }
@@ -61,7 +61,9 @@ class FileUtils {
       return true;
     } catch (e) {
       if (kDebugMode) {
+        showSnakeBar(title: "Delete Failed", message: "$e");
         print(e);
+        return false;
       }
     }
     return false;

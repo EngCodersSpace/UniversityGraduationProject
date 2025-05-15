@@ -325,7 +325,7 @@ class HttpProvider {
     return CachedNetworkImage(
       imageUrl: "${_dio.options.baseUrl}$imageUrl",
       httpHeaders: {
-        'Authorization': _dio.options.headers["Authorization"],
+        'Authorization': _dio.options.headers["Authorization"]??"",
       },
       placeholder: placeholder ??
               (context, url) => const Center(child: CircularProgressIndicator()),

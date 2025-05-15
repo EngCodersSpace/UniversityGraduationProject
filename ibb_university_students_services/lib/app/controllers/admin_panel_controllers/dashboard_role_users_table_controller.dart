@@ -137,11 +137,11 @@ class DashboardRoleUsersTableController extends GetxController
     } else {
       roles.value = {};
       availableRows.value = 0;
-      faildMessage.value = "fetching Roles faild please check connection";
+      faildMessage.value = "fetching Roles failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Role Faild",
-            message: "fetching Roles faild please check connection");
+            title: "Fetch Role Failed",
+            message: "fetching Roles failed please check connection");
       }
     }
     update(["DataTable"]);

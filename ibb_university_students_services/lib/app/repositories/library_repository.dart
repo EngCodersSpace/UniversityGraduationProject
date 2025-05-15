@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
+import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../services/http_provider.dart';
@@ -22,6 +23,7 @@ class LibraryRepository {
   static const int _fetchError = 622;
   static const int _createError = 623;
   static const int _uploadError = 626;
+  static const int _deleteError = 627;
 
   // static Box<LibraryFilesCache>? _libraryFilesGroupsBox;
   static Box<LibraryFile>? _libraryFilesBox;
@@ -345,7 +347,7 @@ class LibraryRepository {
           double progress = (sent / total) * 100;
           file.progress?.value = progress.toInt();
           NotificationHandler.showProgressNotification(
-              uniqueId: file.id.hashCode,
+              uniqueId: file.id,
               progress: progress.toInt(),
               title: "Downloading",
               message: " ${file.title}");
@@ -355,7 +357,7 @@ class LibraryRepository {
         await file.checkDownloaded();
         if (file.downloaded.value) {
           await NotificationHandler.showProgressNotification(
-              uniqueId: file.id.hashCode,
+              uniqueId: file.id,
               title: "Successful Downloaded ",
               message: file.title);
           showSnakeBar(
@@ -363,7 +365,7 @@ class LibraryRepository {
               message: "Downloading ${file.title} Successful");
         } else {
           NotificationHandler.showProgressNotification(
-              uniqueId: file.id.hashCode,
+              uniqueId: file.id,
               title: "Download Failed ",
               message: file.title);
           showSnakeBar(message: "Downloading ${file.title} Failed");
@@ -374,7 +376,7 @@ class LibraryRepository {
       } else {
         file.status?.value = "Download Failed";
         NotificationHandler.showProgressNotification(
-            uniqueId: file.id.hashCode,
+            uniqueId: file.id,
             title: "Failed Downloaded ",
             message: file.title);
         showSnakeBar(message: "Downloading ${file.title} Failed");
@@ -388,6 +390,35 @@ class LibraryRepository {
     } catch (error) {
       return Result(
           statusCode: _createError, message: error.toString(), data: null);
+    }
+  }
+
+  static Future<Result<void>> deleteLibraryBook({
+    required int bookId,
+    bool withCache = true,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(),
+        barrierDismissible: false, name: "loadingDialog");
+    late Response? response;
+    try {
+      response = await HttpProvider.delete(
+          "delete?id=$bookId");
+      if (response?.statusCode == 200 && withCache) {
+        _libraryFilesBox?.delete(bookId);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: false,
+          statusCode: response?.statusCode ?? _deleteError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _deleteError,
+          message: error.toString(),
+          data: null);
     }
   }
 

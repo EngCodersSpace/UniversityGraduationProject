@@ -310,11 +310,11 @@ class DashboardLibraryTableController extends GetxController
     } else {
       library.value = {};
       availableRows.value = 0;
-      faildMessage.value = "fetching Books faild please check connection";
+      faildMessage.value = "fetching Books failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Books Faild",
-            message: "fetching Books faild please check connection");
+            title: "Fetch Books Failed",
+            message: "fetching Books failed please check connection");
       }
     }
     update(["DataTable"]);

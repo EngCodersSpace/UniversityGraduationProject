@@ -323,7 +323,7 @@ class LibraryController extends GetxController
             // eBook formats
           ]);
     } catch (e) {
-      showSnakeBar(message: "Loading Files Failed");
+      showSnakeBar(title: "Loading Files Failed",message: "check your connection and try again");
     }
     // Navigator.of(Get.overlayContext!).pop();
     if (result != null) {
@@ -376,6 +376,29 @@ class LibraryController extends GetxController
     if (selectedBook?.filePath == null) return;
 
     await FileUtils.openFile(selectedBook?.filePath);
+  }
+
+  void deleteBooksFromStorage() async {
+    if (selectedBook?.filePath == null) return;
+    bool res = await FileUtils.deleteFile(filePath: selectedBook!.filePath);
+    if(res){
+      showSnakeBar(message: "File Deleted");
+      await selectedBook?.checkDownloaded();
+    }
+  }
+  void deleteBooksFromServer() async {
+    if (selectedBook?.id == null) return;
+    Result res = await LibraryRepository.deleteLibraryBook(bookId: selectedBook!.id);
+    Navigator.of(Get.overlayContext!).pop();
+    if(res.statusCode == 200){
+      Navigator.of(Get.overlayContext!).pop();
+      showSnakeBar(title: "Delete successfully", message: "File deleted from Server");
+      books.remove(selectedBook?.id);
+
+    }else{
+      showSnakeBar(title: "Delete Failed",message: "Deleting file from server Failed");
+    }
+
   }
 
   void addGroup(int sectionId, int levelId) {
