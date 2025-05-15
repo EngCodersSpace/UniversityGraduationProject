@@ -21,6 +21,12 @@ module.exports = {
       receiver_id: {
         type: Sequelize.INTEGER,
         allowNull:true,
+                references: {
+          model: 'users',
+          key: 'user_id',
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       topic_name: {
         type: Sequelize.STRING,
@@ -34,8 +40,8 @@ module.exports = {
         allowNull:false,
       },
       type:{
-        type:Sequelize.ENUM('single','topic','System'),
-        defaultValue:'System',
+        type:Sequelize.ENUM('single','topic'),
+        allowNull:false,
       },
 
 

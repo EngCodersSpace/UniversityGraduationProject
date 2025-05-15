@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 
       //(4)Relationship One-to-Many between "user table" and  "notification table"
       user.hasMany(models.notification, {
+        as:'senderUser',
         foreignKey: 'sender_id',
         sourceKey: 'user_id',
       });
@@ -75,6 +76,11 @@ module.exports = (sequelize, DataTypes) => {
 
       user.hasMany(models.news, {
         foreignKey: 'publisher_id',  
+      });
+      user.hasMany(models.notification, {
+        as:'receiverUser',
+        foreignKey: 'receiver_id',
+        sourceKey: 'user_id',
       });
 
       

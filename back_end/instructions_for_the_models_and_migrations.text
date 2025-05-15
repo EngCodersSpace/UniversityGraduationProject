@@ -40,7 +40,7 @@ git fetch
 git switch BackEnd
 git pull 
 git switch ModelsAndMigrations
-git merge --squash BackEnd 
+git merge --squash BackEnd .
 
 
 git switch BackEnd
