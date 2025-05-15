@@ -7,30 +7,22 @@ const { debounceSend } = require('../utils/debounceKey');
 // Send a single direct user notification
 const sendSingleNotification = async (req, res) => {
   try {
-    const { title, message, sender_id, receiver_id, token, metadata } = req.body;
-
+    const { title, message, receiver_id, token} = req.body;
     const payload = {
       notification: { title, body: message },
       data: {
         type: 'single',
-        ...metadata,
       },
       token,
     };
-
-    // Send to FCM
     await admin.messaging().send(payload);
-
-    // Save to DB
     await notification.create({
-      sender_id,
+      sender_id:req.user.user_id,
       receiver_id,
-      topic_name: null,
       title,
       message,
       type: 'single',
     });
-
     res.json({ message: "Send notification Successfully",data:notification });
   } catch (error) {
     console.error('Single notification failed:', error);
@@ -42,11 +34,10 @@ const sendSingleNotification = async (req, res) => {
 
 // SYSTEM Notification (not stored in DB)
 const sendSystemNotification = async ({
-  target,
-  topicType = 'topic',
+  topic_name,
   metadata = {},
   debounceKey = null,
-  delay = 1000,
+  delay = 3000,
 }) => {
   const send = async () => {
     const payload = {
@@ -55,13 +46,7 @@ const sendSystemNotification = async ({
         ...metadata,
       },
     };
-
-    if (topicType === 'topic') {
-      payload.topic = target;
-    } else {
-      payload.token = target;
-    }
-
+    payload.topic = topic_name;
     try {
       await admin.messaging().send(payload);
     } catch (error) {
@@ -80,14 +65,10 @@ const sendSystemNotification = async ({
 const sendInfoNotification = async ({
   title,
   message,
-  sender_id,
-  type = 'topic', 
-  receiver_id = null,
-  topic_name = null,
-  target,
+  topic_name ,
   metadata = {},
   debounceKey = null,
-  delay = 1000,
+  delay = 3000,
 }) => {
   const send = async () => {
     const payload = {
@@ -97,21 +78,15 @@ const sendInfoNotification = async ({
         ...metadata,
       },
     };
-
-    if (type === 'topic') {
-      payload.topic = target;
-    } else {
-      payload.token = target;
-    }
+    payload.topic = topic_name;
 
     try {
       await notification.create({
-        sender_id,
-        receiver_id: type === 'single' ? receiver_id : null,
-        topic_name: type === 'topic' ? topic_name : null,
+        sender_id:req.user.user_id,
+        topic_name,
         title,
         message,
-        type,
+        type: 'topic',
       });
 
       await admin.messaging().send(payload);
@@ -126,20 +101,6 @@ const sendInfoNotification = async ({
     await send();
   }
 };
-
-// Fetch notifications for a user and subscribed topics
-const fetchNotifications = async (userId, topicNames = []) => {
-  return notification.findAll({
-    where: {
-      [Op.or]: [
-        { receiver_id: userId },
-        { topic_name: { [Op.in]: topicNames } },
-      ],
-    },
-    order: [['createdAt', 'DESC']],
-  });
-};
-
 
 // HANDLERS :
 
@@ -163,14 +124,203 @@ const sendSystemHandler = async (req, res) => {
   }
 };
 
-const fetchHandler = async (req, res) => {
+
+// to see what i sent   and for who 
+const getNotificationsForSender = async (req, res) => {
+  try{
+  const notifications=notification.findAll({
+    where: {sender_id: req.user.user_id },
+    include: [
+        {
+          model: user,
+          as: 'receiverUser',
+          attributes: ['user_id', 'user_name'],
+        },
+        {
+          model: user,
+          as: 'senderUser',
+          attributes: ['user_id', 'user_name'],
+        },
+      ],
+  });
+  return res.status(200).json({message:"Get Notifications that you sent it", Data:notifications});
+  }catch(error){
+  console.error(error);
+  return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
+  }
+};
+
+// to see what i received (single and topic)  user send topic_name in query
+const getNotificationsForRecieved = async (req, res) => {
+  try{
+  const notifications= notification.findAll({
+    where: {
+      [Op.or]: [
+        { receiver_id: req.user.user_id },
+        { topic_name:  req.query.topic_name },
+      ],
+    },
+    include: [
+        {
+          model: user,
+          as: 'receiverUser',
+          attributes: ['user_id', 'user_name'],
+          // where: {receiver_id: req.user.user_id },
+        },
+        {
+          model: user,
+          as: 'senderUser',
+          attributes: ['user_id', 'user_name'],
+        },
+      ],
+  });
+  return res.status(200).json({message:"Get Notifications that you received it", Data:notifications});
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
+  }
+};
+
+// to see what i recieved (single)
+const getNotificationsForRecievedSingle = async (req, res) => {
+  try{
+  const notifications= notification.findAll({
+    // where: {receiver_id: req.user.user_id },
+    include: [
+        {
+          model: user, as: 'receiverUser',
+          attributes: ['user_id', 'user_name'],
+          where: {receiver_id: req.user.user_id },
+        }
+      ],
+  });
+  return res.status(200).json({message:"Get Notifications that you received it", Data:notifications});
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
+  }
+};
+
+// to see what i recieved (topic)    user send topic_name in query
+const getNotificationsForRecievedByTopic = async (req, res) => {
+  try{
+  const notifications= notification.findAll({
+    where: {topic_name: req.query.topic_name},
+    // order: [['createdAt', 'DESC']],
+
+  });
+  return res.status(200).json({message:`Get Notifications that you received it at ${req.query.topic_name}`, Data:notifications});
+  }catch(error){
+    console.error(error);
+    return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
+  }
+};
+
+
+// admin panel
+const getNotificationsPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = [
+    "message_id",
+    "sender_id",
+    "receiver_id",
+    "topic_name",
+    "title",
+    "message",
+    "type",
+  ];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
   try {
-    const { userId, topics } = req.body;
-    const notifications = await fetchNotifications(userId, topics);
-    res.json(notifications);
-  } catch (err) {
-    console.error('Fetch notifications failed:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const {
+      sender_id,
+      receiver_id,
+      topic_name,
+      type,
+      page = 1,
+      limit = 10,
+      orderBy = "message_id",
+      sort = "ASC",
+      search,
+    } = req.query;
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+    const offset = (pageNumber - 1) * limitNumber;
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "message_id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
+
+    const { count, rows: notifications } = await notification.findAndCountAll({
+      where: {
+        ...(sender_id && {
+          sender_id: sender_id 
+        }),
+        ...(receiver_id && {
+          receiver_id: receiver_id 
+        }),
+        ...(type && {
+          type: type 
+        }), 
+        ...(topic_name && {
+          topic_name: topic_name 
+        }), 
+        
+        ...(search && {
+          [Op.or]: [
+            { title: { [Op.like]: `%${search}%` } },
+            { message: { [Op.like]: `%${search}%` } },
+          ]
+        })
+      },
+      include: [
+        {
+          model: user,
+          as: 'receiverUser',
+          attributes: ['user_id', 'user_name'],
+
+        },
+        {
+          model: user,
+          as: 'senderUser',
+          attributes: ['user_id', 'user_name'],
+
+        },
+      ],
+
+      distinct: true, 
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!notifications.length) {
+      return res
+        .status(404)
+        .json({ message: "No notifications found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "notifications retrieved successfully",
+      data: notifications,
+      pagination: {
+        totalStudents: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error retrieving notifications", error: error.message });
   }
 };
 
@@ -178,8 +328,7 @@ module.exports = {
   sendSingleNotification,
   sendSystemNotification,
   sendInfoNotification,
-  fetchNotifications,
   sendInfoHandler,
   sendSystemHandler,
-  fetchHandler,
+  getNotificationsPanel,
 };

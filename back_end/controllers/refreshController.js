@@ -25,12 +25,10 @@ exports.upsertRefreshState = async (target, filter) => {
     // const systemTitle = `Refresh Required: ${target}`;
     // const systemMessage = `Data has changed for ${target}. Please refresh.`;
     // const topic = `${filter}`;
-    const topic = `Section_${filter.section_id}_Level${filter.level_id}`;
-
-
+    const topic = `Section_${filter.section_id}_Level_${filter.level_id}`;
+    // topic = Section_1_Level_1  or  Section_2_Level_1   or ....etc
     await sendSystemNotification({
-      target: topic,
-      topicType: 'topic',
+      topic_name: topic,
       metadata: {
         sender_id: 0
       }
