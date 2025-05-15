@@ -11,7 +11,7 @@ class LibraryFile {
     required this.id,
     this.levelId,
     this.sectionId,
-    this.category,
+    required this.category,
     this.subject,
     this.addedBy,
     this.title,
@@ -52,7 +52,7 @@ class LibraryFile {
   String? edition;
 
   @HiveField(9)
-  String? category;
+  String category;
 
   @HiveField(10)
   double? fileSize;

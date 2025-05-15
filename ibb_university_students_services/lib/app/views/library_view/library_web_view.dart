@@ -162,7 +162,7 @@ class LibraryWebView extends GetView<LibraryController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      controller.booksPagesController.previousPage(
+                      controller.myTabsControllers[controller.tapController!.index].previousPage(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
                     },
@@ -183,7 +183,7 @@ class LibraryWebView extends GetView<LibraryController> {
                   ),
                   IconButton(
                       onPressed: () {
-                        controller.booksPagesController.nextPage(
+                        controller.myTabsControllers[controller.tapController!.index].nextPage(
                             duration: const Duration(milliseconds: 400),
                             curve: Curves.ease);
                       },

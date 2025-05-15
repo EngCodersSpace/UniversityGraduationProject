@@ -55,7 +55,7 @@ class LibraryRepository {
     required int sectionId,
     required int levelId,
     required String category,
-    required get_x.RxMap<int, LibraryFile> destination,
+    required get_x.RxMap<String, get_x.RxMap<int, LibraryFile>> destination,
     bool hardFetch = false,
   }) async {
     // LibraryFilesCache? cachedLibrary = _libraryFilesGroupsBox
@@ -64,8 +64,9 @@ class LibraryRepository {
     destination.value = {};
     if ((_libraryFilesBox?.isNotEmpty ?? false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
-      for (LibraryFile file in (_libraryFilesBox?.values??[])) {
-          destination[file.id] = file;
+      for (LibraryFile file in (_libraryFilesBox?.values ?? [])) {
+        destination[file.category] ??= get_x.RxMap({});
+        destination[file.category]?[file.id] = file;
       }
       return Result(hasError: false, statusCode: 200);
     }
@@ -83,9 +84,7 @@ class LibraryRepository {
           statusCode: response?.statusCode ?? _fetchAllError,
           message: "No data received",
         );
-      }
-
-      else if (response?.data == null) {
+      } else if (response?.data == null) {
         return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _fetchAllError,
@@ -109,14 +108,15 @@ class LibraryRepository {
               final Map<String, dynamic> jsLibrary = jsonDecode(jsonChunk);
 
               Subject? subject;
-              if(jsLibrary["subject_id"]!=null){
-                 subject = await SubjectRepository.fetchSubject(
-                    id: jsLibrary["subject_id"])
+              if (jsLibrary["subject_id"] != null) {
+                subject = await SubjectRepository.fetchSubject(
+                        id: jsLibrary["subject_id"])
                     .then((e) => e.data);
               }
               LibraryFile libraryFile =
                   LibraryFile.fromJson(jsLibrary, subject: subject);
-              destination[libraryFile.id] = libraryFile;
+              destination[libraryFile.category] ??= get_x.RxMap({});
+              destination[libraryFile.category]?[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
               if (kDebugMode) {
@@ -280,13 +280,14 @@ class LibraryRepository {
 
         if (response?.statusCode == 201) {
           List<LibraryFile> libFiles = [];
-          for(Map<String,dynamic> book in (response?.data["books"]??[]) ){
+          for (Map<String, dynamic> book in (response?.data["books"] ?? [])) {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);
           }
           if (withCache && file.path != null) {
             await FileUtils.saveFiles(
-                fileRelativePath: response?.data["file_info"]["path"], file: File(file.path!));
+                fileRelativePath: response?.data["file_info"]["path"],
+                file: File(file.path!));
           }
           NotificationHandler.showProgressNotification(
             uniqueId: file.path.hashCode,
@@ -315,18 +316,17 @@ class LibraryRepository {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
-      if(response?.data != null){
-      showSnakeBar(title: "Failed Upload",message: response?.data["message"]??"");
-      }else{
-        showSnakeBar(title: "Failed Upload",message:"");
+      if (response?.data != null) {
+        showSnakeBar(
+            title: "Failed Upload", message: response?.data["message"] ?? "");
+      } else {
+        showSnakeBar(title: "Failed Upload", message: "");
       }
-
 
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _uploadError,
           message: response?.data["message"] ?? "error");
-
     } catch (error) {
       return Result(
           statusCode: _uploadError, message: error.toString(), data: null);
@@ -401,8 +401,7 @@ class LibraryRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response = await HttpProvider.delete(
-          "delete?id=$bookId");
+      response = await HttpProvider.delete("delete?id=$bookId");
       if (response?.statusCode == 200 && withCache) {
         _libraryFilesBox?.delete(bookId);
       } else if (response?.statusCode == 403) {
@@ -421,6 +420,4 @@ class LibraryRepository {
           data: null);
     }
   }
-
-
 }

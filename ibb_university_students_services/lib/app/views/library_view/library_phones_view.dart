@@ -48,19 +48,18 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                 Icons.add,
                                 color: AppColors.mainCardColor,
                               )),
-
                           Expanded(
                             child: CustomTextFormField(
                               controller: controller.searchText,
                               focusNode: controller.searchFocus,
                               onChange: controller.searching,
                               labelStyle: AppTextStyles.mainStyle(
-                                  textHeader: AppTextHeaders.h3Normal
-                              ),
+                                  textHeader: AppTextHeaders.h3Normal),
                               style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h3Normal
-                              ),
-                              onTapOutside: (e){controller.searchFocus.unfocus();},
+                                  textHeader: AppTextHeaders.h3Normal),
+                              onTapOutside: (e) {
+                                controller.searchFocus.unfocus();
+                              },
                               labelText: "Search",
                               color: AppColors.mainCardColor,
                               prefixIcon: Icons.search_rounded,
@@ -71,6 +70,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                       TabBar(
                           controller: controller.tapController,
                           labelColor: AppColors.mainCardColor,
+                          onTap: controller.refreshCurrentPage,
                           indicatorColor: AppColors.mainCardColor,
                           dividerHeight: 0,
                           indicatorSize: TabBarIndicatorSize.tab,
@@ -125,36 +125,28 @@ class LibraryPhonesView extends GetView<LibraryController> {
                 ),
                 height: Get.height * 0.1,
                 child: Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        controller.booksPagesController
-                            .previousPage(
-                            duration: const Duration(
-                                milliseconds: 400),
-                            curve: Curves.ease);
-                      },
+                      onPressed: controller.previousPage,
                       icon: const Icon(Icons.arrow_back_rounded),
                       color: AppColors.backColor,
                       iconSize: 40,
                     ),
-                    CustomText(
-                      "0",
-                      style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h1Bold),
-                    ),
+                    Obx(() => (controller.tapController?.index != null)
+                        ? CustomText(
+                            "${(controller.currentPage)}/${(((controller.books[controller.categories[controller.tapController!.index]]?.length ?? 0)) ~/ 12) + 1}",
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h1Bold),
+                          )
+                        : CustomText(
+                            "0/0",
+                            style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h1Bold),
+                          )),
                     IconButton(
-                        onPressed: () {
-                          controller.booksPagesController
-                              .nextPage(
-                              duration: const Duration(
-                                  milliseconds: 400),
-                              curve: Curves.ease);
-                        },
-                        icon: const Icon(
-                            Icons.arrow_forward_rounded),
+                        onPressed: controller.nextPage,
+                        icon: const Icon(Icons.arrow_forward_rounded),
                         color: AppColors.backColor,
                         iconSize: 40)
                   ],
