@@ -778,6 +778,11 @@ class AssignmentsRepository {
     int? level,
     int? limit,
     int? page,
+    int? doctor,
+    int? date,
+    int? dueDate,
+    String? subject,
+    String? day,
     String? term,
     String? order,
     String? sort,
@@ -786,18 +791,22 @@ class AssignmentsRepository {
   }) async {
     late Response? response;
     try {
-      response = await HttpProvider.get("url"); //get the url from backend
+      response = await HttpProvider.get(
+          "get-all-assignment-panel?subject_id=${subject ?? ''}&doctor_id=${doctor ?? ''}&section_id=${section ?? ''}&level_id=${level ?? ''}&assignment_date=${date ?? ''}&assignment_due_day=${day ?? ''}&assignments_due_date=${dueDate ?? ''}&orderBy=${order ?? ''}&limit$limit&sort=${sort ?? ''}&search=$search&page=$page"); //get the url from backend
       Map<int, Assignment> assignment = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsAssignment in response?.data['data']) {
+          Subject? subject = await SubjectRepository.fetchSubject(
+                  id: jsAssignment["subject_id"])
+              .then((e) => e.data);
           assignment[jsAssignment["id"]] =
-              Assignment.fromJson(jsAssignment); //get id
+              Assignment.fromJson(jsAssignment, subject: subject); //get id
         }
         return Result(
           data: {
             "assignment": assignment,
             "totalassignment": response?.data["pagination"]
-                ["totalassignment"], //get names
+                ["totalAssignments"], //get names
           },
           hasError: false,
           statusCode: response?.statusCode,

@@ -38,7 +38,7 @@ class LectureController extends GetxController {
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
                 ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 6) * 0.6,
+                : (Get.width / 7) * 0.6,
             child: CustomText(
               "1st",
               style: AppTextStyles.mainStyle(
@@ -50,7 +50,7 @@ class LectureController extends GetxController {
         child: SizedBox(
             width: (ScreenUtils.isPhoneScreen())
                 ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 6) * 0.6,
+                : (Get.width / 7) * 0.6,
             child: CustomText(
               "2ec",
               style: AppTextStyles.mainStyle(
@@ -228,7 +228,7 @@ class LectureController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                  : (Get.width / 7) * 0.6,
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 level.name ?? "unknown",
                 style:

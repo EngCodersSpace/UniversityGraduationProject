@@ -67,11 +67,39 @@ class AssignmentTableFilterComponent
                   )),
             ),
           ),
+          // SizedBox(
+          //   width: Get.width * 0.01,
+          // ),
+          // // CustomText(
+          // //   "Term".tr,
+          // //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+          // // ),
+          // // SizedBox(
+          // //   width: Get.width * 0.002,
+          // // ),
+          // Container(
+          //   height: Get.height * 0.06,
+          //   width: Get.width * 0.08,
+          //   decoration: BoxDecoration(
+          //     color: AppColors.inverseIconColor,
+          //     borderRadius: BorderRadius.circular(24),
+          //   ),
+          //   child: Center(
+          //     child: Obx(() => DropdownButton(
+          //           items: controller.term,
+          //           onChanged: controller.changeTerm,
+          //           value: controller.selectedTerm.value,
+          //           underline: const SizedBox(),
+          //           iconEnabledColor: AppColors.mainCardColor,
+          //           dropdownColor: AppColors.inverseCardColor,
+          //         )),
+          //   ),
+          // ),
           SizedBox(
             width: Get.width * 0.01,
           ),
           // CustomText(
-          //   "Term".tr,
+          //   "Day".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),
           // SizedBox(
@@ -79,16 +107,16 @@ class AssignmentTableFilterComponent
           // ),
           Container(
             height: Get.height * 0.06,
-            width: Get.width * 0.08,
+            width: Get.width * 0.11,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
             ),
             child: Center(
               child: Obx(() => DropdownButton(
-                    items: controller.term,
-                    onChanged: controller.changeTerm,
-                    value: controller.selectedTerm.value,
+                    items: controller.day,
+                    onChanged: controller.changeDay,
+                    value: controller.selectedDay.value,
                     underline: const SizedBox(),
                     iconEnabledColor: AppColors.mainCardColor,
                     dropdownColor: AppColors.inverseCardColor,
@@ -107,7 +135,7 @@ class AssignmentTableFilterComponent
           // ),
           Container(
             height: Get.height * 0.06,
-            width: Get.width * 0.11,
+            width: Get.width * 0.13,
             decoration: BoxDecoration(
               color: AppColors.inverseIconColor,
               borderRadius: BorderRadius.circular(24),
@@ -151,8 +179,9 @@ class AssignmentTableFilterComponent
                   )),
             ),
           ),
+
           SizedBox(
-            width: Get.width * 0.19,
+            width: Get.width * 0.1,
           ),
           IconButton(
             onPressed: () {

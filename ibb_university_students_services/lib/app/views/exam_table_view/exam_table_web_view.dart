@@ -49,6 +49,9 @@ class ExamTableWebView extends GetView<ExamTableController> {
                       padding: const EdgeInsets.only(left: 70),
                       child: Row(
                         children: [
+                          SizedBox(
+                            width: width * 0.08,
+                          ),
                           CustomText(
                             "Section".tr,
                             style: AppTextStyles.secStyle(

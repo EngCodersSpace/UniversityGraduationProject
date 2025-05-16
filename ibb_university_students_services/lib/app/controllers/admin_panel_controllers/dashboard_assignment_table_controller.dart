@@ -8,11 +8,14 @@ import 'package:ibb_university_students_services/app/models/assignment_model/ass
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/assignment_table_view/assignment_table_component/add_assignment_table_card.dart';
 
 class DashboardAssignmentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -32,8 +35,9 @@ class DashboardAssignmentTableController extends GetxController
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "".obs;
-  RxString selectedOrder = "lecture_time".obs;
+  RxString selectedOrder = "id".obs;
   RxString selectedSort = "DESC".obs;
+  RxString selectedDay = "".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
@@ -70,31 +74,11 @@ class DashboardAssignmentTableController extends GetxController
   ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
-        value: "lecture_time",
+        value: "id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
-              "Lecture Time",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_day",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Day",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "lecture_room",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Lecture Room",
+              "ID",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -105,6 +89,36 @@ class DashboardAssignmentTableController extends GetxController
             width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Subject",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "doctor_id",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "doctor",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "assignment_date",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Assignment date",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "assignments_due_date",
+        child: SizedBox(
+            width: (Get.width / 6) * 0.6,
+            child: CustomText(
+              "Assignment due date",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -132,8 +146,94 @@ class DashboardAssignmentTableController extends GetxController
               ),
             ))),
   ];
+  List<DropdownMenuItem<String>> day = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Saturday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Saturday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Sunday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Sunday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Monday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Monday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Tuesday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Tuesday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "wednesday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Wednesday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Thursday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Thursday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            )))
+  ];
   List<DataColumn> kTableColumn = [];
   Timer? _debounce;
+
+  //popup add component
+  Map<String, Subject>? subjects;
+  Rx<String?> subjectId = Rx(null);
+  Map<int, Section> section = <int, Section>{}.obs;
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
+  List<Level>? level;
+  // ignore: non_constant_identifier_names
+  Rx<int?> LevelId = Rx(null);
+  TextEditingController title = TextEditingController();
+  TextEditingController dueDate = TextEditingController();
+  FocusNode titleFocus = FocusNode();
+  FocusNode dueDateFocus = FocusNode();
 
   @override
   void onInit() async {
@@ -234,6 +334,7 @@ class DashboardAssignmentTableController extends GetxController
       section: (selectedSection.value == 0) ? null : selectedSection.value,
       level: (selectedLevel.value == 0) ? null : selectedLevel.value,
       term: (selectedTerm.value == "") ? "" : selectedTerm.value,
+      day: (selectedDay.value == "") ? "" : selectedDay.value,
       order: selectedOrder.value,
       sort: selectedSort.value,
       limit: rowsPerPage.value,
@@ -242,8 +343,8 @@ class DashboardAssignmentTableController extends GetxController
       hardFetch: false,
     );
     if (res.statusCode == 200) {
-      assignment = res.data["assignment"] ?? {};
-      availableRows = res.data["totalassignment"] ?? 0;
+      assignment.value = res.data["assignment"] ?? {};
+      availableRows.value = res.data["totalassignment"] ?? 0;
     } else if (res.statusCode == 401) {
       assignment.value = {};
       availableRows.value = 0;
@@ -305,6 +406,12 @@ class DashboardAssignmentTableController extends GetxController
   void changeSort(String? val) async {
     if (val == null) return;
     selectedSort.value = val;
+    fetchAssignmentData();
+  }
+
+  void changeDay(String? val) async {
+    if (val == null) return;
+    selectedDay.value = val;
     fetchAssignmentData();
   }
 
@@ -371,7 +478,45 @@ class DashboardAssignmentTableController extends GetxController
     selectedLevel.value = levelsData.first.id;
   }
 
-  Future<void> addClick() async {}
+  Future<void> addClick() async {
+    await getSection();
+    await getSubjects();
+    await getLevel();
+    Get.dialog(AddAssignmentTableCard());
+  }
+
+  Future<void> getSubjects() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+    } else {
+      subjectId.value = null;
+    }
+  }
+
+  Future<void> getSection() async {
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
+  }
+
+  Future<void> getLevel() async {
+    level = await LevelRepository.fetchLevels(hardFetch: false)
+        .then((e) => e.data?.values.toList() ?? []);
+    if (level?.isNotEmpty ?? false) {
+      LevelId = RxInt(level?.first.id ?? 0);
+    } else {
+      LevelId.value = null;
+    }
+  }
+
+  Future<void> addAssignment() async {}
+
   @override
   void export() {}
 
