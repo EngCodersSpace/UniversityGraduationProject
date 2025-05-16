@@ -7,6 +7,7 @@ import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
+import '../services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
 import '../services/http_provider.dart';
 
@@ -38,14 +39,27 @@ class UserRepository {
       {bool rememberMe = false}) async {
     late Response? response;
     try {
+      final String? fcmToken = await NotificationHandler.getDeviceToken();
       response = await HttpProvider.post("login",
-          data: {"user_id": id, "password": password});
+          data: {"user_id": id, "password": password, "fcm_token": fcmToken});
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
+          await NotificationHandler.registerTopics([
+            "${user.section}_${user.level}",
+            "student",
+            (user.role?.name??"undefine"),
+            "all"
+          ]);
           _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
+          await NotificationHandler.registerTopics([
+            "${user.section}",
+            "doctor",
+            (user.role?.name??"undefine"),
+            "all"
+          ]);
           _userBox?.put('currentUser', user);
         }
         HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);

@@ -48,6 +48,11 @@ class NotificationHandler {
     // });
   }
 
+  static Future<void> registerTopics(List<String> topics )async{
+    for(String topic in topics) {
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
+    }
+  }
   static void _handleMessage(RemoteMessage message) {
     showNotification(
       title: message.notification?.title ?? "Info",
