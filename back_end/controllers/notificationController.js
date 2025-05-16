@@ -310,7 +310,7 @@ const getNotificationsPanel = async (req, res) => {
       message: "notifications retrieved successfully",
       data: notifications,
       pagination: {
-        totalStudents: count,
+        totalNotifications: count,
         totalPages: Math.ceil(count / limitNumber),
         currentPage: pageNumber,
         perPage: limitNumber,

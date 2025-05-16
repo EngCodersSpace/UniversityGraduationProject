@@ -2,7 +2,7 @@
 // const bcrypt = require('bcrypt');
 const { user, doctor , student ,study_plan,level,section,phone_number,role} = require('../models'); 
 const { Sequelize,Op} = require('sequelize');
-const {filterJsonColumn} = require('../middleware/filterJsonCol')
+// const {filterJsonColumn} = require('../middleware/filterJsonCol')
 
 
 exports.getUserById = async (req, res) => {
