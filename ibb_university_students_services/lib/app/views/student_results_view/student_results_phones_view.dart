@@ -236,54 +236,75 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                           child: RefreshIndicator(
                             onRefresh: () async => controller.refresh(),
                             child: SingleChildScrollView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 8),
-                                  if ((controller.grads?.value.isEmpty ??
-                                      true)) ...[
-                                    SizedBox(
-                                      height: Get.height * 0.2,
-                                    ),
-                                    Center(
-                                        child: CustomText(
-                                      controller.failedMessage.value,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h2Bold),
-                                    )),
-                                    if (controller.studentId != null)
-                                      IconButton(
-                                          onPressed: () async =>
-                                              controller.refresh(),
-                                          icon: const Icon(
-                                            Icons.refresh,
-                                            size: 40,
-                                          ))
-                                  ],
-                                  for (int i = 0;
-                                      i < (controller.grads?.value.length ?? 0);
-                                      i++) ...[
-                                    (i % 2 == 0)
-                                        ? ResultCard(
-                                            grad:
-                                                Rx(controller.grads!.value[i]))
-                                        : ResultCard(
-                                            grad:
-                                                Rx(controller.grads!.value[i]),
-                                            type: "odd",
-                                          ),
-                                    if (i <
-                                        ((controller.grads?.value.length ?? 0) -
-                                            1))
-                                      SizedBox(
-                                        height: Get.height * 0.005,
-                                      )
-                                  ]
-                                ],
-                              ),
-                            ),
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: Obx(
+                                  () => Column(
+                                    children: [
+                                      SizedBox(height: 8),
+                                      if ((controller.grads?.value.isEmpty ??
+                                          true)) ...[
+                                        SizedBox(
+                                          height: Get.height * 0.2,
+                                        ),
+                                        Center(
+                                            child: CustomText(
+                                          controller.failedMessage.value,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h2Bold),
+                                        )),
+                                        if (controller.studentId != null)
+                                          IconButton(
+                                              onPressed: () async =>
+                                                  controller.refresh(),
+                                              icon: const Icon(
+                                                Icons.refresh,
+                                                size: 40,
+                                              ))
+                                      ],
+                                      for (int i = 0;
+                                          i <
+                                              (controller.grads?.value.length ??
+                                                  0);
+                                          i++) ...[
+                                        if (controller.grads!.value.values
+                                                    .toList()[i]
+                                                    .levelId ==
+                                                controller
+                                                    .selectedLevel.value &&
+                                            (controller.grads!.value.values
+                                                        .toList()[i]
+                                                        .term ==
+                                                    controller
+                                                        .selectedTerm.value ||
+                                                controller.selectedTerm.value ==
+                                                    "All")) ...[
+                                          (i % 2 == 0)
+                                              ? ResultCard(
+                                                  grad: Rx(controller
+                                                      .grads!.value.values
+                                                      .toList()[i]))
+                                              : ResultCard(
+                                                  grad: Rx(controller
+                                                      .grads!.value.values
+                                                      .toList()[i]),
+                                                  type: "odd",
+                                                ),
+                                          if (i <
+                                              ((controller.grads?.value
+                                                          .length ??
+                                                      0) -
+                                                  1))
+                                            SizedBox(
+                                              height: Get.height * 0.005,
+                                            )
+                                        ],
+                                      ]
+                                    ],
+                                  ),
+                                )),
                           ),
                         ),
                       ],

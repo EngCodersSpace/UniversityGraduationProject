@@ -48,9 +48,16 @@ class AssignmentsTabController extends GetxController {
   FocusNode dueDateFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
   String mode = "Add";
+  String fetchMode = "doctor";
   int? selectedAssignment;
   int? selectedState;
 
+Future<void> setStudentSectionAndLevel()async{
+  Student? student =
+      await UserRepository.fetchUser().then((e) => e.data as Student);
+  selectedDepartment.value = student?.section?.id;
+  selectedLevel.value = student?.level?.id;
+}
   @override
   void onInit() async {
     // await initSectionDropdownMenuList();
@@ -60,10 +67,8 @@ class AssignmentsTabController extends GetxController {
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
     if (UserRepository.currentUserType() == Student) {
-      Student? student =
-          await UserRepository.fetchUser().then((e) => e.data as Student);
-      selectedDepartment.value = student?.section?.id;
-      selectedLevel.value = student?.level?.id;
+      await setStudentSectionAndLevel();
+      fetchMode = "student";
     }
     await fetchAssignmentsData();
     super.onInit();
@@ -98,6 +103,10 @@ class AssignmentsTabController extends GetxController {
       }
     }
 
+    if(fetchMode=="student"){
+      await setStudentSectionAndLevel();
+    }
+
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
         selectedSubject.value == null) {
@@ -115,10 +124,10 @@ class AssignmentsTabController extends GetxController {
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 204) {
       assignments?.value = res.data ?? {};
-      fieldMessage.value = "this section and level not has Assignments";
+      fieldMessage.value = "Empty";
       showSnakeBar(
           title: "Not Found Assignments ",
-          message: "this section and level doesn't has assignments ");
+          message: "selected choose doesn't has assignments ");
     } else {
       fieldMessage.value =
           "fetching assignments failed please check connection";

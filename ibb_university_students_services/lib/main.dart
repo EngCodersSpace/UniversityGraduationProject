@@ -25,7 +25,12 @@ class MyApp extends StatelessWidget {
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
-            navigatorObservers: [RouteGuard()],
+    //         navigatorObservers: [RouteGuard()], localizationsDelegates: const [
+    //   GlobalMaterialLocalizations.delegate,
+    //   GlobalCupertinoLocalizations.delegate,
+    //   GlobalWidgetsLocalizations.delegate,
+    //   FlutterQuillLocalizations.delegate,
+    // ]，
           )
         // Android and web UI
         : GetMaterialApp(

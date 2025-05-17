@@ -32,6 +32,7 @@ class StudentFeeController extends GetxController {
   int? selectedFee;
   RxMap<int, StudentFee> studentFees = RxMap({});
   int? studentId;
+  String fetchMode = "search";
 
   @override
   void onInit() async {
@@ -39,6 +40,7 @@ class StudentFeeController extends GetxController {
     await fetchLevels();
     if (UserRepository.currentUserType() == Student) {
       studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+      fetchMode = "self";
       await fetchStudentFees();
     }
     super.onInit();
@@ -68,7 +70,7 @@ class StudentFeeController extends GetxController {
       return;
     }
     Result res =
-        await StudentFeeRepository.fetchStudentFees(studentId: studentId!);
+        await StudentFeeRepository.fetchStudentFees(studentId: studentId!,mode: fetchMode);
     if (res.statusCode == 200) {
       studentFees.value = res.data;
     } else if (res.statusCode == 404) {

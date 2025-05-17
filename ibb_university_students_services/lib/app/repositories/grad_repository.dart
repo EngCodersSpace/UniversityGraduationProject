@@ -1,50 +1,72 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/grads_model/grads_model.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../models/helper_models/result.dart';
+import '../models/helper_models/students_grades_cache/students_grades_cache.dart';
 import '../services/http_provider.dart';
+import '../utils/internet_connection_cheker.dart';
 
 class GradRepository {
   static const int _fetchError = 611;
 
-  static Map<int, Map<int, Grad>>? _gradsByLevels;
 
-  static Future<Result<List<Grad>>> fetchStudentGrads({
-    required int levelId,
-    required String? term,
+  static Box<StudentGradesCache>? _studentGradesBox;
+
+  static Future<void> openBox() async {
+    _studentGradesBox = await Hive.openBox<StudentGradesCache>("StudentGradesBox");
+    _studentGradesBox?.clear();
+  }
+
+  static Future<void> clearBox() async {
+    _studentGradesBox = await Hive.openBox<StudentGradesCache>("StudentGradesBox");
+    _studentGradesBox?.clear();
+  }
+
+  static Future<void> closeBox() async {
+    if (_studentGradesBox?.isOpen ?? false) {
+      await _studentGradesBox?.close();
+    }
+  }
+
+  static Future<Result<Map<int,Grad>>> fetchStudentGrads({
     required int studentID,
+    required String? mode,
     bool hardFetch = false,
   }) async {
-    if (_gradsByLevels?[levelId] != null &&
-        (_gradsByLevels?[levelId]?.isNotEmpty ?? false) &&
-        !hardFetch) {
+    _studentGradesBox?.get(studentID);
+    if ((_studentGradesBox?.get(studentID)?.data.values.isNotEmpty ?? false) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
-        data: _gradsByLevels?[levelId]?.values.toList(),
-        statusCode: 200,
-        hasError: false,
-        message: "successful",
-      );
+          data: _studentGradesBox?.get(studentID)?.data,
+          hasError: false,
+          statusCode: 200);
     }
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-grades?studentID=$studentID&levelID=$levelId&Term=$term");
+          "${(mode=="self")?"get-grades":"get-all-grades"}?studentID=$studentID");
       // print(response?.data);
       if (response?.statusCode == 200) {
-        _gradsByLevels ??= {};
-        _gradsByLevels?[levelId] = {};
-
-        for (Map<String, dynamic> jsGrad in response?.data["Grades"]) {
-          // print("here");
+        StudentGradesCache cachedGrads = StudentGradesCache(key: studentID, data: {});
+        for (Map<String, dynamic> jsGrad in response?.data["Grades"] ?? {}) {
           Grad grad = Grad.fromJson(jsGrad);
-
-          _gradsByLevels?[levelId]?[grad.id] = grad;
+          cachedGrads.data[grad.id] = grad;
+          await _studentGradesBox?.put(
+            studentID,
+            cachedGrads,
+          );
         }
+        return Result(
+            data: cachedGrads.data,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
       }
 
       return Result(
-          data: _gradsByLevels?[levelId]?.values.toList(),
+          data: null,
           hasError: false,
           statusCode: response?.statusCode,
           message: response?.data["message"] ?? "error");

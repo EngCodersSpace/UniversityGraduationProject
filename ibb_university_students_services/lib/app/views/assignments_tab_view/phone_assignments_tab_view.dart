@@ -145,8 +145,8 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
                                     width: (Get.width /3),
-                                    onSelected: (String i,v){
-                                      controller.selectedSubject.value = i;
+                                    onSelected: (String i,v) {
+                                      controller.changeSubject(i);
                                     },
                                     icon: Icon(
                                       Icons.arrow_drop_down_outlined,
@@ -176,7 +176,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     value: controller.selectedSubject.value,
                                     width: (Get.width * 0.45),
                                     onSelected: (String i,v){
-                                      controller.selectedSubject.value = i;
+                                      controller.changeSubject(i);
                                     },
                                     icon: Icon(
                                       Icons.arrow_drop_down_outlined,

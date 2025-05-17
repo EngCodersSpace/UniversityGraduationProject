@@ -46,18 +46,19 @@ class UserRepository {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
           await NotificationHandler.registerTopics([
-            "${user.section}_${user.level}",
+            "section_${user.section?.id}",
+            "level_${user.level?.id}",
             "student",
-            (user.role?.name??"undefine"),
+            "${user.role?.id}",
             "all"
           ]);
           _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
           await NotificationHandler.registerTopics([
-            "${user.section}",
+            "section_${user.section?.id}",
             "doctor",
-            (user.role?.name??"undefine"),
+            "${user.role?.id}",
             "all"
           ]);
           _userBox?.put('currentUser', user);

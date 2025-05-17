@@ -18,13 +18,14 @@ class StudentResultController extends GetxController {
   TextEditingController idController = TextEditingController();
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Rx<List<Grad>>? grads = Rx([]);
+  Rx<Map<int,Grad>>? grads = Rx({});
   RxInt summation = 0.obs;
   RxDouble gpa = 0.0.obs;
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> terms = [];
   RxString failedMessage = "Empty".tr.obs;
   int? studentId;
+  String fetchMode = "search";
 
   @override
   void onInit() async {
@@ -32,6 +33,7 @@ class StudentResultController extends GetxController {
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     if (UserRepository.currentUserType() == Student) {
       studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+      fetchMode = "self";
     }
     await fetchStudentGrads();
     super.onInit();
@@ -48,31 +50,28 @@ class StudentResultController extends GetxController {
     gpa.value = 0.0;
     summation.value = 0;
     if (studentId == null) return;
-    if (selectedLevel.value == null) return;
     Result res = await GradRepository.fetchStudentGrads(
-        studentID: studentId!,
-        levelId: selectedLevel.value!,
-        term: selectedTerm.value);
+        studentID: studentId!, mode: fetchMode);
     if (res.statusCode == 200) {
       int unitSum = 0;
-      grads?.value = res.data ?? [];
-      for (Grad grad in grads?.value ?? []) {
+      grads?.value = res.data ?? {};
+      for (Grad grad in grads?.value.values ?? []) {
         summation.value += ((grad.examGrad ?? 0) + (grad.workGrad ?? 0)) *
             (grad.subject?.units ?? 0);
         unitSum += (grad.subject?.units ?? 0);
       }
       gpa.value = summation.value / unitSum;
     } else if (res.statusCode == 404) {
-      grads?.value = [];
-      failedMessage.value = "this level and term not has grads";
+      grads?.value = {};
+      failedMessage.value = "Not Found";
       showSnakeBar(
           title: "Not Found Grads",
-          message: "this level and term not has grads");
+          message: "this user has not grads");
     } else {
       failedMessage.value = "fetching grads failed please check connection";
       showSnakeBar(
           title: "Fetch Grads Failed",
-          message: "fetching lectures failed please check connection ");
+          message: "fetching grads failed please check connection ");
     }
     grads?.refresh();
   }
@@ -80,13 +79,11 @@ class StudentResultController extends GetxController {
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
-    await fetchStudentGrads();
   }
 
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    fetchStudentGrads();
   }
 
   Future<void> initDropdownMenuLists() async {
@@ -125,6 +122,16 @@ class StudentResultController extends GetxController {
               width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
               child: CustomText(
                 mappingTerms("Term 2"),
+                style: AppTextStyles.mainStyle(
+                  textHeader: AppTextHeaders.h5Bold,
+                ),
+              ))),
+      DropdownMenuItem<String>(
+          value: "All",
+          child: SizedBox(
+              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
+              child: CustomText(
+                "All".tr,
                 style: AppTextStyles.mainStyle(
                   textHeader: AppTextHeaders.h5Bold,
                 ),

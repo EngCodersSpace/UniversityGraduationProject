@@ -45,7 +45,7 @@ class Grad {
       levelId: json['level_id'],
       term: json['term'],
       yearOfIssue: json['year_of_issue'],
-      subject: subject,
+      subject: Subject.fromJson(json["subject"]),
       examGrad: json['exam_grade'],
       workGrad: json['work_grade'],
       isAbsent: json['is_absent'],
