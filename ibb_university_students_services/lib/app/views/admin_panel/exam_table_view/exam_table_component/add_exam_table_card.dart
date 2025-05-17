@@ -32,7 +32,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                 )),
             child: SizedBox(
                 height: Get.height * 0.9,
-                width: Get.width * 0.4,
+                width: Get.width * 0.3,
                 child: SafeArea(
                     minimum: const EdgeInsets.all(12),
                     child: Form(
@@ -55,7 +55,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                           controller.SectionId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Section sectionI
@@ -81,7 +81,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                             items.add(DropdownMenuItem<int?>(
                                               value: sectionI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     sectionI.name ??
                                                         "Unknown".tr,
@@ -136,7 +136,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -154,7 +154,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                           controller.LevelId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Level levelI
@@ -162,7 +162,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                             items.add(DropdownMenuItem<int?>(
                                               value: levelI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     levelI.name ?? "Unknown".tr,
                                                     style:
@@ -205,39 +205,6 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CustomText(
-                                "Term".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.002,
-                              ),
-                              Container(
-                                // height: Get.height * 0.06,
-                                width: Get.width * 0.23,
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainIconColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                  border: Border.all(),
-                                ),
-                                child: Center(
-                                  child: Obx(() => DropdownButton(
-                                        items: controller.term,
-                                        onChanged: controller.changeAddTerm,
-                                        value: controller.TermId.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.inverseCardColor,
-                                        dropdownColor: AppColors.mainCardColor,
-                                      )),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(
                                 "Days".tr,
                                 style: AppTextStyles.secStyle(
                                     textHeader: AppTextHeaders.h3Bold),
@@ -247,7 +214,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                               ),
                               Container(
                                 // height: Get.height * 0.06,
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 decoration: BoxDecoration(
                                   color: AppColors.mainIconColor,
                                   borderRadius: BorderRadius.circular(24),
@@ -282,7 +249,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -300,7 +267,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                           controller.subjectId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Subject subjectI in (controller
@@ -310,7 +277,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                             items.add(DropdownMenuItem<String?>(
                                               value: subjectI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     subjectI.subjectName ?? "",
                                                     style:
@@ -370,7 +337,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 onFieldSubmitted: (e) {
                                   controller.timeFocus.requestFocus();
                                 },
-                                width: (Get.width - 12) * 0.23,
+                                width: (Get.width - 12) * 0.2,
                               ),
                             ],
                           ),
@@ -395,7 +362,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 onFieldSubmitted: (e) {
                                   controller.hallFocus.requestFocus();
                                 },
-                                width: (Get.width - 12) * 0.23,
+                                width: (Get.width - 12) * 0.2,
                               ),
                             ],
                           ),
@@ -418,7 +385,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                                 onFieldSubmitted: (e) {
                                   controller.phoneFocus.requestFocus();
                                 },
-                                width: (Get.width - 12) * 0.23,
+                                width: (Get.width - 12) * 0.2,
                               ),
                             ],
                           ),

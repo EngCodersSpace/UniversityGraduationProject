@@ -234,6 +234,7 @@ class DashboardAssignmentTableController extends GetxController
   TextEditingController dueDate = TextEditingController();
   FocusNode titleFocus = FocusNode();
   FocusNode dueDateFocus = FocusNode();
+  RxList<Map<String, int>> groups = RxList();
 
   @override
   void onInit() async {
@@ -515,7 +516,28 @@ class DashboardAssignmentTableController extends GetxController
     }
   }
 
-  Future<void> addAssignment() async {}
+  Future<void> addAssignment() async {
+    if (formKey.currentState!.validate()) {
+      Result<Assignment> res = await AssignmentsRepository.createAssignment(
+          sectionId: SectionId.value!,
+          levelId: LevelId.value!,
+          subjectId: subjectId.value!,
+          title: title.text,
+          assignmentDate: DateTime.now().toString(),
+          assignmentsDueDate: dueDate.text,
+          sectionsAndLevels: groups.value = [
+            {"section_id": SectionId.value!, "level_id": LevelId.value!}
+          ]);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 201 && res.data != null) {
+        assignment[res.data!.id] = res.data!;
+        assignment.refresh();
+        showSnakeBar(message: "Add successfully");
+      } else {
+        showSnakeBar(message: "Add failed");
+      }
+    }
+  }
 
   @override
   void export() {}
@@ -537,4 +559,19 @@ class DashboardAssignmentTableController extends GetxController
 
   @override
   TextEditingController searchController = TextEditingController(text: "");
+
+  void popupClear() {
+    title.clear();
+    dueDate.clear();
+  }
+
+  @override
+  void onClose() {
+    popupClear();
+    title.dispose();
+    dueDate.dispose();
+    titleFocus.dispose();
+    dueDateFocus.dispose();
+    super.onClose();
+  }
 }

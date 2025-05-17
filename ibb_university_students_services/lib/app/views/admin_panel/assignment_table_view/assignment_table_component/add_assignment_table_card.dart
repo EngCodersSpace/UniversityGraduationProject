@@ -32,7 +32,7 @@ class AddAssignmentTableCard
                 )),
             child: SizedBox(
                 height: Get.height * 0.9,
-                width: Get.width * 0.4,
+                width: Get.width * 0.3,
                 child: SafeArea(
                     minimum: const EdgeInsets.all(12),
                     child: Form(
@@ -55,7 +55,7 @@ class AddAssignmentTableCard
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class AddAssignmentTableCard
                                           controller.SectionId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Section sectionI
@@ -81,7 +81,7 @@ class AddAssignmentTableCard
                                             items.add(DropdownMenuItem<int?>(
                                               value: sectionI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     sectionI.name ??
                                                         "Unknown".tr,
@@ -136,7 +136,7 @@ class AddAssignmentTableCard
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -154,7 +154,7 @@ class AddAssignmentTableCard
                                           controller.LevelId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Level levelI
@@ -162,7 +162,7 @@ class AddAssignmentTableCard
                                             items.add(DropdownMenuItem<int?>(
                                               value: levelI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     levelI.name ?? "Unknown".tr,
                                                     style:
@@ -215,7 +215,7 @@ class AddAssignmentTableCard
                                 ],
                               ),
                               Container(
-                                width: Get.width * 0.23,
+                                width: Get.width * 0.2,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 decoration: BoxDecoration(
@@ -233,7 +233,7 @@ class AddAssignmentTableCard
                                           controller.subjectId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Subject subjectI in (controller
@@ -243,7 +243,7 @@ class AddAssignmentTableCard
                                             items.add(DropdownMenuItem<String?>(
                                               value: subjectI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     subjectI.subjectName ?? "",
                                                     style:
@@ -297,14 +297,12 @@ class AddAssignmentTableCard
                               ),
                               CustomTextFormField(
                                 controller: controller.title,
-                                // validator: controller.validateTime,
                                 labelText: "Title".tr,
                                 focusNode: controller.titleFocus,
-                                readOnly: true,
                                 onFieldSubmitted: (e) {
                                   controller.dueDateFocus.requestFocus();
                                 },
-                                width: (Get.width - 12) * 0.23,
+                                width: (Get.width - 12) * 0.2,
                               ),
                             ],
                           ),
@@ -320,13 +318,13 @@ class AddAssignmentTableCard
                               ),
                               CustomTextFormField(
                                 controller: controller.dueDate,
-                                labelText: "Duration".tr,
+                                labelText: "Due date".tr,
                                 keyboardType: TextInputType.number,
                                 focusNode: controller.dueDateFocus,
                                 onFieldSubmitted: (e) {
                                   controller.dueDateFocus.requestFocus();
                                 },
-                                width: (Get.width - 12) * 0.23,
+                                width: (Get.width - 12) * 0.2,
                               ),
                             ],
                           ),
