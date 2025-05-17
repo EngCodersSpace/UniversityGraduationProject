@@ -14,14 +14,14 @@ module.exports = (sequelize, DataTypes) => {
 
       //(1)Relationship One-to-Many between "notification table" and  "user table"
       notification.belongsTo(models.user, {
-        as:'senderUser',
+        as: 'senderUser',
         foreignKey: 'sender_id',
         targetKey: 'user_id',
 
       });
 
       notification.belongsTo(models.user, {
-        as:'receiverUser',
+        as: 'receiverUser',
         foreignKey: 'receiver_id',
         targetKey: 'user_id',
 
@@ -48,16 +48,16 @@ module.exports = (sequelize, DataTypes) => {
     receiver_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
-    topic_name: {
-      type: DataTypes.STRING,
-      allowNull: true,
       references: {
         model: 'users',
         key: 'user_id',
       },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
+    },
+    topic_name: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     title: {
       type: DataTypes.STRING(100),
@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.ENUM('single', 'topic'),
       allowNull: false,
-    },    
+    },
   }, {
     sequelize,
     modelName: 'notification',
