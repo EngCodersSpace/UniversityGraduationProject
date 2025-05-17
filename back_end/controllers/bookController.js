@@ -77,12 +77,8 @@ exports.uploadFile = async (req, res) => {
               added_by: req.user.user_id,
               section_id: group["section_id"],
               level_id: group["level_id"],
-<<<<<<< Updated upstream
-              file_path: filepath,
-=======
               original_name: req.file.originalname,
               file_path: req.file.path,
->>>>>>> Stashed changes
               author: bookDetails.author,
               edition: bookDetails.edition,
               numberOfPages: bookDetails.totalPages,

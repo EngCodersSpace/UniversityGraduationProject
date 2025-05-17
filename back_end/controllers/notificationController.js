@@ -149,12 +149,12 @@ const getForSender = async (req, res) => {
 const getForRecieved = async (req, res) => {
   try{
   const notifications=await notification.findAll({
-    where: {
-      [Op.or]: [
-        { receiver_id: req.query.receiver_id },
-        { topic_name:  req.query.topic_name },
-      ],
-    },
+    // where: {
+    //   [Op.or]: [
+    //     // { receiver_id: req.query.receiver_id },
+    //     // { topic_name:  req.query.topic_name },
+    //   ],
+    // },
     include: [
         {
           model: user,
