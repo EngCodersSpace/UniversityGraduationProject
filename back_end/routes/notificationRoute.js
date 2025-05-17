@@ -10,6 +10,8 @@ router.use(verifyToken);
 router.post('/send-single-noti', CRUD.sendSingleNotification);
 router.get('/get-all-noti-panel', CRUD.getNotificationsPanel);
 
+router.post('/send-info-noti', CRUD.sendInfoHandler);
+
 router.get('/Get-noti-byTopic',CRUD.getForRecievedByTopic);
 router.get('/Get-noti-single',CRUD.getForRecievedSingle);
 router.get('/Get-noti-sender',CRUD.getForSender);

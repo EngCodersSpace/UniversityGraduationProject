@@ -8,7 +8,7 @@ const {checkPermission,checkStudentAccess,checkDoctorAccess} = require('../middl
 
 router.use(verifyToken);
 router.post('/create-grade',checkPermission('grades', 'write'), vali.createGrade,   CRUD.createGrade);
-router.get('/get-grades',  checkStudentAccess,  CRUD.getGrades);
+router.get('/get-grades',  CRUD.getGrades);
 router.get('/get-all-grades', checkDoctorAccess, checkPermission('grades', 'student_search'),  CRUD.getAllGrades);
 router.get('/get-grade/:id',  checkDoctorAccess,   CRUD.getGradeById);
 router.get('/get-grade-year',  checkDoctorAccess,   CRUD.getGradeYear);
