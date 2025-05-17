@@ -77,7 +77,12 @@ exports.uploadFile = async (req, res) => {
               added_by: req.user.user_id,
               section_id: group["section_id"],
               level_id: group["level_id"],
+<<<<<<< Updated upstream
               file_path: filepath,
+=======
+              original_name: req.file.originalname,
+              file_path: req.file.path,
+>>>>>>> Stashed changes
               author: bookDetails.author,
               edition: bookDetails.edition,
               numberOfPages: bookDetails.totalPages,
@@ -112,7 +117,7 @@ exports.uploadFile = async (req, res) => {
         res.status(201).json({
           message: `Book uploaded successfully to ${createdBooks.length} combinations`,
           file_info: {
-            path: filepath,
+            path: req.file.path,
             size: req.file.size,
             hash: req.file.hash
           },
@@ -147,7 +152,7 @@ exports.downloadFile = async (req, res) => {
       return res.status(404).json({ error: "File not found" });
     }
 
-    const filePath = path.resolve(__dirname, '..', `${fileData.file_path}`);
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.file_path}`);
     const fileSize = fs.statSync(filePath).size;
 
     // Set headers to instruct the browser to download the file
