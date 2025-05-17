@@ -30,12 +30,19 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                         children: [
                           CustomText(
                             "Notifications".tr,
-                            style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h1Bold,),
+                            style: AppTextStyles.secStyle(
+                              textHeader: AppTextHeaders.h1Bold,
+                            ),
                           ),
-                          if(["teacher","doctor"].contains(UserRepository.userRule))...[
-                            IconButton(onPressed: (){}, icon: Icon(Icons.add_alert,color: AppColors.inverseIconColor,))
+                          if (["teacher", "doctor"]
+                              .contains(UserRepository.userRule)) ...[
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.add_alert,
+                                  color: AppColors.inverseIconColor,
+                                ))
                           ]
-
                         ],
                       ),
                       SizedBox(
@@ -44,29 +51,29 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                       for (String key
                           in controller.notificationGroups.keys) ...[
                         CustomText(
-                          (key == controller.today)?"Today".tr:key,
-                          style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h3Bold,),
+                          (key == controller.today) ? "Today".tr : key,
+                          style: AppTextStyles.highlightStyle(
+                            textHeader: AppTextHeaders.h3Bold,
+                          ),
                         ),
                         for (int i = 0;
-                            i <
-                                (controller.notificationGroups[key]?.length ??
-                                    0);
+                            i < (controller.notificationGroups.length);
                             i++)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               NotificationCard(
-                                  message: controller
-                                          .notificationGroups[key]?[i]
-                                          .message
-                                          ?.value ??
-                                      "",
-                                  author: controller.notificationGroups[key]?[i]
-                                          .author?.value ??
-                                      "",
-                                  time: controller.notificationGroups[key]?[i]
-                                          .time?.value ??
-                                      "",readState: controller.notificationGroups[key]?[i].readState?.value??true,),
+                                message: controller
+                                        .notificationGroups.values.toList()[i].message ??
+                                    "",
+                                author: controller.notificationGroups.values.toList()[i]
+                                        .sender?.name ??
+                                    "",
+                                time: controller.notificationGroups.values.toList()[i]
+                                        .createdAt ??
+                                    "",
+                                readState: true,
+                              ),
                             ],
                           )
                       ]

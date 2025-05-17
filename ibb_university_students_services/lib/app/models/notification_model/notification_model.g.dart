@@ -17,14 +17,14 @@ class NotificationAdapter extends TypeAdapter<Notification> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Notification(
-      id: fields[0] as RxInt,
-      author: fields[1] as RxString?,
-      time: fields[2] as RxString?,
-      message: fields[3] as RxString?,
-      date: fields[4] as RxString?,
-      readState: fields[5] as RxBool?,
-      createdAt: fields[6] as RxString?,
-      updatedAt: fields[7] as RxString?,
+      id: fields[0] as int,
+      sender: fields[1] as Instructor?,
+      receiver: fields[2] as Instructor?,
+      topicName: fields[3] as String?,
+      title: fields[4] as String?,
+      message: fields[5] as String?,
+      createdAt: fields[6] as String?,
+      updatedAt: fields[7] as String?,
     );
   }
 
@@ -35,15 +35,15 @@ class NotificationAdapter extends TypeAdapter<Notification> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.author)
+      ..write(obj.sender)
       ..writeByte(2)
-      ..write(obj.time)
+      ..write(obj.receiver)
       ..writeByte(3)
-      ..write(obj.message)
+      ..write(obj.topicName)
       ..writeByte(4)
-      ..write(obj.date)
+      ..write(obj.title)
       ..writeByte(5)
-      ..write(obj.readState)
+      ..write(obj.message)
       ..writeByte(6)
       ..write(obj.createdAt)
       ..writeByte(7)

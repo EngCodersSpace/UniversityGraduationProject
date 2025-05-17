@@ -11,11 +11,10 @@ import '../utils/snake_bar.dart';
 
 class NewsRepository{
 
-  static const int _fetchAllError = 621;
-  static const int _fetchError = 622;
-  static const int _createError = 623;
+  // static const int _fetchError = 622;
+  // static const int _createError = 623;
   static const int _uploadError = 626;
-  static const int _deleteError = 627;
+  // static const int _deleteError = 627;
 
 
   static Future<Result> uploadImageToServer({
