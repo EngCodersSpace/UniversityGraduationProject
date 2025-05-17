@@ -12,10 +12,11 @@ const createLecture = async (req, res) => {
   }
   try {
     const newLecture = await lecture.create(req.body);
-    await upsertRefreshState(
-      "lecture",
-      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
-    );
+
+    await upsertRefreshState("lecture", {
+      section_id: newLecture.lecture_section_id ?? null,
+      level_id: newLecture.lecture_level_id ?? null
+    });
 
     res.status(201).json({
       message: "Lecture created successfully",
@@ -156,14 +157,15 @@ const updateLecture = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-    await lecture.update(req.body, {
+    const newLecture= await lecture.update(req.body, {
       where: { id: req.query.id },
       returning: true,
     });
-    await upsertRefreshState(
-      "lecture",
-      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
-    );
+
+    await upsertRefreshState("lecture", {
+      section_id: newLecture.lecture_section_id ?? null,
+      level_id: newLecture.lecture_level_id ?? null
+    });
 
     res.status(200).json({
       message: "Lecture updated successfully",
@@ -178,18 +180,18 @@ const updateLecture = async (req, res) => {
 
 const deleteLecture = async (req, res) => {
   try {
-    const deleted = await lecture.destroy({
-      where: { id: req.query.id },
-    });
+    const deleted = await lecture.findByPk(req.query.id);
 
     if (deleted === 0) {
       return res.status(404).json({ message: "Lecture not found" });
     }
-    await upsertRefreshState(
-      "lecture",
-      `section_id : ${req.body.lecture_section_id} - level_id : ${req.body.lecture_level_id}`
-    );
 
+    await upsertRefreshState("lecture", {
+      section_id: deleted.lecture_section_id ?? null,
+      level_id: deleted.lecture_level_id ?? null
+    });
+
+    await deleted.destroy();
     res.status(200).json({
       message: "Lecture deleted successfully",
     });

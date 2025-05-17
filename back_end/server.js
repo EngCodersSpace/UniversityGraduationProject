@@ -34,6 +34,7 @@ const rolePermissionRoutes = require('./routes/rolePermissionRoutes');
 const notificationRoute= require('./routes/notificationRoute');
 const refreshRoute=require('./routes/refreshRoute')
 const newsRoute=require('./routes/newsRoute')
+const paperFormRoutes = require('./routes/paperFormRoutes');
 
 
 app.use(getData);
@@ -53,6 +54,8 @@ app.use(rolePermissionRoutes);
 app.use(notificationRoute);
 app.use(refreshRoute);
 app.use(newsRoute);
+app.use(paperFormRoutes);
+
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {

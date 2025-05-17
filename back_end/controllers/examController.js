@@ -3,7 +3,6 @@ const { upsertRefreshState} = require('../controllers/refreshController');
 
 const { Sequelize} = require('sequelize');
 const { Op } = require("sequelize");
-const {systemRefresh} = require('../middleware/notificationMiddleware');
 
 
 //  All Functions are perfict right now 2024-12-10
@@ -15,14 +14,13 @@ exports.createExam = async (req, res) => {
         });
 
         await upsertRefreshState("exam", {
-          section_id: req.body.exam_section_id , 
-          level_id: req.body.exam_level_id       
+          section_id: newExam.exam_section_id , 
+          level_id: newExam.exam_level_id       
         });
-
 
         res.status(201).json({
             message: 'Exam created successfully',
-            exam: newExam,
+            data: newExam,
         });
     } catch (error) {
         console.error('Error creating exam:', error.message);
@@ -249,8 +247,10 @@ exports.updateExam = async (req, res) => {
             include: [{ model: subject, as: 'subject' }], 
         });
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
-
+        await upsertRefreshState("exam", {
+          section_id: updatedExam.exam_section_id , 
+          level_id: updatedExam.exam_level_id       
+        });
 
         res.status(200).json({
             message: 'Exam updated successfully',

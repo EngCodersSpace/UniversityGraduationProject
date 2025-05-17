@@ -126,16 +126,11 @@ const sendSystemHandler = async (req, res) => {
 
 
 // to see what i sent   and for who 
-const getNotificationsForSender = async (req, res) => {
+const getForSender = async (req, res) => {
   try{
-  const notifications=notification.findAll({
-    where: {sender_id: req.user.user_id },
+  const notifications=await notification.findAll({
+    where: {sender_id: req.query.sender_id },
     include: [
-        {
-          model: user,
-          as: 'receiverUser',
-          attributes: ['user_id', 'user_name'],
-        },
         {
           model: user,
           as: 'senderUser',
@@ -151,12 +146,12 @@ const getNotificationsForSender = async (req, res) => {
 };
 
 // to see what i received (single and topic)  user send topic_name in query
-const getNotificationsForRecieved = async (req, res) => {
+const getForRecieved = async (req, res) => {
   try{
-  const notifications= notification.findAll({
+  const notifications=await notification.findAll({
     where: {
       [Op.or]: [
-        { receiver_id: req.user.user_id },
+        { receiver_id: req.query.receiver_id },
         { topic_name:  req.query.topic_name },
       ],
     },
@@ -165,7 +160,6 @@ const getNotificationsForRecieved = async (req, res) => {
           model: user,
           as: 'receiverUser',
           attributes: ['user_id', 'user_name'],
-          // where: {receiver_id: req.user.user_id },
         },
         {
           model: user,
@@ -174,7 +168,7 @@ const getNotificationsForRecieved = async (req, res) => {
         },
       ],
   });
-  return res.status(200).json({message:"Get Notifications that you received it", Data:notifications});
+  return res.status(200).json({message:"Get Notifications ", Data:notifications});
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
@@ -182,9 +176,9 @@ const getNotificationsForRecieved = async (req, res) => {
 };
 
 // to see what i recieved (single)
-const getNotificationsForRecievedSingle = async (req, res) => {
+const getForRecievedSingle = async (req, res) => {
   try{
-  const notifications= notification.findAll({
+  const notifications= await notification.findAll({
     // where: {receiver_id: req.user.user_id },
     include: [
         {
@@ -202,9 +196,9 @@ const getNotificationsForRecievedSingle = async (req, res) => {
 };
 
 // to see what i recieved (topic)    user send topic_name in query
-const getNotificationsForRecievedByTopic = async (req, res) => {
+const getForRecievedByTopic = async (req, res) => {
   try{
-  const notifications= notification.findAll({
+  const notifications=await notification.findAll({
     where: {topic_name: req.query.topic_name},
     // order: [['createdAt', 'DESC']],
 
@@ -213,6 +207,16 @@ const getNotificationsForRecievedByTopic = async (req, res) => {
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
+  }
+};
+
+const getAllNotifications = async (req, res) => {
+  try{
+  const notifications=await notification.findAll();
+  return res.status(200).json({message:"Get Notifications ", Data:notifications});
+  }catch(error){
+  console.error(error);
+  return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
   }
 };
 
@@ -328,7 +332,12 @@ module.exports = {
   sendSingleNotification,
   sendSystemNotification,
   sendInfoNotification,
+  getAllNotifications,
   sendInfoHandler,
   sendSystemHandler,
   getNotificationsPanel,
+  getForSender,
+  getForRecieved,
+  getForRecievedSingle,
+  getForRecievedByTopic,
 };

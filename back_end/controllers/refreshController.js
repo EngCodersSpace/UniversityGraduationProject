@@ -1,8 +1,7 @@
-
+// refreshController.js
 const { refresh_state } = require('../models'); 
 const crypto = require('crypto');
 const { sendSystemNotification } = require('./notificationController'); 
-
 
 function generateId(target, filter) {
   return `${target}-${crypto.createHash('md5').update(JSON.stringify(filter)).digest('hex')}`;

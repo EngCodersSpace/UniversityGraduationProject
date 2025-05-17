@@ -8,7 +8,13 @@ router.use(verifyToken);
 
 // To Send single Notification
 router.post('/send-single-noti', CRUD.sendSingleNotification);
-router.get('/get-all-noti-panel', CRUD.getNotificationsPanel)
+router.get('/get-all-noti-panel', CRUD.getNotificationsPanel);
+
+router.get('/Get-noti-byTopic',CRUD.getForRecievedByTopic);
+router.get('/Get-noti-single',CRUD.getForRecievedSingle);
+router.get('/Get-noti-sender',CRUD.getForSender);
+router.get('/Get-noti-recieved',CRUD.getForRecieved);
+
 
 // Send an information notification (stored + visible to user)
 // router.post('/send-info',checkPermission('notifications','write'),CRUD.sendSystemHandler);
