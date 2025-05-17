@@ -21,8 +21,6 @@ exports.upsertRefreshState = async (target, filter) => {
     );
 
     const topic = `Section_${filter.section_id}_Level_${filter.level_id}`;
-    // topic = Section_1_Level_1  or  Section_2_Level_1   or ....etc
-    // const topic = `all`;
 
     await sendSystemNotification({
       topic_name: topic,

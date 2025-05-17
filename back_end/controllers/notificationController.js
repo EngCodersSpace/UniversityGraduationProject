@@ -149,12 +149,12 @@ const getForSender = async (req, res) => {
 const getForRecieved = async (req, res) => {
   try{
   const notifications=await notification.findAll({
-    // where: {
-    //   [Op.or]: [
-    //     // { receiver_id: req.query.receiver_id },
-    //     // { topic_name:  req.query.topic_name },
-    //   ],
-    // },
+    where: {
+      [Op.or]: [
+        { receiver_id: req.body.receiver_id },
+        { topic_name: { [Op.in]: req.body.topic_name }},
+      ],
+    },
     include: [
         {
           model: user,
@@ -174,6 +174,8 @@ const getForRecieved = async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
   }
 };
+
+
 
 // to see what i recieved (single)
 const getForRecievedSingle = async (req, res) => {
