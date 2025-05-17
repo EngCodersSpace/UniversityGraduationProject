@@ -19,9 +19,6 @@ router.get('/get-all-students-assignment',checkDoctorAccess, CRUD.getStudentsAnd
 router.get('/download-assignment-files',checkDoctorAccess, CRUD.downloadFile);  // doctors download what students upload for specific assignment
 router.get('/download-files-doctor',checkStudentsAccess, CRUD.doctorDownloadFile);// students download what doctor upload for specific assignment
 
-router.get('/get-all-assignment-panel',checkDoctorAccess, CRUD.getAssignmentsPanel);
-
-
 router.put('/update-assignment',checkPermission('assignments', 'write'), CRUD.updateAssigment);
 router.put('/update-student-assignment-status',checkPermission('assignments', 'setStatus'), CRUD.updateAssignmentStatus);
 router.put('/update-student-assignment-complete',checkPermission('assignments', 'setCompletion'), CRUD.updateStudentComplete);
