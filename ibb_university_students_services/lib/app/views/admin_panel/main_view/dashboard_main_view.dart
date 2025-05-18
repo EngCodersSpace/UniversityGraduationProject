@@ -50,7 +50,8 @@ class DashboardMainView extends GetView<DashboardMainController> {
                       TabViewComponent(tablename: "Library Table", index: 7),
                       TabViewComponent(
                           tablename: "Notification Table", index: 8),
-                      TabViewComponent(tablename: "Payment Table", index: 10),
+                      TabViewComponent(
+                          tablename: "Student Fee Table", index: 10),
                       TabViewComponent(
                           tablename: "Assignment Table", index: 11),
                     ],
