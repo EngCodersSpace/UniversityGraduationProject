@@ -3,7 +3,7 @@ const { notification, user } = require('../models');
 const admin = require('../config/firebase');
 const { Op } = require('sequelize');
 const { debounceSend } = require('../utils/debounceKey');
-
+const {isNotificationRelevant}=require('../utils/isNotifications')
 // Send a single direct user notification
 const sendSingleNotification = async (req, res) => {
   try {
@@ -45,8 +45,10 @@ const sendSystemNotification = async ({
         type: 'system',
         ...metadata,
       },
+      condition:topic_name
     };
-    payload.topic = topic_name;
+    // payload.topic = topic_name;
+
     try {
       await admin.messaging().send(payload);
     } catch (error) {
@@ -66,10 +68,12 @@ const sendInfoNotification = async ({
   title,
   message,
   topic_name ,
+  sender_id,
   metadata = {},
   debounceKey = null,
   delay = 3000,
 }) => {
+  
   const send = async () => {
     const payload = {
       notification: { title, body: message },
@@ -77,22 +81,26 @@ const sendInfoNotification = async ({
         type: 'information',
         ...metadata,
       },
+      condition: topic_name,
     };
-    payload.topic = topic_name;
-
+    
     try {
+      // Save the original condition string to DB
       await notification.create({
-        sender_id:req.user.user_id,
-        topic_name,
+        sender_id,
+        topic_name, // Save raw condition string here
         title,
         message,
         type: 'topic',
       });
-
+    
+      // Send the notification using FCM condition
       await admin.messaging().send(payload);
+      console.log('Notification sent to condition:', fcmCondition);
     } catch (error) {
-      console.error('Info notification failed:', error);
+      console.error('Info notification failed:', error.message);
     }
+    
   };
 
   if (debounceKey) {
@@ -107,7 +115,7 @@ const sendInfoNotification = async ({
 const sendInfoHandler = async (req, res) => {
   try {
     await sendInfoNotification(req.body);
-    res.json({ success: true });
+    return res.json({ message: "send done successfullt" });
   } catch (err) {
     console.error('Send info failed:', err);
     res.status(500).json({ error: 'Sending info notification failed' });
@@ -148,28 +156,23 @@ const getForSender = async (req, res) => {
 // to see what i received (single and topic)  user send topic_name in query
 const getForRecieved = async (req, res) => {
   try{
-  const notifications=await notification.findAll({
-    order: [['createdAt', 'DESC']] ,
-    where: {
-      [Op.or]: [
-        { receiver_id: req.body.receiver_id },
-        { topic_name: { [Op.in]: req.body.topic_name }},
-      ],
-    },
+  const notifications=await notification.findAll();
+
+  const filteredNotifications = notifications.filter(notification =>
+    isNotificationRelevant(req.body.topic_name, notification.topic_name)
+  );
+
+  const notifications1= await notification.findAll({
+    where: {receiver_id: req.body.receiver_id },
     include: [
         {
-          model: user,
-          as: 'receiverUser',
+          model: user, as: 'receiverUser',
           attributes: ['user_id', 'user_name'],
-        },
-        {
-          model: user,
-          as: 'senderUser',
-          attributes: ['user_id', 'user_name'],
-        },
+        }
       ],
   });
-  return res.status(200).json({message:"Get Notifications ", Data:notifications});
+
+  return res.status(200).json({message:"Get Notifications ", DatabyTopic:filteredNotifications , databySingle:notifications1});
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
@@ -177,17 +180,15 @@ const getForRecieved = async (req, res) => {
 };
 
 
-
 // to see what i recieved (single)
 const getForRecievedSingle = async (req, res) => {
   try{
   const notifications= await notification.findAll({
-    // where: {receiver_id: req.user.user_id },
+    where: {receiver_id: req.body.receiver_id },
     include: [
         {
           model: user, as: 'receiverUser',
           attributes: ['user_id', 'user_name'],
-          where: {receiver_id: req.user.user_id },
         }
       ],
   });
