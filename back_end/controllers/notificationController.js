@@ -2,8 +2,8 @@
 const { notification, user } = require('../models');
 const admin = require('../config/firebase');
 const { Op } = require('sequelize');
-const { debounceSend } = require('../utils/debounceKey');
-const {isNotificationRelevant}=require('../utils/isNotifications')
+const  CRUD  = require('../utils/debounceKey');
+const {isNotificationRelevant}=require('../utils/notificationUtils')
 // Send a single direct user notification
 const sendSingleNotification = async (req, res) => {
   try {
@@ -36,7 +36,6 @@ const sendSingleNotification = async (req, res) => {
 const sendSystemNotification = async ({
   topic_name,
   metadata = {},
-  debounceKey = null,
   delay = 3000,
 }) => {
   const send = async () => {
@@ -47,8 +46,6 @@ const sendSystemNotification = async ({
       },
       condition:topic_name
     };
-    // payload.topic = topic_name;
-
     try {
       await admin.messaging().send(payload);
     } catch (error) {
@@ -56,11 +53,8 @@ const sendSystemNotification = async ({
     }
   };
 
-  if (debounceKey) {
-    debounceSend(`system-${debounceKey}`, delay, send);
-  } else {
-    await send();
-  }
+  CRUD.delayedSend(delay, send)
+
 };
 
 // INFORMATION Notification (stored in DB and sent)
@@ -70,8 +64,7 @@ const sendInfoNotification = async ({
   topic_name ,
   sender_id,
   metadata = {},
-  debounceKey = null,
-  delay = 3000,
+  delay = 10000,
 }) => {
   
   const send = async () => {
@@ -83,12 +76,11 @@ const sendInfoNotification = async ({
       },
       condition: topic_name,
     };
-    
     try {
       // Save the original condition string to DB
       await notification.create({
         sender_id,
-        topic_name, // Save raw condition string here
+        topic_name,
         title,
         message,
         type: 'topic',
@@ -96,18 +88,13 @@ const sendInfoNotification = async ({
     
       // Send the notification using FCM condition
       await admin.messaging().send(payload);
-      console.log('Notification sent to condition:', fcmCondition);
+      console.log('Notification sent to condition:', topic_name);
     } catch (error) {
       console.error('Info notification failed:', error.message);
     }
     
   };
-
-  if (debounceKey) {
-    debounceSend(`info-${debounceKey}`, delay, send);
-  } else {
-    await send();
-  }
+    CRUD.delayedSend(delay, send)
 };
 
 // HANDLERS :

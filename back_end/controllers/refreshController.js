@@ -2,6 +2,7 @@
 const { refresh_state } = require('../models'); 
 const crypto = require('crypto');
 const { sendSystemNotification } = require('./notificationController'); 
+const {convertToFcmCondition}=require('../utils/notificationUtils')
 
 function generateId(target, filter) {
   return `${target}-${crypto.createHash('md5').update(JSON.stringify(filter)).digest('hex')}`;
@@ -20,13 +21,16 @@ exports.upsertRefreshState = async (target, filter) => {
       }
     );
 
-    const topic = `Section_${filter.section_id}_Level_${filter.level_id}`;
+    // const topic = `section_${filter.section_id} && level_${filter.level_id}`;
+    const condition =`(section_${filter.section_id})  &&  (level_${filter.level_id})`
+    const transtoFCM=convertToFcmCondition(condition)
+    console.log("\n \n \n condition after convert to FCM ", transtoFCM ,'\n \n \n ' );
 
     await sendSystemNotification({
-      topic_name: topic,
+      topic_name:transtoFCM,
       metadata: {
         sender_id: "0"
-      }
+      },
     });
     
     return { record, created };
