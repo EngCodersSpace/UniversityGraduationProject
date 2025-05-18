@@ -10,7 +10,17 @@ module.exports = {
     const topics  = buildConditions({ sections, levels, roles, targets }, 100);
     console.log(topics);
     const notifications = [];
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+  
     for (let i = 0; i < 10; i++) {
+      const date = faker.date.between({ from: startOfWeek, to: endOfWeek });
       const sender = faker.helpers.arrayElement(users); // Randomly select a user as the sender
       const receiver = faker.helpers.arrayElement(users); // Randomly select a user as the sender
       notifications.push({
@@ -19,11 +29,12 @@ module.exports = {
         title: faker.company.catchPhrase(), // Generate a random title
         message: faker.lorem.sentences(3), // Generate a random message
         type:"single",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: date,
+        updatedAt: date,
       });
     }
     for (let i = 0; i < 100; i++) {
+      const date2 = faker.date.between({ from: startOfWeek, to: endOfWeek });
       const sender = faker.helpers.arrayElement(users); // Randomly select a user as the sender
       notifications.push({
         sender_id: sender.user_id, // Associate sender_id with a user
@@ -31,18 +42,19 @@ module.exports = {
         title: faker.company.catchPhrase(), // Generate a random title
         message: faker.lorem.sentences(3), // Generate a random message
         type:"single",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: date2,
+        updatedAt: date2,
       });
 
+      const date3 = faker.date.between({ from: startOfWeek, to: endOfWeek });
       notifications.push({
         sender_id: sender.user_id, // Associate sender_id with a user
         topic_name:"all",
         title: faker.company.catchPhrase(), // Generate a random title
         message: faker.lorem.sentences(3), // Generate a random message
         type:"single",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: date3,
+        updatedAt: date3,
       });
     }
 

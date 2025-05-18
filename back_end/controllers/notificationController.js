@@ -149,6 +149,7 @@ const getForSender = async (req, res) => {
 const getForRecieved = async (req, res) => {
   try{
   const notifications=await notification.findAll({
+    order: [['createdAt', 'DESC']] ,
     where: {
       [Op.or]: [
         { receiver_id: req.body.receiver_id },
