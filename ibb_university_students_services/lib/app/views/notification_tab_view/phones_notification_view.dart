@@ -34,10 +34,9 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                               textHeader: AppTextHeaders.h1Bold,
                             ),
                           ),
-                          if (["teacher", "doctor"]
-                              .contains(UserRepository.userRule)) ...[
+                          if (UserRepository.checkPermission(target: "notification", action: "write")) ...[
                             IconButton(
-                                onPressed: () {},
+                                onPressed: controller.addNotificationClick,
                                 icon: Icon(
                                   Icons.add_alert,
                                   color: AppColors.inverseIconColor,

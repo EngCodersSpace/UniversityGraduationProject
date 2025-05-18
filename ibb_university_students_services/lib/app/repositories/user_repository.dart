@@ -49,7 +49,7 @@ class UserRepository {
             "section_${user.section?.id}",
             "level_${user.level?.id}",
             "student",
-            "${user.role?.id}",
+            "role_${user.role?.id}",
             "all"
           ]);
           _userBox?.put('currentUser', user);
@@ -58,7 +58,7 @@ class UserRepository {
           await NotificationHandler.registerTopics([
             "section_${user.section?.id}",
             "doctor",
-            "${user.role?.id}",
+            "role_${user.role?.id}",
             "all"
           ]);
           _userBox?.put('currentUser', user);
