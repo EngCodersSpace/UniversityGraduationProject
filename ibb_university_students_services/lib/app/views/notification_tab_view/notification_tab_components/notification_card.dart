@@ -10,12 +10,15 @@ import '../../../components/custom_text_v2.dart';
 
 class NotificationCard extends StatelessWidget {
   NotificationCard(
-      {required this.message,
+      {
+        required this.title,
+        required this.message,
       required this.author,
       required this.time,
       this.readState = true,
       super.key});
 
+  String title;
   String message;
   String author;
   String time;
@@ -37,18 +40,19 @@ class NotificationCard extends StatelessWidget {
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomText(
-                      " the title:",
+                      " $title:",
                       style:
                           AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),
                       textAlign: TextAlign.start,
                     ),
                   ),
+                  SizedBox(height: 4,),
                   Padding(
                     padding: const EdgeInsets.only(left: 32),
                     child: CustomText(
                       message,
                       style: AppTextStyles.mainStyle(
-                        textHeader: AppTextHeaders.h3Bold,
+                        textHeader: AppTextHeaders.h3Normal,
                       ),
                       textAlign: TextAlign.start,
                     ),

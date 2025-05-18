@@ -86,6 +86,9 @@ class PhoneNotificationView extends GetView<NotificationTabController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 NotificationCard(
+                                  title: controller
+                                      .notificationGroups[key]?.values.toList()[i].title ??
+                                      "",
                                   message: controller
                                           .notificationGroups[key]?.values.toList()[i].message ??
                                       "",

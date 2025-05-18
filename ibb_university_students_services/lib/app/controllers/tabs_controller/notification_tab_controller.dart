@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart'
     as model;
+import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/role_repository.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/notification_tab_components/add_notifications_target_card.dart';
 import '../../models/helper_models/result.dart';
+import '../../models/level_model/level.dart';
+import '../../models/role_model/role.dart';
+import '../../repositories/level_repository.dart';
+import '../../repositories/section_repository.dart';
 import '../../utils/snake_bar.dart';
 
 class NotificationTabController extends GetxController {
@@ -26,21 +32,18 @@ class NotificationTabController extends GetxController {
   RxList<String> selectedLevels = <String>[].obs;
   RxList<String> selectedRoles = <String>[].obs;
 
-  final sections = [
-    "section_1",
-    "section_2",
-    "section_3",
-    "section_4",
-    "section_5"
-  ];
-  final levels = ["level_1", "level_2", "level_3", "level_4", "level_5"];
-  final roles = ["role_1", "role_2", "role_3", "role_4", "role_5"];
+  Map<int,Section> sections = {};
+  Map<int,Level> levels = {};
+  Map<int,Role> roles = {};
   final targets = ["student", "doctor", "student || doctor"];
 
   @override
   void onInit() async {
 
     DateTime now = DateTime.now();
+    await initSections();
+    await initLevels();
+    await initRoles(force: true);
     await fetchNotification();
     today =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
@@ -48,7 +51,13 @@ class NotificationTabController extends GetxController {
     loadingState.value = false;
     super.onInit();
   }
-
+  @override
+  void refresh({bool force = true})  async{
+    loadingState.value = true;
+    await fetchNotification(force: force);
+    super.refresh();
+    loadingState.value = false;
+  }
   Future<void> fetchNotification({bool force=false})async{
     Result res = await NotificationRepository.fetchNotifications(hardFetch: force);
     if (res.statusCode == 200) {
@@ -66,14 +75,50 @@ class NotificationTabController extends GetxController {
           message: "fetching fees failed please check connection ");
     }
   }
-  @override
-  void refresh({bool force = true})  async{
-    loadingState.value = true;
-    await fetchNotification(force: force);
-    super.refresh();
-    loadingState.value = false;
+
+
+  Future<void> initSections({bool force = false}) async {
+    sections = await SectionRepository.fetchSections(hardFetch: force)
+        .then((e) => e.data ?? {});
   }
 
+  Future<void> initLevels({bool force = false}) async {
+    levels = await LevelRepository.fetchLevels(hardFetch: force)
+        .then((e) => e.data ?? {});
+  }
+
+  Future<void> initRoles({bool force = false}) async {
+    roles = await RoleRepository.fetchRoles(hardFetch: force)
+        .then((e) => e.data ?? {});
+  }
+
+  void pushNotification()async{
+    if(mode.value=="Group"&& selectedSections.isEmpty){
+      showSnakeBar(title: "Validation Error",message:"programs required select at least one " );
+      return;
+    }
+    if(mode.value=="Group"&& selectedTarget.value == "student"&& selectedLevels.isEmpty){
+      showSnakeBar(title: "Validation Error",message:"Levels required select at least one " );
+      return;
+    }
+    if(mode.value=="Group"&& selectedRoles.isEmpty){
+      showSnakeBar(title: "Validation Error",message:"Roles required select at least one " );
+      return;
+    }
+
+    String? topics;
+    int? receiverId;
+    if(mode.value == "Single"){
+      receiverId = int.tryParse(receiverIdController.text);
+    }else if(mode.value == "Group"){
+     topics = buildConditionString();
+    }
+    Result res =await NotificationRepository.pushNotification(title: titleController.text, message: messageController.text,topic:topics,receiverId: receiverId );
+    Navigator.of(Get.overlayContext!).pop();
+    if(res.statusCode == 200){
+      showSnakeBar(title: "successfully",message: "Notification push successfully");
+    }
+  }
   String buildConditionString() {
     final parts = <String>[];
     parts.add("(${selectedTarget.value})");

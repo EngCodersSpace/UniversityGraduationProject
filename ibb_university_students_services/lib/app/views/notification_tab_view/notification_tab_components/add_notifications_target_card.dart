@@ -36,7 +36,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                         children: [
                           Center(
                             child: CustomText(
-                              "Add Notification".tr,
+                              "Push Notification".tr,
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h2Bold),
                             ),
@@ -93,7 +93,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                 child: CustomTextFormField(
                                   controller: controller.messageController,
                                   validator: Validators.validateID,
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.multiline,
                                   labelText: "Message".tr,
                                   minLines: 5,
                                   focusNode: controller.messageFocus,
@@ -263,11 +263,11 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                             ),
                             Wrap(
                               spacing: 6,
-                              children: controller.sections.map((section) {
+                              children: controller.sections.values.map((section) {
                                 final selected = controller.selectedSections
-                                    .contains(section);
+                                    .contains("section_${section.id}");
                                 return FilterChip(
-                                  label: CustomText(section,
+                                  label: CustomText(section.name??"??",
                                       style: (selected)
                                           ? AppTextStyles.mainStyle(
                                               textHeader:
@@ -288,9 +288,9 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                   onSelected: (val) {
                                     selected
                                         ? controller.selectedSections
-                                            .remove(section)
+                                            .remove("section_${section.id}")
                                         : controller.selectedSections
-                                            .add(section);
+                                            .add("section_${section.id}");
                                   },
                                 );
                               }).toList(),
@@ -308,11 +308,11 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                               ),
                               Wrap(
                                 spacing: 6,
-                                children: controller.levels.map((level) {
+                                children: controller.levels.values.map((level) {
                                   final selected =
-                                      controller.selectedLevels.contains(level);
+                                      controller.selectedLevels.contains("level_${level.id}");
                                   return FilterChip(
-                                    label: CustomText(level,
+                                    label: CustomText(level.name??'??',
                                         style: (selected)
                                             ? AppTextStyles.mainStyle(
                                                 textHeader:
@@ -334,9 +334,9 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     onSelected: (val) {
                                       selected
                                           ? controller.selectedLevels
-                                              .remove(level)
+                                              .remove("level_${level.id}")
                                           : controller.selectedLevels
-                                              .add(level);
+                                              .add("level_${level.id}");
                                     },
                                   );
                                 }).toList(),
@@ -353,13 +353,13 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                             ),
                             Wrap(
                               spacing: 6,
-                              children: controller.roles.map((role) {
+                              children: controller.roles.values.map((role) {
                                 final selected =
-                                    controller.selectedRoles.contains(role);
+                                    controller.selectedRoles.contains("role_${role.id}");
                                 return SizedBox(
                                   // width: Get.width/4,
                                   child: FilterChip(
-                                    label: CustomText(role,
+                                    label: CustomText(role.name??'??',
                                         style: (selected)
                                             ? AppTextStyles.mainStyle(
                                                 textHeader:
@@ -381,8 +381,8 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     onSelected: (val) {
                                       selected
                                           ? controller.selectedRoles
-                                              .remove(role)
-                                          : controller.selectedRoles.add(role);
+                                              .remove("role_${role.id}")
+                                          : controller.selectedRoles.add("role_${role.id}");
                                     },
                                   ),
                                 );
@@ -392,7 +392,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                           SizedBox(height: 16),
                           CustomButton(
                               text: "Add",
-                              onPress: controller.buildConditionString),
+                              onPress: controller.pushNotification),
                           CustomButton(text: "close", onPress: () => Get.back())
                         ],
                       )),

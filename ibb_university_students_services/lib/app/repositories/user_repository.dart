@@ -39,7 +39,7 @@ class UserRepository {
       {bool rememberMe = false}) async {
     late Response? response;
     try {
-      final String? fcmToken = await NotificationHandler.getDeviceToken();
+      String? fcmToken = await NotificationHandler.getDeviceToken();
       response = await HttpProvider.post("login",
           data: {"user_id": id, "password": password, "fcm_token": fcmToken});
       if (response?.statusCode == 200) {
