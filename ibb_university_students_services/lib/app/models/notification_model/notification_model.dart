@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 part 'notification_model.g.dart';
 @HiveType(typeId: 91)
 class Notification {
@@ -32,10 +33,11 @@ class Notification {
   });
 
   factory Notification.fromJson(Map<String, dynamic> json) {
+
     return Notification(
-      id: json['id'],
-      sender: (json['senderUser']!=null)?Instructor.fromJson(json['senderUser']):null,
-      receiver: (json['receiverUser']!=null)?Instructor.fromJson(json['receiverUser']):null,
+      id: json['message_id'],
+      sender: (json['senderUser']!=null)?Instructor(id:json['senderUser']['user_id'],nameData: JsonUtils.tryJsonDecode(json['senderUser']['user_name'])):null,
+      receiver: (json['receiverUser']!=null)?Instructor(id:json['receiverUser']['user_id'],nameData: JsonUtils.tryJsonDecode(json['receiverUser']['user_name'])):null,
       topicName: json['topic_name'],
       title: json['title'],
       message: json['message'],

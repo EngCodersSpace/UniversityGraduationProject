@@ -45,24 +45,12 @@ class UserRepository {
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
-          await NotificationHandler.registerTopics([
-            "section_${user.section?.id}",
-            "level_${user.level?.id}",
-            "student",
-            "role_${user.role?.id}",
-            "all"
-          ]);
           _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
-          await NotificationHandler.registerTopics([
-            "section_${user.section?.id}",
-            "doctor",
-            "role_${user.role?.id}",
-            "all"
-          ]);
-          _userBox?.put('currentUser', user);
+          await _userBox?.put('currentUser', user);
         }
+        await NotificationHandler.registerTopics(getUserTopics()??[]);
         HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
@@ -458,5 +446,24 @@ class UserRepository {
     required String action,
   }) {
     return _userBox?.get('currentUser')?.role?.permissions[target]?.any((e)=>e.action == action)??false;
+  }
+
+  static List<String>? getUserTopics(){
+    if(_userBox?.get("currentUser") == null)return null;
+    if(currentUserType() == Doctor){
+      return [
+        "section_${_userBox?.get("currentUser")?.section?.id}",
+        "doctor",
+        "role_${_userBox?.get("currentUser")?.role?.id}",
+        "all"
+      ];
+    }
+    return [
+      "section_${_userBox?.get("currentUser")?.section?.id}",
+      "level_${(_userBox?.get("currentUser") as Student).level?.id}",
+      "student",
+      "role_${_userBox?.get("currentUser")?.role?.id}",
+      "all"
+    ];
   }
 }

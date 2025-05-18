@@ -10,6 +10,8 @@ import 'package:ibb_university_students_services/app/utils/validators.dart';
 import '../../../styles/app_colors.dart';
 
 class AddNotificationsTargetCard extends GetView<NotificationTabController> {
+  const AddNotificationsTargetCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -36,8 +38,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                             child: CustomText(
                               "Add Notification".tr,
                               style: AppTextStyles.secStyle(
-                                  textHeader:
-                                  AppTextHeaders.h2Bold),
+                                  textHeader: AppTextHeaders.h2Bold),
                             ),
                           ),
                           const SizedBox(
@@ -103,18 +104,20 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                               ),
                             ],
                           ),
-                  const SizedBox(
-                      height: 32,),
-                      Row(
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          Row(
                             children: [
                               CustomText(
                                 "Targeting Options".tr,
                                 textAlign: TextAlign.start,
                                 style: AppTextStyles.secStyle(
-                                    textHeader:
-                                    AppTextHeaders.h3Bold),
+                                    textHeader: AppTextHeaders.h3Bold),
                               ),
-                              SizedBox(width: 8,),
+                              SizedBox(
+                                width: 8,
+                              ),
                               Expanded(
                                 child: Container(
                                   color: AppColors.highlightTextColor,
@@ -133,32 +136,34 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                   "Notification Type".tr,
                                   textAlign: TextAlign.start,
                                   style: AppTextStyles.secStyle(
-                                      textHeader:
-                                      AppTextHeaders.h3Bold),
+                                      textHeader: AppTextHeaders.h3Bold),
                                 ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
                                   color: AppColors.inverseCardColor,
-                                  borderRadius:
-                                  BorderRadius.circular(24),
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
-
                                 child: DropdownButton<String>(
                                   underline: const SizedBox(),
-                                  iconEnabledColor:
-                                  AppColors.mainCardColor,
-                                  dropdownColor:
-                                  AppColors.inverseCardColor,
+                                  iconEnabledColor: AppColors.mainCardColor,
+                                  dropdownColor: AppColors.inverseCardColor,
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.symmetric(horizontal: 8),
                                   value: controller.mode.value,
-                                  onChanged: (value) => controller.mode.value = value!,
+                                  onChanged: (value) =>
+                                      controller.mode.value = value!,
                                   items: ['Single', 'Group']
-                                      .map((e) =>
-                                          DropdownMenuItem(value: e, child: SizedBox(
-                                            width: Get.width*0.3,                                      child: CustomText(e,style: AppTextStyles.mainStyle(
-                                                textHeader: AppTextHeaders.h2Bold),),
+                                      .map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: SizedBox(
+                                            width: Get.width * 0.3,
+                                            child: CustomText(
+                                              e,
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h2Bold),
+                                            ),
                                           )))
                                       .toList(),
                                 ),
@@ -183,7 +188,9 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     const SizedBox(
                                       width: 10,
                                     ),
-                                    CustomText("Receiver ID".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
+                                    CustomText("Receiver ID".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
                                   ],
                                 ),
                                 const SizedBox(
@@ -196,8 +203,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     keyboardType: TextInputType.text,
                                     labelText: "Receiver ID".tr,
                                     focusNode: controller.receiverIdFocus,
-                                    onFieldSubmitted: (e) {
-                                    },
+                                    onFieldSubmitted: (e) {},
                                   ),
                                 ),
                               ],
@@ -213,33 +219,35 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     "Target User".tr,
                                     textAlign: TextAlign.start,
                                     style: AppTextStyles.secStyle(
-                                        textHeader:
-                                        AppTextHeaders.h3Bold),
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
                                     color: AppColors.inverseCardColor,
-                                    borderRadius:
-                                    BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: DropdownButton<String>(
                                     underline: const SizedBox(),
-                                    iconEnabledColor:
-                                    AppColors.mainCardColor,
-                                    dropdownColor:
-                                    AppColors.inverseCardColor,
+                                    iconEnabledColor: AppColors.mainCardColor,
+                                    dropdownColor: AppColors.inverseCardColor,
                                     alignment: Alignment.center,
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
                                     value: controller.selectedTarget.value,
-                                    onChanged: (value) =>
-                                        controller.selectedTarget.value = value!,
+                                    onChanged: (value) => controller
+                                        .selectedTarget.value = value!,
                                     items: controller.targets
-                                        .map((e) =>
-                                            DropdownMenuItem(value: e, child: SizedBox(
-                                              width: Get.width*0.3,
-                                              child: CustomText(e,style: AppTextStyles.mainStyle(
-                                                  textHeader: AppTextHeaders.h2Bold),),
+                                        .map((e) => DropdownMenuItem(
+                                            value: e,
+                                            child: SizedBox(
+                                              width: Get.width * 0.3,
+                                              child: CustomText(
+                                                e,
+                                                style: AppTextStyles.mainStyle(
+                                                    textHeader:
+                                                        AppTextHeaders.h2Bold),
+                                              ),
                                             )))
                                         .toList(),
                                   ),
@@ -251,23 +259,24 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                               "${"Programs".tr}:",
                               textAlign: TextAlign.start,
                               style: AppTextStyles.secStyle(
-                                  textHeader:
-                                  AppTextHeaders.h3Bold),
+                                  textHeader: AppTextHeaders.h3Bold),
                             ),
                             Wrap(
                               spacing: 6,
                               children: controller.sections.map((section) {
-                                final selected =
-                                    controller.selectedSections.contains(section);
+                                final selected = controller.selectedSections
+                                    .contains(section);
                                 return FilterChip(
                                   label: CustomText(section,
                                       style: (selected)
                                           ? AppTextStyles.mainStyle(
-                                              textHeader: AppTextHeaders.h3Normal)
+                                              textHeader:
+                                                  AppTextHeaders.h3Normal)
                                           : AppTextStyles.secStyle(
                                               textHeader:
                                                   AppTextHeaders.h3Normal)),
-                                  color: WidgetStateProperty.resolveWith((state) {
+                                  color:
+                                      WidgetStateProperty.resolveWith((state) {
                                     if (state.contains(WidgetState.selected)) {
                                       return AppColors.inverseCardColor;
                                     } else {
@@ -288,14 +297,14 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                             ),
 
                             // Levels (only for student/both)
-                            if (controller.selectedTarget.value==('student')) ...[
+                            if (controller.selectedTarget.value ==
+                                ('student')) ...[
                               SizedBox(height: 8),
                               CustomText(
                                 "${"Levels".tr}:",
                                 textAlign: TextAlign.start,
                                 style: AppTextStyles.secStyle(
-                                    textHeader:
-                                    AppTextHeaders.h3Bold),
+                                    textHeader: AppTextHeaders.h3Bold),
                               ),
                               Wrap(
                                 spacing: 6,
@@ -311,9 +320,10 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                             : AppTextStyles.secStyle(
                                                 textHeader:
                                                     AppTextHeaders.h3Normal)),
-                                    color:
-                                        WidgetStateProperty.resolveWith((state) {
-                                      if (state.contains(WidgetState.selected)) {
+                                    color: WidgetStateProperty.resolveWith(
+                                        (state) {
+                                      if (state
+                                          .contains(WidgetState.selected)) {
                                         return AppColors.inverseCardColor;
                                       } else {
                                         return AppColors.tabBackColor;
@@ -325,7 +335,8 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                       selected
                                           ? controller.selectedLevels
                                               .remove(level)
-                                          : controller.selectedLevels.add(level);
+                                          : controller.selectedLevels
+                                              .add(level);
                                     },
                                   );
                                 }).toList(),
@@ -338,8 +349,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                               "${"Roles".tr}:",
                               textAlign: TextAlign.start,
                               style: AppTextStyles.secStyle(
-                                  textHeader:
-                                  AppTextHeaders.h3Bold),
+                                  textHeader: AppTextHeaders.h3Bold),
                             ),
                             Wrap(
                               spacing: 6,
@@ -357,9 +367,10 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                             : AppTextStyles.secStyle(
                                                 textHeader:
                                                     AppTextHeaders.h3Normal)),
-                                    color:
-                                        WidgetStateProperty.resolveWith((state) {
-                                      if (state.contains(WidgetState.selected)) {
+                                    color: WidgetStateProperty.resolveWith(
+                                        (state) {
+                                      if (state
+                                          .contains(WidgetState.selected)) {
                                         return AppColors.inverseCardColor;
                                       } else {
                                         return AppColors.tabBackColor;
@@ -369,23 +380,20 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     checkmarkColor: AppColors.tabBackColor,
                                     onSelected: (val) {
                                       selected
-                                          ? controller.selectedRoles.remove(role)
+                                          ? controller.selectedRoles
+                                              .remove(role)
                                           : controller.selectedRoles.add(role);
                                     },
                                   ),
                                 );
                               }).toList(),
                             ),
-
-
                           ],
                           SizedBox(height: 16),
                           CustomButton(
                               text: "Add",
                               onPress: controller.buildConditionString),
-                          CustomButton(
-                              text: "close",
-                              onPress: controller.buildConditionString)
+                          CustomButton(text: "close", onPress: () => Get.back())
                         ],
                       )),
                 ),

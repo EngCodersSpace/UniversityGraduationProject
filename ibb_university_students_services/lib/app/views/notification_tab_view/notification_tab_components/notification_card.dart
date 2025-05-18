@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
 import '../../../components/custom_text_v2.dart';
 
@@ -79,7 +80,7 @@ class NotificationCard extends StatelessWidget {
                               const BorderRadius.all(Radius.circular(32)),
                         ),
                         child: CustomText(
-                          "At: $time",
+                          "At: ${DateTimeUtils.formatStringTime(time: time)}",
                           style: AppTextStyles.secStyle(
                               textHeader: AppTextHeaders.h5Bold),
                         ),

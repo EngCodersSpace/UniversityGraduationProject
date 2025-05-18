@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/helper_models/result.dart';
 import '../services/http_provider.dart';
 import '../utils/internet_connection_cheker.dart';
@@ -43,15 +44,19 @@ class NotificationRepository {
     // ignore: unused_local_variable
     late Response? response;
     try {
-      response = await HttpProvider.post(
-          "Get-noti-recieved?topic_name=Section_1&receiver_id=1");
+      int? userId = await UserRepository.fetchUser().then((e)=>e.data?.id);
+      response = await HttpProvider.get(
+          "Get-noti-recieved",data: {
+        "receiver_id":userId,
+        "topic_name": UserRepository.getUserTopics()
+      });
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsNotification in response?.data["Data"]) {
           Notification notification = Notification.fromJson(jsNotification);
           _notificationsBox?.put(notification.id, notification);
         }
         return Result(
-            data: _notificationsBox?.toMap().cast<int, Notification>(),
+            data: _notificationsBox?.toMap().cast<int, Notification>()??{},
             hasError: true,
             statusCode: response?.statusCode ?? _fetchError,
             message: response?.data["message"] ?? "error");
