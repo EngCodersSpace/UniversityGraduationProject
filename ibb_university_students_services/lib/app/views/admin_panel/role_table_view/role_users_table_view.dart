@@ -28,39 +28,48 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
             SizedBox(
               height: Get.height * 0.01,
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(5),
-                width: Get.width * 0.3,
-                child: Scrollbar(
-                  controller: controller.vertical,
-                  thumbVisibility: true,
-                  trackVisibility: true,
-                  child: SingleChildScrollView(
+            Row(children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  width: Get.width * 0.3,
+                  child: Scrollbar(
                     controller: controller.vertical,
-                    child: GetBuilder<DashboardRoleUsersTableController>(
-                      id: "DataTable",
-                      builder: (ctx) => Scrollbar(
-                        controller: controller.horizontal,
-                        thumbVisibility: true,
-                        trackVisibility: true,
-                        child: PaginatedDataTable(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: controller.vertical,
+                      child: GetBuilder<DashboardRoleUsersTableController>(
+                        id: "DataTable",
+                        builder: (ctx) => Scrollbar(
                           controller: controller.horizontal,
-                          rowsPerPage: controller.rowsPerPage.value,
-                          columnSpacing: controller.width * 0.1,
-                          onPageChanged: controller.onPageChange,
-                          availableRowsPerPage: const <int>[5, 10],
-                          onRowsPerPageChanged: controller.onRowChange,
-                          showCheckboxColumn: false,
-                          columns: controller.kTableColumn,
-                          source: MyData(context),
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: PaginatedDataTable(
+                            controller: controller.horizontal,
+                            rowsPerPage: controller.rowsPerPage.value,
+                            columnSpacing: controller.width * 0.1,
+                            onPageChanged: controller.onPageChange,
+                            availableRowsPerPage: const <int>[5, 10],
+                            onRowsPerPageChanged: controller.onRowChange,
+                            showCheckboxColumn: false,
+                            columns: controller.kTableColumn,
+                            source: MyData(context),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
+              SizedBox(
+                width: Get.width * 0.03,
+              ),
+              // Container(
+              //   padding: EdgeInsets.all(10),
+              //   child: ,
+              // ),
+            ])
           ],
         ),
       ),

@@ -22,6 +22,7 @@ class DashboardRoleUsersTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   List<DataColumn> kTableColumn = [];
+  RxInt selectedIndex = 0.obs;
   Timer? _debounce;
   int currentPage = 1;
   RxBool selectAll = false.obs;
