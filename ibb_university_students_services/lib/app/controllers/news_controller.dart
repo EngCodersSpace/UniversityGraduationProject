@@ -1,38 +1,34 @@
-// import 'dart:convert';
-// import 'dart:io';
-// import 'package:file_picker/file_picker.dart';
-// import 'package:get/get.dart';
-// import 'package:dio/dio.dart';
-// import 'package:flutter_quill/flutter_quill.dart' as quill;
-// import 'package:ibb_university_students_services/app/repositories/news_repository.dart';
-// import 'package:path_provider/path_provider.dart';
-//
-// class NewsController extends GetxController {
-//   final title = ''.obs;
-//   final headerImagePath = ''.obs;
-//   final quillController = quill.QuillController.basic();
-//
-//   Future<void> pickHeaderImage() async {
-//     final result = await FilePicker.platform.pickFiles(type: FileType.image);
-//     if (result != null && result.files.single.path != null) {
-//       headerImagePath.value = result.files.single.path!;
-//     }
-//   }
-//
-//   Future<void> insertImage() async {
-//     final result = await FilePicker.platform.pickFiles(type: FileType.image);
-//     if (result != null && result.files.single.path != null) {
-//       final file = File(result.files.single.path!);
-//       final appDir = await getApplicationDocumentsDirectory();
-//       final fileName = result.files.single.name;
-//       final copiedFile = await file.copy('${appDir.path}/$fileName');
-//       await NewsRepository.uploadImageToServer(file: PlatformFile(name: "", size: 0),newsId: 0);
-//       quillController.document.insert(
-//         quillController.selection.baseOffset,
-//         quill.BlockEmbed.image(copiedFile.path),
-//       );
-//     }
-//   }
-//
-//
-// }
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
+
+class NewsController extends GetxController {
+  RxBool initState = false.obs;
+  TextEditingController searchText = TextEditingController();
+  FocusNode searchFocus = FocusNode();
+
+  quill.QuillController quillController =
+      quill.QuillController.basic(config: quill.QuillControllerConfig());
+  quill.QuillSimpleToolbar? quillConfig;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initState.value = true;
+  }
+
+  void saveNewsContent() {
+    quillController.readOnly = true;
+    String js = jsonEncode(quillController.document.toDelta().toJson());
+  }
+
+  void searching(String? val) {
+    update();
+  }
+
+  void loadNewsContent() {
+    quillController.document = quill.Document.fromJson(jsonDecode("[]"));
+  }
+}

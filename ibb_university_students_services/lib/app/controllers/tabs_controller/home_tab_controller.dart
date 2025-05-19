@@ -25,7 +25,7 @@ class HomeTabController extends GetxController
     if (res.statusCode == 200) {
       user = res.data;
     }
-    tabController = TabController(length: 3, initialIndex: 0, vsync: this);
+    tabController = TabController(length: 5, initialIndex: 0, vsync: this);
     _setUpTimer();
     initState.value = true;
     super.onInit();
@@ -152,5 +152,12 @@ class HomeTabController extends GetxController
 
   void pepperTransactionsRoute() {
     Get.toNamed("/pepper_transactions");
+  }
+
+void  openNewsList(){
+  Get.toNamed("news_list");
+  }
+  void openNews(int i) {
+    Get.toNamed("news");
   }
 }

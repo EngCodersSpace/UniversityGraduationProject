@@ -138,6 +138,21 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h2Bold)
                           ),
                         ),
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Padding(
+                            padding:  EdgeInsets.symmetric(
+                                horizontal: Get.width*0.02
+                            ),
+                            child: TextButton(
+                              onPressed: controller.openNewsList,
+                              child: CustomText(
+                                  "Show All".tr,
+                                  style: AppTextStyles.linkStyle(textHeader: AppTextHeaders.h2Bold)
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -152,18 +167,12 @@ class PhoneMainTab extends GetView<HomeTabController> {
                           SizedBox(
                             width: width * 0.05,
                           ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          NewsCard(height: height * 0.25, width: width * 0.8),
-                          SizedBox(
-                            width: width * 0.1,
-                          ),
+                          for(int i = 0;i<(controller.tabController?.length??0);i++)...[
+                            NewsCard(height: height * 0.25, width: width * 0.8,onTap:()=>controller.openNews(i),),
+                            SizedBox(
+                              width: width * 0.05,
+                            ),
+                          ]
                         ],
                       ),
                     ),

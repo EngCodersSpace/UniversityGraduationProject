@@ -30,9 +30,9 @@ class LibraryController extends GetxController
   RxString fieldMessage = "".obs;
   TabController? tapController;
   TextEditingController searchText = TextEditingController();
+  FocusNode searchFocus = FocusNode();
   RxString? selectedSubjectId = "all-option".obs;
   RxString? selectedAddSubjectId;
-  FocusNode searchFocus = FocusNode();
   String mode = "add";
   List<PlatformFile> selectedFiles = [];
   Rx<int?> selectedDepartment = Rx(null);
@@ -61,12 +61,16 @@ class LibraryController extends GetxController
     "date": ["Oldest", "Newest"],
   };
   RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
+  List<PageController> myTabsControllers =  [
+    PageController(keepPage: true),
+    PageController(keepPage: true),
+    PageController(keepPage: true)
+  ];
   RxList<Widget> myTabs = RxList([
     const LecturesTab(),
     const ReferencesTab(),
     const ExamFormsTab(),
   ]);
-  List<PageController> myTabsControllers = [];
   LibraryFile? selectedBook;
   RxInt currentPage = 1.obs;
   int prevTabCurrentPage = 1;
@@ -97,12 +101,12 @@ class LibraryController extends GetxController
         bottom: borderSide,
       ),
     ];
-    await fetchLibraryData();
     myTabsControllers =  [
       PageController(keepPage: true),
       PageController(keepPage: true),
       PageController(keepPage: true)
     ];
+    await fetchLibraryData();
     super.onInit();
     loadingState.value = false;
   }
