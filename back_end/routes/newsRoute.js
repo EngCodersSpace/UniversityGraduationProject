@@ -10,6 +10,8 @@ router.use(verifyToken);
 router.post('/New-With-Photo', CRUD.createNewsWithPhoto);
 
 router.get('/Get-AllNews', CRUD.getAllNews);
+router.get('/Get-imageOfnew', CRUD.getImageOfNews);
+
 router.get('/Get-New/:id', CRUD.getNewsById);
 // router.put('/Update-New/:id', CRUD.updateNews);
 router.delete('/Delete-New/:id', CRUD.deleteNews);

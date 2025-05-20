@@ -27,7 +27,14 @@ exports.createNewsWithPhoto =async (req, res) => {
         title,
         content,
         publisher_id,
+        time: new Date().toISOString().slice(0, 10), 
         image: null, // will update below if file is present
+        include:[
+          {
+            model:user ,as:'user',
+            attributes:['user_id','user_name']
+          }
+        ]
       });
 
       if (req.file) {
@@ -67,7 +74,6 @@ exports.createNews = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 // only upload photo for specific new
 exports.uploadPhotoForNews = async (req, res) => {
   try {
@@ -123,6 +129,8 @@ exports.uploadPhotoForNews = async (req, res) => {
   }
 };
 
+
+
 exports.getAllNews = async (req, res) => {
   try {
     const newsList = await news.findAll();
@@ -131,6 +139,35 @@ exports.getAllNews = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//  get image from path by id (req.query.id)
+exports.getImageOfNews = async (req, res) => {
+  try {
+
+      if (!req.query.id) {
+          return res.status(400).json({message: "News id  is required" });
+      }
+
+      const ImageOfNews = await news.findOne({
+          where: { id: req.query.id },
+      });
+
+      if (ImageOfNews.length === 0) {
+        return res.status(204).json();
+      }
+
+      if (!ImageOfNews) {
+          return res.status(404).json({ success: false, message: "No image found for the specified News" });
+      }
+      const imagePath = path.join(__dirname  , '..',"storage" ,ImageOfNews.image);
+      console.log('\n \n path of image:',imagePath)
+      res.sendFile(imagePath);
+  } catch (error) {
+      console.error("Error fetching new's image:", error);
+      res.status(500).json({message: "An error occurred while fetching new's image", error: error.message });
+  }
+};
+
 
 exports.getNewsById = async (req, res) => {
   try {

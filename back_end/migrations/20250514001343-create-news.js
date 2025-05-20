@@ -27,6 +27,11 @@ module.exports = {
         type:Sequelize.TEXT,
         allowNull:false,
       },
+      time:{
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
       image:{
         type:Sequelize.STRING,
         allowNull:true,

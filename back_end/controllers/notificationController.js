@@ -140,7 +140,7 @@ const getForSender = async (req, res) => {
   }
 };
 
-// to see what i received (single and topic)  user send topic_name in query
+// to see what i received (single and topic)  user send topic_name in query          // depends (relation || in topics)
 const getForRecieved = async (req, res) => {
   try{
   const notifications=await notification.findAll();
