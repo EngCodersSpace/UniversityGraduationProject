@@ -9,11 +9,11 @@ router.use(verifyToken);
 
 router.post('/New-With-Photo', CRUD.createNewsWithPhoto);
 
-router.get('/Get-AllNews', CRUD.getAllNews);
+router.get('/Get-AllNews', CRUD.getAllNewsWithLimit);
 router.get('/Get-imageOfnew', CRUD.getImageOfNews);
 
 router.get('/Get-New/:id', CRUD.getNewsById);
-// router.put('/Update-New/:id', CRUD.updateNews);
+router.put('/Update-New/:id', CRUD.updateNewsWithPhoto);
 router.delete('/Delete-New/:id', CRUD.deleteNews);
 
 module.exports = router;

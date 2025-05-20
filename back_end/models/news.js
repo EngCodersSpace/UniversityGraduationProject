@@ -45,9 +45,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
     },
     time:{
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
     },
     image:{
       type:DataTypes.STRING,

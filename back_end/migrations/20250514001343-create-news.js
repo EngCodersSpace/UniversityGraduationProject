@@ -28,9 +28,8 @@ module.exports = {
         allowNull:false,
       },
       time:{
-        type: Sequelize.DATEONLY,
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
       },
       image:{
         type:Sequelize.STRING,

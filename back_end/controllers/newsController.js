@@ -3,6 +3,11 @@ const {news, user} = require('../models');
 const { uploadPhoto } = require("../utils/multerConfig");
 const path = require('path');
 const fs = require('fs');
+const dayjs = require('dayjs');
+
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
 
 // create with upload photo
 exports.createNewsWithPhoto =async (req, res) => {
@@ -27,8 +32,8 @@ exports.createNewsWithPhoto =async (req, res) => {
         title,
         content,
         publisher_id,
-        time: new Date().toISOString().slice(0, 10), 
-        image: null, // will update below if file is present
+        time:dayjs().format('YYYY-MM-DD, hh:mm A') ,
+        image: null, 
         include:[
           {
             model:user ,as:'user',
@@ -130,7 +135,6 @@ exports.uploadPhotoForNews = async (req, res) => {
 };
 
 
-
 exports.getAllNews = async (req, res) => {
   try {
     const newsList = await news.findAll();
@@ -139,6 +143,23 @@ exports.getAllNews = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getAllNewsWithLimit = async (req, res) => {
+  try {
+    const { limit } = req.query;
+
+    const newsList = await news.findAll({
+      order: [['time', 'DESC']],
+      ...(limit && { limit: parseInt(limit) }) 
+    });
+
+    res.status(200).json({ message: "Get News Successfully", data: newsList });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 
 //  get image from path by id (req.query.id)
 exports.getImageOfNews = async (req, res) => {
@@ -181,20 +202,59 @@ exports.getNewsById = async (req, res) => {
   }
 };
 
-// no update  delete and create new
-exports.updateNews = async (req, res) => {
-  try {
-    const updated = await news.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (!updated[0]) {
-      return res.status(404).json({ error: 'News not found or nothing to update' });
+
+exports.updateNewsWithPhoto = async (req, res) => {
+  uploadPhoto("News", "user").single("file")(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
+        message: "Error during photo upload.",
+        error: err.message,
+      });
     }
-    res.status(200).json({ message: 'News updated' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
+    try {
+      const newsId = req.params.id;
+      const { title, content } = req.body;
+      const publisher_id = req.user.user_id;
+
+      const existingNews = await news.findByPk(newsId);
+      if (!existingNews) {
+        return res.status(404).json({ message: "News not found." });
+      }
+
+      if (title) existingNews.title = title;
+      if (content) existingNews.content = content;
+      existingNews.publisher_id = publisher_id; 
+      existingNews.time = dayjs().format('YYYY-MM-DD, hh:mm A'); 
+
+      if (req.file) {
+        const oldFilePath = req.file.path;
+        const fileExtension = path.extname(req.file.originalname);
+        const newFileName = `news_${existingNews.id}${fileExtension}`;
+        const newFilePath = path.join(path.dirname(oldFilePath), newFileName);
+
+        fs.renameSync(oldFilePath, newFilePath);
+        existingNews.image = `News/user/${newFileName}`;
+      }
+
+      await existingNews.save();
+
+      res.status(200).json({
+        message: "News updated successfully.",
+        data: existingNews,
+      });
+
+    } catch (error) {
+      console.error("Error updating news:", error.message);
+      res.status(500).json({
+        message: "Internal server error.",
+        error: error.message,
+      });
+    }
+  });
 };
+
+
 
 exports.deleteNews = async (req, res) => {
   try {
