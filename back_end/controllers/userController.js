@@ -2,8 +2,6 @@
 // const bcrypt = require('bcrypt');
 const { user, doctor , student ,study_plan,level,section,phone_number,role} = require('../models'); 
 const { Sequelize,Op} = require('sequelize');
-const {filterJsonColumn} = require('../middleware/filterJsonCol')
-
 
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
@@ -630,7 +628,7 @@ exports.getStudentsByCriteriaPanel = async (req, res) => {
             {
               model: section,
               as: "section",
-              attributes: ["section_name"],
+              attributes: ["section_name","id"],
               required: true,
               where: {
                 ...(sectionName && {

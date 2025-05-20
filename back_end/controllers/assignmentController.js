@@ -1,5 +1,5 @@
 
-const {student,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
+const {student,doctor,subject,assignment, assignment_file,student_assignment,student_assignment_file,user,section,level} = require("../models");
 const { uploadFields } = require('../utils/multerConfig');
 const path = require('path');
 const fs = require('fs');
@@ -7,12 +7,13 @@ const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
+const { Sequelize,Op} = require('sequelize');
 
 // get assignments for specific subject of doctor  => 
 // query (  level_id  section_id  and  subject_id)
 exports.getAssignmentsOfSubject = async (req, res) => {
   try {
-    
+    // permission here == roleName
     if (req.user.permission == 'Student' || req.user.permission =='Student Representative'){
       const AllAssignmentSub = await assignment.findAll({
         where: {
@@ -93,6 +94,85 @@ exports.getAssignmentsOfSubject = async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching assignments:', error);
+    res.status(500).json({
+      message: 'Error fetching assignments.',
+      error: error.message,
+    });
+  }
+};
+
+// i'm split (getAssignmentsOfSubject) to two functions  1-for student's-roles
+exports.getAssignmentsForStudent = async (req, res) => {
+  try {
+    const assignments = await assignment.findAll({
+      where: {
+        subject_id: req.query.subject_id,
+        level_id: req.query.level_id,
+        section_id: req.query.section_id,
+      },
+      include: [
+        { model: assignment_file },
+        {
+          model: student_assignment,
+          where: { student_id: req.user.user_id },
+          include: [
+            { model: student_assignment_file },
+            {
+              model: student.scope(null),
+              as: 'student',
+              attributes: ['student_id'],
+              include: [
+                {
+                  model: user,
+                  as: 'user',
+                  attributes: ['user_name'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(204).send(); // No content
+    }
+
+    res.status(200).json({
+      message: 'Assignments retrieved successfully for student.',
+      data: assignments,
+    });
+  } catch (error) {
+    console.error('Error fetching student assignments:', error);
+    res.status(500).json({
+      message: 'Error fetching assignments.',
+      error: error.message,
+    });
+  }
+};
+
+//2- for doctor's-roles
+exports.getAssignmentsForDoctor = async (req, res) => {
+  try {
+    const assignments = await assignment.findAll({
+      where: {
+        subject_id: req.query.subject_id,
+        level_id: req.query.level_id,
+        section_id: req.query.section_id,
+      },
+      include: [{ model: assignment_file }],
+    });
+
+    if (!assignments || assignments.length === 0) {
+      return res.status(204).send(); // No content
+    }
+
+    res.status(200).json({
+      message: 'Assignments retrieved successfully for doctor.',
+      data: assignments,
+    });
+  } catch (error) {
+    console.error('Error fetching doctor assignments:', error);
     res.status(500).json({
       message: 'Error fetching assignments.',
       error: error.message,
@@ -589,5 +669,146 @@ exports.deleteAttachmentFiles=async(req,res)=>{
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error deleting assignment files.', error: error.message });
+  }
+};
+
+
+
+// admin panel
+exports.getAssignmentsPanel = async (req, res) => {
+  const ALLOWED_ORDER_FIELDS = [
+    "id",
+    "subject_id",
+    "doctor_id",
+    "section_id",
+    "level_id",
+    "assignment_due_day",
+    "title",
+    "assignment_date",
+    "assignments_due_date",
+  ];
+  const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
+
+  try {
+    const {
+      subject_id,
+      doctor_id,
+      section_id,
+      level_id,
+      assignment_due_day,
+      assignment_date,
+      assignments_due_date,
+      page = 1,
+      limit = 10,
+      orderBy = "id",
+      sort = "ASC",
+      search,
+    } = req.query;
+    const lang = req.headers["accept-language"] || "en"; 
+    const pageNumber = parseInt(page, 10);
+    let limitNumber = parseInt(limit, 10);
+    const LOWER_LIMIT = 10;
+    const UPPER_LIMIT = 250;
+    if (isNaN(limitNumber)) limitNumber = LOWER_LIMIT;
+    if (limitNumber < LOWER_LIMIT) limitNumber = LOWER_LIMIT;
+    if (limitNumber > UPPER_LIMIT) limitNumber = UPPER_LIMIT;
+    const offset = (pageNumber - 1) * limitNumber;
+    const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy)
+      ? orderBy
+      : "id";
+    const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase())
+      ? sort.toUpperCase()
+      : "ASC";
+
+    const { count, rows: Assignments } = await assignment.findAndCountAll({
+      where: {
+        ...(subject_id && {
+          subject_id: subject_id 
+        }),
+        ...(doctor_id && {
+          doctor_id: doctor_id 
+        }),
+        ...(section_id && {
+          section_id: section_id 
+        }), 
+        ...(level_id && {
+          level_id: level_id 
+        }), 
+        ...(assignment_due_day && {
+          assignment_due_day: assignment_due_day 
+        }), 
+        ...(assignment_date && {
+          assignment_date: assignment_date 
+        }), 
+        ...(assignments_due_date && {
+          assignments_due_date: assignments_due_date 
+        }), 
+        
+        ...(search && {
+          [Op.or]: [
+            Sequelize.where(
+              Sequelize.literal(`JSON_UNQUOTE(JSON_EXTRACT(${'title'}, '$.${lang}'))`),
+              { [Op.like]: `%${search}%` }
+            ),
+
+          ]
+        })
+
+      },
+      include: [
+        {
+          model: doctor,as:'doctor',
+          attributes: ['doctor_id'],
+          where:{
+            ...(doctor_id && {
+              doctor_id: doctor_id 
+            }),
+          },
+          include:[
+            { 
+              model:user,as:'user',
+              attributes:['user_id','user_name'],
+            }
+          ]
+
+        },
+        {
+          model: subject,
+          attributes: ['subject_id','subject_name'],
+          where:{
+            ...(subject_id && {
+              subject_id: subject_id 
+            }),
+          },
+        },
+      ],
+
+      distinct: true, 
+      limit: limitNumber,
+      offset: offset,
+      order: [[validOrderBy, validSort]],
+    });
+
+    if (!Assignments.length) {
+      return res
+        .status(404)
+        .json({ message: "No Assignments found for the specified criteria" });
+    }
+
+    res.status(200).json({
+      message: "Assignments retrieved successfully",
+      data: Assignments,
+      pagination: {
+        totalAssignments: count,
+        totalPages: Math.ceil(count / limitNumber),
+        currentPage: pageNumber,
+        perPage: limitNumber,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error retrieving Assignments", error: error.message });
   }
 };

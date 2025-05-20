@@ -19,11 +19,11 @@ exports.getAllPrerequisites = async (req, res) => {
             include: [
                 {
                     model: subject,
-                    attributes: ['name', 'code'], // حقول المادة
+                    attributes: ['name', 'code'], 
                 },
                 {
                     model: study_plan_elment,
-                    attributes: ['type', 'semester'], // حقول الخطة الدراسية
+                    attributes: ['type', 'semester'], 
                 },
             ],
         });

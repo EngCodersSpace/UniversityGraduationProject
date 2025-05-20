@@ -68,28 +68,6 @@ const validateDoctorRegistration = [
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
 
-   
-
-    body('collegeName')
-        .notEmpty().withMessage('collegeName is required')
-        .isString().withMessage('collegeName must be a String'),
-
-    body('email')
-        .notEmpty().withMessage('Email is required')
-        .isEmail().withMessage('Invalid email format')
-        .custom(async (value) => {
-            const existingUser = await user.findOne({ where: { email: value } });
-            if (existingUser) {
-                throw new Error('Email already registered');
-            }
-            return true;
-        }),
-
-    body('permission')
-        .notEmpty().withMessage('permission is required')
-        .isString().withMessage('permission must be a String'),
-
-
     body('doctor.academic_degree')
         .notEmpty().withMessage('Academic degree is required')
         .isString().withMessage('Academic degree must be a String'),

@@ -23,7 +23,7 @@ exports.getRoles = async (req, res) => {
         include: [ 
         { model: permission, 
           through:{ attributes: [] },
-          required: true}
+          }
         ],
       }
     );

@@ -20,7 +20,7 @@ module.exports = {
       },
       receiver_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull:true,
         references: {
           model: 'users',
           key: 'user_id',
@@ -30,18 +30,18 @@ module.exports = {
       },
       topic_name: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull:true,
       },
       title: {
         type: Sequelize.STRING(100)
       },
       message: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull:false,
       },
-      type: {
-        type: Sequelize.ENUM('single', 'topic'),
-        allowNull: false,
+      type:{
+        type:Sequelize.ENUM('single','topic'),
+        allowNull:false,
       },
 
 

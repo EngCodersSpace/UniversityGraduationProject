@@ -15,6 +15,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      
+      user_type: {
+        type: Sequelize.ENUM('doctor', 'student'),
+        allowNull: false,
+      },
 
 
       createdAt: {

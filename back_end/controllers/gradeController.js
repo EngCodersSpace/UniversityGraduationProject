@@ -5,13 +5,14 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
+// student only can see his grades
 exports.getGrades = async (req, res) => {
   try {
-      const {studentID,levelID , Term} = req.query; 
+      const {studentID} = req.query; 
 
       // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: {student_id:studentID , level_id:levelID , term:Term }, 
+          where: {student_id:studentID}, 
           include: [
               { model: subject, as: 'subject' },
             ],
@@ -28,20 +29,55 @@ exports.getGrades = async (req, res) => {
   }
 }; 
 
+// doctors only can see all grades or use filters to specific (student,section,level,term,subject,yearofissue)
 exports.getAllGrades = async (req, res) => {
   try {
-    
-      // Use a condition for levelID to prevent errors if it's not supplied
-      const grades = await grade.findAll();
+    const {
+      student_id,
+      subject_id,
+      term,
+      section_id,
+      level_id,
+      year_of_issue
+    } = req.query;
 
-      if (!grades.length) {
-          return res.status(404).json({ message: 'No grades found ' });
-      }
+    const { count, rows: grades } = await grade.findAndCountAll({
+      where: {
+        ...(student_id && {
+          student_id: student_id  
+        }),
+        ...(subject_id && {
+          subject_id: subject_id  
+        }),
+        ...(term && {
+          term: term  
+        }),
+        ...(section_id && {
+          section_id: section_id  
+        }),
+        ...(level_id && {
+          level_id: level_id  
+        }),
+        ...(year_of_issue && {
+          year_of_issue: year_of_issue  
+        }),
+      },
+      distinct: true,
+    });
 
-      res.status(200).json({ message: 'These all grades', Grades: grades });
+    if (!grades.length) {
+      return res.status(404).json({ message: "No grades found for the specified criteria" });
+    }
+
+
+    res.status(200).json({
+      message: "Grades retrieved successfully",
+      data: grades,
+      totalGrades: count,
+    });
   } catch (error) {
-      console.error('Error fetching grades:', error.message);
-      res.status(500).json({ message: 'Internal server error', error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving grades", error: error.message });
   }
 }; 
 

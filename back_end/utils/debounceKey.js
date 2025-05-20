@@ -14,4 +14,8 @@ function debounceKey(key, delay = 3000, callback) {
   debounceMap.set(key, { timer });
 }
 
-module.exports = { debounceKey };
+function delayedSend(delay = 3000, callback) {
+  setTimeout(callback, delay);
+}
+
+module.exports = { debounceKey ,delayedSend};

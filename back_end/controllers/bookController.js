@@ -71,14 +71,14 @@ exports.uploadFile = async (req, res) => {
           console.log("\n",group,"  ________________\n");
           try {
             const newBook = await book.create({
-              title: bookDetails.title || req.file.originalname,
+              title: req.file.originalname,
               category: req.query.category,
               subject_id: req.query.subject_id || null,
               added_by: req.user.user_id,
               section_id: group["section_id"],
               level_id: group["level_id"],
               original_name: req.file.originalname,
-              file_path: filepath,
+              file_path: req.file.path,
               author: bookDetails.author,
               edition: bookDetails.edition,
               numberOfPages: bookDetails.totalPages,
@@ -113,7 +113,7 @@ exports.uploadFile = async (req, res) => {
         res.status(201).json({
           message: `Book uploaded successfully to ${createdBooks.length} combinations`,
           file_info: {
-            path: filepath,
+            path: req.file.path,
             size: req.file.size,
             hash: req.file.hash
           },
@@ -148,7 +148,7 @@ exports.downloadFile = async (req, res) => {
       return res.status(404).json({ error: "File not found" });
     }
 
-    const filePath = path.resolve(__dirname, '..', `${fileData.file_path}`);
+    const filePath = path.resolve(__dirname, '..', `storage/${fileData.file_path}`);
     const fileSize = fs.statSync(filePath).size;
 
     // Set headers to instruct the browser to download the file
@@ -300,7 +300,7 @@ exports.deleteBook = async (req, res) => {
 
 exports.getBookGroupedByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["id","section_id", "level_id","title","author",
-    "numberOfPages","edition","category","file_size","file_path","display_image","added_by","subject_id","original_name"];
+    "numberOfPages","edition","category","file_size","file_path","display_image","added_by","subject_id"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
@@ -351,7 +351,6 @@ exports.getBookGroupedByCriteriaPanel = async (req, res) => {
 
         ...(search &&{
           [Op.or]: [
-            { original_name: { [Op.like]: `%${search}%` } },
             { author: { [Op.like]: `%${search}%` } },
             { title: { [Op.like]: `%${search}%` } },
           ],

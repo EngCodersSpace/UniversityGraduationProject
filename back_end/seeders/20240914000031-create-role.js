@@ -9,6 +9,7 @@ module.exports = {
       {
         id: 1,
         roleName: 'Dean',
+        user_type:'doctor',
         permissions: [
           ////////////lectures////////////////
           {
@@ -182,30 +183,34 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-
-
-
       {
         id: 2,
         roleName: 'Controller',
+        user_type:'doctor',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 3,
         roleName: 'Instructor',
+        user_type:'doctor',
+
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 4,
         roleName: 'Student Representative',
+        user_type:'student',
+
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: 5,
         roleName: 'Student',
+        user_type:'student',
+
         createdAt: new Date(),
         updatedAt: new Date(),
       },
