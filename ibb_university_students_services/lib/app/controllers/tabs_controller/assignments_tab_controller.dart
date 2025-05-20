@@ -47,9 +47,16 @@ class AssignmentsTabController extends GetxController {
   FocusNode dueDateFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
   String mode = "Add";
+  String fetchMode = "doctor";
   int? selectedAssignment;
   int? selectedState;
 
+Future<void> setStudentSectionAndLevel()async{
+  Student? student =
+      await UserRepository.fetchUser().then((e) => e.data as Student);
+  selectedDepartment.value = student?.section?.id;
+  selectedLevel.value = student?.level?.id;
+}
   @override
   void onInit() async {
     // await initSectionDropdownMenuList();
@@ -59,10 +66,8 @@ class AssignmentsTabController extends GetxController {
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
     if (UserRepository.currentUserType() == Student) {
-      Student? student =
-          await UserRepository.fetchUser().then((e) => e.data as Student);
-      selectedDepartment.value = student?.section?.id;
-      selectedLevel.value = student?.level?.id;
+      await setStudentSectionAndLevel();
+      fetchMode = "student";
     }
     await fetchAssignmentsData();
     super.onInit();
@@ -80,7 +85,7 @@ class AssignmentsTabController extends GetxController {
   Future<void> fetchAssignmentsData({bool force = false}) async {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
-      if (subjects?.values.isNotEmpty ?? false) {
+      if (subjects?.values.isNotEmpty??false) {
         selectedSubject.value = subjects?.values.first.id;
       }
     }
@@ -95,6 +100,10 @@ class AssignmentsTabController extends GetxController {
       if (sections.isNotEmpty) {
         selectedDepartment.value = sections.values.first.id;
       }
+    }
+
+    if(fetchMode=="student"){
+      await setStudentSectionAndLevel();
     }
 
     if (selectedDepartment.value == null ||
@@ -114,10 +123,10 @@ class AssignmentsTabController extends GetxController {
       assignments?.value = res.data ?? {};
     } else if (res.statusCode == 204) {
       assignments?.value = res.data ?? {};
-      fieldMessage.value = "this section and level not has Assignments";
+      fieldMessage.value = "Empty";
       showSnakeBar(
           title: "Not Found Assignments ",
-          message: "this section and level doesn't has assignments ");
+          message: "selected choose doesn't has assignments ");
     } else {
       fieldMessage.value =
           "fetching assignments failed please check connection";
@@ -181,7 +190,7 @@ class AssignmentsTabController extends GetxController {
   Future<void> initSubjectDropdownMenuList() async {
     subjects = {};
     subjects =
-        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       selectedSubject = RxString(subjects!.values.first.id);
     } else {
@@ -398,13 +407,10 @@ class AssignmentsTabController extends GetxController {
 
   void _moreDeleteAttachmentFileFromStorage(Map<String, dynamic>? data) async {
     if (data == null) return;
-    bool res = await FileUtils.deleteFile(
-        filePath: assignments
-            ?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
-    if (res) {
+    bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
+    if(res){
       showSnakeBar(message: "File Deleted");
-      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]
-          ?.checkDownloaded();
+      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.checkDownloaded();
     }
   }
 
@@ -430,26 +436,21 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
-  void _moreDeleteStudentAssignmentFileFromStorage(
-      Map<String, dynamic>? data) async {
+  void _moreDeleteStudentAssignmentFileFromStorage(Map<String, dynamic>? data) async {
     if (data == null) return;
     if (data["id"] < 0) {
       showSnakeBar(message: "File not Store Yet");
     } else {
-      bool res = await FileUtils.deleteFile(
-          filePath: assignments
-              ?.value[selectedAssignment]
-              ?.studentsStatus?[selectedState]
-              ?.studentFiles?[data["id"]]
-              ?.path);
-      if (res) {
+      bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+          ?.studentFiles?[data["id"]]?.path);
+      if(res){
         showSnakeBar(message: "File Deleted");
-        await assignments?.value[selectedAssignment]
-            ?.studentsStatus?[selectedState]?.studentFiles?[data["id"]]
-            ?.checkDownloaded();
+        await assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
+            ?.studentFiles?[data["id"]]?.checkDownloaded();
+      }
       }
     }
-  }
+
 
   void _moreSetCompletion(bool stat, Map<String, dynamic>? data) async {
     if (data?["assignment_id"] == null) return;
@@ -490,7 +491,7 @@ class AssignmentsTabController extends GetxController {
       case "DeleteAttachmentFile":
         _moreDeleteAttachmentFile(data);
         break;
-      case "DeleteAttachmentFileFromStorage":
+        case "DeleteAttachmentFileFromStorage":
         _moreDeleteAttachmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFileFromStorage":

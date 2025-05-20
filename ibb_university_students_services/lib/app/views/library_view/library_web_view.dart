@@ -143,7 +143,7 @@ class LibraryWebView extends GetView<LibraryController> {
               ),
             ),
             SizedBox(
-              height: Get.height * 0.72,
+              height: Get.height * 0.7,
               child: TabBarView(
                   controller: controller.tapController,
                   physics: const NeverScrollableScrollPhysics(),
@@ -162,7 +162,7 @@ class LibraryWebView extends GetView<LibraryController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      controller.booksPagesController.previousPage(
+                      controller.myTabsControllers[controller.tapController!.index].previousPage(
                           duration: const Duration(milliseconds: 400),
                           curve: Curves.ease);
                     },
@@ -183,7 +183,7 @@ class LibraryWebView extends GetView<LibraryController> {
                   ),
                   IconButton(
                       onPressed: () {
-                        controller.booksPagesController.nextPage(
+                        controller.myTabsControllers[controller.tapController!.index].nextPage(
                             duration: const Duration(milliseconds: 400),
                             curve: Curves.ease);
                       },

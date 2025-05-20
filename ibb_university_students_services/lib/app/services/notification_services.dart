@@ -38,16 +38,18 @@ class NotificationHandler {
     // Handle background messages (important for when the app is in the background)
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
 
-    //Testing
-    // _showNotification(title: "Test", body: "Just test notifications");
-    // Future.delayed(const Duration(seconds: 10), () {
-    //   _showNotification(
-    //     title: "Test Notification",
-    //     body: "This is a test notification sent after 10 seconds.",
-    //   );
-    // });
+    // Handle when the app is launched by tapping a notification (from terminated state)
+    final message = await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      _handleMessage(message);
+    }
   }
 
+  static Future<void> registerTopics(List<String> topics )async{
+    for(String topic in topics) {
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
+    }
+  }
   static void _handleMessage(RemoteMessage message) {
     showNotification(
       title: message.notification?.title ?? "Info",

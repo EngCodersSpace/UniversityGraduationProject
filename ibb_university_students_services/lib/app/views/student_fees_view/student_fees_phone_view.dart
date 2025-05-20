@@ -8,6 +8,7 @@ import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 import '../../components/buttons.dart';
 import '../../components/text_field.dart';
+import '../../models/doctor_model/doctor.dart';
 import '../../repositories/user_repository.dart';
 import '../../utils/validators.dart';
 import 'student_fees_view_components/student_fees_card.dart';
@@ -48,8 +49,7 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                 ),
               ],
             ),
-            if (UserRepository.checkPermission(
-                target: "Payments", action: "studentSearch")) ...[
+            if (UserRepository.currentUserType() == Doctor)...[
               const SizedBox(
                 height: 18,
               ),
@@ -84,7 +84,7 @@ class StudentFeesPhoneView extends GetView<StudentFeeController> {
                         textHeader: AppTextHeaders.h2Bold),
                   ),
                   if ((UserRepository.checkPermission(
-                      target: "StudentFee", action: "write")))
+                      target: "student_fees", action: "write")))
                     CustomButton(
                       onPress: controller.addButtonClick,
                       text: "Add Payment".tr,

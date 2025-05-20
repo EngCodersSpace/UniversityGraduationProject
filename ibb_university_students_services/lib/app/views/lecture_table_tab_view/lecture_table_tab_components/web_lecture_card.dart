@@ -86,7 +86,7 @@ class WebLectureCard extends GetView<LectureController> {
                                   textHeader: AppTextHeaders.h7Bold)),
                         ),
                         if ((UserRepository.checkPermission(
-                            target: "Lectures", action: "write"))) ...[
+                            target: "lectures", action: "write"))) ...[
                           const SizedBox(
                             width: 0,
                           ),

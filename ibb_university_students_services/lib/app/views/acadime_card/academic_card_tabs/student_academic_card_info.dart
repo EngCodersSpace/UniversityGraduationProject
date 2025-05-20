@@ -9,8 +9,8 @@ import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/text_styles.dart';
 
-class AcademicCardInfo extends GetView<AcademicCardController> {
-  const AcademicCardInfo({super.key});
+class StudentAcademicCardInfo extends GetView<AcademicCardController> {
+  const StudentAcademicCardInfo({super.key});
 
   @override
   Widget build(BuildContext context) {

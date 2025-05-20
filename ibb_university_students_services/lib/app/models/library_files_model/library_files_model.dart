@@ -11,7 +11,7 @@ class LibraryFile {
     required this.id,
     this.levelId,
     this.sectionId,
-    this.category,
+    required this.category,
     this.subject,
     this.addedBy,
     this.title,
@@ -52,7 +52,7 @@ class LibraryFile {
   String? edition;
 
   @HiveField(9)
-  String? category;
+  String category;
 
   @HiveField(10)
   double? fileSize;
@@ -79,6 +79,7 @@ class LibraryFile {
 
   factory LibraryFile.fromJson(Map<String, dynamic> json, {Subject? subject}) {
 
+
     return LibraryFile(
       id: json['id'],
       sectionId: json['section_id'],
@@ -86,8 +87,10 @@ class LibraryFile {
       subject: subject,
       title: json['title'],
       author: json['author'],
+      numberOfPages: json['numberOfPages'],
+      addedBy: json['added_by'],
       filePath: json['file_path'],
-      fileSize: json['file_size'],
+      fileSize: json['file_size'].toDouble(),
       edition: json['edition'],
       category: json['category'],
       displayImage: json['display_image'],

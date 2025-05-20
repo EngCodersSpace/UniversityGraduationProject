@@ -107,7 +107,7 @@ class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dateFocus,
                                 readOnly: true,
-                                onTap: () => DateTimeUtils.datePiker(context,controller.dateController),
+                                onTap: () => DateTimeUtils.datePiker(context,controller:controller.dateController),
                                 onFieldSubmitted: (e) {
                                   controller.timeFocus.requestFocus();
                                 },

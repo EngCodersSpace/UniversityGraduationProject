@@ -16,12 +16,15 @@ import 'package:ibb_university_students_services/app/views/library_view/library_
 import 'package:ibb_university_students_services/app/views/login_view/forgot_password_view.dart';
 import 'package:ibb_university_students_services/app/views/login_view/login_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
+import 'package:ibb_university_students_services/app/views/news_view/news_list_view.dart';
+import 'package:ibb_university_students_services/app/views/news_view/phones_news_view.dart';
 import 'package:ibb_university_students_services/app/views/pepper_transactions_view/pepper_transactions_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
+import 'bindings/news_view_binding.dart';
 import 'bindings/student_fees_binding.dart';
 
 class AppRoutes {
@@ -68,7 +71,16 @@ class AppRoutes {
       page: () => const StudentResultViewLoader(),
       binding: StudentResultBinding(),
     ),
-
+    GetPage(
+      name: '/news',
+      page: () => const PhonesNewsView(),
+      binding: NewsViewBinding(),
+    ),
+    GetPage(
+      name: '/news_list',
+      page: () => const PhonesNewsListView(),
+      binding: NewsViewBinding(),
+    ),
     GetPage(
       name: '/student_payments',
       page: () => const PaymentsViewLoader(),

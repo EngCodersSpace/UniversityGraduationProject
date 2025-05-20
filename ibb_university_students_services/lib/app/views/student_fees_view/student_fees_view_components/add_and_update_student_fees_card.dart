@@ -200,7 +200,7 @@ class PopUpIAddAndUpdateStudentFeeCard extends GetView<StudentFeeController> {
                                 labelText: 'Date'.tr,
                                 readOnly: true,
                                 onTap: () => DateTimeUtils.datePiker(
-                                    context, controller.dateController),
+                                    context, controller:controller.dateController),
                                 width: (Get.width - 12) * 0.46,
                               ),
                             ],

@@ -61,7 +61,7 @@ class Doctor extends User {
       role: Role.fromJson(json['role']),
       phones: numbers,
       collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
-      // profileImage: json['profile_picture'],
+      profileImage: json['profile_picture'],
       section: Section.fromJson(json['section']),
       academicDegreeData: JsonUtils.tryJsonDecode(json['academic_degree']),
       administrativePositionData:

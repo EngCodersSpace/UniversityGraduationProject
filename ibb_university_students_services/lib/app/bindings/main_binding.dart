@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
-import 'package:ibb_university_students_services/app/controllers/student_result_controller.dart';
 import '../controllers/main_controller.dart';
 import '../controllers/tabs_controller/assignments_tab_controller.dart';
 import '../controllers/tabs_controller/home_tab_controller.dart';
@@ -21,6 +19,7 @@ class MainViewBinding implements Bindings {
     Get.lazyPut<AssignmentsTabController>(() => AssignmentsTabController());
     Get.lazyPut<ProfileController>(() => ProfileController());
     Get.lazyPut<LectureController>(() => LectureController());
+    Get.lazyPut<LibraryController>(() => LibraryController());
     Get.lazyPut<LibraryController>(() => LibraryController());
     Get.lazyPut<StudentResultController>(() => StudentResultController());
     Get.lazyPut<AcademicCardController>(() => AcademicCardController());

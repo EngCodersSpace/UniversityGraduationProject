@@ -42,6 +42,7 @@ class StudentFeeRepository {
 
   static Future<Result<Map<int, StudentFee>>> fetchStudentFees({
     required int studentId,
+    required String mode,
     bool hardFetch = false,
   }) async {
     if ((_studentFeeBox?.get(studentId)?.data.values.isNotEmpty ?? false) &&
@@ -53,7 +54,7 @@ class StudentFeeRepository {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get("get-allFeeOfStudent",
+      response = await HttpProvider.get((mode=="self")?"get-all-fee":"get-allFeeOfStudent",
           data: {"student_id": studentId});
       if (response?.statusCode == 200) {
         StudentFeeCache cachedFees = StudentFeeCache(key: studentId, data: {});

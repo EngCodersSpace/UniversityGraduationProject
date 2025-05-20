@@ -7,6 +7,7 @@ import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../models/user_model/user.dart';
+import '../services/notification_services.dart';
 import '../utils/internet_connection_cheker.dart';
 import '../services/http_provider.dart';
 
@@ -38,17 +39,19 @@ class UserRepository {
       {bool rememberMe = false}) async {
     late Response? response;
     try {
+      String? fcmToken = await NotificationHandler.getDeviceToken();
       response = await HttpProvider.post("login",
-          data: {"user_id": id, "password": password});
+          data: {"user_id": id, "password": password, "fcm_token": fcmToken});
       if (response?.statusCode == 200) {
         if (response?.data["user_type"] == "student") {
           Student user = Student.fromJson(response?.data["user"]);
           _userBox?.put('currentUser', user);
         } else {
           Doctor user = Doctor.fromJson(response?.data["user"]);
-          _userBox?.put('currentUser', user);
+          await _userBox?.put('currentUser', user);
         }
-        HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
+        await NotificationHandler.registerTopics(getUserTopics()??[]);
+        HttpProvider.addAccessTokenHeader(    response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
         if (rememberMe) {
@@ -442,8 +445,25 @@ class UserRepository {
     required String target,
     required String action,
   }) {
-    return true;
-    // return _userBox?.get('currentUser')?.role?.permissions[target]?.contains(action) ??
-    //     false;
+    return _userBox?.get('currentUser')?.role?.permissions[target]?.any((e)=>e.action == action)??false;
+  }
+
+  static List<String>? getUserTopics(){
+    if(_userBox?.get("currentUser") == null)return null;
+    if(currentUserType() == Doctor){
+      return [
+        "section_${_userBox?.get("currentUser")?.section?.id}",
+        "doctor",
+        "role_${_userBox?.get("currentUser")?.role?.id}",
+        "all"
+      ];
+    }
+    return [
+      "section_${_userBox?.get("currentUser")?.section?.id}",
+      "level_${(_userBox?.get("currentUser") as Student).level?.id}",
+      "student",
+      "role_${_userBox?.get("currentUser")?.role?.id}",
+      "all"
+    ];
   }
 }

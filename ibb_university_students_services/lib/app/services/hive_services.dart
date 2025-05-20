@@ -14,6 +14,8 @@ import 'package:ibb_university_students_services/app/models/instructor_model/ins
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
+import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
+import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/student_assignments_file_model/student_assignments_file_model.dart';
@@ -25,10 +27,11 @@ import 'package:ibb_university_students_services/app/models/subject_model/subjec
 import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
-
 import '../models/data_sync/data_sync.dart';
 import '../models/helper_models/subjects_cache/subjects_cache.dart';
 import '../repositories/level_repository.dart';
@@ -61,9 +64,11 @@ class HiveServices{
     Hive.registerAdapter(StudentAssignmentsFileAdapter());
     Hive.registerAdapter(StudentAssignmentStateAdapter());
     Hive.registerAdapter(RoleAdapter());
+    Hive.registerAdapter(PermissionAdapter());
     Hive.registerAdapter(LibraryFileAdapter());
     Hive.registerAdapter(LibraryFilesCacheAdapter());
     Hive.registerAdapter(DataSyncAdapter());
+    Hive.registerAdapter(NotificationAdapter());
   }
   static openGlobalBoxes()async{
     await SubjectRepository.openBox();
@@ -72,6 +77,7 @@ class HiveServices{
     await SectionRepository.openBox();
     await LectureRepository.openBox();
     await AssignmentsRepository.openBox();
+    await NotificationRepository.openBox();
   }
 
   static clearAllBox() async{
@@ -85,6 +91,7 @@ class HiveServices{
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
     await UserRepository.clearBox();
+    await LibraryRepository.clearBox();
 
   }
 

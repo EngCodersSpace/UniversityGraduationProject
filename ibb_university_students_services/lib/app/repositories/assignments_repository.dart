@@ -309,7 +309,7 @@ class AssignmentsRepository {
         "sectionsAndLevels": sectionsAndLevels
       });
       if (response?.statusCode == 200) {
-        if (withCache) {
+        if(withCache){
           _assignmentsBox?.get(id)?.updateFromJson(response?.data["data"]);
           return Result(
               data: _assignmentsBox?.get(id),
@@ -322,6 +322,7 @@ class AssignmentsRepository {
             hasError: true,
             statusCode: response?.statusCode ?? _createError,
             message: response?.data["message"] ?? "error");
+
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));

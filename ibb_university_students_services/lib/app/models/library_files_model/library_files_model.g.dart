@@ -20,7 +20,7 @@ class LibraryFileAdapter extends TypeAdapter<LibraryFile> {
       id: fields[0] as int,
       levelId: fields[2] as int?,
       sectionId: fields[1] as int?,
-      category: fields[9] as String?,
+      category: fields[9] as String,
       subject: fields[3] as Subject?,
       addedBy: fields[4] as int?,
       title: fields[5] as String?,

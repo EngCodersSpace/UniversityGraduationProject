@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
+import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../repositories/user_repository.dart';
 
@@ -14,14 +16,17 @@ class HttpProvider {
   static final Dio _dio = Dio();
   static int _refreshTries = 5;
   static Map<int, CancelToken> cancelTokens = {};
+  static int onProcessUploads = 0;
+
+  static int onProcessDownloads = 0;
 
   static Future<void> init({
     String baseUrl = '',
     String accept = 'application/json',
     String contentType = 'application/json',
     Duration? connectTimeout = const Duration(seconds: 10),
-    Duration? sendTimeout = const Duration(seconds: 5),
-    Duration? receiveTimeout = const Duration(seconds: 5),
+    Duration? sendTimeout = const Duration(seconds: 30),
+    Duration? receiveTimeout = const Duration(seconds: 30),
   }) async {
     _dio.options.baseUrl = baseUrl;
     _dio.options.headers["Accept"] = accept;
@@ -109,9 +114,9 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> post(String url, {dynamic data}) async {
+  static Future<Response?> post(String url, {dynamic data,void Function(int, int)? onSendProgress}) async {
     try {
-      final response = await _dio.post(url, data: data);
+      final response = await _dio.post(url, data: data,onSendProgress:onSendProgress );
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -160,7 +165,6 @@ class HttpProvider {
   }) async {
     try {
       fileSize ??= await file.length();
-
       cancelTokens[file.path.hashCode] = CancelToken();
       Map<String, dynamic> dataMap = {
         'file': [
@@ -169,7 +173,13 @@ class HttpProvider {
         ],
       };
       dataMap.addAll(data);
-      final response = await _dio.post(
+      onProcessUploads++;
+      showSnakeBar(
+          title: "$onProcessUploads Files Uploading ",
+          message: "for details look on notifications");
+
+      final response = await _dio
+          .post(
         uploadUrl,
         cancelToken: cancelTokens[file.path.hashCode],
         data: FormData.fromMap(dataMap),
@@ -178,15 +188,21 @@ class HttpProvider {
             'Content-Type': 'application/octet-stream',
             'Content-Length': fileSize.toString(),
           },
+          // receiveTimeout: Duration(),
+          sendTimeout: null
+
         ),
         onSendProgress: onSendProgress,
       );
+      HttpProvider.onProcessUploads--;
       return response;
     } on DioException catch (error) {
+      HttpProvider.onProcessUploads--;
       if (error.response != null) {
         return error.response;
       }
     } catch (e) {
+      HttpProvider.onProcessUploads--;
       rethrow;
     }
     return null;
@@ -294,5 +310,39 @@ class HttpProvider {
   static void updateLangHeader() {
     _dio.options.headers["Accept-Language"] =
         LocaleListener.currentLocal.value?.languageCode ?? "en";
+  }
+
+  static String parseUrl(String endPoint){
+    return _dio.options.baseUrl+endPoint;
+  }
+
+  static Widget httpImage({
+    required String imageUrl,
+    Widget Function(BuildContext, String)? placeholder,
+    Widget Function(BuildContext, String, dynamic)? errorWidget,
+    Widget? imageError,
+    BoxFit fit = BoxFit.cover,
+  }) {
+
+    if(imageUrl.startsWith('/') || imageUrl.contains(':\\') || imageUrl.contains('/storage/')){
+      return Image.file(
+        File(imageUrl),
+        fit: fit,
+        errorBuilder: (_, __, ___) => imageError??Icon(Icons.error)
+
+      );
+    }else {
+      return CachedNetworkImage(
+      imageUrl: "${_dio.options.baseUrl}$imageUrl",
+      httpHeaders: {
+        'Authorization': _dio.options.headers["Authorization"]??"",
+      },
+      placeholder: placeholder ??
+              (context, url) => const Center(child: CircularProgressIndicator()),
+      errorWidget: errorWidget ??
+              (context, url, error) => const Icon(Icons.error),
+      fit: fit,
+    );
+    }
   }
 }
