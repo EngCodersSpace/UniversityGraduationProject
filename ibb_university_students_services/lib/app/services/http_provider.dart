@@ -114,9 +114,9 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> post(String url, {dynamic data}) async {
+  static Future<Response?> post(String url, {dynamic data,void Function(int, int)? onSendProgress}) async {
     try {
-      final response = await _dio.post(url, data: data);
+      final response = await _dio.post(url, data: data,onSendProgress:onSendProgress );
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -316,13 +316,23 @@ class HttpProvider {
     return _dio.options.baseUrl+endPoint;
   }
 
-  static CachedNetworkImage httpImage({
+  static Widget httpImage({
     required String imageUrl,
     Widget Function(BuildContext, String)? placeholder,
     Widget Function(BuildContext, String, dynamic)? errorWidget,
+    Widget? imageError,
     BoxFit fit = BoxFit.cover,
   }) {
-    return CachedNetworkImage(
+
+    if(imageUrl.startsWith('/') || imageUrl.contains(':\\') || imageUrl.contains('/storage/')){
+      return Image.file(
+        File(imageUrl),
+        fit: fit,
+        errorBuilder: (_, __, ___) => imageError??Icon(Icons.error)
+
+      );
+    }else {
+      return CachedNetworkImage(
       imageUrl: "${_dio.options.baseUrl}$imageUrl",
       httpHeaders: {
         'Authorization': _dio.options.headers["Authorization"]??"",
@@ -333,6 +343,7 @@ class HttpProvider {
               (context, url, error) => const Icon(Icons.error),
       fit: fit,
     );
+    }
   }
 
 }

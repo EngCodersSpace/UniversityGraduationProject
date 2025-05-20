@@ -102,7 +102,7 @@ class PopUpIAddAndUpdateAssignmentsCard
                                 focusNode: controller.dueDateFocus,
                                 readOnly: true,
                                 onTap: () => DateTimeUtils.datePiker(
-                                    context, controller.dueDateController),
+                                    context, controller:controller.dueDateController),
                                 onFieldSubmitted: (e) {
                                   // controller.timeFocus.requestFocus();
                                 },

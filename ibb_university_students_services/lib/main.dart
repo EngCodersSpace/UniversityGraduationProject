@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:ibb_university_students_services/app/localization/languages.dart';
 import 'package:ibb_university_students_services/app/routes.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,13 +28,15 @@ class MyApp extends StatelessWidget {
             getPages: AppRoutes.routes,
             debugShowCheckedModeBanner: false,
             onDispose: () async => await Hive.close(),
-    //         navigatorObservers: [RouteGuard()], localizationsDelegates: const [
-    //   GlobalMaterialLocalizations.delegate,
-    //   GlobalCupertinoLocalizations.delegate,
-    //   GlobalWidgetsLocalizations.delegate,
-    //   FlutterQuillLocalizations.delegate,
-    // ]，
-          )
+            navigatorObservers: [
+                RouteGuard()
+              ],
+            localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                FlutterQuillLocalizations.delegate,
+              ])
         // Android and web UI
         : GetMaterialApp(
             title: "StudentServices",
@@ -45,6 +50,12 @@ class MyApp extends StatelessWidget {
               await Hive.close();
             },
             navigatorObservers: [RouteGuard()],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              FlutterQuillLocalizations.delegate,
+            ],
           );
   }
 }

@@ -237,7 +237,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                     value: controller.selectedTarget.value,
                                     onChanged: (value) => controller
                                         .selectedTarget.value = value!,
-                                    items: controller.targets
+                                    items: controller.targets.keys
                                         .map((e) => DropdownMenuItem(
                                             value: e,
                                             child: SizedBox(
@@ -298,7 +298,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
 
                             // Levels (only for student/both)
                             if (controller.selectedTarget.value ==
-                                ('student')) ...[
+                                ('Students')) ...[
                               SizedBox(height: 8),
                               CustomText(
                                 "${"Levels".tr}:",

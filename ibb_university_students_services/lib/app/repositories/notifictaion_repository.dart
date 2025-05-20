@@ -92,7 +92,7 @@ class NotificationRepository {
         barrierDismissible: false, name: "loadingDialog");
     late Response? response;
     try {
-      response = await HttpProvider.post("Get-noti-recieved", data: {
+      response = await HttpProvider.post("send-info-noti", data: {
         "title": title,
         "message": message,
         "topic_name": topic,
@@ -106,9 +106,9 @@ class NotificationRepository {
       }
       return Result(
           data: null,
-          hasError: true,
+          hasError: false,
           statusCode: response?.statusCode ?? _createError,
-          message: response?.data["message"] ?? "error");
+          message: response?.data?["message"] ?? "error");
     } catch (error) {
       return Result(
           hasError: true,

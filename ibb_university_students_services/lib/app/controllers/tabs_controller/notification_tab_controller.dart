@@ -27,7 +27,7 @@ class NotificationTabController extends GetxController {
   TextEditingController messageController = TextEditingController();
   FocusNode messageFocus = FocusNode();
 
-  RxString selectedTarget = 'student'.obs;
+  RxString selectedTarget = 'Students'.obs;
   RxList<String> selectedSections = <String>[].obs;
   RxList<String> selectedLevels = <String>[].obs;
   RxList<String> selectedRoles = <String>[].obs;
@@ -35,7 +35,8 @@ class NotificationTabController extends GetxController {
   Map<int,Section> sections = {};
   Map<int,Level> levels = {};
   Map<int,Role> roles = {};
-  final targets = ["student", "doctor", "student || doctor"];
+  final Map<String,String> targets = {"Students":"'student' in topics","Doctors": "'doctor' in topics", "Student And Doctors":"'student' in topics || 'doctor' in topics"};
+  RxBool includeRole = false.obs;
 
   @override
   void onInit() async {
@@ -92,6 +93,12 @@ class NotificationTabController extends GetxController {
         .then((e) => e.data ?? {});
   }
 
+  void changeIncludeRole(bool? val){
+    if (val == null )return;
+    includeRole.value = val;
+  }
+
+
   void pushNotification()async{
     if(mode.value=="Group"&& selectedSections.isEmpty){
       showSnakeBar(title: "Validation Error",message:"programs required select at least one " );
@@ -121,19 +128,19 @@ class NotificationTabController extends GetxController {
   }
   String buildConditionString() {
     final parts = <String>[];
-    parts.add("(${selectedTarget.value})");
+    parts.add("(${targets[selectedTarget.value]})");
 
     if (selectedSections.isNotEmpty) {
-      parts.add("(${selectedSections.join(" || ")})");
+      parts.add("('${selectedSections.join("'in topics || '")}' in topics)");
     }
 
-    if ((selectedTarget.value.contains('student')) &&
+    if ((selectedTarget.value.contains('Students')) &&
         selectedLevels.isNotEmpty) {
-      parts.add("(${selectedLevels.join(" || ")})");
+      parts.add("('${selectedLevels.join("' in topics || '")}' in topics)");
     }
 
     if (selectedRoles.isNotEmpty) {
-      parts.add("(${selectedRoles.join(" || ")})");
+      parts.add("('${selectedRoles.join(", in topics || '")}' in topics)");
     }
     return parts.join(" && ");
   }

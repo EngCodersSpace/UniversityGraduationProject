@@ -30,6 +30,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onChange,
     this.keyboardType,
     this.prefixIcon,
+    this.expands = false,
   }) {
     labelStyle ??=
         AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h3Normal);
@@ -53,6 +54,8 @@ class CustomTextFormField extends StatelessWidget {
   TextInputType? keyboardType;
   TextStyle? style;
   TextStyle? labelStyle;
+  bool expands;
+
 
   String? Function(String?)? validator;
   void Function()? onTap;
@@ -125,15 +128,17 @@ class CustomTextFormField extends StatelessWidget {
           : TextFormField(
               initialValue: initialValue,
               controller: controller,
+              expands: expands,
               style: style,
               readOnly: readOnly,
               keyboardType: keyboardType,
               focusNode: focusNode,
               enabled: enable,
-              minLines: minLines,
-              maxLines: minLines ?? 1,
+              minLines: (expands)?null:minLines??1,
+              maxLines: (expands)?null:maxLines ,
               onSaved: onSaved,
               onChanged: onChange,
+              textInputAction: TextInputAction.newline,
               onFieldSubmitted: onFieldSubmitted,
               onTap: onTap,
               onTapOutside: onTapOutside,
