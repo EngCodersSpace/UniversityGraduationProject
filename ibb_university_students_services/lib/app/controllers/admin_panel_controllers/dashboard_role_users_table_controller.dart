@@ -22,6 +22,7 @@ class DashboardRoleUsersTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   List<DataColumn> kTableColumn = [];
+  RxInt selectedIndex = 0.obs;
   Timer? _debounce;
   int currentPage = 1;
   RxBool selectAll = false.obs;
@@ -102,6 +103,11 @@ class DashboardRoleUsersTableController extends GetxController
         "Name",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
+      // DataColumn(
+      //     label: CustomText(
+      //   "permision",
+      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      // )),
     ];
     await fetchRoleData();
     loadingState.value = false;
@@ -115,6 +121,7 @@ class DashboardRoleUsersTableController extends GetxController
 
   Future<void> fetchRoleData({bool showSnakeBars = true}) async {
     Result res = await RoleRepository.fetchDashboardRole(
+      order: selectedOrder.value,
       sort: selectedSort.value,
       limit: rowsPerPage.value,
       page: currentPage,

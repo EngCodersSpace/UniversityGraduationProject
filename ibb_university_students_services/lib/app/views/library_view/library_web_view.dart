@@ -143,7 +143,7 @@ class LibraryWebView extends GetView<LibraryController> {
               ),
             ),
             SizedBox(
-              height: Get.height * 0.7,
+              height: Get.height * 0.72,
               child: TabBarView(
                   controller: controller.tapController,
                   physics: const NeverScrollableScrollPhysics(),

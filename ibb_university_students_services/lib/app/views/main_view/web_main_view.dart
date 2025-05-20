@@ -137,7 +137,7 @@ class WebMainView extends GetView<MainController> {
                             icon: Icons.calendar_month_outlined,
                           ),
                           WebTabsComponent(
-                            tabname: "Reports",
+                            tabname: "Assignments",
                             index: 3,
                             icon: Icons.repartition,
                           ),

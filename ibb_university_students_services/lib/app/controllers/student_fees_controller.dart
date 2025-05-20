@@ -38,7 +38,7 @@ class StudentFeeController extends GetxController {
     await StudentFeeRepository.openBox();
     await fetchLevels();
     if (UserRepository.currentUserType() == Student) {
-      studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+      studentId = await UserRepository.fetchUser().then((e) => e.data?.id ?? 0);
       await fetchStudentFees();
     }
     super.onInit();
@@ -53,7 +53,8 @@ class StudentFeeController extends GetxController {
 
   Future<void> fetchLevels() async {
     levels = [];
-    levels = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList());
+    levels = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList());
     if (levels?.first != null) {
       level = RxInt(levels!.first.id);
     }
@@ -70,7 +71,7 @@ class StudentFeeController extends GetxController {
     Result res =
         await StudentFeeRepository.fetchStudentFees(studentId: studentId!);
     if (res.statusCode == 200) {
-      studentFees.value = res.data;
+      studentFees.value = res.data ?? {};
     } else if (res.statusCode == 404) {
       studentFees.value = {};
       fieldMessage.value = "this student not has fees";

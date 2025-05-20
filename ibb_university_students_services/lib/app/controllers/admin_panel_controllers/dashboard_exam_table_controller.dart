@@ -17,6 +17,7 @@ import "package:ibb_university_students_services/app/styles/text_styles.dart";
 import "package:ibb_university_students_services/app/utils/date_time_utils.dart";
 import "package:ibb_university_students_services/app/utils/snake_bar.dart";
 import "package:ibb_university_students_services/app/views/admin_panel/exam_table_view/exam_table_component/add_exam_table_card.dart";
+import "package:intl/intl.dart";
 
 class DashboardExamTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -131,7 +132,7 @@ class DashboardExamTableController extends GetxController
 
   //popup card component
   Map<String, Subject>? subjects;
-  Rx<String?> subjectId = Rx(null);
+  late RxString subjectId;
   Map<int, Section> section = <int, Section>{}.obs;
   // ignore: non_constant_identifier_names
   Rx<int?> SectionId = Rx(null);
@@ -139,7 +140,7 @@ class DashboardExamTableController extends GetxController
   // ignore: non_constant_identifier_names
   Rx<int?> LevelId = Rx(null);
   // ignore: non_constant_identifier_names
-  RxString TermId = "".obs;
+  // RxString TermId = "".obs;
   RxString selectedDayName = "Sunday".obs;
   TextEditingController dateController = TextEditingController();
   FocusNode dateFocus = FocusNode();
@@ -149,43 +150,43 @@ class DashboardExamTableController extends GetxController
   FocusNode hallFocus = FocusNode();
   FocusNode entryYearFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
-  List<DropdownMenuItem<String>> term = [
-    DropdownMenuItem<String>(
-        value: "",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-  ];
+  // List<DropdownMenuItem<String>> term = [
+  //   DropdownMenuItem<String>(
+  //       value: "",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "All",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 1",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "1st",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 2",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "2ec",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  // ];
   List<DropdownMenuItem<String>> days = [
     DropdownMenuItem<String>(
         value: "Saturday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Saturday",
               style: AppTextStyles.secStyle(
@@ -195,7 +196,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "Sunday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Sunday",
               style: AppTextStyles.secStyle(
@@ -205,7 +206,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "Monday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Monday",
               style: AppTextStyles.secStyle(
@@ -215,7 +216,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "Tuseday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Tuseday",
               style: AppTextStyles.secStyle(
@@ -225,7 +226,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "Wednesday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Wednesday",
               style: AppTextStyles.secStyle(
@@ -235,7 +236,7 @@ class DashboardExamTableController extends GetxController
     DropdownMenuItem<String>(
         value: "Thursday",
         child: SizedBox(
-            width: (Get.width / 3) * 0.6,
+            width: (Get.width / 4) * 0.6,
             child: CustomText(
               "Thursday",
               style: AppTextStyles.secStyle(
@@ -311,6 +312,7 @@ class DashboardExamTableController extends GetxController
   @override
   void refresh() async {
     await fetchExamsData();
+    super.refresh();
   }
 
   void onRowChange(int? value) async {
@@ -490,7 +492,7 @@ class DashboardExamTableController extends GetxController
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       subjectId = RxString(subjects!.values.first.id);
     } else {
-      subjectId.value = null;
+      subjectId.value = "";
     }
   }
 
@@ -518,34 +520,51 @@ class DashboardExamTableController extends GetxController
     selectedDayName.value = val;
   }
 
-  void changeAddTerm(String? val) async {
-    if (val == null) return;
-    TermId.value = val;
-  }
+  // void changeAddTerm(String? val) async {
+  //   if (val == null) return;
+  //   TermId.value = val;
+  // }
 
   Future<void> addExam() async {
-    //the parameters that must be defined in exam repository
-    Result res = await ExamRepository.createExam(
-      sectionId: SectionId.value!,
-      levelId: LevelId.value!,
-      data: dateController.text,
-      term: TermId.value,
-      day: selectedDayName.value,
-      subjectId: subjectId.value!,
-      examTime: timeController.text,
-      examRoom: hallController.text,
-    );
-
-    // ignore: unused_local_variable
-    Exam? createExam;
-    Navigator.of(Get.overlayContext!).pop();
-    if (res.statusCode == 201 && res.data != null) {
-      createExam = res.data;
-      showSnakeBar(message: "Add successfully");
-    } else {
-      showSnakeBar(message: "Add failed");
+    Map<String, dynamic> jsData = {};
+    if (formKey.currentState!.validate()) {
+      jsData["exam_section_id"] = SectionId.value;
+      jsData["exam_level_id"] = LevelId.value;
+      (subjectId.value.isNotEmpty && subjectId.value != "Unknown".tr)
+          ? jsData["subject_id"] = subjectId.value
+          : null;
+      (dateController.text.isNotEmpty && dateController.text != "Unknown".tr)
+          ? jsData["exam_date"] = dateController.text
+          : null;
+      (timeController.text.isNotEmpty && timeController.text != "Unknown".tr)
+          ? jsData["exam_time"] = DateFormat('HH:mm:ss')
+              .format(DateFormat('hh:mm a').parse(timeController.text))
+          : null;
+      (selectedDayName.value.isNotEmpty &&
+              selectedDayName.value != "Unknown".tr)
+          ? jsData["exam_day"] = selectedDayName.value
+          : null;
+      (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
+          ? jsData["exam_room"] = hallController.text
+          : null;
+      if (LevelId.value == null) return;
+      if (SectionId.value == null) return;
+      Result<Exam> res = await ExamRepository.createExam(
+        sectionId: SectionId.value!,
+        levelId: LevelId.value!,
+        data: jsData,
+      );
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 201 && res.data != null) {
+        // ignore: invalid_use_of_protected_member
+        exams.value[res.data!.id] = res.data!;
+        exams.refresh();
+        showSnakeBar(message: "Add successfully");
+      } else {
+        showSnakeBar(message: "Add failed");
+      }
+      update(["DataTable"]);
     }
-    update(["DataTable"]);
   }
 
   @override
