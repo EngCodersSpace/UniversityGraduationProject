@@ -313,7 +313,7 @@ class LibraryRepository {
 //   }
 // }
 //
-  static Future<Result<LibraryFile>> uploadLibraryFile({
+  static Future<Result<List<LibraryFile>>> uploadLibraryFile({
     required PlatformFile file,
     required String category,
     required List<Map<String, int>> groups,
@@ -347,7 +347,7 @@ class LibraryRepository {
         );
 
         if (response?.statusCode == 201) {
-          List<LibraryFile> libFiles = [];
+        List<LibraryFile> libFiles = [];
           for (Map<String, dynamic> book in (response?.data["books"] ?? [])) {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);
@@ -390,7 +390,6 @@ class LibraryRepository {
       } else {
         showSnakeBar(title: "Failed Upload", message: "");
       }
-
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _uploadError,

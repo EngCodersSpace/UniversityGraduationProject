@@ -7,8 +7,11 @@ import 'package:ibb_university_students_services/app/controllers/student_fees_co
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/utils/validators.dart';
-import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/academic_card_info.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/academic_card_last_payment.dart';
+
+import '../../models/student_model/student.dart';
+import 'academic_card_tabs/doctor_academic_card_info.dart';
+import 'academic_card_tabs/student_academic_card_info.dart';
 
 class AcademicCardWebView extends GetView<AcademicCardController> {
   const AcademicCardWebView({super.key});
@@ -102,19 +105,32 @@ class AcademicCardWebView extends GetView<AcademicCardController> {
                         children: [
                           Column(
                             children: [
-                              SizedBox(
-                                width: Get.width * 0.4,
-                                height: Get.height * 0.4,
-                                child: AcademicCardInfo(),
-                              ),
-                              SizedBox(
-                                height: Get.height * 0.02,
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.4,
-                                height: Get.height * 0.4,
-                                child: AcademicCardLastPayment(),
-                              )
+                              if(controller.user is Student)...[
+                                SizedBox(
+                                    height: Get.height * 0.65,
+                                    child: const TabBarView(
+                                        children: [
+                                          Center(
+                                              child: StudentAcademicCardInfo()
+                                          ),
+                                          Center(
+                                              child: AcademicCardLastPayment()
+                                          )
+                                        ])),
+                                SizedBox(
+                                  height: Get.height * 0.03,
+                                ),
+                                TabPageSelector(
+                                  selectedColor: AppColors.inverseCardColor,
+                                ),
+                              ]
+                              else...[
+                                SizedBox(
+                                  height: Get.height * 0.65,
+                                  child: const Center(
+                                      child: DoctorAcademicCardInfo()
+                                  ),),
+                              ]
                             ],
                           ),
                           // Column(

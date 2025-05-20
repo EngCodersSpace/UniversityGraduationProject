@@ -143,10 +143,10 @@ class NotificationRepository {
     try {
       response = await HttpProvider.get(
           "get-all-noti-panel?sender_id=${senderID ?? ''}&receiver_id=${reciverID ?? ''}&type=${type ?? ''}&topic_name=${topicName ?? ''}&orderBy=${order ?? ''}&limit=$limit&sort=${sort ?? ''}&search=$search&page=$page");
-      Map<int, Notification> notification = {};
+      Map<int, model.Notification> notification = {};
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsNoti in response?.data["data"]) {
-          notification[jsNoti["message_id"]] = Notification.fromJson(jsNoti);
+          notification[jsNoti["message_id"]] = model.Notification.fromJson(jsNoti);
         }
         return Result(
           data: {

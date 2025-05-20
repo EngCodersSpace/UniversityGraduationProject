@@ -219,10 +219,10 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                                       (i % 2 == 0)
                                           ? ResultCard(
                                               grad: Rx(
-                                                  controller.grads!.value[i]))
+                                                  controller.grads!.value.values.toList()[i]))
                                           : ResultCard(
                                               grad: Rx(
-                                                  controller.grads!.value[i]),
+                                                  controller.grads!.value.values.toList()[i]),
                                               type: "odd",
                                             ),
                                       if (i <

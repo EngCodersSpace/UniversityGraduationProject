@@ -50,7 +50,9 @@ class UserRepository {
           Doctor user = Doctor.fromJson(response?.data["user"]);
           await _userBox?.put('currentUser', user);
         }
-        await NotificationHandler.registerTopics(getUserTopics()??[]);
+        if(!kIsWeb){
+          await NotificationHandler.registerTopics(getUserTopics()??[]);
+        }
         HttpProvider.addAccessTokenHeader(    response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
