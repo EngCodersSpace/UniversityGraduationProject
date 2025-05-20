@@ -187,7 +187,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           CustomText(
-                            controller.user?.phones?.first ?? "Unknown".tr,
+                            ((controller.user?.phones?.isNotEmpty??false))?controller.user!.phones!.first:"Unknown".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
                           ),

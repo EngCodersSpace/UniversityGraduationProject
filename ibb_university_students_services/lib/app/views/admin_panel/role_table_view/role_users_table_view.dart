@@ -32,7 +32,7 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  width: Get.width * 0.3,
+                  width: Get.width * 0.2,
                   child: Scrollbar(
                     controller: controller.vertical,
                     thumbVisibility: true,

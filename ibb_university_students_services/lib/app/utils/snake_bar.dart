@@ -6,6 +6,7 @@ import '../styles/app_colors.dart';
 void showSnakeBar({String? title, required String message}) {
   Get.snackbar(
     title ?? "",
+    dismissDirection: DismissDirection.horizontal,
     message,
     snackPosition: SnackPosition.TOP,
     overlayBlur: 0,

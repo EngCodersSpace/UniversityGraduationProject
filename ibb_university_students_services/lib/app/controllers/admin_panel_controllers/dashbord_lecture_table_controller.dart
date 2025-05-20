@@ -592,9 +592,9 @@ class DashboardLectureTableController extends GetxController
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 201 && res.data != null) {
       createLecture = res.data;
-      showSnakeBar(message: "Add successfully");
+      showSnakeBar(title: "Add Successfully",message: "Lecture added successfully");
     } else {
-      showSnakeBar(message: "Add failed");
+      showSnakeBar(title: "Add Failed",message: "Lecture added successfully");
     }
     update(["DataTable"]);
   }

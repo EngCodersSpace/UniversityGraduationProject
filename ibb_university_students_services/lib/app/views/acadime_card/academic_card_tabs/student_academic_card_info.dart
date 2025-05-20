@@ -9,8 +9,8 @@ import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../styles/text_styles.dart';
 
-class AcademicCardInfo extends GetView<AcademicCardController> {
-  const AcademicCardInfo({super.key});
+class StudentAcademicCardInfo extends GetView<AcademicCardController> {
+  const StudentAcademicCardInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +219,7 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
         : RotatedBox(
             quarterTurns: 3,
             child: SizedBox(
-              width: Get.width * 0.5,
+              width: Get.width * 0.4,
               child: Card(
                 color: Colors.white,
                 elevation: 8,
@@ -324,7 +324,7 @@ class AcademicCardInfo extends GetView<AcademicCardController> {
                                                           color: Colors.black,
                                                           textHeader:
                                                               AppTextHeaders
-                                                                  .h2Bold)),
+                                                                  .h3Bold)),
                                             ),
                                             const SizedBox(
                                               height: 20,

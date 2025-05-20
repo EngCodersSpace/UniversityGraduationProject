@@ -54,7 +54,7 @@ class DateTimeUtils {
   }
 
   static void datePiker(
-      BuildContext context, TextEditingController controller) async {
+      BuildContext context, {TextEditingController? controller,String? text}) async {
     DateTime? pikeDate = await showDatePicker(
       context: context,
       builder: (BuildContext context, Widget? child) {
@@ -74,7 +74,13 @@ class DateTimeUtils {
       lastDate: DateTime(2100),
     );
     if (pikeDate != null) {
-      controller.text = pikeDate.toString().split(" ")[0];
+      if(controller != null) {
+        controller.text = pikeDate.toString().split(" ")[0];
+      }
+      if(text != null)
+        {
+          text = pikeDate.toString().split(" ")[0];
+        }
     }
   }
 

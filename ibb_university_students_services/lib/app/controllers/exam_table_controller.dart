@@ -204,9 +204,9 @@ class ExamTableController extends GetxController {
       if (res.statusCode == 200) {
         exams?.value.remove(selectedExam);
         exams?.refresh();
-        showSnakeBar(message: "Delete successfully");
+        showSnakeBar(title: "Delete successfully",message: "Exam deleted successfully");
       } else {
-        showSnakeBar(message: "Delete failed");
+        showSnakeBar(title: "Delete Failed",message: "Exam deleting Failed");
       }
     }
   }
@@ -258,9 +258,9 @@ class ExamTableController extends GetxController {
       if (res.statusCode == 201 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
-        showSnakeBar(message: "Add successfully");
+        showSnakeBar(title: "Add Successfully",message: "Exam added successfully");
       } else {
-        showSnakeBar(message: "Add failed");
+        showSnakeBar(title: "Add Failed",message: "Exam added Failed");
       }
     } else if (mode == "Edit") {
       Result<Exam> res = await ExamRepository.updateExam(
@@ -272,9 +272,9 @@ class ExamTableController extends GetxController {
       if (res.statusCode == 200 && res.data != null) {
         exams?.value[res.data!.id] = res.data!;
         exams?.refresh();
-        showSnakeBar(message: "Edit successfully");
+        showSnakeBar(title: "Edit successfully",message: "Exam edited successfully");
       } else {
-        showSnakeBar(message: "Edit failed");
+        showSnakeBar(title: "Edit Failed",message: "Exam editing failed");
       }
     }
   }

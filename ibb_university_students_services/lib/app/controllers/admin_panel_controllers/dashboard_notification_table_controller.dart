@@ -177,12 +177,12 @@ class DashboardNotificationTableController extends GetxController
           style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
         ),
       ),
-      DataColumn(
-        label: CustomText(
-          "Type",
-          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-        ),
-      ),
+      // DataColumn(
+      //   label: CustomText(
+      //     "Type",
+      //     style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      //   ),
+      // ),
     ];
     await fetchNotificationData();
     loadingState.value = false;

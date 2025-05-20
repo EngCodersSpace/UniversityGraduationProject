@@ -132,7 +132,7 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
                                 color: AppColors.inverseCardColor,
                                 itemBuilder: (ctx) => [
                                   if ((UserRepository.checkPermission(
-                                      target: "Assignments",
+                                      target: "assignments",
                                       action: "write"))) ...[
                                     PopupMenuItem(
                                         value: "Edit",

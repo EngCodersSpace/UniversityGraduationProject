@@ -262,7 +262,7 @@ class PhoneLectureTableTabView extends GetView<LectureController> {
                               textHeader: AppTextHeaders.h2Bold),
                         ),
                         if ((UserRepository.checkPermission(
-                            target: "Lectures", action: "write")))
+                            target: "lectures", action: "write")))
                           CustomButton(
                             onPress: controller.addButtonClick,
                             text: "Add Lecture".tr,

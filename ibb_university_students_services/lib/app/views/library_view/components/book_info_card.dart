@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
+import '../../../services/http_provider.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
@@ -78,16 +78,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                           child: SizedBox(
                               height: (Get.height ) * 0.3,
                               width: (Get.height ) * 0.25,
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                controller.selectedBook?.displayImage ??
-                                    "assets/images/library/file.png",
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              )),
+                              child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${controller.selectedBook?.id}")),
                         ),
                         SizedBox(height: 32,),
                         SizedBox(width: 8,),
@@ -282,18 +273,51 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                             const SizedBox(
                               height: 8,
                             ),
-                            CustomButton(
-                              text: "Download",
-                              onPress: () {},
-                              // size: const Size(120, 40),
-                            ),
+                            Obx(()=>Column(
+                              children: [
+                                if (
+                                controller.selectedBook?.status?.value ==
+                                    "Downloading") ...[
+                                  SizedBox(
+                                    width: Get
+                                        .width,
+                                    child:
+                                    Row(
+                                      children: [
+                                        Expanded(child: LinearProgressIndicator(color: AppColors.inverseCardColor, backgroundColor: AppColors.highlightTextColor.withValues(alpha: 0.2), value: (controller.selectedBook?.progress?.value.toDouble() ?? 0) / 100)),
+                                        SizedBox(width: 4),
+                                        CustomText(
+                                          "${controller.selectedBook?.progress?.value ?? "1"}%",
+                                          textAlign: TextAlign.start,
+                                          style: AppTextStyles.highlightStyle(textHeader: AppTextHeaders.h5Bold),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ]else...[
+                                  if(controller.selectedBook?.downloaded.value??false)...[
+                                    CustomButton(
+                                      text: "Open",
+                                      onPress: controller.openFile,
+                                      // size: const Size(120, 40),
+                                    ),
+                                  ]else...[
+                                    CustomButton(
+                                      text: "Download",
+                                      onPress: controller.downloadBooks,
+                                      // size: const Size(120, 40),
+                                    ),
+                                  ],
+                                ],
+                              ],
+                            )),
                             CustomButton(
                               text: "Delete From Disk",
-                              onPress: () {},
+                              onPress: controller.deleteBooksFromStorage,
                             ),
                             CustomButton(
                               text: "Delete From Server",
-                              onPress: () {},
+                              onPress: controller.deleteBooksFromServer,
                             ),
                           ],
                         )

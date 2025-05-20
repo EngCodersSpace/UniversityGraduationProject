@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
 import '../../../components/custom_text_v2.dart';
 
 class NotificationCard extends StatelessWidget {
   NotificationCard(
-      {required this.message,
+      {
+        required this.title,
+        required this.message,
       required this.author,
       required this.time,
       this.readState = true,
       super.key});
 
+  String title;
   String message;
   String author;
   String time;
@@ -36,18 +40,19 @@ class NotificationCard extends StatelessWidget {
                   SizedBox(
                     width: double.maxFinite,
                     child: CustomText(
-                      " the title:",
+                      " $title:",
                       style:
                           AppTextStyles.mainStyle(textHeader: AppTextHeaders.h1Bold),
                       textAlign: TextAlign.start,
                     ),
                   ),
+                  SizedBox(height: 4,),
                   Padding(
                     padding: const EdgeInsets.only(left: 32),
                     child: CustomText(
                       message,
                       style: AppTextStyles.mainStyle(
-                        textHeader: AppTextHeaders.h3Bold,
+                        textHeader: AppTextHeaders.h3Normal,
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -79,7 +84,7 @@ class NotificationCard extends StatelessWidget {
                               const BorderRadius.all(Radius.circular(32)),
                         ),
                         child: CustomText(
-                          "At: $time",
+                          "At: ${DateTimeUtils.formatStringTime(time: time)}",
                           style: AppTextStyles.secStyle(
                               textHeader: AppTextHeaders.h5Bold),
                         ),

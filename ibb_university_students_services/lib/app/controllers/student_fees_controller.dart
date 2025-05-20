@@ -24,7 +24,7 @@ class StudentFeeController extends GetxController {
   FocusNode receiptNumberFocus = FocusNode();
   FocusNode totalAmountFocus = FocusNode();
   FocusNode payedAmountFocus = FocusNode();
-  RxString fieldMessage = "".obs;
+  RxString fieldMessage = "Empty".tr.obs;
   RxString selectedTerm = "Term 1".obs;
   List<Level>? levels;
   late RxInt level;
@@ -32,13 +32,15 @@ class StudentFeeController extends GetxController {
   int? selectedFee;
   RxMap<int, StudentFee> studentFees = RxMap({});
   int? studentId;
+  String fetchMode = "search";
 
   @override
   void onInit() async {
     await StudentFeeRepository.openBox();
     await fetchLevels();
     if (UserRepository.currentUserType() == Student) {
-      studentId = await UserRepository.fetchUser().then((e) => e.data?.id ?? 0);
+      studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+      fetchMode = "self";
       await fetchStudentFees();
     }
     super.onInit();
@@ -53,8 +55,7 @@ class StudentFeeController extends GetxController {
 
   Future<void> fetchLevels() async {
     levels = [];
-    levels = await LevelRepository.fetchLevels()
-        .then((e) => e.data?.values.toList());
+    levels = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList());
     if (levels?.first != null) {
       level = RxInt(levels!.first.id);
     }
@@ -69,9 +70,9 @@ class StudentFeeController extends GetxController {
       return;
     }
     Result res =
-        await StudentFeeRepository.fetchStudentFees(studentId: studentId!);
+        await StudentFeeRepository.fetchStudentFees(studentId: studentId!,mode: fetchMode);
     if (res.statusCode == 200) {
-      studentFees.value = res.data ?? {};
+      studentFees.value = res.data;
     } else if (res.statusCode == 404) {
       studentFees.value = {};
       fieldMessage.value = "this student not has fees";
@@ -86,8 +87,15 @@ class StudentFeeController extends GetxController {
     }
     loadingState.value = false;
   }
-
   void findButtonClick() {
+
+    if (!UserRepository.checkPermission(
+        target: "student_fees", action: "student_search")) {
+      showSnakeBar(
+          title: "Unauthorizes Access",
+          message: "you don't have permission for search student payments");
+       return;
+    }
     studentId = int.tryParse(idController.text);
     fetchStudentFees();
   }

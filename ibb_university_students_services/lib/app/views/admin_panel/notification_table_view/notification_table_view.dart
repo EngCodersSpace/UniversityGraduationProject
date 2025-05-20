@@ -117,61 +117,63 @@ class MyData extends DataTableSource {
                   initialValue: items[index % controller.rowsPerPage.value]
                       .id
                       .toString())),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value].)),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].date ?? "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].examTime ??
-          //                 "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].day ?? "")),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].hall ?? "")),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .sender
+                      ?.name)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue: items[index % controller.rowsPerPage.value]
+                      .receiver
+                      ?.name)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].topicName)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].title)),
+          DataCell(
+              onTap: () {},
+              CustomTextFormField(
+                  key: UniqueKey(),
+                  onTapOutside: (e) {
+                    controller.refresh();
+                  },
+                  onFieldSubmitted: (str) {},
+                  enableBorder: false,
+                  initialValue:
+                      items[index % controller.rowsPerPage.value].message)),
         ]);
   }
 

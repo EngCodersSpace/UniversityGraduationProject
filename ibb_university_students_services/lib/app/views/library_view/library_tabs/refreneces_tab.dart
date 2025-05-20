@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
-import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import 'package:ibb_university_students_services/app/views/library_view/components/web_book_containar.dart';
-
+import '../../../components/custom_text_v2.dart';
 import '../../../styles/app_colors.dart';
+import '../../../styles/text_styles.dart';
 import '../components/book_container.dart';
 
 class ReferencesTab extends GetView<LibraryController> {
@@ -38,30 +37,66 @@ class ReferencesTab extends GetView<LibraryController> {
                 )
               : PageView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  controller: controller.booksPagesController,
+                  onPageChanged: controller.onPageChange,
+                  controller: controller.myTabsControllers[1],
                   children: [
-                    for (int p = 0; p < controller.books.length; p += 12)
+                    if (controller.books[controller.categories[1]]?.isEmpty ??
+                        true) ...[
                       RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(
                           physics: AlwaysScrollableScrollPhysics(),
                           child: Column(
                             children: [
-                              if (controller.books.isEmpty) ...[
-                                SizedBox(
-                                  height: Get.height * 0.3,
-                                ),
-                                CustomText(
-                                  controller.fieldMessage.value,
+                              SizedBox(
+                                height: Get.height * 0.3,
+                              ),
+                              Center(
+                                child: CustomText(
+                                  "Empty".tr,
                                   style: AppTextStyles.mainStyle(
                                       textHeader: AppTextHeaders.h2Bold),
                                 ),
-                                IconButton(
-                                    onPressed: () async => controller.refresh(),
-                                    icon: Icon(
-                                      Icons.refresh,
-                                      color: AppColors.inverseCardColor,
-                                    ))
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                    for (int i = 0;
+                        i <
+                            (controller
+                                    .books[controller.categories[1]]?.length ??
+                                0);
+                        i += 12)
+                      RefreshIndicator(
+                        onRefresh: () async => controller.refresh(),
+                        child: SingleChildScrollView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          child: Column(
+                            children: [
+                              if (controller.books[controller.categories[1]]
+                                      ?.isEmpty ??
+                                  true) ...[
+                                SizedBox(
+                                  height: Get.height * 0.3,
+                                ),
+                                Center(
+                                  child: CustomText(
+                                    controller.fieldMessage.value,
+                                    style: AppTextStyles.mainStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                ),
+                                Center(
+                                  child: IconButton(
+                                      onPressed: () async =>
+                                          controller.refresh(),
+                                      icon: Icon(
+                                        Icons.refresh,
+                                        color: AppColors.mainCardColor,
+                                      )),
+                                )
                               ],
                               SizedBox(
                                 height: 24,
@@ -72,43 +107,51 @@ class ReferencesTab extends GetView<LibraryController> {
                                     spacing: Get.width * 0.03,
                                     runSpacing: Get.height * 0.045,
                                     children: [
-                                      for (int i = p;
-                                          (i < controller.books.length) &&
-                                              (i < p + 12);
-                                          i++)
-                                        if (controller.books.values
-                                                    .toList()[i]
-                                                    .category ==
-                                                controller.categories[1] &&
-                                            (controller.books.values
+                                      for (int j = i;
+                                          j < (i + 12) &&
+                                              (j <
+                                                  (controller.books[controller.categories[1]]?.length ??
+                                                      0));
+                                          j++)
+                                        if ((controller.books[controller.categories[1]]?.values
                                                         .toList()[i]
                                                         .sectionId ==
                                                     controller
                                                         .selectedDepartment
                                                         .value ||
-                                                controller.selectedDepartment
-                                                        .value ==
+                                                controller.selectedDepartment.value ==
                                                     -1) &&
-                                            (controller.books.values
+                                            (controller.books[controller.categories[1]]?.values
                                                         .toList()[i]
                                                         .levelId ==
                                                     controller
                                                         .selectedLevel.value ||
-                                                controller
-                                                        .selectedLevel.value ==
-                                                    -1)) ...[
-                                          Obx(
-                                            () => (ScreenUtils.isPhoneScreen())
-                                                ? BookContainer(
-                                                    book: controller
-                                                        .books.values
-                                                        .toList()[i],
-                                                  )
-                                                : WebBookContainar(
-                                                    book: controller
-                                                        .books.values
-                                                        .toList()[i]),
-                                          )
+                                                controller.selectedLevel.value ==
+                                                    -1) &&
+                                            ((controller.books[controller.categories[1]]?.values
+                                                        .toList()[i]
+                                                        .title
+                                                        ?.contains(controller.searchText.text) ??
+                                                    false) ||
+                                                controller.searchText.text == "")) ...[
+                                          Obx(() {
+                                            if ((ScreenUtils.isPhoneScreen())) {
+                                              return BookContainer(
+                                                book: controller
+                                                    .books[controller
+                                                        .categories[1]]!
+                                                    .values
+                                                    .toList()[j],
+                                              );
+                                            } else {
+                                              return WebBookContainar(
+                                                  book: controller
+                                                      .books[controller
+                                                          .categories[1]]!
+                                                      .values
+                                                      .toList()[j]);
+                                            }
+                                          })
                                         ]
                                     ]),
                               ),

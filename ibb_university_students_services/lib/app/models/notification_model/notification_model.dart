@@ -1,59 +1,61 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/utils/json_utils.dart';
 part 'notification_model.g.dart';
-@HiveType(typeId: 9)
+@HiveType(typeId: 91)
 class Notification {
   @HiveField(0)
-  RxInt id;
+  int id;
   @HiveField(1)
-  RxString? author;
+  Instructor? sender;
   @HiveField(2)
-  RxString? time;
+  Instructor? receiver;
   @HiveField(3)
-  RxString? message;
+  String? topicName;
   @HiveField(4)
-  RxString? date;
+  String? title;
   @HiveField(5)
-  RxBool? readState;
+  String? message;
   @HiveField(6)
-  RxString? createdAt;
+  String? createdAt;
   @HiveField(7)
-  RxString? updatedAt;
+  String? updatedAt;
 
   Notification({
     required this.id,
-    this.author,
-    this.time,
+    this.sender,
+    this.receiver,
+    this.topicName,
+    this.title,
     this.message,
-    this.date,
-    this.readState,
     this.createdAt,
     this.updatedAt,
   });
 
   factory Notification.fromJson(Map<String, dynamic> json) {
+
     return Notification(
-      id: RxInt(json['id'] ?? 0),
-      author: RxString(json['author'] ?? ""),
-      time: RxString(json['time'] ?? ""),
-      message: RxString(json['message'] ?? ""),
-      date: RxString(json['date'] ?? ""),
-      readState: RxBool(json['readState']),
-      createdAt: RxString(json['created_at'] ?? ""),
-      updatedAt: RxString(json['updated_at'] ?? ""),
+      id: json['message_id'],
+      sender: (json['senderUser']!=null)?Instructor(id:json['senderUser']['user_id'],nameData: JsonUtils.tryJsonDecode(json['senderUser']['user_name'])):null,
+      receiver: (json['receiverUser']!=null)?Instructor(id:json['receiverUser']['user_id'],nameData: JsonUtils.tryJsonDecode(json['receiverUser']['user_name'])):null,
+      topicName: json['topic_name'],
+      title: json['title'],
+      message: json['message'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "id": id.value,
-      "author": author?.value,
-      "time": time?.value,
-      "message": message?.value,
-      "date": date?.value,
-      "readState": readState?.value,
-      "created_at": createdAt?.value,
-      "updated_at": updatedAt?.value,
+      "message_id": id,
+      "senderUser": sender?.toJson(),
+      "receiverUser":receiver?.toJson(),
+      "topic_name": topicName,
+      "title": title,
+      "message": message,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
     };
   }
 }
