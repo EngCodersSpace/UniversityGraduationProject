@@ -1,9 +1,11 @@
 // notificationController.js
-const { notification, user } = require('../models');
+const { notification, user,role } = require('../models');
 const admin = require('../config/firebase');
 const { Op } = require('sequelize');
 const  CRUD  = require('../utils/debounceKey');
 const {isNotificationRelevant}=require('../utils/notificationUtils')
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Send a single direct user notification
 const sendSingleNotification = async (req, res) => {
   try {
@@ -30,54 +32,152 @@ const sendSingleNotification = async (req, res) => {
   }
 };
 
-// as Middleware  :
 
-// SYSTEM Notification (not stored in DB)
-const sendSystemNotification = async ({
-  topic_name,
-  metadata = {},
-  delay = 3000,
-}) => {
-  const send = async () => {
-    const payload = {
-      data: {
-        type: 'system',
-        ...metadata,
-      },
-      condition:topic_name
+const fetchRoleUserTypeMap = async () => {
+  const roles = await role.findAll({
+    attributes: ['id', 'user_type'],
+    raw: true,
+  });
+
+  const roleMap = {};
+  for (const { id, user_type } of roles) {
+    roleMap[id] = user_type;
+  }
+
+  return roleMap;
+};
+
+//  Function to extract topic parts dynamically from a condition string
+function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
+  if (typeof conditionStr !== 'string') {
+    return {
+      userType: [],
+      sections: [],
+      levels: [],
+      roles: [],
     };
-    try {
-      await admin.messaging().send(payload);
-    } catch (error) {
-      console.error('System notification failed:', error);
-    }
+  }
+
+  const normalized = conditionStr.replace(/`/g, "'");
+
+  if (normalized.includes("'all' in topics")) {
+    return {
+      userType: ['all'],
+      sections: [],
+      levels: [],
+      roles: [],
+    };
+  }
+
+  const parts = {
+    userType: [],
+    sections: [],
+    levels: [],
+    roles: [],
   };
 
-  CRUD.delayedSend(delay, send)
+  // Split on logical ANDs
+  const andGroups = normalized.split(/\s*&&\s*/);
 
-};
+  for (let group of andGroups) {
+    const match = group.match(/\(([^()]+)\)/);
+    const groupStr = match ? match[1] : group;
+
+    // Split on logical ORs
+    const items = groupStr.split(/\s*\|\|\s*/);
+
+    for (let item of items) {
+      const cleaned = item.replace(/'|in topics|\(|\)/g, '').trim();
+
+      if (/^student|doctor$/.test(cleaned)) {
+        if (!parts.userType.includes(cleaned)) parts.userType.push(cleaned);
+      } else if (/^section_\d+$/.test(cleaned)) {
+        if (!parts.sections.includes(cleaned)) parts.sections.push(cleaned);
+      } else if (/^level_\d+$/.test(cleaned)) {
+        if (!parts.levels.includes(cleaned)) parts.levels.push(cleaned);
+      } else if (/^role_\d+$/.test(cleaned)) {
+        // Extract numeric ID from 'role_1' => 1
+        const roleId = cleaned.split('_')[1];
+        const expectedUserType = roleUserTypeMap[roleId]; 
+        if (
+          !expectedUserType || // role ID not in map (maybe warn here?)
+          parts.userType.includes(expectedUserType) || // userType matches expected
+          parts.userType.includes('all') // universal
+        ) {
+          if (!parts.roles.includes(cleaned)) parts.roles.push(cleaned);
+        }
+      }
+      
+    }
+  }
+
+  return parts;
+}
+
+function generateConditions(filter) {
+  const {
+    userType = [],
+    sections = [],
+    levels = [],
+    roles = [],
+  } = filter;
+
+  const conditions = [];
+
+  if (userType.includes('all')) {
+    conditions.push("'all' in topics");
+    return conditions;
+  }
+
+  for (const user of userType) {
+    for (const section of sections.length ? sections : [null]) {
+      for (const role of roles.length ? roles : [null]) {
+        if (user === 'student') {
+          for (const level of levels.length ? levels : [null]) {
+            const cond = [
+              `'${user}' in topics`,
+              section && `'${section}' in topics`,
+              level && `'${level}' in topics`,
+              role && `'${role}' in topics`,
+            ].filter(Boolean).join(' && ');
+            conditions.push(cond);
+          }
+        } else {
+          const cond = [
+            `'${user}' in topics`,
+            section && `'${section}' in topics`,
+            role && `'${role}' in topics`,
+          ].filter(Boolean).join(' && ');
+          conditions.push(cond);
+        }
+      }
+    }
+  }
+
+  return conditions;
+}
+
+
 
 // INFORMATION Notification (stored in DB and sent)
 const sendInfoNotification = async ({
   title,
   message,
-  topic_name ,
+  topic_name,
   sender_id,
   metadata = {},
-  delay = 10000,
+  delay = 6000,
 }) => {
-  
+  const roleUserTypeMap = await fetchRoleUserTypeMap();
+  const parsed = extractTopicParts(topic_name, roleUserTypeMap);
+  const conditions = generateConditions(parsed);
+
+  console.log('\n \n   roleUserTypeMap',roleUserTypeMap,'\n  \n ');
+  console.log('\n \n   Topics after Filter',parsed,'\n \n  ');
+  console.log('\n \n   Generate Conditions',conditions,'\n \n \n ');
+
   const send = async () => {
-    const payload = {
-      notification: { title, body: message },
-      data: {
-        type: 'information',
-        ...metadata,
-      },
-      condition: topic_name,
-    };
     try {
-      // Save the original condition string to DB
       await notification.create({
         sender_id,
         topic_name,
@@ -85,20 +185,72 @@ const sendInfoNotification = async ({
         message,
         type: 'topic',
       });
-    
-      // Send the notification using FCM condition
-      await admin.messaging().send(payload);
-      console.log('Notification sent to condition:', topic_name);
+
+      for (const condition of conditions) {
+        const payload = {
+          notification: { title, body: message },
+          data: {
+            type: 'information',
+            ...metadata,
+          },
+          condition,
+        };
+
+        await admin.messaging().send(payload);
+        console.log('✅ Sent to:', condition);
+        await sleep(1000);
+      }
     } catch (error) {
-      console.error('Info notification failed:', error.message);
+      console.error('❌ Notification failed:', error.message);
     }
-    
   };
-    CRUD.delayedSend(delay, send)
+
+  CRUD.delayedSend(delay, send);
 };
 
-// HANDLERS :
+// SYSTEM Notification (not stored in DB)
+const sendSystemNotification = async ({
+  topic_name,
+  metadata = {},
+  delay = 3000,
+}) => {
 
+  const roleUserTypeMap = await fetchRoleUserTypeMap();
+  const parsed = extractTopicParts(topic_name, roleUserTypeMap);
+  const conditions = generateConditions(parsed);
+
+  console.log('\n \n   roleUserTypeMap',roleUserTypeMap,'\n  \n ');
+  console.log('\n \n   Topics after Filter',parsed,'\n \n  ');
+  console.log('\n \n   Generate Conditions',conditions,'\n \n \n ');
+
+  const send = async () => {
+    try {
+  
+      for (const condition of conditions) {
+        const payload = {
+          data: {
+            type: 'system',
+            ...metadata,
+          },
+          condition,
+        };
+
+        await admin.messaging().send(payload);
+        console.log('✅ Sent to:', condition);
+      }
+    } catch (error) {
+      console.error('❌ Notification failed:', error.message);
+    }
+  };
+
+
+  CRUD.delayedSend(delay, send)
+
+};
+
+
+
+// HANDLERS :
 const sendInfoHandler = async (req, res) => {
   try {
     await sendInfoNotification(req.body);
@@ -159,7 +311,7 @@ const getForRecieved = async (req, res) => {
       ],
   });
 
-  return res.status(200).json({message:"Get Notifications ", DatabyTopic:filteredNotifications , databySingle:notifications1});
+  return res.status(200).json({message:"Get Notifications ", Data:[filteredNotifications , notifications1]});
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
