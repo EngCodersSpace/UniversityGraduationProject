@@ -295,7 +295,14 @@ const getForSender = async (req, res) => {
 // to see what i received (single and topic)  user send topic_name in query          // depends (relation || in topics)
 const getForRecieved = async (req, res) => {
   try{
-  const notifications=await notification.findAll();
+  const notifications=await notification.findAll(
+    {include: [
+        {
+          model: user, as: 'senderUser',
+          attributes: ['user_id', 'user_name'],
+        }
+      ],}
+  );
 
   const filteredNotifications = notifications.filter(notification =>
     isNotificationRelevant(req.body.topic_name, notification.topic_name)
@@ -304,10 +311,15 @@ const getForRecieved = async (req, res) => {
   const notifications1= await notification.findAll({
     where: {receiver_id: req.body.receiver_id },
     include: [
+      {
+          model: user,
+          as: 'senderUser',    
+          attributes: ['user_id', 'user_name'],
+        },
         {
           model: user, as: 'receiverUser',
           attributes: ['user_id', 'user_name'],
-        }
+        },
       ],
   });
 

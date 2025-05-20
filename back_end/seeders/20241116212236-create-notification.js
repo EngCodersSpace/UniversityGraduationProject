@@ -117,8 +117,8 @@ function buildConditions({ sections, levels, roles, targets }, count = 10) {
 }
 
 // Your data
-const sections = ["section_1", "section_2", "section_3", "section_4"];
-const levels = ["level_1", "level_2", "level_3", "level_4", "level_5"];
-const roles = ["role_1", "role_2", "role_3", "role_4", "role_5"];
-const targets = ["student", "doctor", "student || doctor"];
+const sections = ["'section_1' in topic", "'section_2' in topic", "'section_3' in topic", "'section_4' in topic"];
+const levels = ["level_1 'in' topic", "'level_2' in topic", "'level_3' in topic", "'level_4' in topic", "'level_5' in topic"];
+const roles = ["'role_1' in topic", "'role_2' in topic", "'role_3' in topic", "'role_4' in topic", "'role_5' in topic"];
+const targets = ["'student' in topic", "'doctor' in topic", "'student' in topic || 'doctor' in topic"];
 

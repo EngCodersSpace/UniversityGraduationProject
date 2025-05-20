@@ -628,7 +628,7 @@ exports.getStudentsByCriteriaPanel = async (req, res) => {
             {
               model: section,
               as: "section",
-              attributes: ["user_section_id","user_section_name"],
+              attributes: ["section_name","id"],
               required: true,
               where: {
                 ...(sectionName && {
