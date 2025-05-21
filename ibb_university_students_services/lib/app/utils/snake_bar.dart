@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 
 import '../styles/app_colors.dart';
 
-void showSnakeBar({String? title, required String message}) {
+void showSnakeBar({String? title, required String message,bool overWrite = false}) {
+  if(overWrite){
+    Get.closeAllSnackbars();
+  }
   Get.snackbar(
     title ?? "",
     dismissDirection: DismissDirection.horizontal,
@@ -14,6 +17,7 @@ void showSnakeBar({String? title, required String message}) {
     colorText: AppColors.mainTextColor,
     margin: const EdgeInsets.all(16),
     overlayColor: Colors.transparent,
+    duration: Duration(seconds: 2),
     isDismissible: true,
     snackStyle: SnackStyle.FLOATING,
   );

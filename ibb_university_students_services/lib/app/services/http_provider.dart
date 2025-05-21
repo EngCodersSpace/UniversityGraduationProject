@@ -176,7 +176,7 @@ class HttpProvider {
       onProcessUploads++;
       showSnakeBar(
           title: "$onProcessUploads Files Uploading ",
-          message: "for details look on notifications");
+          message: "for details look on notifications",overWrite: true);
 
       final response = await _dio
           .post(
@@ -323,7 +323,6 @@ class HttpProvider {
     Widget? imageError,
     BoxFit fit = BoxFit.cover,
   }) {
-
     if(imageUrl.startsWith('/') || imageUrl.contains(':\\') || imageUrl.contains('/storage/')){
       return Image.file(
         File(imageUrl),

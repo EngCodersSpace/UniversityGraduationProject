@@ -171,6 +171,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                           SizedBox(
                             width: width * 0.05,
                           ),
+                          if((controller.newsController?.news.isEmpty??true))...[
+                          NewsCard(
+                          height: height * 0.27,
+                          width: width * 0.8,
+                          text:"News Empty",
+                          imageUrl: "",)
+                      ],
                           for (int i = 0;
                               i < (controller.tabController?.length ?? 1);
                               i++) ...[

@@ -111,7 +111,7 @@ class LecturesTab extends GetView<LibraryController> {
                                 for (int j = i;
                                 j < (i + 12) &&
                                     (j <
-                                        (controller.books[controller.categories[2]]?.length ??
+                                        (controller.books[controller.categories[0]]?.length ??
                                             0));
                                 j++)
                                   if ((controller.books[controller.categories[0]]?.values
@@ -132,7 +132,7 @@ class LecturesTab extends GetView<LibraryController> {
                                       ((controller.books[controller.categories[0]]?.values
                                           .toList()[i]
                                           .title
-                                          ?.toLowerCase().contains(controller.searchText.text.toLowerCase()) ??
+                                          ?.contains(controller.searchText.text) ??
                                           false) ||
                                           controller.searchText.text == "")) ...[
                                     Obx(() {

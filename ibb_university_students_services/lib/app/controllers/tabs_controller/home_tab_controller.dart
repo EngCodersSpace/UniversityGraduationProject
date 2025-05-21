@@ -28,7 +28,7 @@ class HomeTabController extends GetxController
     }
     newsController = Get.find<NewsController>();
     await newsController?.fetchNews(limit: 5);
-    tabController = TabController(length: newsController?.news.length??1, initialIndex: 0, vsync: this);
+    tabController = TabController(length: newsController?.news.length??0, initialIndex: 0, vsync: this);
     _setUpTimer();
     initState.value = true;
     super.onInit();
@@ -43,7 +43,7 @@ class HomeTabController extends GetxController
     }
     await newsController?.fetchNews(limit: 5);
     // tabController?.dispose();
-    tabController = TabController(length: newsController?.news.length??1, initialIndex: 0, vsync: this);
+    tabController = TabController(length: newsController?.news.length??0, initialIndex: 0, vsync: this);
     update(["tadsIndicator"]);
     super.refresh();
   }
