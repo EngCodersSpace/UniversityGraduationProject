@@ -7,6 +7,7 @@ import 'package:ibb_university_students_services/app/models/level_model/level.da
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/add_group_phone_number_card.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/popup_add_student_component.dart';
 
 class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
@@ -249,11 +250,19 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                               )
                             ],
                           ),
-                          PopupAddStudentComponent(
-                            name: "Phone Number",
-                            controlName: controller.studentPhone,
-                            focusName: controller.phoneFocus,
-                            inputType: TextInputType.phone,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText("Phone Number",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold)),
+                              CustomButton(
+                                onPress: () {
+                                  AddGroupPhoneNumberCard();
+                                },
+                                text: "Add Group Numbers",
+                              )
+                            ],
                           ),
                           PopupAddStudentComponent(
                             name: "Student System",

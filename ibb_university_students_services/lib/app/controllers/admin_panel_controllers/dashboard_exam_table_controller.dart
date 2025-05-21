@@ -556,8 +556,7 @@ class DashboardExamTableController extends GetxController
       );
       Navigator.of(Get.overlayContext!).pop();
       if (res.statusCode == 201 && res.data != null) {
-        // ignore: invalid_use_of_protected_member
-        exams.value[res.data!.id] = res.data!;
+        exams[res.data!.id] = res.data!;
         exams.refresh();
         showSnakeBar(message: "Add successfully");
       } else {

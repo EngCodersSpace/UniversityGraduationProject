@@ -188,8 +188,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue:
-                      items[index % controller.rowsPerPage.value].category ??
-                          "")),
+                      items[index % controller.rowsPerPage.value].category)),
           DataCell(
               onTap: () {},
               CustomTextFormField(

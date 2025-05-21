@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/buttons.dart';
-import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
-import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
-import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/utils/validators.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/academic_card_last_payment.dart';
-
-import '../../models/student_model/student.dart';
 import 'academic_card_tabs/doctor_academic_card_info.dart';
 import 'academic_card_tabs/student_academic_card_info.dart';
 

@@ -70,6 +70,7 @@ class LibraryWebView extends GetView<LibraryController> {
                       tabAlignment: TabAlignment.center,
                       controller: controller.tapController,
                       labelColor: AppColors.mainCardColor,
+                      onTap: controller.refreshCurrentPage,
                       indicatorColor: AppColors.mainCardColor,
                       dividerHeight: 0,
                       indicatorSize: TabBarIndicatorSize.tab,
@@ -162,9 +163,11 @@ class LibraryWebView extends GetView<LibraryController> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      controller.myTabsControllers[controller.tapController!.index].previousPage(
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.ease);
+                      controller
+                          .myTabsControllers[controller.tapController!.index]
+                          .previousPage(
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.ease);
                     },
                     icon: const Icon(Icons.arrow_back_rounded),
                     color: AppColors.backColor,
@@ -183,9 +186,11 @@ class LibraryWebView extends GetView<LibraryController> {
                   ),
                   IconButton(
                       onPressed: () {
-                        controller.myTabsControllers[controller.tapController!.index].nextPage(
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.ease);
+                        controller
+                            .myTabsControllers[controller.tapController!.index]
+                            .nextPage(
+                                duration: const Duration(milliseconds: 400),
+                                curve: Curves.ease);
                       },
                       icon: const Icon(Icons.arrow_forward_rounded),
                       color: AppColors.backColor,
