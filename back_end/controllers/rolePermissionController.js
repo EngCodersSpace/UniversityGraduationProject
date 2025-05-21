@@ -1,11 +1,10 @@
 
-
 const { role, permission,  role_permission } = require('../models');
 
 // Create a new role
 exports.createRole = async (req, res) => {
   try {
-    const newrole = await role.create( {roleName:req.body.roleName} );
+    const newrole = await role.create( {roleName:req.body.roleName , user_type:req.body.user_type} );
     res.status(201).json({
         message:'Create role successfully',
         data: newrole
@@ -48,7 +47,6 @@ exports.deleteRole = async (req, res) => {
 
 
 
-
 // Create a new permission
 exports.createPermission = async (req, res) => {
     try {
@@ -84,7 +82,6 @@ exports.deletePermission = async (req, res) => {
     res.status(500).json({ message: 'Error deleting permission', error:error.message});
   }
 };
-
 
 
 
@@ -126,12 +123,13 @@ exports.removePermissionFromRole = async (req, res) => {
 
 // for Admin panel 
 exports.getRolesPanel = async (req, res) => {
-  const ALLOWED_ORDER_FIELDS = ["id","roleName"];
+  const ALLOWED_ORDER_FIELDS = ["id","roleName","user_type"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
   try {
     const {
       roleName,
+      user_type,
       page = 1,
       limit = 10,
       orderBy = "id",
@@ -154,7 +152,9 @@ exports.getRolesPanel = async (req, res) => {
         ...(roleName && {
           roleName: roleName  
         }),
-       
+        ...(user_type && {
+          user_type: user_type  
+        }),
         ...(search &&{
           [Op.or]: [
             { roleName: { [Op.like]: `%${search}%` } },
@@ -193,7 +193,7 @@ exports.getRolesPanel = async (req, res) => {
   }
 };
 
-// 
+// we not use it until now
 exports.getPermissionsPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["id","target","action"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
@@ -263,7 +263,7 @@ exports.getPermissionsPanel = async (req, res) => {
   }
 };
 
-// 
+//  we not use it until now
 exports.getRolesPermissionsPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["id","roleId","permissionId"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];

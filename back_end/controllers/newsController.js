@@ -162,7 +162,7 @@ exports.getAllNewsWithLimit = async (req, res) => {
 
 
 //  get image from path by id (req.query.id)
-exports.getImageOfNews1 = async (req, res) => {
+exports.getImageOfNews = async (req, res) => {
   try {
 
       if (!req.query.id) {
@@ -189,52 +189,46 @@ exports.getImageOfNews1 = async (req, res) => {
   }
 };
 
-// get image as stream
-exports.getImageOfNews = async (req, res) => {
+// get images as stream
+exports.streamNews = async (req, res) => {
   try {
-    const newsId = req.query.id;
+    const { limit } = req.query;
 
-    if (!newsId) {
-      return res.status(400).json({ message: "News id is required" });
+    const options = {
+      order: [['time', 'DESC']],
+    };
+
+    if (limit) {
+      options.limit = parseInt(limit);
     }
 
-    const ImageOfNews = await news.findOne({
-      where: { id: newsId },
-    });
+    const newsList = await news.findAll(options);
 
-    if (!ImageOfNews || !ImageOfNews.image) {
-      return res.status(404).json({ message: "No image found for the specified News" });
+    if (!newsList.length) {
+      return res.status(204).json({ message: 'No news found.' });
     }
 
-    const imagePath = path.join(__dirname, '..', 'storage', ImageOfNews.image);
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
 
-    if (!fs.existsSync(imagePath)) {
-      return res.status(404).json({ message: "Image file not found on server" });
+    for (const item of newsList) {
+      const chunk = JSON.stringify(item) + '\n---\n';
+      res.write(chunk);
+      res.flush?.();
+      await new Promise((resolve) => setTimeout(resolve, 300));
     }
 
-    const ext = path.extname(imagePath).toLowerCase();
-    const mimeType = {
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.png': 'image/png',
-      '.gif': 'image/gif',
-    }[ext] || 'application/octet-stream';
-
-    res.setHeader('Content-Type', mimeType);
-
-    const readStream = fs.createReadStream(imagePath);
-    readStream.pipe(res);
-
-    readStream.on('error', (err) => {
-      console.error("Stream error:", err.message);
-      res.status(500).end("Error reading image file");
-    });
-
+    res.end();
   } catch (error) {
-    console.error("Error fetching News image:", error.message);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error('Error streaming news:', error.message);
+    if (!res.headersSent) {
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+    } else {
+      res.end();
+    }
   }
 };
+
 
 
 

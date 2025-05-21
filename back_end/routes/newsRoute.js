@@ -10,6 +10,8 @@ router.use(verifyToken);
 router.post('/New-With-Photo', CRUD.createNewsWithPhoto);
 
 router.get('/Get-AllNews', CRUD.getAllNewsWithLimit);
+router.get('/stream-news', CRUD.streamNews);
+
 router.get('/Get-imageOfnew', CRUD.getImageOfNews);
 
 router.get('/Get-New/:id', CRUD.getNewsById);
