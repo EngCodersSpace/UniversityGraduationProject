@@ -18,7 +18,7 @@ exports.getGrades = async (req, res) => {
       });
 
       if (!grades.length) {
-          return res.status(404).json({ message: 'No grades found for this student' });
+          return res.status(404).json({ message: 'No grades found for you' });
       }
 
       res.status(200).json({ message: 'These your grades', Grades: grades });
@@ -31,48 +31,21 @@ exports.getGrades = async (req, res) => {
 // doctors only can see all grades or use filters to specific (student,section,level,term,subject,yearofissue)
 exports.getAllGrades = async (req, res) => {
   try {
-    const {
-      student_id,
-      subject_id,
-      term,
-      section_id,
-      level_id,
-      year_of_issue
-    } = req.query;
 
-    const { count, rows: grades } = await grade.findAndCountAll({
-      where: {
-        ...(student_id && {
-          student_id: student_id  
-        }),
-        ...(subject_id && {
-          subject_id: subject_id  
-        }),
-        ...(term && {
-          term: term  
-        }),
-        ...(section_id && {
-          section_id: section_id  
-        }),
-        ...(level_id && {
-          level_id: level_id  
-        }),
-        ...(year_of_issue && {
-          year_of_issue: year_of_issue  
-        }),
-      },
-      distinct: true,
+    const grades = await grade.findAndCountAll({
+      where: {student_id:req.query.student_id}, 
+      include: [
+          { model: subject, as: 'subject' },
+        ],
     });
 
     if (!grades.length) {
-      return res.status(404).json({ message: "No grades found for the specified criteria" });
+      return res.status(404).json({ message: 'No grades found for this student' });
     }
-
 
     res.status(200).json({
       message: "Grades retrieved successfully",
       data: grades,
-      totalGrades: count,
     });
   } catch (error) {
     console.error(error);
