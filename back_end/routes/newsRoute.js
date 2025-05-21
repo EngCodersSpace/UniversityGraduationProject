@@ -7,7 +7,7 @@ const {checkPermission , checkStudentsAccess , checkDoctorAccess,checkUserAccess
 const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
-router.post('/New-With-Photo', CRUD.createNewsWithPhoto);
+router.post('/New-With-Photo',checkUserAccess, CRUD.createNewsWithPhoto);
 
 router.get('/Get-AllNews', CRUD.getAllNewsWithLimit);
 router.get('/stream-news', CRUD.streamNews);

@@ -33,6 +33,30 @@ const sendSingleNotification = async (req, res) => {
 };
 
 
+const sendSingleSystemNotification = async ({ title, message, receiver_id, token, sender_id = null }) => {
+  try {
+    const payload = {
+      notification: { title, body: message },
+      data: { type: 'single' },
+      token,
+    };
+
+    await admin.messaging().send(payload);
+
+  } catch (error) {
+    console.error('System notification failed:', error);
+    throw new Error('Sending single notification failed');
+  }
+};
+
+
+
+
+
+
+
+
+// Fetch role-userType mapping
 const fetchRoleUserTypeMap = async () => {
   const roles = await role.findAll({
     attributes: ['id', 'user_type'],
@@ -47,7 +71,7 @@ const fetchRoleUserTypeMap = async () => {
   return roleMap;
 };
 
-//  Function to extract topic parts dynamically from a condition string
+// Extract topic parts from a condition string
 function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
   if (typeof conditionStr !== 'string') {
     return {
@@ -76,14 +100,12 @@ function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
     roles: [],
   };
 
-  // Split on logical ANDs
   const andGroups = normalized.split(/\s*&&\s*/);
 
   for (let group of andGroups) {
     const match = group.match(/\(([^()]+)\)/);
     const groupStr = match ? match[1] : group;
 
-    // Split on logical ORs
     const items = groupStr.split(/\s*\|\|\s*/);
 
     for (let item of items) {
@@ -96,24 +118,23 @@ function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
       } else if (/^level_\d+$/.test(cleaned)) {
         if (!parts.levels.includes(cleaned)) parts.levels.push(cleaned);
       } else if (/^role_\d+$/.test(cleaned)) {
-        // Extract numeric ID from 'role_1' => 1
         const roleId = cleaned.split('_')[1];
-        const expectedUserType = roleUserTypeMap[roleId]; 
+        const expectedUserType = roleUserTypeMap[roleId];
         if (
-          !expectedUserType || // role ID not in map (maybe warn here?)
-          parts.userType.includes(expectedUserType) || // userType matches expected
-          parts.userType.includes('all') // universal
+          !expectedUserType || 
+          parts.userType.includes(expectedUserType) ||
+          parts.userType.includes('all')
         ) {
           if (!parts.roles.includes(cleaned)) parts.roles.push(cleaned);
         }
       }
-      
     }
   }
 
   return parts;
 }
 
+// Generate topic conditions based on extracted parts
 function generateConditions(filter) {
   const {
     userType = [],
@@ -124,28 +145,29 @@ function generateConditions(filter) {
 
   const conditions = [];
 
+  // If targeting everyone
   if (userType.includes('all')) {
-    conditions.push("'all' in topics");
-    return conditions;
+    return ["'all' in topics"];
+  }
+
+  // If only 1 userType and no other filters
+  if (
+    userType.length === 1 &&
+    !sections.length &&
+    !levels.length &&
+    !roles.length
+  ) {
+    return [`'${userType[0]}' in topics`];
   }
 
   for (const user of userType) {
     for (const section of sections.length ? sections : [null]) {
-      for (const role of roles.length ? roles : [null]) {
-        if (user === 'student') {
-          for (const level of levels.length ? levels : [null]) {
-            const cond = [
-              `'${user}' in topics`,
-              section && `'${section}' in topics`,
-              level && `'${level}' in topics`,
-              role && `'${role}' in topics`,
-            ].filter(Boolean).join(' && ');
-            conditions.push(cond);
-          }
-        } else {
+      for (const level of levels.length ? levels : [null]) {
+        for (const role of roles.length ? roles : [null]) {
           const cond = [
             `'${user}' in topics`,
             section && `'${section}' in topics`,
+            level && `'${level}' in topics`,
             role && `'${role}' in topics`,
           ].filter(Boolean).join(' && ');
           conditions.push(cond);
@@ -495,4 +517,8 @@ module.exports = {
   getForRecieved,
   getForRecievedSingle,
   getForRecievedByTopic,
+  fetchRoleUserTypeMap,
+  extractTopicParts,
+  generateConditions,
+  sendSingleSystemNotification
 };

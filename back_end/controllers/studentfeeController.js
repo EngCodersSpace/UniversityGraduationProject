@@ -1,5 +1,5 @@
 // controllers/studentFeeController.js
-const { student_fee, student } = require('../models');
+const { student_fee, student ,level} = require('../models');
 
 exports.createStudentFee = async (req, res) => {
     try {

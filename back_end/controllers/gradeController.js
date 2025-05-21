@@ -2,6 +2,7 @@
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
+const {sendSingleSystemNotification}= require('./notificationController');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
@@ -363,6 +364,16 @@ exports.createGrade = async (req, res) => {
     }
 
     const newGrade = await grade.create(req.body);
+
+    // await sendSingleSystemNotification({
+    //   title: ` Grades `,
+    //   message: `Your Grade Of Subject ${req.body.subject_id} has been Submmited see it.`,
+    //   receiver_id : req.body.student_id,
+    //   token,
+    //   sender_id: "0", 
+    // });
+
+
     res.status(201).json({
       message: 'Grade created successfully',
       grade: newGrade,

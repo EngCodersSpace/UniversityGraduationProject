@@ -4,7 +4,7 @@ const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = re
 const { sequelize } = require('../models'); 
 const { Sequelize} = require('sequelize');
 const { Op } = require("sequelize");
-
+ 
 
 //  All Functions are perfict right now 2024-12-10
 exports.createExam = async (req, res) =>{
