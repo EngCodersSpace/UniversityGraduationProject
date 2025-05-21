@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -48,6 +49,17 @@ class NotificationHandler {
   static Future<void> registerTopics(List<String> topics )async{
     for(String topic in topics) {
       await FirebaseMessaging.instance.subscribeToTopic(topic);
+    }
+  }
+
+  static Future<void> unsubscribeFromTopic(List<String> topics) async {
+    for(String topic in topics) {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic).then((_) {
+      }).catchError((error) {
+        if (kDebugMode) {
+          print("Failed to unsubscribe: $error");
+        }
+      });
     }
   }
   static void _handleMessage(RemoteMessage message) {

@@ -14,6 +14,7 @@ import 'package:ibb_university_students_services/app/models/instructor_model/ins
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
+import 'package:ibb_university_students_services/app/models/news_model/news.dart';
 import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart';
 import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
@@ -28,6 +29,7 @@ import 'package:ibb_university_students_services/app/repositories/assignments_re
 import 'package:ibb_university_students_services/app/repositories/exam_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/news_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
@@ -69,6 +71,7 @@ class HiveServices{
     Hive.registerAdapter(LibraryFilesCacheAdapter());
     Hive.registerAdapter(DataSyncAdapter());
     Hive.registerAdapter(NotificationAdapter());
+    Hive.registerAdapter(NewsAdapter());
   }
   static openGlobalBoxes()async{
     await SubjectRepository.openBox();
@@ -78,6 +81,7 @@ class HiveServices{
     await LectureRepository.openBox();
     await AssignmentsRepository.openBox();
     await NotificationRepository.openBox();
+    await NewsRepository.openBox();
   }
 
   static clearAllBox() async{

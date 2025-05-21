@@ -6,29 +6,29 @@ part of 'news.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class LevelAdapter extends TypeAdapter<Level> {
+class NewsAdapter extends TypeAdapter<News> {
   @override
   final int typeId = 69;
 
   @override
-  Level read(BinaryReader reader) {
+  News read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Level(
+    return News(
       id: fields[0] as int,
+      title: fields[1] as String?,
+      content: fields[2] as String?,
+      publisher: fields[4] as Instructor?,
+      date: fields[3] as String?,
       createdAt: fields[5] as String?,
       updatedAt: fields[6] as String?,
-    )
-      ..title = fields[1] as String?
-      ..content = fields[2] as String?
-      ..date = fields[3] as String?
-      ..publisher = fields[4] as Instructor?;
+    );
   }
 
   @override
-  void write(BinaryWriter writer, Level obj) {
+  void write(BinaryWriter writer, News obj) {
     writer
       ..writeByte(7)
       ..writeByte(0)
@@ -53,7 +53,7 @@ class LevelAdapter extends TypeAdapter<Level> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LevelAdapter &&
+      other is NewsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

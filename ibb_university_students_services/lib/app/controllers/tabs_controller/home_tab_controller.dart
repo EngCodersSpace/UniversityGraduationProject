@@ -9,6 +9,7 @@ import '../../models/helper_models/result.dart';
 import '../../repositories/user_repository.dart';
 import '../../models/user_model/user.dart';
 import '../main_controller.dart';
+import '../news_controller.dart';
 
 class HomeTabController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -18,19 +19,20 @@ class HomeTabController extends GetxController
   ScrollController scrollController = ScrollController();
   Timer? _timer;
   int _newsCurrentPos = 0;
-
+  NewsController? newsController ;
   @override
   void onInit() async {
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
     }
-    tabController = TabController(length: 5, initialIndex: 0, vsync: this);
+    newsController = Get.find<NewsController>();
+    await newsController?.fetchNews(limit: 5);
+    tabController = TabController(length: newsController?.news.length??1, initialIndex: 0, vsync: this);
     _setUpTimer();
     initState.value = true;
     super.onInit();
   }
-
 
   @override
   void refresh() async{
@@ -39,6 +41,11 @@ class HomeTabController extends GetxController
       user = res.data;
       initState.refresh();
     }
+    await newsController?.fetchNews(limit: 5);
+    // tabController?.dispose();
+    tabController = TabController(length: newsController?.news.length??1, initialIndex: 0, vsync: this);
+    update(["tadsIndicator"]);
+    super.refresh();
   }
 
   @override
@@ -76,17 +83,17 @@ class HomeTabController extends GetxController
   }
   void _setUpTimer() {
     try {
-      const duration = Duration(seconds: 5);
+      const duration = Duration(seconds: 6);
       _timer = Timer.periodic(duration, (timer) {
         _newsCurrentPos++;
-        if (_newsCurrentPos > 2) {
+        if (_newsCurrentPos > (tabController?.length??0)) {
           _newsCurrentPos = 0;
           if (scrollController.hasClients) {
             scrollController.jumpTo(0);
           }
         }
         newsAnimate(Get.width * 0.8, _newsCurrentPos,
-            const Duration(seconds: 2, milliseconds: 500));
+            const Duration(seconds: 3, milliseconds: 500));
       });
     } catch (e) {
       if (kDebugMode) {
@@ -155,6 +162,7 @@ class HomeTabController extends GetxController
   }
 
 void  openNewsList(){
+
   Get.toNamed("news_list");
   }
   void openNews(int i) {

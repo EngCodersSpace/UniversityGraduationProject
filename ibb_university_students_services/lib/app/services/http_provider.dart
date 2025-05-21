@@ -128,9 +128,9 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> put(String url, {dynamic data}) async {
+  static Future<Response?> put(String url, {dynamic data,void Function(int, int)? onSendProgress}) async {
     try {
-      final response = await _dio.put(url, data: data);
+      final response = await _dio.put(url, data: data,onSendProgress:onSendProgress );
       return response;
     } on DioException catch (error) {
       if (error.response != null) {

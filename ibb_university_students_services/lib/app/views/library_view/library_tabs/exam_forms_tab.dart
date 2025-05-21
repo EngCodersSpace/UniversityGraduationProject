@@ -132,7 +132,7 @@ class ExamFormsTab extends GetView<LibraryController> {
                                             ((controller.books[controller.categories[2]]?.values
                                                         .toList()[i]
                                                         .title
-                                                        ?.contains(controller.searchText.text) ??
+                                                        ?.toLowerCase().contains(controller.searchText.text.toLowerCase()) ??
                                                     false) ||
                                                 controller.searchText.text == "")) ...[
                                           Obx(() {

@@ -16,7 +16,6 @@ class GradRepository {
 
   static Future<void> openBox() async {
     _studentGradesBox = await Hive.openBox<StudentGradesCache>("StudentGradesBox");
-    _studentGradesBox?.clear();
   }
 
   static Future<void> clearBox() async {

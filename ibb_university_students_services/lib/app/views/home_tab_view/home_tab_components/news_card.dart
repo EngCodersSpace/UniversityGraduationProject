@@ -16,11 +16,13 @@ class NewsCard extends StatelessWidget {
     this.onTap,
     super.key,
   });
+
   String text;
   double height;
   double width;
   String? imageUrl;
-  void Function()? onTap ;
+  void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -32,49 +34,73 @@ class NewsCard extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Container(
-              height: height -30,
+              height: height - 30,
               decoration: BoxDecoration(
-                color: AppColors.inverseCardColor,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black38,
-                    spreadRadius: 1,
-                    blurRadius: 6,
-                    offset: Offset(0, 2)
-                  )
-                ]
-              ),
+                  color: AppColors.inverseCardColor,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black38,
+                        spreadRadius: 1,
+                        blurRadius: 6,
+                        offset: Offset(0, 2))
+                  ]),
             ),
             Container(
-              height: height -33,
-              width: width -3,
+              height: height - 33,
+              width: width - 3,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
-
               ),
               clipBehavior: Clip.antiAlias,
-              child: HttpProvider.httpImage(imageUrl: imageUrl??"",errorWidget:(context, url, error) => Image.asset(
-                  "assets/images/news_full_back.jpg",fit: BoxFit.fill,), ),
+              child: HttpProvider.httpImage(
+                imageUrl: imageUrl ?? "",
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/images/news_full_back.jpg",
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
             Container(
-              height: height -30,
+              height: height - 30,
               decoration: BoxDecoration(
-               gradient: LinearGradient(colors: [AppColors.inverseCardColor.withAlpha(50),AppColors.inverseCardColor.withAlpha(100),AppColors.inverseCardColor.withAlpha(150),AppColors.inverseCardColor.withAlpha(100),AppColors.inverseCardColor.withAlpha(50)],tileMode: TileMode.clamp),
+                color: AppColors.coverColor.withAlpha(40),
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+            Container(
+              height: height - 30,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+                  // AppColors.inverseCardColor.withAlpha((255*0.2).toInt()),
+                  Colors.transparent,
+                  Colors.transparent,
+                  Colors.transparent,
+                  Colors.transparent,
+                  Colors.black.withAlpha((255*0.3).toInt()),
+                  Colors.black.withAlpha((255*0.5).toInt()),
+                  Colors.black.withAlpha((255*0.6).toInt()),
+                  Colors.black.withAlpha((255*0.7).toInt()),
+                ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter
+                ),
                 // color: AppColors.coverColor,
                 borderRadius: BorderRadius.circular(24),
               ),
             ),
             Align(
-              alignment: Alignment.bottomCenter,
+                alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: 4,
-                      right: 4,
-                  bottom: 24),
-                  child:
-                  CustomText(text,style: AppTextStyles.mainStyle(
-                      textHeader: AppTextHeaders.h1Bold,height: 0,),textAlign: TextAlign.center,),
+                  padding: EdgeInsets.only(left: 4, right: 4, bottom: 24),
+                  child: CustomText(
+                    text,
+                    style: AppTextStyles.mainStyle(
+                      textHeader: AppTextHeaders.h1Bold,
+                      height: 0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 )),
           ],
         ),

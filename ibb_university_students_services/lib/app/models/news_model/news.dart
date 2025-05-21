@@ -1,8 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+
+import '../../utils/json_utils.dart';
 part 'news.g.dart';
 @HiveType(typeId: 69)
-class Level {
+class News {
   @HiveField(0)
   int id;
   @HiveField(1)
@@ -18,7 +20,7 @@ class Level {
   @HiveField(6)
   String? updatedAt;
 
-  Level({
+  News({
     required this.id,
     this.title,
     this.content,
@@ -28,12 +30,13 @@ class Level {
     this.updatedAt,
   });
 
-  factory Level.fromJson(Map<String, dynamic> json) {
-    return Level(
+  factory News.fromJson(Map<String, dynamic> json) {
+    return News(
       id: json['id'],
       title: json['title'],
       content: json['content'],
-      date: json['date'],
+      date: json['time'],
+      publisher: Instructor(id:json['publisher']['user_id'] ,nameData: JsonUtils.tryJsonDecode(json['publisher']['user_name'])),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

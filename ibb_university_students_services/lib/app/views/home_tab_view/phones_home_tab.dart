@@ -137,7 +137,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                           ))
                         ],
                         SizedBox(
-                          height: height * 0.03,
+                          height: height * 0.01,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -172,27 +172,34 @@ class PhoneMainTab extends GetView<HomeTabController> {
                             width: width * 0.05,
                           ),
                           for (int i = 0;
-                              i < (controller.tabController?.length ?? 0);
+                              i < (controller.tabController?.length ?? 1);
                               i++) ...[
-                            NewsCard(
-                              height: height * 0.25,
-                              width: width * 0.8,
-                              onTap: () => controller.openNews(i),
-                            ),
-                            SizedBox(
-                              width: width * 0.05,
-                            ),
+                                if(controller.newsController != null)...[
+                                  NewsCard(
+                                    height: height * 0.27,
+                                    width: width * 0.8,
+                                    text:controller.newsController!.news.values.toList()[i].title??"",
+                                    imageUrl: "Get-imageOfnew?id=${controller.newsController!.news.values.toList()[i].id}",
+                                    onTap: () => controller.newsController!.openNews(controller.newsController!.news.values.toList()[i].id),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.05,
+                                  ),
+                                ]
                           ]
                         ],
                       ),
                     ),
                   ),
                   Align(
-                    child: TabPageSelector(
-                      controller: controller.tabController,
-                      color: AppColors.tabBackColor,
-                      selectedColor: AppColors.inverseIconColor,
-                      indicatorSize: 10,
+                    child: GetBuilder<HomeTabController>(
+                      id: "tadsIndicator",
+                      builder: (ctx) => TabPageSelector(
+                        controller: controller.tabController,
+                        color: AppColors.tabBackColor,
+                        selectedColor: AppColors.inverseIconColor,
+                        indicatorSize: 10,
+                      ),
                     ),
                   ),
                   Padding(
