@@ -26,6 +26,13 @@ exports.getAllFees = async (req, res) => {
         const fees = await student_fee.findAll({
             where:{student_id:req.user.user_id},
         });
+        console.log("\n req.user:", req.user);
+        console.log("\n userID:", req.user?.user_id);
+
+        if (!fees.length) {
+            return res.status(204).json({ message: 'No fees found !' });
+        }
+
         res.status(200).json({
             message:'These all your Fees',
             Fees:fees

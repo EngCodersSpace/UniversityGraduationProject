@@ -162,7 +162,7 @@ exports.getAllNewsWithLimit = async (req, res) => {
 
 
 //  get image from path by id (req.query.id)
-exports.getImageOfNews = async (req, res) => {
+exports.getImageOfNews1 = async (req, res) => {
   try {
 
       if (!req.query.id) {
@@ -188,6 +188,55 @@ exports.getImageOfNews = async (req, res) => {
       res.status(500).json({message: "An error occurred while fetching new's image", error: error.message });
   }
 };
+
+// get image as stream
+exports.getImageOfNews = async (req, res) => {
+  try {
+    const newsId = req.query.id;
+
+    if (!newsId) {
+      return res.status(400).json({ message: "News id is required" });
+    }
+
+    const ImageOfNews = await news.findOne({
+      where: { id: newsId },
+    });
+
+    if (!ImageOfNews || !ImageOfNews.image) {
+      return res.status(404).json({ message: "No image found for the specified News" });
+    }
+
+    const imagePath = path.join(__dirname, '..', 'storage', ImageOfNews.image);
+
+    if (!fs.existsSync(imagePath)) {
+      return res.status(404).json({ message: "Image file not found on server" });
+    }
+
+    const ext = path.extname(imagePath).toLowerCase();
+    const mimeType = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.gif': 'image/gif',
+    }[ext] || 'application/octet-stream';
+
+    res.setHeader('Content-Type', mimeType);
+
+    const readStream = fs.createReadStream(imagePath);
+    readStream.pipe(res);
+
+    readStream.on('error', (err) => {
+      console.error("Stream error:", err.message);
+      res.status(500).end("Error reading image file");
+    });
+
+  } catch (error) {
+    console.error("Error fetching News image:", error.message);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
+
 
 
 exports.getNewsById = async (req, res) => {
