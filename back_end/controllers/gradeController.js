@@ -9,11 +9,9 @@ const SECRET_KEY = process.env.SECRET_KEY;
 // student only can see his grades
 exports.getGrades = async (req, res) => {
   try {
-      const {studentID} = req.query; 
-
       // Use a condition for levelID to prevent errors if it's not supplied
       const grades = await grade.findAll({
-          where: {student_id:studentID}, 
+          where: {student_id:req.user.user_id}, 
           include: [
               { model: subject, as: 'subject' },
             ],

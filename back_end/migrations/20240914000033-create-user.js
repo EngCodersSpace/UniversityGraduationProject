@@ -76,6 +76,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      fcm_token:{
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
 
 
       createdAt: {

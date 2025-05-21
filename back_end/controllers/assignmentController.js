@@ -104,11 +104,18 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 // i'm split (getAssignmentsOfSubject) to two functions  1-for student's-roles
 exports.getAssignmentsForStudent = async (req, res) => {
   try {
+    const studentID = req.user.user_id;
+    const EnrollYear=await student.findOne({
+      where:{ student_id: req.user.user_id}
+    });
+    console.log('\n \n EnrollYear.enrollment_year : ',EnrollYear.enrollment_year,"\n \n");
+
     const assignments = await assignment.findAll({
       where: {
         subject_id: req.query.subject_id,
-        level_id: req.query.level_id,
+        level_id:(EnrollYear.enrollment_year)+(req.query.level_id)-1,
         section_id: req.query.section_id,
+        
       },
       include: [
         { model: assignment_file },
@@ -133,6 +140,7 @@ exports.getAssignmentsForStudent = async (req, res) => {
         },
       ],
     });
+    console.log('\n \n (EnrollYear.enrollment_year)+(req.query.level_id)-1 : ',assignments.level_id,"\n \n");
 
     if (!assignments || assignments.length === 0) {
       return res.status(204).send(); // No content
@@ -159,6 +167,7 @@ exports.getAssignmentsForDoctor = async (req, res) => {
         subject_id: req.query.subject_id,
         level_id: req.query.level_id,
         section_id: req.query.section_id,
+        year:req.query.year,
       },
       include: [{ model: assignment_file }],
     });
@@ -363,7 +372,7 @@ exports.createAssignment = async (req, res) => {
     if (!sectionsAndLevels || sectionsAndLevels.length === 0) {
       return res.status(400).json({ message: 'No sections and levels provided.' });
     }
-
+ 
     const createdAssignments = [];
 
     const targetLanguage = req.headers['accept-language'] === 'en' ? 'ar' : 'en';
@@ -380,7 +389,7 @@ exports.createAssignment = async (req, res) => {
         assignment_due_day: req.body.assignment_due_day,
         assignment_date: req.body.assignment_date,
         assignments_due_date: req.body.assignments_due_date,
-        original_name:req.body.original_name,
+        year:req.body.year,
         section_id: section_id,
         level_id: level_id,
       });
@@ -562,7 +571,7 @@ exports.updateAssigment=async(req,res)=>{
       assignment_date: req.body.assignment_date || Assignment.assignment_date,
       assignments_due_date: req.body.assignments_due_date || Assignment.assignments_due_date,
       title:JSON.stringify({[req.headers['accept-language']] : req.body.title, [targetLanguage] : translatedTitle }) || Assignment.title,
-      original_name:req.body.original_name || Assignment.original_name,
+      year:req.body.year || Assignment.year,
       section_id: req.body.section_id || Assignment.section_id,
       level_id: req.body.level_id || Assignment.level_id,
     };
@@ -686,6 +695,7 @@ exports.getAssignmentsPanel = async (req, res) => {
     "title",
     "assignment_date",
     "assignments_due_date",
+    "year",
   ];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
 
@@ -698,6 +708,7 @@ exports.getAssignmentsPanel = async (req, res) => {
       assignment_due_day,
       assignment_date,
       assignments_due_date,
+      year,
       page = 1,
       limit = 10,
       orderBy = "id",
@@ -743,6 +754,10 @@ exports.getAssignmentsPanel = async (req, res) => {
         ...(assignments_due_date && {
           assignments_due_date: assignments_due_date 
         }), 
+        ...(year && {
+          year: year 
+        }), 
+
         
         ...(search && {
           [Op.or]: [

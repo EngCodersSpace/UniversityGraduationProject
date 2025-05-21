@@ -66,6 +66,11 @@ module.exports = {
         allowNull: false,
       },
 
+      year:{
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+
 
 
       createdAt: {

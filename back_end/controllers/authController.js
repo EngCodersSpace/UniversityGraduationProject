@@ -11,6 +11,7 @@ const {
   student_assignment,
   assignment,
   level,
+  phone_number,
   study_plan,
 } = require("../models");
 const nodemailer = require("nodemailer");
@@ -18,6 +19,7 @@ const { validationResult } = require("express-validator");
 const { Op, Sequelize } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { translateText } = require("../middleware/translationServices");
 const { uploadPhoto } = require("../utils/multerConfig");
 // const { permission } = require("process");
@@ -210,6 +212,24 @@ exports.refreshToken = async (req, res) => {
     }
   });
 };
+
+//  req from body (user_id , newFCM)
+exports.refreshFCM=async(req,res)=>{
+  try {
+    const userFCM= await user.findOne({
+      where:{ user_id :req.body.user_id}
+    });
+    await userFCM.update({ fcmToken: newFCM });
+
+    res.status(200).json({ message: "FCM token updated successfully" });
+
+  } catch (error) {
+    console.error("Error during refresh FCM token :", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
 ///////////////////////////
 exports.registerDoctor = async (req, res) => {
   const errors = validationResult(req);
@@ -257,6 +277,7 @@ exports.registerDoctor = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       roleId: req.body.roleId,
+      phones: req.body.phones ,
       doctor: {
         academic_degree: {
           [req.headers["accept-language"]]: req.body.doctor.academic_degree,
@@ -276,6 +297,9 @@ exports.registerDoctor = async (req, res) => {
           model: doctor,
           as: "doctor",
         },
+        {
+          model:phone_number , as:'phones',
+        }
       ],
     });
 
@@ -285,6 +309,15 @@ exports.registerDoctor = async (req, res) => {
     });
   } catch (error) {
     console.error("Error during user registration:", error.message);
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+    }  
+    if (error instanceof ForeignKeyConstraintError) {
+      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+    }
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: 'Validation error: ' + error.message });
+    }
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
@@ -323,7 +356,6 @@ exports.registerStudent = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-      // profile_picture: req.body.profile_picture,
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,
@@ -331,6 +363,7 @@ exports.registerStudent = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       roleId: req.body.roleId,
+      phones: req.body.phones ,
       student: {
         study_plan_id: req.body.student.study_plan_id,
         student_level_id: req.body.student.student_level_id,
@@ -343,7 +376,9 @@ exports.registerStudent = async (req, res) => {
     };
 
     const newStudent = await user.create(userData, {
-      include: [{ model: student, as: "student" }],
+      include: [{ model: student, as: "student" },
+        {model:phone_number ,as:'phones'}
+      ],
     });
 
     res.status(201).json({
@@ -352,6 +387,15 @@ exports.registerStudent = async (req, res) => {
     });
   } catch (error) {
     console.error("Error during user registration:", error.message);
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+    }  
+    if (error instanceof ForeignKeyConstraintError) {
+      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+    }
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: 'Validation error: ' + error.message });
+    }
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
