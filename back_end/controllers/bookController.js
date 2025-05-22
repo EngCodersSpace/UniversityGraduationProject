@@ -276,7 +276,6 @@ exports.deleteBook = async (req, res) => {
     }
     const filePath = path.resolve(Book.file_path);
     const imagePath = path.resolve(Book.display_image);
-
     if (fs.existsSync(filePath)) {
         await fs.promises.unlink(filePath);
         console.log(`Deleted file: ${filePath}`);

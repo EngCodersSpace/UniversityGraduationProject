@@ -34,3 +34,19 @@ git push origin ModelsAndMigrations:ModelsAndMigrations
 git switch ModelsAndMigrations
 
 
+
+
+git fetch
+git switch BackEnd
+git pull 
+git switch ModelsAndMigrations
+git merge --squash BackEnd .
+
+
+git switch BackEnd
+git merge git ModelsAndMigrations
+
+git push origin BackEnd    
+
+
+git merge --cntinue

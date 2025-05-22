@@ -269,7 +269,6 @@ exports.registerDoctor = async (req, res) => {
       },
       user_section_id: req.body.user_section_id,
       date_of_birth: req.body.date_of_birth,
-
       collegeName: {
         [req.headers["accept-language"]]: req.body.collegeName,
         [targetLanguage]: translatedCollegeName,

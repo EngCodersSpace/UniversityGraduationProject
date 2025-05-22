@@ -127,7 +127,6 @@ const validateStudentRegistration = [
         .matches(/[@$!%*?&]/).withMessage('Password must include at least one special character (@, $, !, %, *, ?, &)')
         .not().matches(/\s/).withMessage('Password cannot contain spaces'),
 
-
     body('student.enrollment_year')
         .isDate().withMessage('Enrollment year must be a valid date'),
 
