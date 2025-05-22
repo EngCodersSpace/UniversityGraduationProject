@@ -27,14 +27,6 @@ class PopupAddComponent extends GetView<DashboardDoctorTableController> {
       children: [
         Row(
           children: [
-            // Icon(
-            //   Icons.account_balance,
-            //   size: 40,
-            //   color: AppColors.inverseIconColor,
-            // ),
-            // const SizedBox(
-            //   width: 10,
-            // ),
             CustomText(name.tr,
                 style:
                     AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
@@ -42,7 +34,6 @@ class PopupAddComponent extends GetView<DashboardDoctorTableController> {
         ),
         CustomTextFormField(
           controller: controlName,
-          // validator: controller.validateEntryYear,
           keyboardType: inputType,
           labelText: name.tr,
           focusNode: focusName,

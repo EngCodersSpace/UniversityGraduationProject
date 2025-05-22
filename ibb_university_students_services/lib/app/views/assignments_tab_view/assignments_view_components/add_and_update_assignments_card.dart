@@ -30,7 +30,9 @@ class PopUpIAddAndUpdateAssignmentsCard
                   width: 3,
                 )),
             child: SizedBox(
-                height: (controller.mode == "Add")?Get.height * 0.65:Get.height * 0.45,
+                height: (controller.mode == "Add")
+                    ? Get.height * 0.65
+                    : Get.height * 0.45,
                 width: Get.width,
                 child: SafeArea(
                     minimum: const EdgeInsets.all(12),
@@ -101,8 +103,8 @@ class PopUpIAddAndUpdateAssignmentsCard
                                 labelText: 'Date'.tr,
                                 focusNode: controller.dueDateFocus,
                                 readOnly: true,
-                                onTap: () => DateTimeUtils.datePiker(
-                                    context, controller:controller.dueDateController),
+                                onTap: () => DateTimeUtils.datePiker(context,
+                                    controller: controller.dueDateController),
                                 onFieldSubmitted: (e) {
                                   // controller.timeFocus.requestFocus();
                                 },
@@ -144,51 +146,77 @@ class PopUpIAddAndUpdateAssignmentsCard
                           //   ],
                           // ),
                           if (controller.mode == "Add")
-                          Obx(() => Column(
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional.centerStart,
-                                    child: CustomText("Groups",
-                                        style: AppTextStyles.secStyle(
-                                            textHeader:
-                                            AppTextHeaders.h2Bold)),
-                                  ),
-                                  SizedBox(height: 8,),
+                            Obx(() => Column(
+                                  children: [
+                                    Align(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      child: CustomText("Groups",
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h2Bold)),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
                                     Container(
                                       height: Get.height * 0.2,
                                       width: Get.width * 0.88,
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.inverseCardColor
-                                        ),
+                                          border: Border.all(
+                                              color:
+                                                  AppColors.inverseCardColor),
                                           color: AppColors.tabBackColor,
                                           borderRadius:
                                               BorderRadius.circular(24)),
                                       child: Column(
                                         children: [
-                                          SizedBox(height: 8,),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width: ((Get.width*0.85)/7),
+                                                width: ((Get.width * 0.85) / 7),
                                                 child: CustomText("#",
-                                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h2Bold)),
                                               ),
                                               SizedBox(
-                                                width: ((Get.width*0.85)/7)*3,
+                                                width:
+                                                    ((Get.width * 0.85) / 7) *
+                                                        3,
                                                 child: CustomText("Program",
-                                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h2Bold)),
                                               ),
                                               SizedBox(
-                                                width: ((Get.width*0.85)/7)*2,
+                                                width:
+                                                    ((Get.width * 0.85) / 7) *
+                                                        2,
                                                 child: CustomText("Level",
-                                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h2Bold)),
                                               ),
                                               SizedBox(
-                                                width: ((Get.width*0.85)/7),
+                                                width: ((Get.width * 0.85) / 7),
                                                 child: CustomText("",
-                                                    style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h2Bold)),
                                               ),
                                             ],
                                           ),
@@ -199,29 +227,64 @@ class PopUpIAddAndUpdateAssignmentsCard
                                             child: SingleChildScrollView(
                                               child: Column(
                                                 children: [
-                                                  for( var (index,item) in controller.groups.indexed)...[
+                                                  for (var (index, item)
+                                                      in controller
+                                                          .groups.indexed) ...[
                                                     Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
                                                       children: [
                                                         SizedBox(
-                                                          width: ((Get.width*0.85)/7),
-                                                          child: CustomText("${index+1}",
-                                                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                          width: ((Get.width *
+                                                                  0.85) /
+                                                              7),
+                                                          child: CustomText(
+                                                              "${index + 1}",
+                                                              style: AppTextStyles
+                                                                  .secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
                                                         ),
                                                         SizedBox(
-                                                          width: ((Get.width*0.85)/7)*3,
-                                                          child: CustomText("${controller.sections[item["section_id"]!]?.name}",
+                                                          width: ((Get.width *
+                                                                      0.85) /
+                                                                  7) *
+                                                              3,
+                                                          child: CustomText(
+                                                              "${controller.sections[item["section_id"]!]?.name}",
                                                               softWrap: false,
-                                                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                              style: AppTextStyles
+                                                                  .secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
                                                         ),
                                                         SizedBox(
-                                                          width: ((Get.width*0.85)/7)*2,
-                                                          child: CustomText("${item["level_id"]}",
-                                                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
+                                                          width: ((Get.width *
+                                                                      0.85) /
+                                                                  7) *
+                                                              2,
+                                                          child: CustomText(
+                                                              "${item["level_id"]}",
+                                                              style: AppTextStyles
+                                                                  .secStyle(
+                                                                      textHeader:
+                                                                          AppTextHeaders
+                                                                              .h2Bold)),
                                                         ),
                                                         SizedBox(
-                                                            width: ((Get.width*0.85)/7),
-                                                            child: IconButton(onPressed: ()=>controller.delGroup(index), icon: Icon(Icons.delete)))
+                                                            width: ((Get.width *
+                                                                    0.85) /
+                                                                7),
+                                                            child: IconButton(
+                                                                onPressed: () =>
+                                                                    controller
+                                                                        .delGroup(
+                                                                            index),
+                                                                icon: Icon(Icons
+                                                                    .delete)))
                                                       ],
                                                     ),
                                                   ]
@@ -232,17 +295,23 @@ class PopUpIAddAndUpdateAssignmentsCard
                                         ],
                                       ),
                                     ),
-                                  SizedBox(height: 8,),
-                                ],
-                              )),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
+                                )),
                           Column(
                             children: [
-                              if(controller.mode=="Add")
-                              CustomButton(onPress: ()async{
-                                Get.dialog(PopUpIAddAssignmentsGroupCard());
-                              },text: "Add Group",),
+                              if (controller.mode == "Add")
+                                CustomButton(
+                                  onPress: () async {
+                                    Get.dialog(PopUpIAddAssignmentsGroupCard());
+                                  },
+                                  text: "Add Group",
+                                ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   CustomButton(
                                     onPress: controller.submit,

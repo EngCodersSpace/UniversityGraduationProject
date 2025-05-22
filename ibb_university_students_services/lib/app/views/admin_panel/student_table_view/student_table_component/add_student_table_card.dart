@@ -258,7 +258,7 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                                       textHeader: AppTextHeaders.h3Bold)),
                               CustomButton(
                                 onPress: () {
-                                  AddGroupPhoneNumberCard();
+                                  Get.dialog(AddGroupPhoneNumberCard());
                                 },
                                 text: "Add Group Numbers",
                               )

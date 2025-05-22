@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_student_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/popup_add_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/popup_add_student_component.dart';
 
-class AddGroupPhoneNumberCard extends GetView<DashboardStudentTableController> {
-  const AddGroupPhoneNumberCard({super.key});
+class AddGroupPhonesCard extends GetView<DashboardDoctorTableController> {
+  AddGroupPhonesCard({super.key});
+
+  String? phone1;
+  String? phone2;
+  String? phone3;
 
   @override
   Widget build(BuildContext context) {
+    phone1 = controller.doctorPhone1.text;
+    phone2 = controller.doctorPhone2.text;
+    phone3 = controller.doctorPhone3.text;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -35,21 +43,21 @@ class AddGroupPhoneNumberCard extends GetView<DashboardStudentTableController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          PopupAddStudentComponent(
+                          PopupAddComponent(
                             name: "Phone number 1",
-                            controlName: controller.studentPhone1,
+                            controlName: phone1 as TextEditingController,
                             focusName: controller.phone1Focus,
                             inputType: TextInputType.number,
                           ),
-                          PopupAddStudentComponent(
+                          PopupAddComponent(
                             name: "Phone number 2",
-                            controlName: controller.studentPhone2,
+                            controlName: phone2 as TextEditingController,
                             focusName: controller.phone2Focus,
                             inputType: TextInputType.number,
                           ),
-                          PopupAddStudentComponent(
+                          PopupAddComponent(
                             name: "Phone number 3",
-                            controlName: controller.studentPhone3,
+                            controlName: phone3 as TextEditingController,
                             focusName: controller.phone3Focus,
                             inputType: TextInputType.number,
                           ),
@@ -59,18 +67,15 @@ class AddGroupPhoneNumberCard extends GetView<DashboardStudentTableController> {
                               CustomButton(
                                   onPress: () {
                                     controller.addGroup(
-                                        int.parse(
-                                            controller.studentPhone1.text),
-                                        int.parse(
-                                            controller.studentPhone2.text),
-                                        int.parse(
-                                            controller.studentPhone1.text));
+                                      phone1!,
+                                      phone2!,
+                                      phone3!,
+                                    );
                                     Navigator.of(Get.overlayContext!).pop();
                                   },
                                   text: "Add"),
                               CustomButton(
-                                onPress: () =>
-                                    Navigator.of(Get.overlayContext!).pop(),
+                                onPress: () => Get.back(result: null),
                                 text: "Close".tr,
                               ),
                             ],

@@ -346,7 +346,7 @@ class UserRepository {
     required String password,
     required String academicdegree,
     required String postion,
-    required List<Map<String, int>> phonenumber,
+    required List<Map<String, String>> phonenumber,
   }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;

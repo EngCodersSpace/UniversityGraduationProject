@@ -240,7 +240,7 @@ class PopUpAddSubjectCard extends GetView<DashboardSubjectsTableController> {
                             name: "Description",
                             controlName: controller.subjectDescription,
                             focusName: controller.descriptionFocus,
-                            inputType: TextInputType.text,
+                            inputType: TextInputType.multiline,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/controllers/admin_panel_con
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/add_group_phones_card.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/popup_add_component.dart';
 
 class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
@@ -68,31 +69,31 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                             focusName: controller.roleFocus,
                             inputType: TextInputType.number,
                           ),
-                          PopupAddComponent(
-                            name: "Phone Number",
-                            controlName: controller.phoneNumber,
-                            focusName: controller.phoneFocus,
-                            inputType: TextInputType.phone,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CustomText("Phone Number",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h3Bold)),
+                              CustomButton(
+                                onPress: () async {
+                                  Get.dialog(AddGroupPhonesCard());
+                                },
+                                text: "Add Group Numbers",
+                              )
+                            ],
                           ),
                           PopupAddComponent(
                             name: "College",
                             controlName: controller.college,
                             focusName: controller.collegeFocus,
-                            inputType: TextInputType.text,
+                            inputType: TextInputType.multiline,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.menu_book,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Doctor Section".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
@@ -120,7 +121,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                           controller.SectionId.value = val;
                                         },
                                         isExpanded: true,
-                                        menuWidth: Get.width * 0.3,
+                                        menuWidth: Get.width * 0.2,
                                         selectedItemBuilder: (_) {
                                           List<Widget> items = [];
                                           for (Section sectionI
@@ -128,7 +129,7 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                                             items.add(DropdownMenuItem<int?>(
                                               value: sectionI.id,
                                               child: SizedBox(
-                                                  width: Get.width * 0.28,
+                                                  width: Get.width * 0.2,
                                                   child: CustomText(
                                                     sectionI.name ??
                                                         "Unknown".tr,
@@ -173,13 +174,13 @@ class PopUpAddDoctorCard extends GetView<DashboardDoctorTableController> {
                             name: "Acadimic Degree",
                             controlName: controller.acadimicDegree,
                             focusName: controller.acadimicFocus,
-                            inputType: TextInputType.text,
+                            inputType: TextInputType.multiline,
                           ),
                           PopupAddComponent(
                             name: "Administrative Position",
                             controlName: controller.adminPosition,
                             focusName: controller.administrativeFocus,
-                            inputType: TextInputType.text,
+                            inputType: TextInputType.multiline,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

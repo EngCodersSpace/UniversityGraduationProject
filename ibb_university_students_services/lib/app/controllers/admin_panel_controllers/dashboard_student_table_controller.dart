@@ -95,8 +95,6 @@ class DashboardStudentTableController extends GetxController
   TextEditingController studentsystem = TextEditingController();
   TextEditingController studentrole = TextEditingController();
   TextEditingController studentcollege = TextEditingController();
-  TextEditingController studentPassword = TextEditingController();
-  FocusNode passwordFocus = FocusNode();
   FocusNode roleFocus = FocusNode();
   FocusNode collegeFocus = FocusNode();
   FocusNode systemFocus = FocusNode();
@@ -421,7 +419,7 @@ class DashboardStudentTableController extends GetxController
         dateOfBirth: studentDOB.text,
         college: studentcollege.text,
         email: studentEmail.text,
-        password: studentPassword.text,
+        password: "12345678",
         enrolment: DateTime.now().toString(),
         system: studentsystem.text,
         phonenumber: groupPhons,
