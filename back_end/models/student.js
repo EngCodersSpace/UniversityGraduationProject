@@ -76,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
     },
     enrollment_year: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     student_system: {

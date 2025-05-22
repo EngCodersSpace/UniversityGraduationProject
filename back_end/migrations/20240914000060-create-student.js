@@ -34,7 +34,7 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       enrollment_year: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       student_system: {

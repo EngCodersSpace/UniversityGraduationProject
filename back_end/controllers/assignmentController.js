@@ -108,17 +108,20 @@ exports.getAssignmentsForStudent = async (req, res) => {
     const EnrollYear=await student.findOne({
       where:{ student_id: req.user.user_id}
     });
-    console.log("\n \n EnrollYear : ",EnrollYear.enrollment_year,"\n \n");
+    const enrollmentDate = EnrollYear.enrollment_year; 
+    const enrollmentYear = new Date(enrollmentDate).getFullYear(); 
+    
+    console.log("\n\nEnrollYear:", enrollmentDate, "\n\n");
+    console.log("Extracted Year:", enrollmentYear, "\n\n");
+    
+    const YearComputed = enrollmentYear + parseInt(req.query.level_id) - 1;
 
-    const levelIdComputed = (parseInt(EnrollYear.enrollment_year) + parseInt(req.query.level_id)) - 1;
-
-    console.log('\n \n levelIdComputed : ',levelIdComputed,"\n \n");
+    console.log('\n \n Year Computed : ',YearComputed,"\n \n");
 
     const assignments = await assignment.findAll({
       where : {
         subject_id: req.query.subject_id,
-        // level_id: levelIdComputed,
-        year: levelIdComputed,
+        year: YearComputed,
         section_id: req.query.section_id,
       },
       include: [

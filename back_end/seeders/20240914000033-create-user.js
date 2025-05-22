@@ -106,8 +106,8 @@ module.exports = {
         students.push({
           student_id: i + 1, // Associating student with the corresponding user
           study_plan_id: studyPlans[i % studyPlans.length].study_plan_id, // Select study plan cyclically
-          // enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
-          enrollment_year:"2024",
+          enrollment_year: faker.date.past(5).getFullYear(), // Get only the year
+          // enrollment_year:"2024",
           student_level_id: levels[i % levels.length].id, // Assign level cyclically
           student_system: system,
           repeat_years_count:faker.number.int({ min: 0, max: 3}),
