@@ -345,7 +345,7 @@ const getForRecieved = async (req, res) => {
       ],
   });
 
-  return res.status(200).json({message:"Get Notifications ", Data:[filteredNotifications , notifications1]});
+  return res.status(200).json({message:"Get Notifications ", Data:[...filteredNotifications , ...notifications1]});
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});

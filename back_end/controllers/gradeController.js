@@ -32,15 +32,15 @@ exports.getGrades = async (req, res) => {
 exports.getAllGrades = async (req, res) => {
   try {
 
-    const grades = await grade.findAndCountAll({
+    const grades = await grade.findAll({
       where: {student_id:req.query.student_id}, 
       include: [
           { model: subject, as: 'subject' },
         ],
     });
 
-    if (!grades.length) {
-      return res.status(404).json({ message: 'No grades found for this student' });
+    if (grades.length==0) {
+      return res.status(404).json({ message: 'No grades found for this student',grades:grades });
     }
 
     res.status(200).json({
