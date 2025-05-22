@@ -40,8 +40,6 @@ const sendSingleSystemNotification = async ({ title, message, receiver_id, token
       data: { type: 'single' },
       token,
     };
-  }
-
     await admin.messaging().send(payload);
 
   } catch (error) {
