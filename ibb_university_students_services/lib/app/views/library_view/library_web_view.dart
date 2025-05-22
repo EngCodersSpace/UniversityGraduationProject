@@ -52,7 +52,7 @@ class LibraryWebView extends GetView<LibraryController> {
                           child: CustomTextFormField(
                             controller: controller.searchText,
                             focusNode: controller.searchFocus,
-                            onChange: controller.searching,
+                            onChange: (x)=>controller.updatePages(),
                             onTapOutside: (e) {
                               controller.searchFocus.unfocus();
                             },

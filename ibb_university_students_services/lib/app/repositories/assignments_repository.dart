@@ -31,11 +31,13 @@ class AssignmentsRepository {
 
   static Box<AssignmentsCache>? _assignmentsGroupsBox;
   static Box<Assignment>? _assignmentsBox;
+  static Box<List<String>>? _assignmentsYearsBox;
 
   static Future<void> openBox() async {
     _assignmentsGroupsBox =
         await Hive.openBox<AssignmentsCache>("assignmentsGroupsBox");
     _assignmentsBox = await Hive.openBox<Assignment>("assignmentsBox");
+    _assignmentsYearsBox = await Hive.openBox<List<String>>("assignmentsYearsBox");
   }
 
   static Future<void> clearBox() async {
@@ -146,6 +148,44 @@ class AssignmentsRepository {
         );
         return Result(
             data: assignment,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<List<String>>> fetchAssignmentYears({
+    bool hardFetch = false,
+    bool withCache = true,
+  }) async {
+    if ((_assignmentsYearsBox?.isNotEmpty??false) &&
+        (!hardFetch || !(await checkInternetConnection()))) {
+      if(withCache){
+
+      }
+      return Result(data: [], hasError: false, statusCode: 200);
+    }
+    Response? response;
+    try {
+      response = await HttpProvider.get("");
+      if (response?.statusCode == 200) {
+        await _assignmentsYearsBox?.put("years",[]
+        );
+        return Result(
+            data: [],
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

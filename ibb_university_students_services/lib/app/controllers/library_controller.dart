@@ -41,7 +41,7 @@ class LibraryController extends GetxController
   RxInt selectedShowOption = 2.obs;
   RxString selectedSortOption = "title".obs;
   RxInt sortDirection = 0.obs;
-
+  Map<String, RxMap<int, LibraryFile>> books = {};
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
   Map<String, Subject> subjects = {};
@@ -60,8 +60,7 @@ class LibraryController extends GetxController
     "page": ["Lowest", "Highest"],
     "date": ["Oldest", "Newest"],
   };
-  RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
-  List<PageController> myTabsControllers =  [
+  List<PageController> myTabsControllers = [
     PageController(keepPage: true),
     PageController(keepPage: true),
     PageController(keepPage: true)
@@ -82,6 +81,9 @@ class LibraryController extends GetxController
       length: 3,
       vsync: this,
     );
+    for(String cate in categories){
+      books[cate] = RxMap({}) ;
+    }
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
@@ -101,7 +103,7 @@ class LibraryController extends GetxController
         bottom: borderSide,
       ),
     ];
-    myTabsControllers =  [
+    myTabsControllers = [
       PageController(keepPage: true),
       PageController(keepPage: true),
       PageController(keepPage: true)
@@ -133,6 +135,9 @@ class LibraryController extends GetxController
 
     if (selectedDepartment.value == null || selectedLevel.value == null) return;
 
+    for(String cate in categories){
+      books[cate]?.value ={} ;
+    }
     Result res = await LibraryRepository.streamFetchLibraryFilesGroup(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
@@ -142,7 +147,7 @@ class LibraryController extends GetxController
     );
     if (res.statusCode == 200) {
     } else if (res.statusCode == 204) {
-      books.value = res.data ?? {};
+      books = res.data ?? {};
       fieldMessage.value = "Empty ";
     } else {
       fieldMessage.value = "fetching Library Document please check connection";
@@ -153,14 +158,14 @@ class LibraryController extends GetxController
   }
 
   void onPageChange(int i) async {
-    currentPage.value = i+1;
+    currentPage.value = i + 1;
   }
 
   void refreshCurrentPage(int i) {
     if (myTabsControllers[tapController!.index].positions.isNotEmpty) {
-      currentPage.value = myTabsControllers[tapController!.index].page?.toInt()??1;
-    }
-    else{
+      currentPage.value =
+          myTabsControllers[tapController!.index].page?.toInt() ?? 1;
+    } else {
       currentPage.value = 1;
     }
     currentPage.refresh();
@@ -189,7 +194,7 @@ class LibraryController extends GetxController
     await myTabsControllers[tapController!.index].previousPage(
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value--;
-    if(currentPage.value<1)currentPage.value=1;
+    if (currentPage.value < 1) currentPage.value = 1;
   }
 
   void nextPage() async {
@@ -198,7 +203,12 @@ class LibraryController extends GetxController
     await myTabsControllers[tapController!.index].nextPage(
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value++;
-    if(currentPage.value>((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1)currentPage.value=((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1;
+    if (currentPage.value >
+        ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil()) {
+      currentPage.value =
+          ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil();
+    }
+    print(books[categories[tapController!.index]]?.length);
   }
 
   void changeDepartment(int? val) async {
@@ -277,6 +287,9 @@ class LibraryController extends GetxController
   }
 
   void showBookInfo(LibraryFile book) async {
+    print(((book.title?.toLowerCase().contains(searchText.text.toLowerCase()) ??
+            false) ||
+        searchText.text == ""));
     selectedBook = book;
     await selectedBook?.checkDownloaded();
     (ScreenUtils.isPhoneScreen())
@@ -284,9 +297,12 @@ class LibraryController extends GetxController
         : Get.dialog(WebBookInfoCard());
   }
 
-  void searching(String? val) {
-    // update();
+  void updatePages() {
+    for(String cat in categories){
+      update(["${cat}Tap"]);
+    }
   }
+
   void filteringIconClick() {
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookFilterCard())

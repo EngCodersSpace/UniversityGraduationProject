@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
@@ -55,17 +56,15 @@ class LibraryRepository {
     required int sectionId,
     required int levelId,
     required String category,
-    required get_x.RxMap<String, get_x.RxMap<int, LibraryFile>> destination,
+    required Map<String, Map<int, LibraryFile>> destination,
     bool hardFetch = false,
   }) async {
     // LibraryFilesCache? cachedLibrary = _libraryFilesGroupsBox
     //     ?.get("${sectionId}_${levelId}_${category}_Library");
 
-    destination.value = {};
     if ((_libraryFilesBox?.isNotEmpty ?? false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       for (LibraryFile file in (_libraryFilesBox?.values ?? [])) {
-        destination[file.category] ??= get_x.RxMap({});
         destination[file.category]?[file.id] = file;
       }
       return Result(hasError: false, statusCode: 200);
@@ -115,7 +114,6 @@ class LibraryRepository {
               }
               LibraryFile libraryFile =
                   LibraryFile.fromJson(jsLibrary, subject: subject);
-              destination[libraryFile.category] ??= get_x.RxMap({});
               destination[libraryFile.category]?[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
@@ -285,15 +283,15 @@ class LibraryRepository {
             libFiles.add(resFile);
           }
           if (withCache && file.path != null) {
+            NotificationHandler.showProgressNotification(
+              uniqueId: file.path.hashCode,
+              title: "successful upload ",
+              message: file.path?.split("/").last,
+            );
             await FileUtils.saveFiles(
                 fileRelativePath: response?.data["file_info"]["path"],
                 file: File(file.path!));
           }
-          NotificationHandler.showProgressNotification(
-            uniqueId: file.path.hashCode,
-            title: "successful upload ",
-            message: file.path?.split("/").last,
-          );
           return Result(
               data: libFiles,
               hasError: false,

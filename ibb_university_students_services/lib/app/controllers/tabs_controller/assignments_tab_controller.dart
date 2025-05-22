@@ -34,9 +34,11 @@ class AssignmentsTabController extends GetxController {
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedSubject = Rx(null);
+  Rx<String?> selectedYear = Rx(null);
   Map<String, Subject>? subjects;
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
   Map<int, Section> sections = {};
+  List<String> years = [];
   List<DropdownMenuItem<int>> levels = [];
   RxList<Map<String, int>> groups = RxList();
   Rx<Map<int, Assignment>>? assignments = Rx({});
@@ -66,6 +68,7 @@ Future<void> setStudentSectionAndLevel()async{
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
+    await initYears();
     if (UserRepository.currentUserType() == Student) {
       await setStudentSectionAndLevel();
       fetchMode = "student";
@@ -160,6 +163,12 @@ Future<void> setStudentSectionAndLevel()async{
     addToMultiGroup.value = val;
   }
 
+  void changeYear(String? val) {
+    if (val == null) return;
+    selectedYear.value = val;
+    fetchAssignmentsData();
+  }
+
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
     sections = await SectionRepository.fetchSections(hardFetch: force)
         .then((e) => e.data ?? {});
@@ -198,6 +207,19 @@ Future<void> setStudentSectionAndLevel()async{
       selectedSubject.value = null;
     }
   }
+
+  Future<void> initYears() async {
+    years = [];
+    years =
+    await AssignmentsRepository.fetchAssignmentYears().then((e)=>e.data??[]);
+    if (years.isNotEmpty) {
+      selectedYear = RxString(subjects!.values.first.id);
+    } else {
+      selectedYear.value = null;
+    }
+  }
+
+
 
   void uploadAssignmentsFiles() async {
     if (selectedLevel.value == null) return;
