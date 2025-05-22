@@ -1,42 +1,47 @@
 const { exam, subject , section,level } = require('../models'); 
 const { upsertRefreshState} = require('../controllers/refreshController');
-
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
+const { sequelize } = require('../models'); 
 const { Sequelize} = require('sequelize');
 const { Op } = require("sequelize");
-const {systemRefresh} = require('../middleware/notificationMiddleware');
-
+ 
 
 //  All Functions are perfict right now 2024-12-10
-exports.createExam = async (req, res) => {
-    try {
+exports.createExam = async (req, res) =>{
+  try {
+      const result = await sequelize.transaction(async (t) => {
+          const newExam = await exam.create(req.body, {
+              include: [{ model: subject, as: 'subject' }],
+              transaction: t
+          });
 
-        const newExam = await exam.create(req.body,{
-            include: [{ model: subject, as: 'subject' }], 
-        });
+          await upsertRefreshState("exam", {
+            section_id: newExam.exam_section_id,
+            level_id: newExam.exam_level_id
+          });
 
-        await upsertRefreshState("exam", {
-          section_id: req.body.exam_section_id , 
-          level_id: req.body.exam_level_id       
-        });
-
-        // await systemRefresh({ 
-        //   entity: 'exam',
-        //   targetType: 'section_level', 
-        //   sectionId: req.body.exam_section_id, 
-        //   levelId: req.body.exam_level_id,     
-        //   action: 'create'
-        // }).catch(err => {
-        //   console.error('Refresh notification failed (non-critical):', err);
-        // });
-
-        res.status(201).json({
-            message: 'Exam created successfully',
-            exam: newExam,
-        });
-    } catch (error) {
-        console.error('Error creating exam:', error.message);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+          return newExam;
+      });
+      res.status(201).json({
+          message: 'Exam created successfully',
+          data: result,
+      });
+  } catch (error) {
+    console.error('Transaction failed:', error);
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+    }  
+    if (error instanceof ForeignKeyConstraintError) {
+      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
     }
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: 'Validation error: ' + error.message });
+    }
+    res.status(500).json({
+        message: 'Failed to create exam',
+        error: error.message,
+    });
+  }
 };
 
 exports.getExam = async (req, res) => {
@@ -224,7 +229,6 @@ exports.getExamGroupedByCriteriaPanel = async (req, res) => {
 };
 
 
-
 exports.getExamYear = async (req, res) => {
     try {
       const uniqueYears = await exam.findAll({
@@ -248,50 +252,65 @@ exports.getExamYear = async (req, res) => {
 };
 
 exports.updateExam = async (req, res) => {
-    try {   
+    try { 
+      const result = await sequelize.transaction(async (t) => {  
         await exam.update(req.body, {
-            where: { exam_id: req.query.exam_id },
+          where: { exam_id: req.query.exam_id },
+          transaction: t,
         });
-
-        const updatedExam = await exam.findOne({
-            where: { exam_id: req.query.exam_id },
-            include: [{ model: subject, as: 'subject' }], 
+      
+        return await exam.findOne({
+          where: { exam_id: req.query.exam_id },
+          include: [{ model: subject, as: 'subject' }],
+          transaction: t,
         });
+      });
+      
+      await upsertRefreshState("exam", {
+        section_id: result.exam_section_id , 
+        level_id: result.exam_level_id       
+      });
 
-        await upsertRefreshState("exam",`section_id : ${req.body.exam_section_id} - level_id : ${req.body.exam_level_id}`);
-
-
-        res.status(200).json({
-            message: 'Exam updated successfully',
-            exam: updatedExam,
-        });
+      res.status(200).json({
+          message: 'Exam updated successfully',
+          exam: result,
+      });
     } catch (error) {
         console.error('Error updating exam:', error.message);
+        if (error instanceof UniqueConstraintError) {
+          return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+        }  
+        if (error instanceof ForeignKeyConstraintError) {
+          return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+        }
+        if (error instanceof ValidationError) {
+          return res.status(400).json({ message: 'Validation error: ' + error.message });
+        }
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
 
 exports.deleteExam = async (req, res) => {
-    try {
-        const foundExam = await exam.findByPk(req.query.exam_id);
+  try {
+    const foundExam = await exam.findByPk(req.query.exam_id);
 
-        if (!foundExam) {
-            return res.status(404).json({ message: 'Exam not found' });
-        }
-
-        await upsertRefreshState("exam", {
-          section_id: foundExam.exam_section_id , 
-          level_id: foundExam.exam_level_id       
-        });
-
-
-
-        await foundExam.destroy();
-        res.status(200).json({
-            message: 'Exam deleted successfully',
-        });
-    } catch (error) {
-        console.error('Error deleting exam:', error.message);
-        res.status(500).json({ message: 'Internal server error', error: error.message });
+    if (!foundExam) {
+      return res.status(404).json({ message: 'Exam not found' });
     }
+
+    const { exam_section_id, exam_level_id } = foundExam;
+    await sequelize.transaction(async (t) => {
+      await foundExam.destroy({ transaction: t });
+    });
+
+    await upsertRefreshState("exam", {
+      section_id: exam_section_id,
+      level_id: exam_level_id,
+    });
+
+    res.status(200).json({ message: 'Exam deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting exam:', error.message);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
 };

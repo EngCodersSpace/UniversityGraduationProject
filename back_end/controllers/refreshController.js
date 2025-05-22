@@ -1,8 +1,8 @@
-
+// refreshController.js
 const { refresh_state } = require('../models'); 
 const crypto = require('crypto');
-const { sendSystemNotification } = require('./notificationController'); // your existing system notification logic
-
+const { sendSystemNotification ,} = require('./notificationController'); 
+// const {convertToFcmCondition}=require('../utils/notificationUtils')
 
 function generateId(target, filter) {
   return `${target}-${crypto.createHash('md5').update(JSON.stringify(filter)).digest('hex')}`;
@@ -21,23 +21,15 @@ exports.upsertRefreshState = async (target, filter) => {
       }
     );
 
-    // Trigger a system notification for refresh
-    const systemTitle = `Refresh Required: ${target}`;
-    const systemMessage = `Data has changed for ${target}. Please refresh.`;
-
-    // Example: broadcast to topic (e.g. "admin", "student-<section_id>")
-    const topic = `${target}`;
-    const metadata = { target, filter }; 
-
+    const condition =`(student in topics) && (section_${filter.section_id} in topics)  &&  (level_${filter.level_id} in topics)`;
+    console.log('\n \n ',condition , '\n \n ');
     await sendSystemNotification({
-      title: systemTitle,
-      message: systemMessage,
-      target: topic, 
-      sender_id: 0, 
-      topicType: 'topic',
-      metadata,
+      topic_name:condition,
+      metadata: {
+        sender_id: "0"
+      },
     });
-
+    
     return { record, created };
   } catch (error) {
     throw new Error('Failed to create/update refresh state: ' + error.message);

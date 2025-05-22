@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    user_type: {
+      type: DataTypes.ENUM('doctor', 'student'), 
+      allowNull: false,
+    },
+
   }, {
     sequelize,
     modelName: 'role',

@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       user.hasMany(models.phone_number, {
         foreignKey: 'user_id',
         sourceKey: 'user_id',
+        as: 'phones',
         // onDelete:'CASCADE',
         // onUpdate:'CASCADE',
       });
@@ -40,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
 
       //(4)Relationship One-to-Many between "user table" and  "notification table"
       user.hasMany(models.notification, {
+        as:'senderUser',
         foreignKey: 'sender_id',
         sourceKey: 'user_id',
       });
@@ -75,6 +77,11 @@ module.exports = (sequelize, DataTypes) => {
 
       user.hasMany(models.news, {
         foreignKey: 'publisher_id',  
+      });
+      user.hasMany(models.notification, {
+        as:'receiverUser',
+        foreignKey: 'receiver_id',
+        sourceKey: 'user_id',
       });
 
       
@@ -120,11 +127,6 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: { isEmail: true, },
     },
-    // permission: {
-    //   type: DataTypes.ENUM('student', 'representative', 'dean', 'vice_dean', 'controller', 'department_head', 'lecturer', 'student_affairs', 'general_secretary', 'admin'),
-    //   allowNull: false,
-    //   defaultValue: 'student',
-    // },
     roleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -151,6 +153,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    fcm_token: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+
     refreshToken: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -176,4 +183,3 @@ module.exports = (sequelize, DataTypes) => {
   return user;
 
 };
-

@@ -2,23 +2,23 @@
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
+const {sendSingleSystemNotification}= require('./notificationController');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
+// student only can see his grades
 exports.getGrades = async (req, res) => {
   try {
-      const {studentID,levelID , Term} = req.query; 
-
-      // Use a condition for levelID to prevent errors if it's not supplied
+    
       const grades = await grade.findAll({
-          where: {student_id:studentID , level_id:levelID , term:Term }, 
+          where: {student_id:req.user.user_id}, 
           include: [
               { model: subject, as: 'subject' },
             ],
       });
 
       if (!grades.length) {
-          return res.status(404).json({ message: 'No grades found for this student' });
+          return res.status(404).json({ message: 'No grades found for you' });
       }
 
       res.status(200).json({ message: 'These your grades', Grades: grades });
@@ -28,20 +28,28 @@ exports.getGrades = async (req, res) => {
   }
 }; 
 
+// doctors only can see all grades or use filters to specific (student,section,level,term,subject,yearofissue)
 exports.getAllGrades = async (req, res) => {
   try {
-    
-      // Use a condition for levelID to prevent errors if it's not supplied
-      const grades = await grade.findAll();
 
-      if (!grades.length) {
-          return res.status(404).json({ message: 'No grades found ' });
-      }
+    const grades = await grade.findAndCountAll({
+      where: {student_id:req.query.student_id}, 
+      include: [
+          { model: subject, as: 'subject' },
+        ],
+    });
 
-      res.status(200).json({ message: 'These all grades', Grades: grades });
+    if (!grades.length) {
+      return res.status(404).json({ message: 'No grades found for this student' });
+    }
+
+    res.status(200).json({
+      message: "Grades retrieved successfully",
+      data: grades,
+    });
   } catch (error) {
-      console.error('Error fetching grades:', error.message);
-      res.status(500).json({ message: 'Internal server error', error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Error retrieving grades", error: error.message });
   }
 }; 
 
@@ -327,6 +335,16 @@ exports.createGrade = async (req, res) => {
     }
 
     const newGrade = await grade.create(req.body);
+
+    // await sendSingleSystemNotification({
+    //   title: ` Grades `,
+    //   message: `Your Grade Of Subject ${req.body.subject_id} has been Submmited see it.`,
+    //   receiver_id : req.body.student_id,
+    //   token,
+    //   sender_id: "0", 
+    // });
+
+
     res.status(201).json({
       message: 'Grade created successfully',
       grade: newGrade,

@@ -90,7 +90,6 @@ const getStorageForPathPhoto = (baseFolder = 'temp', subFolder) => {
       cb(null, folderPath);
     },
     filename: (req, file, cb) => {
-      // const hash = crypto.createHash('md5').update(file.originalname).digest('hex');
       const fileName = `${path.extname(file.originalname)}`;
       cb(null, fileName);
     },

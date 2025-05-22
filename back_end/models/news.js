@@ -44,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.TEXT,
       allowNull:false,
     },
+    time:{
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     image:{
       type:DataTypes.STRING,
       allowNull:true,
@@ -55,4 +59,4 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'news',
   });
   return news;
-};
+};      
