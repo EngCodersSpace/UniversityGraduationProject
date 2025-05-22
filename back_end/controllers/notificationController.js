@@ -131,8 +131,8 @@ function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
   return parts;
 }
 
-// Generate topic conditions based on extracted parts
-function generateConditions(filter) {
+// Generate topic conditions based on extracted parts and roleUserTypeMap
+function generateConditions(filter, roleUserTypeMap = {}) {
   const {
     userType = [],
     sections = [],
@@ -158,16 +158,33 @@ function generateConditions(filter) {
   }
 
   for (const user of userType) {
-    for (const section of sections.length ? sections : [null]) {
-      for (const level of levels.length ? levels : [null]) {
-        for (const role of roles.length ? roles : [null]) {
-          const cond = [
+    // For users like 'doctor' who don't have levels, ignore levels
+    const levelList = (user === 'doctor' || levels.length === 0) ? [null] : levels;
+
+    // Filter roles that belong to the current user type
+    const validRoles = roles.filter(role => {
+      const roleId = role.split('_')[1];
+      const expectedUser = roleUserTypeMap[roleId];
+      return expectedUser === user;
+    });
+
+    const sectionList = sections.length ? sections : [null];
+    const roleList = validRoles.length ? validRoles : [null];
+
+    for (const section of sectionList) {
+      for (const level of levelList) {
+        for (const role of roleList) {
+          const parts = [
             `'${user}' in topics`,
-            section && `'${section}' in topics`,
-            level && `'${level}' in topics`,
-            role && `'${role}' in topics`,
-          ].filter(Boolean).join(' && ');
-          conditions.push(cond);
+            section ? `'${section}' in topics` : null,
+            level ? `'${level}' in topics` : null,
+            role ? `'${role}' in topics` : null,
+          ].filter(Boolean);
+
+          if (parts.length) {
+            const cond = parts.join(' && ');
+            conditions.push(cond);
+          }
         }
       }
     }
@@ -175,6 +192,10 @@ function generateConditions(filter) {
 
   return conditions;
 }
+
+
+
+
 
 
 
@@ -189,7 +210,7 @@ const sendInfoNotification = async ({
 }) => {
   const roleUserTypeMap = await fetchRoleUserTypeMap();
   const parsed = extractTopicParts(topic_name, roleUserTypeMap);
-  const conditions = generateConditions(parsed);
+  const conditions = generateConditions(parsed, roleUserTypeMap);
 
   console.log('\n \n   roleUserTypeMap',roleUserTypeMap,'\n  \n ');
   console.log('\n \n   Topics after Filter',parsed,'\n \n  ');
@@ -236,7 +257,7 @@ const sendSystemNotification = async ({
 
   const roleUserTypeMap = await fetchRoleUserTypeMap();
   const parsed = extractTopicParts(topic_name, roleUserTypeMap);
-  const conditions = generateConditions(parsed);
+  const conditions = generateConditions(parsed,roleUserTypeMap);
 
   console.log('\n \n   roleUserTypeMap',roleUserTypeMap,'\n  \n ');
   console.log('\n \n   Topics after Filter',parsed,'\n \n  ');

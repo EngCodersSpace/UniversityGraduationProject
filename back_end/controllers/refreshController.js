@@ -21,8 +21,12 @@ exports.upsertRefreshState = async (target, filter) => {
       }
     );
 
-    const condition =`(student in topics) && (section_${filter.section_id} in topics)  &&  (level_${filter.level_id} in topics)`;
+    // const condition =`(student in topics) && (section_${filter.section_id} in topics)  &&  (level_${filter.level_id} in topics)`;
+    const condition =`('all' in topics)`;
+
+    
     console.log('\n \n ',condition , '\n \n ');
+
     await sendSystemNotification({
       topic_name:condition,
       metadata: {

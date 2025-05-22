@@ -15,6 +15,8 @@ router.get('/get-assignments-subject',checkUserAccess,CRUD.getAssignmentsOfSubje
 router.get('/get-assignments-subject-student', checkStudentsAccess, CRUD.getAssignmentsForStudent);//1- for students
 router.get('/get-assignments-subject-doctor', checkDoctorAccess, CRUD.getAssignmentsForDoctor);//2- for doctors
 router.get('/get-all-assignment-panel',checkDoctorAccess, CRUD.getAssignmentsPanel);
+router.get('/get-year-assignment',checkDoctorAccess, CRUD.getAssignmentYear);
+
 
 router.get('/get-all-students-assignment',checkDoctorAccess, CRUD.getStudentsAndFilesByAssignment);
 router.get('/download-assignment-files',checkDoctorAccess, CRUD.downloadFile);  // doctors download what students upload for specific assignment
