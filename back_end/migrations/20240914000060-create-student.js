@@ -34,18 +34,14 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       enrollment_year: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       student_system: {
         type: Sequelize.JSON,
         allowNull: false,
       },
-      // status: {
-      //   type: Sequelize.JSON,
-      //   allowNull: false,
-      //   defaultValue: 'Freshman',
-      // },
+
       repeat_years_count: {
         type: Sequelize.INTEGER,
         allowNull: false,

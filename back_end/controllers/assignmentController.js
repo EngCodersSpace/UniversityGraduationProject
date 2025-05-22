@@ -104,18 +104,22 @@ exports.getAssignmentsOfSubject = async (req, res) => {
 // i'm split (getAssignmentsOfSubject) to two functions  1-for student's-roles
 exports.getAssignmentsForStudent = async (req, res) => {
   try {
-    const studentID = req.user.user_id;
+    // const studentID = req.user.user_id;
     const EnrollYear=await student.findOne({
       where:{ student_id: req.user.user_id}
     });
-    console.log('\n \n EnrollYear.enrollment_year : ',EnrollYear.enrollment_year,"\n \n");
+    console.log("\n \n EnrollYear : ",EnrollYear.enrollment_year,"\n \n");
+
+    const levelIdComputed = (parseInt(EnrollYear.enrollment_year) + parseInt(req.query.level_id)) - 1;
+
+    console.log('\n \n levelIdComputed : ',levelIdComputed,"\n \n");
 
     const assignments = await assignment.findAll({
-      where: {
+      where : {
         subject_id: req.query.subject_id,
-        level_id:(EnrollYear.enrollment_year)+(req.query.level_id)-1,
+        // level_id: levelIdComputed,
+        year: levelIdComputed,
         section_id: req.query.section_id,
-        
       },
       include: [
         { model: assignment_file },
@@ -140,7 +144,7 @@ exports.getAssignmentsForStudent = async (req, res) => {
         },
       ],
     });
-    console.log('\n \n (EnrollYear.enrollment_year)+(req.query.level_id)-1 : ',assignments.level_id,"\n \n");
+    // console.log('\n \n (EnrollYear.enrollment_year)+(req.query.level_id)-1 : ',(assignments.level_id),"\n \n");
 
     if (!assignments || assignments.length === 0) {
       return res.status(204).send(); // No content
