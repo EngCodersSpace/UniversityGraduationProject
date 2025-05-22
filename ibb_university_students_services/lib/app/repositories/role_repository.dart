@@ -1,34 +1,54 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import '../models/helper_models/result.dart';
 import '../models/role_model/role.dart';
 import '../services/http_provider.dart';
+import '../utils/internet_connection_cheker.dart';
 
 class RoleRepository {
   static const int _fetchError = 611;
 
+  static Box<Role>? _roleBox;
+
+  static Future<void> openBox() async {
+    if(_roleBox?.isOpen??false)return;
+    _roleBox = await Hive.openBox<Role>('RoleBox');
+    // Box  = await Hive.openBox('');
+  }
+  static Future<void> clearBox() async {
+    _roleBox = await Hive.openBox<Role>('RoleBox');
+    _roleBox?.clear();
+  }
+
+  static Future<void> closeBox() async {
+    if(_roleBox?.isOpen??false) {
+      await _roleBox?.close();
+    }
+  }
   static Future<Result<Map<int, Role>>> fetchRoles({
     bool hardFetch = false,
   }) async {
-    // if ((_levelBox?.values.isNotEmpty??true) &&(!hardFetch|| !(await checkInternetConnection())) ) {
-    //   return Result(
-    //     data: _levelBox?.toMap().cast<int,Level>(),
-    //     statusCode: 200,
-    //     hasError: false,
-    //     message: "successful",
-    //   );
-    // }
+    await openBox();
+    if ((_roleBox?.values.isNotEmpty??false) &&(!hardFetch|| !(await checkInternetConnection())) ) {
+      return Result(
+        data: _roleBox?.toMap().cast<int,Role>(),
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
     late Response? response;
     try {
       response = await HttpProvider.get("get-roles");
       if (response?.statusCode == 200) {
-        Map<int, Role> roles = {};
         for (Map<String, dynamic> jsRoles in response?.data["data"]) {
           Role role = Role.fromJson(jsRoles);
-          roles[role.id] = role;
+          await _roleBox?.put(role.id, role);
+
         }
         return Result(
-            data: roles,
+            data: _roleBox?.toMap().cast<int,Role>(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");

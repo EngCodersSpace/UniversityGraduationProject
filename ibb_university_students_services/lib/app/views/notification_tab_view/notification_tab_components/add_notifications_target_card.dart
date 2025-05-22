@@ -7,6 +7,7 @@ import 'package:ibb_university_students_services/app/controllers/tabs_controller
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/validators.dart';
 
+import '../../../models/role_model/role.dart';
 import '../../../styles/app_colors.dart';
 
 class AddNotificationsTargetCard extends GetView<NotificationTabController> {
@@ -263,11 +264,12 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                             ),
                             Wrap(
                               spacing: 6,
-                              children: controller.sections.values.map((section) {
+                              children:
+                                  controller.sections.values.map((section) {
                                 final selected = controller.selectedSections
                                     .contains("section_${section.id}");
                                 return FilterChip(
-                                  label: CustomText(section.name??"??",
+                                  label: CustomText(section.name ?? "??",
                                       style: (selected)
                                           ? AppTextStyles.mainStyle(
                                               textHeader:
@@ -309,10 +311,10 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                               Wrap(
                                 spacing: 6,
                                 children: controller.levels.values.map((level) {
-                                  final selected =
-                                      controller.selectedLevels.contains("level_${level.id}");
+                                  final selected = controller.selectedLevels
+                                      .contains("level_${level.id}");
                                   return FilterChip(
-                                    label: CustomText(level.name??'??',
+                                    label: CustomText(level.name ?? '??',
                                         style: (selected)
                                             ? AppTextStyles.mainStyle(
                                                 textHeader:
@@ -345,48 +347,77 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
 
                             // Roles
                             SizedBox(height: 8),
-                            CustomText(
-                              "${"Roles".tr}:",
-                              textAlign: TextAlign.start,
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            Wrap(
-                              spacing: 6,
-                              children: controller.roles.values.map((role) {
-                                final selected =
-                                    controller.selectedRoles.contains("role_${role.id}");
-                                return SizedBox(
-                                  // width: Get.width/4,
-                                  child: FilterChip(
-                                    label: CustomText(role.name??'??',
-                                        style: (selected)
-                                            ? AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Normal)
-                                            : AppTextStyles.secStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Normal)),
-                                    color: WidgetStateProperty.resolveWith(
-                                        (state) {
-                                      if (state
-                                          .contains(WidgetState.selected)) {
-                                        return AppColors.inverseCardColor;
-                                      } else {
-                                        return AppColors.tabBackColor;
-                                      }
-                                    }),
-                                    selected: selected,
-                                    checkmarkColor: AppColors.tabBackColor,
-                                    onSelected: (val) {
-                                      selected
-                                          ? controller.selectedRoles
-                                              .remove("role_${role.id}")
-                                          : controller.selectedRoles.add("role_${role.id}");
-                                    },
+                            Obx(
+                              () => Row(
+                                children: [
+                                  Checkbox(
+                                      value: controller.includeRole.value,
+                                      onChanged: controller.changeIncludeRole),
+                                  CustomText(
+                                    "${"Roles".tr}:",
+                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
-                                );
-                              }).toList(),
+                                ],
+                              ),
+                            ),
+                            if(controller.includeRole.value)
+                              Obx(
+                              () => Wrap(
+                                spacing: 6,
+                                children: [
+                                  for (Role role
+                                      in (controller.roles.values ?? [])) ...[
+                                    if ((controller.selectedTarget.value ==
+                                                "Students" &&
+                                            role.roleType == "student") ||
+                                        (controller.selectedTarget.value ==
+                                                "Doctors" &&
+                                            role.roleType == "doctor") ||
+                                        (controller.selectedTarget.value ==
+                                            "Student And Doctors")) ...[
+                                      SizedBox(
+                                        // width: Get.width/4,
+                                        child: FilterChip(
+                                          label: CustomText(role.name ?? '??',
+                                              style: (controller.selectedRoles
+                                                      .contains(
+                                                          "role_${role.id}"))
+                                                  ? AppTextStyles.mainStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)
+                                                  : AppTextStyles.secStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)),
+                                          color:
+                                              WidgetStateProperty.resolveWith(
+                                                  (state) {
+                                            if (state.contains(
+                                                WidgetState.selected)) {
+                                              return AppColors.inverseCardColor;
+                                            } else {
+                                              return AppColors.tabBackColor;
+                                            }
+                                          }),
+                                          selected: controller.selectedRoles
+                                              .contains("role_${role.id}"),
+                                          checkmarkColor:
+                                              AppColors.tabBackColor,
+                                          onSelected: (val) {
+                                            controller.selectedRoles
+                                                    .contains("role_${role.id}")
+                                                ? controller.selectedRoles
+                                                    .remove("role_${role.id}")
+                                                : controller.selectedRoles
+                                                    .add("role_${role.id}");
+                                          },
+                                        ),
+                                      )
+                                    ]
+                                  ]
+                                ],
+                              ),
                             ),
                           ],
                           SizedBox(height: 16),

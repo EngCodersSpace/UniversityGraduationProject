@@ -106,6 +106,9 @@ class SubjectRepository {
     required String id,
     bool hardFetch = false,
   }) async {
+    if(_subjectsBox?.isEmpty??false){
+      fetchSubjects();
+    }
     if ((_subjectsBox?.get(id) != null) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(

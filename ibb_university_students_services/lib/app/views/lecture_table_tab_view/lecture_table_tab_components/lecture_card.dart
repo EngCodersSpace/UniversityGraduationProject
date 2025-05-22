@@ -182,7 +182,7 @@ class LectureCard extends GetView<LectureController> {
                                     textHeader: AppTextHeaders.h2Bold),
                               ),
                               CustomText(
-                                "${"Dr".tr}.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}",
+                                "${"Dr".tr}.${content.value?.subject?.instructors?[content.value?.instructorId]?.name??((content.value?.subject?.instructors?.isNotEmpty??false)?content.value?.subject?.instructors?.values.first.name:"Unknown" .tr)}",
                                 style: AppTextStyles.secStyle(
                                     textHeader: AppTextHeaders.h3Bold),
                               )
