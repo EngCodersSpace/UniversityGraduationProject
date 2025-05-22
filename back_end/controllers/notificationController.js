@@ -40,6 +40,7 @@ const sendSingleSystemNotification = async ({ title, message, receiver_id, token
       data: { type: 'single' },
       token,
     };
+  }
 
     await admin.messaging().send(payload);
 
@@ -47,7 +48,54 @@ const sendSingleSystemNotification = async ({ title, message, receiver_id, token
     console.error('System notification failed:', error);
     throw new Error('Sending single notification failed');
   }
-};
+
+  return parts;
+}
+
+function generateConditions(filter) {
+  const {
+    userType = [],
+    sections = [],
+    levels = [],
+    roles = [],
+  } = filter;
+
+  const conditions = [];
+
+  if (userType.includes('all')) {
+    conditions.push("'all' in topics");
+    return conditions;
+  }
+
+  for (const user of userType) {
+    for (const section of sections.length ? sections : [null]) {
+      for (const role of roles.length ? roles : [null]) {
+        if (user === 'student') {
+          for (const level of levels.length ? levels : [null]) {
+            const cond = [
+              `'${user}' in topics`,
+              section && `'${section}' in topics`,
+              level && `'${level}' in topics`,
+              role && `'${role}' in topics`,
+            ].filter(Boolean).join(' && ');
+            conditions.push(cond);
+          }
+        } else {
+          const cond = [
+            `'${user}' in topics`,
+            section && `'${section}' in topics`,
+            role && `'${role}' in topics`,
+          ].filter(Boolean).join(' && ');
+          conditions.push(cond);
+        }
+      }
+    }
+  }
+
+  return conditions;
+}
+
+
 
 
 
