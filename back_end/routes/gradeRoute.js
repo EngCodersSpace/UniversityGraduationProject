@@ -4,11 +4,11 @@ const router = express.Router();
 const CRUD = require('../controllers/gradeController');
 const vali = require('../validations/gradevalidation');
 const { verifyToken  } = require('../middleware/authMiddleware');
-const {checkPermission,checkStudentAccess,checkDoctorAccess} = require('../middleware/roleMiddleware');
+const {checkPermission,checkStudentAccess,checkDoctorAccess,checkUserAccess} = require('../middleware/roleMiddleware');
 
 router.use(verifyToken);
 router.post('/create-grade',checkPermission('grades', 'write'), vali.createGrade,   CRUD.createGrade);
-router.get('/get-grades', checkPermission('grades', 'student_search'), CRUD.getGrades);
+router.get('/get-grades', checkUserAccess, CRUD.getGrades);
 router.get('/get-all-grades', checkDoctorAccess, checkPermission('grades', 'student_search'),  CRUD.getAllGrades);
 router.get('/get-grade/:id',  checkDoctorAccess,   CRUD.getGradeById);
 router.get('/get-grade-year',  checkDoctorAccess,   CRUD.getGradeYear);

@@ -33,82 +33,18 @@ const sendSingleNotification = async (req, res) => {
 };
 
 
-const fetchRoleUserTypeMap = async () => {
-  const roles = await role.findAll({
-    attributes: ['id', 'user_type'],
-    raw: true,
-  });
-
-  const roleMap = {};
-  for (const { id, user_type } of roles) {
-    roleMap[id] = user_type;
-  }
-
-  return roleMap;
-};
-
-//  Function to extract topic parts dynamically from a condition string
-function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
-  if (typeof conditionStr !== 'string') {
-    return {
-      userType: [],
-      sections: [],
-      levels: [],
-      roles: [],
+const sendSingleSystemNotification = async ({ title, message, receiver_id, token, sender_id = null }) => {
+  try {
+    const payload = {
+      notification: { title, body: message },
+      data: { type: 'single' },
+      token,
     };
-  }
+    await admin.messaging().send(payload);
 
-  const normalized = conditionStr.replace(/`/g, "'");
-
-  if (normalized.includes("'all' in topics")) {
-    return {
-      userType: ['all'],
-      sections: [],
-      levels: [],
-      roles: [],
-    };
-  }
-
-  const parts = {
-    userType: [],
-    sections: [],
-    levels: [],
-    roles: [],
-  };
-
-  // Split on logical ANDs
-  const andGroups = normalized.split(/\s*&&\s*/);
-
-  for (let group of andGroups) {
-    const match = group.match(/\(([^()]+)\)/);
-    const groupStr = match ? match[1] : group;
-
-    // Split on logical ORs
-    const items = groupStr.split(/\s*\|\|\s*/);
-
-    for (let item of items) {
-      const cleaned = item.replace(/'|in topics|\(|\)/g, '').trim();
-
-      if (/^student|doctor$/.test(cleaned)) {
-        if (!parts.userType.includes(cleaned)) parts.userType.push(cleaned);
-      } else if (/^section_\d+$/.test(cleaned)) {
-        if (!parts.sections.includes(cleaned)) parts.sections.push(cleaned);
-      } else if (/^level_\d+$/.test(cleaned)) {
-        if (!parts.levels.includes(cleaned)) parts.levels.push(cleaned);
-      } else if (/^role_\d+$/.test(cleaned)) {
-        // Extract numeric ID from 'role_1' => 1
-        const roleId = cleaned.split('_')[1];
-        const expectedUserType = roleUserTypeMap[roleId]; 
-        if (
-          !expectedUserType || // role ID not in map (maybe warn here?)
-          parts.userType.includes(expectedUserType) || // userType matches expected
-          parts.userType.includes('all') // universal
-        ) {
-          if (!parts.roles.includes(cleaned)) parts.roles.push(cleaned);
-        }
-      }
-      
-    }
+  } catch (error) {
+    console.error('System notification failed:', error);
+    throw new Error('Sending single notification failed');
   }
 
   return parts;
@@ -146,6 +82,138 @@ function generateConditions(filter) {
           const cond = [
             `'${user}' in topics`,
             section && `'${section}' in topics`,
+            role && `'${role}' in topics`,
+          ].filter(Boolean).join(' && ');
+          conditions.push(cond);
+        }
+      }
+    }
+  }
+
+  return conditions;
+}
+
+
+
+
+
+
+
+
+
+
+// Fetch role-userType mapping
+const fetchRoleUserTypeMap = async () => {
+  const roles = await role.findAll({
+    attributes: ['id', 'user_type'],
+    raw: true,
+  });
+
+  const roleMap = {};
+  for (const { id, user_type } of roles) {
+    roleMap[id] = user_type;
+  }
+
+  return roleMap;
+};
+
+// Extract topic parts from a condition string
+function extractTopicParts(conditionStr, roleUserTypeMap = {}) {
+  if (typeof conditionStr !== 'string') {
+    return {
+      userType: [],
+      sections: [],
+      levels: [],
+      roles: [],
+    };
+  }
+
+  const normalized = conditionStr.replace(/`/g, "'");
+
+  if (normalized.includes("'all' in topics")) {
+    return {
+      userType: ['all'],
+      sections: [],
+      levels: [],
+      roles: [],
+    };
+  }
+
+  const parts = {
+    userType: [],
+    sections: [],
+    levels: [],
+    roles: [],
+  };
+
+  const andGroups = normalized.split(/\s*&&\s*/);
+
+  for (let group of andGroups) {
+    const match = group.match(/\(([^()]+)\)/);
+    const groupStr = match ? match[1] : group;
+
+    const items = groupStr.split(/\s*\|\|\s*/);
+
+    for (let item of items) {
+      const cleaned = item.replace(/'|in topics|\(|\)/g, '').trim();
+
+      if (/^student|doctor$/.test(cleaned)) {
+        if (!parts.userType.includes(cleaned)) parts.userType.push(cleaned);
+      } else if (/^section_\d+$/.test(cleaned)) {
+        if (!parts.sections.includes(cleaned)) parts.sections.push(cleaned);
+      } else if (/^level_\d+$/.test(cleaned)) {
+        if (!parts.levels.includes(cleaned)) parts.levels.push(cleaned);
+      } else if (/^role_\d+$/.test(cleaned)) {
+        const roleId = cleaned.split('_')[1];
+        const expectedUserType = roleUserTypeMap[roleId];
+        if (
+          !expectedUserType || 
+          parts.userType.includes(expectedUserType) ||
+          parts.userType.includes('all')
+        ) {
+          if (!parts.roles.includes(cleaned)) parts.roles.push(cleaned);
+        }
+      }
+    }
+  }
+
+  return parts;
+}
+
+// Generate topic conditions based on extracted parts
+function generateConditions(filter) {
+  const {
+    userType = [],
+    sections = [],
+    levels = [],
+    roles = [],
+  } = filter;
+
+  const conditions = [];
+
+  // If targeting everyone
+  if (userType.includes('all')) {
+    return ["'all' in topics"];
+  }
+
+  // If only 1 userType and no other filters
+  if (
+    userType.length === 1 &&
+    !sections.length &&
+    !levels.length &&
+    !roles.length
+  ) {
+    return [`'${userType[0]}' in topics`];
+  }
+
+  for (const user of userType) {
+    for (const section of sections.length ? sections : [null]) {
+      for (const level of levels.length ? levels : [null]) {
+        for (const role of roles.length ? roles : [null]) {
+          const cond = [
+            `'${user}' in topics`,
+            section && `'${section}' in topics`,
+            level && `'${level}' in topics`,
             role && `'${role}' in topics`,
           ].filter(Boolean).join(' && ');
           conditions.push(cond);
@@ -323,7 +391,7 @@ const getForRecieved = async (req, res) => {
       ],
   });
 
-  return res.status(200).json({message:"Get Notifications ", Data:[filteredNotifications , notifications1]});
+  return res.status(200).json({message:"Get Notifications ", Data:[...filteredNotifications , ...notifications1]});
   }catch(error){
     console.error(error);
     return res.status(500).json({ error: 'Failed to fetch Notifications .' ,error:error.message});
@@ -495,4 +563,8 @@ module.exports = {
   getForRecieved,
   getForRecievedSingle,
   getForRecievedByTopic,
+  fetchRoleUserTypeMap,
+  extractTopicParts,
+  generateConditions,
+  sendSingleSystemNotification
 };

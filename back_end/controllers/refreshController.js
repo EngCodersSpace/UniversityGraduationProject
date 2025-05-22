@@ -1,8 +1,8 @@
 // refreshController.js
 const { refresh_state } = require('../models'); 
 const crypto = require('crypto');
-const { sendSystemNotification } = require('./notificationController'); 
-const {convertToFcmCondition}=require('../utils/notificationUtils')
+const { sendSystemNotification ,} = require('./notificationController'); 
+// const {convertToFcmCondition}=require('../utils/notificationUtils')
 
 function generateId(target, filter) {
   return `${target}-${crypto.createHash('md5').update(JSON.stringify(filter)).digest('hex')}`;
@@ -21,13 +21,10 @@ exports.upsertRefreshState = async (target, filter) => {
       }
     );
 
-    // const topic = `section_${filter.section_id} && level_${filter.level_id}`;
-    const condition =`(section_${filter.section_id})  &&  (level_${filter.level_id})`
-    const transtoFCM=convertToFcmCondition(condition)
-    console.log("\n \n \n condition after convert to FCM ", transtoFCM ,'\n \n \n ' );
-
+    const condition =`(student in topics) && (section_${filter.section_id} in topics)  &&  (level_${filter.level_id} in topics)`;
+    console.log('\n \n ',condition , '\n \n ');
     await sendSystemNotification({
-      topic_name:transtoFCM,
+      topic_name:condition,
       metadata: {
         sender_id: "0"
       },

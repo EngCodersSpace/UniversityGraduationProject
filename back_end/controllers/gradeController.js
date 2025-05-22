@@ -2,24 +2,23 @@
 const { user,subject, grade ,student,section,level,study_plan_elment } = require('../models'); 
 const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
+const {sendSingleSystemNotification}= require('./notificationController');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
 // student only can see his grades
 exports.getGrades = async (req, res) => {
   try {
-      const {studentID} = req.query; 
-
-      // Use a condition for levelID to prevent errors if it's not supplied
+    
       const grades = await grade.findAll({
-          where: {student_id:studentID}, 
+          where: {student_id:req.user.user_id}, 
           include: [
               { model: subject, as: 'subject' },
             ],
       });
 
       if (!grades.length) {
-          return res.status(404).json({ message: 'No grades found for this student' });
+          return res.status(404).json({ message: 'No grades found for you' });
       }
 
       res.status(200).json({ message: 'These your grades', Grades: grades });
@@ -32,48 +31,21 @@ exports.getGrades = async (req, res) => {
 // doctors only can see all grades or use filters to specific (student,section,level,term,subject,yearofissue)
 exports.getAllGrades = async (req, res) => {
   try {
-    const {
-      student_id,
-      subject_id,
-      term,
-      section_id,
-      level_id,
-      year_of_issue
-    } = req.query;
 
-    const { count, rows: grades } = await grade.findAndCountAll({
-      where: {
-        ...(student_id && {
-          student_id: student_id  
-        }),
-        ...(subject_id && {
-          subject_id: subject_id  
-        }),
-        ...(term && {
-          term: term  
-        }),
-        ...(section_id && {
-          section_id: section_id  
-        }),
-        ...(level_id && {
-          level_id: level_id  
-        }),
-        ...(year_of_issue && {
-          year_of_issue: year_of_issue  
-        }),
-      },
-      distinct: true,
+    const grades = await grade.findAll({
+      where: {student_id:req.query.student_id}, 
+      include: [
+          { model: subject, as: 'subject' },
+        ],
     });
 
-    if (!grades.length) {
-      return res.status(404).json({ message: "No grades found for the specified criteria" });
+    if (grades.length==0) {
+      return res.status(404).json({ message: 'No grades found for this student',grades:grades });
     }
-
 
     res.status(200).json({
       message: "Grades retrieved successfully",
       data: grades,
-      totalGrades: count,
     });
   } catch (error) {
     console.error(error);
@@ -363,6 +335,16 @@ exports.createGrade = async (req, res) => {
     }
 
     const newGrade = await grade.create(req.body);
+
+    // await sendSingleSystemNotification({
+    //   title: ` Grades `,
+    //   message: `Your Grade Of Subject ${req.body.subject_id} has been Submmited see it.`,
+    //   receiver_id : req.body.student_id,
+    //   token,
+    //   sender_id: "0", 
+    // });
+
+
     res.status(201).json({
       message: 'Grade created successfully',
       grade: newGrade,

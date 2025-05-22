@@ -7,13 +7,15 @@ const {checkPermission , checkStudentsAccess , checkDoctorAccess,checkUserAccess
 const { verifyToken } = require('../middleware/authMiddleware');
 router.use(verifyToken);
 
-router.post('/New-With-Photo', CRUD.createNewsWithPhoto);
+router.post('/New-With-Photo',checkUserAccess, CRUD.createNewsWithPhoto);
 
-router.get('/Get-AllNews', CRUD.getAllNews);
+router.get('/Get-AllNews', CRUD.getAllNewsWithLimit);
+router.get('/stream-news', CRUD.streamNews);
+
 router.get('/Get-imageOfnew', CRUD.getImageOfNews);
 
 router.get('/Get-New/:id', CRUD.getNewsById);
-// router.put('/Update-New/:id', CRUD.updateNews);
+router.put('/Update-New/:id', CRUD.updateNewsWithPhoto);
 router.delete('/Delete-New/:id', CRUD.deleteNews);
 
 module.exports = router;

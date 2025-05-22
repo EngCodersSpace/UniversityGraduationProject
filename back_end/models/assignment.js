@@ -109,6 +109,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
 
+    year:{
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+
 
 
   }, {
