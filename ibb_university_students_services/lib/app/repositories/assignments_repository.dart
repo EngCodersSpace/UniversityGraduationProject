@@ -7,11 +7,13 @@ import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/models/attachment_file_model/attachment_file_model.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/assignment_model/assignment_model.dart';
+import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/assignments_cache/assignments_cache.dart';
 import '../models/helper_models/result.dart';
 import '../models/student_assignments_file_model/student_assignments_file_model.dart';
@@ -77,7 +79,7 @@ class AssignmentsRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "get-assignments-subject?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
+          (UserRepository.currentUserType() == Doctor)?"get-assignments-subject-doctor?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId&year=$year":"get-assignments-subject-student?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
         cachedAssignments = AssignmentsCache(
             key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",

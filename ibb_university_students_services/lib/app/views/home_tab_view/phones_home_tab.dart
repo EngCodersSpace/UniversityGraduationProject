@@ -160,55 +160,35 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ],
                     ),
                   ),
-                  NotificationListener(
-                    onNotification: controller.scrollEvent,
-                    child: SingleChildScrollView(
-                      controller: controller.scrollController,
-                      dragStartBehavior: DragStartBehavior.down,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: width * 0.05,
-                          ),
-                          if((controller.newsController?.news.isEmpty??true))...[
-                          NewsCard(
-                          height: height * 0.27,
-                          width: width * 0.8,
-                          text:"News Empty",
-                          imageUrl: "",)
-                      ],
-                          for (int i = 0;
-                              i < (controller.tabController?.length ?? 1);
-                              i++) ...[
-                                if(controller.newsController != null)...[
-                                  NewsCard(
-                                    height: height * 0.27,
-                                    width: width * 0.8,
-                                    text:controller.newsController!.news.values.toList()[i].title??"",
-                                    imageUrl: "Get-imageOfnew?id=${controller.newsController!.news.values.toList()[i].id}",
-                                    onTap: () => controller.newsController!.openNews(controller.newsController!.news.values.toList()[i].id),
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.05,
-                                  ),
-                                ]
-                          ]
-                        ],
+                  GetBuilder<HomeTabController>(
+                    id:"newsCards",
+                    builder:(ctx) => NotificationListener(
+                      onNotification: controller.scrollEvent,
+                      child: SingleChildScrollView(
+                        controller: controller.scrollController,
+                        dragStartBehavior: DragStartBehavior.down,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: width * 0.05,
+                            ),
+                            if ((controller.newsController?.news.isEmpty ??
+                                true)) ...[
+                              NewsCard(
+                                height: height * 0.27,
+                                width: width * 0.8,
+                                text: "News Empty",
+                                imageUrl: "",
+                              )
+                            ],
+
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Align(
-                    child: GetBuilder<HomeTabController>(
-                      id: "tadsIndicator",
-                      builder: (ctx) => TabPageSelector(
-                        controller: controller.tabController,
-                        color: AppColors.tabBackColor,
-                        selectedColor: AppColors.inverseIconColor,
-                        indicatorSize: 10,
-                      ),
-                    ),
-                  ),
+
                   Padding(
                     padding: EdgeInsets.only(
                       left: width * 0.05,

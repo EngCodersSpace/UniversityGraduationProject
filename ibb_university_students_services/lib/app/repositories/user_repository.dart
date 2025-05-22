@@ -127,6 +127,7 @@ class UserRepository {
   static Future<void> userLogout() async {
     Response? response;
     try {
+      if(_userBox?.get('currentUser')?.id == null)return;
       response = await HttpProvider.post(
           "logout?user_id=${_userBox?.get('currentUser')?.id}");
       if (response?.statusCode == 200) {
@@ -439,6 +440,7 @@ class UserRepository {
   }
 
   static Type? currentUserType() {
+    _userBox?.get('currentUser')?.runtimeType;
     return _userBox?.get('currentUser')?.runtimeType;
   }
 

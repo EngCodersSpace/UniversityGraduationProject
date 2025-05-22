@@ -101,7 +101,7 @@ class StudentInfoCard extends GetView<HomeTabController> {
                       SizedBox(
                         width: Get.width * 0.025,
                       ),
-                      CustomText("0/0",
+                      CustomText("${(controller.user as Student).completeAssignmentCount??0}/${(controller.user as Student).assignmentCount??0}",
                           style: AppTextStyles.secStyle(
                               textHeader: AppTextHeaders.h5Bold,height: 0)),
                     ],

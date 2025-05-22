@@ -138,7 +138,7 @@ class NewsRepository {
     int? limit,
     bool hardFetch = false,
   }) async {
-    if ((_newsBox != null) &&
+    if ((_newsBox?.isNotEmpty??false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       if(limit!=null){
         Map<int,News> news = {};
@@ -161,10 +161,10 @@ class NewsRepository {
     }
     late Response? response;
     try {
-      await clearBox();
       response = await HttpProvider.get(
           "Get-AllNews?limit=${limit??''}");
       if (response?.statusCode == 200) {
+        await clearBox();
         for (Map<String, dynamic> jsNews in response?.data["data"]) {
           News news = News.fromJson(jsNews);
           await _newsBox?.put(news.id, news);

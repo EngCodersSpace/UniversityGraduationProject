@@ -285,9 +285,8 @@ class LibraryController extends GetxController
   }
 
   void searching(String? val) {
-    update();
+    // update();
   }
-
   void filteringIconClick() {
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookFilterCard())

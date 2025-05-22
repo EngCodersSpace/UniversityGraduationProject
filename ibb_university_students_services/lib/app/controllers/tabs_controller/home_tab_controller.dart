@@ -19,33 +19,41 @@ class HomeTabController extends GetxController
   ScrollController scrollController = ScrollController();
   Timer? _timer;
   int _newsCurrentPos = 0;
-  NewsController? newsController ;
+  NewsController? newsController = Get.find<NewsController>();
+
   @override
   void onInit() async {
     Result res = await UserRepository.fetchUser();
+    print(res.statusCode);
+    print(res.data);
     if (res.statusCode == 200) {
       user = res.data;
     }
-    newsController = Get.find<NewsController>();
-    await newsController?.fetchNews(limit: 5);
-    tabController = TabController(length: newsController?.news.length??0, initialIndex: 0, vsync: this);
-    _setUpTimer();
+    await setUpNewsCards();
     initState.value = true;
     super.onInit();
   }
 
   @override
-  void refresh() async{
+  void refresh() async {
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
       initState.refresh();
     }
+    await setUpNewsCards();
+    super.refresh();
+  }
+
+  Future<void> setUpNewsCards() async {
     await newsController?.fetchNews(limit: 5);
     // tabController?.dispose();
-    tabController = TabController(length: newsController?.news.length??0, initialIndex: 0, vsync: this);
-    update(["tadsIndicator"]);
-    super.refresh();
+    tabController = TabController(
+        length: newsController?.news.length ?? 0, initialIndex: 0, vsync: this);
+    if((tabController?.length??1)>1){
+      startTimer();
+    }
+    update(["tadsIndicator", "newsCards"]);
   }
 
   @override
@@ -77,16 +85,18 @@ class HomeTabController extends GetxController
     return false;
   }
 
-  showSettings(){
+  showSettings() {
     Get.put(SettingController());
-    Get.dialog(PopUpSettingsCard()).then((_) => Get.delete<SettingController>());
+    Get.dialog(PopUpSettingsCard())
+        .then((_) => Get.delete<SettingController>());
   }
+
   void _setUpTimer() {
     try {
       const duration = Duration(seconds: 6);
       _timer = Timer.periodic(duration, (timer) {
         _newsCurrentPos++;
-        if (_newsCurrentPos > (tabController?.length??0)) {
+        if (_newsCurrentPos > (tabController?.length ?? 0)) {
           _newsCurrentPos = 0;
           if (scrollController.hasClients) {
             scrollController.jumpTo(0);
@@ -161,10 +171,10 @@ class HomeTabController extends GetxController
     Get.toNamed("/pepper_transactions");
   }
 
-void  openNewsList(){
-
-  Get.toNamed("news_list");
+  void openNewsList() {
+    Get.toNamed("news_list");
   }
+
   void openNews(int i) {
     Get.toNamed("news");
   }
