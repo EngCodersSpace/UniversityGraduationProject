@@ -8,7 +8,6 @@ const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
 
-
 // create with upload photo
 exports.createNewsWithPhoto =async (req, res) => {
 
@@ -134,7 +133,6 @@ exports.uploadPhotoForNews = async (req, res) => {
   }
 };
 
-
 exports.getAllNews = async (req, res) => {
   try {
     const newsList = await news.findAll();
@@ -158,8 +156,6 @@ exports.getAllNewsWithLimit = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
 
 //  get image from path by id (req.query.id)
 exports.getImageOfNews = async (req, res) => {
@@ -229,10 +225,6 @@ exports.streamNews = async (req, res) => {
   }
 };
 
-
-
-
-
 exports.getNewsById = async (req, res) => {
   try {
     const newsItem = await news.findByPk(req.params.id);
@@ -244,7 +236,6 @@ exports.getNewsById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 exports.updateNewsWithPhoto = async (req, res) => {
   uploadPhoto("News", "user").single("file")(req, res, async (err) => {
@@ -296,8 +287,6 @@ exports.updateNewsWithPhoto = async (req, res) => {
     }
   });
 };
-
-
 
 exports.deleteNews = async (req, res) => {
   try {

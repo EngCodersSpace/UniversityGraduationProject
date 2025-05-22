@@ -338,7 +338,7 @@ exports.getDoctorsByCriteriaPanel = async (req, res) => {
             },
             {
               model: phone_number,
-              as: "phone_numbers",
+              as: "phones",
               attributes: ["phone_number"],
               required: true,
             }
@@ -648,7 +648,7 @@ exports.getStudentsByCriteriaPanel = async (req, res) => {
             },
             {
               model: phone_number,
-              as: "phone_numbers",
+              as: "phones",
               attributes: ["phone_number"],
               // required: true,
             },
