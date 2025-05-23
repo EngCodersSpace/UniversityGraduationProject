@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_payment_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/payment_table_view/payment_table_component/popup_add_payment_component.dart';
 
 class PopUpAddPaymentCard extends GetView<DashboardPaymentTableController> {
@@ -166,11 +168,26 @@ class PopUpAddPaymentCard extends GetView<DashboardPaymentTableController> {
                               controlName: controller.totalPaid,
                               focusName: controller.totalFocus,
                               inputType: TextInputType.number),
-                          PopupAddPaymentComponent(
-                              name: "Payment date",
-                              controlName: controller.payDate,
-                              focusName: controller.dateFocus,
-                              inputType: TextInputType.datetime),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  CustomText("Date".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold)),
+                                ],
+                              ),
+                              CustomTextFormField(
+                                controller: controller.payDate,
+                                labelText: "Date".tr,
+                                focusNode: controller.dateFocus,
+                                onTap: () => DateTimeUtils.datePiker(context,
+                                    controller: controller.payDate),
+                                width: (Get.width - 12) * 0.23,
+                              ),
+                            ],
+                          ),
                           PopupAddPaymentComponent(
                               name: "Reciept number",
                               controlName: controller.reciptNum,

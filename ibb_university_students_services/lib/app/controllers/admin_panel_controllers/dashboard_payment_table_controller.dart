@@ -182,7 +182,6 @@ class DashboardPaymentTableController extends GetxController
   FocusNode reciptFocus = FocusNode();
   int? studentID;
   int? selectedFee;
-  String mode = "Add";
 
   @override
   void onInit() async {
@@ -409,28 +408,15 @@ class DashboardPaymentTableController extends GetxController
           : null;
     }
 
-    if (mode == "Add") {
-      Result<StudentFee> res = await StudentFeeRepository.createStudentFee(
-          studentId: int.parse(studentId.text), data: jsData);
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 201 && res.data != null) {
-        studentFee[res.data!.id] = res.data!;
-        studentFee.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
-    } else if (mode == "Edit") {
-      Result<StudentFee> res = await StudentFeeRepository.updateStudentFee(
-          studentId: int.parse(studentId.text), data: jsData, id: selectedFee);
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data != null) {
-        studentFee[res.data!.id] = res.data!;
-        studentFee.refresh();
-        showSnakeBar(message: "Edit successfully");
-      } else {
-        showSnakeBar(message: "Edit failed");
-      }
+    Result<StudentFee> res = await StudentFeeRepository.createStudentFee(
+        studentId: int.parse(studentId.text), data: jsData);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      studentFee[res.data!.id] = res.data!;
+      studentFee.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
     }
   }
 

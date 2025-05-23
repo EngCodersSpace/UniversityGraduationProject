@@ -245,23 +245,21 @@ class DashboardSubjectsTableController extends GetxController
   // }
 
   Future<void> addSubject() async {
-    if (formKey.currentState!.validate()) {
-      Result<Subject> res = await SubjectRepository.createSubject(
-          language: (Get.locale?.languageCode == "en") ? "en" : "ar",
-          subjectId: subjectId.text,
-          subjectName: subjectName.text,
-          numberOfUnit: int.parse(subjectUnit.text),
-          description: subjectDescription.text);
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 201) {
-        subjects[res.data!.id] = res.data!;
-        subjects.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
-      update(["DataTable"]);
+    Result<Subject> res = await SubjectRepository.createSubject(
+        language: (Get.locale?.languageCode == "en") ? "en" : "ar",
+        subjectId: subjectId.text,
+        subjectName: subjectName.text,
+        numberOfUnit: int.parse(subjectUnit.text),
+        description: subjectDescription.text);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201) {
+      subjects[res.data!.id] = res.data!;
+      subjects.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
     }
+    update(["DataTable"]);
   }
 
   @override

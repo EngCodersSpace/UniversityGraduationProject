@@ -547,23 +547,23 @@ class DashboardExamTableController extends GetxController
       (hallController.text.isNotEmpty && hallController.text != "Unknown".tr)
           ? jsData["exam_room"] = hallController.text
           : null;
-      if (LevelId.value == null) return;
-      if (SectionId.value == null) return;
-      Result<Exam> res = await ExamRepository.createExam(
-        sectionId: SectionId.value!,
-        levelId: LevelId.value!,
-        data: jsData,
-      );
-      Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 201 && res.data != null) {
-        exams[res.data!.id] = res.data!;
-        exams.refresh();
-        showSnakeBar(message: "Add successfully");
-      } else {
-        showSnakeBar(message: "Add failed");
-      }
-      update(["DataTable"]);
     }
+    if (LevelId.value == null) return;
+    if (SectionId.value == null) return;
+    Result<Exam> res = await ExamRepository.createExam(
+      sectionId: SectionId.value!,
+      levelId: LevelId.value!,
+      data: jsData,
+    );
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      exams[res.data!.id] = res.data!;
+      exams.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+    update(["DataTable"]);
   }
 
   @override
