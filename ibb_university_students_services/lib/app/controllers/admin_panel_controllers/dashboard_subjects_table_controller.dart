@@ -29,8 +29,6 @@ class DashboardSubjectsTableController extends GetxController
   RxBool selectedAll = false.obs;
   RxSet<String> selectedRow = RxSet({});
   RxMap<String, Subject> subjects = RxMap({});
-  List<DropdownMenuItem<int>> sections = [];
-  List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "subject_id",
@@ -85,8 +83,6 @@ class DashboardSubjectsTableController extends GetxController
               ),
             ))),
   ];
-  Rx<int?> selectedSection = Rx(null);
-  Rx<int?> selectedLevel = Rx(null);
   RxString selectedOrder = "subject_id".obs;
   RxString selectedSort = "DESC".obs;
   RxInt availableRows = 0.obs;
@@ -144,10 +140,6 @@ class DashboardSubjectsTableController extends GetxController
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
     ];
-    await initLevelDashboardMenuList();
-    await initSectionDashboardMenuList();
-    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
-    (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
     await fetchSubjectData();
     loadingState.value = false;
     super.onInit();
@@ -172,27 +164,7 @@ class DashboardSubjectsTableController extends GetxController
   }
 
   Future<void> fetchSubjectData({bool showSnakeBars = true}) async {
-    if (selectedLevel.value == null) {
-      await initLevelDashboardMenuList();
-      if (levels.isNotEmpty) {
-        selectedLevel.value = levels.first.value;
-      }
-    }
-
-    if (selectedSection.value == null) {
-      await initSectionDashboardMenuList();
-      if (sections.isNotEmpty) {
-        selectedSection.value = sections.first.value;
-      }
-    }
-
-    if (selectedLevel.value == null || selectedSection.value == null) {
-      return;
-    }
-
     Result res = await SubjectRepository.fetchDashboardSubject(
-      sectionid: (selectedSection.value == 0) ? null : selectedSection.value,
-      levelid: (selectedLevel.value == 0) ? null : selectedLevel.value,
       limit: rowsPerPage.value,
       page: currentPage,
       order: selectedOrder.value,
@@ -223,18 +195,6 @@ class DashboardSubjectsTableController extends GetxController
     update(["DataTable"]);
   }
 
-  void changeSection(int? val) async {
-    if (val == null) return;
-    selectedSection.value = val;
-    await fetchSubjectData();
-  }
-
-  void changeLevel(int? val) async {
-    if (val == null) return;
-    selectedLevel.value = val;
-    await fetchSubjectData();
-  }
-
   void changeOrder(String? val) async {
     if (val == null) return;
     selectedOrder.value = val;
@@ -245,69 +205,6 @@ class DashboardSubjectsTableController extends GetxController
     if (val == null) return;
     selectedSort.value = val;
     fetchSubjectData();
-  }
-
-  Future<void> initSectionDashboardMenuList({bool force = false}) async {
-    Map<int, Section> sectionsData =
-        await SectionRepository.fetchSections(hardFetch: force)
-            .then((e) => e.data ?? {});
-    sections = [
-      DropdownMenuItem<int>(
-          value: 0,
-          child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
-            ),
-          )),
-    ];
-    for (Section section in sectionsData.values.toList()) {
-      sections.add(
-        DropdownMenuItem<int>(
-            value: section.id,
-            child: SizedBox(
-              width: (Get.width / 6) * 0.5,
-              child: CustomText(
-                section.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
-              ),
-            )),
-      );
-    }
-    selectedSection.value = sectionsData.values.first.id;
-  }
-
-  Future<void> initLevelDashboardMenuList({bool force = false}) async {
-    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
-        .then((e) => e.data?.values.toList() ?? []);
-    levels = [
-      DropdownMenuItem<int>(
-          value: 0,
-          child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
-            ),
-          )),
-    ];
-    for (Level level in levelsData) {
-      levels.add(
-        DropdownMenuItem<int>(
-            value: level.id,
-            child: SizedBox(
-              width: (Get.width / 8) * 0.4,
-              child: CustomText(
-                level.name ?? "unknown",
-                style:
-                    AppTextStyles.mainStyle(textHeader: AppTextHeaders.h6Bold),
-              ),
-            )),
-      );
-    }
-    selectedLevel.value = levelsData.first.id;
   }
 
   void addClick() async {

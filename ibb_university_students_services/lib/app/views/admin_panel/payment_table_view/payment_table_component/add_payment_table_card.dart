@@ -162,6 +162,11 @@ class PopUpAddPaymentCard extends GetView<DashboardPaymentTableController> {
                               focusName: controller.amountFocus,
                               inputType: TextInputType.number),
                           PopupAddPaymentComponent(
+                              name: "Total paid",
+                              controlName: controller.totalPaid,
+                              focusName: controller.totalFocus,
+                              inputType: TextInputType.number),
+                          PopupAddPaymentComponent(
                               name: "Payment date",
                               controlName: controller.payDate,
                               focusName: controller.dateFocus,
