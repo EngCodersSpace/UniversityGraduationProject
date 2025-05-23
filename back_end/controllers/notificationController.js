@@ -317,7 +317,7 @@ const sendSystemHandler = async (req, res) => {
 const getForSender = async (req, res) => {
   try{
   const notifications=await notification.findAll({
-    where: {sender_id: req.query.sender_id },
+    where: {sender_id: req.user.user_id },
     include: [
         {
           model: user,

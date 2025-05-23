@@ -40,7 +40,7 @@ module.exports = {
         assignment_date: faker.date.past(),
         assignments_due_date: faker.date.future(),
         // year:faker.date.future().getFullYear(),
-        year:"2025",
+        year:faker.helpers.arrayElement(['2020', '2021', '2022', '2023', '2024', '2025']),
         createdAt: new Date(),
         updatedAt: new Date(),
       });

@@ -19,7 +19,7 @@ module.exports = {
 
 
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < subjects.length; i++) {
       const doctorData = faker.helpers.arrayElement(doctors);
       const subjectData = faker.helpers.arrayElement(subjects);
 
