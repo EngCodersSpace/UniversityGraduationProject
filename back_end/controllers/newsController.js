@@ -148,7 +148,13 @@ exports.getAllNewsWithLimit = async (req, res) => {
 
     const newsList = await news.findAll({
       order: [['time', 'DESC']],
-      ...(limit && { limit: parseInt(limit) }) 
+      ...(limit && { limit: parseInt(limit) }),
+      include:[
+          {
+            model:user ,as:'user',
+            attributes:['user_id','user_name']
+          }
+        ]
     });
 
     res.status(200).json({ message: "Get News Successfully", data: newsList });
