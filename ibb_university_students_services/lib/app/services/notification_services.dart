@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ibb_university_students_services/app/repositories/data_sync_repository.dart';
+import 'package:ibb_university_students_services/app/services/data_sync_services.dart';
 
 class NotificationHandler {
   static final FirebaseMessaging _firebaseMessaging =
@@ -67,6 +69,7 @@ class NotificationHandler {
       title: message.notification?.title ?? "Info",
       body: message.notification?.body ?? "Notification received",
     );
+    // DataSyncServices.startSync();
     // if (message.data['type'] == 'info') {
     //   showNotification(
     //     title: message.notification?.title ?? "Info",
@@ -79,6 +82,7 @@ class NotificationHandler {
   }
 
   static void _processCommand(Map<String, dynamic> data) {
+    print("commandReceived");
     String action = data['action'] ?? '';
     if (action == 'refresh_data') {
       // String module = data['module'] ?? '';
@@ -161,7 +165,6 @@ class NotificationHandler {
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
   // print("Handling background message: ${message.notification?.title}");
-
   if (message.data['type'] == 'info') {
     NotificationHandler.showNotification(
       title: message.notification?.title ?? "Info",

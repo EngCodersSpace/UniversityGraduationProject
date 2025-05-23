@@ -182,11 +182,29 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 imageUrl: "",
                               )
                             ],
-
+                            for(int i=0; i<(controller.tabController?.length??0);i++)...[
+                              NewsCard(
+                                height: height * 0.27,
+                                width: width * 0.8,
+                                text: controller.newsController?.news.values.toList()[i].title??"Unknown".tr,
+                                onTap: ()=>controller.newsController?.openNews(controller.newsController?.news.values.toList()[i].id??-1),
+                                imageUrl: "Get-imageOfnew?id=${controller.newsController?.news.values.toList()[i].id}",
+                              ),
+                              SizedBox(width: 16,)
+                            ]
                           ],
                         ),
                       ),
                     ),
+                  ),
+                  GetBuilder<HomeTabController>(
+                    id:"newsCards",
+                    builder:(ctx) => Align(
+                      child: TabPageSelector(
+                        controller: controller.tabController,
+                        selectedColor: AppColors.inverseCardColor,
+                      ),
+                    )
                   ),
 
                   Padding(

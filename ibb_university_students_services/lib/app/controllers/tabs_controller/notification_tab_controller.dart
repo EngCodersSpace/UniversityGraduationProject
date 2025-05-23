@@ -12,6 +12,7 @@ import '../../models/level_model/level.dart';
 import '../../models/role_model/role.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
+import '../../styles/app_colors.dart';
 import '../../utils/snake_bar.dart';
 
 class NotificationTabController extends GetxController {
@@ -33,6 +34,8 @@ class NotificationTabController extends GetxController {
   RxList<String> selectedLevels = <String>[].obs;
   RxList<String> selectedRoles = <String>[].obs;
 
+  RxInt sortDirection = 0.obs;
+
   Map<int, Section> sections = {};
   Map<int, Level> levels = {};
   Map<int, Role> roles = {};
@@ -42,13 +45,28 @@ class NotificationTabController extends GetxController {
     "Student And Doctors": "'student' in topics || 'doctor' in topics"
   };
   RxBool includeRole = false.obs;
-
+  List<Border> borders = [];
   @override
   void onInit() async {
     DateTime now = DateTime.now();
     await initSections();
     await initLevels();
     await initRoles();
+    BorderSide borderSide =
+    BorderSide(color: AppColors.inverseCardColor, width: 1.0);
+    borders = [
+      Border(
+        top: borderSide,
+        right: borderSide,
+        bottom: borderSide,
+      ),
+      Border(
+        top: borderSide,
+        left: borderSide,
+        bottom: borderSide,
+      ),
+    ];
+
     await fetchNotification();
     today =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
@@ -71,8 +89,9 @@ class NotificationTabController extends GetxController {
 
   Future<void> fetchNotification({bool force = false}) async {
     Result res =
-        await NotificationRepository.fetchNotifications(hardFetch: force);
+        await NotificationRepository.fetchNotifications(mode: (sortDirection.value==0)?"receiver":"sent",hardFetch: force);
     if (res.statusCode == 200) {
+      notificationGroups = {};
       groupNotifications(res.data);
     } else if (res.statusCode == 404) {
       notificationGroups = {};
@@ -86,6 +105,8 @@ class NotificationTabController extends GetxController {
           title: "Fetch Fees Failed",
           message: "fetching fees failed please check connection ");
     }
+
+    update(["notificationsList"]);
   }
 
   Future<void> initSections({bool force = false}) async {
@@ -107,6 +128,13 @@ class NotificationTabController extends GetxController {
     if (val == null) return;
     includeRole.value = val;
   }
+
+  void changeSelectedSortDirection(int? val) async {
+    if (val == null) return;
+    sortDirection.value = val;
+    await fetchNotification();
+  }
+
 
   void pushNotification() async {
     if (mode.value == "Group" && selectedSections.isEmpty) {
@@ -200,7 +228,6 @@ class NotificationTabController extends GetxController {
   void groupNotifications(Map<int, model.Notification> notifications) {
     for (model.Notification notification in notifications.values) {
       if (notification.createdAt == null) continue;
-
       if (!notificationGroups
           .containsKey(notification.createdAt?.split("T").first)) {
         notificationGroups[notification.createdAt!.split("T").first] = {};
@@ -212,6 +239,7 @@ class NotificationTabController extends GetxController {
           ..sort((a, b) => DateTime.parse(b.key)
               .compareTo(DateTime.parse(a.key))) // newest first
         );
+
   }
 
   @override

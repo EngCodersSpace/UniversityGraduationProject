@@ -11,6 +11,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_assignments_year_card.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/show_files_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/doctor_model/doctor.dart';
@@ -34,32 +35,35 @@ class AssignmentsTabController extends GetxController {
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedSubject = Rx(null);
-  Rx<String?> selectedYear = Rx(null);
+  Rx<int?> selectedYear = Rx(null);
   Map<String, Subject>? subjects;
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
   Map<int, Section> sections = {};
-  List<String> years = [];
+  List<int> years = [];
   List<DropdownMenuItem<int>> levels = [];
   RxList<Map<String, int>> groups = RxList();
   Rx<Map<int, Assignment>>? assignments = Rx({});
-  RxBool addToMultiGroup = false.obs;
+  RxBool isDialogOpen = false.obs;
 
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+  TextEditingController yearController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   FocusNode dueDateFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
+  FocusNode yearFocus = FocusNode();
   String mode = "Add";
   String fetchMode = "doctor";
   int? selectedAssignment;
   int? selectedState;
 
-Future<void> setStudentSectionAndLevel()async{
-  Student? student =
-      await UserRepository.fetchUser().then((e) => e.data as Student);
-  selectedDepartment.value = student?.section?.id;
-  selectedLevel.value = student?.level?.id;
-}
+  Future<void> setStudentSectionAndLevel() async {
+    Student? student =
+        await UserRepository.fetchUser().then((e) => e.data as Student);
+    selectedDepartment.value = student?.section?.id;
+    selectedLevel.value = student?.level?.id;
+  }
+
   @override
   void onInit() async {
     // await initSectionDropdownMenuList();
@@ -89,7 +93,7 @@ Future<void> setStudentSectionAndLevel()async{
   Future<void> fetchAssignmentsData({bool force = false}) async {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
-      if (subjects?.values.isNotEmpty??false) {
+      if (subjects?.values.isNotEmpty ?? false) {
         selectedSubject.value = subjects?.values.first.id;
       }
     }
@@ -106,13 +110,21 @@ Future<void> setStudentSectionAndLevel()async{
       }
     }
 
-    if(fetchMode=="student"){
+    if (selectedYear.value == null) {
+      await initYears();
+      if (years.isNotEmpty) {
+        selectedYear.value = years.first;
+      }
+    }
+
+    if (fetchMode == "student") {
       await setStudentSectionAndLevel();
     }
 
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
-        selectedSubject.value == null) {
+        selectedSubject.value == null ||
+        selectedYear.value == null) {
       return;
     }
 
@@ -120,7 +132,7 @@ Future<void> setStudentSectionAndLevel()async{
       subjectId: selectedSubject.value!,
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: '',
+      year: selectedYear.value!,
       hardFetch: force,
     );
     if (res.statusCode == 200) {
@@ -158,13 +170,19 @@ Future<void> setStudentSectionAndLevel()async{
     await fetchAssignmentsData();
   }
 
-  void changeAddToMultiGroup(bool? val) async {
+  void changeYear(int? val) async{
     if (val == null) return;
-    addToMultiGroup.value = val;
-  }
-
-  void changeYear(String? val) {
-    if (val == null) return;
+    if(val == -1){
+      if(isDialogOpen.value){
+        Get.back();
+      }
+      await Get.dialog(PopUpAddAssignmentsYearCard());
+      if(isDialogOpen.value){
+        Get.dialog(PopUpIAddAndUpdateAssignmentsCard());
+        update(["addUpdateCard"]);
+      }
+      return;
+    }
     selectedYear.value = val;
     fetchAssignmentsData();
   }
@@ -200,7 +218,7 @@ Future<void> setStudentSectionAndLevel()async{
   Future<void> initSubjectDropdownMenuList() async {
     subjects = {};
     subjects =
-    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       selectedSubject = RxString(subjects!.values.first.id);
     } else {
@@ -210,16 +228,15 @@ Future<void> setStudentSectionAndLevel()async{
 
   Future<void> initYears() async {
     years = [];
-    years =
-    await AssignmentsRepository.fetchAssignmentYears().then((e)=>e.data??[]);
+    years = await AssignmentsRepository.fetchAssignmentYears(hardFetch: true)
+        .then((e) => e.data ?? []);
+    years.add(-1);
     if (years.isNotEmpty) {
-      selectedYear = RxString(subjects!.values.first.id);
+      selectedYear = RxInt(years.first);
     } else {
       selectedYear.value = null;
     }
   }
-
-
 
   void uploadAssignmentsFiles() async {
     if (selectedLevel.value == null) return;
@@ -293,12 +310,11 @@ Future<void> setStudentSectionAndLevel()async{
             path: result.files[i].path,
             assignmentId: selectedAssignment,
             status: RxString("Not Uploaded"));
-        if(kIsWeb){
+        if (kIsWeb) {
           file.downloaded.value = false;
-        }else{
+        } else {
           file.downloaded.value = true;
         }
-
 
         assignments?.value[selectedAssignment]?.attachments?.forEach((i, e) {
           exist = (e.originName == file.originName);
@@ -366,15 +382,15 @@ Future<void> setStudentSectionAndLevel()async{
     }
   }
 
-  void openFile(int id,String? path) async {
-    if(id>0){
+  void openFile(int id, String? path) async {
+    if (id > 0) {
       await FileUtils.openFile(path);
-    }else{
-      await FileUtils.openFile(path,baseFolderPath: "");
+    } else {
+      await FileUtils.openFile(path, baseFolderPath: "");
     }
   }
 
-  void downloadAssignmentFile(AttachmentFile file) async{
+  void downloadAssignmentFile(AttachmentFile file) async {
     await AssignmentsRepository.downloadAttachmentFiles(file: file);
   }
 
@@ -431,10 +447,13 @@ Future<void> setStudentSectionAndLevel()async{
 
   void _moreDeleteAttachmentFileFromStorage(Map<String, dynamic>? data) async {
     if (data == null) return;
-    bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
-    if(res){
+    bool res = await FileUtils.deleteFile(
+        filePath: assignments
+            ?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
+    if (res) {
       showSnakeBar(message: "File Deleted");
-      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.checkDownloaded();
+      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]
+          ?.checkDownloaded();
     }
   }
 
@@ -460,21 +479,26 @@ Future<void> setStudentSectionAndLevel()async{
     }
   }
 
-  void _moreDeleteStudentAssignmentFileFromStorage(Map<String, dynamic>? data) async {
+  void _moreDeleteStudentAssignmentFileFromStorage(
+      Map<String, dynamic>? data) async {
     if (data == null) return;
     if (data["id"] < 0) {
       showSnakeBar(message: "File not Store Yet");
     } else {
-      bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
-          ?.studentFiles?[data["id"]]?.path);
-      if(res){
+      bool res = await FileUtils.deleteFile(
+          filePath: assignments
+              ?.value[selectedAssignment]
+              ?.studentsStatus?[selectedState]
+              ?.studentFiles?[data["id"]]
+              ?.path);
+      if (res) {
         showSnakeBar(message: "File Deleted");
-        await assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
-            ?.studentFiles?[data["id"]]?.checkDownloaded();
-      }
+        await assignments?.value[selectedAssignment]
+            ?.studentsStatus?[selectedState]?.studentFiles?[data["id"]]
+            ?.checkDownloaded();
       }
     }
-
+  }
 
   void _moreSetCompletion(bool stat, Map<String, dynamic>? data) async {
     if (data?["assignment_id"] == null) return;
@@ -515,7 +539,7 @@ Future<void> setStudentSectionAndLevel()async{
       case "DeleteAttachmentFile":
         _moreDeleteAttachmentFile(data);
         break;
-        case "DeleteAttachmentFileFromStorage":
+      case "DeleteAttachmentFileFromStorage":
         _moreDeleteAttachmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFileFromStorage":
@@ -580,8 +604,13 @@ Future<void> setStudentSectionAndLevel()async{
       showSnakeBar(message: "Select Subject First");
       return;
     }
+    if (selectedYear.value == null) {
+      showSnakeBar(message: "Select Year First");
+      return;
+    }
     groups.value = [];
     addGroup(selectedDepartment.value!, selectedLevel.value!);
+    isDialogOpen.value = true;
     Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
   }
 
@@ -608,6 +637,7 @@ Future<void> setStudentSectionAndLevel()async{
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           subjectId: selectedSubject.value!,
+          year: selectedYear.value!,
           title: titleController.text,
           assignmentDate: DateTime.now().toString(),
           assignmentsDueDate: dueDateController.text,
@@ -647,8 +677,7 @@ Future<void> setStudentSectionAndLevel()async{
   void showAttachmentsFiles(int? assignmentId) async {
     selectedAssignment = assignmentId;
     for (AttachmentFile file
-    in assignments?.value[selectedAssignment]?.attachments?.values ??
-        []) {
+        in assignments?.value[selectedAssignment]?.attachments?.values ?? []) {
       await file.checkDownloaded();
     }
     if (UserRepository.currentUserType() == Doctor) {
@@ -683,5 +712,14 @@ Future<void> setStudentSectionAndLevel()async{
     Get.to(AssignmentStudentList(
       items: items ?? [],
     ));
+  }
+
+
+  void addYear(){
+    if(yearController.text == "")return;
+    years.add(int.parse(yearController.text));
+    selectedYear.value = int.parse(yearController.text);
+    years.sort((a, b) => b.compareTo(a));
+    Get.back();
   }
 }

@@ -31,12 +31,13 @@ class News {
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
+
     return News(
       id: json['id'],
       title: json['title'],
       content: json['content'],
       date: json['time'],
-      publisher: Instructor(id:json['publisher']['user_id'] ,nameData: JsonUtils.tryJsonDecode(json['publisher']['user_name'])),
+      publisher: Instructor(id:json['user']['user_id'] ,nameData: JsonUtils.tryJsonDecode(json['user']['user_name'])),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

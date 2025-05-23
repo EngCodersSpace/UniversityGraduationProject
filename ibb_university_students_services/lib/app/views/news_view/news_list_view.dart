@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/news_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/views/news_view/news_view_components/news_list_card.dart';
 import '../../components/custom_text_v2.dart';
 import '../../components/text_field.dart';
@@ -31,12 +32,12 @@ class PhonesNewsListView extends GetView<NewsController> {
                               Icons.arrow_back_outlined,
                               color: AppColors.inverseCardColor,
                             )),
-                        IconButton(
+                        if(UserRepository.checkPermission(target: "news", action: "write"))...[IconButton(
                             onPressed: controller.createRoute,
                             icon: Icon(
                               Icons.add,
                               color: AppColors.inverseCardColor,
-                            )),
+                            )),],
                         Expanded(
                           child: CustomTextFormField(
                             controller: controller.searchText,

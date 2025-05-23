@@ -31,13 +31,13 @@ class AssignmentsRepository {
 
   static Box<AssignmentsCache>? _assignmentsGroupsBox;
   static Box<Assignment>? _assignmentsBox;
-  static Box<List<String>>? _assignmentsYearsBox;
+  static Box<List<int>>? _assignmentsYearsBox;
 
   static Future<void> openBox() async {
     _assignmentsGroupsBox =
         await Hive.openBox<AssignmentsCache>("assignmentsGroupsBox");
     _assignmentsBox = await Hive.openBox<Assignment>("assignmentsBox");
-    _assignmentsYearsBox = await Hive.openBox<List<String>>("assignmentsYearsBox");
+    _assignmentsYearsBox = await Hive.openBox<List<int>>("assignmentsYearsBox");
   }
 
   static Future<void> clearBox() async {
@@ -60,7 +60,7 @@ class AssignmentsRepository {
   static Future<Result<Map<int, Assignment>>> fetchAssignmentsGroup({
     required int sectionId,
     required int levelId,
-    required String year,
+    required int year,
     required String subjectId,
     bool hardFetch = false,
   }) async {
@@ -81,7 +81,7 @@ class AssignmentsRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          (UserRepository.currentUserType() == Doctor)?"get-assignments-subject-doctor?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId&year=$year":"get-assignments-subject-student?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId");
+          (UserRepository.currentUserType() == Doctor)?"get-assignments-subject-doctor?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId&year=$year":"get-assignments-subject-student?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
         cachedAssignments = AssignmentsCache(
             key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",
@@ -167,25 +167,22 @@ class AssignmentsRepository {
     }
   }
 
-  static Future<Result<List<String>>> fetchAssignmentYears({
+  static Future<Result<List<int>>> fetchAssignmentYears({
     bool hardFetch = false,
     bool withCache = true,
   }) async {
     if ((_assignmentsYearsBox?.isNotEmpty??false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
-      if(withCache){
-
-      }
-      return Result(data: [], hasError: false, statusCode: 200);
+      return Result(data: _assignmentsYearsBox?.get("years"), hasError: false, statusCode: 200);
     }
     Response? response;
     try {
-      response = await HttpProvider.get("");
-      if (response?.statusCode == 200) {
-        await _assignmentsYearsBox?.put("years",[]
+      response = await HttpProvider.get("get-year-assignment");
+      if (response?.statusCode == 200 && withCache) {
+        await _assignmentsYearsBox?.put("years",response?.data["data"].cast<int>()
         );
         return Result(
-            data: [],
+            data: _assignmentsYearsBox?.get("years")?.cast<int>(),
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -263,16 +260,18 @@ class AssignmentsRepository {
       required String subjectId,
       required String title,
       required String assignmentDate,
+      required int year,
       required String assignmentsDueDate,
       required List<Map<String, int>> sectionsAndLevels,
       bool withCache = true,
-      String year = ""}) async {
+      }) async {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
       response = await HttpProvider.post("upload-assignment-doctor", data: {
         "subject_id": subjectId,
         "title": title,
+        "year":year,
         "assignment_due_day": "Sun",
         "assignment_date": assignmentDate,
         "assignments_due_date": assignmentsDueDate,

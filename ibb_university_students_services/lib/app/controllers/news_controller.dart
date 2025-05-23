@@ -138,6 +138,8 @@ class NewsController extends GetxController {
 
   Future<void> createNews() async {
     String content = jsonEncode(quillController.document.toDelta().toJson());
+    print(content);
+    return;
     Result<News> res = await NewsRepository.createNews(
         file: imageFile,
         title: titleController.text,
@@ -156,6 +158,8 @@ class NewsController extends GetxController {
 
   void createRoute() async {
     creating.value = true;
+    quillController.readOnly= false;
+    editing.value = true;
     selectedId = null;
     titleController.text = "Title";
     quillController.clear();

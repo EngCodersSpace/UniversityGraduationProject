@@ -130,44 +130,43 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                         decoration: BoxDecoration(
                                           color: AppColors.inverseCardColor,
                                           borderRadius:
-                                              BorderRadius.circular(24),
+                                          BorderRadius.circular(24),
                                         ),
                                         width: Get.width / 3,
                                         child: Center(
                                           child: Obx(
-                                            () => DropdownButton(
+                                                () => DropdownButton<int>(
                                               items: (controller
-                                                  .sections.entries
+                                                  .years
                                                   .map((e) {
                                                 return DropdownMenuItem<int>(
-                                                    value: e.value.id,
+                                                    value: e,
                                                     child: SizedBox(
                                                       width: (ScreenUtils
-                                                              .isPhoneScreen())
+                                                          .isPhoneScreen())
                                                           ? (Get.width / 3) - 30
                                                           : (Get.width / 5.5) *
-                                                              0.6,
+                                                          0.6,
                                                       child: CustomText(
-                                                        e.value.name ??
-                                                            "unknown",
+                                                        e.toString(),
                                                         style: AppTextStyles
                                                             .mainStyle(
                                                           textHeader:
-                                                              AppTextHeaders
-                                                                  .h5Bold,
+                                                          AppTextHeaders
+                                                              .h5Bold,
                                                         ),
                                                       ),
                                                     ));
                                               }).toList()),
                                               onChanged:
-                                                  controller.changeDepartment,
+                                              controller.changeYear,
                                               value: controller
-                                                  .selectedDepartment.value,
+                                                  .selectedYear.value,
                                               underline: const SizedBox(),
                                               iconEnabledColor:
-                                                  AppColors.mainCardColor,
+                                              AppColors.mainCardColor,
                                               dropdownColor:
-                                                  AppColors.inverseCardColor,
+                                              AppColors.inverseCardColor,
                                             ),
                                           ),
                                         ),
