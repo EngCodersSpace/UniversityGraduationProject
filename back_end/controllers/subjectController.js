@@ -48,6 +48,16 @@ exports.getSubjectById=async (req, res) => {
     try {
         const Subject = await subject.findOne({
             where: { subject_id: id }, 
+            include: [{
+            model: doctor,
+            attributes: ['doctor_id'],
+            through:{ attributes: [] },
+            include:[{
+              model:user,
+              as:'user',
+              attributes: ['user_name'],
+            }]
+          }],
         });
 
         if (!Subject) {

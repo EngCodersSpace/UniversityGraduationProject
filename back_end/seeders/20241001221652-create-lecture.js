@@ -1,13 +1,23 @@
 +"use strict";
 
 const { faker } = require("@faker-js/faker");
-const { lecture, subject, doctor, section, level } = require("../models");
+const { lecture, subject, doctor, section,user, level } = require("../models");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
   
-    const subjects = await subject.findAll();
-    const doctors = await doctor.findAll();
+    const subjects = await subject.findAll({
+      include: [{
+            model: doctor,
+            attributes: ['doctor_id'],
+            through:{ attributes: [] },
+            include:[{
+              model:user,
+              as:'user',
+              attributes: ['user_name'],
+            }]
+          }],
+    });
     const sections = await section.findAll();
     const levels = await level.findAll();
 
@@ -48,9 +58,13 @@ module.exports = {
                 .toString()
                 .padStart(2, "0")}:${randomMinute.toString().padStart(2, "0")}`;
               const n = faker.number.int({ min: 0, max: subjects.length });
+              const doctor_id = null;
+              if(subjects.doctors){
+                doctor_id = subjects.doctors[faker.number.int({ min: 0, max: doctors.length - 1 })].doctor_id;
+              }
               const lecture = {
                 subject_id: subjects[faker.number.int({ min: 0, max: subjects.length - 1 })].subject_id,
-                doctor_id: doctors[faker.number.int({ min: 0, max: doctors.length - 1 })].doctor_id,
+                doctor_id: doctor_id??1,
                 lecture_section_id: sections[s].id,
                 lecture_level_id: levels[l].id,
                 term: terms[t],
