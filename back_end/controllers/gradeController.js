@@ -336,14 +336,18 @@ exports.createGrade = async (req, res) => {
 
     const newGrade = await grade.create(req.body);
 
-    // await sendSingleSystemNotification({
-    //   title: ` Grades `,
-    //   message: `Your Grade Of Subject ${req.body.subject_id} has been Submmited see it.`,
-    //   receiver_id : req.body.student_id,
-    //   token,
-    //   sender_id: "0", 
-    // });
+    const UserId=await user.findOne({
+      where:{user_id:req.body.student_id}
+    });
 
+    await sendSingleSystemNotification({
+      title: "New Grade Available",
+      message: `Your grade for subject ${req.body.subject_id} has been submitted. Please check it.`,
+      receiver_id: req.body.student_id,
+      token: UserId.fcm_token,
+      sender_id: req.user.user_id,
+    });
+    
 
     res.status(201).json({
       message: 'Grade created successfully',

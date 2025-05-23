@@ -40,6 +40,8 @@ const sendSingleSystemNotification = async ({ title, message, receiver_id, token
       data: { type: 'single' },
       token,
     };
+    console.log('\n Sending to token:', token);
+    if (!token) throw new Error('\n FCM token is missing or invalid');
     await admin.messaging().send(payload);
 
   } catch (error) {
@@ -47,7 +49,6 @@ const sendSingleSystemNotification = async ({ title, message, receiver_id, token
     throw new Error('Sending single notification failed');
   }
 
-  return parts;
 }
 
 
