@@ -22,7 +22,7 @@ class DashboardRoleUsersTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   List<DataColumn> kTableColumn = [];
-  RxInt selectedIndex = 0.obs;
+  RxInt selectedIndex = (-1).obs;
   Timer? _debounce;
   int currentPage = 1;
   RxBool selectAll = false.obs;
@@ -152,6 +152,13 @@ class DashboardRoleUsersTableController extends GetxController
       }
     }
     update(["DataTable"]);
+  }
+
+
+  void changeSelectedRole(int? val){
+    if(val == null)return;
+    selectedIndex.value = val;
+    update(["rolePermissions"]);
   }
 
   // Future<void> showPermition() async {
