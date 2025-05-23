@@ -13,19 +13,21 @@ exports.createSubject=async (req, res) => {
         const {} = req.body;
 
         const targetLanguage = req.headers["accept-language"] === "en" ? "ar" : "en";
+        const lang=req.headers["accept-language"];
+        console.log('\n \n Lang',lang,'\n \n');
 
-        const translatedName = await translateText(req.body.subject_name, req.headers["accept-language"], targetLanguage);
-        const translatedDesc = await translateText(req.body.subject_description, req.headers["accept-language"], targetLanguage);
+        const translatedName = await translateText(req.body.subject_name, lang, targetLanguage);
+        const translatedDesc = await translateText(req.body.subject_description, lang, targetLanguage);
 
         const newSubject = await subject.create({
           subject_id: req.body.subject_id,
           subject_name:{
-            [req.body.language] : req.body.subject_name,
+            [lang] : req.body.subject_name,
             [targetLanguage] : translatedName
           },
           number_of_units:req.body.number_of_units,
           subject_description:{
-            [req.body.language] : req.body.subject_description,
+            [lang] : req.body.subject_description,
             [targetLanguage] : translatedDesc
           }
         });
@@ -84,6 +86,7 @@ exports.getAllSubject=async (req, res) => {
       }
 };
 
+// study plan element here...
 exports.getSubjectByfilter = async (req,res) => {
 
   try {
@@ -115,6 +118,7 @@ exports.getSubjectByfilter = async (req,res) => {
   }
 };
 
+// study plan element here...
 exports.getSubjectsByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["subject_id", "subject_name", "number_of_units"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
@@ -124,8 +128,6 @@ exports.getSubjectsByCriteriaPanel = async (req, res) => {
       subject_id,
       subject_name,
       number_of_units,
-      level_id,
-      section_id,
       page = 1,
       limit = 10,
       orderBy = "subject_id",
@@ -171,22 +173,6 @@ exports.getSubjectsByCriteriaPanel = async (req, res) => {
           ]
         })
       },
-      include: [
-        {
-          model: study_plan_elment,
-          // as: "study_plan_elment",
-          attributes: ["section_id","level_id"], 
-          required: true, 
-          where: {
-            ...(section_id && {
-              section_id: section_id
-            }),
-            ...(level_id &&{
-              level_id:level_id
-            })
-          }
-        }
-      ],
       distinct: true,
       limit: limitNumber,
       offset: offset,
@@ -213,8 +199,6 @@ exports.getSubjectsByCriteriaPanel = async (req, res) => {
   }
 };
 
-
-
 exports.updateSubject = async (req, res) => {
     try {
       const { id } = req.query;
@@ -232,12 +216,12 @@ exports.updateSubject = async (req, res) => {
       const updateSubject = await subject.update({
         subject_id: req.body.subject_id,
           subject_name:{
-            [req.body.language] : req.body.subject_name,
+            [req.headers["accept-language"]] : req.body.subject_name,
             [targetLanguage] : translatedName
           },
           number_of_units:req.body.number_of_units,
           subject_description:{
-            [req.body.language] : req.body.subject_description,
+            [req.headers["accept-language"]] : req.body.subject_description,
             [targetLanguage] : translatedDesc
           }
       }, {
