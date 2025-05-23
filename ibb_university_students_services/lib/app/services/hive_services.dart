@@ -36,6 +36,7 @@ import 'package:ibb_university_students_services/app/repositories/subject_reposi
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/data_sync/data_sync.dart';
 import '../models/helper_models/subjects_cache/subjects_cache.dart';
+import '../repositories/grad_repository.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
 
@@ -87,15 +88,16 @@ class HiveServices{
   static clearAllBox() async{
     await AssignmentsRepository.clearBox();
     await ExamRepository.clearBox();
-    // await GradRepository.clearBox();
+    await GradRepository.clearBox();
     await LectureRepository.clearBox();
     await LevelRepository.clearBox();
-    // await NotificationRepository.clearBox();
+    await NotificationRepository.clearBox();
     await SectionRepository.clearBox();
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
     await UserRepository.clearBox();
     await LibraryRepository.clearBox();
+    await NewsRepository.clearBox();
 
   }
 

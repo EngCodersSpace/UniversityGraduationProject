@@ -61,7 +61,6 @@ class AssignmentsTabController extends GetxController {
     Student? student =
         await UserRepository.fetchUser().then((e) => e.data as Student);
     selectedDepartment.value = student?.section?.id;
-    selectedLevel.value = student?.level?.id;
   }
 
   @override
@@ -231,6 +230,7 @@ class AssignmentsTabController extends GetxController {
     years = await AssignmentsRepository.fetchAssignmentYears(hardFetch: true)
         .then((e) => e.data ?? []);
     years.add(-1);
+    years.sort((a, b) => b.compareTo(a));
     if (years.isNotEmpty) {
       selectedYear = RxInt(years.first);
     } else {

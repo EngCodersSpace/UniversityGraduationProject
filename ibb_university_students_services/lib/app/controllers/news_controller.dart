@@ -64,7 +64,7 @@ class NewsController extends GetxController {
 
   Future<void> fetchNews({int? limit, bool force = false}) async {
     Result<Map<int, News>> res =
-        await NewsRepository.fetchNews(hardFetch: force);
+        await NewsRepository.fetchNews(limit: limit,hardFetch: force);
     if (res.statusCode == 200) {
       news.value = res.data ?? {};
     } else if (res.statusCode == 404) {

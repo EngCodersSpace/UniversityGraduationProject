@@ -142,11 +142,12 @@ class NewsRepository {
         (!hardFetch || !(await checkInternetConnection()))) {
       if(limit!=null){
         Map<int,News> news = {};
-        for(int i = 0; (i < limit && i< (_newsBox?.toMap().cast<int,News>().length??0));i++){
+        for(int i = 0; (i < limit &&i<(_newsBox?.length??0));i++){
           news[i] = _newsBox!.toMap().cast<int,News>().values.toList()[i];
         }
+
         return Result(
-          data: Map<int,News>.fromEntries( _newsBox?.toMap().cast<int,News>().entries.take(limit)??{}),
+          data:news,
           statusCode: 200,
           hasError: false,
           message: "successful",
@@ -169,6 +170,7 @@ class NewsRepository {
           News news = News.fromJson(jsNews);
           await _newsBox?.put(news.id, news);
         }
+        print(_newsBox?.values);
         return Result(
             data: _newsBox?.toMap().cast<int,News>()??{},
             hasError: false,

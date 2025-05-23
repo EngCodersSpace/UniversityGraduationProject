@@ -81,7 +81,7 @@ class AssignmentsRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          (UserRepository.currentUserType() == Doctor)?"get-assignments-subject-doctor?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId&year=$year":"get-assignments-subject-student?subject_id=$subjectId-th&level_id=$levelId&section_id=$sectionId");
+          (UserRepository.currentUserType() == Doctor)?"get-assignments-subject-doctor?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId&year=$year":"get-assignments-subject-student?subject_id=$subjectId&level_id=$levelId&section_id=$sectionId");
       if (response?.statusCode == 200) {
         cachedAssignments = AssignmentsCache(
             key: "${sectionId}_${levelId}_${year}_${subjectId}_Assignments",

@@ -139,6 +139,47 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                               items: (controller
                                                   .years
                                                   .map((e) {
+                                                    if(
+                                                    e==-1
+                                                    ){
+                                                      return DropdownMenuItem<int>(
+                                                          value: e,
+                                                          child: SizedBox(
+                                                            width: (ScreenUtils
+                                                                .isPhoneScreen())
+                                                                ? (Get.width / 3) - 30
+                                                                : (Get.width / 5.5) *
+                                                                0.6,
+                                                            child: CustomText(
+                                                              "Add",
+                                                              style: AppTextStyles
+                                                                  .mainStyle(
+                                                                textHeader:
+                                                                AppTextHeaders
+                                                                    .h5Bold,
+                                                              ),
+                                                            ),
+                                                          ));
+                                                    }else{
+                                                      return DropdownMenuItem<int>(
+                                                          value: e,
+                                                          child: SizedBox(
+                                                            width: (ScreenUtils
+                                                                .isPhoneScreen())
+                                                                ? (Get.width / 3) - 30
+                                                                : (Get.width / 5.5) *
+                                                                0.6,
+                                                            child: CustomText(
+                                                              e.toString(),
+                                                              style: AppTextStyles
+                                                                  .mainStyle(
+                                                                textHeader:
+                                                                AppTextHeaders
+                                                                    .h5Bold,
+                                                              ),
+                                                            ),
+                                                          ));
+                                                    }
                                                 return DropdownMenuItem<int>(
                                                     value: e,
                                                     child: SizedBox(

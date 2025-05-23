@@ -52,6 +52,7 @@ dependencies:
   firebase_messaging: ^15.2.2
   open_filex: ^4.6.0
   pdf: ^3.11.3
+  pdf_image_renderer: ^1.0.1
   printing: ^5.14.2
   flutter_quill:
     git:

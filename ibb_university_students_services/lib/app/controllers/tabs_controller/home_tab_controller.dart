@@ -24,8 +24,6 @@ class HomeTabController extends GetxController
   @override
   void onInit() async {
     Result res = await UserRepository.fetchUser();
-    print(res.statusCode);
-    print(res.data);
     if (res.statusCode == 200) {
       user = res.data;
     }
@@ -47,13 +45,12 @@ class HomeTabController extends GetxController
 
   Future<void> setUpNewsCards() async {
     await newsController?.fetchNews(limit: 5);
-    // tabController?.dispose();
     tabController = TabController(
         length: newsController?.news.length ?? 0, initialIndex: 0, vsync: this);
-    if((tabController?.length??1)>1){
+    if ((tabController?.length ?? 1) > 1) {
       startTimer();
     }
-    update(["tadsIndicator", "newsCards"]);
+    update(["newsCardsTapsIndictor", "newsCards"]);
   }
 
   @override
@@ -171,11 +168,10 @@ class HomeTabController extends GetxController
     Get.toNamed("/pepper_transactions");
   }
 
-  void openNewsList() {
-    Get.toNamed("news_list");
-  }
-
-  void openNews(int i) {
-    Get.toNamed("news");
+  void openNewsList() async {
+    await Get.toNamed("news_list");
+    if ((tabController?.length ?? 0) <= 0) {
+      setUpNewsCards();
+    }
   }
 }

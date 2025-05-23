@@ -197,8 +197,9 @@ class PhoneMainTab extends GetView<HomeTabController> {
                       ),
                     ),
                   ),
+                  if((controller.tabController?.length??0)>0)
                   GetBuilder<HomeTabController>(
-                    id:"newsCards",
+                    id:"newsCardsTapsIndictor",
                     builder:(ctx) => Align(
                       child: TabPageSelector(
                         controller: controller.tabController,
