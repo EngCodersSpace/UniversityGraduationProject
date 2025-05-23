@@ -49,6 +49,7 @@ class NotificationHandler {
   }
 
   static Future<void> registerTopics(List<String> topics )async{
+    if(kIsWeb)return;
     for(String topic in topics) {
       await FirebaseMessaging.instance.subscribeToTopic(topic);
     }
