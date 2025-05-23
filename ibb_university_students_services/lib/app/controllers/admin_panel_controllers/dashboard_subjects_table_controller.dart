@@ -350,6 +350,7 @@ class DashboardSubjectsTableController extends GetxController
   Future<void> addSubject() async {
     if (formKey.currentState!.validate()) {
       Result<Subject> res = await SubjectRepository.createSubject(
+          language: (Get.locale?.languageCode == "en") ? "en" : "ar",
           subjectId: subjectId.text,
           subjectName: subjectName.text,
           numberOfUnit: int.parse(subjectUnit.text),

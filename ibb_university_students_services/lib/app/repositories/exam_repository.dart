@@ -112,9 +112,9 @@ class ExamRepository {
       Exam? newExam;
       if (response?.statusCode == 201) {
         Subject? subject = await SubjectRepository.fetchSubject(
-                id: response?.data["exam"]["subject_id"])
+                id: response?.data["data"]["subject_id"])
             .then((e) => e.data);
-        newExam = Exam.fromJson(response?.data["exam"], subject: subject);
+        newExam = Exam.fromJson(response?.data["data"], subject: subject);
         if (withCache) {
           ExamsCache? cachedExams =
               _examsBox?.get("${sectionId}_${levelId}_Exams");

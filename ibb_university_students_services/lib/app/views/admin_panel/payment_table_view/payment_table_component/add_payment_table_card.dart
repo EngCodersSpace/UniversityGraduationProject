@@ -49,14 +49,6 @@ class PopUpAddPaymentCard extends GetView<DashboardPaymentTableController> {
                             children: [
                               Row(
                                 children: [
-                                  // Icon(
-                                  //   Icons.menu_book,
-                                  //   size: 40,
-                                  //   color: AppColors.inverseIconColor,
-                                  // ),
-                                  // const SizedBox(
-                                  //   width: 10,
-                                  // ),
                                   CustomText("Level".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),

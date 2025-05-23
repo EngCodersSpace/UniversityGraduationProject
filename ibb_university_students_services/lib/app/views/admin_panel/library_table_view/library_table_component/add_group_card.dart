@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
-import '../../../components/buttons.dart';
-import '../../../styles/app_colors.dart';
-import '../../../styles/text_styles.dart';
-import '../../../utils/screen_utils.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_library_table_controller.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 
 // ignore: must_be_immutable
-class WebAddGroupCard extends GetView<LibraryController> {
-  WebAddGroupCard({super.key});
+class AddGroupCard extends GetView<DashboardLibraryTableController> {
+  AddGroupCard({super.key});
 
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
 
   @override
   Widget build(BuildContext context) {
-    selectedDepartment = RxInt(controller.sections.values.first.id);
-    selectedLevel = RxInt(controller.levels.keys.first);
+    selectedDepartment = RxInt(controller.section.values.first.id);
+    selectedLevel = RxInt(controller.level.keys.first);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -54,23 +54,22 @@ class WebAddGroupCard extends GetView<LibraryController> {
                                 color: AppColors.inverseCardColor,
                                 borderRadius: BorderRadius.circular(24),
                               ),
-                              width: Get.width / 5,
+                              width: Get.width / 6,
                               child: Center(
                                 child: Obx(
                                   () => DropdownButton(
-                                    items:
-                                        (controller.sections.entries.map((e) {
+                                    items: (controller.section.entries.map((e) {
                                       return DropdownMenuItem<int>(
                                           value: e.value.id,
                                           child: SizedBox(
                                             width: (ScreenUtils.isPhoneScreen())
                                                 ? (Get.width / 3) - 30
-                                                : (Get.width / 5.5) * 0.7,
+                                                : (Get.width / 5.5) * 0.6,
                                             child: CustomText(
                                               e.value.name ?? "unknown",
                                               style: AppTextStyles.mainStyle(
                                                 textHeader:
-                                                    AppTextHeaders.h5Bold,
+                                                    AppTextHeaders.h3Bold,
                                               ),
                                             ),
                                           ));
@@ -100,11 +99,11 @@ class WebAddGroupCard extends GetView<LibraryController> {
                                 color: AppColors.inverseCardColor,
                                 borderRadius: BorderRadius.circular(24),
                               ),
-                              width: Get.width / 5,
+                              width: Get.width / 6,
                               child: Center(
                                 child: Obx(
                                   () => DropdownButton(
-                                    items: controller.levels.keys
+                                    items: controller.level.keys
                                         .where((t) => t != -1)
                                         .map((e) {
                                       return DropdownMenuItem<int>(

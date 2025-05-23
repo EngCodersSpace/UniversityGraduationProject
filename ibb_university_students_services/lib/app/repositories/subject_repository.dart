@@ -148,11 +148,13 @@ class SubjectRepository {
     required String subjectName,
     required int numberOfUnit,
     required String description,
+    required String language,
   }) async {
     get_x.Get.dialog(PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
       response = await HttpProvider.post("create-subject", data: {
+        "language": language,
         "subject_id": subjectId,
         "subject_name": subjectName,
         "number_of_units": numberOfUnit,
@@ -160,7 +162,7 @@ class SubjectRepository {
       });
       Subject? newsubject;
       if (response?.statusCode == 201) {
-        newsubject = Subject.fromJson(response?.data["subject"]);
+        newsubject = Subject.fromJson(response?.data["data"]);
       } else if (response?.statusCode == 403) {
         await get_x.Get.dialog(PopUpAlertCard(
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));

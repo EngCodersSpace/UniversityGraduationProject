@@ -362,6 +362,7 @@ class DashboardPaymentTableController extends GetxController
 
   void addClick() async {
     await getLevel();
+    payDate.text = DateTime.now().toString().split("")[0];
     Get.dialog(PopUpAddPaymentCard());
   }
 
@@ -370,13 +371,9 @@ class DashboardPaymentTableController extends GetxController
     addTerm.value = val;
   }
 
-  // Future<void> getStudent() async {
-  //   student =
-  //       await UserRepository.fetchStudentsForPayment().then((e) => e.data);
-  // }
-
   Future<void> getLevel() async {
-    level = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    level = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     if (level?.isNotEmpty ?? false) {
       levelId = Rx(level?.first.id ?? 0);
     } else {

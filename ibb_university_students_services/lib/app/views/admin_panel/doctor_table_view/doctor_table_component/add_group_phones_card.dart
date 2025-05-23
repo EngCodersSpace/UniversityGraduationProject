@@ -4,8 +4,8 @@ import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_component/popup_add_component.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/student_table_view/student_table_component/popup_add_student_component.dart';
 
+// ignore: must_be_immutable
 class AddGroupPhonesCard extends GetView<DashboardDoctorTableController> {
   AddGroupPhonesCard({super.key});
 
