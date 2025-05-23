@@ -170,8 +170,6 @@ class HomeTabController extends GetxController
 
   void openNewsList() async {
     await Get.toNamed("news_list");
-    if ((tabController?.length ?? 0) <= 0) {
-      setUpNewsCards();
-    }
+    setUpNewsCards();
   }
 }

@@ -22,7 +22,7 @@ class NewsRepository {
   }
 
   static Future<void> clearBox() async {
-    if(!(_newsBox?.isOpen??false)) {
+    if (!(_newsBox?.isOpen ?? false)) {
       _newsBox = await Hive.openBox<News>("NewsBox");
     }
     _newsBox?.clear();
@@ -33,9 +33,6 @@ class NewsRepository {
       await _newsBox?.close();
     }
   }
-
-
-
 
   // static Future<Result<void>> streamFetchLibraryFilesGroup({
   //   required int sectionId,
@@ -138,23 +135,23 @@ class NewsRepository {
     int? limit,
     bool hardFetch = false,
   }) async {
-    if ((_newsBox?.isNotEmpty??false) &&
+    if ((_newsBox?.isNotEmpty ?? false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
-      if(limit!=null){
-        Map<int,News> news = {};
-        for(int i = 0; (i < limit &&i<(_newsBox?.length??0));i++){
-          news[i] = _newsBox!.toMap().cast<int,News>().values.toList()[i];
+      if (limit != null) {
+        Map<int, News> news = {};
+        for (int i = 0; (i < limit && i < (_newsBox?.length ?? 0)); i++) {
+          news[_newsBox!.toMap().cast<int, News>().values.toList()[i].id] =
+              _newsBox!.toMap().cast<int, News>().values.toList()[i];
         }
-
         return Result(
-          data:news,
+          data: news,
           statusCode: 200,
           hasError: false,
           message: "successful",
         );
       }
       return Result(
-        data: _newsBox?.toMap().cast<int,News>()??{},
+        data: _newsBox?.toMap().cast<int, News>() ?? {},
         statusCode: 200,
         hasError: false,
         message: "successful",
@@ -162,17 +159,17 @@ class NewsRepository {
     }
     late Response? response;
     try {
-      response = await HttpProvider.get(
-          "Get-AllNews?limit=${limit??''}");
+      response = await HttpProvider.get("Get-AllNews?limit=${limit ?? ''}");
       if (response?.statusCode == 200) {
         await clearBox();
+        Map<int, News> list = {};
         for (Map<String, dynamic> jsNews in response?.data["data"]) {
           News news = News.fromJson(jsNews);
-          await _newsBox?.put(news.id, news);
+          list[news.id] = news;
+          _newsBox?.put(news.id, news);
         }
-        print(_newsBox?.values);
         return Result(
-            data: _newsBox?.toMap().cast<int,News>()??{},
+            data: list,
             hasError: false,
             statusCode: response?.statusCode,
             message: response?.data["message"] ?? "error");
@@ -190,8 +187,6 @@ class NewsRepository {
           data: null);
     }
   }
-
-
 
   static Future<Result<News>> createNews({
     required PlatformFile? file,
@@ -213,14 +208,14 @@ class NewsRepository {
           'content': content
         }),
         onSendProgress: (sent, total) {
-           progress.value = (sent / total) * 100;
+          progress.value = (sent / total) * 100;
         },
       );
 
       if (response?.statusCode == 201) {
         News news = News.fromJson(response?.data["data"]);
-        if(withCache){
-        await _newsBox?.put(news.id, news);
+        if (withCache) {
+          await _newsBox?.put(news.id, news);
         }
         return Result(
             data: news,
@@ -240,7 +235,6 @@ class NewsRepository {
           statusCode: _createError, message: error.toString(), data: null);
     }
   }
-
 
   static Future<Result> updateNews({
     required int id,
@@ -269,7 +263,7 @@ class NewsRepository {
 
       if (response?.statusCode == 201) {
         News news = News.fromJson(response?.data["data"]);
-        if(withCache){
+        if (withCache) {
           await _newsBox?.put(news.id, news);
         }
         return Result(
@@ -291,7 +285,36 @@ class NewsRepository {
     }
   }
 
+  static Future<Result<void>> deleteNews({
+    required int id,
+    bool withCache = true,
+  }) async {
+    Response? response;
+    try {
+      get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+      response = await HttpProvider.delete(
+        "Delete-New/$id",
+      );
 
-
-
+      if (response?.statusCode == 200) {
+        if (withCache) {
+          await _newsBox?.delete(id);
+        }
+        return Result(
+            hasError: false,
+            statusCode: response?.statusCode ?? _uploadError,
+            message: response?.data["message"] ?? "error");
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? _uploadError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          statusCode: _uploadError, message: error.toString(), data: null);
+    }
+  }
 }

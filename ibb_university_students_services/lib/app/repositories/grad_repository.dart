@@ -45,7 +45,7 @@ class GradRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "${(mode=="self")?"get-grades":"get-all-grades"}?student_id=$studentID");
+          (mode=="self")?"get-grades":"get-all-grades?student_id=$studentID}");
       // print(response?.data);
       if (response?.statusCode == 200) {
         StudentGradesCache cachedGrads = StudentGradesCache(key: studentID, data: {});

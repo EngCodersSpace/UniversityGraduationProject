@@ -61,15 +61,15 @@ class NewsListCard extends GetView<NewsController> {
                           textHeader: AppTextHeaders.h3Normal),
                     ),
                     CustomText(
-                      news.date??DateTimeUtils.formatStringDateTime(
-                          time: DateTime.now().toIso8601String()),
+                      "${"At".tr} ${news.date??"0000-00-00"}",
                       style: AppTextStyles.highlightStyle(
                           textHeader: AppTextHeaders.h3Normal),
                     ),
                   ],
                 ),
               ),
-            )
+            ),
+            IconButton(icon: Icon(Icons.delete), onPressed: ()=>controller.deleteNews(news.id))
           ],
         ),
       ),

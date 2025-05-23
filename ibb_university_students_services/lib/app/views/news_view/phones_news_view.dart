@@ -70,7 +70,7 @@ class PhonesNewsView extends GetView<NewsController> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(24),
                               child: HttpProvider.httpImage(
-                                imageUrl: "Get-imageOfnew?id=${controller.selectedId}",
+                                imageUrl:(controller.selectedId != null)?"Get-imageOfnew?id=${controller.selectedId}":controller.imageFile?.path??"",
                                 imageError: Image.asset(
                                   "assets/images/news_full_back.jpg",
                                   fit: BoxFit.fill,

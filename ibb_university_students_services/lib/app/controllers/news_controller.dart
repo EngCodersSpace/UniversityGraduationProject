@@ -173,6 +173,16 @@ class NewsController extends GetxController {
     creating.value = false;
   }
 
+  void deleteNews(int? id)async{
+    if(id == null)return;
+    Result<void> res = await NewsRepository.deleteNews(id: id);
+    Navigator.of(Get.overlayContext!).pop();
+    if(res.statusCode == 200){
+      showSnakeBar(title:"Successful",message: "News deleted Successfully");
+      news.remove(id);
+    }
+  }
+
   void openNews(int i) {
     selectedId = i;
     if(news[i] == null)return;

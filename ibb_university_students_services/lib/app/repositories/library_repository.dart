@@ -283,7 +283,7 @@ class LibraryRepository {
             libFiles.add(resFile);
           }
           if (withCache && file.path != null) {
-            NotificationHandler.showProgressNotification(
+            await NotificationHandler.showProgressNotification(
               uniqueId: file.path.hashCode,
               title: "successful upload ",
               message: file.path?.split("/").last,
