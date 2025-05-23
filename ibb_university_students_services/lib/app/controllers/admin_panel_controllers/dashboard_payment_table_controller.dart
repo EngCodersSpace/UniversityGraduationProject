@@ -180,8 +180,6 @@ class DashboardPaymentTableController extends GetxController
   FocusNode amountFocus = FocusNode();
   FocusNode dateFocus = FocusNode();
   FocusNode reciptFocus = FocusNode();
-  int? studentID;
-  int? selectedFee;
 
   @override
   void onInit() async {
@@ -387,10 +385,9 @@ class DashboardPaymentTableController extends GetxController
 
   Future<void> addPayment() async {
     Map<String, dynamic> jsData = {};
-    if (studentID == null) return;
-    jsData["id"] = selectedFee;
-    jsData["student_id"] = studentId;
-    jsData["term"] = selectedTerm.value;
+    jsData["id"] = 0;
+    jsData["student_id"] = int.parse(studentId.text);
+    jsData["term"] = addTerm.value;
     jsData["level_fees_id"] = levelId.value;
     jsData["remaining_amount"] = 0;
     if (formKey.currentState!.validate()) {
@@ -418,6 +415,7 @@ class DashboardPaymentTableController extends GetxController
     } else {
       showSnakeBar(message: "Add failed");
     }
+    update(["DataTable"]);
   }
 
   @override
