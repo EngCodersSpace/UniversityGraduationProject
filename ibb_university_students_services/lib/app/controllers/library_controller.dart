@@ -81,8 +81,8 @@ class LibraryController extends GetxController
       length: 3,
       vsync: this,
     );
-    for(String cate in categories){
-      books[cate] = RxMap({}) ;
+    for (String cate in categories) {
+      books[cate] = RxMap({});
     }
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
@@ -135,8 +135,8 @@ class LibraryController extends GetxController
 
     if (selectedDepartment.value == null || selectedLevel.value == null) return;
 
-    for(String cate in categories){
-      books[cate]?.value ={} ;
+    for (String cate in categories) {
+      books[cate]?.value = {};
     }
     Result res = await LibraryRepository.streamFetchLibraryFilesGroup(
       sectionId: selectedDepartment.value!,
@@ -208,7 +208,6 @@ class LibraryController extends GetxController
       currentPage.value =
           ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil();
     }
-    print(books[categories[tapController!.index]]?.length);
   }
 
   void changeDepartment(int? val) async {
@@ -287,9 +286,6 @@ class LibraryController extends GetxController
   }
 
   void showBookInfo(LibraryFile book) async {
-    print(((book.title?.toLowerCase().contains(searchText.text.toLowerCase()) ??
-            false) ||
-        searchText.text == ""));
     selectedBook = book;
     await selectedBook?.checkDownloaded();
     (ScreenUtils.isPhoneScreen())
@@ -298,7 +294,7 @@ class LibraryController extends GetxController
   }
 
   void updatePages() {
-    for(String cat in categories){
+    for (String cat in categories) {
       update(["${cat}Tap"]);
     }
   }

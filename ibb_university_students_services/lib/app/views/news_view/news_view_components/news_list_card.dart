@@ -10,7 +10,6 @@ import '../../../components/custom_text_v2.dart';
 import '../../../models/news_model/news.dart';
 import '../../../services/http_provider.dart';
 import '../../../styles/text_styles.dart';
-import '../../../utils/date_time_utils.dart';
 
 class NewsListCard extends GetView<NewsController> {
   News news;
@@ -42,6 +41,7 @@ class NewsListCard extends GetView<NewsController> {
                     borderRadius: BorderRadius.circular(24),
                     child: HttpProvider.httpImage(
                       imageUrl: "Get-imageOfnew?id=${news.id}",
+                      secImageUrl: news.image,
                       errorWidget: (context, url, error) => Image.asset(
                         "assets/images/news_full_back.jpg",
                         fit: BoxFit.fill,

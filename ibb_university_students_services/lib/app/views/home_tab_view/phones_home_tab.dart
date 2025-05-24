@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/services/http_provider.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/news_card.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/home_tab_components/services_card.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
@@ -24,7 +24,6 @@ class PhoneMainTab extends GetView<HomeTabController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.startTimer();
     return Obx(() => (controller.initState.value)
         ? SafeArea(
             minimum: EdgeInsets.only(
@@ -62,15 +61,13 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                               : AppColors.inverseMainTextColor,
                                       maxRadius: width * 0.1 - 2,
                                       child: ClipOval(
-                                        child: CachedNetworkImage(
+                                        child: HttpProvider.httpImage(
                                           imageUrl:
                                               controller.user?.profileImage ??
                                                   "",
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
+                                          secImageUrl:controller.user?.profileImage ??
+                                              "",
+                                          errorWidget: (ctx, s, o) =>
                                               CustomText(
                                                   controller.user?.name?[0] ??
                                                       "".toUpperCase(),
@@ -80,9 +77,6 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                                           fontWeight:
                                                               FontWeight.bold),
                                                       height: 0)),
-                                          height: width * 0.1 * 2,
-                                          width: width * 0.1 * 2,
-                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     )
@@ -161,8 +155,8 @@ class PhoneMainTab extends GetView<HomeTabController> {
                     ),
                   ),
                   GetBuilder<HomeTabController>(
-                    id:"newsCards",
-                    builder:(ctx) => NotificationListener(
+                    id: "newsCards",
+                    builder: (ctx) => NotificationListener(
                       onNotification: controller.scrollEvent,
                       child: SingleChildScrollView(
                         controller: controller.scrollController,
@@ -182,32 +176,43 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                 imageUrl: "",
                               )
                             ],
-                            for(int i=0; i<(controller.tabController?.length??0);i++)...[
+                            for (int i = 0;
+                                i < (controller.tabController?.length ?? 0);
+                                i++) ...[
                               NewsCard(
                                 height: height * 0.27,
                                 width: width * 0.8,
-                                text: controller.newsController?.news.values.toList()[i].title??"Unknown".tr,
-                                onTap: ()=>controller.newsController?.openNews(controller.newsController?.news.values.toList()[i].id??-1),
-                                imageUrl: "Get-imageOfnew?id=${controller.newsController?.news.values.toList()[i].id}",
+                                text: controller.newsController?.news.values
+                                        .toList()[i]
+                                        .title ??
+                                    "Unknown".tr,
+                                onTap: () => controller.newsController
+                                    ?.openNews(controller
+                                            .newsController?.news.values
+                                            .toList()[i]
+                                            .id ??
+                                        -1),
+                                imageUrl:
+                                    "Get-imageOfnew?id=${controller.newsController?.news.values.toList()[i].id}",
                               ),
-                              SizedBox(width: 16,)
+                              SizedBox(
+                                width: 16,
+                              )
                             ]
                           ],
                         ),
                       ),
                     ),
                   ),
-                  if((controller.tabController?.length??0)>0)
-                  GetBuilder<HomeTabController>(
-                    id:"newsCardsTapsIndictor",
-                    builder:(ctx) => Align(
-                      child: TabPageSelector(
-                        controller: controller.tabController,
-                        selectedColor: AppColors.inverseCardColor,
-                      ),
-                    )
-                  ),
-
+                  if ((controller.tabController?.length ?? 0) > 0)
+                    GetBuilder<HomeTabController>(
+                        id: "newsCardsTapsIndictor",
+                        builder: (ctx) => Align(
+                              child: TabPageSelector(
+                                controller: controller.tabController,
+                                selectedColor: AppColors.inverseCardColor,
+                              ),
+                            )),
                   Padding(
                     padding: EdgeInsets.only(
                       left: width * 0.05,

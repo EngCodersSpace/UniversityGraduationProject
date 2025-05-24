@@ -24,7 +24,7 @@ class BookContainer extends GetView<LibraryController> {
             SizedBox(
               height: (Get.height/5)*0.4,
               width: (Get.height/5)*0.3,
-              child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${book.id}")
+              child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${book.id}",secImageUrl: book.displayImage)
             ),
             SizedBox(
               height: 8,

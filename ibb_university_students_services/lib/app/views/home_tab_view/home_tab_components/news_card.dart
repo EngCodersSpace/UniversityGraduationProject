@@ -55,6 +55,7 @@ class NewsCard extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: HttpProvider.httpImage(
                 imageUrl: imageUrl ?? "",
+                secImageUrl: imageUrl,
                 errorWidget: (context, url, error) => Image.asset(
                   "assets/images/news_full_back.jpg",
                   fit: BoxFit.fill,

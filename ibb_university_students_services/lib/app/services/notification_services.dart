@@ -2,8 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:ibb_university_students_services/app/repositories/data_sync_repository.dart';
-import 'package:ibb_university_students_services/app/services/data_sync_services.dart';
 
 class NotificationHandler {
   static final FirebaseMessaging _firebaseMessaging =

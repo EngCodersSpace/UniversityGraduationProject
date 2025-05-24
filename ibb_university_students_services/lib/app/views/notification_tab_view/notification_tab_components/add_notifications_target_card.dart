@@ -368,7 +368,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                 spacing: 6,
                                 children: [
                                   for (Role role
-                                      in (controller.roles.values ?? [])) ...[
+                                      in (controller.roles.values)) ...[
                                     if ((controller.selectedTarget.value ==
                                                 "Students" &&
                                             role.roleType == "student") ||

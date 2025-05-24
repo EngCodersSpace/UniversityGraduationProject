@@ -59,6 +59,7 @@ class NewsController extends GetxController {
   @override
   void refresh() async {
     await fetchNews(force: true);
+    update();
     super.refresh();
   }
 
@@ -143,7 +144,7 @@ class NewsController extends GetxController {
         id: selectedId!);
     if (res.statusCode == 200) {
       news[selectedId!] = res.data;
-      showSnakeBar(title: "Successful",message: "news updated successfully");
+      showSnakeBar(title: "Successful", message: "news updated successfully");
     }
 
     Navigator.of(Get.overlayContext!).pop();
@@ -156,8 +157,6 @@ class NewsController extends GetxController {
 
   Future<void> createNews() async {
     String content = jsonEncode(quillController.document.toDelta().toJson());
-    print(content);
-    return;
     Result<News> res = await NewsRepository.createNews(
         file: imageFile,
         title: titleController.text,

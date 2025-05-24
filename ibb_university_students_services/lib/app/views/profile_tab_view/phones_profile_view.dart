@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
@@ -9,8 +8,8 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-
 import '../../components/custom_text_v2.dart';
+import '../../services/http_provider.dart';
 
 class PhoneProfileView extends GetView<ProfileController> {
   PhoneProfileView({
@@ -49,21 +48,17 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
-                              child: CachedNetworkImage(
+                              child: HttpProvider.httpImage(
                                 imageUrl: controller.user?.profileImage ?? "",
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) => Center(
-                                  child: CustomText(
-                                      controller.user?.name?[0] ??
-                                          "".toUpperCase(),
-                                      style: AppTextStyles.mainStyle(
-                                          textHeader: TextHeaders(
-                                              fontSize: 80,
-                                              fontWeight: FontWeight.bold),
-                                          height: 0)),
-                                ),
-                                fit: BoxFit.cover,
+                                secImageUrl: controller.user?.profileImage,
+                                errorWidget: (ctx, s, o) => CustomText(
+                                    controller.user?.name?[0] ??
+                                        "".toUpperCase(),
+                                    style: AppTextStyles.mainStyle(
+                                        textHeader: TextHeaders(
+                                            fontSize: 80,
+                                            fontWeight: FontWeight.bold),
+                                        height: 0)),
                               ),
                             ),
                           ),
@@ -187,7 +182,9 @@ class PhoneProfileView extends GetView<ProfileController> {
                             ),
                           ),
                           CustomText(
-                            ((controller.user?.phones?.isNotEmpty??false))?controller.user!.phones!.first:"Unknown".tr,
+                            ((controller.user?.phones?.isNotEmpty ?? false))
+                                ? controller.user!.phones!.first
+                                : "Unknown".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Normal),
                           ),

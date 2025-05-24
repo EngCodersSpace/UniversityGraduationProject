@@ -20,17 +20,18 @@ class NewsAdapter extends TypeAdapter<News> {
       id: fields[0] as int,
       title: fields[1] as String?,
       content: fields[2] as String?,
-      publisher: fields[4] as Instructor?,
+      image: fields[4] as String?,
+      publisher: fields[5] as Instructor?,
       date: fields[3] as String?,
-      createdAt: fields[5] as String?,
-      updatedAt: fields[6] as String?,
+      createdAt: fields[6] as String?,
+      updatedAt: fields[7] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, News obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -40,10 +41,12 @@ class NewsAdapter extends TypeAdapter<News> {
       ..writeByte(3)
       ..write(obj.date)
       ..writeByte(4)
-      ..write(obj.publisher)
+      ..write(obj.image)
       ..writeByte(5)
-      ..write(obj.createdAt)
+      ..write(obj.publisher)
       ..writeByte(6)
+      ..write(obj.createdAt)
+      ..writeByte(7)
       ..write(obj.updatedAt);
   }
 

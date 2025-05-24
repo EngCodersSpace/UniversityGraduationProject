@@ -21,9 +21,10 @@ class RoleAdapter extends TypeAdapter<Role> {
       permissions: (fields[3] as Map).map((dynamic k, dynamic v) =>
           MapEntry(k as String, (v as List).cast<Permission>())),
       name: fields[1] as String?,
+      roleType: fields[2] as String?,
       createdAt: fields[4] as String?,
       updatedAt: fields[5] as String?,
-    )..roleType = fields[2] as String?;
+    );
   }
 
   @override

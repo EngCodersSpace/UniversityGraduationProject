@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/notification_model/notification_model.dart'
     as model;
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
-import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/role_repository.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/notification_tab_components/add_notifications_target_card.dart';

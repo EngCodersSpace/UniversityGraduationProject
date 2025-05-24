@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
 import '../../../components/custom_text_v2.dart';
 import '../../../models/doctor_model/doctor.dart';
+import '../../../services/http_provider.dart';
 import '../../../styles/text_styles.dart';
 
 class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
@@ -78,9 +79,20 @@ class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
                           quarterTurns: 1,
                           child: Row(
                             children: [
-                              const Align(
+                              Align(
                                 alignment: Alignment.topLeft,
-                                child: Icon(Icons.person,size: 80,),
+                                child: SizedBox(
+                                  height: Get.width*0.35,
+                                  width: Get.width*0.24,
+                                  child: HttpProvider.httpImage(
+                                    imageUrl:
+                                    controller.user?.value.profileImage ??
+                                        "",
+                                    secImageUrl: controller.user?.value.profileImage,
+                                    errorWidget: (ctx, s, o) =>
+                                        Icon(Icons.person),
+                                  ),
+                                ),
                               ),
                               Expanded(
                                 child: Column(
