@@ -251,29 +251,45 @@ class LibraryRepository {
   }) async {
     Response? response;
     try {
-      File fileData = File(file.path ?? "");
-      int fileSize = await fileData.length();
+      int fileSize = file.size;
       response = await HttpProvider.post("checkFileDuplicate", data: {
-        "originalname": file.path?.split("/").last,
+        "originalname": file.name,
         "size": fileSize.toString(),
         "sectionsAndLevels": groups,
       });
       if (response?.statusCode == 200) {
         response = null;
-        response = await HttpProvider.uploadFile(
-          uploadUrl:
-              "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
-          file: fileData,
-          fileSize: fileSize,
-          onSendProgress: (sent, total) {
-            double progress = (sent / total) * 100;
-            NotificationHandler.showProgressNotification(
-                uniqueId: file.path.hashCode,
-                progress: progress.toInt(),
-                title: "Uploading",
-                message: " ${file.path?.split("/").last}");
-          },
-        );
+        if(kIsWeb){
+          response = await HttpProvider.uploadFileWeb(
+            uploadUrl:
+            "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
+            fileBytes: file.bytes,
+            fileName: file.name,
+            onSendProgress: (sent, total) {
+              double progress = (sent / total) * 100;
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.hashCode,
+                  progress: progress.toInt(),
+                  title: "Uploading",
+                  message: " ${file.name}");
+            },
+          );
+        }else{
+          response = await HttpProvider.uploadFileWeb(
+            uploadUrl:
+            "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
+             file: File(file.xFile.path),
+             fileName: file.name,
+            onSendProgress: (sent, total) {
+              double progress = (sent / total) * 100;
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.hashCode,
+                  progress: progress.toInt(),
+                  title: "Uploading",
+                  message: " ${file.name}");
+            },
+          );
+        }
 
         if (response?.statusCode == 201) {
           List<LibraryFile> libFiles = [];
@@ -281,15 +297,15 @@ class LibraryRepository {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);
           }
-          if (withCache && file.path != null) {
-            await NotificationHandler.showProgressNotification(
-              uniqueId: file.path.hashCode,
-              title: "successful upload ",
-              message: file.path?.split("/").last,
-            );
+          await NotificationHandler.showProgressNotification(
+            uniqueId: file.hashCode,
+            title: "successful upload ",
+            message: file.name,
+          );
+          if (withCache && !kIsWeb) {
             await FileUtils.saveFiles(
                 fileRelativePath: response?.data["file_info"]["path"],
-                file: File(file.path!));
+                file: File(file.xFile.path));
           }
           return Result(
               data: libFiles,
@@ -298,9 +314,9 @@ class LibraryRepository {
               message: response?.data["message"] ?? "error");
         } else {
           NotificationHandler.showProgressNotification(
-            uniqueId: file.path.hashCode,
+            uniqueId: file.hashCode,
             title: "failed upload ",
-            message: file.path?.split("/").last,
+            message: file.name,
           );
         }
 

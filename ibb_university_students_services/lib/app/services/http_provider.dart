@@ -210,6 +210,76 @@ class HttpProvider {
     return null;
   }
 
+
+  static Future<Response?> uploadFileWeb({
+    File? file, // Mobile
+    Uint8List? fileBytes, // Web
+    required String uploadUrl,
+    required String fileName,
+    void Function(int, int)? onSendProgress,
+    Map<String, dynamic> data = const {},
+  }) async {
+    try {
+      final int fileSize;
+      final MultipartFile multipartFile;
+
+      if (file != null) {
+        fileSize = await file.length();
+        multipartFile = MultipartFile.fromStream(
+              () => file.openRead(),
+          fileSize,
+          filename: fileName,
+        );
+      } else if (fileBytes != null) {
+        fileSize = fileBytes.length;
+        multipartFile = MultipartFile.fromBytes(
+          fileBytes,
+          filename: fileName,
+        );
+      } else {
+        throw Exception('Either file or fileBytes must be provided.');
+      }
+
+      final cancelKey = file?.path.hashCode ?? fileName.hashCode;
+      cancelTokens[cancelKey] = CancelToken();
+
+      final dataMap = {
+        'file': multipartFile,
+        ...data,
+      };
+
+      onProcessUploads++;
+      showSnakeBar(
+        title: "$onProcessUploads Files Uploading",
+        message: "for details look on notifications",
+      );
+
+      final response = await _dio.post(
+        uploadUrl,
+        cancelToken: cancelTokens[cancelKey],
+        data: FormData.fromMap(dataMap),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': fileSize.toString(),
+          },
+          sendTimeout: null,
+        ),
+        onSendProgress: onSendProgress,
+      );
+
+      HttpProvider.onProcessUploads--;
+      return response;
+    } on DioException catch (error) {
+      HttpProvider.onProcessUploads--;
+      return error.response;
+    } catch (e) {
+      HttpProvider.onProcessUploads--;
+      rethrow;
+    }
+  }
+
+
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
