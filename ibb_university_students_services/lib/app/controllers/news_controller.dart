@@ -64,7 +64,7 @@ class NewsController extends GetxController {
 
   Future<void> fetchNews({int? limit, bool force = false}) async {
     Result<Map<int, News>> res =
-        await NewsRepository.fetchNews(limit: limit,hardFetch: force);
+        await NewsRepository.fetchNews(limit: limit, hardFetch: force);
     if (res.statusCode == 200) {
       news.value = res.data ?? {};
     } else if (res.statusCode == 404) {
@@ -77,6 +77,19 @@ class NewsController extends GetxController {
           title: "Fetch News Failed",
           message: "fetching News failed please check connection ");
     }
+  }
+
+  var items = List.generate(10, (index) => 'Item ${index + 1}').obs;
+
+  void deleteItem(int index) {
+    final item = items[index];
+    items.removeAt(index);
+    Get.snackbar('Deleted', '$item was deleted');
+  }
+
+  void editItem(int index) {
+    final item = items[index];
+    Get.snackbar('Edit', 'Edit $item');
   }
 
   Future<void> pickImage() async {
@@ -128,6 +141,11 @@ class NewsController extends GetxController {
         content: content,
         progress: progress,
         id: selectedId!);
+    if (res.statusCode == 200) {
+      news[selectedId!] = res.data;
+      showSnakeBar(title: "Successful",message: "news updated successfully");
+    }
+
     Navigator.of(Get.overlayContext!).pop();
     progress.value = -1.0;
     if (res.statusCode == 201) {
@@ -158,7 +176,7 @@ class NewsController extends GetxController {
 
   void createRoute() async {
     creating.value = true;
-    quillController.readOnly= false;
+    quillController.readOnly = false;
     editing.value = true;
     selectedId = null;
     titleController.text = "Title";
@@ -166,32 +184,33 @@ class NewsController extends GetxController {
     dateController.text = DateTimeUtils.formatStringDateTime(
         time: DateTime.now().toIso8601String());
     User? user = await UserRepository.fetchUser().then((e) => e.data);
-    if(user != null){
-      publisher = Instructor(id: user.id,nameData: user.nameData);
+    if (user != null) {
+      publisher = Instructor(id: user.id, nameData: user.nameData);
     }
     await Get.toNamed("news");
     creating.value = false;
   }
 
-  void deleteNews(int? id)async{
-    if(id == null)return;
+  void deleteNews(int? id) async {
+    if (id == null) return;
     Result<void> res = await NewsRepository.deleteNews(id: id);
     Navigator.of(Get.overlayContext!).pop();
-    if(res.statusCode == 200){
-      showSnakeBar(title:"Successful",message: "News deleted Successfully");
+    if (res.statusCode == 200) {
+      showSnakeBar(title: "Successful", message: "News deleted Successfully");
       news.remove(id);
     }
   }
 
   void openNews(int i) {
     selectedId = i;
-    if(news[i] == null)return;
+    if (news[i] == null) return;
     if (news[i]?.content != null && news[i] != null) {
-      quillController.document = quill.Document.fromJson(jsonDecode(news[i]!.content!));
+      quillController.document =
+          quill.Document.fromJson(jsonDecode(news[i]!.content!));
     }
-    titleController.text = news[i]?.title??"";
-    dateController.text =  news[i]?.date ??"Unknown".tr;
-    if(news[i]?.publisher != null){
+    titleController.text = news[i]?.title ?? "";
+    dateController.text = news[i]?.date ?? "Unknown".tr;
+    if (news[i]?.publisher != null) {
       publisher = news[i]!.publisher;
     }
     Get.toNamed("news");

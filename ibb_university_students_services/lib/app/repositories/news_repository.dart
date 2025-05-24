@@ -236,7 +236,7 @@ class NewsRepository {
     }
   }
 
-  static Future<Result> updateNews({
+  static Future<Result<News>> updateNews({
     required int id,
     PlatformFile? file,
     String? title,
@@ -261,7 +261,7 @@ class NewsRepository {
         },
       );
 
-      if (response?.statusCode == 201) {
+      if (response?.statusCode == 200) {
         News news = News.fromJson(response?.data["data"]);
         if (withCache) {
           await _newsBox?.put(news.id, news);
