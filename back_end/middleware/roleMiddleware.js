@@ -24,13 +24,15 @@ const checkPermission = (target, action) => async (req, res, next) => {
     }
     const userRole = await role.findOne({
       where: { id: req.user.user_id },
-      include: {
+      include:[ 
+        {
         model: permission,
         through: { attributes: [] },
-      },
+        },
+     ],
     });
     if (!userRole) {
-      return res.status(403).json({ error: "Permission denied: Role not found" });
+      return res.status(403).json({ error: "Permission denied: Role not found " });
     }
     const userPermissions = userRole.permissions.filter((p) => p.target === target).map((p) => p.action);
     if (!userPermissions.includes(action)) {
