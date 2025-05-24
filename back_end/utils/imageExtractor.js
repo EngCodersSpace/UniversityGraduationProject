@@ -1,5 +1,4 @@
 // utils/imageExtractor.js
-
 const fs = require("fs");
 const path = require("path");
 const pdfPoppler = require("pdf-poppler");

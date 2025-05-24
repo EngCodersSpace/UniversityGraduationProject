@@ -1,5 +1,7 @@
 
 const { role, permission,  role_permission } = require('../models');
+const { Sequelize,Op} = require('sequelize');
+
 
 // Create a new role
 exports.createRole = async (req, res) => {
@@ -165,7 +167,7 @@ exports.getRolesPanel = async (req, res) => {
       include: [ 
         { model: permission, 
           through:{ attributes: [] },
-          required: true}
+          }
         ],
       distinct: true,
       limit: limitNumber,

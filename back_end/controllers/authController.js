@@ -460,6 +460,36 @@ exports.uploadPhotoForuser = async (req, res) => {
   }
 };
 
+exports.getImageOfUser = async (req, res) => {
+  try {
+
+      if (!req.query.user_id) {
+          return res.status(400).json({message: "user id  is required" });
+      }
+
+      const ImageOfUser = await user.findOne({
+          where: { user_id: req.query.user_id },
+      });
+
+      if (ImageOfUser.length === 0) {
+        return res.status(204).json();
+      }
+
+      if (!ImageOfUser) {
+          return res.status(404).json({ success: false, message: "No image found for the specified user" });
+      }
+      const imagePath = path.join(__dirname  , '..',"storage" ,ImageOfUser.profile_picture);
+      console.log('\n \n path of image:',imagePath)
+      res.sendFile(imagePath);
+  } catch (error) {
+      console.error("Error fetching new's image:", error);
+      res.status(500).json({message: "An error occurred while fetching new's image", error: error.message });
+  }
+};
+
+
+
+
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({

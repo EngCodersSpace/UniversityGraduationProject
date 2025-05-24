@@ -9,6 +9,7 @@ const { upsertRefreshState} = require('../controllers/refreshController');
 const { Op } = require('sequelize'); 
 const { promisify } = require('util');
 const mkdirAsync = promisify(fs.mkdir);
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 // To check if a file is a duplicate
 exports.checkFileDuplicate = async (req, res) => {
@@ -132,6 +133,17 @@ exports.uploadFile = async (req, res) => {
 
   } catch (error) {
     console.error('Upload error:', error);
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'Duplicate entry error: ' + error.message });
+    }
+
+    if (error instanceof ForeignKeyConstraintError) {
+      return res.status(400).json({ message: 'Foreign key violation: ' + error.message });
+    }
+
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: 'Validation error: ' + error.message });
+    }
     res.status(500).json({ 
       message: 'Server error during upload setup', 
       error: error.message,

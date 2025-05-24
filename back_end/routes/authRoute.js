@@ -15,9 +15,11 @@ router.post('/refresh', CRUD.refreshToken);
 router.post('/refresh-fcm-token', CRUD.refreshFCM);
 router.post('/registerDoctor',CRUD.registerDoctor); 
 router.post('/registerStudent',CRUD.registerStudent ); 
-router.post('/upload-photo-user',checkPermission('users', 'write'),CRUD.uploadPhotoForuser);
+router.post('/upload-photo-user',CRUD.uploadPhotoForuser);//  checkPermission('users', 'write'),
 router.post('/request-password-reset', vali.validateRequestPasswordReset , CRUD.requestPasswordReset);
 router.get('/verify-reset-token',CRUD.verifyResetToken);
+router.get('/get-profile-image',CRUD.getImageOfUser);
+
 router.post('/reset-password', vali.validateResetPassword , CRUD.resetPassword);
 router.post('/change-password', CRUD.changePass);
 
