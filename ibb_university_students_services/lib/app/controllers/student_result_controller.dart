@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../components/custom_text_v2.dart';
 import '../models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
@@ -18,7 +19,7 @@ class StudentResultController extends GetxController {
   TextEditingController idController = TextEditingController();
   Rx<int?> selectedLevel = Rx(null);
   RxString selectedTerm = "Term 1".obs;
-  Rx<Map<int,Grad>>? grads = Rx({});
+  Rx<Map<int, Grad>>? grads = Rx({});
   RxInt summation = 0.obs;
   RxDouble gpa = 0.0.obs;
   List<DropdownMenuItem<int>> levels = [];
@@ -65,8 +66,7 @@ class StudentResultController extends GetxController {
       grads?.value = {};
       failedMessage.value = "Not Found";
       showSnakeBar(
-          title: "Not Found Grads",
-          message: "this user has not grads");
+          title: "Not Found Grads", message: "this user has not grads");
     } else {
       failedMessage.value = "fetching grads failed please check connection";
       showSnakeBar(
@@ -95,7 +95,9 @@ class StudentResultController extends GetxController {
         DropdownMenuItem<int>(
             value: level.id,
             child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3) - 50) * 0.6,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? ((((Get.width - 32) / 7) * 3) - 50) * 0.6
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(
@@ -109,7 +111,9 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 1",
           child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? ((((Get.width - 32) / 7) * 3) - 50) * 0.6
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 mappingTerms("Term 1"),
                 style: AppTextStyles.mainStyle(
@@ -119,7 +123,9 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "Term 2",
           child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? ((((Get.width - 32) / 7) * 3) - 50) * 0.6
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 mappingTerms("Term 2"),
                 style: AppTextStyles.mainStyle(
@@ -129,7 +135,9 @@ class StudentResultController extends GetxController {
       DropdownMenuItem<String>(
           value: "All",
           child: SizedBox(
-              width: ((((Get.width - 32) / 7) * 3.8) - 50) * 0.6,
+              width: (ScreenUtils.isPhoneScreen())
+                  ? ((((Get.width - 32) / 7) * 3) - 50) * 0.6
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 "All".tr,
                 style: AppTextStyles.mainStyle(

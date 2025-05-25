@@ -44,6 +44,7 @@ class AssignmentsTabController extends GetxController {
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FocusNode titleFocus = FocusNode();
   FocusNode dueDateFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
   String mode = "Add";
@@ -51,12 +52,13 @@ class AssignmentsTabController extends GetxController {
   int? selectedAssignment;
   int? selectedState;
 
-Future<void> setStudentSectionAndLevel()async{
-  Student? student =
-      await UserRepository.fetchUser().then((e) => e.data as Student);
-  selectedDepartment.value = student?.section?.id;
-  selectedLevel.value = student?.level?.id;
-}
+  Future<void> setStudentSectionAndLevel() async {
+    Student? student =
+        await UserRepository.fetchUser().then((e) => e.data as Student);
+    selectedDepartment.value = student?.section?.id;
+    selectedLevel.value = student?.level?.id;
+  }
+
   @override
   void onInit() async {
     // await initSectionDropdownMenuList();
@@ -85,7 +87,7 @@ Future<void> setStudentSectionAndLevel()async{
   Future<void> fetchAssignmentsData({bool force = false}) async {
     if (selectedSubject.value == null) {
       await initSubjectDropdownMenuList();
-      if (subjects?.values.isNotEmpty??false) {
+      if (subjects?.values.isNotEmpty ?? false) {
         selectedSubject.value = subjects?.values.first.id;
       }
     }
@@ -102,7 +104,7 @@ Future<void> setStudentSectionAndLevel()async{
       }
     }
 
-    if(fetchMode=="student"){
+    if (fetchMode == "student") {
       await setStudentSectionAndLevel();
     }
 
@@ -175,7 +177,7 @@ Future<void> setStudentSectionAndLevel()async{
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 5) - 30
-                  : (Get.width / 8) * 0.6,
+                  : (Get.width / 8) * 0.4,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(
@@ -190,7 +192,7 @@ Future<void> setStudentSectionAndLevel()async{
   Future<void> initSubjectDropdownMenuList() async {
     subjects = {};
     subjects =
-    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
       selectedSubject = RxString(subjects!.values.first.id);
     } else {
@@ -407,10 +409,13 @@ Future<void> setStudentSectionAndLevel()async{
 
   void _moreDeleteAttachmentFileFromStorage(Map<String, dynamic>? data) async {
     if (data == null) return;
-    bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
-    if(res){
+    bool res = await FileUtils.deleteFile(
+        filePath: assignments
+            ?.value[selectedAssignment]?.attachments?[data["id"]]?.path);
+    if (res) {
       showSnakeBar(message: "File Deleted");
-      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]?.checkDownloaded();
+      await assignments?.value[selectedAssignment]?.attachments?[data["id"]]
+          ?.checkDownloaded();
     }
   }
 
@@ -436,21 +441,26 @@ Future<void> setStudentSectionAndLevel()async{
     }
   }
 
-  void _moreDeleteStudentAssignmentFileFromStorage(Map<String, dynamic>? data) async {
+  void _moreDeleteStudentAssignmentFileFromStorage(
+      Map<String, dynamic>? data) async {
     if (data == null) return;
     if (data["id"] < 0) {
       showSnakeBar(message: "File not Store Yet");
     } else {
-      bool res = await FileUtils.deleteFile(filePath: assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
-          ?.studentFiles?[data["id"]]?.path);
-      if(res){
+      bool res = await FileUtils.deleteFile(
+          filePath: assignments
+              ?.value[selectedAssignment]
+              ?.studentsStatus?[selectedState]
+              ?.studentFiles?[data["id"]]
+              ?.path);
+      if (res) {
         showSnakeBar(message: "File Deleted");
-        await assignments?.value[selectedAssignment]?.studentsStatus?[selectedState]
-            ?.studentFiles?[data["id"]]?.checkDownloaded();
-      }
+        await assignments?.value[selectedAssignment]
+            ?.studentsStatus?[selectedState]?.studentFiles?[data["id"]]
+            ?.checkDownloaded();
       }
     }
-
+  }
 
   void _moreSetCompletion(bool stat, Map<String, dynamic>? data) async {
     if (data?["assignment_id"] == null) return;
@@ -491,7 +501,7 @@ Future<void> setStudentSectionAndLevel()async{
       case "DeleteAttachmentFile":
         _moreDeleteAttachmentFile(data);
         break;
-        case "DeleteAttachmentFileFromStorage":
+      case "DeleteAttachmentFileFromStorage":
         _moreDeleteAttachmentFileFromStorage(data);
         break;
       case "DeleteStudentAssignmentFileFromStorage":

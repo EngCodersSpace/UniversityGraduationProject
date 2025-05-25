@@ -173,7 +173,9 @@ class DashboardPaymentTableController extends GetxController
   TextEditingController studentId = TextEditingController();
   TextEditingController amountPaid = TextEditingController();
   TextEditingController payDate = TextEditingController();
+  TextEditingController totalPaid = TextEditingController();
   TextEditingController reciptNum = TextEditingController();
+  FocusNode totalFocus = FocusNode();
   FocusNode idFocus = FocusNode();
   FocusNode amountFocus = FocusNode();
   FocusNode dateFocus = FocusNode();
@@ -362,6 +364,7 @@ class DashboardPaymentTableController extends GetxController
 
   void addClick() async {
     await getLevel();
+    payDate.text = DateTime.now().toString().split("")[0];
     Get.dialog(PopUpAddPaymentCard());
   }
 
@@ -370,13 +373,9 @@ class DashboardPaymentTableController extends GetxController
     addTerm.value = val;
   }
 
-  // Future<void> getStudent() async {
-  //   student =
-  //       await UserRepository.fetchStudentsForPayment().then((e) => e.data);
-  // }
-
   Future<void> getLevel() async {
-    level = await LevelRepository.fetchLevels().then((e) => e.data?.values.toList() ?? []);
+    level = await LevelRepository.fetchLevels()
+        .then((e) => e.data?.values.toList() ?? []);
     if (level?.isNotEmpty ?? false) {
       levelId = Rx(level?.first.id ?? 0);
     } else {
@@ -384,7 +383,40 @@ class DashboardPaymentTableController extends GetxController
     }
   }
 
-  Future<void> addPayment() async {}
+  Future<void> addPayment() async {
+    Map<String, dynamic> jsData = {};
+    jsData["id"] = 0;
+    jsData["student_id"] = int.parse(studentId.text);
+    jsData["term"] = addTerm.value;
+    jsData["level_fees_id"] = levelId.value;
+    jsData["remaining_amount"] = 0;
+    if (formKey.currentState!.validate()) {
+      (payDate.text.isNotEmpty && payDate.text != "Unknown".tr)
+          ? jsData["payment_date"] = payDate.text
+          : null;
+      (reciptNum.text.isNotEmpty && reciptNum.text != "Unknown".tr)
+          ? jsData["receipt_number"] = reciptNum.text
+          : null;
+      (totalPaid.text.isNotEmpty && totalPaid.text != "Unknown".tr)
+          ? jsData["total_amount"] = totalPaid.text
+          : null;
+      (amountPaid.text.isNotEmpty && amountPaid.text != "Unknown".tr)
+          ? jsData["amount_paid"] = amountPaid.text
+          : null;
+    }
+
+    Result<StudentFee> res = await StudentFeeRepository.createStudentFee(
+        studentId: int.parse(studentId.text), data: jsData);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      studentFee[res.data!.id] = res.data!;
+      studentFee.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+    update(["DataTable"]);
+  }
 
   @override
   void export() {}

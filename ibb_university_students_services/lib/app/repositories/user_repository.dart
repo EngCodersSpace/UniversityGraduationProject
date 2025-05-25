@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/services/hive_services.dart';
 import '../models/doctor_model/doctor.dart';
 import '../models/helper_models/result.dart';
@@ -13,6 +16,7 @@ import '../services/http_provider.dart';
 
 class UserRepository {
   static Box<User>? _userBox;
+  static const int _createError = 623;
 
   static get userRule => _userBox?.get('currentUser')?.role;
 
@@ -50,10 +54,10 @@ class UserRepository {
           Doctor user = Doctor.fromJson(response?.data["user"]);
           await _userBox?.put('currentUser', user);
         }
-        if(!kIsWeb){
-          await NotificationHandler.registerTopics(getUserTopics()??[]);
+        if (!kIsWeb) {
+          await NotificationHandler.registerTopics(getUserTopics() ?? []);
         }
-        HttpProvider.addAccessTokenHeader(    response?.data["accessToken"]);
+        HttpProvider.addAccessTokenHeader(response?.data["accessToken"]);
         HttpProvider.storeRefreshToken(response?.data["refreshToken"]);
 
         if (rememberMe) {
@@ -174,65 +178,6 @@ class UserRepository {
     }
   }
 
-  // static Future<Result<Student>> fetchStudentsForPayment({
-  //   bool hardfetch = false,
-  // }) async {
-  //   late Response? response;
-  //   try {
-  //     response = await HttpProvider.get("student/200");
-  //     if (response?.statusCode == 200) {
-  //       Student? student = Student.fromJson(response?.data["data"]);
-  //       return Result(
-  //           data: student,
-  //           hasError: false,
-  //           statusCode: response?.statusCode,
-  //           message: response?.data["message"] ?? "error");
-  //     }
-  //     return Result(
-  //         data: null,
-  //         hasError: true,
-  //         statusCode: response?.statusCode,
-  //         message: response?.data["message"] ?? "error");
-  //   } catch (error) {
-  //     return Result(
-  //         hasError: true,
-  //         statusCode: response?.statusCode,
-  //         message: error.toString(),
-  //         data: null);
-  //   }
-  // }
-
-  // static Future<Result<Student>> fetchAllStudent({
-  //   bool hardFetch = false,
-  // }) async {
-  //   late Response? response;
-  //   try {
-  //     response = await HttpProvider.get("student");
-  //     if (response?.statusCode == 200) {
-  //       Student student = Student.fromJson(response?.data);
-  //       return Result(
-  //         data: student,
-  //         hasError: false,
-  //         statusCode: response?.statusCode,
-  //         message: response?.data["message"] ?? "error",
-  //       );
-  //     }
-  //     return Result(
-  //       data: null,
-  //       hasError: true,
-  //       statusCode: response?.statusCode,
-  //       message: response?.data["message"] ?? "error",
-  //     );
-  //   } catch (error) {
-  //     return Result(
-  //       hasError: true,
-  //       statusCode: response?.statusCode,
-  //       message: error.toString(),
-  //       data: null,
-  //     );
-  //   }
-  // }
-
   static Future<Result<Map>> fetchDashboardDoctors({
     int? doctorId,
     String? acadimicDegree,
@@ -287,19 +232,10 @@ class UserRepository {
 
   static Future<Result<Map>> fetchDashboardStudent({
     int? studentId,
-    String? name,
-    String? email,
-    int? dateOfBirth,
-    String? college,
-    int? phoneNumber,
-    int? page,
     int? level,
     int? section,
-    int? studyPlan,
-    int? roleId,
     int? limit,
-    int? repeatYear,
-    String? enrollment,
+    int? page,
     String? studySystem,
     String? sort,
     String? order,
@@ -310,10 +246,10 @@ class UserRepository {
     try {
       Map<int, Student> student = {};
       response = await HttpProvider.get(
-          "get-student-panle?student_id=${studentId ?? ''}&study_plan_id=${studyPlan ?? ''}&student_level_id=${level ?? ''}&enrollment_year=${enrollment ?? ''}&sectionName=${section ?? ''}&studentSystem=${studySystem ?? ''}&user_name=${name ?? ''}&email=${email ?? ''}&data_of_birth=${dateOfBirth ?? ''}&collegeName=${college ?? ''}&phoneNumber=${phoneNumber ?? ''}&rolename=${roleId ?? ""}&repeat_years_count=${repeatYear ?? ""}&limit=${limit ?? ""}&orderBy=${order ?? ""}&sort=${sort ?? ""}&search=${search ?? ""}&page=$page");
+          "get-student-panle?student_id=${studentId ?? ''}&student_level_id=${level ?? ''}&sectionName=${section ?? ''}&studentSystem=${studySystem ?? ''}&limit=${limit ?? ""}&orderBy=${order ?? ""}&sort=${sort ?? ""}&search=${search ?? ""}&page=$page");
       if (response?.statusCode == 200) {
         for (Map<String, dynamic> jsStudent in response?.data['data']) {
-          student[jsStudent['student_id']] = Student.fromJson(jsStudent);
+          student[jsStudent["student_id"]] = Student.fromJson(jsStudent);
         }
         return Result(
           data: {
@@ -340,6 +276,113 @@ class UserRepository {
           statusCode: response?.statusCode,
           message: error.toString(),
           data: null);
+    }
+  }
+
+  static Future<Result<Student>> createStudent({
+    required int studentId,
+    required int sectionId,
+    required int roleId,
+    required int level,
+    required String name,
+    required String dateOfBirth,
+    required String college,
+    required String email,
+    required String password,
+    required String enrolment,
+    required String system,
+    required List<Map<String, int>> phonenumber,
+  }) async {
+    get_x.Get.dialog(
+      const PopUpLoadingCard(),
+      barrierDismissible: false,
+    );
+    late Response? response;
+    try {
+      response = await HttpProvider.post("registerStudent", data: {
+        "user_id": studentId,
+        "user_name": name,
+        "user_section_id": sectionId,
+        "date_of_birth": dateOfBirth,
+        "collegeName": college,
+        "email": email,
+        "roleId": roleId,
+        "password": password,
+        "student_level_id": level,
+        "enrollment_year": enrolment,
+        "student_system": system,
+      });
+      Student? newstudent;
+      if (response?.statusCode == 201) {
+        newstudent = Student.fromJson(response?.data["student"]);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+        data: newstudent,
+        hasError: true,
+        statusCode: response?.statusCode ?? _createError,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _createError,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
+
+  static Future<Result<Doctor>> createDoctor({
+    required int doctorId,
+    required int sectionId,
+    required int roleId,
+    required String name,
+    required String dateOfBirth,
+    required String college,
+    required String email,
+    required String password,
+    required String academicdegree,
+    required String postion,
+    required List<Map<String, String>> phonenumber,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.post("registerDoctor", data: {
+        "user_id": doctorId,
+        "user_name": name,
+        "user_section_id": sectionId,
+        "date_of_birth": dateOfBirth,
+        "roleId": roleId,
+        "password": password,
+        "collegeName": college,
+        "email": email,
+        "academic_degree": academicdegree,
+        "administrative_position": postion,
+      });
+      Doctor? newdoctor;
+      if (response?.statusCode == 201) {
+        newdoctor = Doctor.fromJson(response?.data["doctor"]);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+        data: newdoctor,
+        hasError: true,
+        statusCode: response?.statusCode ?? _createError,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _createError,
+        message: error.toString(),
+        data: null,
+      );
     }
   }
 
@@ -447,12 +490,17 @@ class UserRepository {
     required String target,
     required String action,
   }) {
-    return _userBox?.get('currentUser')?.role?.permissions[target]?.any((e)=>e.action == action)??false;
+    return _userBox
+            ?.get('currentUser')
+            ?.role
+            ?.permissions[target]
+            ?.any((e) => e.action == action) ??
+        false;
   }
 
-  static List<String>? getUserTopics(){
-    if(_userBox?.get("currentUser") == null)return null;
-    if(currentUserType() == Doctor){
+  static List<String>? getUserTopics() {
+    if (_userBox?.get("currentUser") == null) return null;
+    if (currentUserType() == Doctor) {
       return [
         "section_${_userBox?.get("currentUser")?.section?.id}",
         "doctor",

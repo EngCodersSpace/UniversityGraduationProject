@@ -75,7 +75,7 @@ class NotificationTableFilterComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.15,
+            width: Get.width * 0.2,
           ),
           IconButton(
             onPressed: () {

@@ -8,6 +8,7 @@ import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
@@ -322,10 +323,13 @@ class LibraryRepository {
   }) async {
     Response? response;
     try {
-      File fileData = File(file.path ?? "");
+      File fileData =
+          File((ScreenUtils.isPhoneScreen()) ? file.path ?? "" : file.name);
       int fileSize = await fileData.length();
       response = await HttpProvider.post("checkFileDuplicate", data: {
-        "originalname": file.path?.split("/").last,
+        "originalname": (ScreenUtils.isPhoneScreen())
+            ? file.path?.split("/").last
+            : file.name,
         "size": fileSize.toString(),
         "sectionsAndLevels": groups,
       });
@@ -347,7 +351,7 @@ class LibraryRepository {
         );
 
         if (response?.statusCode == 201) {
-        List<LibraryFile> libFiles = [];
+          List<LibraryFile> libFiles = [];
           for (Map<String, dynamic> book in (response?.data["books"] ?? [])) {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);

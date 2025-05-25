@@ -219,7 +219,7 @@ class StudentAcademicCardInfo extends GetView<AcademicCardController> {
         : RotatedBox(
             quarterTurns: 3,
             child: SizedBox(
-              width: Get.width * 0.5,
+              width: Get.width * 0.4,
               child: Card(
                 color: Colors.white,
                 elevation: 8,
@@ -324,7 +324,7 @@ class StudentAcademicCardInfo extends GetView<AcademicCardController> {
                                                           color: Colors.black,
                                                           textHeader:
                                                               AppTextHeaders
-                                                                  .h2Bold)),
+                                                                  .h3Bold)),
                                             ),
                                             const SizedBox(
                                               height: 20,

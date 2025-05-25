@@ -61,7 +61,7 @@ class LibraryController extends GetxController
     "date": ["Oldest", "Newest"],
   };
   RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
-  List<PageController> myTabsControllers =  [
+  List<PageController> myTabsControllers = [
     PageController(keepPage: true),
     PageController(keepPage: true),
     PageController(keepPage: true)
@@ -101,10 +101,10 @@ class LibraryController extends GetxController
         bottom: borderSide,
       ),
     ];
-    myTabsControllers =  [
+    myTabsControllers = [
       PageController(keepPage: true),
       PageController(keepPage: true),
-      PageController(keepPage: true)
+      PageController(keepPage: true),
     ];
     await fetchLibraryData();
     super.onInit();
@@ -153,14 +153,14 @@ class LibraryController extends GetxController
   }
 
   void onPageChange(int i) async {
-    currentPage.value = i+1;
+    currentPage.value = i + 1;
   }
 
   void refreshCurrentPage(int i) {
     if (myTabsControllers[tapController!.index].positions.isNotEmpty) {
-      currentPage.value = myTabsControllers[tapController!.index].page?.toInt()??1;
-    }
-    else{
+      currentPage.value =
+          myTabsControllers[tapController!.index].page?.toInt() ?? 1;
+    } else {
       currentPage.value = 1;
     }
     currentPage.refresh();
@@ -189,7 +189,7 @@ class LibraryController extends GetxController
     await myTabsControllers[tapController!.index].previousPage(
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value--;
-    if(currentPage.value<1)currentPage.value=1;
+    if (currentPage.value < 1) currentPage.value = 1;
   }
 
   void nextPage() async {
@@ -198,7 +198,11 @@ class LibraryController extends GetxController
     await myTabsControllers[tapController!.index].nextPage(
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value++;
-    if(currentPage.value>((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1)currentPage.value=((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1;
+    if (currentPage.value >
+        ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1) {
+      currentPage.value =
+          ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1;
+    }
   }
 
   void changeDepartment(int? val) async {

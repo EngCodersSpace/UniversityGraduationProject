@@ -114,9 +114,11 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> post(String url, {dynamic data,void Function(int, int)? onSendProgress}) async {
+  static Future<Response?> post(String url,
+      {dynamic data, void Function(int, int)? onSendProgress}) async {
     try {
-      final response = await _dio.post(url, data: data,onSendProgress:onSendProgress );
+      final response =
+          await _dio.post(url, data: data, onSendProgress: onSendProgress);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -178,20 +180,17 @@ class HttpProvider {
           title: "$onProcessUploads Files Uploading ",
           message: "for details look on notifications");
 
-      final response = await _dio
-          .post(
+      final response = await _dio.post(
         uploadUrl,
         cancelToken: cancelTokens[file.path.hashCode],
         data: FormData.fromMap(dataMap),
         options: Options(
-          headers: {
-            'Content-Type': 'application/octet-stream',
-            'Content-Length': fileSize.toString(),
-          },
-          // receiveTimeout: Duration(),
-          sendTimeout: null
-
-        ),
+            headers: {
+              'Content-Type': 'application/octet-stream',
+              'Content-Length': fileSize.toString(),
+            },
+            // receiveTimeout: Duration(),
+            sendTimeout: null),
         onSendProgress: onSendProgress,
       );
       HttpProvider.onProcessUploads--;
@@ -312,8 +311,8 @@ class HttpProvider {
         LocaleListener.currentLocal.value?.languageCode ?? "en";
   }
 
-  static String parseUrl(String endPoint){
-    return _dio.options.baseUrl+endPoint;
+  static String parseUrl(String endPoint) {
+    return _dio.options.baseUrl + endPoint;
   }
 
   static Widget httpImage({
@@ -323,26 +322,24 @@ class HttpProvider {
     Widget? imageError,
     BoxFit fit = BoxFit.cover,
   }) {
-
-    if(imageUrl.startsWith('/') || imageUrl.contains(':\\') || imageUrl.contains('/storage/')){
-      return Image.file(
-        File(imageUrl),
-        fit: fit,
-        errorBuilder: (_, __, ___) => imageError??Icon(Icons.error)
-
-      );
-    }else {
+    if (imageUrl.startsWith('/') ||
+        imageUrl.contains(':\\') ||
+        imageUrl.contains('/storage/')) {
+      return Image.file(File(imageUrl),
+          fit: fit,
+          errorBuilder: (_, __, ___) => imageError ?? Icon(Icons.error));
+    } else {
       return CachedNetworkImage(
-      imageUrl: "${_dio.options.baseUrl}$imageUrl",
-      httpHeaders: {
-        'Authorization': _dio.options.headers["Authorization"]??"",
-      },
-      placeholder: placeholder ??
-              (context, url) => const Center(child: CircularProgressIndicator()),
-      errorWidget: errorWidget ??
-              (context, url, error) => const Icon(Icons.error),
-      fit: fit,
-    );
+        imageUrl: "${_dio.options.baseUrl}$imageUrl",
+        httpHeaders: {
+          'Authorization': _dio.options.headers["Authorization"] ?? "",
+        },
+        placeholder: placeholder ??
+            (context, url) => const Center(child: CircularProgressIndicator()),
+        errorWidget:
+            errorWidget ?? (context, url, error) => const Icon(Icons.error),
+        fit: fit,
+      );
     }
   }
 }

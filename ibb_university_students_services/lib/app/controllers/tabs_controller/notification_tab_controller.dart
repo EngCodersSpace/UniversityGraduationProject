@@ -32,15 +32,18 @@ class NotificationTabController extends GetxController {
   RxList<String> selectedLevels = <String>[].obs;
   RxList<String> selectedRoles = <String>[].obs;
 
-  Map<int,Section> sections = {};
-  Map<int,Level> levels = {};
-  Map<int,Role> roles = {};
-  final Map<String,String> targets = {"Students":"'student' in topics","Doctors": "'doctor' in topics", "Student And Doctors":"'student' in topics || 'doctor' in topics"};
+  Map<int, Section> sections = {};
+  Map<int, Level> levels = {};
+  Map<int, Role> roles = {};
+  final Map<String, String> targets = {
+    "Students": "'student' in topics",
+    "Doctors": "'doctor' in topics",
+    "Student And Doctors": "'student' in topics || 'doctor' in topics"
+  };
   RxBool includeRole = false.obs;
 
   @override
   void onInit() async {
-
     DateTime now = DateTime.now();
     await initSections();
     await initLevels();
@@ -48,35 +51,39 @@ class NotificationTabController extends GetxController {
     await fetchNotification();
     today =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    yesterday = '${now.year}-${now.month.toString().padLeft(2, '0')}-${(now.day-1).toString().padLeft(2, '0')}';
+    yesterday =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${(now.day - 1).toString().padLeft(2, '0')}';
     loadingState.value = false;
     super.onInit();
   }
+
   @override
-  void refresh({bool force = true})  async{
+  void refresh({bool force = true}) async {
     loadingState.value = true;
     await fetchNotification(force: force);
     super.refresh();
     loadingState.value = false;
   }
-  Future<void> fetchNotification({bool force=false})async{
-    Result res = await NotificationRepository.fetchNotifications(hardFetch: force);
+
+  Future<void> fetchNotification({bool force = false}) async {
+    Result res =
+        await NotificationRepository.fetchNotifications(hardFetch: force);
     if (res.statusCode == 200) {
       groupNotifications(res.data);
     } else if (res.statusCode == 404) {
       notificationGroups = {};
       // = "this student not has fees";
       showSnakeBar(
-          title: "Not Found Fees", message: "this student not has fees");
+          title: "Not Found Notifications",
+          message: "this student not has Notifications");
     } else {
       notificationGroups = {};
-      // fieldMessage.value = "fetching fees failed please check connection";
+      // fieldMessage.value = "fetching Notifications failed please check connection";
       showSnakeBar(
-          title: "Fetch Fees Failed",
-          message: "fetching fees failed please check connection ");
+          title: "Fetch Notifications Failed",
+          message: "fetching Notifications failed please check connection ");
     }
   }
-
 
   Future<void> initSections({bool force = false}) async {
     sections = await SectionRepository.fetchSections(hardFetch: force)
@@ -93,39 +100,52 @@ class NotificationTabController extends GetxController {
         .then((e) => e.data ?? {});
   }
 
-  void changeIncludeRole(bool? val){
-    if (val == null )return;
+  void changeIncludeRole(bool? val) {
+    if (val == null) return;
     includeRole.value = val;
   }
 
-
-  void pushNotification()async{
-    if(mode.value=="Group"&& selectedSections.isEmpty){
-      showSnakeBar(title: "Validation Error",message:"programs required select at least one " );
+  void pushNotification() async {
+    if (mode.value == "Group" && selectedSections.isEmpty) {
+      showSnakeBar(
+          title: "Validation Error",
+          message: "programs required select at least one ");
       return;
     }
-    if(mode.value=="Group"&& selectedTarget.value == "student"&& selectedLevels.isEmpty){
-      showSnakeBar(title: "Validation Error",message:"Levels required select at least one " );
+    if (mode.value == "Group" &&
+        selectedTarget.value == "student" &&
+        selectedLevels.isEmpty) {
+      showSnakeBar(
+          title: "Validation Error",
+          message: "Levels required select at least one ");
       return;
     }
-    if(mode.value=="Group"&& selectedRoles.isEmpty){
-      showSnakeBar(title: "Validation Error",message:"Roles required select at least one " );
+    if (mode.value == "Group" && selectedRoles.isEmpty) {
+      showSnakeBar(
+          title: "Validation Error",
+          message: "Roles required select at least one ");
       return;
     }
 
     String? topics;
     int? receiverId;
-    if(mode.value == "Single"){
+    if (mode.value == "Single") {
       receiverId = int.tryParse(receiverIdController.text);
-    }else if(mode.value == "Group"){
-     topics = buildConditionString();
+    } else if (mode.value == "Group") {
+      topics = buildConditionString();
     }
-    Result res =await NotificationRepository.pushNotification(title: titleController.text, message: messageController.text,topic:topics,receiverId: receiverId );
+    Result res = await NotificationRepository.pushNotification(
+        title: titleController.text,
+        message: messageController.text,
+        topic: topics,
+        receiverId: receiverId);
     Navigator.of(Get.overlayContext!).pop();
-    if(res.statusCode == 200){
-      showSnakeBar(title: "successfully",message: "Notification push successfully");
+    if (res.statusCode == 200) {
+      showSnakeBar(
+          title: "successfully", message: "Notification push successfully");
     }
   }
+
   String buildConditionString() {
     final parts = <String>[];
     parts.add("(${targets[selectedTarget.value]})");
@@ -153,16 +173,17 @@ class NotificationTabController extends GetxController {
     for (model.Notification notification in notifications.values) {
       if (notification.createdAt == null) continue;
 
-      if (!notificationGroups.containsKey(notification.createdAt?.split("T").first)) {
+      if (!notificationGroups
+          .containsKey(notification.createdAt?.split("T").first)) {
         notificationGroups[notification.createdAt!.split("T").first] = {};
       }
-      notificationGroups[notification.createdAt!.split("T").first]?[notification.id] =
-          notification;
+      notificationGroups[notification.createdAt!.split("T").first]
+          ?[notification.id] = notification;
     }
-    notificationGroups = Map.fromEntries(
-        notificationGroups.entries.toList()
-          ..sort((a, b) => DateTime.parse(b.key).compareTo(DateTime.parse(a.key))) // newest first
-    );
+    notificationGroups = Map.fromEntries(notificationGroups.entries.toList()
+          ..sort((a, b) => DateTime.parse(b.key)
+              .compareTo(DateTime.parse(a.key))) // newest first
+        );
   }
 
   @override

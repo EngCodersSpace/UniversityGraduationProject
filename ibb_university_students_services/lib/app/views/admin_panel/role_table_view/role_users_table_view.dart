@@ -4,6 +4,7 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_table_component/role_table_filter_component.dart';
 
@@ -29,10 +30,12 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
               height: Get.height * 0.01,
             ),
             Row(children: [
-              Expanded(
+              SizedBox(
+                height: Get.height * 0.6,
+                width: Get.width * 0.3,
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  width: Get.width * 0.3,
+                  width: Get.width * 0.2,
                   child: Scrollbar(
                     controller: controller.vertical,
                     thumbVisibility: true,
@@ -63,12 +66,49 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
                 ),
               ),
               SizedBox(
-                width: Get.width * 0.03,
+                width: Get.width * 0.001,
               ),
-              // Container(
-              //   padding: EdgeInsets.all(10),
-              //   child: ,
-              // ),
+              GetBuilder<DashboardRoleUsersTableController>(
+                id: "rolePermissions",
+                builder: (ctx) => Container(
+                  width: Get.width * 0.47,
+                  height: Get.height * 0.6,
+                  padding: EdgeInsets.all(10),
+                  child: SingleChildScrollView(
+                    child: Scrollbar(
+                      controller: controller.horizontal,
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      child: Column(children: [
+                        if (controller.selectedIndex.value != -1) ...[
+                          ...?controller.roles[controller.selectedIndex.value]
+                              ?.permissions.entries
+                              .map<Widget>((e) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  "${e.key} : ",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                                CustomText(
+                                  " ${e.value}",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                              ],
+                            );
+                          })
+                        ],
+                        Center(
+                          child: CustomText("Please Select a Role",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold)),
+                        )
+                      ]),
+                    ),
+                  ),
+                ),
+              ),
             ])
           ],
         ),
@@ -83,6 +123,7 @@ class MyData extends DataTableSource {
       Get.find<DashboardRoleUsersTableController>(); // GetX Controller
 
   MyData(this.context);
+
   List<String> permitionActions = [];
 
   @override
@@ -114,79 +155,30 @@ class MyData extends DataTableSource {
                 )),
           ),
           DataCell(
-            onTap: () => _showPermissionPopup(
-                context, items[index % controller.rowsPerPage.value]),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
             CustomText(
                 items[index % controller.rowsPerPage.value].id.toString()),
           ),
-          // DataCell(onTap: () {
-          //   _showPermissionPopup(
-          //       context, items[index % controller.rowsPerPage.value]);
-          // },
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value]
-          //             .id
-          //             .toString())),
           DataCell(
-            onTap: () => _showPermissionPopup(
-                context, items[index % controller.rowsPerPage.value]),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
             CustomText(
                 key: UniqueKey(),
                 items[index % controller.rowsPerPage.value].name.toString()),
           ),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].name)),
+          DataCell(
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
+            CustomText(
+                key: UniqueKey(),
+                items[index % controller.rowsPerPage.value].type.toString()),
+          ),
         ]);
   }
 
-  void _showPermissionPopup(BuildContext context, Role role) {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          title: Text('Permissions for: ${role.name}'),
-          content: SizedBox(
-            width: 400,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: role.permissions.entries.expand((entry) {
-                  return entry.value.map((perm) => ListTile(
-                        leading: Icon(Icons.security),
-                        title: Text(perm.action.toString()),
-                        subtitle: Text('Module: ${perm.target}'),
-                      ));
-                }).toList(),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   List<Role> get items => controller.roles.values.toList();
+
   @override
   bool get isRowCountApproximate => false;
 

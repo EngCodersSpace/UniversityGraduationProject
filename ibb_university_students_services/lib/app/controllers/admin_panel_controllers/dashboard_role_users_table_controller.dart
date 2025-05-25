@@ -9,6 +9,7 @@ import 'package:ibb_university_students_services/app/models/role_model/role.dart
 import 'package:ibb_university_students_services/app/repositories/role_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_table_component/add_role_table_card.dart';
 
 class DashboardRoleUsersTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -22,7 +23,7 @@ class DashboardRoleUsersTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   List<DataColumn> kTableColumn = [];
-  RxInt selectedIndex = 0.obs;
+  RxInt selectedIndex = (-1).obs;
   Timer? _debounce;
   int currentPage = 1;
   RxBool selectAll = false.obs;
@@ -52,6 +53,16 @@ class DashboardRoleUsersTableController extends GetxController
                 textHeader: AppTextHeaders.h6Bold,
               ),
             ))),
+    DropdownMenuItem<String>(
+        value: "user_type",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "User Type",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
   ];
   List<DropdownMenuItem<String>> sort = [
     DropdownMenuItem<String>(
@@ -75,6 +86,12 @@ class DashboardRoleUsersTableController extends GetxController
               ),
             ))),
   ];
+
+  //popup add component
+  TextEditingController roleName = TextEditingController();
+  TextEditingController roleType = TextEditingController();
+  FocusNode nameFocus = FocusNode();
+  FocusNode typeFocus = FocusNode();
 
   @override
   void onInit() async {
@@ -103,11 +120,11 @@ class DashboardRoleUsersTableController extends GetxController
         "Name",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
-      // DataColumn(
-      //     label: CustomText(
-      //   "permision",
-      //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      // )),
+      DataColumn(
+          label: CustomText(
+        "Type",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
     ];
     await fetchRoleData();
     loadingState.value = false;
@@ -154,10 +171,11 @@ class DashboardRoleUsersTableController extends GetxController
     update(["DataTable"]);
   }
 
-  // Future<void> showPermition() async {
-  //   Permission? permitionData=await RoleRepository.fetchDashbordPermition(id: roleId.value).then((e)=>e.data);
-
-  // }
+  void changeSelectedRole(int? val) {
+    if (val == null) return;
+    selectedIndex.value = val;
+    update(["rolePermissions"]);
+  }
 
   void onPageChange(int page) async {
     currentPage = (page ~/ rowsPerPage.value) + 1;
@@ -184,7 +202,31 @@ class DashboardRoleUsersTableController extends GetxController
     fetchRoleData();
   }
 
-  void addClick() {}
+  void addClick() async {
+    await Get.dialog(AddRoleTableCard());
+  }
+
+  void addRole() async {
+    Map<String, dynamic> jsData = {};
+    if (formKey.currentState!.validate()) {
+      (roleName.text.isNotEmpty && roleName.text != "Unknown".tr)
+          ? jsData["roleName"] = roleName.text
+          : null;
+      (roleType.text.isNotEmpty && roleType.text != "Unknown".tr)
+          ? jsData["user_type"] = roleType.text
+          : null;
+    }
+    Result<Role> res = await RoleRepository.createRole(data: jsData);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 200 && res.data != null) {
+      roles[res.data!.id] = res.data!;
+      roles.refresh();
+      showSnakeBar(message: "Add successfully");
+    } else {
+      showSnakeBar(message: "Add failed");
+    }
+    update(["DataTable"]);
+  }
 
   @override
   void export() {}

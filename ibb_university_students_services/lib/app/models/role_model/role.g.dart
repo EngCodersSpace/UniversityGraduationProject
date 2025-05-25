@@ -20,6 +20,7 @@ class RoleAdapter extends TypeAdapter<Role> {
       id: fields[0] as int,
       permissions: (fields[2] as Map).map((dynamic k, dynamic v) =>
           MapEntry(k as String, (v as List).cast<Permission>())),
+      type: fields[5] as String?,
       name: fields[1] as String?,
       createdAt: fields[3] as String?,
       updatedAt: fields[4] as String?,
@@ -29,7 +30,7 @@ class RoleAdapter extends TypeAdapter<Role> {
   @override
   void write(BinaryWriter writer, Role obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,7 +40,9 @@ class RoleAdapter extends TypeAdapter<Role> {
       ..writeByte(3)
       ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(5)
+      ..write(obj.type);
   }
 
   @override

@@ -331,9 +331,10 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                               ),
                               CustomTextFormField(
                                 controller: controller.dateController,
-                                // validator: controller.validateTime,
                                 labelText: "Date".tr,
                                 focusNode: controller.dateFocus,
+                                onTap: () => DateTimeUtils.datePiker(context,
+                                    controller: controller.dateController),
                                 onFieldSubmitted: (e) {
                                   controller.timeFocus.requestFocus();
                                 },
@@ -379,7 +380,7 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                               CustomTextFormField(
                                 controller: controller.hallController,
                                 // validator: controller.validateEntryYear,
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.multiline,
                                 labelText: "Hall".tr,
                                 focusNode: controller.entryYearFocus,
                                 onFieldSubmitted: (e) {

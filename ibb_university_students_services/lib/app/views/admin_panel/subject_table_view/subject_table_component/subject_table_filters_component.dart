@@ -16,62 +16,6 @@ class SubjectTableFiltersComponent
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // CustomText(
-          //   "Section".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
-          Container(
-            height: Get.height * 0.06,
-            width: Get.width * 0.12,
-            decoration: BoxDecoration(
-              color: AppColors.inverseIconColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Obx(() => DropdownButton(
-                    items: controller.sections,
-                    onChanged: controller.changeSection,
-                    value: controller.selectedSection.value,
-                    underline: const SizedBox(),
-                    iconEnabledColor: AppColors.mainCardColor,
-                    dropdownColor: AppColors.inverseCardColor,
-                  )),
-            ),
-          ),
-          SizedBox(
-            width: Get.width * 0.01,
-          ),
-          // CustomText(
-          //   "Level".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
-          Container(
-            height: Get.height * 0.06,
-            width: Get.width * 0.08,
-            decoration: BoxDecoration(
-              color: AppColors.inverseIconColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Obx(() => DropdownButton(
-                    items: controller.levels,
-                    onChanged: controller.changeLevel,
-                    value: controller.selectedLevel.value,
-                    underline: const SizedBox(),
-                    iconEnabledColor: AppColors.mainCardColor,
-                    dropdownColor: AppColors.inverseCardColor,
-                  )),
-            ),
-          ),
-          SizedBox(
-            width: Get.width * 0.01,
-          ),
-          // CustomText(
           //   "Order".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
           // ),

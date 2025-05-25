@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
@@ -139,30 +140,23 @@ class DashboardLibraryTableController extends GetxController
   Timer? _debounce;
 
   //popup card component
-  Map<String, Subject>? subjects;
+  Map<String, Subject> subjects = {};
   Map<int, Section> section = <int, Section>{}.obs;
-  List<Level>? level;
+  Map<int, RxBool> level = {};
+  String mode = "add";
   Rx<String?> subjectId = Rx(null);
   Rx<int?> sectionId = Rx(null);
   Rx<int?> levelId = Rx(null);
-  TextEditingController title = TextEditingController();
-  TextEditingController author = TextEditingController();
-  TextEditingController pages = TextEditingController();
-  TextEditingController edition = TextEditingController();
-  TextEditingController category = TextEditingController();
-  TextEditingController size = TextEditingController();
-  TextEditingController path = TextEditingController();
-  TextEditingController image = TextEditingController();
-  TextEditingController name = TextEditingController();
-  FocusNode titleFocus = FocusNode();
-  FocusNode authorFocus = FocusNode();
-  FocusNode pageFocus = FocusNode();
-  FocusNode editionFocus = FocusNode();
-  FocusNode categoryFocus = FocusNode();
-  FocusNode sizeFocus = FocusNode();
-  FocusNode pathFocus = FocusNode();
-  FocusNode imageFocus = FocusNode();
-  FocusNode nameFocus = FocusNode();
+  RxString? selectedAddSubjectId;
+  Rx<int?> selectedCategory = Rx(0);
+  List<String> categories = [
+    "Lecture",
+    "Reference",
+    "Exams Forms",
+  ];
+  List<PlatformFile> selectedFiles = [];
+  RxList<Map<String, int>> groups = RxList();
+  RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
 
   @override
   void onInit() async {
@@ -320,6 +314,95 @@ class DashboardLibraryTableController extends GetxController
     update(["DataTable"]);
   }
 
+  void fileDelete(int index) {
+    selectedFiles.removeAt(index);
+    update(["BooksPiker"]);
+  }
+
+  void filesMore(String? val, int index) {
+    switch (val) {
+      case "reName":
+        break;
+      case "Delete":
+        fileDelete(index);
+        break;
+    }
+  }
+
+  Future<void> pickFiles() async {
+    // Open file picker dialog
+    // Get.dialog(const PopUpLoadingCard());
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+          allowMultiple: true,
+          type: FileType.custom,
+          allowedExtensions: [
+            'pdf',
+            // PDF files
+            'doc',
+            'docx',
+            // Microsoft Word
+            'xls',
+            'xlsx',
+            // Microsoft Excel
+            'ppt',
+            'pptx',
+            // Microsoft PowerPoint
+            'txt',
+            // Plain text files
+            'rtf',
+            // Rich Text Format
+            'odt',
+            'ods',
+            'odp',
+            // OpenDocument formats (LibreOffice, OpenOffice)
+            'csv',
+            // Comma-Separated Values
+            'md',
+            // Markdown files
+            'html',
+            'htm',
+            // HTML documents
+            'json',
+            'xml',
+            // Structured data files
+            'epub',
+            'mobi',
+            'azw',
+            // eBook formats
+          ]);
+    } catch (e) {
+      showSnakeBar(
+          title: "Loading Files Failed",
+          message: "check your connection and try again");
+    }
+    // Navigator.of(Get.overlayContext!).pop();
+    if (result != null) {
+      bool exist = false;
+      for (int i = 0; i < result.count; i++) {
+        for (PlatformFile e in selectedFiles) {
+          exist = (e.name == result.files[i].name);
+        }
+        if (!exist) {
+          selectedFiles.add(result.files[i]);
+        } else {
+          showSnakeBar(message: "This File Already Exist");
+        }
+      }
+      update(["BooksPiker"]);
+    }
+  }
+
+  void delGroup(int index) {
+    groups.removeAt(index);
+  }
+
+  void changeSelectedCategory(int? val) async {
+    if (val == null) return;
+    selectedCategory.value = val;
+  }
+
   void onRowChange(int? val) async {
     if (val != null) {
       rowsPerPage.value = val;
@@ -396,7 +479,7 @@ class DashboardLibraryTableController extends GetxController
   }
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
-    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
+    List<Level> levelData = await LevelRepository.fetchLevels(hardFetch: force)
         .then((e) => e.data?.values.toList() ?? []);
     levels = [
       DropdownMenuItem<int>(
@@ -409,7 +492,7 @@ class DashboardLibraryTableController extends GetxController
             ),
           )),
     ];
-    for (Level level in levelsData) {
+    for (Level level in levelData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
@@ -423,49 +506,83 @@ class DashboardLibraryTableController extends GetxController
             )),
       );
     }
-    selectedLevel.value = levelsData.first.id;
+    selectedLevel.value = levelData.first.id;
   }
 
   Future<void> addClick() async {
     await getSection();
     await getLevel();
     await getSubject();
-    Get.dialog(PopUpAddLibraryCard());
+    Get.dialog(AddLibraryTableCard());
   }
 
   Future<void> getSubject() async {
     subjects = {};
     subjects =
         await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
-    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
-      subjectId = RxString(subjects!.values.first.id);
+    if ((subjects.isNotEmpty)) {
+      subjectId = RxString(subjects.values.first.id);
     } else {
       subjectId.value = null;
     }
   }
 
   Future<void> getSection() async {
-    section = {};
-    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
-    if (section.isNotEmpty) {
-      sectionId = RxInt(section.values.first.id);
-    } else {
-      sectionId.value = null;
-    }
+    section = await SectionRepository.fetchSections(hardFetch: false)
+        .then((e) => e.data ?? {});
+    section[-1] = Section(id: -1, nameData: {"en": "All"});
+    sectionId.value = -1;
   }
 
   Future<void> getLevel() async {
-    level = [];
-    level = await LevelRepository.fetchLevels()
+    List<Level> levelsData = await LevelRepository.fetchLevels()
         .then((e) => e.data?.values.toList() ?? []);
-    if (level?.isNotEmpty ?? false) {
-      levelId = RxInt(level?.first.id ?? 0);
-    } else {
-      levelId.value = null;
+    level = {};
+    for (Level leveli in levelsData) {
+      level[leveli.id] = false.obs;
     }
+    level[-1] = false.obs;
+    levelId.value = -1;
   }
 
-  Future<void> addBook() async {}
+  void addGroup(int sectionId, int levelId) {
+    if (groups.any((map) =>
+        map["section_id"] == sectionId && map["level_id"] == levelId)) {
+      showSnakeBar(message: "Group Already Exists");
+      return;
+    }
+    groups.insert(
+      0,
+      {"section_id": sectionId, "level_id": levelId},
+    );
+  }
+
+  Future<void> addBook() async {
+    if (groups.isEmpty) {
+      showSnakeBar(
+          title: "Validation Error", message: "Should add at least one group");
+      return;
+    }
+    if (selectedAddSubjectId == null) {
+      showSnakeBar(
+          title: "Validation Error", message: "Should select subject ");
+      return;
+    }
+    for (PlatformFile file in (selectedFiles)) {
+      List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
+              file: file,
+              groups: groups.value = [
+                {"section_id": sectionId.value!, "level_id": levelId.value!}
+              ],
+              category: categories[selectedCategory.value ?? 0],
+              subjectId: selectedAddSubjectId?.value)
+          .then((e) => e.data ?? []);
+      for (LibraryFile e in files) {
+        books[e.category] ??= RxMap({});
+        books[e.category]?[e.id] = e;
+      }
+    }
+  }
 
   @override
   void export() {}
@@ -488,39 +605,8 @@ class DashboardLibraryTableController extends GetxController
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
-  void popupClear() {
-    title.clear();
-    author.clear();
-    pages.clear();
-    edition.clear();
-    category.clear();
-    size.clear();
-    path.clear();
-    image.clear();
-    name.clear();
-  }
-
   @override
   void onClose() {
     searchController.dispose();
-    popupClear();
-    title.dispose();
-    author.dispose();
-    pages.dispose();
-    edition.dispose();
-    category.dispose();
-    size.dispose();
-    path.dispose();
-    image.dispose();
-    name.dispose();
-    titleFocus.dispose();
-    authorFocus.dispose();
-    pageFocus.dispose();
-    editionFocus.dispose();
-    categoryFocus.dispose();
-    sizeFocus.dispose();
-    pathFocus.dispose();
-    imageFocus.dispose();
-    nameFocus.dispose();
   }
 }

@@ -68,7 +68,7 @@ class RoleTableFilterComponent
               controller.addClick();
             },
             icon: Icon(Icons.add_box_outlined),
-            tooltip: "Add",
+            tooltip: "Add Role",
           ),
         ],
       ),

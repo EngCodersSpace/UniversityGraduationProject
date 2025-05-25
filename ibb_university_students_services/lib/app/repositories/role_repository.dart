@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
 import '../models/helper_models/result.dart';
 import '../models/role_model/role.dart';
@@ -6,6 +10,7 @@ import '../services/http_provider.dart';
 
 class RoleRepository {
   static const int _fetchError = 611;
+  static const int _createError = 623;
 
   static Future<Result<Map<int, Role>>> fetchRoles({
     bool hardFetch = false,
@@ -43,6 +48,38 @@ class RoleRepository {
       return Result(
           hasError: true,
           statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+  static Future<Result<Role>> createRole({
+    required data,
+  }) async {
+    get_x.Get.dialog(
+      PopUpLoadingCard(),
+      barrierDismissible: false,
+    );
+    late Response? response;
+    try {
+      response = await HttpProvider.post("create-roles", data: data);
+      Role? newRole;
+      if (response?.statusCode == 201) {
+        newRole = Role.fromJson(response?.data["data"]);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+        data: newRole,
+        hasError: true,
+        statusCode: response?.statusCode ?? _createError,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
           message: error.toString(),
           data: null);
     }

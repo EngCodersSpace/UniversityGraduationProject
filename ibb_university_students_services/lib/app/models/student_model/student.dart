@@ -58,9 +58,27 @@ class Student extends User {
         }
       }
     }
+    Student(
+      id: json['student_id'] ?? json['user_id'],
+      nameData: JsonUtils.tryJsonDecode(json['user_name']),
+      dateOfBrith: json['date_of_birth'],
+      email: json['email'],
+      role: Role.fromJson(json['role']),
+      phones: numbers,
+      profileImage: json['profile_picture'],
+      studyPlane: StudyPlane.fromJson(json['study_plan']),
+      level: Level.fromJson(json["level"]),
+      collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
+      section: Section.fromJson(json["section"]),
+      systemData: JsonUtils.tryJsonDecode(json['student_system']),
+      enrollmentYear: json['enrollment_year'],
+      repeatYearsCount: json['repeat_years_count'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+    );
 
     return Student(
-      id: json['user_id'],
+      id: json['user_id'] ?? ["student_id"],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_birth'],
       email: json['email'],
