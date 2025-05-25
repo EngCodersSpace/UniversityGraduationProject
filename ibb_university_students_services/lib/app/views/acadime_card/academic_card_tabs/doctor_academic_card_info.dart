@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 
 import '../../../components/custom_text_v2.dart';
 import '../../../models/doctor_model/doctor.dart';

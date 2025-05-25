@@ -16,26 +16,29 @@ class ReferencesTab extends GetView<LibraryController> {
     return Container(
         decoration: (ScreenUtils.isPhoneScreen())
             ? const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(
-                        "assets/images/library/istockphoto-867895848-612x612.jpg"),
-                    fit: BoxFit.fill),
-              )
+          image: DecorationImage(
+              image: AssetImage(
+                  "assets/images/library/istockphoto-867895848-612x612.jpg"),
+              fit: BoxFit.fill),
+        )
             : const BoxDecoration(
-                image: DecorationImage(
-                    image:
-                        AssetImage("assets/images/library/weblibraryphoto.png"),
-                    fit: BoxFit.fill),
-              ),
+          image: DecorationImage(
+              image:
+              AssetImage("assets/images/library/weblibraryphoto.png"),
+              fit: BoxFit.fill),
+        ),
         height: Get.height * 0.74,
         child: Obx(
-          () => (controller.loadingState.value)
+              () =>
+          (controller.loadingState.value)
               ? Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.mainCardColor,
-                  ),
-                )
-              : PageView(
+            child: CircularProgressIndicator(
+              color: AppColors.mainCardColor,
+            ),
+          )
+              :Obx(
+            () =>
+                PageView(
                   physics: AlwaysScrollableScrollPhysics(),
                   onPageChanged: controller.onPageChange,
                   controller: controller.myTabsControllers[1],
@@ -64,11 +67,11 @@ class ReferencesTab extends GetView<LibraryController> {
                       )
                     ],
                     for (int i = 0;
-                        i <
-                            (controller
-                                    .books[controller.categories[1]]?.length ??
-                                0);
-                        i += 12)
+                    i <
+                        (controller
+                            .books[controller.categories[1]]?.length ??
+                            0);
+                    i += 12)
                       RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(
@@ -76,7 +79,7 @@ class ReferencesTab extends GetView<LibraryController> {
                           child: Column(
                             children: [
                               if (controller.books[controller.categories[1]]
-                                      ?.isEmpty ??
+                                  ?.isEmpty ??
                                   true) ...[
                                 SizedBox(
                                   height: Get.height * 0.3,
@@ -108,38 +111,48 @@ class ReferencesTab extends GetView<LibraryController> {
                                     runSpacing: Get.height * 0.045,
                                     children: [
                                       for (int j = i;
-                                          j < (i + 12) &&
-                                              (j <
-                                                  (controller.books[controller.categories[1]]?.length ??
-                                                      0));
-                                          j++)
-                                        if ((controller.books[controller.categories[1]]?.values
-                                                        .toList()[i]
-                                                        .sectionId ==
-                                                    controller
-                                                        .selectedDepartment
-                                                        .value ||
-                                                controller.selectedDepartment.value ==
+                                      j < (i + 12) &&
+                                          (j <
+                                              (controller.books[controller
+                                                  .categories[1]]?.length ??
+                                                  0));
+                                      j++)
+                                        if (
+                                        ((controller.books[controller
+                                            .categories[1]]
+                                            ?.values
+                                            .toList()[j]
+                                            .title
+                                            ?.toLowerCase().contains(
+                                            controller.searchText.text
+                                                .toLowerCase()) ??
+                                            false) ||
+                                            controller.searchText.text == "") &&
+                                            (controller.books[controller
+                                                .categories[1]]?.values
+                                                .toList()[j]
+                                                .sectionId ==
+                                                controller
+                                                    .selectedDepartment
+                                                    .value ||
+                                                controller.selectedDepartment
+                                                    .value ==
                                                     -1) &&
-                                            (controller.books[controller.categories[1]]?.values
-                                                        .toList()[i]
-                                                        .levelId ==
-                                                    controller
-                                                        .selectedLevel.value ||
-                                                controller.selectedLevel.value ==
-                                                    -1) &&
-                                            ((controller.books[controller.categories[1]]?.values
-                                                        .toList()[i]
-                                                        .title
-                                                        ?.contains(controller.searchText.text) ??
-                                                    false) ||
-                                                controller.searchText.text == "")) ...[
+                                            (controller.books[controller
+                                                .categories[1]]?.values
+                                                .toList()[j]
+                                                .levelId ==
+                                                controller
+                                                    .selectedLevel.value ||
+                                                controller.selectedLevel
+                                                    .value ==
+                                                    -1)) ...[
                                           Obx(() {
                                             if ((ScreenUtils.isPhoneScreen())) {
                                               return BookContainer(
                                                 book: controller
                                                     .books[controller
-                                                        .categories[1]]!
+                                                    .categories[1]]!
                                                     .values
                                                     .toList()[j],
                                               );
@@ -147,7 +160,7 @@ class ReferencesTab extends GetView<LibraryController> {
                                               return WebBookContainar(
                                                   book: controller
                                                       .books[controller
-                                                          .categories[1]]!
+                                                      .categories[1]]!
                                                       .values
                                                       .toList()[j]);
                                             }
@@ -161,6 +174,7 @@ class ReferencesTab extends GetView<LibraryController> {
                       ),
                   ],
                 ),
+          ),
         ));
   }
 }

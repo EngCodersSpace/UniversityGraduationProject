@@ -7,10 +7,18 @@ enum TimeFormat {
   hhMm("hh:mm"),
   hhMmSs("hh:mm:ss"),
   hhMmA("hh:mm a");
-
   final String value;
 
   const TimeFormat(this.value);
+}
+
+enum DateTimeFormat {
+  yyyyMmDd("yyyy-mm-dd"),
+  yyyyMmDdHhMmA("yyyy-MM-dd hh:mm a"),
+  yyyyMmDdHhMm("yyyy-MM-dd hh:mm");
+  final String value;
+
+  const DateTimeFormat(this.value);
 }
 
 class DateTimeUtils {
@@ -32,6 +40,15 @@ class DateTimeUtils {
   }) {
     return DateFormat(format.value)
         .format(DateFormat(currentFormat.value).parse(time));
+  }
+
+  static String formatStringDateTime({
+    required String time,
+    DateTimeFormat format = DateTimeFormat.yyyyMmDdHhMmA,
+    // DateTimeFormat currentFormat = DateTimeFormat.yyyyMmDd,
+  }) {
+    return DateFormat(format.value)
+        .format(DateTime.parse(time));
   }
 
   static formatTimeOfDay({

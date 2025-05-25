@@ -21,11 +21,12 @@ class UserRepository {
   static get userRule => _userBox?.get('currentUser')?.role;
 
   static Future<void> openBox() async {
+    if(_userBox?.isOpen??false)return;
     _userBox = await Hive.openBox<User>('userBox');
   }
 
   static Future<void> clearBox() async {
-    _userBox = await Hive.openBox<User>('userBox');
+    openBox();
     await _userBox?.clear();
     Box box = await Hive.openBox('rememberMe');
     await box.clear();
@@ -36,7 +37,6 @@ class UserRepository {
     if (_userBox?.isOpen ?? false) {
       await _userBox?.close();
     }
-    // Box  = await Hive.openBox('');
   }
 
   static Future<Result<bool>> userLogin(String id, String password,
@@ -133,9 +133,11 @@ class UserRepository {
   static Future<void> userLogout() async {
     Response? response;
     try {
+      if(_userBox?.get('currentUser')?.id == null)return;
       response = await HttpProvider.post(
           "logout?user_id=${_userBox?.get('currentUser')?.id}");
-      if (response?.statusCode == 200 || true) {
+      if (response?.statusCode == 200) {
+        await NotificationHandler.unsubscribeFromTopic(getUserTopics()??[]);
         Box box = await Hive.openBox('rememberMe');
         box.clear();
         box.close();
@@ -387,6 +389,7 @@ class UserRepository {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
+    openBox();
     if (_userBox?.get('currentUser') != null &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(
@@ -483,6 +486,7 @@ class UserRepository {
   }
 
   static Type? currentUserType() {
+    _userBox?.get('currentUser')?.runtimeType;
     return _userBox?.get('currentUser')?.runtimeType;
   }
 

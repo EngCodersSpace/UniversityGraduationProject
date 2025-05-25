@@ -11,6 +11,7 @@ import '../../models/level_model/level.dart';
 import '../../models/role_model/role.dart';
 import '../../repositories/level_repository.dart';
 import '../../repositories/section_repository.dart';
+import '../../styles/app_colors.dart';
 import '../../utils/snake_bar.dart';
 
 class NotificationTabController extends GetxController {
@@ -32,6 +33,8 @@ class NotificationTabController extends GetxController {
   RxList<String> selectedLevels = <String>[].obs;
   RxList<String> selectedRoles = <String>[].obs;
 
+  RxInt sortDirection = 0.obs;
+
   Map<int, Section> sections = {};
   Map<int, Level> levels = {};
   Map<int, Role> roles = {};
@@ -41,13 +44,28 @@ class NotificationTabController extends GetxController {
     "Student And Doctors": "'student' in topics || 'doctor' in topics"
   };
   RxBool includeRole = false.obs;
-
+  List<Border> borders = [];
   @override
   void onInit() async {
     DateTime now = DateTime.now();
     await initSections();
     await initLevels();
-    await initRoles(force: true);
+    await initRoles();
+    BorderSide borderSide =
+    BorderSide(color: AppColors.inverseCardColor, width: 1.0);
+    borders = [
+      Border(
+        top: borderSide,
+        right: borderSide,
+        bottom: borderSide,
+      ),
+      Border(
+        top: borderSide,
+        left: borderSide,
+        bottom: borderSide,
+      ),
+    ];
+
     await fetchNotification();
     today =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
@@ -60,6 +78,9 @@ class NotificationTabController extends GetxController {
   @override
   void refresh({bool force = true}) async {
     loadingState.value = true;
+    if (roles.isEmpty) initRoles(force: true);
+    if (levels.isEmpty) initLevels(force: true);
+    if (sections.isEmpty) initSections(force: true);
     await fetchNotification(force: force);
     super.refresh();
     loadingState.value = false;
@@ -67,22 +88,24 @@ class NotificationTabController extends GetxController {
 
   Future<void> fetchNotification({bool force = false}) async {
     Result res =
-        await NotificationRepository.fetchNotifications(hardFetch: force);
+        await NotificationRepository.fetchNotifications(mode: (sortDirection.value==0)?"receiver":"sent",hardFetch: force);
     if (res.statusCode == 200) {
+      notificationGroups = {};
       groupNotifications(res.data);
     } else if (res.statusCode == 404) {
       notificationGroups = {};
       // = "this student not has fees";
       showSnakeBar(
-          title: "Not Found Notifications",
-          message: "this student not has Notifications");
+          title: "Not Found Fees", message: "this student not has fees");
     } else {
       notificationGroups = {};
-      // fieldMessage.value = "fetching Notifications failed please check connection";
+      // fieldMessage.value = "fetching fees failed please check connection";
       showSnakeBar(
-          title: "Fetch Notifications Failed",
-          message: "fetching Notifications failed please check connection ");
+          title: "Fetch Fees Failed",
+          message: "fetching fees failed please check connection ");
     }
+
+    update(["notificationsList"]);
   }
 
   Future<void> initSections({bool force = false}) async {
@@ -105,6 +128,13 @@ class NotificationTabController extends GetxController {
     includeRole.value = val;
   }
 
+  void changeSelectedSortDirection(int? val) async {
+    if (val == null) return;
+    sortDirection.value = val;
+    await fetchNotification();
+  }
+
+
   void pushNotification() async {
     if (mode.value == "Group" && selectedSections.isEmpty) {
       showSnakeBar(
@@ -120,7 +150,7 @@ class NotificationTabController extends GetxController {
           message: "Levels required select at least one ");
       return;
     }
-    if (mode.value == "Group" && selectedRoles.isEmpty) {
+    if (mode.value == "Group" && selectedRoles.isEmpty && includeRole.value) {
       showSnakeBar(
           title: "Validation Error",
           message: "Roles required select at least one ");
@@ -147,9 +177,33 @@ class NotificationTabController extends GetxController {
   }
 
   String buildConditionString() {
+    if (!includeRole.value &&
+        (selectedSections.length == sections.length &&
+            selectedSections.isNotEmpty) &&
+        ((selectedLevels.length == levels.length) &&
+            selectedLevels.isNotEmpty) &&
+        selectedTarget.value == "Students") {
+      return "'student' in topics";
+    }
+
+    if (!includeRole.value &&
+        (selectedSections.length == sections.length &&
+            selectedSections.isNotEmpty) &&
+        selectedTarget.value == "Doctors") {
+      return "'doctor' in topics";
+    }
+
+
+    if (!includeRole.value &&
+        (selectedSections.length == sections.length &&
+            selectedSections.isNotEmpty) &&
+        selectedTarget.value == "Student And Doctors") {
+      return "'all' in topics";
+    }
+
+
     final parts = <String>[];
     parts.add("(${targets[selectedTarget.value]})");
-
     if (selectedSections.isNotEmpty) {
       parts.add("('${selectedSections.join("'in topics || '")}' in topics)");
     }
@@ -162,6 +216,7 @@ class NotificationTabController extends GetxController {
     if (selectedRoles.isNotEmpty) {
       parts.add("('${selectedRoles.join(", in topics || '")}' in topics)");
     }
+
     return parts.join(" && ");
   }
 
@@ -172,7 +227,6 @@ class NotificationTabController extends GetxController {
   void groupNotifications(Map<int, model.Notification> notifications) {
     for (model.Notification notification in notifications.values) {
       if (notification.createdAt == null) continue;
-
       if (!notificationGroups
           .containsKey(notification.createdAt?.split("T").first)) {
         notificationGroups[notification.createdAt!.split("T").first] = {};
@@ -184,6 +238,7 @@ class NotificationTabController extends GetxController {
           ..sort((a, b) => DateTime.parse(b.key)
               .compareTo(DateTime.parse(a.key))) // newest first
         );
+
   }
 
   @override

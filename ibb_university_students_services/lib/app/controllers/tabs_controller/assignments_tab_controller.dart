@@ -11,6 +11,7 @@ import 'package:ibb_university_students_services/app/repositories/user_repositor
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_and_update_assignments_card.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/add_assignments_year_card.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/assignments_view_components/show_files_card.dart';
 import '../../models/assignment_model/assignment_model.dart';
 import '../../models/doctor_model/doctor.dart';
@@ -34,29 +35,33 @@ class AssignmentsTabController extends GetxController {
   Rx<int?> selectedDepartment = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   Rx<String?> selectedSubject = Rx(null);
+  Rx<int?> selectedYear = Rx(null);
   Map<String, Subject>? subjects;
   List<DropdownMenuItem<String>> selectedSubjectsItems = [];
   Map<int, Section> sections = {};
+  List<int> years = [];
   List<DropdownMenuItem<int>> levels = [];
   RxList<Map<String, int>> groups = RxList();
   Rx<Map<int, Assignment>>? assignments = Rx({});
-  RxBool addToMultiGroup = false.obs;
+  RxBool isDialogOpen = false.obs;
+
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+  TextEditingController yearController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  FocusNode titleFocus = FocusNode();
   FocusNode dueDateFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
+  FocusNode yearFocus = FocusNode();
   String mode = "Add";
   String fetchMode = "doctor";
   int? selectedAssignment;
   int? selectedState;
+  Map<int, PlatformFile>? webFiles;
 
   Future<void> setStudentSectionAndLevel() async {
     Student? student =
         await UserRepository.fetchUser().then((e) => e.data as Student);
     selectedDepartment.value = student?.section?.id;
-    selectedLevel.value = student?.level?.id;
   }
 
   @override
@@ -67,6 +72,7 @@ class AssignmentsTabController extends GetxController {
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuList();
     await initSubjectDropdownMenuList();
+    await initYears();
     if (UserRepository.currentUserType() == Student) {
       await setStudentSectionAndLevel();
       fetchMode = "student";
@@ -104,13 +110,21 @@ class AssignmentsTabController extends GetxController {
       }
     }
 
+    if (selectedYear.value == null) {
+      await initYears();
+      if (years.isNotEmpty) {
+        selectedYear.value = years.first;
+      }
+    }
+
     if (fetchMode == "student") {
       await setStudentSectionAndLevel();
     }
 
     if (selectedDepartment.value == null ||
         selectedLevel.value == null ||
-        selectedSubject.value == null) {
+        selectedSubject.value == null ||
+        selectedYear.value == null) {
       return;
     }
 
@@ -118,7 +132,7 @@ class AssignmentsTabController extends GetxController {
       subjectId: selectedSubject.value!,
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
-      year: '',
+      year: selectedYear.value!,
       hardFetch: force,
     );
     if (res.statusCode == 200) {
@@ -156,9 +170,21 @@ class AssignmentsTabController extends GetxController {
     await fetchAssignmentsData();
   }
 
-  void changeAddToMultiGroup(bool? val) async {
+  void changeYear(int? val) async {
     if (val == null) return;
-    addToMultiGroup.value = val;
+    if (val == -1) {
+      if (isDialogOpen.value) {
+        Get.back();
+      }
+      await Get.dialog(PopUpAddAssignmentsYearCard());
+      if (isDialogOpen.value) {
+        Get.dialog(PopUpIAddAndUpdateAssignmentsCard());
+        update(["addUpdateCard"]);
+      }
+      return;
+    }
+    selectedYear.value = val;
+    fetchAssignmentsData();
   }
 
   Future<void> initSectionDropdownMenuList({bool force = false}) async {
@@ -177,7 +203,7 @@ class AssignmentsTabController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 5) - 30
-                  : (Get.width / 8) * 0.4,
+                  : (Get.width / 8) * 0.6,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(
@@ -200,6 +226,19 @@ class AssignmentsTabController extends GetxController {
     }
   }
 
+  Future<void> initYears() async {
+    years = [];
+    years = await AssignmentsRepository.fetchAssignmentYears(hardFetch: true)
+        .then((e) => e.data ?? []);
+    years.add(-1);
+    years.sort((a, b) => a.compareTo(b));
+    if (years.isNotEmpty) {
+      selectedYear = RxInt(years.first);
+    } else {
+      selectedYear.value = null;
+    }
+  }
+
   void uploadAssignmentsFiles() async {
     if (selectedLevel.value == null) return;
     if (selectedDepartment.value == null) return;
@@ -211,14 +250,27 @@ class AssignmentsTabController extends GetxController {
         continue;
       }
       int? oldId = file.id;
-      await AssignmentsRepository.uploadAttachmentFiles(
-              attachment: file,
-              sectionId: selectedDepartment.value!,
-              levelId: selectedLevel.value!)
-          .then((e) {
-        assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
-        assignments?.value[selectedAssignment]?.attachments?.remove(oldId);
-      });
+      if (kIsWeb) {
+        if(webFiles![file.id] == null)continue;
+        await AssignmentsRepository.uploadAttachmentFilesWeb(
+            attachment: file,
+            file: webFiles![file.id]!,
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!)
+            .then((e) {
+          assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
+          assignments?.value[selectedAssignment]?.attachments?.remove(oldId);
+        });
+      } else {
+        await AssignmentsRepository.uploadAttachmentFiles(
+                attachment: file,
+                sectionId: selectedDepartment.value!,
+                levelId: selectedLevel.value!)
+            .then((e) {
+          assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
+          assignments?.value[selectedAssignment]?.attachments?.remove(oldId);
+        });
+      }
     }
   }
 
@@ -234,18 +286,36 @@ class AssignmentsTabController extends GetxController {
         continue;
       }
       int? oldId = file.id;
-      await AssignmentsRepository.uploadStudentAssignmentsFiles(
-              files: file,
-              assignmentId: selectedAssignment!,
-              sectionId: selectedDepartment.value!,
-              levelId: selectedLevel.value!)
-          .then((e) {
-        assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
-            ?.studentFiles?[file.id] = file;
-        assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
-            ?.studentFiles
-            ?.remove(oldId);
-      });
+      if(kIsWeb){
+        if(webFiles?[file.id] == null)continue;
+        await AssignmentsRepository.uploadStudentAssignmentsFilesWeb(
+            files: file,
+            file: webFiles![file.id]!,
+            assignmentId: selectedAssignment!,
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!)
+            .then((e) {
+          assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+              ?.studentFiles?[file.id] = file;
+          assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+              ?.studentFiles
+              ?.remove(oldId);
+        });
+      }else{
+        await AssignmentsRepository.uploadStudentAssignmentsFiles(
+            files: file,
+
+            assignmentId: selectedAssignment!,
+            sectionId: selectedDepartment.value!,
+            levelId: selectedLevel.value!)
+            .then((e) {
+          assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+              ?.studentFiles?[file.id] = file;
+          assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
+              ?.studentFiles
+              ?.remove(oldId);
+        });
+      }
     }
   }
 
@@ -269,15 +339,16 @@ class AssignmentsTabController extends GetxController {
         AttachmentFile file = AttachmentFile(
             id: -result.files[i].name.hashCode,
             originName: result.files[i].name,
-            path: result.files[i].path,
+            path: (kIsWeb) ? "" : result.files[i].path,
             assignmentId: selectedAssignment,
             status: RxString("Not Uploaded"));
         if (kIsWeb) {
           file.downloaded.value = false;
+          webFiles ??= {};
+          webFiles?[file.id] = result.files[i];
         } else {
           file.downloaded.value = true;
         }
-
         assignments?.value[selectedAssignment]?.attachments?.forEach((i, e) {
           exist = (e.originName == file.originName);
         });
@@ -566,13 +637,17 @@ class AssignmentsTabController extends GetxController {
       showSnakeBar(message: "Select Subject First");
       return;
     }
+    if (selectedYear.value == null) {
+      showSnakeBar(message: "Select Year First");
+      return;
+    }
     groups.value = [];
     addGroup(selectedDepartment.value!, selectedLevel.value!);
+    isDialogOpen.value = true;
     Get.dialog(const PopUpIAddAndUpdateAssignmentsCard());
   }
 
   void addGroup(int sectionId, int levelId) {
-    //copy to dashboard
     if (groups.any((map) =>
         map["section_id"] == sectionId && map["level_id"] == levelId)) {
       showSnakeBar(message: "Group Already Exists");
@@ -595,6 +670,7 @@ class AssignmentsTabController extends GetxController {
           sectionId: selectedDepartment.value!,
           levelId: selectedLevel.value!,
           subjectId: selectedSubject.value!,
+          year: selectedYear.value!,
           title: titleController.text,
           assignmentDate: DateTime.now().toString(),
           assignmentsDueDate: dueDateController.text,
@@ -633,9 +709,11 @@ class AssignmentsTabController extends GetxController {
 
   void showAttachmentsFiles(int? assignmentId) async {
     selectedAssignment = assignmentId;
-    for (AttachmentFile file
-        in assignments?.value[selectedAssignment]?.attachments?.values ?? []) {
-      await file.checkDownloaded();
+    if(!kIsWeb){
+      for (AttachmentFile file
+      in assignments?.value[selectedAssignment]?.attachments?.values ?? []) {
+        await file.checkDownloaded();
+      }
     }
     if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsAddFilesCard());
@@ -647,10 +725,12 @@ class AssignmentsTabController extends GetxController {
   void showStudentFiles(int? assignmentId, {int? stateId}) async {
     selectedAssignment = assignmentId;
     selectedState = stateId;
-    for (StudentAssignmentsFile file in assignments?.value[selectedAssignment]
-            ?.studentsStatus?[selectedState]?.studentFiles?.values ??
-        []) {
-      await file.checkDownloaded();
+    if(!kIsWeb){
+      for (StudentAssignmentsFile file in assignments?.value[selectedAssignment]
+          ?.studentsStatus?[selectedState]?.studentFiles?.values ??
+          []) {
+        await file.checkDownloaded();
+      }
     }
     if (UserRepository.currentUserType() == Doctor) {
       Get.dialog(AssignmentsShowFilesCard());
@@ -669,5 +749,13 @@ class AssignmentsTabController extends GetxController {
     Get.to(AssignmentStudentList(
       items: items ?? [],
     ));
+  }
+
+  void addYear() {
+    if (yearController.text == "") return;
+    years.add(int.parse(yearController.text));
+    selectedYear.value = int.parse(yearController.text);
+    years.sort((a, b) => a.compareTo(b));
+    Get.back();
   }
 }

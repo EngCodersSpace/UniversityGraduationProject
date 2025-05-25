@@ -138,7 +138,6 @@ class CustomTextFormField extends StatelessWidget {
               maxLines: (expands)?null:maxLines ,
               onSaved: onSaved,
               onChanged: onChange,
-              textInputAction: TextInputAction.newline,
               onFieldSubmitted: onFieldSubmitted,
               onTap: onTap,
               onTapOutside: onTapOutside,

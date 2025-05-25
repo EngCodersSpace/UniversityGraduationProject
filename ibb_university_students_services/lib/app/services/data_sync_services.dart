@@ -54,7 +54,7 @@ static Future<void> syncAssignments(DataSync dataSync)async {
  DataSync oldDataSync = await DataSyncRepository.fetchCachedDataSyncRecord(id: dataSync.id).then((e)=>e.data);
  if(DateTimeUtils.stringDataIsAfter(dataSync.updatedAt??"", oldDataSync.updatedAt??"")){
   if(dataSync.filters?["section_id"] == null||dataSync.filters?["level_id"]||dataSync.filters?["subject_id"])return;
-  AssignmentsRepository.fetchAssignmentsGroup(sectionId: dataSync.filters?["section_id"], levelId: dataSync.filters?["level_id"],hardFetch: true, subjectId: dataSync.filters?["subject_id"],year: '');
+  AssignmentsRepository.fetchAssignmentsGroup(sectionId: dataSync.filters?["section_id"], levelId: dataSync.filters?["level_id"],hardFetch: true, subjectId: dataSync.filters?["subject_id"],year: 2025);
   if (Get.isRegistered<AssignmentsTabController>()){
    Get.find<AssignmentsTabController>().refresh(force: false);
   }

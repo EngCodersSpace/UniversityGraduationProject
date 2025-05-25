@@ -177,6 +177,7 @@ class PhoneLoginView extends GetView<LoginController> {
                                 labelText: "User ID".tr,
                                 icon: Icons.account_circle_outlined,
                                 color: AppColors.inverseIconColor,
+                                keyboardType: TextInputType.number,
                                 focusNode: controller.idFocus,
                                 onFieldSubmitted: (e) {
                                   controller.idFocus.unfocus();

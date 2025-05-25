@@ -21,6 +21,11 @@ class Student extends User {
   String? enrollmentYear;
   @HiveField(15)
   int? repeatYearsCount;
+  @HiveField(16)
+  int? assignmentCount;
+  @HiveField(17)
+  int? completeAssignmentCount;
+
 
   String? get system {
     String currentLang = Get.locale?.languageCode.toString() ?? "en";
@@ -42,6 +47,8 @@ class Student extends User {
     this.systemData,
     this.enrollmentYear,
     this.repeatYearsCount,
+    this.assignmentCount,
+    this.completeAssignmentCount,
     super.createdAt,
     super.updatedAt,
   });
@@ -58,25 +65,6 @@ class Student extends User {
         }
       }
     }
-    Student(
-      id: json['student_id'] ?? json['user_id'],
-      nameData: JsonUtils.tryJsonDecode(json['user_name']),
-      dateOfBrith: json['date_of_birth'],
-      email: json['email'],
-      role: Role.fromJson(json['role']),
-      phones: numbers,
-      profileImage: json['profile_picture'],
-      studyPlane: StudyPlane.fromJson(json['study_plan']),
-      level: Level.fromJson(json["level"]),
-      collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
-      section: Section.fromJson(json["section"]),
-      systemData: JsonUtils.tryJsonDecode(json['student_system']),
-      enrollmentYear: json['enrollment_year'],
-      repeatYearsCount: json['repeat_years_count'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-    );
-
     return Student(
       id: json['user_id'] ?? ["student_id"],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
@@ -92,6 +80,8 @@ class Student extends User {
       systemData: JsonUtils.tryJsonDecode(json['student_system']),
       enrollmentYear: json['enrollment_year'],
       repeatYearsCount: json['repeat_years_count'],
+      assignmentCount: json['totalAssignmentsCount'],
+      completeAssignmentCount: json['completedAssignmentsCount'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

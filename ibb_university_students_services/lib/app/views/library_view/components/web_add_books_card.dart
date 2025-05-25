@@ -149,7 +149,7 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                           height: 8,
                                         ),
                                         Container(
-                                          height: Get.height * 0.2,
+                                          height: Get.height * 0.18,
                                           width: Get.width * 0.39,
                                           decoration: BoxDecoration(
                                               border: Border.all(
@@ -249,8 +249,8 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                                             SizedBox(
                                                               width: ((Get.width *
                                                                           0.3) /
-                                                                      6) *
-                                                                  3.5,
+                                                                      7) *
+                                                                  3,
                                                               child: CustomText(
                                                                   "${controller.sections[item["section_id"]!]?.name}",
                                                                   softWrap:
@@ -263,8 +263,8 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                                             SizedBox(
                                                               width: ((Get.width *
                                                                           0.3) /
-                                                                      8) *
-                                                                  3,
+                                                                      7) *
+                                                                  2,
                                                               child: CustomText(
                                                                   "${item["level_id"]}",
                                                                   style: AppTextStyles.secStyle(
@@ -276,7 +276,7 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                                                 width:
                                                                     ((Get.width *
                                                                             0.3) /
-                                                                        8),
+                                                                        7),
                                                                 child: IconButton(
                                                                     onPressed: () =>
                                                                         controller.delGroup(

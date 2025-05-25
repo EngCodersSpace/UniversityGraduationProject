@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
@@ -41,7 +42,7 @@ class LibraryController extends GetxController
   RxInt selectedShowOption = 2.obs;
   RxString selectedSortOption = "title".obs;
   RxInt sortDirection = 0.obs;
-
+  Map<String, RxMap<int, LibraryFile>> books = {};
   Map<int, Section> sections = {};
   Map<int, RxBool> levels = {};
   Map<String, Subject> subjects = {};
@@ -60,7 +61,6 @@ class LibraryController extends GetxController
     "page": ["Lowest", "Highest"],
     "date": ["Oldest", "Newest"],
   };
-  RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
   List<PageController> myTabsControllers = [
     PageController(keepPage: true),
     PageController(keepPage: true),
@@ -82,6 +82,9 @@ class LibraryController extends GetxController
       length: 3,
       vsync: this,
     );
+    for (String cate in categories) {
+      books[cate] = RxMap({});
+    }
     await LibraryRepository.openBox();
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
@@ -104,7 +107,7 @@ class LibraryController extends GetxController
     myTabsControllers = [
       PageController(keepPage: true),
       PageController(keepPage: true),
-      PageController(keepPage: true),
+      PageController(keepPage: true)
     ];
     await fetchLibraryData();
     super.onInit();
@@ -133,6 +136,9 @@ class LibraryController extends GetxController
 
     if (selectedDepartment.value == null || selectedLevel.value == null) return;
 
+    for (String cate in categories) {
+      books[cate]?.value = {};
+    }
     Result res = await LibraryRepository.streamFetchLibraryFilesGroup(
       sectionId: selectedDepartment.value!,
       levelId: selectedLevel.value!,
@@ -142,7 +148,7 @@ class LibraryController extends GetxController
     );
     if (res.statusCode == 200) {
     } else if (res.statusCode == 204) {
-      books.value = res.data ?? {};
+      books = res.data ?? {};
       fieldMessage.value = "Empty ";
     } else {
       fieldMessage.value = "fetching Library Document please check connection";
@@ -199,9 +205,9 @@ class LibraryController extends GetxController
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value++;
     if (currentPage.value >
-        ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1) {
+        ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil()) {
       currentPage.value =
-          ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12) + 1;
+          ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil();
     }
   }
 
@@ -282,14 +288,18 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) async {
     selectedBook = book;
-    await selectedBook?.checkDownloaded();
+    if(!kIsWeb){
+      await selectedBook?.checkDownloaded();
+    }
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookInfoCard())
         : Get.dialog(WebBookInfoCard());
   }
 
-  void searching(String? val) {
-    update();
+  void updatePages() {
+    for (String cat in categories) {
+      update(["${cat}Tap"]);
+    }
   }
 
   void filteringIconClick() {

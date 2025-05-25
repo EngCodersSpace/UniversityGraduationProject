@@ -24,7 +24,6 @@ import 'package:ibb_university_students_services/app/views/student_fees_view/stu
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
 import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
-import 'bindings/news_view_binding.dart';
 import 'bindings/student_fees_binding.dart';
 
 class AppRoutes {
@@ -43,7 +42,7 @@ class AppRoutes {
     GetPage(
       name: '/main',
       page: () => const MainViewLoader(),
-      binding: MainViewBinding(),
+      binding:  MainViewBinding(),
     ),
     GetPage(
       name: '/forgotPassword',
@@ -74,12 +73,12 @@ class AppRoutes {
     GetPage(
       name: '/news',
       page: () => const PhonesNewsView(),
-      binding: NewsViewBinding(),
+      // binding: NewsViewBinding(),
     ),
     GetPage(
       name: '/news_list',
       page: () => const PhonesNewsListView(),
-      binding: NewsViewBinding(),
+      // binding: NewsViewBinding(),
     ),
     GetPage(
       name: '/student_payments',
