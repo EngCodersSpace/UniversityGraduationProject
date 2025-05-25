@@ -8,7 +8,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 const {checkPermission} = require('../middleware/roleMiddleware');
 const CRUD = require('../controllers/dataControll');
 const CRUD2 = require('../controllers/subjectController');
-  
+const { verifyToken } = require('../middleware/authMiddleware');
+router.use(verifyToken);
+
 router.get('/all-data', CRUD.getAllData); 
 router.get('/get-subjects', CRUD.getSubjects); 
 router.get('/get-all-subjects', CRUD2.getAllSubject);

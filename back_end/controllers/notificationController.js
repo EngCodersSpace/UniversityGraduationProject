@@ -249,7 +249,7 @@ const sendInfoNotification = async ({
   CRUD.delayedSend(delay, send);
 };
 
-// SYSTEM Notification (not stored in DB)
+// SYSTEM Notification (not stored in DB) and not shown for users only i use it for sync
 const sendSystemNotification = async ({
   topic_name,
   metadata = {},
