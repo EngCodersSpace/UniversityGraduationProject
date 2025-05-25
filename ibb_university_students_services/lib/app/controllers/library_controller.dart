@@ -89,9 +89,9 @@ class LibraryController extends GetxController
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
     subjects =
-        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     BorderSide borderSide =
-        BorderSide(color: AppColors.inverseCardColor, width: 1.0);
+    BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
       Border(
         top: borderSide,
@@ -205,9 +205,9 @@ class LibraryController extends GetxController
         duration: const Duration(milliseconds: 400), curve: Curves.ease);
     currentPage.value++;
     if (currentPage.value >
-        ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil()) {
+        ((books[categories[tapController!.index]]?.length ?? 0) / 12).ceil()) {
       currentPage.value =
-          ((books[categories[tapController!.index]]?.length ?? 0) ~/ 12).ceil();
+          ((books[categories[tapController!.index]]?.length ?? 0) / 12).ceil();
     }
   }
 
@@ -232,13 +232,13 @@ class LibraryController extends GetxController
               books[cat]!.entries.toList()
                 ..sort((a, b) => (sortDirection.value == 0)
                     ? (a.value.title
-                            ?.toLowerCase()
-                            .compareTo(b.value.title?.toLowerCase() ?? "") ??
-                        0)
+                    ?.toLowerCase()
+                    .compareTo(b.value.title?.toLowerCase() ?? "") ??
+                    0)
                     : (b.value.title
-                            ?.toLowerCase()
-                            .compareTo(a.value.title?.toLowerCase() ?? "") ??
-                        0)));
+                    ?.toLowerCase()
+                    .compareTo(a.value.title?.toLowerCase() ?? "") ??
+                    0)));
         }
 
         break;
@@ -249,11 +249,11 @@ class LibraryController extends GetxController
               books[cat]!.entries.toList()
                 ..sort((a, b) => (sortDirection.value == 0)
                     ? (a.value.numberOfPages
-                            ?.compareTo(b.value.numberOfPages ?? 0) ??
-                        0)
+                    ?.compareTo(b.value.numberOfPages ?? 0) ??
+                    0)
                     : (b.value.numberOfPages
-                            ?.compareTo(a.value.numberOfPages ?? 0) ??
-                        0)));
+                    ?.compareTo(a.value.numberOfPages ?? 0) ??
+                    0)));
         }
         break;
       case "size":
@@ -429,10 +429,10 @@ class LibraryController extends GetxController
     }
     for (PlatformFile file in (selectedFiles)) {
       List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
-              file: file,
-              groups: groups,
-              category: categories[selectedCategory.value ?? 0],
-              subjectId: selectedAddSubjectId?.value)
+          file: file,
+          groups: groups,
+          category: categories[selectedCategory.value ?? 0],
+          subjectId: selectedAddSubjectId?.value)
           .then((e) => e.data ?? []);
       for (LibraryFile e in files) {
         books[e.category] ??= RxMap({});
@@ -464,7 +464,7 @@ class LibraryController extends GetxController
   void deleteBooksFromServer() async {
     if (selectedBook?.id == null) return;
     Result res =
-        await LibraryRepository.deleteLibraryBook(bookId: selectedBook!.id);
+    await LibraryRepository.deleteLibraryBook(bookId: selectedBook!.id);
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 200) {
       Navigator.of(Get.overlayContext!).pop();
@@ -479,7 +479,7 @@ class LibraryController extends GetxController
 
   void addGroup(int sectionId, int levelId) {
     if (groups.any((map) =>
-        map["section_id"] == sectionId && map["level_id"] == levelId)) {
+    map["section_id"] == sectionId && map["level_id"] == levelId)) {
       showSnakeBar(message: "Group Already Exists");
       return;
     }
