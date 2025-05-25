@@ -75,7 +75,6 @@ class MainController extends GetxController {
     if (ScreenUtils.isWebScreen()) {
       putControllers(index);
     }
-
     selectedIndex.value = index;
   }
 

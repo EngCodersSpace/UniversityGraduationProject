@@ -102,19 +102,21 @@ class WebLectureTableTabView extends GetView<LectureController> {
                       ),
                       padding: const EdgeInsets.all(10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
+                          SizedBox(
+                            width: width * 0.12,
+                          ),
                           CustomText(
                             "Section".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h2Bold),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           SizedBox(
-                            width: width * 0.002,
+                            width: width * 0.008,
                           ),
                           Container(
                             height: height * 0.08,
-                            width: width * 0.14,
+                            width: width * 0.13,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
                               borderRadius: BorderRadius.circular(24),
@@ -145,15 +147,15 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.02,
+                            width: width * 0.03,
                           ),
                           CustomText(
                             "Level".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h2Bold),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           SizedBox(
-                            width: width * 0.002,
+                            width: width * 0.008,
                           ),
                           Container(
                             height: height * 0.08,
@@ -174,19 +176,19 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.02,
+                            width: width * 0.03,
                           ),
                           CustomText(
                             "Term".tr,
                             style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h2Bold),
+                                textHeader: AppTextHeaders.h3Bold),
                           ),
                           SizedBox(
-                            width: width * 0.002,
+                            width: width * 0.008,
                           ),
                           Container(
                             height: height * 0.08,
-                            width: width * 0.13,
+                            width: width * 0.11,
                             decoration: BoxDecoration(
                               color: AppColors.inverseIconColor,
                               borderRadius: BorderRadius.circular(24),
@@ -203,23 +205,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             ),
                           ),
                           SizedBox(
-                            width: width * 0.02,
-                          ),
-                          CustomText(
-                            "Year".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h2Bold),
-                          ),
-                          SizedBox(
-                            width: width * 0.002,
-                          ),
-                          Container(
-                            height: height * 0.08,
-                            width: width * 0.13,
-                            decoration: BoxDecoration(
-                              color: AppColors.inverseIconColor,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
+                            width: width * 0.03,
                           ),
                         ],
                       ),

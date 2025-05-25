@@ -994,4 +994,63 @@ class AssignmentsRepository {
           data: null);
     }
   }
+
+  static Future<Result<Map>> fetchDashboardAssignment({
+    int? section,
+    int? level,
+    int? limit,
+    int? page,
+    int? doctor,
+    String? date,
+    String? dueDate,
+    String? subject,
+    String? day,
+    String? term,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "get-all-assignment-panel?subject_id=${subject ?? ''}&doctor_id=${doctor ?? ''}&section_id=${section ?? ''}&level_id=${level ?? ''}&assignment_date=${date ?? ''}&assignment_due_day=${day ?? ''}&assignments_due_date=${dueDate ?? ''}&orderBy=${order ?? ''}&limit$limit&sort=${sort ?? ''}&search=$search&page=$page"); //get the url from backend
+      Map<int, Assignment> assignment = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsAssignment in response?.data['data']) {
+          Subject? subject = await SubjectRepository.fetchSubject(
+                  id: jsAssignment["subject_id"])
+              .then((e) => e.data);
+          assignment[jsAssignment["id"]] =
+              Assignment.fromJson(jsAssignment, subject: subject); //get id
+        }
+        return Result(
+          data: {
+            "assignment": assignment,
+            "totalassignment": response?.data["pagination"]
+                ["totalAssignments"], //get names
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "assignment": assignment,
+          "totalassignment": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: response?.statusCode ?? _fetchError,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
 }

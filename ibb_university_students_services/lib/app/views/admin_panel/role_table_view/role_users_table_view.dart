@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/components/text_field.dart';
+import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/role_model/role.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/dashboard_component/heder_of_view_component.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/role_table_view/role_table_component/role_table_filter_component.dart';
 
@@ -28,127 +29,87 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
             SizedBox(
               height: Get.height * 0.01,
             ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(5),
+            Row(children: [
+              SizedBox(
+                height: Get.height * 0.6,
                 width: Get.width * 0.3,
-                child: Scrollbar(
-                  controller: controller.vertical,
-                  thumbVisibility: true,
-                  trackVisibility: true,
-                  child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  width: Get.width * 0.2,
+                  child: Scrollbar(
                     controller: controller.vertical,
-                    child: GetBuilder<DashboardRoleUsersTableController>(
-                      id: "DataTable",
-                      builder: (ctx) => Scrollbar(
-                        controller: controller.horizontal,
-                        thumbVisibility: true,
-                        trackVisibility: true,
-                        child: PaginatedDataTable(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: controller.vertical,
+                      child: GetBuilder<DashboardRoleUsersTableController>(
+                        id: "DataTable",
+                        builder: (ctx) => Scrollbar(
                           controller: controller.horizontal,
-                          rowsPerPage: controller.rowsPerPage.value,
-                          columnSpacing: controller.width * 0.06,
-                          onPageChanged: controller.onPageChange,
-                          availableRowsPerPage: const <int>[5, 10],
-                          onRowsPerPageChanged: controller.onRowChange,
-                          showCheckboxColumn: false,
-                          columns: controller.kTableColumn,
-                          source: MyData(),
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: PaginatedDataTable(
+                            controller: controller.horizontal,
+                            rowsPerPage: controller.rowsPerPage.value,
+                            columnSpacing: controller.width * 0.1,
+                            onPageChanged: controller.onPageChange,
+                            availableRowsPerPage: const <int>[5, 10],
+                            onRowsPerPageChanged: controller.onRowChange,
+                            showCheckboxColumn: false,
+                            columns: controller.kTableColumn,
+                            source: MyData(context),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Obx(
-            //   () => InkWell(
-            //     onTap: () => controller.changeDoctorTableView(),
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //         borderRadius: const BorderRadius.only(
-            //           topLeft: Radius.circular(24), // Top-left corner rounded
-            //           bottomLeft:
-            //               Radius.circular(24), // Bottom-left corner rounded
-            //         ),
-            //         color: (controller.selectedIndex.value == 0)
-            //             ? AppColors.tabBackColor
-            //             : AppColors.inverseTabBackColor,
-            //       ),
-            //       padding: const EdgeInsets.only(left: 25),
-            //       margin: const EdgeInsets.only(left: 16),
-            //       height: Get.height * 0.08,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         children: [
-            //           // Icon(
-            //           //   Icons.library_books_outlined,
-            //           //   color: (controller.selectedindex.value == int)
-            //           //       ? AppColors.secTextColor
-            //           //       : AppColors.mainTextColor,
-            //           // ),
-            //           SizedBox(
-            //             width: Get.width * 0.005,
-            //           ),
-            //           CustomText(
-            //             "Doctor".tr,
-            //             style: AppTextStyles.customColorStyle(
-            //               color: (controller.selectedIndex.value == 0)
-            //                   ? AppColors.secTextColor
-            //                   : AppColors.mainTextColor,
-            //               textHeader: AppTextHeaders.h6Bold,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // Obx(
-            //   () => InkWell(
-            //     onTap: () => controller.changeStudentTableView(),
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //         borderRadius: const BorderRadius.only(
-            //           topLeft: Radius.circular(24), // Top-left corner rounded
-            //           bottomLeft:
-            //               Radius.circular(24), // Bottom-left corner rounded
-            //         ),
-            //         color: (controller.selectedIndex.value == 1)
-            //             ? AppColors.tabBackColor
-            //             : AppColors.inverseTabBackColor,
-            //       ),
-            //       padding: const EdgeInsets.only(left: 25),
-            //       margin: const EdgeInsets.only(left: 16),
-            //       height: Get.height * 0.08,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         children: [
-            //           // Icon(
-            //           //   Icons.library_books_outlined,
-            //           //   color: (controller.selectedindex.value == int)
-            //           //       ? AppColors.secTextColor
-            //           //       : AppColors.mainTextColor,
-            //           // ),
-            //           SizedBox(
-            //             width: Get.width * 0.005,
-            //           ),
-            //           CustomText(
-            //             "Student".tr,
-            //             style: AppTextStyles.customColorStyle(
-            //               color: (controller.selectedIndex.value == 1)
-            //                   ? AppColors.secTextColor
-            //                   : AppColors.mainTextColor,
-            //               textHeader: AppTextHeaders.h6Bold,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
+              SizedBox(
+                width: Get.width * 0.001,
+              ),
+              GetBuilder<DashboardRoleUsersTableController>(
+                id: "rolePermissions",
+                builder: (ctx) => Container(
+                  width: Get.width * 0.47,
+                  height: Get.height * 0.6,
+                  padding: EdgeInsets.all(10),
+                  child: SingleChildScrollView(
+                    child: Scrollbar(
+                      controller: controller.horizontal,
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      child: Column(children: [
+                        if (controller.selectedIndex.value != -1) ...[
+                          ...?controller.roles[controller.selectedIndex.value]
+                              ?.permissions.entries
+                              .map<Widget>((e) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  "${e.key} : ",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                                CustomText(
+                                  " ${e.value}",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                              ],
+                            );
+                          })
+                        ],
+                        Center(
+                          child: CustomText("Please Select a Role",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold)),
+                        )
+                      ]),
+                    ),
+                  ),
+                ),
+              ),
+            ])
           ],
         ),
       ),
@@ -157,10 +118,13 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
 }
 
 class MyData extends DataTableSource {
+  final BuildContext context;
   final DashboardRoleUsersTableController controller =
       Get.find<DashboardRoleUsersTableController>(); // GetX Controller
 
-  MyData();
+  MyData(this.context);
+
+  List<String> permitionActions = [];
 
   @override
   DataRow? getRow(int index) {
@@ -191,32 +155,30 @@ class MyData extends DataTableSource {
                 )),
           ),
           DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue: items[index % controller.rowsPerPage.value]
-                      .id
-                      .toString())),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
+            CustomText(
+                items[index % controller.rowsPerPage.value].id.toString()),
+          ),
           DataCell(
-              onTap: () {},
-              CustomTextFormField(
-                  key: UniqueKey(),
-                  onTapOutside: (e) {
-                    controller.refresh();
-                  },
-                  onFieldSubmitted: (str) {},
-                  enableBorder: false,
-                  initialValue:
-                      items[index % controller.rowsPerPage.value].name)),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
+            CustomText(
+                key: UniqueKey(),
+                items[index % controller.rowsPerPage.value].name.toString()),
+          ),
+          DataCell(
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
+            CustomText(
+                key: UniqueKey(),
+                items[index % controller.rowsPerPage.value].type.toString()),
+          ),
         ]);
   }
 
   List<Role> get items => controller.roles.values.toList();
+
   @override
   bool get isRowCountApproximate => false;
 

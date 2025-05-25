@@ -1,35 +1,34 @@
 import 'dart:async';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/header_of_view_controller_interface.dart';
+import 'package:ibb_university_students_services/app/models/assignment_model/assignment_model.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/result.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
-import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
+import 'package:ibb_university_students_services/app/repositories/assignments_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/level_repository.dart';
-import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/section_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
-import 'package:ibb_university_students_services/app/views/admin_panel/library_table_view/library_table_component/add_library_table_card.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/assignment_table_view/assignment_table_component/add_assignment_table_card.dart';
 
-class DashboardLibraryTableController extends GetxController
+class DashboardAssignmentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
   double get width => (Get.width - (Get.width * 0.2));
   double get height => Get.height;
-  RxMap<int, LibraryFile> library = RxMap({});
-  RxString faildMessage = "".obs;
+  RxMap<int, Assignment> assignment = RxMap({});
   RxSet<int> selectedRows = RxSet({});
   RxInt availableRows = 0.obs;
-  ScrollController vertical = ScrollController();
-  ScrollController horizontal = ScrollController();
-  RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
   int currentPage = 1;
+  RxInt rowsPerPage = PaginatedDataTable.defaultRowsPerPage.obs;
+  RxString fieldMessage = "".obs;
+  ScrollController horizontal = ScrollController();
+  ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxBool loadingstate = true.obs;
@@ -38,6 +37,7 @@ class DashboardLibraryTableController extends GetxController
   RxString selectedTerm = "".obs;
   RxString selectedOrder = "id".obs;
   RxString selectedSort = "DESC".obs;
+  RxString selectedDay = "".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> term = [
@@ -84,31 +84,41 @@ class DashboardLibraryTableController extends GetxController
               ),
             ))),
     DropdownMenuItem<String>(
-        value: "edition",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Edition",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "added_by",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.6,
-            child: CustomText(
-              "Added By",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
         value: "subject_id",
         child: SizedBox(
             width: (Get.width / 8) * 0.6,
             child: CustomText(
               "Subject",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "doctor_id",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "doctor",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "assignment_date",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Assignment date",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "assignments_due_date",
+        child: SizedBox(
+            width: (Get.width / 6) * 0.6,
+            child: CustomText(
+              "Assignment due date",
               style: AppTextStyles.mainStyle(
                 textHeader: AppTextHeaders.h6Bold,
               ),
@@ -136,33 +146,99 @@ class DashboardLibraryTableController extends GetxController
               ),
             ))),
   ];
+  List<DropdownMenuItem<String>> day = [
+    DropdownMenuItem<String>(
+        value: "",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "All",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Saturday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Saturday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Sunday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Sunday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Monday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Monday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Tuesday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Tuesday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "wednesday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Wednesday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            ))),
+    DropdownMenuItem<String>(
+        value: "Thursday",
+        child: SizedBox(
+            width: (Get.width / 8) * 0.6,
+            child: CustomText(
+              "Thursday",
+              style: AppTextStyles.mainStyle(
+                textHeader: AppTextHeaders.h6Bold,
+              ),
+            )))
+  ];
   List<DataColumn> kTableColumn = [];
   Timer? _debounce;
 
-  //popup card component
-  Map<String, Subject> subjects = {};
-  Map<int, Section> section = <int, Section>{}.obs;
-  Map<int, RxBool> level = {};
-  String mode = "add";
+  //popup add component
+  Map<String, Subject>? subjects;
   Rx<String?> subjectId = Rx(null);
-  Rx<int?> sectionId = Rx(null);
-  Rx<int?> levelId = Rx(null);
-  RxString? selectedAddSubjectId;
-  Rx<int?> selectedCategory = Rx(0);
-  List<String> categories = [
-    "Lecture",
-    "Reference",
-    "Exams Forms",
-  ];
-  List<PlatformFile> selectedFiles = [];
+  Map<int, Section> section = <int, Section>{}.obs;
+  // ignore: non_constant_identifier_names
+  Rx<int?> SectionId = Rx(null);
+  List<Level>? level;
+  // ignore: non_constant_identifier_names
+  Rx<int?> LevelId = Rx(null);
+  TextEditingController title = TextEditingController();
+  TextEditingController dueDate = TextEditingController();
+  FocusNode titleFocus = FocusNode();
+  FocusNode dueDateFocus = FocusNode();
   RxList<Map<String, int>> groups = RxList();
-  RxMap<String, RxMap<int, LibraryFile>> books = RxMap();
 
   @override
   void onInit() async {
-    searchController.addListener(() {
-      onSearch();
-    });
+    searchController.addListener(() => onSearch());
     kTableColumn = <DataColumn>[
       DataColumn(
         label: Obx(() => Checkbox(
@@ -174,13 +250,25 @@ class DashboardLibraryTableController extends GetxController
             )),
       ),
       DataColumn(
+        label: CustomText(
+          "Assignment ID",
+          style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+        ),
+        numeric: true,
+      ),
+      DataColumn(
           label: CustomText(
-        "ID",
+        "Subject ID",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
       DataColumn(
           label: CustomText(
-        "Section",
+        "Doctor",
+        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
+      )),
+      DataColumn(
+          label: CustomText(
+        "Section ID",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
       DataColumn(
@@ -195,52 +283,17 @@ class DashboardLibraryTableController extends GetxController
       )),
       DataColumn(
           label: CustomText(
-        "Author",
+        "Day",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
       DataColumn(
           label: CustomText(
-        "pages",
+        "Date",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
       DataColumn(
           label: CustomText(
-        "Edation",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Category",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Size",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Path",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Image",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Added By",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Subject id",
-        style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-      )),
-      DataColumn(
-          label: CustomText(
-        "Name",
+        "Due Date",
         style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
       )),
     ];
@@ -248,18 +301,18 @@ class DashboardLibraryTableController extends GetxController
     await initSectionDashboardMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     (sections.isNotEmpty) ? selectedSection.value = sections.first.value : null;
-    await fetchLibraryData();
+    await fetchAssignmentData();
     loadingstate.value = false;
     super.onInit();
   }
 
   @override
   void refresh() async {
-    await fetchLibraryData();
+    await fetchAssignmentData();
     super.refresh();
   }
 
-  Future<void> fetchLibraryData({bool showSnakeBars = true}) async {
+  Future<void> fetchAssignmentData({bool showSnakeBars = true}) async {
     if (selectedLevel.value == null) {
       await initLevelDashboardMenuList();
       if (levels.isNotEmpty) {
@@ -278,172 +331,89 @@ class DashboardLibraryTableController extends GetxController
       return;
     }
 
-    Result res = await LibraryRepository.fetchDashboardLibrary(
-      sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
-      levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
+    Result res = await AssignmentsRepository.fetchDashboardAssignment(
+      section: (selectedSection.value == 0) ? null : selectedSection.value,
+      level: (selectedLevel.value == 0) ? null : selectedLevel.value,
+      term: (selectedTerm.value == "") ? "" : selectedTerm.value,
+      day: (selectedDay.value == "") ? "" : selectedDay.value,
       order: selectedOrder.value,
       sort: selectedSort.value,
-      search: searchController.text,
       limit: rowsPerPage.value,
       page: currentPage,
+      search: searchController.text,
       hardFetch: false,
-    ); //assigning values to variables
+    );
     if (res.statusCode == 200) {
-      library.value = res.data["library"] ?? {};
-      availableRows.value = res.data["totalbooks"] ?? 0;
-    } else if (res.statusCode == 404) {
-      library.value = {};
+      assignment.value = res.data["assignment"] ?? {};
+      availableRows.value = res.data["totalassignment"] ?? 0;
+    } else if (res.statusCode == 401) {
+      assignment.value = {};
       availableRows.value = 0;
-      faildMessage.value = "this section and level not have Books";
+      fieldMessage.value = "this section and level not has Assignment";
       if (showSnakeBars) {
         showSnakeBar(
-          title: "Not Found Books",
-          message: "this section and level not have Books",
-        );
+            title: "Not Found Assignment",
+            message: "this section and level doesn't has Assignment ");
       }
     } else {
-      library.value = {};
-      availableRows.value = 0;
-      faildMessage.value = "fetching Books faild please check connection";
+      assignment.value = {};
+      fieldMessage.value = "fetching assignment failed please check connection";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Fetch Books Faild",
-            message: "fetching Books faild please check connection");
+            title: "Fetch Assignment Failed",
+            message: "fetching assignment failed please check connection ");
       }
     }
     update(["DataTable"]);
   }
 
-  void fileDelete(int index) {
-    selectedFiles.removeAt(index);
-    update(["BooksPiker"]);
-  }
-
-  void filesMore(String? val, int index) {
-    switch (val) {
-      case "reName":
-        break;
-      case "Delete":
-        fileDelete(index);
-        break;
-    }
-  }
-
-  Future<void> pickFiles() async {
-    // Open file picker dialog
-    // Get.dialog(const PopUpLoadingCard());
-    FilePickerResult? result;
-    try {
-      result = await FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: FileType.custom,
-          allowedExtensions: [
-            'pdf',
-            // PDF files
-            'doc',
-            'docx',
-            // Microsoft Word
-            'xls',
-            'xlsx',
-            // Microsoft Excel
-            'ppt',
-            'pptx',
-            // Microsoft PowerPoint
-            'txt',
-            // Plain text files
-            'rtf',
-            // Rich Text Format
-            'odt',
-            'ods',
-            'odp',
-            // OpenDocument formats (LibreOffice, OpenOffice)
-            'csv',
-            // Comma-Separated Values
-            'md',
-            // Markdown files
-            'html',
-            'htm',
-            // HTML documents
-            'json',
-            'xml',
-            // Structured data files
-            'epub',
-            'mobi',
-            'azw',
-            // eBook formats
-          ]);
-    } catch (e) {
-      showSnakeBar(
-          title: "Loading Files Failed",
-          message: "check your connection and try again");
-    }
-    // Navigator.of(Get.overlayContext!).pop();
-    if (result != null) {
-      bool exist = false;
-      for (int i = 0; i < result.count; i++) {
-        for (PlatformFile e in selectedFiles) {
-          exist = (e.name == result.files[i].name);
-        }
-        if (!exist) {
-          selectedFiles.add(result.files[i]);
-        } else {
-          showSnakeBar(message: "This File Already Exist");
-        }
-      }
-      update(["BooksPiker"]);
-    }
-  }
-
-  void delGroup(int index) {
-    groups.removeAt(index);
-  }
-
-  void changeSelectedCategory(int? val) async {
-    if (val == null) return;
-    selectedCategory.value = val;
-  }
-
-  void onRowChange(int? val) async {
-    if (val != null) {
-      rowsPerPage.value = val;
-      await fetchLibraryData();
-      update(["DataTable"]);
-    }
-  }
-
   void onPageChange(int page) async {
     currentPage = (page ~/ rowsPerPage.value) + 1;
-    await fetchLibraryData();
+    await fetchAssignmentData();
+  }
+
+  void onRowChange(int? value) async {
+    if (value != null) {
+      rowsPerPage.value = value;
+      await fetchAssignmentData();
+      update(["DataTable"]);
+    }
   }
 
   void changeSection(int? val) async {
     if (val == null) return;
     selectedSection.value = val;
-    await fetchLibraryData();
+    await fetchAssignmentData();
   }
 
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
-    await fetchLibraryData();
+    await fetchAssignmentData();
   }
 
   void changeTerm(String? val) async {
     if (val == null) return;
     selectedTerm.value = val;
-    fetchLibraryData();
+    fetchAssignmentData();
   }
 
   void changeOrder(String? val) async {
     if (val == null) return;
     selectedOrder.value = val;
-    fetchLibraryData();
+    fetchAssignmentData();
   }
 
   void changeSort(String? val) async {
     if (val == null) return;
     selectedSort.value = val;
-    fetchLibraryData();
+    fetchAssignmentData();
+  }
+
+  void changeDay(String? val) async {
+    if (val == null) return;
+    selectedDay.value = val;
+    fetchAssignmentData();
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
@@ -479,7 +449,7 @@ class DashboardLibraryTableController extends GetxController
   }
 
   Future<void> initLevelDashboardMenuList({bool force = false}) async {
-    List<Level> levelData = await LevelRepository.fetchLevels(hardFetch: force)
+    List<Level> levelsData = await LevelRepository.fetchLevels(hardFetch: force)
         .then((e) => e.data?.values.toList() ?? []);
     levels = [
       DropdownMenuItem<int>(
@@ -492,7 +462,7 @@ class DashboardLibraryTableController extends GetxController
             ),
           )),
     ];
-    for (Level level in levelData) {
+    for (Level level in levelsData) {
       levels.add(
         DropdownMenuItem<int>(
             value: level.id,
@@ -506,80 +476,66 @@ class DashboardLibraryTableController extends GetxController
             )),
       );
     }
-    selectedLevel.value = levelData.first.id;
+    selectedLevel.value = levelsData.first.id;
   }
 
   Future<void> addClick() async {
     await getSection();
+    await getSubjects();
     await getLevel();
-    await getSubject();
-    Get.dialog(AddLibraryTableCard());
+    Get.dialog(AddAssignmentTableCard());
   }
 
-  Future<void> getSubject() async {
+  Future<void> getSubjects() async {
     subjects = {};
     subjects =
         await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
-    if ((subjects.isNotEmpty)) {
-      subjectId = RxString(subjects.values.first.id);
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
     } else {
       subjectId.value = null;
     }
   }
 
   Future<void> getSection() async {
-    section = await SectionRepository.fetchSections(hardFetch: false)
-        .then((e) => e.data ?? {});
-    section[-1] = Section(id: -1, nameData: {"en": "All"});
-    sectionId.value = -1;
+    section = await SectionRepository.fetchSections().then((e) => e.data ?? {});
+    if (section.isNotEmpty) {
+      SectionId = RxInt(section.values.first.id);
+    } else {
+      SectionId.value = null;
+    }
   }
 
   Future<void> getLevel() async {
-    List<Level> levelsData = await LevelRepository.fetchLevels()
+    level = await LevelRepository.fetchLevels(hardFetch: false)
         .then((e) => e.data?.values.toList() ?? []);
-    level = {};
-    for (Level leveli in levelsData) {
-      level[leveli.id] = false.obs;
+    if (level?.isNotEmpty ?? false) {
+      LevelId = RxInt(level?.first.id ?? 0);
+    } else {
+      LevelId.value = null;
     }
-    level[-1] = false.obs;
-    levelId.value = -1;
   }
 
-  void addGroup(int sectionId, int levelId) {
-    if (groups.any((map) =>
-        map["section_id"] == sectionId && map["level_id"] == levelId)) {
-      showSnakeBar(message: "Group Already Exists");
-      return;
-    }
-    groups.insert(
-      0,
-      {"section_id": sectionId, "level_id": levelId},
-    );
-  }
-
-  Future<void> addBook() async {
-    if (groups.isEmpty) {
-      showSnakeBar(
-          title: "Validation Error", message: "Should add at least one group");
-      return;
-    }
-    if (selectedAddSubjectId == null) {
-      showSnakeBar(
-          title: "Validation Error", message: "Should select subject ");
-      return;
-    }
-    for (PlatformFile file in (selectedFiles)) {
-      List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
-              file: file,
-              groups: groups.value = [
-                {"section_id": sectionId.value!, "level_id": levelId.value!}
-              ],
-              category: categories[selectedCategory.value ?? 0],
-              subjectId: selectedAddSubjectId?.value)
-          .then((e) => e.data ?? []);
-      for (LibraryFile e in files) {
-        books[e.category] ??= RxMap({});
-        books[e.category]?[e.id] = e;
+  Future<void> addAssignment() async {
+    if (formKey.currentState!.validate()) {
+      Result<Assignment> res = await AssignmentsRepository.createAssignment(
+          sectionId: SectionId.value!,
+          levelId: LevelId.value!,
+          subjectId: subjectId.value!,
+          title: title.text,
+          year: 2025,
+          assignmentDate: DateTime.now().toString(),
+          assignmentsDueDate: dueDate.text,
+          sectionsAndLevels: groups.value = [
+            {"section_id": SectionId.value!, "level_id": LevelId.value!}
+          ]);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 201 && res.data != null) {
+        assignment[res.data!.id] = res.data!;
+        assignment.refresh();
+        showSnakeBar(message: "Add successfully");
+      } else {
+        showSnakeBar(message: "Add failed");
       }
     }
   }
@@ -598,15 +554,25 @@ class DashboardLibraryTableController extends GetxController
     prevTxt = searchController.text;
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(Duration(milliseconds: 600), () async {
-      await fetchLibraryData();
+      await fetchAssignmentData();
     });
   }
 
   @override
   TextEditingController searchController = TextEditingController(text: "");
 
+  void popupClear() {
+    title.clear();
+    dueDate.clear();
+  }
+
   @override
   void onClose() {
-    searchController.dispose();
+    popupClear();
+    title.dispose();
+    dueDate.dispose();
+    titleFocus.dispose();
+    dueDateFocus.dispose();
+    super.onClose();
   }
 }

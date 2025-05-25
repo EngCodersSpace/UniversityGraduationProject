@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_doctor_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_role_users_table_controller.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 
 // ignore: must_be_immutable
-class PopupAddComponent extends GetView<DashboardDoctorTableController> {
-  PopupAddComponent({
+class AddRoleComponent extends GetView<DashboardRoleUsersTableController> {
+  AddRoleComponent({
     super.key,
     required this.name,
     required this.controlName,
@@ -27,6 +27,14 @@ class PopupAddComponent extends GetView<DashboardDoctorTableController> {
       children: [
         Row(
           children: [
+            // Icon(
+            //   Icons.account_balance,
+            //   size: 40,
+            //   color: AppColors.inverseIconColor,
+            // ),
+            // const SizedBox(
+            //   width: 10,
+            // ),
             CustomText(name.tr,
                 style:
                     AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
@@ -34,6 +42,7 @@ class PopupAddComponent extends GetView<DashboardDoctorTableController> {
         ),
         CustomTextFormField(
           controller: controlName,
+          // validator: controller.validateEntryYear,
           keyboardType: inputType,
           labelText: name.tr,
           focusNode: focusName,

@@ -30,7 +30,7 @@ class WebAddBooksCard extends GetView<LibraryController> {
                           width: 3,
                         )),
                     child: SizedBox(
-                        height: Get.height * 0.85,
+                        height: Get.height * 0.95,
                         width: Get.width * 0.4,
                         child: SafeArea(
                             minimum: const EdgeInsets.all(12),
@@ -118,8 +118,9 @@ class WebAddBooksCard extends GetView<LibraryController> {
                                     TypeAhead(
                                       width: (Get.width * 0.2),
                                       onSelected: (i, v) {
-                                        controller.selectedAddSubjectId??=RxString("");
-                                        controller.selectedSubjectId?.value =
+                                        controller.selectedAddSubjectId ??=
+                                            RxString("");
+                                        controller.selectedAddSubjectId?.value =
                                             i;
                                       },
                                       label: "Select Subject",

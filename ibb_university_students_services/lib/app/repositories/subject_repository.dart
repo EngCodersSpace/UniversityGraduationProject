@@ -1,5 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:get/get.dart' as get_x;
+import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
+import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
 import '../models/subject_model/subject_model.dart';
 import '../services/http_provider.dart';
@@ -8,6 +12,7 @@ import '../utils/internet_connection_cheker.dart';
 class SubjectRepository {
   static const int _fetchAllError = 681;
   static const int _fetchError = 682;
+  static const int _createError = 623;
   static Box<Subject>? _subjectsBox;
 
   static Future<void> openBox() async {
@@ -138,6 +143,46 @@ class SubjectRepository {
           statusCode: _fetchError,
           message: error.toString(),
           data: null);
+    }
+  }
+
+  static Future<Result<Subject>> createSubject({
+    required String subjectId,
+    required String subjectName,
+    required int numberOfUnit,
+    required String description,
+    required String language,
+  }) async {
+    get_x.Get.dialog(PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.post("create-subject", data: {
+        "language": language,
+        "subject_id": subjectId,
+        "subject_name": subjectName,
+        "number_of_units": numberOfUnit,
+        "subject_description": description,
+      });
+      Subject? newsubject;
+      if (response?.statusCode == 201) {
+        newsubject = Subject.fromJson(response?.data["data"]);
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+        data: newsubject,
+        hasError: true,
+        statusCode: response?.statusCode ?? _createError,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: _createError,
+        message: error.toString(),
+        data: null,
+      );
     }
   }
 

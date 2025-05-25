@@ -1,27 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_subjects_table_controller.dart';
-// import '../../../../components/custom_text_v2.dart';
-import '../../../../styles/app_colors.dart';
-// import '../../../../styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_notification_table_controller.dart';
+import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 
-class SubjectTableFiltersComponent
-    extends GetView<DashboardSubjectsTableController> {
-  const SubjectTableFiltersComponent({super.key});
+class NotificationTableFilterComponent
+    extends GetView<DashboardNotificationTableController> {
+  const NotificationTableFilterComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // CustomText(
-          //   "Order".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
+          Container(
+            height: Get.height * 0.06,
+            width: Get.width * 0.11,
+            decoration: BoxDecoration(
+              color: AppColors.inverseIconColor,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Center(
+              child: Obx(() => DropdownButton(
+                    items: controller.type,
+                    onChanged: controller.changeType,
+                    value: controller.selectedType.value,
+                    underline: const SizedBox(),
+                    iconEnabledColor: AppColors.mainCardColor,
+                    dropdownColor: AppColors.inverseCardColor,
+                  )),
+            ),
+          ),
+          SizedBox(
+            width: Get.width * 0.01,
+          ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.11,
@@ -43,13 +56,6 @@ class SubjectTableFiltersComponent
           SizedBox(
             width: Get.width * 0.01,
           ),
-          // CustomText(
-          //   "Sort".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
-          // SizedBox(
-          //   width: Get.width * 0.002,
-          // ),
           Container(
             height: Get.height * 0.06,
             width: Get.width * 0.11,
@@ -69,7 +75,7 @@ class SubjectTableFiltersComponent
             ),
           ),
           SizedBox(
-            width: Get.width * 0.27,
+            width: Get.width * 0.2,
           ),
           IconButton(
             onPressed: () {

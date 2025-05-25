@@ -66,7 +66,7 @@ class Student extends User {
       }
     }
     return Student(
-      id: json['user_id'],
+      id: json['user_id'] ?? ["student_id"],
       nameData: JsonUtils.tryJsonDecode(json['user_name']),
       dateOfBrith: json['date_of_birth'],
       email: json['email'],

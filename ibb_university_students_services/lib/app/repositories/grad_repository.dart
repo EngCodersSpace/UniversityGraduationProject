@@ -131,4 +131,58 @@ class GradRepository {
           data: null);
     }
   }
+
+  // static Future<Result<Map>> fetchDashboardGrad({
+  //   int? sectionId,
+  //   int? levelId,
+  //   int? studentId,
+  //   String? subjectId,
+  //   int limit = 20,
+  //   int? page,
+  //   String? term,
+  //   String? order,
+  //   String? sort,
+  //   String? search,
+  //   bool? hardfetch = false,
+  // }) async {
+  //   late Response? response;
+  //   try {
+  //     response = await HttpProvider.get(
+  //         "get-grades-grouped-panle?student_id=${studentId ?? ''}&subject_id=${subjectId ?? ''}&section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&term=${term ?? ''}&order=${order ?? ''}&sort=${sort ?? ''}&search=$search &limit=$limit&page=$page&");
+  //     Map<int, Grad> grad = {};
+  //     if (response?.statusCode == 200) {
+  //       for (Map<String, dynamic> jsGrad in response?.data['data']) {
+  //         Subject? subject =
+  //             await SubjectRepository.fetchSubject(id: jsGrad["subject_id"])
+  //                 .then((e) => e.data);
+  //         grad[jsGrad['grad_id']] = Grad.fromJson(
+  //           jsGrad,
+  //           subject: subject,
+  //         );
+  //       }
+  //       return Result(
+  //           data: {
+  //             "grads": grad,
+  //             "totalGrads": response?.data["pagination"]["totalGrades"],
+  //           },
+  //           hasError: false,
+  //           statusCode: response?.statusCode,
+  //           message: response?.data["message"] ?? "error");
+  //     }
+  //     return Result(
+  //         data: {
+  //           "grads": grad,
+  //           "totalGrads": 0,
+  //         },
+  //         hasError: false,
+  //         statusCode: response?.statusCode,
+  //         message: response?.data["message"] ?? "error");
+  //   } catch (error) {
+  //     return Result(
+  //         hasError: true,
+  //         statusCode: _fetchError,
+  //         message: error.toString(),
+  //         data: null);
+  //   }
+  // }
 }

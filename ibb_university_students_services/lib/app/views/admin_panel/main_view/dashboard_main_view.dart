@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_main_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/assignment_table_view/assignment_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/exam_table_view/exam_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/grad_table_view/grad_table_view.dart';
@@ -49,7 +50,10 @@ class DashboardMainView extends GetView<DashboardMainController> {
                       TabViewComponent(tablename: "Library Table", index: 7),
                       TabViewComponent(
                           tablename: "Notification Table", index: 8),
-                      TabViewComponent(tablename: "Payment Table", index: 10),
+                      TabViewComponent(
+                          tablename: "Student Fee Table", index: 10),
+                      TabViewComponent(
+                          tablename: "Assignment Table", index: 11),
                     ],
                   ),
                 ),
@@ -77,5 +81,6 @@ class DashboardMainView extends GetView<DashboardMainController> {
     const NotificationTableView(),
     RoleUsersTableView(),
     const PaymentTableView(),
+    AssignmentTableView(),
   ];
 }

@@ -81,10 +81,7 @@ class Assignment {
     );
   }
 
-
-
-
-  void updateFromJson(Map<String, dynamic> json,{Subject? subject}){
+  void updateFromJson(Map<String, dynamic> json, {Subject? subject}) {
     Map<int, AttachmentFile> files = {};
     for (Map<String, dynamic> file in json["assignment_files"] ?? []) {
       files[file["id"]] = AttachmentFile(
@@ -99,18 +96,19 @@ class Assignment {
       state = StudentAssignmentState.fromJson(json['student_assignments'][0]);
     }
 
-    sectionId = json["section_id"]??sectionId;
-    levelId = json["level_id"]??levelId;
-    this.subject = subject??this.subject;
-    doctor = json['doctor']??doctor;
+    sectionId = json["section_id"] ?? sectionId;
+    levelId = json["level_id"] ?? levelId;
+    this.subject = subject ?? this.subject;
+    doctor = json['doctor'] ?? doctor;
     titleData = JsonUtils.tryJsonDecode(
-      json['title'],
-    )??titleData;
-    assignmentDay = json['assignment_due_day']??assignmentDay;
-    assignmentDate = json['assignment_date']??assignmentDate;
-    dueDate = json['assignments_due_date']??dueDate;
+          json['title'],
+        ) ??
+        titleData;
+    assignmentDay = json['assignment_due_day'] ?? assignmentDay;
+    assignmentDate = json['assignment_date'] ?? assignmentDate;
+    dueDate = json['assignments_due_date'] ?? dueDate;
     studentsStatus = (state != null) ? {state.id!: state} : studentsStatus;
-    attachments = ((files.isNotEmpty))?files:attachments;
+    attachments = ((files.isNotEmpty)) ? files : attachments;
   }
 
   Map<String, dynamic> toJson() {
@@ -123,8 +121,7 @@ class Assignment {
       "assignment_date": assignmentDate,
       "assignments_due_date": dueDate,
       "attachment": attachments,
-      "studentsStatus":studentsStatus
-
+      "studentsStatus": studentsStatus
     };
   }
 }

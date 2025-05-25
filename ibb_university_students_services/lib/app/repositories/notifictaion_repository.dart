@@ -171,4 +171,55 @@ class NotificationRepository {
     //   }
     // }
   }
+
+  static Future<Result<Map>> fetchDashboardNotifications({
+    int? senderID,
+    int? reciverID,
+    int? limit,
+    int? page,
+    String? topicName,
+    String? type,
+    String? order,
+    String? sort,
+    String? search,
+    bool hardFetch = false,
+  }) async {
+    late Response? response;
+    try {
+      response = await HttpProvider.get(
+          "get-all-noti-panel?sender_id=${senderID ?? ''}&receiver_id=${reciverID ?? ''}&type=${type ?? ''}&topic_name=${topicName ?? ''}&orderBy=${order ?? ''}&limit=$limit&sort=${sort ?? ''}&search=$search&page=$page");
+      Map<int, model.Notification> notification = {};
+      if (response?.statusCode == 200) {
+        for (Map<String, dynamic> jsNoti in response?.data["data"]) {
+          notification[jsNoti["message_id"]] = model.Notification.fromJson(jsNoti);
+        }
+        return Result(
+          data: {
+            "notifications": notification,
+            "totalnotifications": response?.data["pagination"]
+                ["totalNotifications"],
+          },
+          hasError: false,
+          statusCode: response?.statusCode,
+          message: response?.data["message"] ?? "error",
+        );
+      }
+      return Result(
+        data: {
+          "notifications": notification,
+          "totalnotifications": 0,
+        },
+        hasError: false,
+        statusCode: response?.statusCode,
+        message: response?.data["message"] ?? "error",
+      );
+    } catch (error) {
+      return Result(
+        hasError: true,
+        statusCode: response?.statusCode,
+        message: error.toString(),
+        data: null,
+      );
+    }
+  }
 }

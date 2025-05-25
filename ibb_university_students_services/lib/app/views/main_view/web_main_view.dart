@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
+import 'package:ibb_university_students_services/app/views/assignments_tab_view/web_assignments_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/web_lecture_table_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
@@ -137,9 +138,9 @@ class WebMainView extends GetView<MainController> {
                             icon: Icons.calendar_month_outlined,
                           ),
                           WebTabsComponent(
-                            tabname: "Reports",
+                            tabname: "Assignments",
                             index: 3,
-                            icon: Icons.repartition,
+                            icon: Icons.assignment_outlined,
                           ),
                           WebTabsComponent(
                             tabname: "Exam Table",
@@ -182,14 +183,7 @@ class WebMainView extends GetView<MainController> {
     const WebNotificationView(),
     WebLectureTableTabView(),
     WebHomeTab(),
-    Center(
-      child: CustomText(
-        "Main page 3",
-        style: AppTextStyles.mainStyle(
-          textHeader: AppTextHeaders.h3Bold,
-        ),
-      ),
-    ),
+    WebAssignmentsTabView(),
     const WebProfileView(),
     LibraryWebView(),
     ExamTableWebView(),

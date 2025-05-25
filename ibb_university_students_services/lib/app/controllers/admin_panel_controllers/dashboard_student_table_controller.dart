@@ -89,7 +89,9 @@ class DashboardStudentTableController extends GetxController
   TextEditingController studentName = TextEditingController();
   TextEditingController studentDOB = TextEditingController();
   TextEditingController studentEmail = TextEditingController();
-  TextEditingController studentPhone = TextEditingController();
+  TextEditingController studentPhone1 = TextEditingController();
+  TextEditingController studentPhone2 = TextEditingController();
+  TextEditingController studentPhone3 = TextEditingController();
   TextEditingController studentsystem = TextEditingController();
   TextEditingController studentrole = TextEditingController();
   TextEditingController studentcollege = TextEditingController();
@@ -100,12 +102,15 @@ class DashboardStudentTableController extends GetxController
   FocusNode nameFocus = FocusNode();
   FocusNode dateFocus = FocusNode();
   FocusNode emailFocus = FocusNode();
-  FocusNode phoneFocus = FocusNode();
+  FocusNode phone1Focus = FocusNode();
+  FocusNode phone2Focus = FocusNode();
+  FocusNode phone3Focus = FocusNode();
   Map<int, Section> section = <int, Section>{}.obs;
   // ignore: non_constant_identifier_names
   Rx<int?> SectionId = Rx(null);
   List<Level>? level;
   Rx<int?> levelId = Rx(null);
+  RxList<Map<String, int>> groupPhons = RxList();
 
   @override
   void onInit() async {
@@ -345,7 +350,7 @@ class DashboardStudentTableController extends GetxController
       fieldMessage.value = "this section and level not has Student";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
+            title: "Not Found student",
             message: "this section and level doesn't has Student ");
       }
     } else {
@@ -385,7 +390,51 @@ class DashboardStudentTableController extends GetxController
     }
   }
 
-  Future<void> addStudent() async {}
+  void addGroup(
+    int phone1,
+    int phone2,
+    int phone3,
+  ) {
+    //copy to dashboard
+    if (groupPhons.any((map) =>
+        map["phone_number"] == phone1 &&
+        map["phone_number"] == phone2 &&
+        map["phone_number"] == phone3)) {
+      showSnakeBar(message: "Group Already Exists");
+      return;
+    }
+    groupPhons.add(
+      {"phone_number": phone1 & phone2 & phone3},
+    );
+  }
+
+  Future<void> addStudent() async {
+    if (formKey.currentState!.validate()) {
+      Result<Student> res = await UserRepository.createStudent(
+        studentId: int.parse(studentId.text),
+        sectionId: SectionId.value!,
+        roleId: int.parse(studentrole.text),
+        level: levelId.value!,
+        name: studentName.text,
+        dateOfBirth: studentDOB.text,
+        college: studentcollege.text,
+        email: studentEmail.text,
+        password: "12345678",
+        enrolment: DateTime.now().toString(),
+        system: studentsystem.text,
+        phonenumber: groupPhons,
+      );
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 201 && res.data != null) {
+        student[res.data!.id] = res.data!;
+        student.refresh();
+        showSnakeBar(message: "Add successfully");
+      } else {
+        showSnakeBar(message: "Add failed");
+      }
+      update(["DataTable"]);
+    }
+  }
 
   @override
   void export() {}
@@ -409,11 +458,12 @@ class DashboardStudentTableController extends GetxController
   TextEditingController searchController = TextEditingController(text: "");
 
   void popupClear() {
-    studentId.clear();
     studentName.clear();
     studentDOB.clear();
     studentEmail.clear();
-    studentPhone.clear();
+    studentPhone1.clear();
+    studentPhone2.clear();
+    studentPhone3.clear();
     studentcollege.clear();
     studentsystem.clear();
     studentrole.clear();
@@ -423,11 +473,12 @@ class DashboardStudentTableController extends GetxController
   void onClose() {
     searchController.dispose();
     popupClear();
-    studentId.dispose();
     studentName.dispose();
     studentDOB.dispose();
     studentEmail.dispose();
-    studentPhone.dispose();
+    studentPhone1.dispose();
+    studentPhone2.dispose();
+    studentPhone3.dispose();
     studentcollege.dispose();
     studentsystem.dispose();
     studentrole.dispose();
@@ -435,7 +486,9 @@ class DashboardStudentTableController extends GetxController
     nameFocus.dispose();
     dateFocus.dispose();
     emailFocus.dispose();
-    phoneFocus.dispose();
+    phone1Focus.dispose();
+    phone2Focus.dispose();
+    phone3Focus.dispose();
     collegeFocus.dispose();
     systemFocus.dispose();
     roleFocus.dispose();

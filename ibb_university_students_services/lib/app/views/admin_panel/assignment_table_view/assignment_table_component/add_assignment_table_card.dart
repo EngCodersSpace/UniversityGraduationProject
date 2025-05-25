@@ -3,16 +3,16 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
-import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_exam_table_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/admin_panel_controllers/dashboard_assignment_table_controller.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
 import 'package:ibb_university_students_services/app/models/section_model/section.dart';
 import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
 
-class AddExamTableCard extends GetView<DashboardExamTableController> {
-  const AddExamTableCard({super.key});
+class AddAssignmentTableCard
+    extends GetView<DashboardAssignmentTableController> {
+  const AddAssignmentTableCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -204,40 +204,6 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CustomText(
-                                "Days".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.002,
-                              ),
-                              Container(
-                                // height: Get.height * 0.06,
-                                width: Get.width * 0.2,
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainIconColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                  border: Border.all(),
-                                ),
-                                child: Center(
-                                  child: Obx(() => DropdownButton(
-                                        items: controller.days,
-                                        menuWidth: Get.width * 0.2,
-                                        onChanged: controller.changeAddDay,
-                                        value: controller.selectedDayName.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.inverseCardColor,
-                                        dropdownColor: AppColors.mainCardColor,
-                                      )),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
                               Row(
                                 children: [
                                   CustomText("Subject".tr,
@@ -324,19 +290,17 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                             children: [
                               Row(
                                 children: [
-                                  CustomText("Date".tr,
+                                  CustomText("Title".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
-                                controller: controller.dateController,
-                                labelText: "Date".tr,
-                                focusNode: controller.dateFocus,
-                                onTap: () => DateTimeUtils.datePiker(context,
-                                    controller: controller.dateController),
+                                controller: controller.title,
+                                labelText: "Title".tr,
+                                focusNode: controller.titleFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.timeFocus.requestFocus();
+                                  controller.dueDateFocus.requestFocus();
                                 },
                                 width: (Get.width - 12) * 0.2,
                               ),
@@ -347,44 +311,18 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                             children: [
                               Row(
                                 children: [
-                                  CustomText("Time".tr,
+                                  CustomText("Due date".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
-                                controller: controller.timeController,
-                                // validator: controller.validateTime,
-                                labelText: "Time".tr,
-                                focusNode: controller.timeFocus,
-                                readOnly: true,
-                                onTap: () => DateTimeUtils.timePiker(
-                                    context, controller.timeController),
+                                controller: controller.dueDate,
+                                labelText: "Due date".tr,
+                                keyboardType: TextInputType.number,
+                                focusNode: controller.dueDateFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.hallFocus.requestFocus();
-                                },
-                                width: (Get.width - 12) * 0.2,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CustomText("Hall".tr,
-                                      style: AppTextStyles.secStyle(
-                                          textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              CustomTextFormField(
-                                controller: controller.hallController,
-                                // validator: controller.validateEntryYear,
-                                keyboardType: TextInputType.multiline,
-                                labelText: "Hall".tr,
-                                focusNode: controller.entryYearFocus,
-                                onFieldSubmitted: (e) {
-                                  controller.phoneFocus.requestFocus();
+                                  controller.dueDateFocus.requestFocus();
                                 },
                                 width: (Get.width - 12) * 0.2,
                               ),
@@ -394,7 +332,8 @@ class AddExamTableCard extends GetView<DashboardExamTableController> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomButton(
-                                  onPress: controller.addExam, text: "Add"),
+                                  onPress: controller.addAssignment,
+                                  text: "Add"),
                               CustomButton(
                                 onPress: () =>
                                     Navigator.of(Get.overlayContext!).pop(),

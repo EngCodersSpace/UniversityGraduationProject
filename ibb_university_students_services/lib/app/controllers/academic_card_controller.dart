@@ -9,6 +9,7 @@ class AcademicCardController extends GetxController {
   RxBool loadingState = true.obs;
   Rx<User>? user;
   Rx<StudentFee>? lastFee;
+
   @override
   void onInit() async {
     Result res = await UserRepository.fetchUser();

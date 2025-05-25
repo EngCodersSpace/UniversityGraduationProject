@@ -5,9 +5,9 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/notification_tab_controller.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import 'package:ibb_university_students_services/app/utils/validators.dart';
 
-import '../../../models/role_model/role.dart';
 import '../../../styles/app_colors.dart';
 
 class AddNotificationsTargetCard extends GetView<NotificationTabController> {
@@ -15,375 +15,333 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Hero(
-          tag: "PopUpInsertCard",
-          child: Material(
-              color: AppColors.mainCardColor,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  side: BorderSide(
-                    color: AppColors.inverseCardColor,
-                    width: 3,
-                  )),
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: SingleChildScrollView(
-                  child: Obx(() => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: CustomText(
-                              "Push Notification".tr,
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h2Bold),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                Icons.title,
-                                size: 40,
-                                color: AppColors.inverseIconColor,
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              Expanded(
-                                child: CustomTextFormField(
-                                  controller: controller.titleController,
-                                  validator: Validators.validateID,
-                                  keyboardType: TextInputType.text,
-                                  labelText: "Title".tr,
-                                  focusNode: controller.titleFocus,
-                                  onFieldSubmitted: (e) {
-                                    controller.messageFocus.requestFocus();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.message_outlined,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  // CustomText("Receiver ID".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: CustomTextFormField(
-                                  controller: controller.messageController,
-                                  validator: Validators.validateID,
-                                  keyboardType: TextInputType.multiline,
-                                  labelText: "Message".tr,
-                                  minLines: 5,
-                                  focusNode: controller.messageFocus,
-                                  onFieldSubmitted: (e) {
-                                    controller.receiverIdFocus.requestFocus();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                          Row(
-                            children: [
-                              CustomText(
-                                "Targeting Options".tr,
-                                textAlign: TextAlign.start,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  color: AppColors.highlightTextColor,
-                                  height: 1,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 24,
-                              ),
-                              Expanded(
-                                child: CustomText(
-                                  "Notification Type".tr,
-                                  textAlign: TextAlign.start,
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.inverseCardColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                ),
-                                child: DropdownButton<String>(
-                                  underline: const SizedBox(),
-                                  iconEnabledColor: AppColors.mainCardColor,
-                                  dropdownColor: AppColors.inverseCardColor,
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  value: controller.mode.value,
-                                  onChanged: (value) =>
-                                      controller.mode.value = value!,
-                                  items: ['Single', 'Group']
-                                      .map((e) => DropdownMenuItem(
-                                          value: e,
-                                          child: SizedBox(
-                                            width: Get.width * 0.3,
-                                            child: CustomText(
-                                              e,
-                                              style: AppTextStyles.mainStyle(
-                                                  textHeader:
-                                                      AppTextHeaders.h2Bold),
-                                            ),
-                                          )))
-                                      .toList(),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          if (controller.mode.value == 'Single') ...[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return (ScreenUtils.isPhoneScreen())
+        ? Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Hero(
+                tag: "PopUpInsertCard",
+                child: Material(
+                    color: AppColors.mainCardColor,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                        side: BorderSide(
+                          color: AppColors.inverseCardColor,
+                          width: 3,
+                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: SingleChildScrollView(
+                        child: Obx(() => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Center(
+                                  child: CustomText(
+                                    "Push Notification".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 32,
+                                ),
                                 Row(
-                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Icon(
-                                      Icons.person,
+                                      Icons.title,
                                       size: 40,
                                       color: AppColors.inverseIconColor,
                                     ),
                                     const SizedBox(
-                                      width: 10,
+                                      width: 4,
                                     ),
-                                    CustomText("Receiver ID".tr,
-                                        style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h3Bold)),
+                                    Expanded(
+                                      child: CustomTextFormField(
+                                        controller: controller.titleController,
+                                        validator: Validators.validateID,
+                                        keyboardType: TextInputType.text,
+                                        labelText: "Title".tr,
+                                        focusNode: controller.titleFocus,
+                                        onFieldSubmitted: (e) {
+                                          controller.messageFocus
+                                              .requestFocus();
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(
-                                  width: 10,
+                                  height: 16,
                                 ),
-                                Expanded(
-                                  child: CustomTextFormField(
-                                    controller: controller.receiverIdController,
-                                    validator: Validators.validateID,
-                                    keyboardType: TextInputType.text,
-                                    labelText: "Receiver ID".tr,
-                                    focusNode: controller.receiverIdFocus,
-                                    onFieldSubmitted: (e) {},
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.message_outlined,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        // CustomText("Receiver ID".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: CustomTextFormField(
+                                        controller:
+                                            controller.messageController,
+                                        validator: Validators.validateID,
+                                        keyboardType: TextInputType.multiline,
+                                        labelText: "Message".tr,
+                                        minLines: 5,
+                                        focusNode: controller.messageFocus,
+                                        onFieldSubmitted: (e) {
+                                          controller.receiverIdFocus
+                                              .requestFocus();
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ] else ...[
-                            Row(
-                              children: [
+                                const SizedBox(
+                                  height: 32,
+                                ),
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      "Targeting Options".tr,
+                                      textAlign: TextAlign.start,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        color: AppColors.highlightTextColor,
+                                        height: 1,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                    ),
+                                    Expanded(
+                                      child: CustomText(
+                                        "Notification Type".tr,
+                                        textAlign: TextAlign.start,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.inverseCardColor,
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: DropdownButton<String>(
+                                        underline: const SizedBox(),
+                                        iconEnabledColor:
+                                            AppColors.mainCardColor,
+                                        dropdownColor:
+                                            AppColors.inverseCardColor,
+                                        alignment: Alignment.center,
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        value: controller.mode.value,
+                                        onChanged: (value) =>
+                                            controller.mode.value = value!,
+                                        items: ['Single', 'Group']
+                                            .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: SizedBox(
+                                                  width: Get.width * 0.3,
+                                                  child: CustomText(
+                                                    e,
+                                                    style:
+                                                        AppTextStyles.mainStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h2Bold),
+                                                  ),
+                                                )))
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(
-                                  width: 24,
+                                  height: 8,
                                 ),
-                                Expanded(
-                                  child: CustomText(
-                                    "Target User".tr,
-                                    textAlign: TextAlign.start,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
+                                if (controller.mode.value == 'Single') ...[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.person,
+                                            size: 40,
+                                            color: AppColors.inverseIconColor,
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          CustomText("Receiver ID".tr,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: CustomTextFormField(
+                                          controller:
+                                              controller.receiverIdController,
+                                          validator: Validators.validateID,
+                                          keyboardType: TextInputType.text,
+                                          labelText: "Receiver ID".tr,
+                                          focusNode: controller.receiverIdFocus,
+                                          onFieldSubmitted: (e) {},
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.inverseCardColor,
-                                    borderRadius: BorderRadius.circular(24),
-                                  ),
-                                  child: DropdownButton<String>(
-                                    underline: const SizedBox(),
-                                    iconEnabledColor: AppColors.mainCardColor,
-                                    dropdownColor: AppColors.inverseCardColor,
-                                    alignment: Alignment.center,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    value: controller.selectedTarget.value,
-                                    onChanged: (value) => controller
-                                        .selectedTarget.value = value!,
-                                    items: controller.targets.keys
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: SizedBox(
-                                              width: Get.width * 0.3,
-                                              child: CustomText(
-                                                e,
-                                                style: AppTextStyles.mainStyle(
-                                                    textHeader:
-                                                        AppTextHeaders.h2Bold),
-                                              ),
-                                            )))
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            CustomText(
-                              "${"Programs".tr}:",
-                              textAlign: TextAlign.start,
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            Wrap(
-                              spacing: 6,
-                              children:
-                                  controller.sections.values.map((section) {
-                                final selected = controller.selectedSections
-                                    .contains("section_${section.id}");
-                                return FilterChip(
-                                  label: CustomText(section.name ?? "??",
-                                      style: (selected)
-                                          ? AppTextStyles.mainStyle(
-                                              textHeader:
-                                                  AppTextHeaders.h3Normal)
-                                          : AppTextStyles.secStyle(
-                                              textHeader:
-                                                  AppTextHeaders.h3Normal)),
-                                  color:
-                                      WidgetStateProperty.resolveWith((state) {
-                                    if (state.contains(WidgetState.selected)) {
-                                      return AppColors.inverseCardColor;
-                                    } else {
-                                      return AppColors.tabBackColor;
-                                    }
-                                  }),
-                                  checkmarkColor: AppColors.tabBackColor,
-                                  selected: selected,
-                                  onSelected: (val) {
-                                    selected
-                                        ? controller.selectedSections
-                                            .remove("section_${section.id}")
-                                        : controller.selectedSections
-                                            .add("section_${section.id}");
-                                  },
-                                );
-                              }).toList(),
-                            ),
-
-                            // Levels (only for student/both)
-                            if (controller.selectedTarget.value ==
-                                ('Students')) ...[
-                              SizedBox(height: 8),
-                              CustomText(
-                                "${"Levels".tr}:",
-                                textAlign: TextAlign.start,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              Wrap(
-                                spacing: 6,
-                                children: controller.levels.values.map((level) {
-                                  final selected = controller.selectedLevels
-                                      .contains("level_${level.id}");
-                                  return FilterChip(
-                                    label: CustomText(level.name ?? '??',
-                                        style: (selected)
-                                            ? AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Normal)
-                                            : AppTextStyles.secStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Normal)),
-                                    color: WidgetStateProperty.resolveWith(
-                                        (state) {
-                                      if (state
-                                          .contains(WidgetState.selected)) {
-                                        return AppColors.inverseCardColor;
-                                      } else {
-                                        return AppColors.tabBackColor;
-                                      }
-                                    }),
-                                    checkmarkColor: AppColors.tabBackColor,
-                                    selected: selected,
-                                    onSelected: (val) {
-                                      selected
-                                          ? controller.selectedLevels
-                                              .remove("level_${level.id}")
-                                          : controller.selectedLevels
-                                              .add("level_${level.id}");
-                                    },
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-
-                            // Roles
-                            SizedBox(height: 8),
-                            Obx(
-                              () => Row(
-                                children: [
-                                  Checkbox(
-                                      value: controller.includeRole.value,
-                                      onChanged: controller.changeIncludeRole),
-                                  CustomText(
-                                    "${"Roles".tr}:",
-                                    textAlign: TextAlign.start,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3Bold),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if(controller.includeRole.value)
-                              Obx(
-                              () => Wrap(
-                                spacing: 6,
-                                children: [
-                                  for (Role role
-                                      in (controller.roles.values)) ...[
-                                    if ((controller.selectedTarget.value ==
-                                                "Students" &&
-                                            role.roleType == "student") ||
-                                        (controller.selectedTarget.value ==
-                                                "Doctors" &&
-                                            role.roleType == "doctor") ||
-                                        (controller.selectedTarget.value ==
-                                            "Student And Doctors")) ...[
+                                ] else ...[
+                                  Row(
+                                    children: [
                                       SizedBox(
-                                        // width: Get.width/4,
-                                        child: FilterChip(
-                                          label: CustomText(role.name ?? '??',
-                                              style: (controller.selectedRoles
-                                                      .contains(
-                                                          "role_${role.id}"))
+                                        width: 24,
+                                      ),
+                                      Expanded(
+                                        child: CustomText(
+                                          "Target User".tr,
+                                          textAlign: TextAlign.start,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
+                                        ),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.inverseCardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(24),
+                                        ),
+                                        child: DropdownButton<String>(
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          value:
+                                              controller.selectedTarget.value,
+                                          onChanged: (value) => controller
+                                              .selectedTarget.value = value!,
+                                          items: controller.targets.keys
+                                              .map((e) => DropdownMenuItem(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: Get.width * 0.3,
+                                                    child: CustomText(
+                                                      e,
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                              textHeader:
+                                                                  AppTextHeaders
+                                                                      .h2Bold),
+                                                    ),
+                                                  )))
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  CustomText(
+                                    "${"Programs".tr}:",
+                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  Wrap(
+                                    spacing: 6,
+                                    children: controller.sections.values
+                                        .map((section) {
+                                      final selected = controller
+                                          .selectedSections
+                                          .contains("section_${section.id}");
+                                      return FilterChip(
+                                        label: CustomText(section.name ?? "??",
+                                            style: (selected)
+                                                ? AppTextStyles.mainStyle(
+                                                    textHeader:
+                                                        AppTextHeaders.h3Normal)
+                                                : AppTextStyles.secStyle(
+                                                    textHeader: AppTextHeaders
+                                                        .h3Normal)),
+                                        color: WidgetStateProperty.resolveWith(
+                                            (state) {
+                                          if (state
+                                              .contains(WidgetState.selected)) {
+                                            return AppColors.inverseCardColor;
+                                          } else {
+                                            return AppColors.tabBackColor;
+                                          }
+                                        }),
+                                        checkmarkColor: AppColors.tabBackColor,
+                                        selected: selected,
+                                        onSelected: (val) {
+                                          selected
+                                              ? controller.selectedSections
+                                                  .remove(
+                                                      "section_${section.id}")
+                                              : controller.selectedSections
+                                                  .add("section_${section.id}");
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+
+                                  // Levels (only for student/both)
+                                  if (controller.selectedTarget.value ==
+                                      ('Students')) ...[
+                                    SizedBox(height: 8),
+                                    CustomText(
+                                      "${"Levels".tr}:",
+                                      textAlign: TextAlign.start,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                    Wrap(
+                                      spacing: 6,
+                                      children:
+                                          controller.levels.values.map((level) {
+                                        final selected = controller
+                                            .selectedLevels
+                                            .contains("level_${level.id}");
+                                        return FilterChip(
+                                          label: CustomText(level.name ?? '??',
+                                              style: (selected)
                                                   ? AppTextStyles.mainStyle(
                                                       textHeader: AppTextHeaders
                                                           .h3Normal)
@@ -400,37 +358,504 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
                                               return AppColors.tabBackColor;
                                             }
                                           }),
-                                          selected: controller.selectedRoles
-                                              .contains("role_${role.id}"),
+                                          checkmarkColor:
+                                              AppColors.tabBackColor,
+                                          selected: selected,
+                                          onSelected: (val) {
+                                            selected
+                                                ? controller.selectedLevels
+                                                    .remove("level_${level.id}")
+                                                : controller.selectedLevels
+                                                    .add("level_${level.id}");
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+
+                                  // Roles
+                                  SizedBox(height: 8),
+                                  CustomText(
+                                    "${"Roles".tr}:",
+                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  Wrap(
+                                    spacing: 6,
+                                    children:
+                                        controller.roles.values.map((role) {
+                                      final selected = controller.selectedRoles
+                                          .contains("role_${role.id}");
+                                      return SizedBox(
+                                        // width: Get.width/4,
+                                        child: FilterChip(
+                                          label: CustomText(role.name ?? '??',
+                                              style: (selected)
+                                                  ? AppTextStyles.mainStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)
+                                                  : AppTextStyles.secStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)),
+                                          color:
+                                              WidgetStateProperty.resolveWith(
+                                                  (state) {
+                                            if (state.contains(
+                                                WidgetState.selected)) {
+                                              return AppColors.inverseCardColor;
+                                            } else {
+                                              return AppColors.tabBackColor;
+                                            }
+                                          }),
+                                          selected: selected,
                                           checkmarkColor:
                                               AppColors.tabBackColor,
                                           onSelected: (val) {
-                                            controller.selectedRoles
-                                                    .contains("role_${role.id}")
+                                            selected
                                                 ? controller.selectedRoles
                                                     .remove("role_${role.id}")
                                                 : controller.selectedRoles
                                                     .add("role_${role.id}");
                                           },
                                         ),
-                                      )
-                                    ]
-                                  ]
+                                      );
+                                    }).toList(),
+                                  ),
                                 ],
-                              ),
-                            ),
-                          ],
-                          SizedBox(height: 16),
-                          CustomButton(
-                              text: "Add",
-                              onPress: controller.pushNotification),
-                          CustomButton(text: "close", onPress: () => Get.back())
-                        ],
-                      )),
-                ),
-              )),
-        ),
-      ),
-    );
+                                SizedBox(height: 16),
+                                CustomButton(
+                                    text: "Add",
+                                    onPress: controller.pushNotification),
+                                CustomButton(
+                                    text: "close", onPress: () => Get.back())
+                              ],
+                            )),
+                      ),
+                    )),
+              ),
+            ),
+          )
+        //the web add card
+        : Center(
+            child: Container(
+              padding: EdgeInsets.all(8),
+              width: Get.width * 0.4,
+              height: Get.height * 0.95,
+              child: Hero(
+                tag: "PopUpInsertCard",
+                child: Material(
+                    color: AppColors.mainCardColor,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                        side: BorderSide(
+                          color: AppColors.inverseCardColor,
+                          width: 3,
+                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: SingleChildScrollView(
+                        child: Obx(() => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      "Title".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h2Bold),
+                                    ),
+                                    SizedBox(
+                                      width: Get.width * 0.25,
+                                      child: CustomTextFormField(
+                                        controller: controller.titleController,
+                                        validator: Validators.validateID,
+                                        keyboardType: TextInputType.multiline,
+                                        labelText: "Title".tr,
+                                        focusNode: controller.titleFocus,
+                                        onFieldSubmitted: (e) {
+                                          controller.messageFocus
+                                              .requestFocus();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: Get.width * 0.01,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText(
+                                      "Message".tr,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                    SizedBox(
+                                      width: Get.width * 0.25,
+                                      child: CustomTextFormField(
+                                        controller:
+                                            controller.messageController,
+                                        validator: Validators.validateID,
+                                        keyboardType: TextInputType.multiline,
+                                        labelText: "Message".tr,
+                                        minLines: 5,
+                                        focusNode: controller.messageFocus,
+                                        onFieldSubmitted: (e) {
+                                          controller.receiverIdFocus
+                                              .requestFocus();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: Get.width * 0.01,
+                                ),
+                                Row(
+                                  children: [
+                                    CustomText(
+                                      "Targeting Options".tr,
+                                      textAlign: TextAlign.start,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        color: AppColors.highlightTextColor,
+                                        height: 2,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                    ),
+                                    Expanded(
+                                      child: CustomText(
+                                        "Notification Type".tr,
+                                        textAlign: TextAlign.start,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: Get.width * 0.18,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.inverseCardColor,
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: DropdownButton<String>(
+                                        underline: const SizedBox(),
+                                        iconEnabledColor:
+                                            AppColors.mainCardColor,
+                                        dropdownColor:
+                                            AppColors.inverseCardColor,
+                                        alignment: Alignment.center,
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        value: controller.mode.value,
+                                        onChanged: (value) =>
+                                            controller.mode.value = value!,
+                                        items: ['Single', 'Group']
+                                            .map((e) => DropdownMenuItem(
+                                                value: e,
+                                                child: SizedBox(
+                                                  width: Get.width * 0.13,
+                                                  child: CustomText(
+                                                    e,
+                                                    style:
+                                                        AppTextStyles.mainStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                )))
+                                            .toList(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                if (controller.mode.value == 'Single') ...[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CustomText("Receiver ID".tr,
+                                              style: AppTextStyles.secStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        width: Get.width * 0.2,
+                                        child: CustomTextFormField(
+                                          controller:
+                                              controller.receiverIdController,
+                                          validator: Validators.validateID,
+                                          keyboardType: TextInputType.multiline,
+                                          labelText: "Receiver ID".tr,
+                                          focusNode: controller.receiverIdFocus,
+                                          onFieldSubmitted: (e) {},
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ] else ...[
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 24,
+                                      ),
+                                      Expanded(
+                                        child: CustomText(
+                                          "Target User".tr,
+                                          textAlign: TextAlign.start,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: Get.width * 0.18,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.inverseCardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(24),
+                                        ),
+                                        child: DropdownButton<String>(
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          value:
+                                              controller.selectedTarget.value,
+                                          onChanged: (value) => controller
+                                              .selectedTarget.value = value!,
+                                          items: controller.targets.keys
+                                              .map((e) => DropdownMenuItem(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: Get.width * 0.13,
+                                                    child: CustomText(
+                                                      e,
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                              textHeader:
+                                                                  AppTextHeaders
+                                                                      .h3Bold),
+                                                    ),
+                                                  )))
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+
+                                  CustomText(
+                                    "${"Programs".tr}:",
+                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Wrap(
+                                    spacing: 8,
+                                    children: controller.sections.values
+                                        .map((section) {
+                                      final selected = controller
+                                          .selectedSections
+                                          .contains("section_${section.id}");
+                                      return FilterChip(
+                                        label: CustomText(section.name ?? "??",
+                                            style: (selected)
+                                                ? AppTextStyles.mainStyle(
+                                                    textHeader:
+                                                        AppTextHeaders.h3Normal)
+                                                : AppTextStyles.secStyle(
+                                                    textHeader: AppTextHeaders
+                                                        .h3Normal)),
+                                        color: WidgetStateProperty.resolveWith(
+                                            (state) {
+                                          if (state
+                                              .contains(WidgetState.selected)) {
+                                            return AppColors.inverseCardColor;
+                                          } else {
+                                            return AppColors.tabBackColor;
+                                          }
+                                        }),
+                                        checkmarkColor: AppColors.tabBackColor,
+                                        selected: selected,
+                                        onSelected: (val) {
+                                          selected
+                                              ? controller.selectedSections
+                                                  .remove(
+                                                      "section_${section.id}")
+                                              : controller.selectedSections
+                                                  .add("section_${section.id}");
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+
+                                  // Levels (only for student/both)
+                                  if (controller.selectedTarget.value ==
+                                      ('Students')) ...[
+                                    SizedBox(height: 10),
+                                    CustomText(
+                                      "${"Levels".tr}:",
+                                      textAlign: TextAlign.start,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Wrap(
+                                      spacing: 10,
+                                      children:
+                                          controller.levels.values.map((level) {
+                                        final selected = controller
+                                            .selectedLevels
+                                            .contains("level_${level.id}");
+                                        return FilterChip(
+                                          label: CustomText(level.name ?? '??',
+                                              style: (selected)
+                                                  ? AppTextStyles.mainStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)
+                                                  : AppTextStyles.secStyle(
+                                                      textHeader: AppTextHeaders
+                                                          .h3Normal)),
+                                          color:
+                                              WidgetStateProperty.resolveWith(
+                                                  (state) {
+                                            if (state.contains(
+                                                WidgetState.selected)) {
+                                              return AppColors.inverseCardColor;
+                                            } else {
+                                              return AppColors.tabBackColor;
+                                            }
+                                          }),
+                                          checkmarkColor:
+                                              AppColors.tabBackColor,
+                                          selected: selected,
+                                          onSelected: (val) {
+                                            selected
+                                                ? controller.selectedLevels
+                                                    .remove("level_${level.id}")
+                                                : controller.selectedLevels
+                                                    .add("level_${level.id}");
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+
+                                  // Roles
+                                  SizedBox(height: 8),
+                                  CustomText(
+                                    "${"Roles".tr}:",
+                                    textAlign: TextAlign.start,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Wrap(
+                                    spacing: 10,
+                                    children:
+                                        controller.roles.values.map((role) {
+                                      final selected = controller.selectedRoles
+                                          .contains("role_${role.id}");
+                                      return FilterChip(
+                                        label: CustomText(role.name ?? '??',
+                                            style: (selected)
+                                                ? AppTextStyles.mainStyle(
+                                                    textHeader:
+                                                        AppTextHeaders.h3Normal)
+                                                : AppTextStyles.secStyle(
+                                                    textHeader: AppTextHeaders
+                                                        .h3Normal)),
+                                        color: WidgetStateProperty.resolveWith(
+                                            (state) {
+                                          if (state
+                                              .contains(WidgetState.selected)) {
+                                            return AppColors.inverseCardColor;
+                                          } else {
+                                            return AppColors.tabBackColor;
+                                          }
+                                        }),
+                                        selected: selected,
+                                        checkmarkColor: AppColors.tabBackColor,
+                                        onSelected: (val) {
+                                          selected
+                                              ? controller.selectedRoles
+                                                  .remove("role_${role.id}")
+                                              : controller.selectedRoles
+                                                  .add("role_${role.id}");
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                                SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width * 0.1,
+                                      child: CustomButton(
+                                          text: "Add",
+                                          onPress: controller.pushNotification),
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    SizedBox(
+                                      width: Get.width * 0.1,
+                                      child: CustomButton(
+                                          text: "close",
+                                          onPress: () => Get.back()),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                      ),
+                    )),
+              ),
+            ),
+          );
   }
 }
