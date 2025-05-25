@@ -80,19 +80,6 @@ class NewsController extends GetxController {
     }
   }
 
-  var items = List.generate(10, (index) => 'Item ${index + 1}').obs;
-
-  void deleteItem(int index) {
-    final item = items[index];
-    items.removeAt(index);
-    Get.snackbar('Deleted', '$item was deleted');
-  }
-
-  void editItem(int index) {
-    final item = items[index];
-    Get.snackbar('Edit', 'Edit $item');
-  }
-
   Future<void> pickImage() async {
     Get.dialog(const PopUpLoadingCard());
     FilePickerResult? result;

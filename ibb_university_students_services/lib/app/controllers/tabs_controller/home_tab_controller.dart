@@ -12,7 +12,7 @@ import '../main_controller.dart';
 import '../news_controller.dart';
 
 class HomeTabController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+    with GetTickerProviderStateMixin {
   User? user;
   RxBool initState = false.obs;
   TabController? tabController;
@@ -45,8 +45,9 @@ class HomeTabController extends GetxController
 
   Future<void> setUpNewsCards() async {
     await newsController?.fetchNews(limit: 5);
+    tabController?.dispose();
     tabController = TabController(
-        length: newsController?.news.length ?? 0, initialIndex: 0, vsync: this);
+        length: newsController?.news.length ?? 1, initialIndex: 0, vsync: this);
     if ((tabController?.length ?? 1) > 1) {
       startTimer();
     }
@@ -62,10 +63,13 @@ class HomeTabController extends GetxController
     try {
       Duration d = const Duration(seconds: 0, milliseconds: 500);
       _timer?.cancel();
+      Future.delayed(Duration(seconds: 0, milliseconds: 200));
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         _newsCurrentPos++;
-        _newsCurrentPos == 3 ? _newsCurrentPos = 2 : null;
+        (_newsCurrentPos == tabController?.length)
+            ? _newsCurrentPos = (tabController?.length ?? 1) - 1
+            : null;
         newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
@@ -101,6 +105,7 @@ class HomeTabController extends GetxController
         }
         newsAnimate(Get.width * 0.8, _newsCurrentPos,
             const Duration(seconds: 3, milliseconds: 500));
+        return;
       });
     } catch (e) {
       if (kDebugMode) {
@@ -114,6 +119,7 @@ class HomeTabController extends GetxController
       _timer?.cancel();
       _newsCurrentPos = 0;
       tabController?.index = (0);
+      scrollController.jumpTo(0);
       _setUpTimer();
     } catch (e) {
       if (kDebugMode) {

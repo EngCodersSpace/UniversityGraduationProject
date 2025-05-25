@@ -81,7 +81,6 @@ class NotificationHandler {
   }
 
   static void _processCommand(Map<String, dynamic> data) {
-    print("commandReceived");
     String action = data['action'] ?? '';
     if (action == 'refresh_data') {
       // String module = data['module'] ?? '';

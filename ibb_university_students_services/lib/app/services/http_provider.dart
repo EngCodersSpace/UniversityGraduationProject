@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,6 +12,7 @@ import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../repositories/user_repository.dart';
+import 'package:universal_html/html.dart' as html;
 
 class HttpProvider {
   static final Dio _dio = Dio();
@@ -210,7 +212,6 @@ class HttpProvider {
     return null;
   }
 
-
   static Future<Response?> uploadFileWeb({
     File? file, // Mobile
     Uint8List? fileBytes, // Web
@@ -226,7 +227,7 @@ class HttpProvider {
       if (file != null) {
         fileSize = await file.length();
         multipartFile = MultipartFile.fromStream(
-              () => file.openRead(),
+          () => file.openRead(),
           fileSize,
           filename: fileName,
         );
@@ -279,7 +280,6 @@ class HttpProvider {
     }
   }
 
-
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
@@ -294,7 +294,6 @@ class HttpProvider {
         // cancelToken: cancelTokens[file.path.hashCode],
         onReceiveProgress: onReceiveProgress,
       );
-
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -304,6 +303,26 @@ class HttpProvider {
       rethrow;
     }
     return null;
+  }
+
+  static Future<void> downloadFileWeb({
+    required String fileUrl,
+    required String fileName,
+    required void Function(int received, int total)? onProgress,
+  }) async {
+    final response = await _dio.get(fileUrl,
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
+        onReceiveProgress: onProgress);
+    final base64 = base64Encode(response.data);
+    final anchor =
+        html.AnchorElement(href: 'data:application/octet-stream;base64,$base64')
+          ..target = 'blank';
+    anchor.download = fileName;
+    html.document.body?.append(anchor);
+    anchor.click();
+    anchor.remove();
   }
 
   static Future<Response?> _refreshAndRetry(
@@ -387,7 +406,6 @@ class HttpProvider {
   static String parseUrl(String endPoint) {
     return _dio.options.baseUrl + endPoint;
   }
-
   static Widget httpImage({
     required String imageUrl,
     String? secImageUrl,
@@ -411,7 +429,7 @@ class HttpProvider {
         placeholder: placeholder ??
             (context, url) => const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => CachedNetworkImage(
-          imageUrl: secImageUrl??"",
+          imageUrl: secImageUrl ?? "",
           placeholder: (context, url) =>
               const Center(child: CircularProgressIndicator()),
           errorWidget:

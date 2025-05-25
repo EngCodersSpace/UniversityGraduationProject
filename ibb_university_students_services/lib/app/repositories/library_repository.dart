@@ -353,6 +353,23 @@ class LibraryRepository {
     try {
       file.progress = get_x.RxInt(0);
       file.status?.value = "Downloading";
+
+      if (kIsWeb) {
+        await HttpProvider.downloadFileWeb(
+            fileUrl: "download?id=${file.id}",
+            fileName: file.title ?? file.id.toString(),
+            onProgress: (int received, int total) {
+              double progress = (received / total) * 100;
+              file.progress?.value = progress.toInt();
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.id.hashCode,
+                  progress: progress.toInt(),
+                  title: "Downloading",
+                  message: " ${file.title}");
+            });
+        return Result();
+      }
+
       response = await HttpProvider.downloadFile(
         downloadUrl: "download?id=${file.id}",
         savePath: "${FileUtils.defaultBaseFolderPath}/${file.filePath}",

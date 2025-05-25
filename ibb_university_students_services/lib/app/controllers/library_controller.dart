@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
@@ -287,7 +288,9 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) async {
     selectedBook = book;
-    await selectedBook?.checkDownloaded();
+    if(!kIsWeb){
+      await selectedBook?.checkDownloaded();
+    }
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookInfoCard())
         : Get.dialog(WebBookInfoCard());

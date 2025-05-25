@@ -49,7 +49,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: HttpProvider.httpImage(
-                                imageUrl: controller.user?.profileImage ?? "",
+                                imageUrl: "get-profile-image?user_id=${controller.user?.id}",
                                 secImageUrl: controller.user?.profileImage,
                                 errorWidget: (ctx, s, o) => CustomText(
                                     controller.user?.name?[0] ??
