@@ -18,13 +18,13 @@ class LevelAdapter extends TypeAdapter<Level> {
     };
     return Level(
       id: fields[0] as int,
+      title: fields[1] as String?,
+      content: fields[2] as String?,
+      publisher: fields[4] as Instructor?,
+      date: fields[3] as String?,
       createdAt: fields[5] as String?,
       updatedAt: fields[6] as String?,
-    )
-      ..title = fields[1] as String?
-      ..content = fields[2] as String?
-      ..date = fields[3] as String?
-      ..publisher = fields[4] as Instructor?;
+    );
   }
 
   @override

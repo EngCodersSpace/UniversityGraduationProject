@@ -74,13 +74,14 @@ class NotificationTabController extends GetxController {
       notificationGroups = {};
       // = "this student not has fees";
       showSnakeBar(
-          title: "Not Found Fees", message: "this student not has fees");
+          title: "Not Found Notifications",
+          message: "this student not has Notifications");
     } else {
       notificationGroups = {};
-      // fieldMessage.value = "fetching fees failed please check connection";
+      // fieldMessage.value = "fetching Notifications failed please check connection";
       showSnakeBar(
-          title: "Fetch Fees Failed",
-          message: "fetching fees failed please check connection ");
+          title: "Fetch Notifications Failed",
+          message: "fetching Notifications failed please check connection ");
     }
   }
 

@@ -350,7 +350,7 @@ class DashboardStudentTableController extends GetxController
       fieldMessage.value = "this section and level not has Student";
       if (showSnakeBars) {
         showSnakeBar(
-            title: "Not Found Lectures",
+            title: "Not Found student",
             message: "this section and level doesn't has Student ");
       }
     } else {

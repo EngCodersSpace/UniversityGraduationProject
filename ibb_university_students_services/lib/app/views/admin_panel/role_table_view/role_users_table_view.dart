@@ -31,7 +31,7 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
             ),
             Row(children: [
               SizedBox(
-                height: Get.height * 0.5,
+                height: Get.height * 0.6,
                 width: Get.width * 0.3,
                 child: Container(
                   padding: EdgeInsets.all(5),
@@ -66,27 +66,46 @@ class RoleUsersTableView extends GetView<DashboardRoleUsersTableController> {
                 ),
               ),
               SizedBox(
-                width: Get.width * 0.03,
+                width: Get.width * 0.001,
               ),
               GetBuilder<DashboardRoleUsersTableController>(
                 id: "rolePermissions",
                 builder: (ctx) => Container(
-                  width: Get.width * 0.4,
-                  height: Get.height * 0.3,
+                  width: Get.width * 0.47,
+                  height: Get.height * 0.6,
                   padding: EdgeInsets.all(10),
                   child: SingleChildScrollView(
-                    child: Column(children: [
-                      if (controller.selectedIndex.value != -1) ...[
-                        ...?controller.roles[controller.selectedIndex.value]
-                            ?.permissions.entries
-                            .map<Widget>((e) {
-                          return CustomText("${e.key} - ${e.value}",
-                              style: AppTextStyles.secStyle());
-                        })
-                      ],
-                      CustomText("Select Role",
-                          style: AppTextStyles.secStyle())
-                    ]),
+                    child: Scrollbar(
+                      controller: controller.horizontal,
+                      thumbVisibility: true,
+                      trackVisibility: true,
+                      child: Column(children: [
+                        if (controller.selectedIndex.value != -1) ...[
+                          ...?controller.roles[controller.selectedIndex.value]
+                              ?.permissions.entries
+                              .map<Widget>((e) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  "${e.key} : ",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                                CustomText(
+                                  " ${e.value}",
+                                  style: AppTextStyles.secStyle(),
+                                ),
+                              ],
+                            );
+                          })
+                        ],
+                        Center(
+                          child: CustomText("Please Select a Role",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold)),
+                        )
+                      ]),
+                    ),
                   ),
                 ),
               ),
@@ -136,41 +155,25 @@ class MyData extends DataTableSource {
                 )),
           ),
           DataCell(
-            onTap: () => controller.changeSelectedRole(items[index % controller.rowsPerPage.value].id),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
             CustomText(
                 items[index % controller.rowsPerPage.value].id.toString()),
           ),
-          // DataCell(onTap: () {
-          //   _showPermissionPopup(
-          //       context, items[index % controller.rowsPerPage.value]);
-          // },
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue: items[index % controller.rowsPerPage.value]
-          //             .id
-          //             .toString())),
           DataCell(
-            onTap: () => controller.changeSelectedRole(items[index % controller.rowsPerPage.value].id),
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
             CustomText(
                 key: UniqueKey(),
                 items[index % controller.rowsPerPage.value].name.toString()),
           ),
-          // DataCell(
-          //     onTap: () {},
-          //     CustomTextFormField(
-          //         key: UniqueKey(),
-          //         onTapOutside: (e) {
-          //           controller.refresh();
-          //         },
-          //         onFieldSubmitted: (str) {},
-          //         enableBorder: false,
-          //         initialValue:
-          //             items[index % controller.rowsPerPage.value].name)),
+          DataCell(
+            onTap: () => controller.changeSelectedRole(
+                items[index % controller.rowsPerPage.value].id),
+            CustomText(
+                key: UniqueKey(),
+                items[index % controller.rowsPerPage.value].type.toString()),
+          ),
         ]);
   }
 

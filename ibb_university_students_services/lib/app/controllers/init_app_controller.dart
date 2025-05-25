@@ -48,7 +48,7 @@ class InitAppController extends GetxController {
       }
     }
     if (await UserRepository.isCredentialsCached()) {
-      Get.offNamed("/dashboard_main_view");
+      Get.offNamed("/main");
     } else {
       Get.offNamed("/login");
     }
