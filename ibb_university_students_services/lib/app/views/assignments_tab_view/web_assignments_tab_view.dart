@@ -66,7 +66,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width * 0.13,
+                                    width: Get.width * 0.12,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
@@ -147,7 +147,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   ),
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
-                                    width: (Get.width * 0.2),
+                                    width: (Get.width * 0.18),
                                     onSelected: (String i, v) {
                                       controller.changeSubject(i);
                                     },
@@ -183,7 +183,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width / 3,
+                                    width: Get.width * 0.13,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton<int>(
@@ -195,8 +195,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                                     width: (ScreenUtils
                                                             .isPhoneScreen())
                                                         ? (Get.width / 3) - 30
-                                                        : (Get.width / 5.5) *
-                                                            0.6,
+                                                        : (Get.width / 3) * 0.3,
                                                     child: CustomText(
                                                       "Add",
                                                       style: AppTextStyles

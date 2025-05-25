@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/web_assignments_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
@@ -158,7 +159,13 @@ class WebMainView extends GetView<MainController> {
                             index: 8,
                             icon: Icons.credit_card_sharp,
                           ),
-                          if(controller.user==Doctor)
+                          if (UserRepository.currentUserType() == Doctor) ...[
+                            WebTabsComponent(
+                              tabname: "Dashboard",
+                              index: 9,
+                              icon: Icons.settings_outlined,
+                            ),
+                          ]
                         ],
                       ),
                     ],

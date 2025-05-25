@@ -204,7 +204,7 @@ class AssignmentsTabController extends GetxController {
             child: SizedBox(
               width: (ScreenUtils.isPhoneScreen())
                   ? (Get.width / 5) - 30
-                  : (Get.width / 8) * 0.6,
+                  : (Get.width / 8) * 0.5,
               child: CustomText(
                 level.name ?? "unknown",
                 style: AppTextStyles.mainStyle(

@@ -50,37 +50,38 @@ class MainController extends GetxController {
     }
   }
 
-  Future<void> onLogin() async {
-    logging.value = true;
+  // Future<void> onLogin() async {
+  //   logging.value = true;
 
-    if (formKey.currentState!.validate()) {
-      Result res = await UserRepository.userLogin(
-        id.text,
-        password.text,
-      );
+  //   if (formKey.currentState!.validate()) {
+  //     Result res = await UserRepository.userLogin(
+  //       id.text,
+  //       password.text,
+  //     );
 
-      // Handle various login outcomes based on status code
-      if (res.statusCode == 200) {
-        Get.offNamed("/main"); // Navigate to main screen on success
-      } else if (res.statusCode == 900) {
-        loggingFiledMessage.value =
-            "no internet connection \n please check your connection ";
-        loggingFiled.value = true;
-      } else if (res.statusCode == 401) {
-        loggingFiledMessage.value = "password or id is wrong";
-        loggingFiled.value = true;
-      } else if (res.statusCode == 404) {
-        loggingFiledMessage.value = "no such user exist";
-        loggingFiled.value = true;
-      } else {
-        loggingFiledMessage.value =
-            "something get wrong \n please check your connection ";
-        loggingFiled.value = true;
-      }
-    }
+  //     // Handle various login outcomes based on status code
+  //     if (res.statusCode == 200) {
+  //       Get.offNamed(
+  //           "/dashboard_main_view"); // Navigate to main screen on success
+  //     } else if (res.statusCode == 900) {
+  //       loggingFiledMessage.value =
+  //           "no internet connection \n please check your connection ";
+  //       loggingFiled.value = true;
+  //     } else if (res.statusCode == 401) {
+  //       loggingFiledMessage.value = "password or id is wrong";
+  //       loggingFiled.value = true;
+  //     } else if (res.statusCode == 404) {
+  //       loggingFiledMessage.value = "no such user exist";
+  //       loggingFiled.value = true;
+  //     } else {
+  //       loggingFiledMessage.value =
+  //           "something get wrong \n please check your connection ";
+  //       loggingFiled.value = true;
+  //     }
+  //   }
 
-    logging.value = false;
-  }
+  //   logging.value = false;
+  // }
 
   // Method to change the selected index
   void changeTabIndex(int index) {

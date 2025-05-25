@@ -316,295 +316,304 @@ class AssignmentsCard extends GetView<AssignmentsTabController> {
               ],
             ),
           )
-        : Container(
-            width: Get.width * 0.2,
-            padding: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              color: AppColors.mainCardColor,
-              border: Border(
-                bottom: BorderSide(
-                    color: AppColors.inverseCardColor,
-                    width: 2,
-                    strokeAlign: 1),
-                right: BorderSide(
-                    color: AppColors.inverseCardColor,
-                    width: 2,
-                    strokeAlign: 1),
-                left: BorderSide(
-                    color: AppColors.inverseCardColor,
-                    width: 2,
-                    strokeAlign: 1),
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  spreadRadius: 1,
-                  blurRadius: 8,
-                  offset: Offset(0, 5),
-                )
-              ],
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.inverseCardColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomText(
-                            "Title:".tr,
-                            style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h2Bold),
-                          ),
-                          Row(
-                            children: [
-                              if ((UserRepository.isCurrentUser(content
-                                      .value
-                                      ?.studentsStatus
-                                      ?.entries
-                                      .first
-                                      .value
-                                      .studentId) ??
-                                  false))
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.mainCardColor,
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(32)),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: CustomText(
-                                        (content.value?.studentsStatus?.entries
-                                                    .first.value.isCompleted ??
-                                                false)
-                                            ? "Completed".tr
-                                            : "Not Completed".tr,
-                                        style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h3Bold),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: AppColors.mainCardColor,
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(32)),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: CustomText(
-                                        (content.value?.studentsStatus?.entries
-                                                .first.value.state ??
-                                            "Unknown".tr),
-                                        style: AppTextStyles.secStyle(
-                                            textHeader: AppTextHeaders.h3Bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: PopupMenuButton<String>(
-                                  onSelected: (val) => controller.more(val,
-                                      data: content.toJson()),
-                                  color: AppColors.inverseCardColor,
-                                  itemBuilder: (ctx) => [
-                                    if ((UserRepository.checkPermission(
-                                        target: "assignments",
-                                        action: "write"))) ...[
-                                      PopupMenuItem(
-                                          value: "Edit",
-                                          child: CustomText(
-                                            "Edit".tr,
-                                            style: AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Bold),
-                                          )),
-                                      PopupMenuItem(
-                                          value: "Delete",
-                                          child: CustomText(
-                                            "Delete".tr,
-                                            style: AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Bold),
-                                          )),
-                                    ],
-                                    if (UserRepository.currentUserType() ==
-                                        Student) ...[
-                                      PopupMenuItem(
-                                          value: "setComplete",
-                                          child: CustomText(
-                                            "Set Complete".tr,
-                                            style: AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Bold),
-                                          )),
-                                      PopupMenuItem(
-                                          value: "setNotComplete",
-                                          child: CustomText(
-                                            "Set Not Complete".tr,
-                                            style: AppTextStyles.mainStyle(
-                                                textHeader:
-                                                    AppTextHeaders.h3Bold),
-                                          )),
-                                    ]
-                                  ],
-                                  child: Icon(Icons.more_vert_outlined,
-                                      color: AppColors.mainTextColor),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Padding(
-                          padding: (LocaleListener
-                                      .currentLocal.value?.languageCode ==
-                                  "en")
-                              ? EdgeInsets.only(left: 32)
-                              : EdgeInsets.only(right: 32),
-                          child: CustomText(
-                            content.value?.title ?? "Unknown".tr,
-                            style: AppTextStyles.mainStyle(
-                              textHeader: AppTextHeaders.h2Bold,
-                            ),
-                          )),
-                    ],
-                  ),
+        : Center(
+            child: Container(
+              width: Get.width * 0.3,
+              padding: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                color: AppColors.mainCardColor,
+                border: Border(
+                  bottom: BorderSide(
+                      color: AppColors.inverseCardColor,
+                      width: 2,
+                      strokeAlign: 1),
+                  right: BorderSide(
+                      color: AppColors.inverseCardColor,
+                      width: 2,
+                      strokeAlign: 1),
+                  left: BorderSide(
+                      color: AppColors.inverseCardColor,
+                      width: 2,
+                      strokeAlign: 1),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: Offset(0, 5),
+                  )
+                ],
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.inverseCardColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             CustomText(
-                              "${"Doctor".tr}:",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
+                              "Title:".tr,
+                              style: AppTextStyles.mainStyle(
+                                  textHeader: AppTextHeaders.h2Bold),
                             ),
-                            const SizedBox(
-                              width: 8,
+                            Row(
+                              children: [
+                                if ((UserRepository.isCurrentUser(content
+                                        .value
+                                        ?.studentsStatus
+                                        ?.entries
+                                        .first
+                                        .value
+                                        .studentId) ??
+                                    false))
+                                  Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mainCardColor,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(32)),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: CustomText(
+                                          (content
+                                                      .value
+                                                      ?.studentsStatus
+                                                      ?.entries
+                                                      .first
+                                                      .value
+                                                      .isCompleted ??
+                                                  false)
+                                              ? "Completed".tr
+                                              : "Not Completed".tr,
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mainCardColor,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(32)),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: CustomText(
+                                          (content.value?.studentsStatus
+                                                  ?.entries.first.value.state ??
+                                              "Unknown".tr),
+                                          style: AppTextStyles.secStyle(
+                                              textHeader:
+                                                  AppTextHeaders.h3Bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: PopupMenuButton<String>(
+                                    onSelected: (val) => controller.more(val,
+                                        data: content.toJson()),
+                                    color: AppColors.inverseCardColor,
+                                    itemBuilder: (ctx) => [
+                                      if ((UserRepository.checkPermission(
+                                          target: "assignments",
+                                          action: "write"))) ...[
+                                        PopupMenuItem(
+                                            value: "Edit",
+                                            child: CustomText(
+                                              "Edit".tr,
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold),
+                                            )),
+                                        PopupMenuItem(
+                                            value: "Delete",
+                                            child: CustomText(
+                                              "Delete".tr,
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold),
+                                            )),
+                                      ],
+                                      if (UserRepository.currentUserType() ==
+                                          Student) ...[
+                                        PopupMenuItem(
+                                            value: "setComplete",
+                                            child: CustomText(
+                                              "Set Complete".tr,
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold),
+                                            )),
+                                        PopupMenuItem(
+                                            value: "setNotComplete",
+                                            child: CustomText(
+                                              "Set Not Complete".tr,
+                                              style: AppTextStyles.mainStyle(
+                                                  textHeader:
+                                                      AppTextHeaders.h3Bold),
+                                            )),
+                                      ]
+                                    ],
+                                    child: Icon(Icons.more_vert_outlined,
+                                        color: AppColors.mainTextColor),
+                                  ),
+                                ),
+                              ],
                             ),
-                            CustomText(
-                              content.value?.doctor?.name ?? "unknown".tr,
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            )
                           ],
                         ),
                         const SizedBox(
                           height: 8,
                         ),
-                        Row(
-                          children: [
-                            CustomText(
-                              "${"Create Date".tr}:",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            CustomText(
-                              content.value?.assignmentDate ?? "00:00:00",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: [
-                            CustomText(
-                              "${"Due Date".tr}:",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            CustomText(
-                              content.value?.dueDate ?? "00:00:00",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            CustomText(
-                              (content.value?.assignmentDay ?? "").tr,
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h3Bold),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        if (UserRepository.currentUserType() == Doctor) ...[
-                          CustomButton(
-                            onPress: () => controller
-                                .showAttachmentsFiles(content.value?.id),
-                            text: "Attachments".tr,
+                        Padding(
+                            padding: (LocaleListener
+                                        .currentLocal.value?.languageCode ==
+                                    "en")
+                                ? EdgeInsets.only(left: 32)
+                                : EdgeInsets.only(right: 32),
+                            child: CustomText(
+                              content.value?.title ?? "Unknown".tr,
+                              style: AppTextStyles.mainStyle(
+                                textHeader: AppTextHeaders.h2Bold,
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 22),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CustomText(
+                                "${"Doctor".tr}:",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              CustomText(
+                                content.value?.doctor?.name ?? "unknown".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              )
+                            ],
                           ),
                           const SizedBox(
                             height: 8,
                           ),
-                          CustomButton(
-                            onPress: () =>
-                                controller.routeStudentList(content.value?.id),
-                            text: "Students".tr,
-                          ),
-                        ] else ...[
-                          CustomButton(
-                            onPress: () => controller
-                                .showAttachmentsFiles(content.value?.id),
-                            text: "Attachments".tr,
+                          Row(
+                            children: [
+                              CustomText(
+                                "${"Create Date".tr}:",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              CustomText(
+                                content.value?.assignmentDate ?? "00:00:00",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 8,
                           ),
-                          CustomButton(
-                            onPress: () => controller.showStudentFiles(
-                                content.value?.id,
-                                stateId: content
-                                    .value?.studentsStatus?.values.first.id),
-                            text: "Assignment Files".tr,
+                          Row(
+                            children: [
+                              CustomText(
+                                "${"Due Date".tr}:",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              CustomText(
+                                content.value?.dueDate ?? "00:00:00",
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              CustomText(
+                                (content.value?.assignmentDay ?? "").tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                            ],
                           ),
-                        ],
-                      ]),
-                )
-              ],
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          if (UserRepository.currentUserType() == Doctor) ...[
+                            CustomButton(
+                              onPress: () => controller
+                                  .showAttachmentsFiles(content.value?.id),
+                              text: "Attachments".tr,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            CustomButton(
+                              onPress: () => controller
+                                  .routeStudentList(content.value?.id),
+                              text: "Students".tr,
+                            ),
+                          ] else ...[
+                            CustomButton(
+                              onPress: () => controller
+                                  .showAttachmentsFiles(content.value?.id),
+                              text: "Attachments".tr,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            CustomButton(
+                              onPress: () => controller.showStudentFiles(
+                                  content.value?.id,
+                                  stateId: content
+                                      .value?.studentsStatus?.values.first.id),
+                              text: "Assignment Files".tr,
+                            ),
+                          ],
+                        ]),
+                  )
+                ],
+              ),
             ),
           ));
   }
