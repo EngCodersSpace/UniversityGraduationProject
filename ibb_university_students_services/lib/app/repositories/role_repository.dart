@@ -1,5 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/models/permission_model/permission.dart';
+import '../components/pop_up_cards/alert_message_card.dart';
+import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
 import '../models/role_model/role.dart';
 import '../services/http_provider.dart';
@@ -7,6 +12,7 @@ import '../utils/internet_connection_cheker.dart';
 
 class RoleRepository {
   static const int _fetchError = 611;
+  static const int _createError = 611;
 
   static Box<Role>? _roleBox;
 
