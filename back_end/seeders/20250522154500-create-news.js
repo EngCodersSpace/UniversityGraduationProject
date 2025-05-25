@@ -90,9 +90,9 @@ module.exports = {
             },
             { insert: " will be held regularly in the lab.\n" },
           ]),
-          time: "2025-05-10 10:00",
+          time: "2025-05-10 10:00 AM",
           image:
-            "https://images.pexels.com/photos/3183165/pexels-photo-3183165.jpeg",
+            "storage\\News\\user\\news_1.png",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -185,7 +185,8 @@ module.exports = {
             { insert: ".\n" },
           ]),
           image:
-            "https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg",
+            "storage\\News\\user\\news_2.png",
+            time: "2025-05-10 8:00 AM",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

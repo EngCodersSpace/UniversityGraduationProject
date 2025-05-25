@@ -1,16 +1,15 @@
 // controllers/newsController.js
-const {news, user} = require('../models');
+const { news, user } = require("../models");
 const { uploadPhoto } = require("../utils/multerConfig");
-const path = require('path');
-const fs = require('fs');
-const dayjs = require('dayjs');
+const path = require("path");
+const fs = require("fs");
+const dayjs = require("dayjs");
 
-const customParseFormat = require('dayjs/plugin/customParseFormat');
+const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
 // create with upload photo
-exports.createNewsWithPhoto =async (req, res) => {
-
+exports.createNewsWithPhoto = async (req, res) => {
   uploadPhoto("News", "user").single("file")(req, res, async (err) => {
     if (err) {
       return res.status(400).json({
@@ -31,14 +30,15 @@ exports.createNewsWithPhoto =async (req, res) => {
         title,
         content,
         publisher_id,
-        time:dayjs().format('YYYY-MM-DD, hh:mm A') ,
-        image: null, 
-        include:[
+        time: dayjs().format("YYYY-MM-DD, hh:mm A"),
+        image: null,
+        include: [
           {
-            model:user ,as:'user',
-            attributes:['user_id','user_name']
-          }
-        ]
+            model: user,
+            as: "user",
+            attributes: ["user_id", "user_name"],
+          },
+        ],
       });
 
       if (req.file) {
@@ -57,7 +57,6 @@ exports.createNewsWithPhoto =async (req, res) => {
         message: "News created successfully.",
         data: createdNews,
       });
-
     } catch (error) {
       console.error("Error creating news:", error.message);
       res.status(500).json({
@@ -66,14 +65,15 @@ exports.createNewsWithPhoto =async (req, res) => {
       });
     }
   });
-
 };
 
 // create new without photo
 exports.createNews = async (req, res) => {
   try {
     const newsItem = await news.create(req.body);
-    res.status(201).json({message:"create New Successfully",data:newsItem});
+    res
+      .status(201)
+      .json({ message: "create New Successfully", data: newsItem });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -81,7 +81,7 @@ exports.createNews = async (req, res) => {
 // only upload photo for specific new
 exports.uploadPhotoForNews = async (req, res) => {
   try {
-    const {id } = req.params;
+    const { id } = req.params;
 
     const existingNews = await news.findByPk(id);
 
@@ -136,7 +136,9 @@ exports.uploadPhotoForNews = async (req, res) => {
 exports.getAllNews = async (req, res) => {
   try {
     const newsList = await news.findAll();
-    res.status(200).json({message:"Get All News Successfully",data:newsList});
+    res
+      .status(200)
+      .json({ message: "Get All News Successfully", data: newsList });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -147,14 +149,15 @@ exports.getAllNewsWithLimit = async (req, res) => {
     const { limit } = req.query;
 
     const newsList = await news.findAll({
-      order: [['time', 'DESC']],
+      order: [["time", "DESC"]],
       ...(limit && { limit: parseInt(limit) }),
-      include:[
-          {
-            model:user ,as:'user',
-            attributes:['user_id','user_name']
-          }
-        ]
+      include: [
+        {
+          model: user,
+          as: "user",
+          attributes: ["user_id", "user_name"],
+        },
+      ],
     });
 
     res.status(200).json({ message: "Get News Successfully", data: newsList });
@@ -166,28 +169,37 @@ exports.getAllNewsWithLimit = async (req, res) => {
 //  get image from path by id (req.query.id)
 exports.getImageOfNews = async (req, res) => {
   try {
+    if (!req.query.id) {
+      return res.status(400).json({ message: "News id  is required" });
+    }
 
-      if (!req.query.id) {
-          return res.status(400).json({message: "News id  is required" });
-      }
+    const ImageOfNews = await news.findOne({
+      where: { id: req.query.id },
+    });
 
-      const ImageOfNews = await news.findOne({
-          where: { id: req.query.id },
-      });
+    if (ImageOfNews.length === 0) {
+      return res.status(204).json();
+    }
 
-      if (ImageOfNews.length === 0) {
-        return res.status(204).json();
-      }
-
-      if (!ImageOfNews) {
-          return res.status(404).json({ success: false, message: "No image found for the specified News" });
-      }
-      const imagePath = path.join(__dirname  , '..',"storage" ,ImageOfNews.image);
-      console.log('\n \n path of image:',imagePath)
-      res.sendFile(imagePath);
+    if (!ImageOfNews) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "No image found for the specified News",
+        });
+    }
+    const imagePath = path.join(__dirname, "..", "storage", ImageOfNews.image);
+    console.log("\n \n path of image:", imagePath);
+    res.sendFile(imagePath);
   } catch (error) {
-      console.error("Error fetching new's image:", error);
-      res.status(500).json({message: "An error occurred while fetching new's image", error: error.message });
+    console.error("Error fetching new's image:", error);
+    res
+      .status(500)
+      .json({
+        message: "An error occurred while fetching new's image",
+        error: error.message,
+      });
   }
 };
 
@@ -197,7 +209,7 @@ exports.streamNews = async (req, res) => {
     const { limit } = req.query;
 
     const options = {
-      order: [['time', 'DESC']],
+      order: [["time", "DESC"]],
     };
 
     if (limit) {
@@ -207,14 +219,14 @@ exports.streamNews = async (req, res) => {
     const newsList = await news.findAll(options);
 
     if (!newsList.length) {
-      return res.status(204).json({ message: 'No news found.' });
+      return res.status(204).json({ message: "No news found." });
     }
 
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Transfer-Encoding", "chunked");
 
     for (const item of newsList) {
-      const chunk = JSON.stringify(item) + '\n---\n';
+      const chunk = JSON.stringify(item) + "\n---\n";
       res.write(chunk);
       res.flush?.();
       await new Promise((resolve) => setTimeout(resolve, 300));
@@ -222,9 +234,11 @@ exports.streamNews = async (req, res) => {
 
     res.end();
   } catch (error) {
-    console.error('Error streaming news:', error.message);
+    console.error("Error streaming news:", error.message);
     if (!res.headersSent) {
-      res.status(500).json({ message: 'Internal server error', error: error.message });
+      res
+        .status(500)
+        .json({ message: "Internal server error", error: error.message });
     } else {
       res.end();
     }
@@ -235,9 +249,9 @@ exports.getNewsById = async (req, res) => {
   try {
     const newsItem = await news.findByPk(req.params.id);
     if (!newsItem) {
-      return res.status(404).json({ error: 'News not found' });
+      return res.status(404).json({ error: "News not found" });
     }
-    res.status(200).json({message:"Get New Successfully",data:newsItem});
+    res.status(200).json({ message: "Get New Successfully", data: newsItem });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -264,8 +278,8 @@ exports.updateNewsWithPhoto = async (req, res) => {
 
       if (title) existingNews.title = title;
       if (content) existingNews.content = content;
-      existingNews.publisher_id = publisher_id; 
-      existingNews.time = dayjs().format('YYYY-MM-DD, hh:mm A'); 
+      existingNews.publisher_id = publisher_id;
+      existingNews.time = dayjs().format("YYYY-MM-DD, hh:mm A");
 
       if (req.file) {
         const oldFilePath = req.file.path;
@@ -283,7 +297,6 @@ exports.updateNewsWithPhoto = async (req, res) => {
         message: "News updated successfully.",
         data: existingNews,
       });
-
     } catch (error) {
       console.error("Error updating news:", error.message);
       res.status(500).json({
@@ -298,22 +311,24 @@ exports.deleteNews = async (req, res) => {
   try {
     const deleted = await news.findByPk(req.params.id);
     if (!deleted) {
-      return res.status(404).json({ error: 'News not found' });
+      return res.status(404).json({ error: "News not found" });
     }
-    const imagePath = path.resolve('storage',deleted.image);
-    console.log("\n \n image path:",imagePath,"\n \n ");
-    if (fs.existsSync(imagePath)) {
-      await fs.promises.unlink(imagePath);
-      console.log(`Deleted file: ${imagePath}`);
-    } else {
-      console.warn(`File not found: ${imagePath}`);
+    if (deleted.image) {
+      const imagePath = path.resolve("storage", deleted.image);
+      console.log("\n \n image path:", imagePath, "\n \n ");
+      if (fs.existsSync(imagePath)) {
+        await fs.promises.unlink(imagePath);
+        console.log(`Deleted file: ${imagePath}`);
+      } else {
+        console.warn(`File not found: ${imagePath}`);
+      }
     }
-    
+
     if (!deleted) {
-      return res.status(404).json({ error: 'News not found' });
+      return res.status(404).json({ error: "News not found" });
     }
     await deleted.destroy();
-    res.status(200).json({ message: 'News deleted' });
+    res.status(200).json({ message: "News deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
