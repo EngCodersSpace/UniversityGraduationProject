@@ -178,74 +178,67 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   SizedBox(
                                     width: Get.width * 0.01,
                                   ),
-                                  // Container(
-                                  //   decoration: BoxDecoration(
-                                  //     color: AppColors.inverseCardColor,
-                                  //     borderRadius:
-                                  //     BorderRadius.circular(24),
-                                  //   ),
-                                  //   width: Get.width / 3,
-                                  //   child: Center(
-                                  //     child: Obx(
-                                  //           () => DropdownButton<int>(
-                                  //         items: (controller
-                                  //             .years
-                                  //             .map((e) {
-                                  //               if(
-                                  //               e==-1
-                                  //               ){
-                                  //                 return DropdownMenuItem<int>(
-                                  //                     value: e,
-                                  //                     child: SizedBox(
-                                  //                       width: (ScreenUtils
-                                  //                           .isPhoneScreen())
-                                  //                           ? (Get.width / 3) - 30
-                                  //                           : (Get.width / 5.5) *
-                                  //                           0.6,
-                                  //                       child: CustomText(
-                                  //                         "Add",
-                                  //                         style: AppTextStyles
-                                  //                             .mainStyle(
-                                  //                           textHeader:
-                                  //                           AppTextHeaders
-                                  //                               .h5Bold,
-                                  //                         ),
-                                  //                       ),
-                                  //                     ));
-                                  //               }else{
-                                  //                 return DropdownMenuItem<int>(
-                                  //                     value: e,
-                                  //                     child: SizedBox(
-                                  //                       width: (ScreenUtils
-                                  //                           .isPhoneScreen())
-                                  //                           ? (Get.width / 3) - 30
-                                  //                           : (Get.width / 5.5) *
-                                  //                           0.6,
-                                  //                       child: CustomText(
-                                  //                         e.toString(),
-                                  //                         style: AppTextStyles
-                                  //                             .mainStyle(
-                                  //                           textHeader:
-                                  //                           AppTextHeaders
-                                  //                               .h5Bold,
-                                  //                         ),
-                                  //                       ),
-                                  //                     ));
-                                  //               }
-                                  //         }).toList()),
-                                  //         onChanged:
-                                  //         controller.changeYear,
-                                  //         value: controller
-                                  //             .selectedYear.value,
-                                  //         underline: const SizedBox(),
-                                  //         iconEnabledColor:
-                                  //         AppColors.mainCardColor,
-                                  //         dropdownColor:
-                                  //         AppColors.inverseCardColor,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width / 3,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton<int>(
+                                          items: (controller.years.map((e) {
+                                            if (e == -1) {
+                                              return DropdownMenuItem<int>(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                            .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) *
+                                                            0.6,
+                                                    child: CustomText(
+                                                      "Add",
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                        textHeader:
+                                                            AppTextHeaders
+                                                                .h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            } else {
+                                              return DropdownMenuItem<int>(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                            .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) *
+                                                            0.6,
+                                                    child: CustomText(
+                                                      e.toString(),
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                        textHeader:
+                                                            AppTextHeaders
+                                                                .h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            }
+                                          }).toList()),
+                                          onChanged: controller.changeYear,
+                                          value: controller.selectedYear.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ] else ...[

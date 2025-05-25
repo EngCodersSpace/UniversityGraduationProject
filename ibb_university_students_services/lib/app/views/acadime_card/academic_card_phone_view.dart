@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/doctor_academic_card_info.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/student_academic_card_info.dart';
@@ -40,7 +42,7 @@ class AcademicCardPhoneView extends GetView<AcademicCardController> {
                           child:   Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              if(controller.user is Student)...[
+                              if(UserRepository.currentUserType() == Student)...[
                                 SizedBox(
                                     height: Get.height * 0.65,
                                     child: const TabBarView(
@@ -59,7 +61,7 @@ class AcademicCardPhoneView extends GetView<AcademicCardController> {
                                   selectedColor: AppColors.inverseCardColor,
                                 ),
                               ]
-                              else...[
+                              else if (UserRepository.currentUserType() == Doctor)...[
                                 SizedBox(
                                   height: Get.height * 0.65,
                                   child: const Center(

@@ -8,7 +8,6 @@ import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
 import 'package:ibb_university_students_services/app/models/library_files_model/library_files_model.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
-import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../components/pop_up_cards/loading_card.dart';
 import '../models/helper_models/result.dart';
@@ -56,17 +55,15 @@ class LibraryRepository {
     required int sectionId,
     required int levelId,
     required String category,
-    required get_x.RxMap<String, get_x.RxMap<int, LibraryFile>> destination,
+    required Map<String, Map<int, LibraryFile>> destination,
     bool hardFetch = false,
   }) async {
     // LibraryFilesCache? cachedLibrary = _libraryFilesGroupsBox
     //     ?.get("${sectionId}_${levelId}_${category}_Library");
 
-    destination.value = {};
     if ((_libraryFilesBox?.isNotEmpty ?? false) &&
         (!hardFetch || !(await checkInternetConnection()))) {
       for (LibraryFile file in (_libraryFilesBox?.values ?? [])) {
-        destination[file.category] ??= get_x.RxMap({});
         destination[file.category]?[file.id] = file;
       }
       return Result(hasError: false, statusCode: 200);
@@ -116,7 +113,6 @@ class LibraryRepository {
               }
               LibraryFile libraryFile =
                   LibraryFile.fromJson(jsLibrary, subject: subject);
-              destination[libraryFile.category] ??= get_x.RxMap({});
               destination[libraryFile.category]?[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
@@ -246,74 +242,6 @@ class LibraryRepository {
     }
   }
 
-//
-// static Future<Result<Assignment>> createAssignment(
-//     {required int sectionId,
-//       required int levelId,
-//       required String subjectId,
-//       required String title,
-//       required String assignmentDate,
-//       required String assignmentsDueDate,
-//       required List<Map<String, int>> sectionsAndLevels,
-//       String year = ""}) async {
-//   get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
-//   late Response? response;
-//   try {
-//     response = await HttpProvider.post("upload-assignment-doctor", data: {
-//       "subject_id": subjectId,
-//       "title": title,
-//       "assignment_due_day": "Sun",
-//       "assignment_date": assignmentDate,
-//       "assignments_due_date": assignmentsDueDate,
-//       "sectionsAndLevels": sectionsAndLevels
-//     });
-//     Assignment? newAssignment;
-//     if (response?.statusCode == 201) {
-//       int i = 0;
-//       for (Map group in sectionsAndLevels) {
-//         Assignment assignment =
-//         Assignment.fromJson(response?.data["data"][i]);
-//         if (group["section_id"] == sectionId &&
-//             group["level_id"] == levelId) {
-//           newAssignment = assignment;
-//         }
-//         LibraryCache? cachedLibrary = _libraryFilesGroupsBox?.get(
-//             "${group["section_id"]}_${group["level_id"]}_${year}_${subjectId}_Library");
-//         cachedLibrary ??
-//             LibraryCache(
-//                 key:
-//                 "${sectionId}_${levelId}_${year}_${subjectId}_Library",
-//                 data: []);
-//         await _libraryFilesBox?.put(
-//           assignment.id,
-//           assignment,
-//         );
-//         cachedLibrary?.data.add(assignment.id);
-//         if (cachedLibrary != null) {
-//           await _libraryFilesGroupsBox?.put(
-//               "${sectionId}_${levelId}_${year}_${subjectId}_Library",
-//               cachedLibrary);
-//         }
-//         i++;
-//       }
-//     } else if (response?.statusCode == 403) {
-//       await get_x.Get.dialog(PopUpAlertCard(
-//           response?.data["message"] ?? "UnAuthorized Action", Icons.block));
-//     }
-//     return Result(
-//         data: newAssignment,
-//         hasError: true,
-//         statusCode: response?.statusCode ?? _createError,
-//         message: response?.data["message"] ?? "error");
-//   } catch (error) {
-//     return Result(
-//         hasError: true,
-//         statusCode: _createError,
-//         message: error.toString(),
-//         data: null);
-//   }
-// }
-//
   static Future<Result<List<LibraryFile>>> uploadLibraryFile({
     required PlatformFile file,
     required String category,
@@ -323,32 +251,45 @@ class LibraryRepository {
   }) async {
     Response? response;
     try {
-      File fileData =
-          File((ScreenUtils.isPhoneScreen()) ? file.path ?? "" : file.name);
-      int fileSize = await fileData.length();
+      int fileSize = file.size;
       response = await HttpProvider.post("checkFileDuplicate", data: {
-        "originalname": (ScreenUtils.isPhoneScreen())
-            ? file.path?.split("/").last
-            : file.name,
+        "originalname": file.name,
         "size": fileSize.toString(),
         "sectionsAndLevels": groups,
       });
       if (response?.statusCode == 200) {
         response = null;
-        response = await HttpProvider.uploadFile(
-          uploadUrl:
-              "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
-          file: fileData,
-          fileSize: fileSize,
-          onSendProgress: (sent, total) {
-            double progress = (sent / total) * 100;
-            NotificationHandler.showProgressNotification(
-                uniqueId: file.path.hashCode,
-                progress: progress.toInt(),
-                title: "Uploading",
-                message: " ${file.path?.split("/").last}");
-          },
-        );
+        if(kIsWeb){
+          response = await HttpProvider.uploadFileWeb(
+            uploadUrl:
+            "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
+            fileBytes: file.bytes,
+            fileName: file.name,
+            onSendProgress: (sent, total) {
+              double progress = (sent / total) * 100;
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.hashCode,
+                  progress: progress.toInt(),
+                  title: "Uploading",
+                  message: " ${file.name}");
+            },
+          );
+        }else{
+          response = await HttpProvider.uploadFileWeb(
+            uploadUrl:
+            "upload?category=$category&subject_id=$subjectId&sectionsAndLevels=${json.encode(groups)}",
+             file: File(file.xFile.path),
+             fileName: file.name,
+            onSendProgress: (sent, total) {
+              double progress = (sent / total) * 100;
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.hashCode,
+                  progress: progress.toInt(),
+                  title: "Uploading",
+                  message: " ${file.name}");
+            },
+          );
+        }
 
         if (response?.statusCode == 201) {
           List<LibraryFile> libFiles = [];
@@ -356,16 +297,16 @@ class LibraryRepository {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);
           }
-          if (withCache && file.path != null) {
+          await NotificationHandler.showProgressNotification(
+            uniqueId: file.hashCode,
+            title: "successful upload ",
+            message: file.name,
+          );
+          if (withCache && !kIsWeb) {
             await FileUtils.saveFiles(
                 fileRelativePath: response?.data["file_info"]["path"],
-                file: File(file.path!));
+                file: File(file.xFile.path));
           }
-          NotificationHandler.showProgressNotification(
-            uniqueId: file.path.hashCode,
-            title: "successful upload ",
-            message: file.path?.split("/").last,
-          );
           return Result(
               data: libFiles,
               hasError: false,
@@ -373,9 +314,9 @@ class LibraryRepository {
               message: response?.data["message"] ?? "error");
         } else {
           NotificationHandler.showProgressNotification(
-            uniqueId: file.path.hashCode,
+            uniqueId: file.hashCode,
             title: "failed upload ",
-            message: file.path?.split("/").last,
+            message: file.name,
           );
         }
 
@@ -394,6 +335,7 @@ class LibraryRepository {
       } else {
         showSnakeBar(title: "Failed Upload", message: "");
       }
+
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _uploadError,
@@ -411,6 +353,23 @@ class LibraryRepository {
     try {
       file.progress = get_x.RxInt(0);
       file.status?.value = "Downloading";
+
+      if (kIsWeb) {
+        await HttpProvider.downloadFileWeb(
+            fileUrl: "download?id=${file.id}",
+            fileName: file.title ?? file.id.toString(),
+            onProgress: (int received, int total) {
+              double progress = (received / total) * 100;
+              file.progress?.value = progress.toInt();
+              NotificationHandler.showProgressNotification(
+                  uniqueId: file.id.hashCode,
+                  progress: progress.toInt(),
+                  title: "Downloading",
+                  message: " ${file.title}");
+            });
+        return Result();
+      }
+
       response = await HttpProvider.downloadFile(
         downloadUrl: "download?id=${file.id}",
         savePath: "${FileUtils.defaultBaseFolderPath}/${file.filePath}",

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,6 +12,7 @@ import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../repositories/user_repository.dart';
+import 'package:universal_html/html.dart' as html;
 
 class HttpProvider {
   static final Dio _dio = Dio();
@@ -130,9 +132,11 @@ class HttpProvider {
     return null;
   }
 
-  static Future<Response?> put(String url, {dynamic data}) async {
+  static Future<Response?> put(String url,
+      {dynamic data, void Function(int, int)? onSendProgress}) async {
     try {
-      final response = await _dio.put(url, data: data);
+      final response =
+          await _dio.put(url, data: data, onSendProgress: onSendProgress);
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -178,7 +182,8 @@ class HttpProvider {
       onProcessUploads++;
       showSnakeBar(
           title: "$onProcessUploads Files Uploading ",
-          message: "for details look on notifications");
+          message: "for details look on notifications",
+          overWrite: true);
 
       final response = await _dio.post(
         uploadUrl,
@@ -207,6 +212,74 @@ class HttpProvider {
     return null;
   }
 
+  static Future<Response?> uploadFileWeb({
+    File? file, // Mobile
+    Uint8List? fileBytes, // Web
+    required String uploadUrl,
+    required String fileName,
+    void Function(int, int)? onSendProgress,
+    Map<String, dynamic> data = const {},
+  }) async {
+    try {
+      final int fileSize;
+      final MultipartFile multipartFile;
+
+      if (file != null) {
+        fileSize = await file.length();
+        multipartFile = MultipartFile.fromStream(
+          () => file.openRead(),
+          fileSize,
+          filename: fileName,
+        );
+      } else if (fileBytes != null) {
+        fileSize = fileBytes.length;
+        multipartFile = MultipartFile.fromBytes(
+          fileBytes,
+          filename: fileName,
+        );
+      } else {
+        throw Exception('Either file or fileBytes must be provided.');
+      }
+
+      final cancelKey = file?.path.hashCode ?? fileName.hashCode;
+      cancelTokens[cancelKey] = CancelToken();
+
+      final dataMap = {
+        'file': multipartFile,
+        ...data,
+      };
+
+      onProcessUploads++;
+      showSnakeBar(
+        title: "$onProcessUploads Files Uploading",
+        message: "for details look on notifications",
+      );
+
+      final response = await _dio.post(
+        uploadUrl,
+        cancelToken: cancelTokens[cancelKey],
+        data: FormData.fromMap(dataMap),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': fileSize.toString(),
+          },
+          sendTimeout: null,
+        ),
+        onSendProgress: onSendProgress,
+      );
+
+      HttpProvider.onProcessUploads--;
+      return response;
+    } on DioException catch (error) {
+      HttpProvider.onProcessUploads--;
+      return error.response;
+    } catch (e) {
+      HttpProvider.onProcessUploads--;
+      rethrow;
+    }
+  }
+
   static Future<Response?> downloadFile({
     required String savePath,
     required String downloadUrl,
@@ -221,7 +294,6 @@ class HttpProvider {
         // cancelToken: cancelTokens[file.path.hashCode],
         onReceiveProgress: onReceiveProgress,
       );
-
       return response;
     } on DioException catch (error) {
       if (error.response != null) {
@@ -231,6 +303,26 @@ class HttpProvider {
       rethrow;
     }
     return null;
+  }
+
+  static Future<void> downloadFileWeb({
+    required String fileUrl,
+    required String fileName,
+    required void Function(int received, int total)? onProgress,
+  }) async {
+    final response = await _dio.get(fileUrl,
+        options: Options(
+          responseType: ResponseType.bytes,
+        ),
+        onReceiveProgress: onProgress);
+    final base64 = base64Encode(response.data);
+    final anchor =
+        html.AnchorElement(href: 'data:application/octet-stream;base64,$base64')
+          ..target = 'blank';
+    anchor.download = fileName;
+    html.document.body?.append(anchor);
+    anchor.click();
+    anchor.remove();
   }
 
   static Future<Response?> _refreshAndRetry(
@@ -314,9 +406,9 @@ class HttpProvider {
   static String parseUrl(String endPoint) {
     return _dio.options.baseUrl + endPoint;
   }
-
   static Widget httpImage({
     required String imageUrl,
+    String? secImageUrl,
     Widget Function(BuildContext, String)? placeholder,
     Widget Function(BuildContext, String, dynamic)? errorWidget,
     Widget? imageError,
@@ -336,8 +428,14 @@ class HttpProvider {
         },
         placeholder: placeholder ??
             (context, url) => const Center(child: CircularProgressIndicator()),
-        errorWidget:
-            errorWidget ?? (context, url, error) => const Icon(Icons.error),
+        errorWidget: (context, url, error) => CachedNetworkImage(
+          imageUrl: secImageUrl ?? "",
+          placeholder: (context, url) =>
+              const Center(child: CircularProgressIndicator()),
+          errorWidget:
+              errorWidget ?? (context, url, error) => Icon(Icons.error),
+          fit: BoxFit.cover,
+        ),
         fit: fit,
       );
     }

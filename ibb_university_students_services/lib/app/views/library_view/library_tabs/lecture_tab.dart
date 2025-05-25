@@ -29,139 +29,149 @@ class LecturesTab extends GetView<LibraryController> {
         ),
         height: Get.height * 0.74,
         child: Obx(
-              () => (controller.loadingState.value)
+              () =>
+          (controller.loadingState.value)
               ? Center(
             child: CircularProgressIndicator(
               color: AppColors.mainCardColor,
             ),
           )
-              : PageView(
-            physics: AlwaysScrollableScrollPhysics(),
-                onPageChanged: controller.onPageChange,
-            controller: controller.myTabsControllers[0],
-            children: [
-              if (controller.books[controller.categories[0]]
-                  ?.isEmpty ??
-                  true) ...[
-                RefreshIndicator(
-            onRefresh: () async => controller.refresh(),
-                  child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: Get.height * 0.3,
-                        ),
-                        Center(
-                          child: CustomText(
-                            "Empty".tr,
-                            style: AppTextStyles.mainStyle(
-                                textHeader: AppTextHeaders.h2Bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-              for (int i = 0;
-              i <
-                  (controller
-                      .books[controller.categories[0]]?.length ??
-                      0);
-              i += 12)
-                RefreshIndicator(
-                  onRefresh: () async => controller.refresh(),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        if (controller.books[controller.categories[0]]
-                            ?.isEmpty ??
-                            true) ...[
+              : Obx(
+            ()=> PageView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            onPageChanged: controller.onPageChange,
+                            controller: controller.myTabsControllers[0],
+                            children: [
+                if (controller.books[controller.categories[0]]
+                    ?.isEmpty ??
+                    true) ...[
+                  RefreshIndicator(
+                    onRefresh: () async => controller.refresh(),
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
                           SizedBox(
                             height: Get.height * 0.3,
                           ),
                           Center(
                             child: CustomText(
-                              controller.fieldMessage.value,
+                              "Empty".tr,
                               style: AppTextStyles.mainStyle(
                                   textHeader: AppTextHeaders.h2Bold),
                             ),
                           ),
-                          Center(
-                            child: IconButton(
-                                onPressed: () async =>
-                                    controller.refresh(),
-                                icon: Icon(
-                                  Icons.refresh,
-                                  color: AppColors.mainCardColor,
-                                )),
-                          )
                         ],
-                        SizedBox(
-                          height: 24,
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.70,
-                          child: Wrap(
-                              spacing: Get.width * 0.03,
-                              runSpacing: Get.height * 0.045,
-                              children: [
-                                for (int j = i;
-                                j < (i + 12) &&
-                                    (j <
-                                        (controller.books[controller.categories[2]]?.length ??
-                                            0));
-                                j++)
-                                  if ((controller.books[controller.categories[0]]?.values
-                                      .toList()[i]
-                                      .sectionId ==
-                                      controller
-                                          .selectedDepartment
-                                          .value ||
-                                      controller.selectedDepartment.value ==
-                                          -1) &&
-                                      (controller.books[controller.categories[0]]?.values
-                                          .toList()[i]
-                                          .levelId ==
-                                          controller
-                                              .selectedLevel.value ||
-                                          controller.selectedLevel.value ==
-                                              -1) &&
-                                      ((controller.books[controller.categories[0]]?.values
-                                          .toList()[i]
-                                          .title
-                                          ?.contains(controller.searchText.text) ??
-                                          false) ||
-                                          controller.searchText.text == "")) ...[
-                                    Obx(() {
-                                      if ((ScreenUtils.isPhoneScreen())) {
-                                        return BookContainer(
-                                          book: controller
-                                              .books[controller
-                                              .categories[0]]!
-                                              .values
-                                              .toList()[j],
-                                        );
-                                      } else {
-                                        return WebBookContainar(
+                      ),
+                    ),
+                  )
+                ],
+                for (int i = 0;
+                i <
+                    (controller
+                        .books[controller.categories[0]]?.length ??
+                        0);
+                i += 12)
+                  RefreshIndicator(
+                    onRefresh: () async => controller.refresh(),
+                    child: SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          if (controller.books[controller.categories[0]]
+                              ?.isEmpty ??
+                              true) ...[
+                            SizedBox(
+                              height: Get.height * 0.3,
+                            ),
+                            Center(
+                              child: CustomText(
+                                controller.fieldMessage.value,
+                                style: AppTextStyles.mainStyle(
+                                    textHeader: AppTextHeaders.h2Bold),
+                              ),
+                            ),
+                            Center(
+                              child: IconButton(
+                                  onPressed: () async =>
+                                      controller.refresh(),
+                                  icon: Icon(
+                                    Icons.refresh,
+                                    color: AppColors.mainCardColor,
+                                  )),
+                            )
+                          ],
+                          SizedBox(
+                            height: 24,
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.70,
+                            child: Wrap(
+                                spacing: Get.width * 0.03,
+                                runSpacing: Get.height * 0.045,
+                                children: [
+                                  for (int j = i;
+                                  j < (i + 12) &&
+                                      (j <
+                                          (controller.books[controller
+                                              .categories[0]]?.length ??
+                                              0));
+                                  j++)
+                                    if ((controller.books[controller
+                                        .categories[0]]?.values
+                                        .toList()[j]
+                                        .sectionId ==
+                                        controller
+                                            .selectedDepartment
+                                            .value ||
+                                        controller.selectedDepartment.value ==
+                                            -1) &&
+                                        (controller.books[controller
+                                            .categories[0]]?.values
+                                            .toList()[j]
+                                            .levelId ==
+                                            controller
+                                                .selectedLevel.value ||
+                                            controller.selectedLevel.value ==
+                                                -1) &&
+                                        ((controller.books[controller
+                                            .categories[0]]?.values
+                                            .toList()[j]
+                                            .title
+                                            ?.toLowerCase().contains(
+                                            controller.searchText.text.toLowerCase()) ??
+                                            false) ||
+                                            controller.searchText.text ==
+                                                "")
+                                    ) ...[
+                                      Obx(() {
+                                        if ((ScreenUtils.isPhoneScreen())) {
+                                          return BookContainer(
                                             book: controller
                                                 .books[controller
                                                 .categories[0]]!
                                                 .values
-                                                .toList()[j]);
-                                      }
-                                    })
-                                  ]
-                              ]),
-                        ),
-                      ],
+                                                .toList()[j],
+                                          );
+                                        } else {
+                                          return WebBookContainar(
+                                              book: controller
+                                                  .books[controller
+                                                  .categories[0]]!
+                                                  .values
+                                                  .toList()[j]);
+                                        }
+                                      })
+                                    ]
+                                ]),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
+                            ],
+                          ),
+              ),
         ));
   }
 }

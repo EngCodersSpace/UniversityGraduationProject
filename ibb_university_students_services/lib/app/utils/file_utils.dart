@@ -10,17 +10,18 @@ class FileUtils {
 
   static Future<bool> requestStoragePermission() async {
     final status = await Permission.manageExternalStorage.status;
-
-    if (status.isGranted || status.isRestricted) {
+    final status2 = await Permission.storage.status;
+    if ((status.isGranted || status.isRestricted )&&(status2.isGranted || status2.isRestricted)) {
       return true;
     }
 
-    if (status.isDenied ) {
-      final result = await Permission.manageExternalStorage.request();
-      return result.isGranted;
+    if (status.isDenied || status2.isDenied) {
+      final result1 = await Permission.manageExternalStorage.request();
+      final result2 = await Permission.storage.request();
+      return result1.isGranted && result2.isGranted;
     }
 
-    if (status.isPermanentlyDenied) {
+    if (status.isPermanentlyDenied || status2.isPermanentlyDenied) {
       // Optionally, open app settings
       await openAppSettings();
       return false;

@@ -9,15 +9,17 @@ import '../../models/helper_models/result.dart';
 import '../../repositories/user_repository.dart';
 import '../../models/user_model/user.dart';
 import '../main_controller.dart';
+import '../news_controller.dart';
 
 class HomeTabController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+    with GetTickerProviderStateMixin {
   User? user;
   RxBool initState = false.obs;
   TabController? tabController;
   ScrollController scrollController = ScrollController();
   Timer? _timer;
   int _newsCurrentPos = 0;
+  NewsController? newsController = Get.find<NewsController>();
 
   @override
   void onInit() async {
@@ -25,20 +27,31 @@ class HomeTabController extends GetxController
     if (res.statusCode == 200) {
       user = res.data;
     }
-    tabController = TabController(length: 5, initialIndex: 0, vsync: this);
-    _setUpTimer();
+    await setUpNewsCards();
     initState.value = true;
     super.onInit();
   }
 
-
   @override
-  void refresh() async{
+  void refresh() async {
     Result res = await UserRepository.fetchUser();
     if (res.statusCode == 200) {
       user = res.data;
       initState.refresh();
     }
+    await setUpNewsCards();
+    super.refresh();
+  }
+
+  Future<void> setUpNewsCards() async {
+    await newsController?.fetchNews(limit: 5);
+    tabController?.dispose();
+    tabController = TabController(
+        length: newsController?.news.length ?? 1, initialIndex: 0, vsync: this);
+    if ((tabController?.length ?? 1) > 1) {
+      startTimer();
+    }
+    update(["newsCardsTapsIndictor", "newsCards"]);
   }
 
   @override
@@ -50,10 +63,13 @@ class HomeTabController extends GetxController
     try {
       Duration d = const Duration(seconds: 0, milliseconds: 500);
       _timer?.cancel();
+      Future.delayed(Duration(seconds: 0, milliseconds: 200));
       if (scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         _newsCurrentPos++;
-        _newsCurrentPos == 3 ? _newsCurrentPos = 2 : null;
+        (_newsCurrentPos == tabController?.length)
+            ? _newsCurrentPos = (tabController?.length ?? 1) - 1
+            : null;
         newsAnimate(Get.width * 0.8, _newsCurrentPos, d);
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
@@ -70,23 +86,26 @@ class HomeTabController extends GetxController
     return false;
   }
 
-  showSettings(){
+  showSettings() {
     Get.put(SettingController());
-    Get.dialog(PopUpSettingsCard()).then((_) => Get.delete<SettingController>());
+    Get.dialog(PopUpSettingsCard())
+        .then((_) => Get.delete<SettingController>());
   }
+
   void _setUpTimer() {
     try {
-      const duration = Duration(seconds: 5);
+      const duration = Duration(seconds: 6);
       _timer = Timer.periodic(duration, (timer) {
         _newsCurrentPos++;
-        if (_newsCurrentPos > 2) {
+        if (_newsCurrentPos > (tabController?.length ?? 0)) {
           _newsCurrentPos = 0;
           if (scrollController.hasClients) {
             scrollController.jumpTo(0);
           }
         }
         newsAnimate(Get.width * 0.8, _newsCurrentPos,
-            const Duration(seconds: 2, milliseconds: 500));
+            const Duration(seconds: 3, milliseconds: 500));
+        return;
       });
     } catch (e) {
       if (kDebugMode) {
@@ -100,6 +119,7 @@ class HomeTabController extends GetxController
       _timer?.cancel();
       _newsCurrentPos = 0;
       tabController?.index = (0);
+      scrollController.jumpTo(0);
       _setUpTimer();
     } catch (e) {
       if (kDebugMode) {
@@ -154,10 +174,8 @@ class HomeTabController extends GetxController
     Get.toNamed("/pepper_transactions");
   }
 
-void  openNewsList(){
-  Get.toNamed("news_list");
-  }
-  void openNews(int i) {
-    Get.toNamed("news");
+  void openNewsList() async {
+    await Get.toNamed("news_list");
+    setUpNewsCards();
   }
 }

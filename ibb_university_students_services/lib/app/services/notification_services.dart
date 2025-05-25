@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -46,8 +47,20 @@ class NotificationHandler {
   }
 
   static Future<void> registerTopics(List<String> topics )async{
+    if(kIsWeb)return;
     for(String topic in topics) {
       await FirebaseMessaging.instance.subscribeToTopic(topic);
+    }
+  }
+
+  static Future<void> unsubscribeFromTopic(List<String> topics) async {
+    for(String topic in topics) {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic).then((_) {
+      }).catchError((error) {
+        if (kDebugMode) {
+          print("Failed to unsubscribe: $error");
+        }
+      });
     }
   }
   static void _handleMessage(RemoteMessage message) {
@@ -55,6 +68,7 @@ class NotificationHandler {
       title: message.notification?.title ?? "Info",
       body: message.notification?.body ?? "Notification received",
     );
+    // DataSyncServices.startSync();
     // if (message.data['type'] == 'info') {
     //   showNotification(
     //     title: message.notification?.title ?? "Info",
@@ -149,7 +163,6 @@ class NotificationHandler {
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
   // print("Handling background message: ${message.notification?.title}");
-
   if (message.data['type'] == 'info') {
     NotificationHandler.showNotification(
       title: message.notification?.title ?? "Info",

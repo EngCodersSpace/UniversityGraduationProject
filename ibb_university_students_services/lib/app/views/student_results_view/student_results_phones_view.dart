@@ -18,7 +18,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
   PhoneStudentResultView({super.key});
 
   double width = Get.width;
-
+  int count =0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -281,7 +281,7 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                                         .selectedTerm.value ||
                                                 controller.selectedTerm.value ==
                                                     "All")) ...[
-                                          (i % 2 == 0)
+                                          ((count++) % 2 == 0)
                                               ? ResultCard(
                                                   grad: Rx(controller
                                                       .grads!.value.values
@@ -301,7 +301,8 @@ class PhoneStudentResultView extends GetView<StudentResultController> {
                                               height: Get.height * 0.005,
                                             )
                                         ],
-                                      ]
+                                      ],
+                                      
                                     ],
                                   ),
                                 )),

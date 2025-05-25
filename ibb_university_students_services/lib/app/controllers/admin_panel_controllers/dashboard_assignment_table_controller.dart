@@ -523,6 +523,7 @@ class DashboardAssignmentTableController extends GetxController
           levelId: LevelId.value!,
           subjectId: subjectId.value!,
           title: title.text,
+          year: 2025,
           assignmentDate: DateTime.now().toString(),
           assignmentsDueDate: dueDate.text,
           sectionsAndLevels: groups.value = [

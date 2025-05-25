@@ -8,7 +8,6 @@ import '../../components/custom_text_v2.dart';
 import '../../services/http_provider.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
-import '../../utils/date_time_utils.dart';
 
 class PhonesNewsView extends GetView<NewsController> {
   const PhonesNewsView({super.key});
@@ -30,18 +29,21 @@ class PhonesNewsView extends GetView<NewsController> {
                     children: [
                       IconButton(
                         // onPressed: () => Get.back(),
-                          onPressed: () => controller.saveNews(),
+                          onPressed: () => Get.back(),
                           icon: Icon(
                             Icons.arrow_back_outlined,
                             color: AppColors.mainCardColor,
                           )),
-                      if (UserRepository.checkPermission(
+                      if ((UserRepository.checkPermission(
                           target: "news", action: "write") &&
-                          (UserRepository.isCurrentUser(1) ?? false))
+                          (UserRepository.isCurrentUser(controller.publisher?.id) ?? false)))
                         ...[
                           IconButton(
                               onPressed: controller.toggleEdit,
-                              icon: Icon(
+                              icon: (controller.editing.value || controller.creating.value)?Icon(
+                                Icons.save_rounded,
+                                color: AppColors.mainCardColor,
+                              ):Icon(
                                 Icons.edit_document,
                                 color: AppColors.mainCardColor,
                               )),
@@ -68,7 +70,8 @@ class PhonesNewsView extends GetView<NewsController> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(24),
                               child: HttpProvider.httpImage(
-                                imageUrl: controller.imageFile?.path ?? "",
+                                imageUrl:(controller.selectedId != null)?"Get-imageOfnew?id=${controller.selectedId}":controller.imageFile?.path??"",
+                                secImageUrl: controller.news[controller.selectedId]?.image,
                                 imageError: Image.asset(
                                   "assets/images/news_full_back.jpg",
                                   fit: BoxFit.fill,
@@ -138,7 +141,7 @@ class PhonesNewsView extends GetView<NewsController> {
                           Row(
                             children: [
                               CustomText(
-                                "${"By".tr} user_name - ",
+                                "${"By".tr} ${controller.publisher?.name} - ",
                                 style: AppTextStyles.highlightStyle(
                                     textHeader: AppTextHeaders.h3Bold),
                               ),
@@ -149,11 +152,7 @@ class PhonesNewsView extends GetView<NewsController> {
                                   style: AppTextStyles.highlightStyle(
                                       textHeader: AppTextHeaders.h3Bold),
                                   enableBorder: false,
-                                  onTap: () =>
-                                      DateTimeUtils.datePiker(
-                                          context,
-                                          controller:
-                                          controller.dateController),
+
                                 ),
                               )
                             ],

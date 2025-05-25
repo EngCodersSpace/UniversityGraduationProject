@@ -9,10 +9,12 @@ class Role {
   @HiveField(1)
   String? name;
   @HiveField(2)
-  Map<String, List<Permission>> permissions;
+  String? roleType;
   @HiveField(3)
-  String? createdAt;
+  Map<String, List<Permission>> permissions;
   @HiveField(4)
+  String? createdAt;
+  @HiveField(5)
   String? updatedAt;
   @HiveField(5)
   String? type;
@@ -22,6 +24,7 @@ class Role {
     required this.permissions,
     this.type,
     this.name,
+    this.roleType,
     this.createdAt,
     this.updatedAt,
   });
@@ -42,6 +45,7 @@ class Role {
     return Role(
       id: json['id'],
       name: json['roleName'],
+      roleType: json['user_type'],
       permissions: permissionsMap,
       type: json['user_type'],
       createdAt: json['createdAt'],

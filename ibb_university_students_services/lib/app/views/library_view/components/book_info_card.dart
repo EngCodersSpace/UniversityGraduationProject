@@ -78,7 +78,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                           child: SizedBox(
                               height: (Get.height ) * 0.3,
                               width: (Get.height ) * 0.25,
-                              child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${controller.selectedBook?.id}")),
+                              child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${controller.selectedBook?.id}",secImageUrl:controller.selectedBook?.displayImage )),
                         ),
                         SizedBox(height: 32,),
                         SizedBox(width: 8,),

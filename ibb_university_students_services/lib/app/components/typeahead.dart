@@ -117,6 +117,7 @@ class TypeAhead<T extends Object> extends StatefulWidget {
   void hideOverlay() {
     overlayEntry?.remove();
     overlayEntry = null;
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override

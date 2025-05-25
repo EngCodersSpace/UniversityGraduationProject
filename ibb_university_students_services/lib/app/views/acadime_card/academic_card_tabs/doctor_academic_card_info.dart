@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
-import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
-
 import '../../../components/custom_text_v2.dart';
 import '../../../models/doctor_model/doctor.dart';
+import '../../../services/http_provider.dart';
 import '../../../styles/text_styles.dart';
+import '../../../utils/screen_utils.dart';
 
 class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
   const DoctorAcademicCardInfo({super.key});
@@ -89,11 +89,19 @@ class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
                                 quarterTurns: 1,
                                 child: Row(
                                   children: [
-                                    const Align(
+                                    Align(
                                       alignment: Alignment.topLeft,
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 80,
+                                      child: SizedBox(
+                                        height: Get.width*0.35,
+                                        width: Get.width*0.24,
+                                        child: HttpProvider.httpImage(
+                                          imageUrl:
+                                          controller.user?.value.profileImage ??
+                                              "",
+                                          secImageUrl: controller.user?.value.profileImage,
+                                          errorWidget: (ctx, s, o) =>
+                                              Icon(Icons.person),
+                                        ),
                                       ),
                                     ),
                                     Expanded(

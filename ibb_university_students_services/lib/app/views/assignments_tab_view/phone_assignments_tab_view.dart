@@ -31,7 +31,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                 Column(
                   children: [
                     Container(
-                        height: Get.height * 0.18,
+                        // height: Get.height * 0.18,
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.mainCardColor,
@@ -51,75 +51,168 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             SizedBox(
-                              height: Get.height * 0.02,
+                              height: Get.height * 0.05,
                             ),
                             if (UserRepository.currentUserType() == Doctor) ...[
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  CustomText(
-                                    "Section".tr,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2Bold),
+                                  Row(
+                                    children: [
+                                      CustomText(
+                                        "Section".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.inverseCardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(24),
+                                        ),
+                                        width: Get.width / 3,
+                                        child: Center(
+                                          child: Obx(
+                                            () => DropdownButton(
+                                              items: (controller
+                                                  .sections.entries
+                                                  .map((e) {
+                                                return DropdownMenuItem<int>(
+                                                    value: e.value.id,
+                                                    child: SizedBox(
+                                                      width: (ScreenUtils
+                                                              .isPhoneScreen())
+                                                          ? (Get.width / 3) - 30
+                                                          : (Get.width / 5.5) *
+                                                              0.6,
+                                                      child: CustomText(
+                                                        e.value.name ??
+                                                            "unknown",
+                                                        style: AppTextStyles
+                                                            .mainStyle(
+                                                          textHeader:
+                                                              AppTextHeaders
+                                                                  .h5Bold,
+                                                        ),
+                                                      ),
+                                                    ));
+                                              }).toList()),
+                                              onChanged:
+                                                  controller.changeDepartment,
+                                              value: controller
+                                                  .selectedDepartment.value,
+                                              underline: const SizedBox(),
+                                              iconEnabledColor:
+                                                  AppColors.mainCardColor,
+                                              dropdownColor:
+                                                  AppColors.inverseCardColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  CustomText(
-                                    "Level".tr,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2Bold),
-                                  ),
-                                  CustomText(
-                                    "Subject".tr,
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2Bold),
+                                  Row(
+                                    children: [
+                                      CustomText(
+                                        "Year".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.inverseCardColor,
+                                          borderRadius:
+                                          BorderRadius.circular(24),
+                                        ),
+                                        width: Get.width / 3,
+                                        child: Center(
+                                          child: Obx(
+                                                () => DropdownButton<int>(
+                                              items: (controller
+                                                  .years
+                                                  .map((e) {
+                                                    if(
+                                                    e==-1
+                                                    ){
+                                                      return DropdownMenuItem<int>(
+                                                          value: e,
+                                                          child: SizedBox(
+                                                            width: (ScreenUtils
+                                                                .isPhoneScreen())
+                                                                ? (Get.width / 3) - 30
+                                                                : (Get.width / 5.5) *
+                                                                0.6,
+                                                            child: CustomText(
+                                                              "Add",
+                                                              style: AppTextStyles
+                                                                  .mainStyle(
+                                                                textHeader:
+                                                                AppTextHeaders
+                                                                    .h5Bold,
+                                                              ),
+                                                            ),
+                                                          ));
+                                                    }else{
+                                                      return DropdownMenuItem<int>(
+                                                          value: e,
+                                                          child: SizedBox(
+                                                            width: (ScreenUtils
+                                                                .isPhoneScreen())
+                                                                ? (Get.width / 3) - 30
+                                                                : (Get.width / 5.5) *
+                                                                0.6,
+                                                            child: CustomText(
+                                                              e.toString(),
+                                                              style: AppTextStyles
+                                                                  .mainStyle(
+                                                                textHeader:
+                                                                AppTextHeaders
+                                                                    .h5Bold,
+                                                              ),
+                                                            ),
+                                                          ));
+                                                    }
+                                              }).toList()),
+                                              onChanged:
+                                              controller.changeYear,
+                                              value: controller
+                                                  .selectedYear.value,
+                                              underline: const SizedBox(),
+                                              iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                              dropdownColor:
+                                              AppColors.inverseCardColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.inverseCardColor,
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    width: Get.width / 3,
-                                    child: Center(
-                                      child: Obx(
-                                        () => DropdownButton(
-                                          items: (controller.sections.entries
-                                              .map((e) {
-                                            return DropdownMenuItem<int>(
-                                                value: e.value.id,
-                                                child: SizedBox(
-                                                  width: (ScreenUtils
-                                                          .isPhoneScreen())
-                                                      ? (Get.width / 3) - 30
-                                                      : (Get.width / 5.5) * 0.6,
-                                                  child: CustomText(
-                                                    e.value.name ?? "unknown",
-                                                    style:
-                                                        AppTextStyles.mainStyle(
-                                                      textHeader:
-                                                          AppTextHeaders.h5Bold,
-                                                    ),
-                                                  ),
-                                                ));
-                                          }).toList()),
-                                          onChanged:
-                                              controller.changeDepartment,
-                                          value: controller
-                                              .selectedDepartment.value,
-                                          underline: const SizedBox(),
-                                          iconEnabledColor:
-                                              AppColors.mainCardColor,
-                                          dropdownColor:
-                                              AppColors.inverseCardColor,
-                                        ),
-                                      ),
-                                    ),
+                            ],
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(children: [
+                                  CustomText(
+                                    "Level".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
@@ -142,40 +235,21 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       ),
                                     ),
                                   ),
-                                  TypeAhead<String>(
-                                    value: controller.selectedSubject.value,
-                                    width: (Get.width /3),
-                                    onSelected: (String i,v) {
-                                      controller.changeSubject(i);
-                                    },
-                                    icon: Icon(
-                                      Icons.arrow_drop_down_outlined,
-                                      color: AppColors.mainTextColor,
-                                      size: 25,
-                                    ),
-                                    label: "Select Subject",
-                                    items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
-                                    color: AppColors.inverseCardColor,
-                                    menuColor: AppColors.inverseCardColor,
-                                    textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-                                    menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-                                  ),
-                                ],
-                              ),
-                            ] else ...[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
+                                ]),
+                                Row(children: [
                                   CustomText(
                                     "Subject".tr,
                                     style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h2Bold),
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
                                   ),
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
-                                    width: (Get.width * 0.45),
-                                    onSelected: (String i,v){
+                                    width: (Get.width / 3) * 1.4,
+                                    height: 50,
+                                    onSelected: (String i, v) {
                                       controller.changeSubject(i);
                                     },
                                     icon: Icon(
@@ -184,17 +258,21 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       size: 25,
                                     ),
                                     label: "Select Subject",
-                                    items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
+                                    items: controller.subjects?.map((i, e) =>
+                                            MapEntry(i, e.subjectName ?? "")) ??
+                                        {},
                                     color: AppColors.inverseCardColor,
                                     menuColor: AppColors.inverseCardColor,
-                                    textStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-                                    menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
+                                    textStyle: AppTextStyles.mainStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                    menuTextStyle: AppTextStyles.mainStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
                                   ),
-                                ],
-                              ),
-                            ],
+                                ])
+                              ],
+                            ),
                             SizedBox(
-                              height: Get.height * 0.04,
+                              height: Get.height * 0.02,
                             ),
                           ],
                         )),
@@ -220,15 +298,10 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
+                Expanded(
                   child: SizedBox(
-                      width: width,
-                      height: (UserRepository.checkPermission(
-                              target: "assignments", action: "write"))
-                          ? Get.height * 0.64
-                          : Get.height * 0.666,
-                      child: RefreshIndicator(
+                    width: width,
+                    child: RefreshIndicator(
                         onRefresh: () async => controller.refresh(),
                         child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
@@ -252,7 +325,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     )),
                                     IconButton(
                                         onPressed: () async =>
-                                             controller.refresh(),
+                                            controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
                                   for (int i = 0;
@@ -277,8 +350,10 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                 ],
                               ),
                             )),
-                      )),
+                      ),
+                  ),
                 ),
+                SizedBox(height: 16,)
               ],
             ),
           ));

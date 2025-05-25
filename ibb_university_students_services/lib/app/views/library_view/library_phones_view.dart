@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../components/custom_text_v2.dart';
 import '../../components/text_field.dart';
 import '../../styles/app_colors.dart';
@@ -42,17 +43,19 @@ class LibraryPhonesView extends GetView<LibraryController> {
                                 Icons.filter_list_alt,
                                 color: AppColors.mainCardColor,
                               )),
-                          IconButton(
-                              onPressed: controller.addIconClick,
-                              icon: Icon(
-                                Icons.add,
-                                color: AppColors.mainCardColor,
-                              )),
+                          if(UserRepository.checkPermission(target: "books", action: "write"))...[
+                            IconButton(
+                                onPressed: controller.addIconClick,
+                                icon: Icon(
+                                  Icons.add,
+                                  color: AppColors.mainCardColor,
+                                )),
+                          ],
                           Expanded(
                             child: CustomTextFormField(
                               controller: controller.searchText,
                               focusNode: controller.searchFocus,
-                              onChange: controller.searching,
+                              onChange: (x)=>controller.updatePages(),
                               labelStyle: AppTextStyles.mainStyle(
                                   textHeader: AppTextHeaders.h3Normal),
                               style: AppTextStyles.mainStyle(
@@ -135,7 +138,7 @@ class LibraryPhonesView extends GetView<LibraryController> {
                     ),
                     Obx(() => (controller.tapController?.index != null)
                         ? CustomText(
-                            "${(controller.currentPage)}/${(((controller.books[controller.categories[controller.tapController!.index]]?.length ?? 0)) ~/ 12) + 1}",
+                            "${(controller.currentPage)}/${(((controller.books[controller.categories[controller.tapController!.index]]?.length ?? 0)) / 12).ceil()}",
                             style: AppTextStyles.mainStyle(
                                 textHeader: AppTextHeaders.h1Bold),
                           )

@@ -16,7 +16,6 @@ class GradRepository {
 
   static Future<void> openBox() async {
     _studentGradesBox = await Hive.openBox<StudentGradesCache>("StudentGradesBox");
-    _studentGradesBox?.clear();
   }
 
   static Future<void> clearBox() async {
@@ -46,11 +45,11 @@ class GradRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-          "${(mode=="self")?"get-grades":"get-all-grades"}?studentID=$studentID");
+          (mode=="self")?"get-grades":"get-all-grades?student_id=$studentID}");
       // print(response?.data);
       if (response?.statusCode == 200) {
         StudentGradesCache cachedGrads = StudentGradesCache(key: studentID, data: {});
-        for (Map<String, dynamic> jsGrad in response?.data["Grades"] ?? {}) {
+        for (Map<String, dynamic> jsGrad in response?.data["data"] ?? {}) {
           Grad grad = Grad.fromJson(jsGrad);
           cachedGrads.data[grad.id] = grad;
           await _studentGradesBox?.put(
