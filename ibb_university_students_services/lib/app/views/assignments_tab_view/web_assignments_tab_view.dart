@@ -66,7 +66,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width * 0.15,
+                                    width: Get.width * 0.13,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
@@ -147,7 +147,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   ),
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
-                                    width: (Get.width * 0.25),
+                                    width: (Get.width * 0.2),
                                     onSelected: (String i, v) {
                                       controller.changeSubject(i);
                                     },
@@ -165,6 +165,14 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                     textStyle: AppTextStyles.mainStyle(
                                         textHeader: AppTextHeaders.h3Bold),
                                     menuTextStyle: AppTextStyles.mainStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    width: Get.width * 0.02,
+                                  ),
+                                  CustomText(
+                                    "Year",
+                                    style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h3Bold),
                                   ),
                                 ],
