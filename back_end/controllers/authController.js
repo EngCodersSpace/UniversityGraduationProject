@@ -488,7 +488,100 @@ exports.getImageOfUser = async (req, res) => {
 };
 
 
+// Function to get the currently logged-in user 
+exports.getCurrentUser = async (req, res) => {
+  try {
+      const foundUser = await user.scope("with_hidden_data").findOne(
+        { where: { user_id: req.user.user_id } ,
+        include: [
+          { model: doctor, as: "doctor" },
+          {
+            model: student,
+            as: "student",
+            include: [
+              {
+                model: level,
+                as: "level",
+              },
+            ],
+          },
+          { model: section, as: "section" },
+  
+          {
+            model: role,
+            include: [
+              {
+                model: permission,
+                as: "permissions",
+                through: { attributes: [] },
+              },
+            ],
+          },
+        ],
+      });
 
+      if (!foundUser) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+
+      let responseUser = {};
+    let user_type = null;
+
+    if (foundUser.doctor == null) {
+      responseUser = foundUser.toJSON();
+      user_type = "student";
+      const tempStudent = responseUser.student;
+      delete responseUser.student;
+      delete responseUser.doctor;
+      responseUser = { ...responseUser, ...tempStudent };
+
+      const studentAssignments = await assignment.findAll({
+        where: {
+          level_id: foundUser.student.level.id,
+          section_id: foundUser.user_section_id,
+        },
+        include: [
+          {
+            model: student,
+            through: {
+              attributes: [],
+              where: { student_id: foundUser.user_id },
+            },
+          },
+        ],
+      });
+
+      totalAssignmentsCount = studentAssignments.length;
+      completedAssignmentsCount = studentAssignments.filter(
+        (assign) => assign.is_completed === true
+      ).length;
+
+      responseUser = {
+        ...responseUser,
+        completedAssignmentsCount,
+        totalAssignmentsCount,
+      };
+    } else if (foundUser.student == null) {
+      responseUser = foundUser.toJSON();
+      user_type = "doctor";
+      const tempDoctor = responseUser.doctor;
+      delete responseUser.student;
+      delete responseUser.doctor;
+      responseUser = { ...responseUser, ...tempDoctor };
+    }
+
+    res.json({
+      message: "Get Currrent User Data  successful",
+      user: responseUser,
+      user_type: user_type,
+    });
+
+  } catch (error) {
+      console.error("Error fetching user:", error.message);
+      res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
 
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {

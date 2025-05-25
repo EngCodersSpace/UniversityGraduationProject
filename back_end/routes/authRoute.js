@@ -19,6 +19,8 @@ router.post('/request-password-reset', vali.validateRequestPasswordReset , CRUD.
 
 router.use(verifyToken);
 
+
+router.get('/me',CRUD.getCurrentUser);
 router.post('/registerDoctor',checkPermission('users' , 'write'),CRUD.registerDoctor); 
 router.post('/registerStudent',checkPermission('users' , 'write'),CRUD.registerStudent ); 
 router.post('/upload-photo-user',checkPermission('users' , 'write'),CRUD.uploadPhotoForuser);//  
