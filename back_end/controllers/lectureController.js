@@ -100,36 +100,45 @@ const replaceOne = async (req, res) => {
     const condition =`(student in topics) && (section_${originalLecture.lecture_section_id} in topics)  &&  (level_${originalLecture.lecture_level_id} in topics) `;
     console.log('\n \n condition (info)',condition , '\n \n ');
 
+
     const oldDoctor= await user.findOne({
       where:{user_id:originalLecture.doctor_id}
     });
     const NewDoctor= await user.findOne({
       where:{user_id:replacedLecture.doctor_id}
     });
+    const olduserNameObj = JSON.parse(oldDoctor.user_name);
+    const newuserNameObj = JSON.parse(NewDoctor.user_name);
 
     await sendInfoNotification({
-      title:'Lecture is Replaced',
-      message:` Lecture ${originalLecture.subject_id}-Of-
-      ${oldDoctor.user_name}-which was at${originalLecture.lecture_day}-
-      ${originalLecture.lecture_time},has been replaced to New Lecture ${replacedLecture.subject_id}-Of-
-      ${NewDoctor.user_name} `,
-      sender_id:req.user.user_id,
-      topic_name:condition,
+      title: 'Lecture Replacement Notice',
+      message: `The lecture for subject ${originalLecture.subject_id}, originally scheduled with Dr. ${olduserNameObj.en} on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been replaced. 
+      The new lecture will be for subject ${replacedLecture.subject_id}, and it will be conducted by Dr. ${newuserNameObj.en}.`,
+      sender_id: req.user.user_id,
+      topic_name: condition,
     });
 
-    // if (originalLecture.lecture_section_id !== replacedLecture.lecture_section_id || originalLecture.lecture_level_id !== replacedLecture.lecture_level_id){
-    //   await sendInfoNotification({
-    //     title:'Lecture is Replaced',
-    //     message:`Your Lecture ${originalLecture.subject_id}-Of-
-    //     ${oldDoctor.user_name}-which was at${originalLecture.lecture_day}-
-    //     ${originalLecture.lecture_time},has been replaced to New Lecture ${replacedLecture.subject_id}-Of-
-    //     ${NewDoctor.user_name} `,
-    //     sender_id:req.user.user_id,
-    //     topic_name,
-    //   });
-    // }
+    await sendSingleSystemNotification({
+      title: 'Lecture Reassignment Notification',
+      message: `Dear Dr. ${newuserNameObj.en},
+      You have been assigned a new lecture for subject ${replacedLecture.subject_id}, originally scheduled with
+      Dr. ${olduserNameObj.en}, on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}.
+      Please make the necessary arrangements.`,
+      receiver_id: NewDoctor.user_id,
+      token: NewDoctor.fcm_token,
+      sender_id: req.user.user_id,
+    });
 
-
+    await sendSingleSystemNotification({
+      title: 'Lecture Reassignment Notification',
+      message: `Dear Dr. ${olduserNameObj.en},
+      Your lecture for subject ${originalLecture.subject_id}, scheduled on ${originalLecture.lecture_day}
+      at ${originalLecture.lecture_time}, has been reassigned.
+      Thank you for your understanding.`,
+      receiver_id: oldDoctor.user_id,
+      token: oldDoctor.fcm_token,
+      sender_id: req.user.user_id,
+    });
 
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     const [hours, minutes, seconds] = originalLecture.lecture_time

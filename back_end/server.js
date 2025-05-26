@@ -37,8 +37,8 @@ const newsRoute=require('./routes/newsRoute')
 const paperFormRoutes = require('./routes/paperFormRoutes');
 
 
-app.use(getData);
 app.use(authRoutes);
+app.use(getData);
 app.use(userRoutes);
 app.use(studyPlanElementRoute);
 app.use(examRoute);
