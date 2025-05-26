@@ -1,9 +1,12 @@
 const { validationResult } = require("express-validator");
 const { lecture, subject, doctor, section, level, user } = require("../models");
 const { Sequelize } = require("sequelize");
+const { sequelize } = require('../models'); 
 const { Op } = require("sequelize");
 const cron = require("node-cron");
 const { upsertRefreshState } = require("../controllers/refreshController");
+const { sendInfoNotification ,sendSingleSystemNotification} = require("./notificationController");
+
 
 const createLecture = async (req, res) => {
   const errors = validationResult(req);
@@ -64,6 +67,7 @@ async function restoreOriginalLecture(originalLectureId) {
 const replaceOne = async (req, res) => {
   const transaction = await lecture.sequelize.transaction();
   try {
+
     const originalLecture = await lecture.findByPk(req.query.id);
     if (!originalLecture) {
       throw new Error("Original lecture not found");
@@ -87,6 +91,45 @@ const replaceOne = async (req, res) => {
       lecture_room: req.body.lecture_room || originalLecture.lecture_room,
     };
     const replacedLecture = await lecture.create(updateFields, { transaction });
+
+    await upsertRefreshState("lecture", {
+      section_id: originalLecture.lecture_section_id ?? null,
+      level_id: originalLecture.lecture_level_id ?? null
+    },{ transaction });
+
+    const condition =`(student in topics) && (section_${originalLecture.lecture_section_id} in topics)  &&  (level_${originalLecture.lecture_level_id} in topics) `;
+    console.log('\n \n condition (info)',condition , '\n \n ');
+
+    const oldDoctor= await user.findOne({
+      where:{user_id:originalLecture.doctor_id}
+    });
+    const NewDoctor= await user.findOne({
+      where:{user_id:replacedLecture.doctor_id}
+    });
+
+    await sendInfoNotification({
+      title:'Lecture is Replaced',
+      message:` Lecture ${originalLecture.subject_id}-Of-
+      ${oldDoctor.user_name}-which was at${originalLecture.lecture_day}-
+      ${originalLecture.lecture_time},has been replaced to New Lecture ${replacedLecture.subject_id}-Of-
+      ${NewDoctor.user_name} `,
+      sender_id:req.user.user_id,
+      topic_name:condition,
+    });
+
+    // if (originalLecture.lecture_section_id !== replacedLecture.lecture_section_id || originalLecture.lecture_level_id !== replacedLecture.lecture_level_id){
+    //   await sendInfoNotification({
+    //     title:'Lecture is Replaced',
+    //     message:`Your Lecture ${originalLecture.subject_id}-Of-
+    //     ${oldDoctor.user_name}-which was at${originalLecture.lecture_day}-
+    //     ${originalLecture.lecture_time},has been replaced to New Lecture ${replacedLecture.subject_id}-Of-
+    //     ${NewDoctor.user_name} `,
+    //     sender_id:req.user.user_id,
+    //     topic_name,
+    //   });
+    // }
+
+
 
     const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     const [hours, minutes, seconds] = originalLecture.lecture_time
@@ -139,6 +182,35 @@ const changeLecStatus = async (req, res) => {
   try {
     lectureCancled.lectureStatus = req.body.action === "confirm";
     await lectureCancled.save();
+    await upsertRefreshState("lecture", {
+      section_id: lectureCancled.lecture_section_id ?? null,
+      level_id: lectureCancled.lecture_level_id ?? null
+    });
+
+    const condition =`(student in topics) && (section_${lectureCancled.lecture_section_id} in topics)  &&  (level_${lectureCancled.lecture_level_id} in topics) `;
+    console.log('\n \n condition (info)',condition , '\n \n ');
+
+    const DoctorName= await user.findOne({
+      where:{user_id:lectureCancled.doctor_id}
+    });
+
+    await sendInfoNotification({
+      title:'Lecture Status is changed',
+      message:` Lecture ${lectureCancled.subject_id}-Of-
+      ${DoctorName.user_name}-which was at ${lectureCancled.lecture_day}-${lectureCancled.lecture_time}-has been ${req.body.action}`,
+      sender_id:req.user.user_id,
+      topic_name:condition,
+    });
+
+    await sendSingleSystemNotification({
+      title: " Lecture ",
+      message: `Your Lecture Of subject ${lectureCancled.subject_id}-which was at ${lectureCancled.lecture_day}-
+      ${lectureCancled.lecture_time}-,has been ${req.body.action}. Please check it.`,
+      receiver_id: DoctorName.user_id,
+      token: DoctorName.fcm_token,
+      sender_id: req.user.user_id,
+    });
+
     return res
       .status(200)
       .json({ message: `Lecture ${req.body.action}ed successfully` });

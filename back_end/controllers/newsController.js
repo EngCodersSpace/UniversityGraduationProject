@@ -4,6 +4,7 @@ const { uploadPhoto } = require("../utils/multerConfig");
 const path = require("path");
 const fs = require("fs");
 const dayjs = require("dayjs");
+const { upsertRefreshState} = require('../controllers/refreshController');
 
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
@@ -52,6 +53,7 @@ exports.createNewsWithPhoto = async (req, res) => {
         createdNews.image = `News/user/${newFileName}`;
         await createdNews.save();
       }
+      await upsertRefreshState("news", {});
 
       res.status(201).json({
         message: "News created successfully.",
@@ -292,6 +294,7 @@ exports.updateNewsWithPhoto = async (req, res) => {
       }
 
       await existingNews.save();
+      await upsertRefreshState("news", {});
 
       res.status(200).json({
         message: "News updated successfully.",
@@ -327,6 +330,7 @@ exports.deleteNews = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ error: "News not found" });
     }
+    await upsertRefreshState("news", {});
     await deleted.destroy();
     res.status(200).json({ message: "News deleted" });
   } catch (err) {

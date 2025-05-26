@@ -270,7 +270,7 @@ const sendSystemNotification = async ({
       for (const condition of conditions) {
         const payload = {
           data: {
-            type: 'system',
+            type: 'sync',
             ...metadata,
           },
           condition,
@@ -288,6 +288,16 @@ const sendSystemNotification = async ({
   CRUD.delayedSend(delay, send)
 
 };
+
+
+
+
+
+
+
+
+
+
 
 
 

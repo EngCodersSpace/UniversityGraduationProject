@@ -7,6 +7,8 @@ const crypto = require('crypto');
 const {  translateText } = require('../middleware/translationServices');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 const { upsertRefreshState} = require('../controllers/refreshController');
+const { sendInfoNotification } = require("../controllers/notificationController");
+
 const { Sequelize,Op} = require('sequelize');
 
 
@@ -267,7 +269,7 @@ exports.getStudentsAndFilesByAssignment = async (req, res) => {
   }
 };
 
-// download files of student_assignment-file
+// download files of student_assignment-file // what students realy uploaded
 exports.downloadFile = async (req, res) => {
   try {
     const fileData = await student_assignment_file.findByPk(req.query.id);
@@ -299,7 +301,7 @@ exports.downloadFile = async (req, res) => {
   }
 };
 
-// download files of assignment-file
+// download files of assignment-file // what doctors realy uploaded
 exports.doctorDownloadFile = async (req, res) => {
   try {
     const fileData = await assignment_file.findByPk(req.query.id);
@@ -459,7 +461,9 @@ exports.createAssignment = async (req, res) => {
           req.body.sectionsAndLevels.map(async (item) => {
               await upsertRefreshState("assignment", {
                   section_id: item.section_id ?? null,
-                  level_id: item.level_id ?? null
+                  level_id: item.level_id ?? null,
+                  year:item.year,
+                  subject_id:item.subject_id,
               });
           })
       );
@@ -610,9 +614,12 @@ exports.updateAssigment=async(req,res)=>{
       level_id: req.body.level_id || Assignment.level_id,
     };
 
+
     await upsertRefreshState("assignment", {
-      section_id: Assignment.section_id , 
-      level_id:  Assignment.level_id     
+      section_id: Assignment.section_id ?? null,
+      level_id: Assignment.level_id ?? null,
+      year:Assignment.year,
+      subject_id:Assignment.subject_id,
     });
     
     await Assignment.update(updatedFields, { where: { id: req.query.assignment_id } });
@@ -653,10 +660,11 @@ exports.deleteAssignment = async (req, res) => {
       await file.destroy();
     }
 
-    // await assignment_file.destroy({where:{assignment_id: Assignment.id}});
     await upsertRefreshState("assignment", {
-      section_id: Assignment.section_id , 
-      level_id:  Assignment.level_id     
+      section_id: Assignment.section_id ?? null,
+      level_id: Assignment.level_id ?? null,
+      year:Assignment.year,
+      subject_id:Assignment.subject_id,
     });
     await Assignment.destroy();
 

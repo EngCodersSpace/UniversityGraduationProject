@@ -3,6 +3,7 @@ const { user,subject, grade ,student,section,level,study_plan_elment } = require
 const {Op, Sequelize} = require('sequelize');
 const jwt = require("jsonwebtoken");
 const {sendSingleSystemNotification}= require('./notificationController');
+const { upsertRefreshState } = require("../controllers/refreshController");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // get All Grades For specific =>  student_id  and  level_id and Term 
@@ -348,6 +349,9 @@ exports.createGrade = async (req, res) => {
       sender_id: req.user.user_id,
     });
     
+    await upsertRefreshState("studentGrades", {
+      student_id: newGrade.student_id ?? null,
+    });
 
     res.status(201).json({
       message: 'Grade created successfully',
@@ -447,6 +451,23 @@ exports.updateGrade = async (req, res) => {
         is_absent,
         status,
       });
+
+      const UserId=await user.findOne({
+        where:{user_id:gradeToUpdate.student_id}
+      });
+
+
+      await sendSingleSystemNotification({
+        title: "New Grade Available",
+        message: `Your grade for subject ${req.body.subject_id} has been Updated. Please check it.`,
+        receiver_id: gradeToUpdate.student_id,
+        token: UserId.fcm_token,
+        sender_id: req.user.user_id,
+      });
+      
+      await upsertRefreshState("studentGrades", {
+        student_id: gradeToUpdate.student_id ?? null,
+      });
   
       res.status(200).json({
         message: 'Grade updated successfully',
@@ -461,13 +482,29 @@ exports.updateGrade = async (req, res) => {
 exports.deleteGrade = async (req, res) => {
     try {
       const { id } = req.params;
-  
+
       const gradeToDelete = await grade.findOne({ where: { grad_id: id } });
   
       if (!gradeToDelete) {
         return res.status(404).json({ message: 'Grade not found' });
       }
-  
+      const UserId=await user.findOne({
+        where:{user_id:gradeToDelete.student_id}
+      });
+
+      await sendSingleSystemNotification({
+        title: " Grade Delete",
+        message: `Your grade for subject ${req.body.subject_id} has been Deleted. Please check it.`,
+        receiver_id: gradeToDelete.student_id,
+        token: UserId.fcm_token,
+        sender_id: req.user.user_id,
+      });
+      
+      await upsertRefreshState("studentGrades", {
+        student_id: gradeToDelete.student_id ?? null,
+      });
+
+
       await gradeToDelete.destroy();
   
       res.status(200).json({ message: 'Grade deleted successfully' });

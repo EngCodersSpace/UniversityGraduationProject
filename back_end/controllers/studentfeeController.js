@@ -1,5 +1,6 @@
 // controllers/studentFeeController.js
 const { student_fee, student ,level} = require('../models');
+const { upsertRefreshState } = require("../controllers/refreshController");
 
 exports.createStudentFee = async (req, res) => {
     try {
@@ -9,6 +10,9 @@ exports.createStudentFee = async (req, res) => {
             ]
         });
 
+        await upsertRefreshState("studentFees", {
+            student_id: fee.student_id ?? null,
+        });
 
         res.status(201).json({
                 message :'Make fee successfully',
@@ -205,6 +209,9 @@ exports.updateFee = async (req, res) => {
             {where:{id:req.body.id}},
         );
         const updatedFee = await student_fee.findOne({ where: { id: req.body.id } });
+        await upsertRefreshState("studentFees", {
+            student_id: updatedFee.student_id ?? null,
+        });
         res.status(200).json({ 
             message: 'Student fee updated successfully' ,
             data: updatedFee
@@ -217,6 +224,7 @@ exports.updateFee = async (req, res) => {
 exports.deleteFee = async (req, res) => {
     try {
         await student_fee.destroy({ where: { id: req.query.id} });
+
         res.status(200).json({ message: 'Student fee deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });

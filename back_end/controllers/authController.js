@@ -38,6 +38,7 @@ exports.welcome = (req, res) => {
 ///////////////////////////
 
 exports.login = async (req, res) => {
+  console.log("\n__________________login__________________\n");
   const { user_id, password, fcm_token } = req.body;
   console.log("____________________________________\n");
   console.log(fcm_token, "\n");

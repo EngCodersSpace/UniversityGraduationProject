@@ -7,7 +7,7 @@ const { getTableRelations } = require('../utils/relationHelper');
 
 exports.exportData = async (req, res) => {
   try {
-    const lang = req.headers["Accept-Language"] === "en" ? "ar" : "en";
+    const lang = req.headers["Accept-Language"] === 'en' ? 'ar' : 'en';
     console.log('\n \n \n ',lang,'\n \n \n');
     let { tables = '', relations = 'false'} = req.query;
     

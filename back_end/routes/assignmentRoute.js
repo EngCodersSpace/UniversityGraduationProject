@@ -19,8 +19,8 @@ router.get('/get-year-assignment',checkDoctorAccess, CRUD.getAssignmentYear);
 
 
 router.get('/get-all-students-assignment',checkDoctorAccess, CRUD.getStudentsAndFilesByAssignment);
-router.get('/download-assignment-files',checkDoctorAccess, CRUD.downloadFile);  // doctors download what students upload for specific assignment
-router.get('/download-files-doctor',checkStudentsAccess, CRUD.doctorDownloadFile);// students download what doctor upload for specific assignment
+router.get('/download-assignment-files',checkUserAccess, CRUD.downloadFile);  // doctors download what students upload for specific assignment
+router.get('/download-files-doctor',checkUserAccess, CRUD.doctorDownloadFile);// students download what doctor upload for specific assignment
 
 router.put('/update-assignment',checkPermission('assignments', 'write'), CRUD.updateAssigment);
 router.put('/update-student-assignment-status',checkPermission('assignments', 'setStatus'), CRUD.updateAssignmentStatus);
