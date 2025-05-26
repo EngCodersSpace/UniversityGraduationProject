@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -13,10 +12,12 @@ import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
 import '../repositories/user_repository.dart';
 import 'package:universal_html/html.dart' as html;
+// ignore: depend_on_referenced_packages
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 class HttpProvider {
   static final Dio _dio = Dio();
-  static int _refreshTries = 5;
+  static int _refreshTries = 2;
   static Map<int, CancelToken> cancelTokens = {};
   static int onProcessUploads = 0;
 
@@ -74,6 +75,7 @@ class HttpProvider {
           try {
             Response? response = await _refreshAndRetry(error.requestOptions);
             if (response != null) {
+              _refreshTries = 2;
               return handler.resolve(response);
             }
           } catch (e) {
@@ -329,12 +331,12 @@ class HttpProvider {
       RequestOptions requestOptions) async {
     try {
       _refreshTries--;
-      if (_refreshTries < 0) {
+      if (_refreshTries <= 0) {
         Box box = await Hive.openBox('rememberMe');
         box.clear();
         box.close();
         get_x.Get.offAllNamed("login");
-        _refreshTries = 5;
+        _refreshTries = 2;
         return null;
       }
 
@@ -353,7 +355,6 @@ class HttpProvider {
         addAccessTokenHeader(
           response.data["accessToken"],
         );
-        _refreshTries = 5;
         return await _dio.request(
           requestOptions.path,
           queryParameters: requestOptions.queryParameters,
@@ -406,6 +407,7 @@ class HttpProvider {
   static String parseUrl(String endPoint) {
     return _dio.options.baseUrl + endPoint;
   }
+
   static Widget httpImage({
     required String imageUrl,
     String? secImageUrl,
@@ -415,20 +417,22 @@ class HttpProvider {
     BoxFit fit = BoxFit.cover,
   }) {
     if (imageUrl.startsWith('/') ||
-        imageUrl.contains(':\\') ||
         imageUrl.contains('/storage/')) {
       return Image.file(File(imageUrl),
           fit: fit,
-          errorBuilder: (_, __, ___) => imageError ?? Icon(Icons.error));
+          errorBuilder: (_, __, ___) => imageError ?? Icon(Icons.error),
+      );
     } else {
       return CachedNetworkImage(
         imageUrl: "${_dio.options.baseUrl}$imageUrl",
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         httpHeaders: {
           'Authorization': _dio.options.headers["Authorization"] ?? "",
         },
         placeholder: placeholder ??
             (context, url) => const Center(child: CircularProgressIndicator()),
         errorWidget: (context, url, error) => CachedNetworkImage(
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
           imageUrl: secImageUrl ?? "",
           placeholder: (context, url) =>
               const Center(child: CircularProgressIndicator()),
@@ -439,5 +443,6 @@ class HttpProvider {
         fit: fit,
       );
     }
+
   }
 }

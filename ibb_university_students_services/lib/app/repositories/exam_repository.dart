@@ -24,6 +24,7 @@ class ExamRepository {
   static Box<ExamsCache>? _examsBox;
 
   static Future<void> openBox() async {
+    if(_examsBox?.isOpen??false)return;
     _examsBox = await Hive.openBox<ExamsCache>("ExamBox");
   }
 

@@ -5,6 +5,7 @@ import 'package:ibb_university_students_services/app/models/doctor_model/doctor.
 import 'package:ibb_university_students_services/app/models/student_model/student.dart';
 import '../../components/buttons.dart';
 import '../../components/custom_text_v2.dart';
+import '../../services/http_provider.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
 
@@ -56,24 +57,15 @@ class WebProfileView extends GetView<ProfileController> {
                                   radius: Get.width * 0.07,
                                   backgroundColor: AppColors.mainCardColor),
                               CircleAvatar(
-                                backgroundColor:
-                                    (controller.user?.profileImage) != null
-                                        ? AppColors.inverseCardColor
-                                        : AppColors.inverseCardColor,
                                 maxRadius: Get.width * 0.07 - 3,
-                                backgroundImage:
-                                    (controller.user?.profileImage) != null
-                                        ? AssetImage(
-                                            controller.user?.profileImage ?? "")
-                                        : null,
-                                child: (controller.user?.profileImage) != null
-                                    ? null
-                                    : CustomText(
-                                        controller.user?.name?[0] ??
-                                            "".toUpperCase(),
-                                        style: AppTextStyles.mainStyle(
-                                            textHeader: AppTextHeaders.h1Bold),
-                                      ),
+                                child: HttpProvider.httpImage(
+                                  imageUrl:
+                                  controller.user?.profileImage ??
+                                      "",
+                                  secImageUrl: controller.user?.profileImage,
+                                  errorWidget: (ctx, s, o) =>
+                                      Icon(Icons.person),
+                                ),
                               ),
                             ],
                           ),

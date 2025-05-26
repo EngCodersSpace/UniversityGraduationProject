@@ -115,7 +115,7 @@ class LibraryController extends GetxController
   }
 
   @override
-  void refresh() async {
+  Future<void> refresh() async {
     fetchLibraryData(force: true);
     await Future.delayed(Duration(seconds: 2));
   }
@@ -140,9 +140,6 @@ class LibraryController extends GetxController
       books[cate]?.value = {};
     }
     Result res = await LibraryRepository.streamFetchLibraryFilesGroup(
-      sectionId: selectedDepartment.value!,
-      levelId: selectedLevel.value!,
-      category: categories[selectedCategory.value!],
       destination: books,
       hardFetch: force,
     );

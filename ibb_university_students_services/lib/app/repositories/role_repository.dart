@@ -15,20 +15,27 @@ class RoleRepository {
   static const int _createError = 611;
 
   static Box<Role>? _roleBox;
+  static Box<Role>? _allPermissionBox;
 
   static Future<void> openBox() async {
     if(_roleBox?.isOpen??false)return;
     _roleBox = await Hive.openBox<Role>('RoleBox');
+    _allPermissionBox = await Hive.openBox<Role>('allPermissionBox');
     // Box  = await Hive.openBox('');
   }
   static Future<void> clearBox() async {
     _roleBox = await Hive.openBox<Role>('RoleBox');
     _roleBox?.clear();
+    _allPermissionBox = await Hive.openBox<Role>('allPermissionBox');
+    _allPermissionBox?.clear();
   }
 
   static Future<void> closeBox() async {
     if(_roleBox?.isOpen??false) {
       await _roleBox?.close();
+    }
+    if(_allPermissionBox?.isOpen??false) {
+      await _allPermissionBox?.close();
     }
   }
   static Future<Result<Map<int, Role>>> fetchRoles({
@@ -72,6 +79,61 @@ class RoleRepository {
           data: null);
     }
   }
+
+
+  static Future<Result<Map<String, List<Permission>>>> fetchAllPermission({
+    bool hardFetch = false,
+  }) async {
+    await openBox();
+    if ((_allPermissionBox?.get(1) != null) &&(!hardFetch|| !(await checkInternetConnection())) ) {
+      return Result(
+        data: _roleBox?.get(1)?.permissions,
+        statusCode: 200,
+        hasError: false,
+        message: "successful",
+      );
+    }
+    late Response? response;
+    try {
+      response = await HttpProvider.get("get-permissions");
+      if (response?.statusCode == 200) {
+          Map<String, List<Permission>> permissionsMap = {};
+        for (Map<String, dynamic> permission in response?.data["data"]) {
+          if (permissionsMap[permission['target']] == null) {
+            permissionsMap[permission['target']] = [];
+          }
+          permissionsMap[permission['target']]
+              ?.add(Permission.fromJson(permission));
+        }
+          Role role = Role(
+            id: 1,
+            permissions: permissionsMap,
+            name: "all",
+            roleType: "none",
+
+          );
+          await _allPermissionBox?.put(role.id, role);
+        return Result(
+            data: role.permissions,
+            hasError: false,
+            statusCode: response?.statusCode,
+            message: response?.data["message"] ?? "error");
+      }
+
+      return Result(
+          data: null,
+          hasError: true,
+          statusCode: response?.statusCode ?? _fetchError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _fetchError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
 
   static Future<Result<Role>> createRole({
     required data,
