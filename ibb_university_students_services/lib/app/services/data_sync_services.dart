@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/news_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/student_result_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
@@ -14,6 +15,7 @@ import 'package:ibb_university_students_services/app/repositories/exam_repositor
 import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/lecture_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/news_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
@@ -241,7 +243,7 @@ class DataSyncServices {
           hardFetch: true,
         );
         if (Get.isRegistered<LibraryController>()) {
-           await Get.find<LibraryController>().refresh();
+          await Get.find<LibraryController>().fetchLibraryData();
         }
         await DataSyncRepository.cacheDataSyncRecord(state: dataSync);
       }
@@ -260,17 +262,10 @@ class DataSyncServices {
       if (oldDataSync == null ||
           DateTimeUtils.stringDataIsAfter(
               dataSync.updatedAt ?? "", oldDataSync.updatedAt ?? "")) {
-        if (dataSync.filters?["section_id"] == null ||
-            dataSync.filters?["level_id"] == null) {
-          return;
-        }
-        await ExamRepository.openBox();
-        await ExamRepository.fetchExamsGroup(
-            sectionId: dataSync.filters?["section_id"],
-            levelId: dataSync.filters?["level_id"],
-            hardFetch: true);
-        if (Get.isRegistered<ExamTableController>()) {
-          await Get.find<ExamTableController>().fetchExamsData();
+        await NewsRepository.openBox();
+        await NewsRepository.fetchNews();
+        if (Get.isRegistered<NewsController>()) {
+          await Get.find<NewsController>().fetchNews();
         }
         await DataSyncRepository.cacheDataSyncRecord(state: dataSync);
       }

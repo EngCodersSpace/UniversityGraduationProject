@@ -1,5 +1,4 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
@@ -89,9 +88,9 @@ class LibraryController extends GetxController
     await initSectionDropdownMenuList();
     await initLevelDropdownMenuLists();
     subjects =
-    await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
     BorderSide borderSide =
-    BorderSide(color: AppColors.inverseCardColor, width: 1.0);
+        BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
       Border(
         top: borderSide,
@@ -229,13 +228,13 @@ class LibraryController extends GetxController
               books[cat]!.entries.toList()
                 ..sort((a, b) => (sortDirection.value == 0)
                     ? (a.value.title
-                    ?.toLowerCase()
-                    .compareTo(b.value.title?.toLowerCase() ?? "") ??
-                    0)
+                            ?.toLowerCase()
+                            .compareTo(b.value.title?.toLowerCase() ?? "") ??
+                        0)
                     : (b.value.title
-                    ?.toLowerCase()
-                    .compareTo(a.value.title?.toLowerCase() ?? "") ??
-                    0)));
+                            ?.toLowerCase()
+                            .compareTo(a.value.title?.toLowerCase() ?? "") ??
+                        0)));
         }
 
         break;
@@ -246,11 +245,11 @@ class LibraryController extends GetxController
               books[cat]!.entries.toList()
                 ..sort((a, b) => (sortDirection.value == 0)
                     ? (a.value.numberOfPages
-                    ?.compareTo(b.value.numberOfPages ?? 0) ??
-                    0)
+                            ?.compareTo(b.value.numberOfPages ?? 0) ??
+                        0)
                     : (b.value.numberOfPages
-                    ?.compareTo(a.value.numberOfPages ?? 0) ??
-                    0)));
+                            ?.compareTo(a.value.numberOfPages ?? 0) ??
+                        0)));
         }
         break;
       case "size":
@@ -285,9 +284,6 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) async {
     selectedBook = book;
-    if(!kIsWeb){
-      await selectedBook?.checkDownloaded();
-    }
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookInfoCard())
         : Get.dialog(WebBookInfoCard());
@@ -295,7 +291,7 @@ class LibraryController extends GetxController
 
   void updatePages() {
     for (String cat in categories) {
-      update(["${cat}Tap"]);
+      books[cat]?.refresh();
     }
   }
 
@@ -426,10 +422,10 @@ class LibraryController extends GetxController
     }
     for (PlatformFile file in (selectedFiles)) {
       List<LibraryFile> files = await LibraryRepository.uploadLibraryFile(
-          file: file,
-          groups: groups,
-          category: categories[selectedCategory.value ?? 0],
-          subjectId: selectedAddSubjectId?.value)
+              file: file,
+              groups: groups,
+              category: categories[selectedCategory.value ?? 0],
+              subjectId: selectedAddSubjectId?.value)
           .then((e) => e.data ?? []);
       for (LibraryFile e in files) {
         books[e.category] ??= RxMap({});
@@ -461,7 +457,7 @@ class LibraryController extends GetxController
   void deleteBooksFromServer() async {
     if (selectedBook?.id == null) return;
     Result res =
-    await LibraryRepository.deleteLibraryBook(bookId: selectedBook!.id);
+        await LibraryRepository.deleteLibraryBook(bookId: selectedBook!.id);
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 200) {
       Navigator.of(Get.overlayContext!).pop();
@@ -476,7 +472,7 @@ class LibraryController extends GetxController
 
   void addGroup(int sectionId, int levelId) {
     if (groups.any((map) =>
-    map["section_id"] == sectionId && map["level_id"] == levelId)) {
+        map["section_id"] == sectionId && map["level_id"] == levelId)) {
       showSnakeBar(message: "Group Already Exists");
       return;
     }
@@ -494,6 +490,27 @@ class LibraryController extends GetxController
     Navigator.of(Get.overlayContext!).pop();
   }
 
+  bool checkShowBook2({required int category, required LibraryFile file}) {
+    bool check =
+        (file.sectionId ==
+            selectedDepartment.value ||
+            selectedDepartment.value == -1) &&
+            (file.levelId ==
+                selectedLevel.value ||
+                selectedLevel.value == -1) &&
+            ((file
+                .title
+                ?.toLowerCase()
+                .contains(searchText.text.toLowerCase()) ??
+                false) ||
+                searchText.text == "") &&
+            ((file
+                .downloaded
+                .value &&
+                selectedShowOption.value == 0) ||
+                selectedShowOption.value == 2);
+    return check;
+  }
   @override
   void onClose() {
     LibraryRepository.closeBox();

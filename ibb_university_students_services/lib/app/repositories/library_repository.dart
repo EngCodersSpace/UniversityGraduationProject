@@ -110,6 +110,10 @@ class LibraryRepository {
               }
               LibraryFile libraryFile =
                   LibraryFile.fromJson(jsLibrary, subject: subject);
+              if (!kIsWeb) {
+                await libraryFile.checkDownloaded();
+              }
+
               destination[libraryFile.category]?[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {
