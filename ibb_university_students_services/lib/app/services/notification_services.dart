@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'data_sync_services.dart';
+
 class NotificationHandler {
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
@@ -46,46 +48,41 @@ class NotificationHandler {
     }
   }
 
-  static Future<void> registerTopics(List<String> topics )async{
-    if(kIsWeb)return;
-    for(String topic in topics) {
+  static Future<void> registerTopics(List<String> topics) async {
+    if (kIsWeb) return;
+    for (String topic in topics) {
       await FirebaseMessaging.instance.subscribeToTopic(topic);
     }
   }
 
   static Future<void> unsubscribeFromTopic(List<String> topics) async {
-    for(String topic in topics) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic(topic).then((_) {
-      }).catchError((error) {
+    if (kIsWeb) return;
+    for (String topic in topics) {
+      await FirebaseMessaging.instance
+          .unsubscribeFromTopic(topic)
+          .then((_) {})
+          .catchError((error) {
         if (kDebugMode) {
           print("Failed to unsubscribe: $error");
         }
       });
     }
   }
+
   static void _handleMessage(RemoteMessage message) {
-    showNotification(
-      title: message.notification?.title ?? "Info",
-      body: message.notification?.body ?? "Notification received",
-    );
-    // DataSyncServices.startSync();
-    // if (message.data['type'] == 'info') {
-    //   showNotification(
-    //     title: message.notification?.title ?? "Info",
-    //     body: message.notification?.body ?? "Notification received",
-    //   );
-    // } else if (message.data['type'] == 'command') {
-    //   // Handle silent command notification
-    //   _processCommand(message.data);
-    // }
+    if (message.data['type'] == 'sync') {
+      // Handle silent command notification
+      _processCommand(message.data);
+    } else {
+      showNotification(
+        title: message.notification?.title ?? "Info",
+        body: message.notification?.body ?? "Notification received",
+      );
+    }
   }
 
   static void _processCommand(Map<String, dynamic> data) {
-    String action = data['action'] ?? '';
-    if (action == 'refresh_data') {
-      // String module = data['module'] ?? '';
-      // Add logic to refresh data (e.g., call a service to update cache)
-    }
+    DataSyncServices.startSync();
   }
 
   static Future<void> showNotification(
@@ -150,11 +147,10 @@ class NotificationHandler {
     );
   }
 
-  static Future<String?> getDeviceToken() async{
-    try{
+  static Future<String?> getDeviceToken() async {
+    try {
       return await FirebaseMessaging.instance.getToken();
-    }
-    catch(e){
+    } catch (e) {
       //
     }
     return null;
@@ -162,13 +158,12 @@ class NotificationHandler {
 }
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
-  // print("Handling background message: ${message.notification?.title}");
-  if (message.data['type'] == 'info') {
+  if (message.data['type'] == 'system') {
+    NotificationHandler._processCommand(message.data);
+  } else {
     NotificationHandler.showNotification(
       title: message.notification?.title ?? "Info",
       body: message.notification?.body ?? "Background Notification",
     );
-  } else if (message.data['type'] == 'command') {
-    NotificationHandler._processCommand(message.data);
   }
 }

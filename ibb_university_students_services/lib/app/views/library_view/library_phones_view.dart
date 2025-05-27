@@ -138,7 +138,8 @@ class LibraryPhonesView extends GetView<LibraryController> {
                     ),
                     Obx(() => (controller.tapController?.index != null)
                         ? CustomText(
-                            "${(controller.currentPage)}/${(((controller.books[controller.categories[controller.tapController!.index]]?.length ?? 0)) / 12).ceil()}",
+                            "${(controller.currentPage)}/${((controller.books[controller.categories[0]]?.values.where((e)=>controller.checkShowBook2(category: 0, file: e)).length??
+                                0) / 12).ceil()}",
                             style: AppTextStyles.mainStyle(
                                 textHeader: AppTextHeaders.h1Bold),
                           )

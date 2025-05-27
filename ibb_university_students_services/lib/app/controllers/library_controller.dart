@@ -1,5 +1,4 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/repositories/library_repository.dart';
@@ -115,7 +114,7 @@ class LibraryController extends GetxController
   }
 
   @override
-  void refresh() async {
+  Future<void> refresh() async {
     fetchLibraryData(force: true);
     await Future.delayed(Duration(seconds: 2));
   }
@@ -140,9 +139,6 @@ class LibraryController extends GetxController
       books[cate]?.value = {};
     }
     Result res = await LibraryRepository.streamFetchLibraryFilesGroup(
-      sectionId: selectedDepartment.value!,
-      levelId: selectedLevel.value!,
-      category: categories[selectedCategory.value!],
       destination: books,
       hardFetch: force,
     );
@@ -288,9 +284,6 @@ class LibraryController extends GetxController
 
   void showBookInfo(LibraryFile book) async {
     selectedBook = book;
-    if(!kIsWeb){
-      await selectedBook?.checkDownloaded();
-    }
     (ScreenUtils.isPhoneScreen())
         ? Get.dialog(PopUpBookInfoCard())
         : Get.dialog(WebBookInfoCard());
@@ -298,7 +291,7 @@ class LibraryController extends GetxController
 
   void updatePages() {
     for (String cat in categories) {
-      update(["${cat}Tap"]);
+      books[cat]?.refresh();
     }
   }
 
@@ -497,6 +490,27 @@ class LibraryController extends GetxController
     Navigator.of(Get.overlayContext!).pop();
   }
 
+  bool checkShowBook2({required int category, required LibraryFile file}) {
+    bool check =
+        (file.sectionId ==
+            selectedDepartment.value ||
+            selectedDepartment.value == -1) &&
+            (file.levelId ==
+                selectedLevel.value ||
+                selectedLevel.value == -1) &&
+            ((file
+                .title
+                ?.toLowerCase()
+                .contains(searchText.text.toLowerCase()) ??
+                false) ||
+                searchText.text == "") &&
+            ((file
+                .downloaded
+                .value &&
+                selectedShowOption.value == 0) ||
+                selectedShowOption.value == 2);
+    return check;
+  }
   @override
   void onClose() {
     LibraryRepository.closeBox();

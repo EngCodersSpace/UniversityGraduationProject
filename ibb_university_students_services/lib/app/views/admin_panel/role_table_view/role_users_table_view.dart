@@ -172,7 +172,7 @@ class MyData extends DataTableSource {
                 items[index % controller.rowsPerPage.value].id),
             CustomText(
                 key: UniqueKey(),
-                items[index % controller.rowsPerPage.value].type.toString()),
+                items[index % controller.rowsPerPage.value].roleType.toString()),
           ),
         ]);
   }

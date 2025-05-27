@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/academic_card_controller.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_tabs/academic_card_last_payment.dart';
 import 'academic_card_tabs/doctor_academic_card_info.dart';
@@ -29,7 +30,7 @@ class AcademicCardWebView extends GetView<AcademicCardController> {
                       SizedBox(
                         height: Get.height * 0.02,
                       ),
-                      if (controller.user is Doctor) ...[
+                      if (UserRepository.currentUserType() ==  Doctor) ...[
                         SizedBox(
                           width: Get.width * 0.4,
                           height: Get.height * 0.4,

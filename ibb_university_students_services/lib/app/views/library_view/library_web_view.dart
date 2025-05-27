@@ -91,12 +91,9 @@ class LibraryWebView extends GetView<LibraryController> {
                                   fontSize: 20, fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 40,
                             ),
                           ],
-                        ),
-                        SizedBox(
-                          width: 30,
                         ),
                         Row(
                           children: [
@@ -113,12 +110,9 @@ class LibraryWebView extends GetView<LibraryController> {
                                   fontSize: 20, fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 40,
                             ),
                           ],
-                        ),
-                        SizedBox(
-                          width: 30,
                         ),
                         Row(
                           children: [

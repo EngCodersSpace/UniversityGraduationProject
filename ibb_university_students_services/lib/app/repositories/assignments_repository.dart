@@ -487,6 +487,8 @@ class AssignmentsRepository {
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       showSnakeBar(message: "Failed Upload");
+      attachment.progress?.value = -1;
+      attachment.status?.value = "Upload Failed";
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
@@ -556,6 +558,8 @@ class AssignmentsRepository {
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       showSnakeBar(message: "Failed Upload");
+      attachment.progress?.value = -1;
+      attachment.status?.value = "Upload Failed";
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
@@ -588,6 +592,7 @@ class AssignmentsRepository {
                   title: "Downloading",
                   message: " ${file.originName}");
             });
+        file.progress?.value = -1;
         return Result();
       }
 
@@ -703,6 +708,8 @@ class AssignmentsRepository {
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       showSnakeBar(message: "Failed Upload");
+      files.progress?.value = -1;
+      files.status?.value = "Upload Failed";
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
@@ -774,6 +781,8 @@ class AssignmentsRepository {
             response?.data["message"] ?? "UnAuthorized Action", Icons.block));
       }
       showSnakeBar(message: "Failed Upload");
+      files.progress?.value = -1;
+      files.status?.value = "Upload Failed";
       return Result(
           hasError: true,
           statusCode: response?.statusCode ?? _createError,
@@ -807,6 +816,7 @@ class AssignmentsRepository {
                   title: "Downloading",
                   message: " ${file.originName}");
             });
+        file.progress?.value = -1;
         return Result();
       }
 
@@ -851,6 +861,7 @@ class AssignmentsRepository {
             message: file.originName);
         showSnakeBar(message: "Downloading ${file.originName} Failed");
       }
+       file.progress?.value = -1;
       file.status?.value = "None";
       return Result(
           data: file.id,

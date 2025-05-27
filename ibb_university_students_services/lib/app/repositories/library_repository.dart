@@ -52,9 +52,6 @@ class LibraryRepository {
   }
 
   static Future<Result<void>> streamFetchLibraryFilesGroup({
-    required int sectionId,
-    required int levelId,
-    required String category,
     required Map<String, Map<int, LibraryFile>> destination,
     bool hardFetch = false,
   }) async {
@@ -113,6 +110,10 @@ class LibraryRepository {
               }
               LibraryFile libraryFile =
                   LibraryFile.fromJson(jsLibrary, subject: subject);
+              if (!kIsWeb) {
+                await libraryFile.checkDownloaded();
+              }
+
               destination[libraryFile.category]?[libraryFile.id] = libraryFile;
               await _libraryFilesBox?.put(libraryFile.id, libraryFile);
             } catch (e) {

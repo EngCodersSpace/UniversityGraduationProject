@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/home_tab_controller.dart';
 import '../../components/custom_text_v2.dart';
+import '../../services/http_provider.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
 
@@ -62,21 +63,25 @@ class WebHomeTab extends GetView<HomeTabController> {
                                         ? AppColors.inverseCardColor
                                         : AppColors.inverseMainTextColor,
                                 maxRadius: Get.width * 0.03 - 2,
-                                backgroundImage:
-                                    (controller.user?.profileImage) != null
-                                        ? AssetImage(
-                                            controller.user?.profileImage ?? "")
-                                        : null,
-                                child: (controller.user?.profileImage) != null
-                                    ? null
-                                    : CustomText(
-                                        controller.user?.name?[0] ??
-                                            "".toUpperCase(),
-                                        style: AppTextStyles.mainStyle(
-                                          textHeader: AppTextHeaders.h3Bold,
-                                        ),
-                                      ),
-                              ),
+                                child: ClipOval(
+                                  child: HttpProvider.httpImage(
+                                    imageUrl: "get-profile-image?user_id=${controller
+                                        .user?.id}",
+                                    secImageUrl: controller.user
+                                        ?.profileImage ??
+                                        "",
+                                    errorWidget: (ctx, s, o) =>
+                                        CustomText(
+                                            controller.user?.name?[0] ??
+                                                "".toUpperCase(),
+                                            style: AppTextStyles.secStyle(
+                                                textHeader: TextHeaders(
+                                                    fontSize: 50,
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                                height: 0)),
+                                  ),
+                                ),                              ),
                             ],
                           ),
                           Row(
