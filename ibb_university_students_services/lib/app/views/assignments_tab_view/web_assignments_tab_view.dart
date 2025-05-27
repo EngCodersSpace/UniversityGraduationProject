@@ -339,25 +339,50 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                             controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
-                                  for (int i = 0;
-                                      i <
-                                          (controller
-                                                  .assignments?.value.length ??
-                                              0);
-                                      i++) ...[
-                                    AssignmentsCard(
-                                        content: Rx(controller
-                                            .assignments?.value.values
-                                            .toList()[i])),
-                                    if (i <
-                                        ((controller.assignments?.value
-                                                    .length ??
-                                                0) -
-                                            1))
-                                      SizedBox(
-                                        height: Get.height * 0.03,
-                                      )
-                                  ]
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      for (int i = 0;
+                                          i <
+                                              (controller.assignments?.value
+                                                      .length ??
+                                                  0);
+                                          i += 2) ...[
+                                        AssignmentsCard(
+                                            content: Rx(controller
+                                                .assignments?.value.values
+                                                .toList()[i])),
+                                        if (i <
+                                            ((controller.assignments?.value
+                                                        .length ??
+                                                    0) -
+                                                1))
+                                          SizedBox(
+                                            height: Get.height * 0.03,
+                                          ),
+                                      ],
+                                      for (int i = 1;
+                                          i <
+                                              (controller.assignments?.value
+                                                      .length ??
+                                                  0);
+                                          i += 2) ...[
+                                        AssignmentsCard(
+                                            content: Rx(controller
+                                                .assignments?.value.values
+                                                .toList()[i])),
+                                        if (i <
+                                            ((controller.assignments?.value
+                                                        .length ??
+                                                    0) -
+                                                1))
+                                          SizedBox(
+                                            height: Get.height * 0.03,
+                                          )
+                                      ]
+                                    ],
+                                  )
                                 ],
                               ),
                             )),

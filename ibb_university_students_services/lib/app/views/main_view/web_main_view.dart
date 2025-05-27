@@ -10,6 +10,7 @@ import 'package:ibb_university_students_services/app/views/lecture_table_tab_vie
 import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
+import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_web_view.dart';
 import '../../components/custom_text_v2.dart';
 import '../../controllers/main_controller.dart';
 import '../../styles/text_styles.dart';
@@ -125,9 +126,9 @@ class WebMainView extends GetView<MainController> {
                             icon: Icons.person_outline_sharp,
                           ),
                           WebTabsComponent(
-                            tabname: "Home",
-                            index: 2,
-                            icon: Icons.home_outlined,
+                            tabname: "Student Fee",
+                            index: 9,
+                            icon: Icons.attach_money,
                           ),
                           WebTabsComponent(
                             tabname: "Notification",
@@ -162,7 +163,7 @@ class WebMainView extends GetView<MainController> {
                           if (UserRepository.currentUserType() == Doctor) ...[
                             WebTabsComponent(
                               tabname: "Dashboard",
-                              index: 9,
+                              index: 10,
                               icon: Icons.settings_outlined,
                             ),
                           ]
@@ -193,6 +194,7 @@ class WebMainView extends GetView<MainController> {
     ExamTableWebView(),
     const StudentResultsWebView(),
     const AcademicCardWebView(),
+    StudentFeesWebView(),
   ];
 
   WebMainView({super.key});

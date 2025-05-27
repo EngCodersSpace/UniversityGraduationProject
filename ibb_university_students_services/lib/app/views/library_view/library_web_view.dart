@@ -52,7 +52,7 @@ class LibraryWebView extends GetView<LibraryController> {
                           child: CustomTextFormField(
                             controller: controller.searchText,
                             focusNode: controller.searchFocus,
-                            onChange: (x)=>controller.updatePages(),
+                            onChange: (x) => controller.updatePages(),
                             onTapOutside: (e) {
                               controller.searchFocus.unfocus();
                             },
@@ -91,15 +91,15 @@ class LibraryWebView extends GetView<LibraryController> {
                                   fontSize: 20, fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 20,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 30,
-                        ),
                         Row(
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             Icon(
                               Icons.library_books_outlined,
                               size: 25,
@@ -113,15 +113,15 @@ class LibraryWebView extends GetView<LibraryController> {
                                   fontSize: 20, fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 20,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 30,
-                        ),
                         Row(
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             Icon(
                               Icons.library_books_outlined,
                               size: 25,

@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/components/custom_text_v2.d
 import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
 import 'package:ibb_university_students_services/app/models/student_fee/student_fee.dart';
 import 'package:ibb_university_students_services/app/utils/dobule_digits_parse.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import 'package:intl/intl.dart';
 import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
@@ -24,183 +25,400 @@ class StudentFeeCard extends GetView<StudentFeeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-          padding: const EdgeInsets.only(bottom: 10),
-          margin:  const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            color: AppColors.mainCardColor,
-            border: Border(
-              bottom: BorderSide(
-                  color: AppColors.inverseCardColor, width: 2, strokeAlign: 1),
-              right: BorderSide(
-                  color: AppColors.inverseCardColor, width: 2, strokeAlign: 1),
-              left: BorderSide(
-                  color: AppColors.inverseCardColor, width: 2, strokeAlign: 1),
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: Offset(0, 5),
-              )
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.inverseCardColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.mainCardColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText(studentFee.value.paymentDate??"Unknown".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.mainCardColor,
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(32)),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText("Level ${(studentFee.value.levelId??0)}".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.mainCardColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(32)),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: CustomText("${mappingTerms(studentFee.value.term)} Semester".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Normal,),),
-                        ),
-                        if ((UserRepository.checkPermission(
-                            target: "student_fees", action: "write"))) ...[
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: PopupMenuButton<String>(
-                              onSelected: (val) => controller.more(val,
-                                  data: studentFee.toJson()),
-                              color: AppColors.inverseCardColor,
-                              itemBuilder: (ctx) => [
-                                PopupMenuItem(
-                                    value: "Edit",
-                                    child: CustomText(
-                                      "Edit".tr,
-                                      style: AppTextStyles.mainStyle(
-                                          textHeader:
-                                          AppTextHeaders.h3Bold),
-                                    )),
-                                PopupMenuItem(
-                                    value: "Delete",
-                                    child: CustomText(
-                                      "Delete".tr,
-                                      style: AppTextStyles.mainStyle(
-                                          textHeader:
-                                          AppTextHeaders.h3Bold),
-                                    )),
-                              ],
-                              child: Icon(Icons.more_vert_outlined,
-                                  color: AppColors.mainTextColor),
-                            ),
-                          )
-                        ]
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    CustomText(
-                      "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
-                      style: AppTextStyles.mainStyle(
-                          textHeader: AppTextHeaders.h2Bold),
-                      textAlign: TextAlign.start,
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                  ],
-                ),
+    return Obx(() => (ScreenUtils.isPhoneScreen())
+        ? Container(
+            padding: const EdgeInsets.only(bottom: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: AppColors.mainCardColor,
+              border: Border(
+                bottom: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
+                right: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
+                left: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
-                child: Row(
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: Offset(0, 5),
+                )
+              ],
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.inverseCardColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomText(
-                            "Total Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              studentFee.value.paymentDate ?? "Unknown".tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
                           ),
-                          CustomText(
-                            "${DoubleDigitParse.twoDigit(studentFee.value.totalAmount)??"Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              "Level ${(studentFee.value.levelId ?? 0)}".tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
                           ),
-
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              "${mappingTerms(studentFee.value.term)} Semester"
+                                  .tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
+                          ),
+                          if ((UserRepository.checkPermission(
+                              target: "student_fees", action: "write"))) ...[
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: PopupMenuButton<String>(
+                                onSelected: (val) => controller.more(val,
+                                    data: studentFee.toJson()),
+                                color: AppColors.inverseCardColor,
+                                itemBuilder: (ctx) => [
+                                  PopupMenuItem(
+                                      value: "Edit",
+                                      child: CustomText(
+                                        "Edit".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      )),
+                                  PopupMenuItem(
+                                      value: "Delete",
+                                      child: CustomText(
+                                        "Delete".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      )),
+                                ],
+                                child: Icon(Icons.more_vert_outlined,
+                                    color: AppColors.mainTextColor),
+                              ),
+                            )
+                          ]
                         ],
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomText(
-                            "Payed Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          CustomText(
-                            "${DoubleDigitParse.twoDigit(studentFee.value.payedAmount)??"Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 16,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomText(
-                            "Remain Amount",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          CustomText(
-                            "${DoubleDigitParse.twoDigit((studentFee.value.totalAmount ?? -9999) - (studentFee.value.payedAmount??0))??"Unknown".tr} YR",
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                        ],
+                      CustomText(
+                        "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
+                        style: AppTextStyles.mainStyle(
+                            textHeader: AppTextHeaders.h2Bold),
+                        textAlign: TextAlign.start,
                       ),
-                    ]
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ),
                 ),
-              )
-            ],
-          ),
-        ));
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Total Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit(studentFee.value.totalAmount) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Payed Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit(studentFee.value.payedAmount) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Remain Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit((studentFee.value.totalAmount ?? -9999) - (studentFee.value.payedAmount ?? 0)) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                      ]),
+                )
+              ],
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.only(bottom: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            width: Get.width * 0.35,
+            height: Get.height * 0.35,
+            decoration: BoxDecoration(
+              color: AppColors.mainCardColor,
+              border: Border(
+                bottom: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
+                right: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
+                left: BorderSide(
+                    color: AppColors.inverseCardColor,
+                    width: 2,
+                    strokeAlign: 1),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  spreadRadius: 1,
+                  blurRadius: 8,
+                  offset: Offset(0, 5),
+                )
+              ],
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.inverseCardColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              studentFee.value.paymentDate ?? "Unknown".tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              "Level ${(studentFee.value.levelId ?? 0)}".tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.mainCardColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(32)),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: CustomText(
+                              "${mappingTerms(studentFee.value.term)} Semester"
+                                  .tr,
+                              style: AppTextStyles.secStyle(
+                                textHeader: AppTextHeaders.h3Normal,
+                              ),
+                            ),
+                          ),
+                          if ((UserRepository.checkPermission(
+                              target: "student_fees", action: "write"))) ...[
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: PopupMenuButton<String>(
+                                onSelected: (val) => controller.more(val,
+                                    data: studentFee.toJson()),
+                                color: AppColors.inverseCardColor,
+                                itemBuilder: (ctx) => [
+                                  PopupMenuItem(
+                                      value: "Edit",
+                                      child: CustomText(
+                                        "Edit".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      )),
+                                  PopupMenuItem(
+                                      value: "Delete",
+                                      child: CustomText(
+                                        "Delete".tr,
+                                        style: AppTextStyles.mainStyle(
+                                            textHeader: AppTextHeaders.h3Bold),
+                                      )),
+                                ],
+                                child: Icon(Icons.more_vert_outlined,
+                                    color: AppColors.mainTextColor),
+                              ),
+                            )
+                          ]
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      CustomText(
+                        "Receipt Number : ${studentFee.value.receiptNumber ?? "Unknown".tr}",
+                        style: AppTextStyles.mainStyle(
+                            textHeader: AppTextHeaders.h2Bold),
+                        textAlign: TextAlign.start,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Total Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit(studentFee.value.totalAmount) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Payed Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit(studentFee.value.payedAmount) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              "Remain Amount",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                            CustomText(
+                              "${DoubleDigitParse.twoDigit((studentFee.value.totalAmount ?? -9999) - (studentFee.value.payedAmount ?? 0)) ?? "Unknown".tr} YR",
+                              style: AppTextStyles.secStyle(
+                                  textHeader: AppTextHeaders.h3Bold),
+                            ),
+                          ],
+                        ),
+                      ]),
+                )
+              ],
+            ),
+          ));
   }
 }

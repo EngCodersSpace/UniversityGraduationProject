@@ -186,12 +186,28 @@ class WebProfileView extends GetView<ProfileController> {
                                     ],
                                   ),
                                 ],
-                                CustomButton(
-                                  onPress: controller.logout,
-                                  text: "Logout".tr,
-                                  size:
-                                      Size(Get.width * 0.18, Get.height * 0.05),
-                                ),
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width: Get.width * 0.2,
+                                      child: CustomButton(
+                                        onPress:
+                                            controller.changedPasswordClick,
+                                        text: "Change Password".tr,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: Get.height * 0.02,
+                                    ),
+                                    SizedBox(
+                                      width: Get.width * 0.2,
+                                      child: CustomButton(
+                                        onPress: controller.logout,
+                                        text: "Logout".tr,
+                                      ),
+                                    )
+                                  ],
+                                )
                               ],
                             ),
                           ],

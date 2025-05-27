@@ -41,36 +41,23 @@ class StudentFeesWebView extends GetView<StudentFeeController> {
                             keyboardType: TextInputType.number,
                             icon: Icons.account_circle_outlined,
                             color: AppColors.inverseIconColor,
-                            width: Get.width * 0.25,
+                            width: Get.width * 0.4,
                             onFieldSubmitted: (e) {},
                           ),
                           CustomButton(
                             onPress: controller.findButtonClick,
                             text: "Find".tr,
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CustomText(
-                            "Payments".tr,
-                            style: AppTextStyles.highlightStyle(
-                                textHeader: AppTextHeaders.h2Bold),
-                          ),
                           if ((UserRepository.checkPermission(
                               target: "student_fees", action: "write")))
-                            CustomButton(
-                              onPress: controller.addButtonClick,
-                              text: "Add Payment".tr,
+                            SizedBox(
+                              width: Get.width * 0.2,
+                              child: CustomButton(
+                                onPress: controller.addButtonClick,
+                                text: "Add Payment".tr,
+                              ),
                             ),
                         ],
-                      ),
-                      SizedBox(
-                        height: Get.height * 0.01,
                       ),
                     ],
                     Expanded(
@@ -101,17 +88,34 @@ class StudentFeesWebView extends GetView<StudentFeeController> {
                                           size: 40,
                                         ))
                                 ],
-                                for (int i = 0;
-                                    i < (controller.studentFees.length);
-                                    i++) ...[
-                                  StudentFeeCard(
-                                      studentFee: Rx<StudentFee>(controller
-                                          .studentFees.values
-                                          .toList()[i])),
-                                  const SizedBox(
-                                    height: 24,
-                                  )
-                                ]
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    for (int i = 0;
+                                        i < (controller.studentFees.length);
+                                        i += 2) ...[
+                                      StudentFeeCard(
+                                          studentFee: Rx<StudentFee>(controller
+                                              .studentFees.values
+                                              .toList()[i])),
+                                      const SizedBox(
+                                        height: 24,
+                                      )
+                                    ],
+                                    for (int i = 1;
+                                        i < (controller.studentFees.length);
+                                        i += 2) ...[
+                                      StudentFeeCard(
+                                          studentFee: Rx<StudentFee>(controller
+                                              .studentFees.values
+                                              .toList()[i])),
+                                      const SizedBox(
+                                        height: 24,
+                                      )
+                                    ]
+                                  ],
+                                )
                               ],
                             ),
                           ),

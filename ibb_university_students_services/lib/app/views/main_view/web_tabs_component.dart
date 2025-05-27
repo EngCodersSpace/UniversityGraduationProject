@@ -22,7 +22,7 @@ class WebTabsComponent extends GetView<MainController> {
     return Obx(
       () => InkWell(
         onTap: () {
-          if (index == 9) {
+          if (index == 10) {
             controller.routeAdmainPanel();
             return;
           }

@@ -30,28 +30,34 @@ class AcademicCardWebView extends GetView<AcademicCardController> {
                         height: Get.height * 0.02,
                       ),
                       if (controller.user is Student) ...[
-                        Column(
-                          children: [
-                            SizedBox(
-                              width: Get.width * 0.4,
-                              height: Get.height * 0.4,
-                              child: StudentAcademicCardInfo(),
-                            ),
-                            SizedBox(
-                              height: Get.height * 0.03,
-                            ),
-                            SizedBox(
-                              width: Get.width * 0.4,
-                              height: Get.height * 0.4,
-                              child: AcademicCardLastPayment(),
-                            ),
-                          ],
+                        Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: Get.width * 0.5,
+                                height: Get.height * 0.4,
+                                child: StudentAcademicCardInfo(),
+                              ),
+                              SizedBox(
+                                height: Get.height * 0.03,
+                              ),
+                              SizedBox(
+                                width: Get.width * 0.5,
+                                height: Get.height * 0.4,
+                                child: AcademicCardLastPayment(),
+                              ),
+                            ],
+                          ),
                         )
                       ] else ...[
-                        SizedBox(
-                          width: Get.width * 0.4,
-                          height: Get.height * 0.4,
-                          child: const Center(child: DoctorAcademicCardInfo()),
+                        Center(
+                          heightFactor: 2,
+                          child: SizedBox(
+                            width: Get.width * 0.45,
+                            height: Get.height * 0.43,
+                            child:
+                                const Center(child: DoctorAcademicCardInfo()),
+                          ),
                         ),
                       ],
                     ],
