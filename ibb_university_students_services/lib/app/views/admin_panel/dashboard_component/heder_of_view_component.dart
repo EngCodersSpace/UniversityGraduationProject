@@ -27,6 +27,12 @@ class HeaderOfViewComponent extends GetView {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                onPressed: () {
+                  Get.offNamed("/main");
+                },
+                icon: Icon(Icons.arrow_back_outlined),
+              ),
               SizedBox(
                 width: width * 0.2,
                 child: CustomText(
