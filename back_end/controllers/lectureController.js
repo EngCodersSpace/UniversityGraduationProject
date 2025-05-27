@@ -202,18 +202,20 @@ const changeLecStatus = async (req, res) => {
     const DoctorName= await user.findOne({
       where:{user_id:lectureCancled.doctor_id}
     });
+    const userNameObj = JSON.parse(DoctorName.user_name);
 
     await sendInfoNotification({
       title:'Lecture Status is changed',
       message:` Lecture ${lectureCancled.subject_id}-Of-
-      ${DoctorName.user_name}-which was at ${lectureCancled.lecture_day}-${lectureCancled.lecture_time}-has been ${req.body.action}`,
+      ${userNameObj.en}- which was at ${lectureCancled.lecture_day}- 
+      ${lectureCancled.lecture_time}- has been ${req.body.action}`,
       sender_id:req.user.user_id,
       topic_name:condition,
     });
 
     await sendSingleSystemNotification({
       title: " Lecture ",
-      message: `Your Lecture Of subject ${lectureCancled.subject_id}-which was at ${lectureCancled.lecture_day}-
+      message: `Your Lecture Of subject ${lectureCancled.subject_id}- which was at ${lectureCancled.lecture_day}-
       ${lectureCancled.lecture_time}-,has been ${req.body.action}. Please check it.`,
       receiver_id: DoctorName.user_id,
       token: DoctorName.fcm_token,
