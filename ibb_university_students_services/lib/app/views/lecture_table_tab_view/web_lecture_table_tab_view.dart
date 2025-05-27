@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/lecture_table_tab_view_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/views/lecture_table_tab_view/lecture_table_tab_components/web_schedual_content.dart';
 import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
@@ -207,6 +209,12 @@ class WebLectureTableTabView extends GetView<LectureController> {
                           SizedBox(
                             width: width * 0.03,
                           ),
+                          if ((UserRepository.checkPermission(
+                              target: "lectures", action: "write")))
+                            CustomButton(
+                              onPress: controller.addButtonClick,
+                              text: "Add Lecture".tr,
+                            ),
                         ],
                       ),
                     ),

@@ -441,7 +441,7 @@ class AddNotificationsTargetCard extends GetView<NotificationTabController> {
             child: Container(
               padding: EdgeInsets.all(8),
               width: Get.width * 0.4,
-              height: Get.height * 0.95,
+              height: Get.height * 0.98,
               child: Hero(
                 tag: "PopUpInsertCard",
                 child: Material(

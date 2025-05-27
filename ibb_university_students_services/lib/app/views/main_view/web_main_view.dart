@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/web_assignments_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
@@ -8,6 +10,7 @@ import 'package:ibb_university_students_services/app/views/lecture_table_tab_vie
 import 'package:ibb_university_students_services/app/views/main_view/web_tabs_component.dart';
 import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/profile_tab_view/web_profile_view.dart';
+import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_web_view.dart';
 import '../../components/custom_text_v2.dart';
 import '../../controllers/main_controller.dart';
 import '../../styles/text_styles.dart';
@@ -123,9 +126,9 @@ class WebMainView extends GetView<MainController> {
                             icon: Icons.person_outline_sharp,
                           ),
                           WebTabsComponent(
-                            tabname: "Home",
-                            index: 2,
-                            icon: Icons.home_outlined,
+                            tabname: "Student Fee",
+                            index: 9,
+                            icon: Icons.attach_money,
                           ),
                           WebTabsComponent(
                             tabname: "Notification",
@@ -157,11 +160,13 @@ class WebMainView extends GetView<MainController> {
                             index: 8,
                             icon: Icons.credit_card_sharp,
                           ),
-                          WebTabsComponent(
-                            tabname: "Dashboard",
-                            index: 9,
-                            icon: Icons.settings_outlined,
-                          ),
+                          if (UserRepository.currentUserType() == Doctor) ...[
+                            WebTabsComponent(
+                              tabname: "Dashboard",
+                              index: 10,
+                              icon: Icons.settings_outlined,
+                            ),
+                          ]
                         ],
                       ),
                     ],
@@ -189,6 +194,7 @@ class WebMainView extends GetView<MainController> {
     ExamTableWebView(),
     const StudentResultsWebView(),
     const AcademicCardWebView(),
+    StudentFeesWebView(),
   ];
 
   WebMainView({super.key});
