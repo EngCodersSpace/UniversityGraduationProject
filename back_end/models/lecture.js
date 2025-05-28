@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'lecture_level_id',//the foreign Key in the lecture table refers to level table
       });
 
+
+
       lecture.belongsTo(models.lecture, {
         foreignKey: 'originalLecturId',
         as: 'originalLecture',
@@ -119,8 +121,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     lectureStatus:{
       type:DataTypes.BOOLEAN,
-      allowNull:false,
-      defaultValue:true,
+      allowNull:true,// false
+      defaultValue:null,
     },
     isReplaced: {
       type: DataTypes.BOOLEAN,

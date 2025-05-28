@@ -50,16 +50,16 @@ module.exports = (sequelize, DataTypes) => {
       section.belongsToMany(models.book, {
         through: 'bookSectionLevel',
         foreignKey: 'sectionId',
-        // otherKey: 'bookId',
+        otherKey: 'bookId',
       });
 
       section.hasMany(models.assignment, {
         foreignKey: 'section_id',
       });
 
-      section.hasMany(models.book, {
-        foreignKey: 'section_id',
-      });
+      // section.hasMany(models.book, {
+      //   foreignKey: 'section_id',
+      // });
 
 
     }

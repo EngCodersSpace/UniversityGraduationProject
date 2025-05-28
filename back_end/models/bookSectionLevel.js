@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // bookSectionLevel.belongsTo(models.book, { foreignKey: 'bookId' });
-      // bookSectionLevel.belongsTo(models.section, { foreignKey: 'sectionId' });
-      // bookSectionLevel.belongsTo(models.level, { foreignKey: 'levelId' });
+      bookSectionLevel.belongsTo(models.book, { foreignKey: 'bookId' });
+      bookSectionLevel.belongsTo(models.section, { foreignKey: 'sectionId' });
+      bookSectionLevel.belongsTo(models.level, { foreignKey: 'levelId' });
     }
   }
   bookSectionLevel.init({

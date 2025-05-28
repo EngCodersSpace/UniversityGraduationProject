@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'subject_id',
       });
 
+      subject.hasMany(models.lecture, {
+        foreignKey: 'subject_id',
+      });
+
 
     }
   }

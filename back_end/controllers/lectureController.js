@@ -1,11 +1,15 @@
 const { validationResult } = require("express-validator");
-const { lecture, subject, doctor, section, level, user } = require("../models");
+const { lecture, subject, doctor, section, level, user,sequelize } = require("../models");
 const { Sequelize } = require("sequelize");
-const { sequelize } = require('../models'); 
 const { Op } = require("sequelize");
 const cron = require("node-cron");
 const { upsertRefreshState } = require("../controllers/refreshController");
 const { sendInfoNotification ,sendSingleSystemNotification} = require("./notificationController");
+const dayjs = require("dayjs");
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 
 const createLecture = async (req, res) => {
@@ -179,36 +183,122 @@ const replaceOne1 = async (req, res) => {
 };
 
 
+async function restoreReplacedLectures() {
+  try {
+    const now = dayjs().tz('Asia/Riyadh');
+    const currentDay = now.format('dddd'); 
+    const currentTime = now.format('HH:mm:ss'); 
+
+    const expiredReplacements = await lecture.findAll({
+      where: {
+        originalLecturId: { [Op.ne]: null },
+        isReplaced: false,
+        lecture_day: currentDay,
+        lecture_time: { [Op.lt]: currentTime },
+      }
+    });
+
+    for (const replacement of expiredReplacements) {
+      const originalLecture = await lecture.findOne({
+        where: { id: replacement.originalLecturId }
+      });
+
+      if (originalLecture) {
+        originalLecture.isReplaced = false;
+        await originalLecture.save();
+      }
+
+      replacement.isReplaced = true;
+      await replacement.save();
+    }
+
+    console.log(`[${now.format()}] Replaced lectures restored: ${expiredReplacements.length}`);
+  } catch (error) {
+    console.error('Error restoring replaced lectures:', error);
+  }
+}
+
+const dayNameToNumber = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Saturday: 6,
+};
+
+async function resetLectureStatus() {
+  try {
+    const activeLectures = await lecture.findAll({
+      where: {
+        lectureStatus: { [Op.not]: null },
+      },
+    });
+
+    const now = dayjs().tz('Asia/Riyadh');
+
+    for (const lec of activeLectures) {
+      const lectureDay = dayNameToNumber[lec.lecture_day];
+      
+      // Get the start of this week in Riyadh timezone
+      const startOfWeek = now.startOf('week').tz('Asia/Riyadh');
+
+      // Get the date of the lecture day this week
+      const lectureDate = startOfWeek.add(lectureDay, 'day');
+
+      // Parse lecture time (e.g., "21:00:00")
+      const [hour, minute] = lec.lecture_time.split(':').map(Number);
+
+      // Build start datetime for the lecture in Riyadh timezone
+      const lectureStart = lectureDate.hour(hour).minute(minute).second(0);
+
+      // Calculate end datetime by adding duration in minutes
+      const lectureEnd = lectureStart.add(lec.lecture_duration, 'minute');
+
+      // Compare current time to lecture end time
+      if (now.isAfter(lectureEnd)) {
+        lec.lectureStatus = null;
+        await lec.save();
+        console.log(`Lecture ${lec.id} status reset to null.`);
+      }
+    }
+  } catch (error) {
+    console.error('Error in resetLectureStatus:', error);
+  }
+}
+
+
+
 const replaceOne = async (req, res) => {
-  const transaction = await lecture.sequelize.transaction();
+  const transaction = await sequelize.transaction();
 
   try {
     const lectureId = req.query.id;
-
-    // Fetch the original lecture with associated subject and doctor
-    const originalLecture = await lecture.findByPk(lectureId, {
-      include: [
-        { model: subject },
-        { model: doctor }
-      ]
+    const originalLecture = await lecture.findByPk(lectureId,{
+      include:[
+        {model:subject},
+        {model:doctor ,
+          include: [
+            {
+              model: user ,as:'user',
+            }
+          ]
+        }
+      ],
     });
-
     if (!originalLecture) {
       throw new Error("Original lecture not found");
     }
-
-    // Mark original as replaced
     originalLecture.isReplaced = true;
     await originalLecture.save({ transaction });
-
-    // Create the new lecture
+ 
     const updateFields = {
-      originalLecturId: lectureId,
+      originalLecturId: lectureId ,
       lecture_section_id: originalLecture.lecture_section_id,
       lecture_level_id: originalLecture.lecture_level_id,
       term: originalLecture.term,
       year: originalLecture.year,
-      subject_id: req.body.subject_id || originalLecture.subject_id,
+      subject_id: req.body.subject_id,
       doctor_id: req.body.doctor_id || originalLecture.doctor_id,
       lecture_time: req.body.lecture_time || originalLecture.lecture_time,
       lecture_duration: req.body.lecture_duration || originalLecture.lecture_duration,
@@ -227,19 +317,18 @@ const replaceOne = async (req, res) => {
     //  Notification topic condition
     const condition = `(student in topics) && (section_${originalLecture.lecture_section_id} in topics) && (level_${originalLecture.lecture_level_id} in topics)`;
 
-    // Fetch new subject/doctor with associations
-    const fullReplacedLecture = await lecture.findByPk(replacedLecture.id, {
-      include: [
-        { model: subject },
-        { model: doctor }
-      ]
+    const subjectName = await subject.findOne({
+      where:{ subject_id: replacedLecture.subject_id}
+    });
+    const doctorName = await user.findOne({
+      where:{ user_id: replacedLecture.doctor_id}
     });
 
     //  Extract names from JSON fields
-    const oldSubjectName = JSON.parse(originalLecture.subject.user_name)?.en || 'Old Subject';
-    const newSubjectName = JSON.parse(fullReplacedLecture.subject.user_name)?.en || 'New Subject';
-    const oldDoctorName = JSON.parse(originalLecture.doctor.user_name)?.en || 'Old Doctor';
-    const newDoctorName = JSON.parse(fullReplacedLecture.doctor.user_name)?.en || 'New Doctor';
+    const oldSubjectName = JSON.parse(originalLecture.subject.subject_name)?.en || 'Old Subject';
+    const newSubjectName = JSON.parse(subjectName.subject_name)?.en || 'New Subject';
+    const oldDoctorName = JSON.parse(originalLecture.doctor.user.user_name)?.en || 'Old Doctor';
+    const newDoctorName = JSON.parse(doctorName.user_name)?.en || 'New Doctor';
 
     //  Send topic-based and personal notifications
     await sendInfoNotification({
@@ -266,17 +355,17 @@ const replaceOne = async (req, res) => {
       })
     ]);
 
-    const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
-    const [hours, minutes, seconds] = originalLecture.lecture_time.split(":").map(Number);
-    nextLectureDay.setHours(hours, minutes, seconds, 0);
-    const lectureEndTime = new Date(nextLectureDay.getTime() + originalLecture.lecture_duration * 60000);
+    // const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
+    // const [hours, minutes, seconds] = originalLecture.lecture_time.split(":").map(Number);
+    // nextLectureDay.setHours(hours, minutes, seconds, 0);
+    // const lectureEndTime = new Date(nextLectureDay.getTime() + originalLecture.lecture_duration * 60000);
 
-    cron.schedule(`*/5 * * * *`, async () => {
-      if (new Date().getTime() >= lectureEndTime.getTime()) {
-        await restoreOriginalLecture(lectureId);
-        await replacedLecture.destroy();
-      }
-    });
+    // cron.schedule("0 * * * *", async () => {
+    //   if (new Date().getTime() >= lectureEndTime.getTime()) {
+    //     await restoreOriginalLecture(lectureId);
+    //     await replacedLecture.destroy();
+    //   }
+    // });
 
     await transaction.commit();
     return res.status(200).json({ message: "Lecture replaced successfully", replacedLecture });
@@ -294,7 +383,13 @@ const changeLecStatus = async (req, res) => {
       .status(400)
       .json({ message: 'Invalid action. Use either "confirm" or "cancel".' });
   }
-  const lectureCancled = await lecture.findByPk(req.body.id);
+  const lectureCancled = await lecture.findByPk(req.body.id ,{
+    include: [
+        { model: subject },
+        { model: doctor }
+      ]
+  });
+
   if (!lectureCancled) {
     return res.status(404).json({ message: "Lecture not found" });
   }
@@ -314,10 +409,17 @@ const changeLecStatus = async (req, res) => {
     });
     const userNameObj = JSON.parse(DoctorName.user_name);
 
+    const SubjectName = JSON.parse(lectureCancled.subject.subject_name)?.en || 'Subject';
+    const DoctorNam = JSON.parse(lectureCancled.doctor.user.user_name)?.en || 'Doctor';
+
+    console.log('\n userNameObj:',userNameObj.en,'\n');
+    console.log('\n SubjectName:',SubjectName,'\n');
+    console.log('\n DoctorNam:',DoctorNam,'\n');
+
     await sendInfoNotification({
       title:'Lecture Status is changed',
-      message:` Lecture ${lectureCancled.subject_id}-Of-
-      ${userNameObj.en}- which was at ${lectureCancled.lecture_day}- 
+      message:` Lecture ${SubjectName} , Of -
+      ${DoctorNam}- which was at ${lectureCancled.lecture_day}- 
       ${lectureCancled.lecture_time}- has been ${req.body.action}`,
       sender_id:req.user.user_id,
       topic_name:condition,
@@ -325,16 +427,19 @@ const changeLecStatus = async (req, res) => {
 
     await sendSingleSystemNotification({
       title: " Lecture ",
-      message: `Your Lecture Of subject ${lectureCancled.subject_id}- which was at ${lectureCancled.lecture_day}-
+      message: `Your Lecture Of subject ${SubjectName}- which was at ${lectureCancled.lecture_day}-
       ${lectureCancled.lecture_time}-,has been ${req.body.action}. Please check it.`,
       receiver_id: DoctorName.user_id,
       token: DoctorName.fcm_token,
       sender_id: req.user.user_id,
     });
 
-    return res
-      .status(200)
-      .json({ message: `Lecture ${req.body.action}ed successfully` });
+    return res.status(200).json({ message: `Lecture ${req.body.action}ed successfully` });
+
+
+
+
+
   } catch (error) {
     console.error("Error during lecture status update:", error);
     return res.status(500).json({
@@ -343,6 +448,16 @@ const changeLecStatus = async (req, res) => {
     });
   }
 };
+
+
+cron.schedule('*/5 * * * *', () => { 
+  console.log('\n ⏰ Running restoreReplacedLectures...\n \n ');
+  restoreReplacedLectures();
+  console.log("\n ⏰ Checking today's lectures to reset status...\n \n ");
+  resetLectureStatus();
+});
+
+
 
 const updateLecture = async (req, res) => {
   const errors = validationResult(req);

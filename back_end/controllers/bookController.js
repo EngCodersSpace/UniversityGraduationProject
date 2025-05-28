@@ -12,7 +12,7 @@ const mkdirAsync = promisify(fs.mkdir);
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 // To check if a file is a duplicate
-exports.checkFileDuplicate = async (req, res) => {
+exports.checkFileDuplicate1 = async (req, res) => {
   try {
     const hash = crypto.createHash('md5').update(req.body.originalname + req.body.size).digest('hex');
     for (const group of req.body.sectionsAndLevels) {
@@ -38,7 +38,7 @@ exports.checkFileDuplicate = async (req, res) => {
   }
 };
 
-exports.checkFileDuplicate1 = async (req, res) => {
+exports.checkFileDuplicate = async (req, res) => {
   try {
     const hash = crypto.createHash('md5')
       .update(req.body.originalname + req.body.size)
@@ -79,8 +79,7 @@ exports.checkFileDuplicate1 = async (req, res) => {
 };
 
 
-
-exports.uploadFile = async (req, res) => { 
+exports.uploadFile1 = async (req, res) => { 
   try {
     if (!req.query.category) {
       return res.status(400).json({ message: 'Category is required' });
@@ -222,7 +221,7 @@ exports.uploadFile = async (req, res) => {
 };
 
 
-exports.uploadFile1 = async (req, res) => {
+exports.uploadFile = async (req, res) => {
   try {
     if (!req.query.category) {
       return res.status(400).json({ message: 'Category is required' });
@@ -404,7 +403,7 @@ exports.downloadFile = async (req, res) => {
 };
 
 // To get books by filtering (section, level, category) and stream them
-exports.streamBooks = async (req, res) => {
+exports.streamBooks1 = async (req, res) => {
   try {
     const { section_id, level_id, category } = req.query;
 
@@ -447,7 +446,7 @@ exports.streamBooks = async (req, res) => {
   }
 };
 
-exports.streamBooks1 = async (req, res) => {
+exports.streamBooks = async (req, res) => {
   try {
     const { section_id, level_id, category } = req.query;
 
@@ -586,7 +585,7 @@ exports.deleteBook = async (req, res) => {
   }
 };
 
-exports.getBookGroupedByCriteriaPanel = async (req, res) => {
+exports.getBookGroupedByCriteriaPanel1 = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = ["id","section_id", "level_id","title","author",
     "numberOfPages","edition","category","file_size","file_path","display_image","added_by","subject_id"];
   const ALLOWED_SORT_DIRECTIONS = ["ASC", "DESC"];
@@ -699,7 +698,7 @@ exports.getBookGroupedByCriteriaPanel = async (req, res) => {
   }
 };
 
-exports.getBookGroupedByCriteriaPanel1 = async (req, res) => {
+exports.getBookGroupedByCriteriaPanel = async (req, res) => {
   const ALLOWED_ORDER_FIELDS = [
     "id", "title", "author", "numberOfPages", "edition",
     "category", "file_size", "file_path", "display_image",
@@ -733,7 +732,6 @@ exports.getBookGroupedByCriteriaPanel1 = async (req, res) => {
     const validOrderBy = ALLOWED_ORDER_FIELDS.includes(orderBy) ? orderBy : "id";
     const validSort = ALLOWED_SORT_DIRECTIONS.includes(sort.toUpperCase()) ? sort.toUpperCase() : "ASC";
 
-    // Filters for book table
     const bookWhere = {
       ...(author && { author }),
       ...(edition && { edition }),
@@ -747,36 +745,37 @@ exports.getBookGroupedByCriteriaPanel1 = async (req, res) => {
       }),
     };
 
-    // Filters for join table (bookSectionLevel)
-    // const joinWhere = {};
-    // if (section_id) joinWhere.sectionId = section_id;
-    // if (level_id) joinWhere.levelId = level_id;
-
+    const includes = [
+      {
+        model: subject,
+        as: "subject",
+        attributes: ["subject_id", "subject_name"],
+      },
+    ];
+    
+    if (section_id) {
+      includes.push({
+        model: section,
+        attributes:['id','section_name'],
+        required: true, 
+        through: { attributes: [] },
+        where: { id: section_id },
+      });
+    }
+    
+    if (level_id) {
+      includes.push({
+        model: level,
+        attributes:['id','level_name'],
+        required: true, 
+        through: { attributes: [] },
+        where: { id: level_id },
+      });
+    }
+    
     const { count, rows: books } = await book.findAndCountAll({
       where: bookWhere,
-      include: [
-        {
-          model: subject,
-          as: "subject",
-          attributes: ["subject_id", "subject_name"],
-        },
-        // {
-        //   model: section,
-        //   attributes: ["id", "section_name"],
-        //   through: {
-        //     attributes: [],
-        //     // where: section_id ? { sectionId: section_id } : undefined,
-        //   },
-        // },
-        // {
-        //   model: level,
-        //   attributes: ["id", "level_name"],
-        //   through: {
-        //     attributes: [],
-        //     where: level_id ? { levelId: level_id } : undefined,
-        //   },
-        // },
-      ],
+      include: includes,
       distinct: true,
       limit: limitNumber,
       offset: offset,

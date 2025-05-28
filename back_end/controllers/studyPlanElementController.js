@@ -5,13 +5,7 @@ const { Op } = require("sequelize");
 
 // when you Create a new study plan element befor see the (study plan id,subject id , doctor id )
 exports.createStudyPlanElement = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     try {
-    const {} = req.body;
-
     const newStudyPlanElement = await study_plan_elment.create(req.body,{
       include: [
         { model: study_plan, as: 'study_plan' },
@@ -33,16 +27,16 @@ exports.createStudyPlanElement = async (req, res) => {
 
 // Get a single study plan element by ID with its associated data
 exports.getStudyPlanElement = async (req, res) => {
-    try {
-      const { id } = req.params; // ID passed from the URL
-  
+    try {  
       const studyPlanElement = await study_plan_elment.findOne({
-        where: { study_plan_elment_id: id },
+        where: { id: req.query.id },
         include: [
           { model: study_plan, as: 'study_plan' },
           { model: subject, as: 'subject' },
           { model: doctor, as: 'doctor' },
-          { model: prerequisite, as: 'prerequisites' } // Include prerequisites associated with this study plan element
+          { model: section, as: 'section' },
+          { model: level, as: 'level' },
+          // { model: prerequisite, as: 'prerequisites' } 
         ]
       });
   
@@ -56,16 +50,33 @@ exports.getStudyPlanElement = async (req, res) => {
     }
 };
   
+exports.getAllStudyPlanElement = async (req, res) => {
+  try {  
+    const studyPlanElements = await study_plan_elment.findAll({
+      include: [
+        { model: study_plan, as: 'study_plan' },
+        { model: subject, as: 'subject' },
+        { model: doctor, as: 'doctor' },
+        { model: section, as: 'section' },
+        { model: level, as: 'level' },
+        // { model: prerequisite, as: 'prerequisites' } 
+      ]
+    });
+
+    if (!studyPlanElements) {
+      return res.status(404).json({ message: 'Study Plan Element not found' });
+    }
+
+    res.status(200).json({message:'Get All study Plan Elements Successfully',data:studyPlanElements});
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching study plan element', error: err.message });
+  }
+};
 
 // Update an existing study plan element
 exports.updateStudyPlanElement = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    
     try {
-      const { id } = req.params; // ID passed from the URL
+      const { id } = req.query; // ID passed from the URL
       const { study_plan_id, subject_id, doctor_id, section, level, number_of_units, term } = req.body;
   
       const studyPlanElement = await study_plan_elment.findOne({ where: { study_plan_elment_id: id } });
@@ -98,7 +109,7 @@ exports.updateStudyPlanElement = async (req, res) => {
 // Delete a study plan element
 exports.deleteStudyPlanElement = async (req, res) => {
     try {
-      const { id } = req.params; // ID passed from the URL
+      const { id } = req.query; // ID passed from the URL
   
       const studyPlanElement = await study_plan_elment.findOne({ where: { study_plan_elment_id: id } });
   

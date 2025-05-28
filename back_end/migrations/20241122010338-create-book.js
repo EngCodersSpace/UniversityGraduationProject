@@ -9,26 +9,26 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      section_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'sections',
-          key: 'id',
-        },
-        onDelete: 'NO ACTION',
-        onUpdate: 'CASCADE',
-      },
-      level_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'levels',
-          key: 'id',
-        },
-        onDelete: 'NO ACTION',
-        onUpdate: 'CASCADE',
-      },
+      // section_id: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: 'sections',
+      //     key: 'id',
+      //   },
+      //   onDelete: 'NO ACTION',
+      //   onUpdate: 'CASCADE',
+      // },
+      // level_id: {
+      //   type: Sequelize.INTEGER,
+      //   allowNull: false,
+      //   references: {
+      //     model: 'levels',
+      //     key: 'id',
+      //   },
+      //   onDelete: 'NO ACTION',
+      //   onUpdate: 'CASCADE',
+      // },
       title: {
         type: Sequelize.STRING,
         allowNull: false,

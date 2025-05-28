@@ -54,9 +54,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'level_id',
       });
 
-      level.hasMany(models.book, {
-        foreignKey: 'level_id',
-      });
+      // level.hasMany(models.book, {
+      //   foreignKey: 'level_id',
+      // });
 
 
     }

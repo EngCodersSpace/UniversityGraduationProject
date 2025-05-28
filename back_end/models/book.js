@@ -25,27 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       book.belongsToMany(models.level, {
         through: 'bookSectionLevel',
         foreignKey: 'bookId',
-        // otherKey: 'levelId'
+        otherKey: 'levelId'
       });
       
       //(4)Relationship Many-to-Many between "book table" and  "section table through bookSectionLevel"
       book.belongsToMany(models.section, {
         through: 'bookSectionLevel',
         foreignKey: 'bookId',
-        // otherKey: 'sectionId'
+        otherKey: 'sectionId'
       });
-
-    
-      //(5)Relationship One-to-Many between "book table" and  "section table"
-      book.belongsTo(models.section, {
-        foreignKey: 'section_id',//the foreign Key in the book table refers to section table
-      });
-
-      //(6)Relationship One-to-Many between "book table" and  "level table"
-      book.belongsTo(models.level, {
-        foreignKey: 'level_id',//the foreign Key in the book table refers to level table
-      });
-
 
     }
   }
@@ -56,26 +44,6 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
-    },
-    section_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'sections',
-        key: 'id',
-      },
-      onDelete: 'NO ACTION',
-      onUpdate: 'CASCADE',
-    },
-    level_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'levels',
-        key: 'id',
-      },
-      onDelete: 'NO ACTION',
-      onUpdate: 'CASCADE',
     },
     title: {
       type: DataTypes.STRING,
