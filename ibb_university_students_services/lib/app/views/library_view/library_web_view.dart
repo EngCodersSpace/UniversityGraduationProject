@@ -97,6 +97,9 @@ class LibraryWebView extends GetView<LibraryController> {
                         ),
                         Row(
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             Icon(
                               Icons.library_books_outlined,
                               size: 25,
@@ -110,12 +113,15 @@ class LibraryWebView extends GetView<LibraryController> {
                                   fontSize: 20, fontWeight: FontWeight.normal),
                             ),
                             SizedBox(
-                              width: 40,
+                              width: 20,
                             ),
                           ],
                         ),
                         Row(
                           children: [
+                            SizedBox(
+                              width: 20,
+                            ),
                             Icon(
                               Icons.library_books_outlined,
                               size: 25,

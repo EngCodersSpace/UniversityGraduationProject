@@ -24,7 +24,7 @@ class StudentAdapter extends TypeAdapter<Student> {
       phones: (fields[6] as List?)?.cast<String>(),
       profileImage: fields[5] as String?,
       role: fields[4] as Role?,
-      studyPlane: fields[11] as StudyPlane?,
+      studyPlane: fields[11] as StudyPlan?,
       level: fields[12] as Level?,
       collegeNameData: (fields[7] as Map?)?.cast<String, dynamic>(),
       section: fields[8] as Section?,

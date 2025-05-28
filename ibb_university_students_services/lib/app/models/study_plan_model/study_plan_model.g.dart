@@ -6,35 +6,38 @@ part of 'study_plan_model.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class StudyPlaneAdapter extends TypeAdapter<StudyPlane> {
+class StudyPlanAdapter extends TypeAdapter<StudyPlan> {
   @override
   final int typeId = 12;
 
   @override
-  StudyPlane read(BinaryReader reader) {
+  StudyPlan read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return StudyPlane(
+    return StudyPlan(
       id: fields[0] as int,
       name: fields[1] as String?,
-      createdAt: fields[2] as String?,
-      updatedAt: fields[3] as String?,
+      studyPlaneElement: (fields[2] as List?)?.cast<int>(),
+      createdAt: fields[3] as String?,
+      updatedAt: fields[4] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, StudyPlane obj) {
+  void write(BinaryWriter writer, StudyPlan obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.createdAt)
+      ..write(obj.studyPlaneElement)
       ..writeByte(3)
+      ..write(obj.createdAt)
+      ..writeByte(4)
       ..write(obj.updatedAt);
   }
 
@@ -44,7 +47,7 @@ class StudyPlaneAdapter extends TypeAdapter<StudyPlane> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StudyPlaneAdapter &&
+      other is StudyPlanAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

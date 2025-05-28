@@ -92,6 +92,8 @@ class DashboardRoleUsersTableController extends GetxController
   TextEditingController roleType = TextEditingController();
   FocusNode nameFocus = FocusNode();
   FocusNode typeFocus = FocusNode();
+  Map<int, Role> role = {};
+  RxList<String> selectedRoles = <String>[].obs;
 
   @override
   void onInit() async {
@@ -127,6 +129,7 @@ class DashboardRoleUsersTableController extends GetxController
       )),
     ];
     await fetchRoleData();
+    await initRoles();
     loadingState.value = false;
     super.onInit();
   }
@@ -200,6 +203,11 @@ class DashboardRoleUsersTableController extends GetxController
     if (val == null) return;
     selectedSort.value = val;
     fetchRoleData();
+  }
+
+  Future<void> initRoles({bool force = false}) async {
+    role = await RoleRepository.fetchRoles(hardFetch: force)
+        .then((e) => e.data ?? {});
   }
 
   void addClick() async {

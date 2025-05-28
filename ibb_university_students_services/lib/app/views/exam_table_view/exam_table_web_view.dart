@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/exam_table_view/exam_table_view_components/exam_card.dart';
 import '../../components/custom_text_v2.dart';
@@ -53,7 +55,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             width: width * 0.08,
                           ),
                           CustomText(
-                            "Section".tr,
+                            "Program".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),
@@ -153,6 +155,12 @@ class ExamTableWebView extends GetView<ExamTableController> {
                           SizedBox(
                             width: width * 0.03,
                           ),
+                          if ((UserRepository.checkPermission(
+                              target: "exams", action: "write")))
+                            CustomButton(
+                              onPress: controller.addButtonClick,
+                              text: "Add Exam".tr,
+                            ),
                         ],
                       ),
                     ),

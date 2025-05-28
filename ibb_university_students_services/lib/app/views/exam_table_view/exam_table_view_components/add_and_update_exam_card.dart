@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/exam_table_controller.dart';
 import 'package:ibb_university_students_services/app/utils/date_time_utils.dart';
+import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../components/typeahead.dart';
@@ -12,254 +13,589 @@ import '../../../styles/text_styles.dart';
 class PopUpIAddAndUpdateExamCard extends GetView<ExamTableController> {
   const PopUpIAddAndUpdateExamCard({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Hero(
-          tag: "PopUpInsertCard",
-          child: Material(
-            color: AppColors.mainCardColor,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-                side: BorderSide(
-                  color: AppColors.inverseCardColor,
-                  width: 3,
-
-                )
+    return (ScreenUtils.isPhoneScreen())
+        ? Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Hero(
+                tag: "PopUpInsertCard",
+                child: Material(
+                  color: AppColors.mainCardColor,
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                      side: BorderSide(
+                        color: AppColors.inverseCardColor,
+                        width: 3,
+                      )),
+                  child: SizedBox(
+                      height: Get.height * 0.6,
+                      width: Get.width,
+                      child: SafeArea(
+                          minimum: const EdgeInsets.all(12),
+                          child: Form(
+                            key: controller.formKey,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                CustomText("${controller.mode} Exam",
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold)),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.menu_book,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomText("Subject".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold)),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                      ],
+                                    ),
+                                    TypeAhead<String>(
+                                      value: controller.subjectId.value,
+                                      width: (Get.width * 0.45),
+                                      onSelected: (String i, v) {
+                                        controller.subjectId.value = i;
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_drop_down_outlined,
+                                        color: AppColors.inverseCardColor,
+                                        size: 25,
+                                      ),
+                                      label: "Select Subject",
+                                      items: controller.subjects?.map((i, e) =>
+                                              MapEntry(
+                                                  i, e.subjectName ?? "")) ??
+                                          {},
+                                      // color: AppColors.inverseCardColor,
+                                      menuColor: AppColors.inverseCardColor,
+                                      textStyle: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      menuTextStyle: AppTextStyles.mainStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_month,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomText("Date".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold)),
+                                      ],
+                                    ),
+                                    CustomTextFormField(
+                                      controller: controller.dateController,
+                                      // validator: controller.validateDate,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      labelText: 'Date'.tr,
+                                      focusNode: controller.dateFocus,
+                                      readOnly: true,
+                                      onTap: () => DateTimeUtils.datePiker(
+                                          context,
+                                          controller:
+                                              controller.dateController),
+                                      onFieldSubmitted: (e) {
+                                        controller.timeFocus.requestFocus();
+                                      },
+                                      width: (Get.width - 12) * 0.46,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time_filled,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomText("Time".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold)),
+                                      ],
+                                    ),
+                                    CustomTextFormField(
+                                      controller: controller.timeController,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      // validator: controller.validateTime,
+                                      labelText: "Time".tr,
+                                      focusNode: controller.timeFocus,
+                                      readOnly: true,
+                                      onTap: () => DateTimeUtils.timePiker(
+                                          context, controller.timeController),
+                                      onFieldSubmitted: (e) {
+                                        controller.dayFocus.requestFocus();
+                                      },
+                                      width: (Get.width - 12) * 0.46,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.timer,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomText("Day".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold)),
+                                      ],
+                                    ),
+                                    Container(
+                                      width: Get.width * 0.45,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(),
+                                          borderRadius:
+                                              BorderRadius.circular(24)),
+                                      child: Center(
+                                        child: Obx(() => DropdownButton<String>(
+                                              value: controller.day.value,
+                                              icon: Icon(
+                                                  Icons.arrow_drop_down_sharp,
+                                                  color: AppColors
+                                                      .inverseCardColor),
+                                              underline: const SizedBox(),
+                                              dropdownColor:
+                                                  AppColors.mainCardColor,
+                                              onChanged: (val) {
+                                                controller.day.value =
+                                                    val ?? "Saturday";
+                                              },
+                                              items: [
+                                                DropdownMenuItem<String>(
+                                                  value: "Saturday",
+                                                  child: CustomText(
+                                                    "Saturday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Sunday",
+                                                  child: CustomText(
+                                                    "Sunday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Monday",
+                                                  child: CustomText(
+                                                    "Monday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Tuesday",
+                                                  child: CustomText(
+                                                    "Tuesday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Wednesday",
+                                                  child: CustomText(
+                                                    "Wednesday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Thursday",
+                                                  child: CustomText(
+                                                    "Thursday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.account_balance,
+                                          size: 40,
+                                          color: AppColors.inverseIconColor,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        CustomText("Hall".tr,
+                                            style: AppTextStyles.secStyle(
+                                                textHeader:
+                                                    AppTextHeaders.h3Bold)),
+                                      ],
+                                    ),
+                                    CustomTextFormField(
+                                      controller: controller.hallController,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      // validator: controller.validateEntryYear,
+                                      labelText: "Hall".tr,
+                                      focusNode: controller.hallFocus,
+                                      onFieldSubmitted: (e) {
+                                        controller.submit();
+                                      },
+                                      width: (Get.width - 12) * 0.46,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CustomButton(
+                                      onPress: controller.submit,
+                                      text: (controller.mode).tr,
+                                    ),
+                                    CustomButton(
+                                      onPress: () => Get.back(result: null),
+                                      text: "Close".tr,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ))),
+                ),
+              ),
             ),
-            child: SizedBox(
-                height: Get.height * 0.6,
-                width: Get.width,
-                child: SafeArea(
-                    minimum: const EdgeInsets.all(12),
-                    child: Form(
-                      key: controller.formKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CustomText("${controller.mode} Exam",
-                              style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.menu_book,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText("Subject".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                ],
-                              ),
-                              TypeAhead<String>(
-                                value: controller.subjectId.value,
-                                width: (Get.width * 0.45),
-                                onSelected: (String i,v){
-                                  controller.subjectId.value = i;
-                                },
-                                icon: Icon(
-                                  Icons.arrow_drop_down_outlined,
-                                  color: AppColors.inverseCardColor,
-                                  size: 25,
+          )
+        : Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Hero(
+                tag: "PopUpInsertCard",
+                child: Material(
+                  color: AppColors.mainCardColor,
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                      side: BorderSide(
+                        color: AppColors.inverseCardColor,
+                        width: 3,
+                      )),
+                  child: SizedBox(
+                      height: Get.height * 0.7,
+                      width: Get.width * 0.3,
+                      child: SafeArea(
+                          minimum: const EdgeInsets.all(12),
+                          child: Form(
+                            key: controller.formKey,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                CustomText("${controller.mode} Exam",
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h2Bold)),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText("Subject".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    TypeAhead<String>(
+                                      value: controller.subjectId.value,
+                                      width: (Get.width * 0.2),
+                                      onSelected: (String i, v) {
+                                        controller.subjectId.value = i;
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_drop_down_outlined,
+                                        color: AppColors.inverseCardColor,
+                                        size: 25,
+                                      ),
+                                      label: "Select Subject",
+                                      items: controller.subjects?.map((i, e) =>
+                                              MapEntry(
+                                                  i, e.subjectName ?? "")) ??
+                                          {},
+                                      // color: AppColors.inverseCardColor,
+                                      menuColor: AppColors.inverseCardColor,
+                                      textStyle: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      menuTextStyle: AppTextStyles.mainStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                    ),
+                                  ],
                                 ),
-                                label: "Select Subject",
-                                items: controller.subjects?.map((i,e)=>MapEntry(i, e.subjectName??""))??{},
-                                // color: AppColors.inverseCardColor,
-                                menuColor: AppColors.inverseCardColor,
-                                textStyle: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                                menuTextStyle: AppTextStyles.mainStyle(textHeader: AppTextHeaders.h3Bold),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_month,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText("Date".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              CustomTextFormField(
-                                controller: controller.dateController,
-                                // validator: controller.validateDate,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                                labelText: 'Date'.tr,
-                                focusNode: controller.dateFocus,
-                                readOnly: true,
-                                onTap: () => DateTimeUtils.datePiker(context,controller:controller.dateController),
-                                onFieldSubmitted: (e) {
-                                  controller.timeFocus.requestFocus();
-                                },
-                                width: (Get.width - 12) * 0.46,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.access_time_filled,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText("Time".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              CustomTextFormField(
-                                controller: controller.timeController,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                                // validator: controller.validateTime,
-                                labelText: "Time".tr,
-                                focusNode: controller.timeFocus,
-                                readOnly: true,
-                                onTap: () => DateTimeUtils.timePiker(context,controller.timeController),
-                                onFieldSubmitted: (e) {
-                                  controller.dayFocus.requestFocus();
-                                },
-                                width: (Get.width - 12) * 0.46,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.timer,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText("Day".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              Container(
-                                width: Get.width*0.45,
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius: BorderRadius.circular(24)
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText("Date".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
+                                    CustomTextFormField(
+                                      controller: controller.dateController,
+                                      // validator: controller.validateDate,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      labelText: 'Date'.tr,
+                                      focusNode: controller.dateFocus,
+                                      readOnly: true,
+                                      onTap: () => DateTimeUtils.datePiker(
+                                          context,
+                                          controller:
+                                              controller.dateController),
+                                      onFieldSubmitted: (e) {
+                                        controller.timeFocus.requestFocus();
+                                      },
+                                      width: (Get.width - 12) * 0.21,
+                                    ),
+                                  ],
                                 ),
-                                child: Center(
-                                  child: Obx(()=>DropdownButton<String>(
-                                    value: controller.day.value,
-                                    icon: Icon(Icons.arrow_drop_down_sharp,
-                                        color: AppColors.inverseCardColor),
-                                    underline: const SizedBox(),
-                                    dropdownColor: AppColors.mainCardColor,
-                                    onChanged: (val) {
-                                      controller.day.value = val ?? "Saturday";
-                                    },
-                                    items: [
-                                      DropdownMenuItem<String>(
-                                        value: "Saturday",
-                                        child:  CustomText("Saturday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText("Time".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
+                                    CustomTextFormField(
+                                      controller: controller.timeController,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      // validator: controller.validateTime,
+                                      labelText: "Time".tr,
+                                      focusNode: controller.timeFocus,
+                                      readOnly: true,
+                                      onTap: () => DateTimeUtils.timePiker(
+                                          context, controller.timeController),
+                                      onFieldSubmitted: (e) {
+                                        controller.dayFocus.requestFocus();
+                                      },
+                                      width: (Get.width - 12) * 0.21,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText("Day".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
+                                    Container(
+                                      width: Get.width * 0.21,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(),
+                                          borderRadius:
+                                              BorderRadius.circular(24)),
+                                      child: Center(
+                                        child: Obx(() => DropdownButton<String>(
+                                              value: controller.day.value,
+                                              icon: Icon(
+                                                  Icons.arrow_drop_down_sharp,
+                                                  color: AppColors
+                                                      .inverseCardColor),
+                                              underline: const SizedBox(),
+                                              dropdownColor:
+                                                  AppColors.mainCardColor,
+                                              onChanged: (val) {
+                                                controller.day.value =
+                                                    val ?? "Saturday";
+                                              },
+                                              items: [
+                                                DropdownMenuItem<String>(
+                                                  value: "Saturday",
+                                                  child: CustomText(
+                                                    "Saturday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Sunday",
+                                                  child: CustomText(
+                                                    "Sunday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Monday",
+                                                  child: CustomText(
+                                                    "Monday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Tuesday",
+                                                  child: CustomText(
+                                                    "Tuesday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Wednesday",
+                                                  child: CustomText(
+                                                    "Wednesday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                                DropdownMenuItem<String>(
+                                                  value: "Thursday",
+                                                  child: CustomText(
+                                                    "Thursday".tr,
+                                                    style:
+                                                        AppTextStyles.secStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h3Bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
                                       ),
-                                      DropdownMenuItem<String>(
-                                        value: "Sunday",
-                                        child:  CustomText("Sunday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        value: "Monday",
-                                        child:  CustomText("Monday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        value: "Tuesday",
-                                        child:  CustomText("Tuesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        value: "Wednesday",
-                                        child:  CustomText("Wednesday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                      ),
-                                      DropdownMenuItem<String>(
-                                        value: "Thursday",
-                                        child:  CustomText("Thursday".tr,style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),),
-                                      ),
-                                    ],
-                                  )),
-                                ),)
-
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.account_balance,
-                                    size: 40,
-                                    color: AppColors.inverseIconColor,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText("Hall".tr, style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold)),
-                                ],
-                              ),
-                              CustomTextFormField(
-                                controller: controller.hallController,
-                                style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h3Bold),
-                                // validator: controller.validateEntryYear,
-                                labelText: "Hall".tr,
-                                focusNode: controller.hallFocus,
-                                onFieldSubmitted: (e) {
-                                  controller.submit();
-                                },
-                                width: (Get.width-12)*0.46,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CustomButton(
-                                onPress: controller.submit,
-                                text: (controller.mode).tr,
-                              ),
-                              CustomButton(
-                                onPress: () => Get.back(result: null),
-                                text: "Close".tr,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ))),
-          ),
-        ),
-      ),
-    );
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CustomText("Hall".tr,
+                                        style: AppTextStyles.secStyle(
+                                            textHeader: AppTextHeaders.h3Bold)),
+                                    CustomTextFormField(
+                                      controller: controller.hallController,
+                                      style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Bold),
+                                      // validator: controller.validateEntryYear,
+                                      labelText: "Hall".tr,
+                                      focusNode: controller.hallFocus,
+                                      onFieldSubmitted: (e) {
+                                        controller.submit();
+                                      },
+                                      width: (Get.width - 12) * 0.21,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    CustomButton(
+                                      onPress: controller.submit,
+                                      text: (controller.mode).tr,
+                                    ),
+                                    CustomButton(
+                                      onPress: () => Get.back(result: null),
+                                      text: "Close".tr,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ))),
+                ),
+              ),
+            ),
+          );
   }
-
-
 }

@@ -16,7 +16,7 @@ class LibraryTableFilterComponent
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // CustomText(
-          //   "Section".tr,
+          //   "Program".tr,
           //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h5Bold),
           // ),
           // SizedBox(

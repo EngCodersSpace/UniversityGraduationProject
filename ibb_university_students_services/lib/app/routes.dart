@@ -6,6 +6,7 @@ import 'package:ibb_university_students_services/app/bindings/library_binding.da
 import 'package:ibb_university_students_services/app/bindings/login_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/pepper_transactions_binding.dart';
 import 'package:ibb_university_students_services/app/bindings/student_result_binding.dart';
+import 'package:ibb_university_students_services/app/bindings/study_plane_binding.dart';
 import 'package:ibb_university_students_services/app/views/acadime_card/academic_card_loder.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/doctor_table_view/doctor_table_view.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/main_view/dashboard_main_view.dart';
@@ -22,6 +23,7 @@ import 'package:ibb_university_students_services/app/views/pepper_transactions_v
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_loder.dart';
+import 'package:ibb_university_students_services/app/views/study_plane/study_plane_view_loder.dart';
 import 'bindings/academic_card_binding.dart';
 import 'bindings/main_binding.dart';
 import 'bindings/student_fees_binding.dart';
@@ -104,6 +106,11 @@ class AppRoutes {
       name: "/dashboard_student_view",
       page: () => StudentTableView(),
       binding: MainViewBinding(),
+    ),
+    GetPage(
+      name: "/study_plane",
+      page: () => StudyPlaneViewLoader(),
+      binding: StudyPlaneBinding(),
     ),
     GetPage(
       name: "/pepper_transactions",

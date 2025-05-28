@@ -389,7 +389,7 @@ class UserRepository {
   }
 
   static Future<Result<User>> fetchUser({bool hardFetch = false}) async {
-    openBox();
+    await openBox();
     if (_userBox?.get('currentUser') != null &&
         (!hardFetch || !(await checkInternetConnection()))) {
       return Result(

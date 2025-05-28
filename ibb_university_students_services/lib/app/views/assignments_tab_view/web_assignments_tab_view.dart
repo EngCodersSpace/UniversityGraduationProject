@@ -54,7 +54,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CustomText(
-                                    "Section".tr,
+                                    "Program".tr,
                                     style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h2Bold),
                                   ),
@@ -66,7 +66,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                       color: AppColors.inverseCardColor,
                                       borderRadius: BorderRadius.circular(24),
                                     ),
-                                    width: Get.width * 0.15,
+                                    width: Get.width * 0.12,
                                     child: Center(
                                       child: Obx(
                                         () => DropdownButton(
@@ -147,7 +147,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   ),
                                   TypeAhead<String>(
                                     value: controller.selectedSubject.value,
-                                    width: (Get.width * 0.25),
+                                    width: (Get.width * 0.18),
                                     onSelected: (String i, v) {
                                       controller.changeSubject(i);
                                     },
@@ -166,6 +166,77 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                         textHeader: AppTextHeaders.h3Bold),
                                     menuTextStyle: AppTextStyles.mainStyle(
                                         textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    width: Get.width * 0.02,
+                                  ),
+                                  CustomText(
+                                    "Year".tr,
+                                    style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Bold),
+                                  ),
+                                  SizedBox(
+                                    width: Get.width * 0.01,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.inverseCardColor,
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    width: Get.width * 0.13,
+                                    child: Center(
+                                      child: Obx(
+                                        () => DropdownButton<int>(
+                                          items: (controller.years.map((e) {
+                                            if (e == -1) {
+                                              return DropdownMenuItem<int>(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                            .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 3) * 0.3,
+                                                    child: CustomText(
+                                                      "Add",
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                        textHeader:
+                                                            AppTextHeaders
+                                                                .h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            } else {
+                                              return DropdownMenuItem<int>(
+                                                  value: e,
+                                                  child: SizedBox(
+                                                    width: (ScreenUtils
+                                                            .isPhoneScreen())
+                                                        ? (Get.width / 3) - 30
+                                                        : (Get.width / 5.5) *
+                                                            0.6,
+                                                    child: CustomText(
+                                                      e.toString(),
+                                                      style: AppTextStyles
+                                                          .mainStyle(
+                                                        textHeader:
+                                                            AppTextHeaders
+                                                                .h5Bold,
+                                                      ),
+                                                    ),
+                                                  ));
+                                            }
+                                          }).toList()),
+                                          onChanged: controller.changeYear,
+                                          value: controller.selectedYear.value,
+                                          underline: const SizedBox(),
+                                          iconEnabledColor:
+                                              AppColors.mainCardColor,
+                                          dropdownColor:
+                                              AppColors.inverseCardColor,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -268,25 +339,50 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                             controller.refresh(),
                                         icon: const Icon(Icons.refresh))
                                   ],
-                                  for (int i = 0;
-                                      i <
-                                          (controller
-                                                  .assignments?.value.length ??
-                                              0);
-                                      i++) ...[
-                                    AssignmentsCard(
-                                        content: Rx(controller
-                                            .assignments?.value.values
-                                            .toList()[i])),
-                                    if (i <
-                                        ((controller.assignments?.value
-                                                    .length ??
-                                                0) -
-                                            1))
-                                      SizedBox(
-                                        height: Get.height * 0.03,
-                                      )
-                                  ]
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      for (int i = 0;
+                                          i <
+                                              (controller.assignments?.value
+                                                      .length ??
+                                                  0);
+                                          i += 2) ...[
+                                        AssignmentsCard(
+                                            content: Rx(controller
+                                                .assignments?.value.values
+                                                .toList()[i])),
+                                        if (i <
+                                            ((controller.assignments?.value
+                                                        .length ??
+                                                    0) -
+                                                1))
+                                          SizedBox(
+                                            height: Get.height * 0.03,
+                                          ),
+                                      ],
+                                      for (int i = 1;
+                                          i <
+                                              (controller.assignments?.value
+                                                      .length ??
+                                                  0);
+                                          i += 2) ...[
+                                        AssignmentsCard(
+                                            content: Rx(controller
+                                                .assignments?.value.values
+                                                .toList()[i])),
+                                        if (i <
+                                            ((controller.assignments?.value
+                                                        .length ??
+                                                    0) -
+                                                1))
+                                          SizedBox(
+                                            height: Get.height * 0.03,
+                                          )
+                                      ]
+                                    ],
+                                  )
                                 ],
                               ),
                             )),

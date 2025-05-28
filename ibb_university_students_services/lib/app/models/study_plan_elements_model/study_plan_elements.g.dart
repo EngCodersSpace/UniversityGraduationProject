@@ -18,23 +18,38 @@ class StudyPlanElementAdapter extends TypeAdapter<StudyPlanElement> {
     };
     return StudyPlanElement(
       id: fields[0] as int,
-      name: fields[1] as String?,
-      createdAt: fields[2] as String?,
-      updatedAt: fields[3] as String?,
+      studyPlanId: fields[1] as int?,
+      sectionId: fields[3] as int?,
+      levelId: fields[4] as int?,
+      subjectId: fields[2] as int?,
+      doctor: fields[5] as Instructor?,
+      name: fields[6] as String?,
+      createdAt: fields[7] as String?,
+      updatedAt: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, StudyPlanElement obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.studyPlanId)
       ..writeByte(2)
-      ..write(obj.createdAt)
+      ..write(obj.subjectId)
       ..writeByte(3)
+      ..write(obj.sectionId)
+      ..writeByte(4)
+      ..write(obj.levelId)
+      ..writeByte(5)
+      ..write(obj.doctor)
+      ..writeByte(6)
+      ..write(obj.name)
+      ..writeByte(7)
+      ..write(obj.createdAt)
+      ..writeByte(8)
       ..write(obj.updatedAt);
   }
 

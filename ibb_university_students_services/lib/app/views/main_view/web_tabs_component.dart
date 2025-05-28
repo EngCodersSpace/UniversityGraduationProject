@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/main_controller.dart';
-
 import '../../components/custom_text_v2.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/text_styles.dart';
@@ -23,7 +22,7 @@ class WebTabsComponent extends GetView<MainController> {
     return Obx(
       () => InkWell(
         onTap: () {
-          if (index == 9) {
+          if (index == 10) {
             controller.routeAdmainPanel();
             return;
           }

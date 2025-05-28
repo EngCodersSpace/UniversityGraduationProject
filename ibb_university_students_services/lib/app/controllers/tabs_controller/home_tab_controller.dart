@@ -171,7 +171,7 @@ class HomeTabController extends GetxController
   }
 
   void pepperTransactionsRoute() {
-    Get.toNamed("/pepper_transactions");
+    Get.toNamed("/study_plane");
   }
 
   void openNewsList() async {

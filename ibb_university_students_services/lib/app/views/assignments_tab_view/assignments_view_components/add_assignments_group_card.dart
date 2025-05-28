@@ -50,7 +50,7 @@ class PopUpIAddAssignmentsGroupCard extends GetView<AssignmentsTabController> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  CustomText("Section".tr,
+                                  CustomText("Program".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   Container(
@@ -184,7 +184,7 @@ class PopUpIAddAssignmentsGroupCard extends GetView<AssignmentsTabController> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  CustomText("Section".tr,
+                                  CustomText("Program".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   Container(

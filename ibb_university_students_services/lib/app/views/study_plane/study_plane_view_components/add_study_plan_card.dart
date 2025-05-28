@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
+import 'package:ibb_university_students_services/app/controllers/study_plane_controller.dart';
 import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
-class PopUpAddAssignmentsYearCard
-    extends GetView<AssignmentsTabController> {
-  const PopUpAddAssignmentsYearCard({super.key});
+class PopUpAddStudyPlanCard
+    extends GetView<StudyPlaneController> {
+  const PopUpAddStudyPlanCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class PopUpAddAssignmentsYearCard
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          CustomText("${controller.mode} Assignment",
+                          CustomText("Add Study plan",
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h2Bold)),
                           Row(
@@ -54,20 +55,20 @@ class PopUpAddAssignmentsYearCard
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  CustomText("Year".tr,
+                                  CustomText("Name".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                 ],
                               ),
                               CustomTextFormField(
-                                controller: controller.yearController,
+                                controller: controller.studyPlaneNameController,
                                 style: AppTextStyles.secStyle(
                                     textHeader: AppTextHeaders.h3Bold),
                                 // validator: controller.validateEntryYear,
-                                labelText: "Year".tr,
-                                focusNode: controller.yearFocus,
+                                labelText: "Name".tr,
+                                focusNode: controller.studyPlaneNameFocus,
                                 onFieldSubmitted: (e) {
-                                  controller.addYear();
+                                  controller.addStudyPlan();
                                 },
                                 width: (Get.width - 12) * 0.46,
                               ),
@@ -77,7 +78,7 @@ class PopUpAddAssignmentsYearCard
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomButton(
-                                onPress: controller.addYear,
+                                onPress: controller.addStudyPlan,
                                 text: "Add",
                               ),
                               CustomButton(

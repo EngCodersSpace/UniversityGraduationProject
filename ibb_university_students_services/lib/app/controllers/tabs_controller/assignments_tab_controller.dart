@@ -49,10 +49,10 @@ class AssignmentsTabController extends GetxController {
   TextEditingController titleController = TextEditingController();
   TextEditingController yearController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  FocusNode yearFocus = FocusNode();
   FocusNode dueDateFocus = FocusNode();
   FocusNode titleFocus = FocusNode();
   FocusNode hallFocus = FocusNode();
-  FocusNode yearFocus = FocusNode();
   String mode = "Add";
   String fetchMode = "doctor";
   int? selectedAssignment;

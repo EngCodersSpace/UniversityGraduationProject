@@ -78,6 +78,7 @@ class LectureRepository {
       response = await HttpProvider.get(
           "lectures/grouped?section_id=$sectionId&level_id=$levelId");
       if (response?.statusCode == 200) {
+        _lecturesGroupsBox?.delete("${sectionId}_${levelId}_Lectures");
         LecturesCache dayLectures =
             LecturesCache(key: "${sectionId}_${levelId}_Lectures", data: {});
 
@@ -324,7 +325,7 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.post("changeLecStatus-lecture",
-          data: {"id": 7, "action": action});
+          data: {"id": id, "action": action});
       if (response?.statusCode == 200) {
         _lecturesBox?.get(id)?.lectureStatus = (action == "confirm")
             ? true

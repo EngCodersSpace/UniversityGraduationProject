@@ -55,8 +55,8 @@ class HiveServices{
     Hive.registerAdapter(LectureAdapter());
     Hive.registerAdapter(GradAdapter());
     Hive.registerAdapter(StudentFeeAdapter());
+    Hive.registerAdapter(StudyPlanAdapter());
     Hive.registerAdapter(StudyPlanElementAdapter());
-    Hive.registerAdapter(StudyPlaneAdapter());
     Hive.registerAdapter(StudentFeeCacheAdapter());
     Hive.registerAdapter(LecturesCacheAdapter());
     Hive.registerAdapter(ExamsCacheAdapter());
@@ -86,6 +86,7 @@ class HiveServices{
   }
 
   static clearAllBox() async{
+    await UserRepository.clearBox();
     await AssignmentsRepository.clearBox();
     await ExamRepository.clearBox();
     await GradRepository.clearBox();
@@ -95,7 +96,6 @@ class HiveServices{
     await SectionRepository.clearBox();
     await StudentFeeRepository.clearBox();
     await SubjectRepository.clearBox();
-    await UserRepository.clearBox();
     await LibraryRepository.clearBox();
     await NewsRepository.clearBox();
 
@@ -104,10 +104,10 @@ class HiveServices{
   static closeAllBoxes() async{
     await AssignmentsRepository.closeBox();
     await ExamRepository.closeBox();
-    // await GradRepository.closeBox();
+    await GradRepository.closeBox();
     await LectureRepository.closeBox();
     await LevelRepository.closeBox();
-    // await NotificationRepository.closeBox();
+    await NotificationRepository.closeBox();
     await SectionRepository.closeBox();
     await StudentFeeRepository.closeBox();
     await SubjectRepository.closeBox();
