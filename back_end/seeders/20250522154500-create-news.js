@@ -92,7 +92,7 @@ module.exports = {
           ]),
           time: "2025-05-10 10:00 AM",
           image:
-            "storage\\News\\user\\news_1.png",
+            "News\\user\\news_7.jpeg",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -185,7 +185,7 @@ module.exports = {
             { insert: ".\n" },
           ]),
           image:
-            "storage\\News\\user\\news_2.png",
+            "News\\user\\news_8.jpeg",
             time: "2025-05-10 8:00 AM",
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -271,7 +271,7 @@ module.exports = {
             { insert: ".\n" },
           ]),
           image:
-            "https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg",
+            "News\\user\\news9.jpeg",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

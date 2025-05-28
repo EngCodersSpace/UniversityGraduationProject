@@ -25,13 +25,17 @@ module.exports = (sequelize, DataTypes) => {
       book.belongsToMany(models.level, {
         through: 'bookSectionLevel',
         foreignKey: 'bookId',
+        // otherKey: 'levelId'
       });
+      
       //(4)Relationship Many-to-Many between "book table" and  "section table through bookSectionLevel"
       book.belongsToMany(models.section, {
         through: 'bookSectionLevel',
         foreignKey: 'bookId',
+        // otherKey: 'sectionId'
       });
 
+    
       //(5)Relationship One-to-Many between "book table" and  "section table"
       book.belongsTo(models.section, {
         foreignKey: 'section_id',//the foreign Key in the book table refers to section table
@@ -90,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     category: {
-      type: DataTypes.ENUM('Reference', 'Lecture', 'Exams Forms'),
+      type: DataTypes.ENUM('Reference', 'Lecture', 'Exam'),
       allowNull: false,
     },
     file_size: {

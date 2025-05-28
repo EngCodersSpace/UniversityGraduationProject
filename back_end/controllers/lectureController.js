@@ -64,7 +64,7 @@ async function restoreOriginalLecture(originalLectureId) {
   }
 }
 
-const replaceOne = async (req, res) => {
+const replaceOne1 = async (req, res) => {
   const transaction = await lecture.sequelize.transaction();
   try {
 
@@ -177,6 +177,116 @@ const replaceOne = async (req, res) => {
       .json({ message: "Failed to replace lecture", error: error.message });
   }
 };
+
+
+const replaceOne = async (req, res) => {
+  const transaction = await lecture.sequelize.transaction();
+
+  try {
+    const lectureId = req.query.id;
+
+    // Fetch the original lecture with associated subject and doctor
+    const originalLecture = await lecture.findByPk(lectureId, {
+      include: [
+        { model: subject },
+        { model: doctor }
+      ]
+    });
+
+    if (!originalLecture) {
+      throw new Error("Original lecture not found");
+    }
+
+    // Mark original as replaced
+    originalLecture.isReplaced = true;
+    await originalLecture.save({ transaction });
+
+    // Create the new lecture
+    const updateFields = {
+      originalLecturId: lectureId,
+      lecture_section_id: originalLecture.lecture_section_id,
+      lecture_level_id: originalLecture.lecture_level_id,
+      term: originalLecture.term,
+      year: originalLecture.year,
+      subject_id: req.body.subject_id || originalLecture.subject_id,
+      doctor_id: req.body.doctor_id || originalLecture.doctor_id,
+      lecture_time: req.body.lecture_time || originalLecture.lecture_time,
+      lecture_duration: req.body.lecture_duration || originalLecture.lecture_duration,
+      lecture_day: req.body.lecture_day || originalLecture.lecture_day,
+      lecture_room: req.body.lecture_room || originalLecture.lecture_room,
+    };
+
+    const replacedLecture = await lecture.create(updateFields, { transaction });
+
+    //  Refresh state
+    await upsertRefreshState("lecture", {
+      section_id: originalLecture.lecture_section_id,
+      level_id: originalLecture.lecture_level_id
+    }, { transaction });
+
+    //  Notification topic condition
+    const condition = `(student in topics) && (section_${originalLecture.lecture_section_id} in topics) && (level_${originalLecture.lecture_level_id} in topics)`;
+
+    // Fetch new subject/doctor with associations
+    const fullReplacedLecture = await lecture.findByPk(replacedLecture.id, {
+      include: [
+        { model: subject },
+        { model: doctor }
+      ]
+    });
+
+    //  Extract names from JSON fields
+    const oldSubjectName = JSON.parse(originalLecture.subject.user_name)?.en || 'Old Subject';
+    const newSubjectName = JSON.parse(fullReplacedLecture.subject.user_name)?.en || 'New Subject';
+    const oldDoctorName = JSON.parse(originalLecture.doctor.user_name)?.en || 'Old Doctor';
+    const newDoctorName = JSON.parse(fullReplacedLecture.doctor.user_name)?.en || 'New Doctor';
+
+    //  Send topic-based and personal notifications
+    await sendInfoNotification({
+      title: 'Lecture Replacement Notice',
+      message: `The lecture for subject ${oldSubjectName}, originally scheduled with Dr. ${oldDoctorName} on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been replaced. The new lecture will be for subject ${newSubjectName}, and it will be conducted by Dr. ${newDoctorName}.`,
+      sender_id: req.user.user_id,
+      topic_name: condition,
+    });
+
+    await Promise.all([
+      sendSingleSystemNotification({
+        title: 'Lecture Reassignment Notification',
+        message: `Dear Dr. ${newDoctorName}, You have been assigned a new lecture for subject ${newSubjectName}, originally scheduled with Dr. ${oldDoctorName}.`,
+        receiver_id: fullReplacedLecture.doctor.user_id,
+        token: fullReplacedLecture.doctor.fcm_token,
+        sender_id: req.user.user_id,
+      }),
+      sendSingleSystemNotification({
+        title: 'Lecture Reassignment Notification',
+        message: `Dear Dr. ${oldDoctorName}, Your lecture for subject ${oldSubjectName}, scheduled on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been reassigned.`,
+        receiver_id: originalLecture.doctor.user_id,
+        token: originalLecture.doctor.fcm_token,
+        sender_id: req.user.user_id,
+      })
+    ]);
+
+    const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
+    const [hours, minutes, seconds] = originalLecture.lecture_time.split(":").map(Number);
+    nextLectureDay.setHours(hours, minutes, seconds, 0);
+    const lectureEndTime = new Date(nextLectureDay.getTime() + originalLecture.lecture_duration * 60000);
+
+    cron.schedule(`*/5 * * * *`, async () => {
+      if (new Date().getTime() >= lectureEndTime.getTime()) {
+        await restoreOriginalLecture(lectureId);
+        await replacedLecture.destroy();
+      }
+    });
+
+    await transaction.commit();
+    return res.status(200).json({ message: "Lecture replaced successfully", replacedLecture });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Replace error:", error);
+    return res.status(500).json({ message: "Replacement failed", error: error.message });
+  }
+};
+
 
 const changeLecStatus = async (req, res) => {
   if (req.body.action !== "confirm" && req.body.action !== "cancel") {

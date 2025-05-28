@@ -44,19 +44,19 @@ exports.createSubject=async (req, res) => {
 
 exports.getSubjectById=async (req, res) => {
     const { id } = req.query;
-
+ 
     try {
         const Subject = await subject.findOne({
             where: { subject_id: id }, 
             include: [{
-            model: doctor,
-            attributes: ['doctor_id'],
-            through:{ attributes: [] },
-            include:[{
-              model:user,
-              as:'user',
-              attributes: ['user_name'],
-            }]
+              model: doctor,
+              attributes: ['doctor_id'],
+              through:{ attributes: [] },
+              include:[{
+                model:user,
+                as:'user',
+                attributes: ['user_name'],
+              }]
           }],
         });
 
