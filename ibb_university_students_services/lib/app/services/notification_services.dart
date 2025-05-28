@@ -93,6 +93,7 @@ class NotificationHandler {
         'Default Channel',
         importance: Importance.max,
         priority: Priority.high,
+
       ),
     );
     await _localNotificationsPlugin.show(
@@ -158,7 +159,7 @@ class NotificationHandler {
 }
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
-  if (message.data['type'] == 'system') {
+  if (message.data['type'] == 'sync') {
     NotificationHandler._processCommand(message.data);
   } else {
     NotificationHandler.showNotification(

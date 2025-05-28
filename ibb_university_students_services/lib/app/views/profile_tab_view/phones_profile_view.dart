@@ -203,7 +203,7 @@ class PhoneProfileView extends GetView<ProfileController> {
                                     width: width * 0.02,
                                   ),
                                   CustomText(
-                                    "Section".tr,
+                                    "Program".tr,
                                     style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h3Bold),
                                   ),

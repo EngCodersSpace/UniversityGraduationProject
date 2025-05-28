@@ -54,7 +54,7 @@ class WebAssignmentsTabView extends GetView<AssignmentsTabController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   CustomText(
-                                    "Section".tr,
+                                    "Program".tr,
                                     style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h2Bold),
                                   ),

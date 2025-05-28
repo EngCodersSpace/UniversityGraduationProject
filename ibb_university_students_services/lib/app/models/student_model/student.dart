@@ -12,7 +12,7 @@ part 'student.g.dart';
 @HiveType(typeId: 3)
 class Student extends User {
   @HiveField(11)
-  StudyPlane? studyPlane;
+  StudyPlan? studyPlane;
   @HiveField(12)
   Level? level;
   @HiveField(13)
@@ -73,7 +73,7 @@ class Student extends User {
       role: Role.fromJson(json['role']),
       phones: numbers,
       profileImage: json['profile_picture'],
-      studyPlane: StudyPlane.fromJson(json['study_plan']),
+      studyPlane: StudyPlan.fromJson(json['study_plan']),
       level: Level.fromJson(json["level"]),
       collegeNameData: JsonUtils.tryJsonDecode(json['collegeName']),
       section: Section.fromJson(json["section"]),

@@ -46,7 +46,7 @@ class AddAssignmentTableCard
                             children: [
                               Row(
                                 children: [
-                                  CustomText("Section".tr,
+                                  CustomText("Program".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(

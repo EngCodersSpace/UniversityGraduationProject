@@ -55,7 +55,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                             width: width * 0.08,
                           ),
                           CustomText(
-                            "Section".tr,
+                            "Program".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),

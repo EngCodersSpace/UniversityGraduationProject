@@ -61,7 +61,7 @@ class PhoneAssignmentsTabView extends GetView<AssignmentsTabController> {
                                   Row(
                                     children: [
                                       CustomText(
-                                        "Section".tr,
+                                        "Program".tr,
                                         style: AppTextStyles.secStyle(
                                             textHeader: AppTextHeaders.h3Bold),
                                       ),

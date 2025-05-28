@@ -46,7 +46,7 @@ class WebAddGroupCard extends GetView<LibraryController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            CustomText("Section".tr,
+                            CustomText("Program".tr,
                                 style: AppTextStyles.secStyle(
                                     textHeader: AppTextHeaders.h3Bold)),
                             Container(

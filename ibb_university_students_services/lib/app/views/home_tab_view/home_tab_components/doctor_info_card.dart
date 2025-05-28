@@ -29,7 +29,7 @@ class DoctorInfoCard extends GetView<HomeTabController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText("Section".tr,
+                  CustomText("Program".tr,
                       style: AppTextStyles.highlightStyle(
                           textHeader: AppTextHeaders.h5Bold)),
                   Row(

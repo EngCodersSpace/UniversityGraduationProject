@@ -109,7 +109,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                             width: width * 0.12,
                           ),
                           CustomText(
-                            "Section".tr,
+                            "Program".tr,
                             style: AppTextStyles.secStyle(
                                 textHeader: AppTextHeaders.h3Bold),
                           ),

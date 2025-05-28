@@ -87,7 +87,7 @@ class PopUpAddStudentCard extends GetView<DashboardStudentTableController> {
                                   // const SizedBox(
                                   //   width: 10,
                                   // ),
-                                  CustomText("Section".tr,
+                                  CustomText("Program".tr,
                                       style: AppTextStyles.secStyle(
                                           textHeader: AppTextHeaders.h3Bold)),
                                   const SizedBox(

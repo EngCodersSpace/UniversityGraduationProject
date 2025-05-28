@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../firebase_options.dart';
+import '../services/data_sync_services.dart';
 import '../services/hive_services.dart';
 import '../services/http_provider.dart';
 import '../services/notification_services.dart';
@@ -23,12 +24,12 @@ class InitAppController extends GetxController {
     });
     try {
       // await HttpProvider.init(baseUrl: "http://192.168.0.31:3000/");
-      // await HttpProvider.init(baseUrl: "http://192.168.0.111:3000/");
+      await HttpProvider.init(baseUrl: "http://192.168.0.111:3000/");
       // await HttpProvider.init(baseUrl: "http://192.168.43.135:3000/");
       // await HttpProvider.init(baseUrl: "http://192.168.8.30:3000/");
       // await HttpProvider.init(baseUrl: "http://192.168.146.135:3000/");
       // await HttpProvider.init(baseUrl: "http://192.168.1.7:3000/");
-      await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
+      // await HttpProvider.init(baseUrl: "http://127.0.0.1:3000/");
       await Hive.initFlutter();
       await HiveServices.registerAdapters();
       await HiveServices.openGlobalBoxes();
@@ -41,6 +42,7 @@ class InitAppController extends GetxController {
         }
       }
       await NotificationHandler.initialize();
+      DataSyncServices.startSync();
 
       // await DataSyncServices.startSync();
     } catch (e) {
