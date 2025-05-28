@@ -50,8 +50,8 @@ module.exports = {
           grades.push({
             student_id: studentData.student_id,
             subject_id: subjectData.subject_id,
-            exam_grade: faker.number.int({ min: 0, max: 70 }),
-            work_grade: faker.number.int({ min: 0, max: 30 }),
+            exam_grade: faker.number.int({ min: 30, max: 70 }),
+            work_grade: faker.number.int({ min: 15, max: 30 }),
             term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
             section_id: sectionData.id,
             level_id: levelIndex,
@@ -68,7 +68,11 @@ module.exports = {
       }
     }
 
-    await grade.bulkCreate(grades);
+     for (let i = 0; i < grades.length; i += 1000) {
+      const chunk = grades.slice(i, i + 1000);
+      await grade.bulkCreate(chunk);
+    }
+
     console.log(`Seed data inserted into grades table successfully.`);
   },
 

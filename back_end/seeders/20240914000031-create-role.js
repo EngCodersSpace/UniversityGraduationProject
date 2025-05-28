@@ -185,6 +185,14 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date(),
           },
+
+          {
+            target: 'study_plan',
+            action: 'write',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+
         ],
         createdAt: new Date(),
         updatedAt: new Date(),
