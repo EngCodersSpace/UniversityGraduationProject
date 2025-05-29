@@ -341,6 +341,7 @@ class HttpProvider {
       }
 
       Box box = await Hive.openBox('Tokens');
+      print(box.values.toString());
       Response response = await _dio.post("refresh",
           data: {"refreshToken": await box.get("refreshToken") ?? ""});
       await box.close();

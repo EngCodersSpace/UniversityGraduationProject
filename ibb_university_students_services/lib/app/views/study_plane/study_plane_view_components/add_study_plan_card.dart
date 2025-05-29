@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/study_plane_controller.dart';
-import 'package:ibb_university_students_services/app/controllers/tabs_controller/assignments_tab_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';

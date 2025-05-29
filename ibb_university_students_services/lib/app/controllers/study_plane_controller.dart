@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
-import 'package:ibb_university_students_services/app/repositories/grad_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/study_plane_repository.dart';
 import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
 import '../components/custom_text_v2.dart';
-import '../models/grads_model/grads_model.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/section_model/section.dart';
@@ -24,21 +23,21 @@ class StudyPlaneController extends GetxController {
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedStudyPlan = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
+  List<String> terms = ["Term 1", "Term 2"];
   RxInt selectedTerm = 0.obs;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController studyPlaneNameController = TextEditingController();
   FocusNode studyPlaneNameFocus = FocusNode();
-  Rx<Map<int, Grad>>? grads = Rx({});
+  Rx<Map<int, StudyPlanElement>>? studyPlanElement = Rx({});
   Map<int, Section> sections = {};
   Map<int, StudyPlan> studyPlans = {};
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> terms = [];
   RxString failedMessage = "Empty".tr.obs;
-  int? studentId;
   String fetchMode = "search";
 
   List<Border> borders = [];
+
   @override
   void onInit() async {
     await StudyPlanRepository.openBox();
@@ -47,13 +46,14 @@ class StudyPlaneController extends GetxController {
     await initStudyPlansDropdownMenuList();
     (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
     if (UserRepository.currentUserType() == Student) {
-      studentId = await UserRepository.fetchUser().then((e) => e.data?.id);
+      selectedStudyPlan.value = await UserRepository.fetchUser()
+          .then((e) => (e.data as Student).studyPlane?.id);
       fetchMode = "self";
     }
     await fetchStudyPlaneData();
 
     BorderSide borderSide =
-    BorderSide(color: AppColors.inverseCardColor, width: 1.0);
+        BorderSide(color: AppColors.inverseCardColor, width: 1.0);
     borders = [
       Border(
         top: borderSide,
@@ -78,12 +78,13 @@ class StudyPlaneController extends GetxController {
   }
 
   Future<void> fetchStudyPlaneData() async {
-    if (studentId == null) return;
-    Result res = await GradRepository.fetchStudentGrads(
-        studentID: studentId!, mode: fetchMode);
+    if (selectedStudyPlan.value == null) return;
+    Result res = await StudyPlanRepository.fetchStudyPlanElements(
+        studyPlanId: selectedStudyPlan.value!, mode: "mode");
     if (res.statusCode == 200) {
+      studyPlanElement?.value = res.data;
     } else if (res.statusCode == 404) {
-      grads?.value = {};
+      studyPlanElement?.value = {};
       failedMessage.value = "Not Found";
       showSnakeBar(
           title: "Not Found Grads", message: "this user has not grads");
@@ -93,7 +94,7 @@ class StudyPlaneController extends GetxController {
           title: "Fetch Grads Failed",
           message: "fetching grads failed please check connection ");
     }
-    grads?.refresh();
+    studyPlanElement?.refresh();
   }
 
   void changeLevel(int? val) async {
@@ -166,6 +167,82 @@ class StudyPlaneController extends GetxController {
     // }
     Get.dialog(PopUpAddStudyPlanCard());
     fetchStudyPlaneData();
+  }
+
+  Future<void> more(String val, {Map<String, dynamic>? data}) async {
+    // if (val == "Edit") {
+    //   await getSubjects();
+    //   mode = "Edit";
+    //   if (data != null) {
+    //     selectedLecture = data["id"];
+    //     doctorId.value = data["doctor_id"];
+    //     subjectId.value = data["subject"]["subject_id"];
+    //     timeController.text =
+    //         DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+    //     durationController.text = data["duration"].toString();
+    //     hallController.text = data["lecture_room"].toString();
+    //   }
+    //   Get.dialog(const PopUpIAddAndUpdateLectureCard());
+    // } else if (val == "Delete") {
+    //   if (selectedLevel.value == null) return;
+    //   if (selectedSection.value == null) return;
+    //   selectedLecture = data?["id"];
+    //   Result<void> res =
+    //   await LectureRepository.deleteLecture(id: selectedLecture);
+    //   Navigator.of(Get.overlayContext!).pop();
+    //   if (res.statusCode == 200) {
+    //     selectedDay(selected.value)?.remove(selectedLecture);
+    //     selected.refresh();
+    //     showSnakeBar(message: "Delete successfully");
+    //   } else {
+    //     showSnakeBar(message: "Delete failed");
+    //   }
+    // } else if (val == "TemporaryReplace") {
+    //   await getSubjects();
+    //   mode = "Replace";
+    //   if (data != null) {
+    //     selectedLecture = data["id"];
+    //     doctorId.value = data["doctor_id"];
+    //     subjectId.value = data["subject"]["subject_id"];
+    //     timeController.text =
+    //         DateTimeUtils.formatStringTime(time: data["lecture_time"]);
+    //     durationController.text = data["duration"].toString();
+    //     hallController.text = data["lecture_room"].toString();
+    //   }
+    //   Get.dialog(const PopUpIAddAndUpdateLectureCard());
+    // } else if (val == "Confirm") {
+    //   selectedLecture = data?["id"];
+    //   if (selectedLecture == null) return;
+    //   Result<void> res = await LectureRepository.changeLectureState(
+    //       id: selectedLecture!, action: 'confirm');
+    //   Navigator.of(Get.overlayContext!).pop();
+    //   if (res.statusCode == 200) {
+    //     selectedDay(selected.value)?[selectedLecture]?.lectureStatus = true;
+    //     selected.refresh();
+    //     showSnakeBar(message: "Confirm successfully");
+    //   } else {
+    //     showSnakeBar(message: "Confirm failed");
+    //   }
+    // } else if (val == "Cancel") {
+    //   selectedLecture = data?["id"];
+    //   if (selectedLecture == null) return;
+    //   Result<void> res = await LectureRepository.changeLectureState(
+    //       id: selectedLecture!, action: 'cancel');
+    //   Navigator.of(Get.overlayContext!).pop();
+    //   if (res.statusCode == 200) {
+    //     selectedDay(selected.value)?[selectedLecture]?.lectureStatus = false;
+    //     selected.refresh();
+    //     showSnakeBar(message: "Cancel successfully");
+    //   } else {
+    //     showSnakeBar(message: "Cancel failed");
+    //   }
+    // }
+  }
+
+  bool checkShowStudyPlanElements(StudyPlanElement e) {
+    return (e.levelId == selectedLevel.value) &&
+        (e.sectionId == selectedSection.value) &&
+        (e.term == terms[selectedTerm.value]);
   }
 
   @override

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../firebase_options.dart';
-import '../services/data_sync_services.dart';
 import '../services/hive_services.dart';
 import '../services/http_provider.dart';
 import '../services/notification_services.dart';
