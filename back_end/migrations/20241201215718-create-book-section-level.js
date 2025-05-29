@@ -17,7 +17,7 @@ module.exports = {
           model: 'books',
           key: 'id',
         },
-        onDelete: 'NO ACTION',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
       sectionId: {

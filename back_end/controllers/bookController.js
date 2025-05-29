@@ -477,7 +477,13 @@ exports.streamBooks = async (req, res) => {
 
     const books = await book.findAll({
       where: whereClause,
-      include,
+      include:[
+        {
+         model:bookSectionLevel ,
+         as: "bookSectionLevels",
+         attributes:["sectionId","levelId"],
+        },
+      ],
     });
 
     if (!books.length) {

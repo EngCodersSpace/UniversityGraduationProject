@@ -46,7 +46,7 @@ module.exports = {
         allowNull: true,
       },
       category: {
-        type: Sequelize.ENUM('Reference', 'Lecture', 'ExamsForms'),
+        type: Sequelize.ENUM('Reference', 'Lecture', 'Exam'),
         allowNull: false,
       },
       file_size: {
@@ -68,7 +68,7 @@ module.exports = {
           model: 'users',
           key: 'user_id',
         },
-        onDelete: 'NO ACTION',
+        onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
       },
       subject_id: {

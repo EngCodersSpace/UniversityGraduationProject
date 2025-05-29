@@ -22,8 +22,6 @@ let subjectId = 5; // unique subject id for mapped subjects
 
 for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
   const section = sections[sectionIndex];
-  for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
-    const level = levels[levelIndex];
     for (let subjectIndex = 0; subjectIndex < 5; subjectIndex++) {
       const subjectI = await subject.findOne(
         { where: { subject_id: `subject_${subjectIndex}`},
@@ -41,16 +39,16 @@ for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
       });
  studyPlanElements.push({
         study_plan_id: section, 
-        subject_id: `subject_${subjectId}`, 
+        subject_id: `subject_${subjectIndex}`, 
         doctor_id: subjectI.doctors[0].doctor_id??1, 
         section_id: section,
-        level_id:  level,
+        level_id:  1,
         number_of_units: subjectI.number_of_units, 
         term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-    }}}
+    }}
 
 
 

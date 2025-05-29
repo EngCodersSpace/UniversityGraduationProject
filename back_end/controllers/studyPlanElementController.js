@@ -1,6 +1,6 @@
-const { study_plan_elment, study_plan, subject, doctor,section,level } = require('../models'); 
+const { study_plan_elment, study_plan, subject, doctor,section,level,user } = require('../models'); 
 const { validationResult } = require('express-validator');
-const { Sequelize} = require('sequelize');
+const { Sequelize, where} = require('sequelize');
 const { Op } = require("sequelize");
 
 // when you Create a new study plan element befor see the (study plan id,subject id , doctor id )
@@ -51,12 +51,24 @@ exports.getStudyPlanElement = async (req, res) => {
 };
   
 exports.getAllStudyPlanElement = async (req, res) => {
-  try {  
+  try { 
+    const { study_plan_id } = req.query; 
     const studyPlanElements = await study_plan_elment.findAll({
+      where:{study_plan_id:study_plan_id},
       include: [
-        { model: study_plan, as: 'study_plan' },
         { model: subject, as: 'subject' },
-        { model: doctor, as: 'doctor' },
+        {
+          model: doctor,
+          as: "doctor",
+          attributes: ["doctor_id"],
+          include: [
+            {
+              model: user,
+              as: "user",
+              attributes: ["user_name"],
+            },
+          ],
+        },
         { model: section, as: 'section' },
         { model: level, as: 'level' },
         // { model: prerequisite, as: 'prerequisites' } 
@@ -78,7 +90,6 @@ exports.updateStudyPlanElement = async (req, res) => {
     try {
       const { id } = req.query; // ID passed from the URL
       const { study_plan_id, subject_id, doctor_id, section, level, number_of_units, term } = req.body;
-  
       const studyPlanElement = await study_plan_elment.findOne({ where: { study_plan_elment_id: id } });
   
       if (!studyPlanElement) {

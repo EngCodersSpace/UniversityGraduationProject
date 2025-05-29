@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'sectionId'
       });
 
+      book.hasMany(models.bookSectionLevel, { foreignKey: 'bookId' });
     }
   }
   book.init({
