@@ -34,43 +34,43 @@ class DashboardLectureTableController extends GetxController
   RxBool loadingState = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "".obs;
+  // RxString selectedTerm = "".obs;
   RxString selectedOrder = "lecture_time".obs;
   RxString selectedSort = "DESC".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> term = [
-    DropdownMenuItem<String>(
-        value: "",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-  ];
+  // List<DropdownMenuItem<String>> term = [
+  //   DropdownMenuItem<String>(
+  //       value: "",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "All",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h6Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 1",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "1st",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h6Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 2",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "2ec",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h6Bold,
+  //             ),
+  //           ))),
+  // ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "lecture_time",
@@ -153,7 +153,7 @@ class DashboardLectureTableController extends GetxController
   // ignore: non_constant_identifier_names
   Rx<int?> LevelId = Rx(null);
   // ignore: non_constant_identifier_names
-  RxString TermId = "".obs;
+  // RxString TermId = "".obs;
   TextEditingController timeController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   TextEditingController hallController = TextEditingController();
@@ -165,38 +165,38 @@ class DashboardLectureTableController extends GetxController
   int? selectedLecture;
   String mode = "Edit";
   bool submitting = false;
-  List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(
-        value: "",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.secStyle(
-                textHeader: AppTextHeaders.h3Bold,
-              ),
-            ))),
-  ];
+  // List<DropdownMenuItem<String>> terms = [
+  //   DropdownMenuItem<String>(
+  //       value: "",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "All",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 1",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "1st",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 2",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "2ec",
+  //             style: AppTextStyles.secStyle(
+  //               textHeader: AppTextHeaders.h3Bold,
+  //             ),
+  //           ))),
+  // ];
 
   List<DropdownMenuItem<String>> days = [
     DropdownMenuItem<String>(
@@ -368,7 +368,7 @@ class DashboardLectureTableController extends GetxController
     Result res = await LectureRepository.fetchDashboardLecture(
         sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
         levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
-        term: (selectedTerm.value == "") ? "" : selectedTerm.value,
+        // term: (selectedTerm.value == "") ? "" : selectedTerm.value,
         order: selectedOrder.value,
         limit: rowsPerPage.value,
         sort: selectedSort.value,
@@ -417,11 +417,11 @@ class DashboardLectureTableController extends GetxController
     await fetchDashboardData();
   }
 
-  void changeTerm(String? val) async {
-    if (val == null) return;
-    selectedTerm.value = val;
-    fetchDashboardData();
-  }
+  // void changeTerm(String? val) async {
+  //   if (val == null) return;
+  //   selectedTerm.value = val;
+  //   fetchDashboardData();
+  // }
 
   void changeOrder(String? val) async {
     if (val == null) return;
@@ -529,10 +529,10 @@ class DashboardLectureTableController extends GetxController
     Get.dialog(const PopUpAddLectureCard());
   }
 
-  void changeAddTerm(String? val) async {
-    if (val == null) return;
-    TermId.value = val;
-  }
+  // void changeAddTerm(String? val) async {
+  //   if (val == null) return;
+  //   TermId.value = val;
+  // }
 
   void changeAddDay(String? val) async {
     if (val == null) return;
@@ -592,9 +592,10 @@ class DashboardLectureTableController extends GetxController
     Navigator.of(Get.overlayContext!).pop();
     if (res.statusCode == 201 && res.data != null) {
       createLecture = res.data;
-      showSnakeBar(title: "Add Successfully",message: "Lecture added successfully");
+      showSnakeBar(
+          title: "Add Successfully", message: "Lecture added successfully");
     } else {
-      showSnakeBar(title: "Add Failed",message: "Lecture added successfully");
+      showSnakeBar(title: "Add Failed", message: "Lecture added successfully");
     }
     update(["DataTable"]);
   }

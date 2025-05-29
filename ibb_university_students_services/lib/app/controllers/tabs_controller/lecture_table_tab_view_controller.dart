@@ -27,37 +27,37 @@ class LectureController extends GetxController {
   RxString selectedDayName = "Sunday".obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "Term 1".obs;
+  // RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
   Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];
   List<DropdownMenuItem<String>> years = [];
-  List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (ScreenUtils.isPhoneScreen())
-                ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 7) * 0.6,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (ScreenUtils.isPhoneScreen())
-                ? (((Get.width - 16) / 7) * 2.5) * 0.35
-                : (Get.width / 7) * 0.6,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
-              ),
-            ))),
-  ];
+  // List<DropdownMenuItem<String>> terms = [
+  //   DropdownMenuItem<String>(
+  //       value: "Term 1",
+  //       child: SizedBox(
+  //           width: (ScreenUtils.isPhoneScreen())
+  //               ? (((Get.width - 16) / 7) * 2.5) * 0.35
+  //               : (Get.width / 7) * 0.6,
+  //           child: CustomText(
+  //             "1st",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h5Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 2",
+  //       child: SizedBox(
+  //           width: (ScreenUtils.isPhoneScreen())
+  //               ? (((Get.width - 16) / 7) * 2.5) * 0.35
+  //               : (Get.width / 7) * 0.6,
+  //           child: CustomText(
+  //             "2ec",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h5Bold,
+  //             ),
+  //           ))),
+  // ];
   Rx<Locale?> currentLocale = Get.locale.obs;
 
   //Lecture popCard variables
@@ -154,12 +154,12 @@ class LectureController extends GetxController {
     await fetchTableData();
   }
 
-  void changeTerm(String? val) async {
-    if (val == null) return;
-    selectedTerm.value = val;
-    fetchTableData();
-    selected.refresh();
-  }
+  // void changeTerm(String? val) async {
+  //   if (val == null) return;
+  //   selectedTerm.value = val;
+  //   fetchTableData();
+  //   selected.refresh();
+  // }
 
   void selectedDayChange(int index) {
     selected.value = index;

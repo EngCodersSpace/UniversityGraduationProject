@@ -68,34 +68,34 @@ class LectureTableFilterComponent
                   )),
             ),
           ),
-          SizedBox(
-            width: Get.width * 0.01,
-          ),
-          // CustomText(
-          //   "Term".tr,
-          //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
-          // ),
           // SizedBox(
-          //   width: Get.width * 0.002,
+          //   width: Get.width * 0.01,
           // ),
-          Container(
-            height: Get.height * 0.06,
-            width: Get.width * 0.08,
-            decoration: BoxDecoration(
-              color: AppColors.inverseIconColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Obx(() => DropdownButton(
-                    items: controller.term,
-                    onChanged: controller.changeTerm,
-                    value: controller.selectedTerm.value,
-                    underline: const SizedBox(),
-                    iconEnabledColor: AppColors.mainCardColor,
-                    dropdownColor: AppColors.inverseCardColor,
-                  )),
-            ),
-          ),
+          // // CustomText(
+          // //   "Term".tr,
+          // //   style: AppTextStyles.secStyle(textHeader: AppTextHeaders.h2Bold),
+          // // ),
+          // // SizedBox(
+          // //   width: Get.width * 0.002,
+          // // ),
+          // Container(
+          //   height: Get.height * 0.06,
+          //   width: Get.width * 0.08,
+          //   decoration: BoxDecoration(
+          //     color: AppColors.inverseIconColor,
+          //     borderRadius: BorderRadius.circular(24),
+          //   ),
+          //   child: Center(
+          //     child: Obx(() => DropdownButton(
+          //           items: controller.term,
+          //           onChanged: controller.changeTerm,
+          //           value: controller.selectedTerm.value,
+          //           underline: const SizedBox(),
+          //           iconEnabledColor: AppColors.mainCardColor,
+          //           dropdownColor: AppColors.inverseCardColor,
+          //         )),
+          //   ),
+          // ),
           SizedBox(
             width: Get.width * 0.01,
           ),

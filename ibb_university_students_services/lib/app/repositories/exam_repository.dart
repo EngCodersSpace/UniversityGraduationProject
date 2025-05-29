@@ -24,7 +24,7 @@ class ExamRepository {
   static Box<ExamsCache>? _examsBox;
 
   static Future<void> openBox() async {
-    if(_examsBox?.isOpen??false)return;
+    if (_examsBox?.isOpen ?? false) return;
     _examsBox = await Hive.openBox<ExamsCache>("ExamBox");
   }
 
@@ -221,7 +221,7 @@ class ExamRepository {
     int? examDate,
     int limit = 20,
     int? page,
-    String? term,
+    // String? term,
     String? order,
     String? sort,
     String? search,

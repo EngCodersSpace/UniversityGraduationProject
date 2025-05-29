@@ -40,41 +40,41 @@ class DashboardExamTableController extends GetxController
   RxSet selectedRow = RxSet({});
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "".obs;
+  // RxString selectedTerm = "".obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> terms = [
-    DropdownMenuItem<String>(
-        value: "",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h5Bold,
-              ),
-            ))),
-  ];
+  // List<DropdownMenuItem<String>> terms = [
+  //   DropdownMenuItem<String>(
+  //       value: "",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "All",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h5Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 1",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "1st",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h5Bold,
+  //             ),
+  //           ))),
+  //   DropdownMenuItem<String>(
+  //       value: "Term 2",
+  //       child: SizedBox(
+  //           width: (Get.width / 8) * 0.4,
+  //           child: CustomText(
+  //             "2ec",
+  //             style: AppTextStyles.mainStyle(
+  //               textHeader: AppTextHeaders.h5Bold,
+  //             ),
+  //           ))),
+  // ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "exam_date",
@@ -413,7 +413,7 @@ class DashboardExamTableController extends GetxController
     Result res = await ExamRepository.fetchDashboardExam(
         sectionId: (selectedSection.value == 0) ? null : selectedSection.value,
         levelId: (selectedLevel.value == 0) ? null : selectedLevel.value,
-        term: (selectedTerm.value == "") ? "" : selectedTerm.value,
+        // term: (selectedTerm.value == "") ? "" : selectedTerm.value,
         order: selectedOrder.value,
         limit: rowsPerPage.value,
         sort: selectedSort.value,
@@ -457,11 +457,11 @@ class DashboardExamTableController extends GetxController
     await fetchExamsData();
   }
 
-  void changeTerm(String? val) async {
-    if (val == null) return;
-    selectedTerm.value = val;
-    fetchExamsData();
-  }
+  // void changeTerm(String? val) async {
+  //   if (val == null) return;
+  //   selectedTerm.value = val;
+  //   fetchExamsData();
+  // }
 
   void changeOrder(String? val) async {
     if (val == null) return;

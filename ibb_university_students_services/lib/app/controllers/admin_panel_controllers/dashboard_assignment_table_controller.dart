@@ -16,6 +16,7 @@ import 'package:ibb_university_students_services/app/repositories/subject_reposi
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import 'package:ibb_university_students_services/app/views/admin_panel/assignment_table_view/assignment_table_component/add_assignment_table_card.dart';
+import 'package:ibb_university_students_services/app/views/admin_panel/assignment_table_view/assignment_table_component/add_assignment_year_card.dart';
 
 class DashboardAssignmentTableController extends GetxController
     implements HeaderOfViewControllerInterface {
@@ -34,44 +35,15 @@ class DashboardAssignmentTableController extends GetxController
   RxBool loadingstate = true.obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  RxString selectedTerm = "".obs;
+  // RxString selectedTerm = "".obs;
   RxString selectedOrder = "id".obs;
   RxString selectedSort = "DESC".obs;
   RxString selectedDay = "".obs;
+  Rx<int?> selectedYear = Rx(null);
+  List<int> years = [];
+  RxBool isDialogOpen = false.obs;
   List<DropdownMenuItem<int>> sections = [];
   List<DropdownMenuItem<int>> levels = [];
-  List<DropdownMenuItem<String>> term = [
-    DropdownMenuItem<String>(
-        value: "",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "All",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 1",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "1st",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-    DropdownMenuItem<String>(
-        value: "Term 2",
-        child: SizedBox(
-            width: (Get.width / 8) * 0.4,
-            child: CustomText(
-              "2ec",
-              style: AppTextStyles.mainStyle(
-                textHeader: AppTextHeaders.h6Bold,
-              ),
-            ))),
-  ];
   List<DropdownMenuItem<String>> orderBy = [
     DropdownMenuItem<String>(
         value: "id",
@@ -232,6 +204,8 @@ class DashboardAssignmentTableController extends GetxController
   Rx<int?> LevelId = Rx(null);
   TextEditingController title = TextEditingController();
   TextEditingController dueDate = TextEditingController();
+  TextEditingController year = TextEditingController();
+  FocusNode yearFocus = FocusNode();
   FocusNode titleFocus = FocusNode();
   FocusNode dueDateFocus = FocusNode();
   RxList<Map<String, int>> groups = RxList();
@@ -334,7 +308,6 @@ class DashboardAssignmentTableController extends GetxController
     Result res = await AssignmentsRepository.fetchDashboardAssignment(
       section: (selectedSection.value == 0) ? null : selectedSection.value,
       level: (selectedLevel.value == 0) ? null : selectedLevel.value,
-      term: (selectedTerm.value == "") ? "" : selectedTerm.value,
       day: (selectedDay.value == "") ? "" : selectedDay.value,
       order: selectedOrder.value,
       sort: selectedSort.value,
@@ -392,9 +365,20 @@ class DashboardAssignmentTableController extends GetxController
     await fetchAssignmentData();
   }
 
-  void changeTerm(String? val) async {
+  void changeYear(int? val) async {
     if (val == null) return;
-    selectedTerm.value = val;
+    if (val == -1) {
+      if (isDialogOpen.value) {
+        Get.back();
+      }
+      await Get.dialog(AddAssignmentYearCard());
+      if (isDialogOpen.value) {
+        Get.dialog(AddAssignmentTableCard());
+        update(["addUpdateCard"]);
+      }
+      return;
+    }
+    selectedYear.value = val;
     fetchAssignmentData();
   }
 
@@ -414,6 +398,14 @@ class DashboardAssignmentTableController extends GetxController
     if (val == null) return;
     selectedDay.value = val;
     fetchAssignmentData();
+  }
+
+  void addYear() {
+    if (year.text == "") return;
+    years.add(int.parse(year.text));
+    selectedYear.value = int.parse(year.text);
+    years.sort((a, b) => a.compareTo(b));
+    Get.back();
   }
 
   Future<void> initSectionDashboardMenuList({bool force = false}) async {
@@ -523,7 +515,7 @@ class DashboardAssignmentTableController extends GetxController
           levelId: LevelId.value!,
           subjectId: subjectId.value!,
           title: title.text,
-          year: 2025,
+          year: int.parse(year.text),
           assignmentDate: DateTime.now().toString(),
           assignmentsDueDate: dueDate.text,
           sectionsAndLevels: groups.value = [

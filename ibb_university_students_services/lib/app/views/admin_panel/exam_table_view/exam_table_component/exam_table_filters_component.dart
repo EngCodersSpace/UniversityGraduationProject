@@ -59,27 +59,27 @@ class ExamTableFiltersComponent extends GetView<DashboardExamTableController> {
                   )),
             ),
           ),
-          SizedBox(
-            width: Get.width * 0.01,
-          ),
-          Container(
-            height: Get.height * 0.06,
-            width: Get.width * 0.08,
-            decoration: BoxDecoration(
-              color: AppColors.inverseIconColor,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Center(
-              child: Obx(() => DropdownButton(
-                    items: controller.terms,
-                    onChanged: controller.changeTerm,
-                    value: controller.selectedTerm.value,
-                    underline: const SizedBox(),
-                    iconEnabledColor: AppColors.mainCardColor,
-                    dropdownColor: AppColors.inverseCardColor,
-                  )),
-            ),
-          ),
+          // SizedBox(
+          //   width: Get.width * 0.01,
+          // ),
+          // Container(
+          //   height: Get.height * 0.06,
+          //   width: Get.width * 0.08,
+          //   decoration: BoxDecoration(
+          //     color: AppColors.inverseIconColor,
+          //     borderRadius: BorderRadius.circular(24),
+          //   ),
+          //   child: Center(
+          //     child: Obx(() => DropdownButton(
+          //           items: controller.terms,
+          //           onChanged: controller.changeTerm,
+          //           value: controller.selectedTerm.value,
+          //           underline: const SizedBox(),
+          //           iconEnabledColor: AppColors.mainCardColor,
+          //           dropdownColor: AppColors.inverseCardColor,
+          //         )),
+          //   ),
+          // ),
           SizedBox(
             width: Get.width * 0.01,
           ),

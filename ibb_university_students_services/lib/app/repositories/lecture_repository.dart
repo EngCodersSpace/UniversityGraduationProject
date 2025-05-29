@@ -377,7 +377,7 @@ class LectureRepository {
     int limit = 20,
     int? page,
     String? year,
-    String? term,
+    // String? term,
     String? day,
     String? order,
     String? sort,
@@ -387,7 +387,7 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.get(
-        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&term=${term ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page",
+        "lectures/panle?section_id=${sectionId ?? ''}&level_id=${levelId ?? ''}&year=${year ?? ''}&day=${day ?? ''}&orderBy=${order ?? ''}&sort=${sort ?? ''}&limit=$limit&search=${search ?? ''}&page=$page",
       );
       Map<int, Lecture> lectures = {};
 

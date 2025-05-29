@@ -50,108 +50,118 @@ class ExamTableWebView extends GetView<ExamTableController> {
                       ),
                       padding: const EdgeInsets.only(left: 70),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width: width * 0.08,
-                          ),
-                          CustomText(
-                            "Program".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          SizedBox(
-                            width: width * 0.008,
-                          ),
-                          Container(
-                            height: height * 0.08,
-                            width: width * 0.12,
-                            decoration: BoxDecoration(
-                              color: AppColors.inverseIconColor,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Center(
-                              child: Obx(
-                                () => DropdownButton(
-                                  items: controller.sections.values
-                                      .map((section) => DropdownMenuItem<int>(
-                                          value: section.id,
-                                          child: SizedBox(
-                                            width: (Get.width / 7.3) * 0.7,
-                                            child: CustomText(
-                                              section.name ?? "unknown",
-                                              style: AppTextStyles.mainStyle(
-                                                  textHeader:
-                                                      AppTextHeaders.h6Bold),
-                                            ),
-                                          )))
-                                      .toList(),
-                                  onChanged: controller.changeDepartment,
-                                  value: controller.selectedSection.value,
-                                  underline: const SizedBox(),
-                                  iconEnabledColor: AppColors.mainCardColor,
-                                  dropdownColor: AppColors.inverseCardColor,
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: width * 0.08,
+                              ),
+                              CustomText(
+                                "Section".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              SizedBox(
+                                width: width * 0.008,
+                              ),
+                              Container(
+                                height: height * 0.08,
+                                width: width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: AppColors.inverseIconColor,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Center(
+                                  child: Obx(
+                                    () => DropdownButton(
+                                      items: controller.sections.values
+                                          .map((section) => DropdownMenuItem<
+                                                  int>(
+                                              value: section.id,
+                                              child: SizedBox(
+                                                width: (Get.width / 7.3) * 0.7,
+                                                child: CustomText(
+                                                  section.name ?? "unknown",
+                                                  style:
+                                                      AppTextStyles.mainStyle(
+                                                          textHeader:
+                                                              AppTextHeaders
+                                                                  .h6Bold),
+                                                ),
+                                              )))
+                                          .toList(),
+                                      onChanged: controller.changeDepartment,
+                                      value: controller.selectedSection.value,
+                                      underline: const SizedBox(),
+                                      iconEnabledColor: AppColors.mainCardColor,
+                                      dropdownColor: AppColors.inverseCardColor,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              SizedBox(
+                                width: width * 0.03,
+                              ),
+                              CustomText(
+                                "Level".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold),
+                              ),
+                              SizedBox(
+                                width: width * 0.008,
+                              ),
+                              Container(
+                                height: height * 0.08,
+                                width: width * 0.08,
+                                decoration: BoxDecoration(
+                                  color: AppColors.inverseIconColor,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Center(
+                                  child: Obx(() => DropdownButton(
+                                        items: controller.levels,
+                                        onChanged: controller.changeLevel,
+                                        value: controller.selectedLevel.value,
+                                        underline: const SizedBox(),
+                                        iconEnabledColor:
+                                            AppColors.mainCardColor,
+                                        dropdownColor:
+                                            AppColors.inverseCardColor,
+                                      )),
+                                ),
+                              ),
+                              SizedBox(
+                                width: width * 0.03,
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: width * 0.03,
-                          ),
-                          CustomText(
-                            "Level".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          SizedBox(
-                            width: width * 0.008,
-                          ),
-                          Container(
-                            height: height * 0.08,
-                            width: width * 0.08,
-                            decoration: BoxDecoration(
-                              color: AppColors.inverseIconColor,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Center(
-                              child: Obx(() => DropdownButton(
-                                    items: controller.levels,
-                                    onChanged: controller.changeLevel,
-                                    value: controller.selectedLevel.value,
-                                    underline: const SizedBox(),
-                                    iconEnabledColor: AppColors.mainCardColor,
-                                    dropdownColor: AppColors.inverseCardColor,
-                                  )),
-                            ),
-                          ),
-                          SizedBox(
-                            width: width * 0.03,
-                          ),
-                          CustomText(
-                            "Term".tr,
-                            style: AppTextStyles.secStyle(
-                                textHeader: AppTextHeaders.h3Bold),
-                          ),
-                          SizedBox(
-                            width: width * 0.008,
-                          ),
-                          Container(
-                            height: height * 0.08,
-                            width: width * 0.1,
-                            decoration: BoxDecoration(
-                              color: AppColors.inverseIconColor,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Center(
-                              child: Obx(() => DropdownButton(
-                                    items: controller.terms,
-                                    onChanged: controller.changeTerm,
-                                    value: controller.selectedTerm.value,
-                                    underline: const SizedBox(),
-                                    iconEnabledColor: AppColors.mainCardColor,
-                                    dropdownColor: AppColors.inverseCardColor,
-                                  )),
-                            ),
-                          ),
+                          // CustomText(
+                          //   "Term".tr,
+                          //   style: AppTextStyles.secStyle(
+                          //       textHeader: AppTextHeaders.h3Bold),
+                          // ),
+                          // SizedBox(
+                          //   width: width * 0.008,
+                          // ),
+                          // Container(
+                          //   height: height * 0.08,
+                          //   width: width * 0.1,
+                          //   decoration: BoxDecoration(
+                          //     color: AppColors.inverseIconColor,
+                          //     borderRadius: BorderRadius.circular(24),
+                          //   ),
+                          //   child: Center(
+                          //     child: Obx(() => DropdownButton(
+                          //           items: controller.terms,
+                          //           onChanged: controller.changeTerm,
+                          //           value: controller.selectedTerm.value,
+                          //           underline: const SizedBox(),
+                          //           iconEnabledColor: AppColors.mainCardColor,
+                          //           dropdownColor: AppColors.inverseCardColor,
+                          //         )),
+                          //   ),
+                          // ),
                           SizedBox(
                             width: width * 0.03,
                           ),

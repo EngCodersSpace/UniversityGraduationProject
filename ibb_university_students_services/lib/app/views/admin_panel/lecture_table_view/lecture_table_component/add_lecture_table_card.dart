@@ -210,39 +210,39 @@ class PopUpAddLectureCard extends GetView<DashboardLectureTableController> {
                               )
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(
-                                "Term".tr,
-                                style: AppTextStyles.secStyle(
-                                    textHeader: AppTextHeaders.h3Bold),
-                              ),
-                              SizedBox(
-                                width: Get.width * 0.002,
-                              ),
-                              Container(
-                                // height: Get.height * 0.06,
-                                width: Get.width * 0.23,
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainIconColor,
-                                  borderRadius: BorderRadius.circular(24),
-                                  border: Border.all(),
-                                ),
-                                child: Center(
-                                  child: Obx(() => DropdownButton(
-                                        items: controller.terms,
-                                        onChanged: controller.changeAddTerm,
-                                        value: controller.TermId.value,
-                                        underline: const SizedBox(),
-                                        iconEnabledColor:
-                                            AppColors.inverseCardColor,
-                                        dropdownColor: AppColors.mainCardColor,
-                                      )),
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     CustomText(
+                          //       "Term".tr,
+                          //       style: AppTextStyles.secStyle(
+                          //           textHeader: AppTextHeaders.h3Bold),
+                          //     ),
+                          //     SizedBox(
+                          //       width: Get.width * 0.002,
+                          //     ),
+                          //     Container(
+                          //       // height: Get.height * 0.06,
+                          //       width: Get.width * 0.23,
+                          //       decoration: BoxDecoration(
+                          //         color: AppColors.mainIconColor,
+                          //         borderRadius: BorderRadius.circular(24),
+                          //         border: Border.all(),
+                          //       ),
+                          //       child: Center(
+                          //         child: Obx(() => DropdownButton(
+                          //               items: controller.terms,
+                          //               onChanged: controller.changeAddTerm,
+                          //               value: controller.TermId.value,
+                          //               underline: const SizedBox(),
+                          //               iconEnabledColor:
+                          //                   AppColors.inverseCardColor,
+                          //               dropdownColor: AppColors.mainCardColor,
+                          //             )),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

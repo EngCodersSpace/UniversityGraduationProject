@@ -44,7 +44,6 @@ class AssignmentsTabController extends GetxController {
   RxList<Map<String, int>> groups = RxList();
   Rx<Map<int, Assignment>>? assignments = Rx({});
   RxBool isDialogOpen = false.obs;
-
   TextEditingController dueDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController yearController = TextEditingController();
@@ -252,12 +251,12 @@ class AssignmentsTabController extends GetxController {
       }
       int? oldId = file.id;
       if (kIsWeb) {
-        if(webFiles![file.id] == null)continue;
+        if (webFiles![file.id] == null) continue;
         await AssignmentsRepository.uploadAttachmentFilesWeb(
-            attachment: file,
-            file: webFiles![file.id]!,
-            sectionId: selectedDepartment.value!,
-            levelId: selectedLevel.value!)
+                attachment: file,
+                file: webFiles![file.id]!,
+                sectionId: selectedDepartment.value!,
+                levelId: selectedLevel.value!)
             .then((e) {
           assignments?.value[selectedAssignment]?.attachments?[file.id] = file;
           assignments?.value[selectedAssignment]?.attachments?.remove(oldId);
@@ -287,14 +286,14 @@ class AssignmentsTabController extends GetxController {
         continue;
       }
       int? oldId = file.id;
-      if(kIsWeb){
-        if(webFiles?[file.id] == null)continue;
+      if (kIsWeb) {
+        if (webFiles?[file.id] == null) continue;
         await AssignmentsRepository.uploadStudentAssignmentsFilesWeb(
-            files: file,
-            file: webFiles![file.id]!,
-            assignmentId: selectedAssignment!,
-            sectionId: selectedDepartment.value!,
-            levelId: selectedLevel.value!)
+                files: file,
+                file: webFiles![file.id]!,
+                assignmentId: selectedAssignment!,
+                sectionId: selectedDepartment.value!,
+                levelId: selectedLevel.value!)
             .then((e) {
           assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
               ?.studentFiles?[file.id] = file;
@@ -302,13 +301,12 @@ class AssignmentsTabController extends GetxController {
               ?.studentFiles
               ?.remove(oldId);
         });
-      }else{
+      } else {
         await AssignmentsRepository.uploadStudentAssignmentsFiles(
-            files: file,
-
-            assignmentId: selectedAssignment!,
-            sectionId: selectedDepartment.value!,
-            levelId: selectedLevel.value!)
+                files: file,
+                assignmentId: selectedAssignment!,
+                sectionId: selectedDepartment.value!,
+                levelId: selectedLevel.value!)
             .then((e) {
           assignments?.value[selectedAssignment]!.studentsStatus?[selectedState]
               ?.studentFiles?[file.id] = file;
@@ -710,9 +708,10 @@ class AssignmentsTabController extends GetxController {
 
   void showAttachmentsFiles(int? assignmentId) async {
     selectedAssignment = assignmentId;
-    if(!kIsWeb){
+    if (!kIsWeb) {
       for (AttachmentFile file
-      in assignments?.value[selectedAssignment]?.attachments?.values ?? []) {
+          in assignments?.value[selectedAssignment]?.attachments?.values ??
+              []) {
         await file.checkDownloaded();
       }
     }
@@ -726,9 +725,9 @@ class AssignmentsTabController extends GetxController {
   void showStudentFiles(int? assignmentId, {int? stateId}) async {
     selectedAssignment = assignmentId;
     selectedState = stateId;
-    if(!kIsWeb){
+    if (!kIsWeb) {
       for (StudentAssignmentsFile file in assignments?.value[selectedAssignment]
-          ?.studentsStatus?[selectedState]?.studentFiles?.values ??
+              ?.studentsStatus?[selectedState]?.studentFiles?.values ??
           []) {
         await file.checkDownloaded();
       }
