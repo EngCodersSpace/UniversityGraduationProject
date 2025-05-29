@@ -60,10 +60,6 @@ module.exports = {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
-      number_of_units: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       term: {
         type: Sequelize.ENUM('Term 1', 'Term 2'),
         allowNull: false,

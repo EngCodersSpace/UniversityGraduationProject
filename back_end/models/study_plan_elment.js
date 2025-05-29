@@ -104,10 +104,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'NO ACTION',
       onUpdate: 'CASCADE',
     },
-    number_of_units: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     term: {
       type: DataTypes.ENUM('Term 1', 'Term 2'),
       allowNull: false,
