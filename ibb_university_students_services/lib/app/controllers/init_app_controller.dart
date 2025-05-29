@@ -12,9 +12,9 @@ import '../repositories/user_repository.dart';
 
 class InitAppController extends GetxController {
   @override
-  void onInit() {
+  void onInit() async{
+    await _initializeApp();
     super.onInit();
-    _initializeApp();
   }
 
   Future<void> _initializeApp() async {
@@ -42,9 +42,7 @@ class InitAppController extends GetxController {
         }
       }
       await NotificationHandler.initialize();
-      DataSyncServices.startSync();
-
-      // await DataSyncServices.startSync();
+      // DataSyncServices.startSync();
     } catch (e) {
       if (kDebugMode) {
         print('Initialization error: $e');

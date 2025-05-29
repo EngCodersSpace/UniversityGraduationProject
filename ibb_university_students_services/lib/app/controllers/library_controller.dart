@@ -50,7 +50,7 @@ class LibraryController extends GetxController
   List<String> categories = [
     "Lecture",
     "Reference",
-    "Exams Forms",
+    "Exam",
   ];
   List<Border> borders = [];
   final List<int?> showOptions = [0, 1, 2];
@@ -492,12 +492,7 @@ class LibraryController extends GetxController
 
   bool checkShowBook2({required int category, required LibraryFile file}) {
     bool check =
-        (file.sectionId ==
-            selectedDepartment.value ||
-            selectedDepartment.value == -1) &&
-            (file.levelId ==
-                selectedLevel.value ||
-                selectedLevel.value == -1) &&
+        (file.sectionsAndLevels?.any((t)=>(t["sectionId"]==selectedDepartment.value || selectedDepartment.value == -1) && (t["levelId"]==selectedLevel.value || selectedLevel.value == -1))??false) &&
             ((file
                 .title
                 ?.toLowerCase()

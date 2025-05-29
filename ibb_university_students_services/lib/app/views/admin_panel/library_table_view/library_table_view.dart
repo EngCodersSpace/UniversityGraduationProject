@@ -120,7 +120,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
-                      .sectionId
+                      .sectionsAndLevels?.first["sectionId"]
                       .toString())),
           DataCell(
               onTap: () {},
@@ -132,7 +132,7 @@ class MyData extends DataTableSource {
                   onFieldSubmitted: (str) {},
                   enableBorder: false,
                   initialValue: items[index % controller.rowsPerPage.value]
-                      .levelId
+                      .sectionsAndLevels?.first["levelId"]
                       .toString())),
           DataCell(
               onTap: () {},

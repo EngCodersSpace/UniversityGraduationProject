@@ -32,7 +32,7 @@ class AppRoutes {
   static final routes = [
     GetPage(
       name: '/splash_screen',
-      page: () => const SplashScreen(),
+      page: () =>  SplashScreen(),
       binding: InitAppBinding(),
     ),
 

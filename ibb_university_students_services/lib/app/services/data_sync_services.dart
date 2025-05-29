@@ -23,7 +23,7 @@ import 'package:ibb_university_students_services/app/utils/date_time_utils.dart'
 import '../models/library_files_model/library_files_model.dart';
 
 class DataSyncServices {
-  static Future<void> startSync() async {
+  static void startSync() async {
     Map<String, DataSync> lastDataSyncs =
         await DataSyncRepository.fetchLastDataSyncs().then((e) => e.data ?? {});
     await DataSyncRepository.openBox();
