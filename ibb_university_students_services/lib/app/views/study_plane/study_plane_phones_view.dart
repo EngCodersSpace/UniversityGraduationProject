@@ -12,6 +12,7 @@ import '../../components/typeahead.dart';
 import '../../models/study_plan_elements_model/study_plan_elements.dart';
 import '../../repositories/user_repository.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/screen_utils.dart';
 
 class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
   PhoneStudyPlaneView({super.key});
@@ -91,10 +92,12 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                                 menuTextStyle: AppTextStyles.mainStyle(
                                     textHeader: AppTextHeaders.h3Bold),
                               ),
-                              CustomButton(
-                                onPress: controller.newButtonClick,
-                                text: "New".tr,
-                              ),
+                              if ((UserRepository.checkPermission(
+                                  target: "study_plan", action: "write")))
+                                CustomButton(
+                                  onPress: controller.newButtonClick,
+                                  text: "New".tr,
+                                ),
                             ],
                           ),
                           const SizedBox(
@@ -189,7 +192,33 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                                       child: Center(
                                         child: Obx(
                                           () => DropdownButton(
-                                            items: controller.levels,
+                                            items: controller.levels.entries
+                                                .map(
+                                                  (e) => DropdownMenuItem<int>(
+                                                      value: e.value.id,
+                                                      child: SizedBox(
+                                                        width: (ScreenUtils
+                                                                .isPhoneScreen())
+                                                            ? ((((Get.width - 32) /
+                                                                            7) *
+                                                                        3) -
+                                                                    50) *
+                                                                0.6
+                                                            : (Get.width / 8) *
+                                                                0.4,
+                                                        child: CustomText(
+                                                          e.value.name ??
+                                                              "unknown",
+                                                          style: AppTextStyles
+                                                              .mainStyle(
+                                                            textHeader:
+                                                                AppTextHeaders
+                                                                    .h5Bold,
+                                                          ),
+                                                        ),
+                                                      )),
+                                                )
+                                                .toList(),
                                             onChanged: controller.changeLevel,
                                             value:
                                                 controller.selectedLevel.value,
@@ -211,9 +240,6 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                         ),
                       ],
                     )),
-                const SizedBox(
-                  height: 16,
-                ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(top: 8, bottom: 32),
@@ -221,6 +247,28 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                     child: Obx(
                       () => Column(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomText(
+                                  "Study Plan Elements",
+                                  style: AppTextStyles.highlightStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
+                                ),
+                                if ((UserRepository.checkPermission(
+                                    target: "study_plan", action: "write")))
+                                  CustomButton(
+                                    onPress: controller.addButtonClick,
+                                    text: "Add Element".tr,
+                                  ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -320,6 +368,9 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                                 ),
                               ]
                             ],
+                          ),
+                          SizedBox(
+                            height: 4,
                           ),
                           Expanded(
                             child: RefreshIndicator(

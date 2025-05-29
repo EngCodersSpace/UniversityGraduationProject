@@ -23,9 +23,8 @@ class StudyPlanElementAdapter extends TypeAdapter<StudyPlanElement> {
       levelId: fields[4] as int?,
       subject: fields[2] as Subject?,
       doctorId: fields[5] as int?,
-      name: fields[6] as String?,
-      createdAt: fields[7] as String?,
-      updatedAt: fields[8] as String?,
+      createdAt: fields[6] as String?,
+      updatedAt: fields[7] as String?,
     );
   }
 
@@ -46,10 +45,8 @@ class StudyPlanElementAdapter extends TypeAdapter<StudyPlanElement> {
       ..writeByte(5)
       ..write(obj.doctorId)
       ..writeByte(6)
-      ..write(obj.name)
-      ..writeByte(7)
       ..write(obj.createdAt)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.updatedAt);
   }
 

@@ -177,12 +177,12 @@ class StudyPlanRepository {
     get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
     late Response? response;
     try {
-      response = await HttpProvider.post("create-lecture", data: {
+      response = await HttpProvider.post("study-plan-element", data: {
         "study_plan_id": studyPlanId,
         "subject_id": subjectId,
         "doctor_id": doctorId,
-        "section": sectionId,
-        "level": levelId,
+        "section_id": sectionId,
+        "level_id": levelId,
         "term": term
       });
       StudyPlanElement? studyPlanElement;
@@ -211,4 +211,84 @@ class StudyPlanRepository {
           data: null);
     }
   }
+
+  static Future<Result<StudyPlanElement>> updateStudyPlanElement({
+    required int id,
+    required int studyPlanId,
+    required int sectionId,
+    required int levelId,
+    required String subjectId,
+    required int doctorId,
+    required String term,
+    bool withCache = true,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.put("update-study-plan-element?id=$id", data: {
+        "study_plan_id": studyPlanId,
+        "subject_id": subjectId,
+        "doctor_id": doctorId,
+        "section_id": sectionId,
+        "level_id": levelId,
+        "term": term
+      });
+      StudyPlanElement? studyPlanElement;
+      if (response?.statusCode == 200) {
+        Subject? subject = await SubjectRepository.fetchSubject(
+            id: response?.data["study_plan_elment"]["subject_id"])
+            .then((e) => e.data);
+        studyPlanElement = StudyPlanElement.fromJson(response?.data["study_plan_elment"], subject: subject);
+        if (withCache) {
+          await _studyPlanElementBox?.put(studyPlanElement.id, studyPlanElement);
+        }
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          data: studyPlanElement,
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
+  static Future<Result<void>> deleteStudyPlanElement({
+    required int id,
+    bool withCache = true,
+  }) async {
+    get_x.Get.dialog(const PopUpLoadingCard(), barrierDismissible: false);
+    late Response? response;
+    try {
+      response = await HttpProvider.delete("delete-study-plan-element?id=$id",);
+      if (response?.statusCode == 200) {
+        if (withCache) {
+          await _studyPlanElementBox?.delete(id);
+        }
+      } else if (response?.statusCode == 403) {
+        await get_x.Get.dialog(PopUpAlertCard(
+            response?.data["message"] ?? "UnAuthorized Action", Icons.block));
+      }
+      return Result(
+          hasError: true,
+          statusCode: response?.statusCode ?? _createError,
+          message: response?.data["message"] ?? "error");
+    } catch (error) {
+      return Result(
+          hasError: true,
+          statusCode: _createError,
+          message: error.toString(),
+          data: null);
+    }
+  }
+
+
 }

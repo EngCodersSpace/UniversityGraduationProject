@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/controllers/study_plane_controller.dart';
-import 'package:intl/intl.dart';
 import '../../../models/study_plan_elements_model/study_plan_elements.dart';
 import '../../../repositories/user_repository.dart';
 import '../../../styles/app_colors.dart';
@@ -17,8 +16,6 @@ class StudyPlanElementCard extends GetView<StudyPlaneController> {
     required this.studyPlanElement,
     super.key,
   });
-
-  DateFormat timeFormat = DateFormat("hh:mm a");
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
@@ -76,7 +73,7 @@ class StudyPlanElementCard extends GetView<StudyPlaneController> {
                           "${studyPlanElement.value.subject?.units} ${"Units".tr}"),
                     ),
                     if ((UserRepository.checkPermission(
-                        target: "study_plan_element", action: "write"))) ...[
+                        target: "study_plan", action: "write"))) ...[
                       const SizedBox(
                         width: 8,
                       ),

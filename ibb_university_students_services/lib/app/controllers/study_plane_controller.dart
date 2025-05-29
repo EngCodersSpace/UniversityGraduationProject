@@ -3,28 +3,32 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
 import 'package:ibb_university_students_services/app/repositories/study_plane_repository.dart';
-import 'package:ibb_university_students_services/app/utils/screen_utils.dart';
-import '../components/custom_text_v2.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/section_model/section.dart';
 import '../models/student_model/student.dart';
+import '../models/subject_model/subject_model.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
+import '../repositories/subject_repository.dart';
 import '../repositories/user_repository.dart';
 import '../styles/app_colors.dart';
-import '../styles/text_styles.dart';
 import '../utils/snake_bar.dart';
+import '../views/study_plane/study_plane_view_components/add_and_update_study_plan_card.dart';
 import '../views/study_plane/study_plane_view_components/add_study_plan_card.dart';
 
 class StudyPlaneController extends GetxController {
   RxBool loadingState = true.obs;
-  RxInt selected = 3.obs;
+  RxInt? selected;
+
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedStudyPlan = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
   List<String> terms = ["Term 1", "Term 2"];
   RxInt selectedTerm = 0.obs;
+  Map<String, Subject>? subjects;
+  Rx<String?> subjectId = Rx(null);
+  Rx<int?> doctorId = Rx(null);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController studyPlaneNameController = TextEditingController();
@@ -32,11 +36,12 @@ class StudyPlaneController extends GetxController {
   Rx<Map<int, StudyPlanElement>>? studyPlanElement = Rx({});
   Map<int, Section> sections = {};
   Map<int, StudyPlan> studyPlans = {};
-  List<DropdownMenuItem<int>> levels = [];
+  Map<int, Level> levels = {};
   RxString failedMessage = "Empty".tr.obs;
   String fetchMode = "search";
-
   List<Border> borders = [];
+
+  String mode = "Add";
 
   @override
   void onInit() async {
@@ -44,7 +49,8 @@ class StudyPlaneController extends GetxController {
     await initLevelDropdownMenuLists();
     await initSectionDropdownMenuList();
     await initStudyPlansDropdownMenuList();
-    (levels.isNotEmpty) ? selectedLevel.value = levels.first.value : null;
+    await getSubjects();
+    (levels.isNotEmpty) ? selectedLevel.value = levels.values.first.id : null;
     if (UserRepository.currentUserType() == Student) {
       selectedStudyPlan.value = await UserRepository.fetchUser()
           .then((e) => (e.data as Student).studyPlane?.id);
@@ -97,6 +103,23 @@ class StudyPlaneController extends GetxController {
     studyPlanElement?.refresh();
   }
 
+  Future<void> getSubjects() async {
+    subjects = {};
+    subjects =
+        await SubjectRepository.fetchSubjects().then((e) => e.data ?? {});
+    if ((subjects?.isNotEmpty ?? false) && subjects?.values.first != null) {
+      subjectId = RxString(subjects!.values.first.id);
+      if ((subjects?.values.first.instructors?.isNotEmpty ?? false) &&
+          subjects?.values.first.instructors?.values.first != null) {
+        doctorId.value = subjects?.values.first.instructors?.values.first.id;
+      } else {
+        doctorId.value = null;
+      }
+    } else {
+      subjectId.value = null;
+    }
+  }
+
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
@@ -130,31 +153,40 @@ class StudyPlaneController extends GetxController {
   }
 
   Future<void> initLevelDropdownMenuLists() async {
-    List<Level> levelsData = await LevelRepository.fetchLevels()
-        .then((e) => e.data?.values.toList() ?? []);
-    levels = [];
-    for (Level level in levelsData) {
-      levels.add(
-        DropdownMenuItem<int>(
-            value: level.id,
-            child: SizedBox(
-              width: (ScreenUtils.isPhoneScreen())
-                  ? ((((Get.width - 32) / 7) * 3) - 50) * 0.6
-                  : (Get.width / 8) * 0.4,
-              child: CustomText(
-                level.name ?? "unknown",
-                style: AppTextStyles.mainStyle(
-                  textHeader: AppTextHeaders.h5Bold,
-                ),
-              ),
-            )),
-      );
+    levels = await LevelRepository.fetchLevels().then((e) => e.data ?? {});
+  }
+
+  void addStudyPlan() async {
+    if (studyPlaneNameController.text == "") return;
+    Result<StudyPlan> res = await StudyPlanRepository.createStudyPlan(
+        name: studyPlaneNameController.text);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      studyPlans[res.data!.id] = res.data!;
+      Get.back();
     }
   }
 
-  void addStudyPlan() {
-    if (studyPlaneNameController.text == "") return;
-    Get.back();
+  void addStudyPlanElement() async {
+    if (selectedStudyPlan.value == null) return;
+    if (selectedLevel.value == null) return;
+    if (selectedSection.value == null) return;
+    if (subjectId.value == null) return;
+    if (doctorId.value == null) return;
+    Result<StudyPlanElement> res =
+        await StudyPlanRepository.createStudyPlanElement(
+            studyPlanId: selectedStudyPlan.value!,
+            sectionId: selectedSection.value!,
+            levelId: selectedLevel.value!,
+            term: terms[selectedTerm.value],
+            doctorId: doctorId.value!,
+            subjectId: subjectId.value!);
+    Navigator.of(Get.overlayContext!).pop();
+    if (res.statusCode == 201 && res.data != null) {
+      studyPlanElement?.value[res.data!.id] = res.data!;
+      studyPlanElement?.refresh();
+      Get.back();
+    }
   }
 
   void newButtonClick() {
@@ -170,79 +202,66 @@ class StudyPlaneController extends GetxController {
   }
 
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
-    // if (val == "Edit") {
-    //   await getSubjects();
-    //   mode = "Edit";
-    //   if (data != null) {
-    //     selectedLecture = data["id"];
-    //     doctorId.value = data["doctor_id"];
-    //     subjectId.value = data["subject"]["subject_id"];
-    //     timeController.text =
-    //         DateTimeUtils.formatStringTime(time: data["lecture_time"]);
-    //     durationController.text = data["duration"].toString();
-    //     hallController.text = data["lecture_room"].toString();
-    //   }
-    //   Get.dialog(const PopUpIAddAndUpdateLectureCard());
-    // } else if (val == "Delete") {
-    //   if (selectedLevel.value == null) return;
-    //   if (selectedSection.value == null) return;
-    //   selectedLecture = data?["id"];
-    //   Result<void> res =
-    //   await LectureRepository.deleteLecture(id: selectedLecture);
-    //   Navigator.of(Get.overlayContext!).pop();
-    //   if (res.statusCode == 200) {
-    //     selectedDay(selected.value)?.remove(selectedLecture);
-    //     selected.refresh();
-    //     showSnakeBar(message: "Delete successfully");
-    //   } else {
-    //     showSnakeBar(message: "Delete failed");
-    //   }
-    // } else if (val == "TemporaryReplace") {
-    //   await getSubjects();
-    //   mode = "Replace";
-    //   if (data != null) {
-    //     selectedLecture = data["id"];
-    //     doctorId.value = data["doctor_id"];
-    //     subjectId.value = data["subject"]["subject_id"];
-    //     timeController.text =
-    //         DateTimeUtils.formatStringTime(time: data["lecture_time"]);
-    //     durationController.text = data["duration"].toString();
-    //     hallController.text = data["lecture_room"].toString();
-    //   }
-    //   Get.dialog(const PopUpIAddAndUpdateLectureCard());
-    // } else if (val == "Confirm") {
-    //   selectedLecture = data?["id"];
-    //   if (selectedLecture == null) return;
-    //   Result<void> res = await LectureRepository.changeLectureState(
-    //       id: selectedLecture!, action: 'confirm');
-    //   Navigator.of(Get.overlayContext!).pop();
-    //   if (res.statusCode == 200) {
-    //     selectedDay(selected.value)?[selectedLecture]?.lectureStatus = true;
-    //     selected.refresh();
-    //     showSnakeBar(message: "Confirm successfully");
-    //   } else {
-    //     showSnakeBar(message: "Confirm failed");
-    //   }
-    // } else if (val == "Cancel") {
-    //   selectedLecture = data?["id"];
-    //   if (selectedLecture == null) return;
-    //   Result<void> res = await LectureRepository.changeLectureState(
-    //       id: selectedLecture!, action: 'cancel');
-    //   Navigator.of(Get.overlayContext!).pop();
-    //   if (res.statusCode == 200) {
-    //     selectedDay(selected.value)?[selectedLecture]?.lectureStatus = false;
-    //     selected.refresh();
-    //     showSnakeBar(message: "Cancel successfully");
-    //   } else {
-    //     showSnakeBar(message: "Cancel failed");
-    //   }
-    // }
+    if (data != null) {
+      selected ??= RxInt(0);
+      selected?.value = data["id"];
+      selectedStudyPlan.value = data["studyPlaneId"];
+      selectedSection.value = data["sectionId"];
+      selectedLevel.value = data["levelId"];
+      selectedTerm.value = terms.indexOf(data["term"]);
+      doctorId.value = data["doctorId"];
+      subjectId.value = data["subject"]["subject_id"];
+    }
+    if (val == "Edit") {
+      await getSubjects();
+      mode = "Edit";
+      await Get.dialog(const PopUpIAddAndUpdateStudyPlanCard());
+      if (selected?.value == null) return;
+      if (selectedStudyPlan.value == null) return;
+      if (selectedLevel.value == null) return;
+      if (selectedSection.value == null) return;
+      if (subjectId.value == null) return;
+      if (doctorId.value == null) return;
+      Result<StudyPlanElement> res = await StudyPlanRepository.updateStudyPlanElement(
+          id: selected!.value,
+          studyPlanId: selectedStudyPlan.value!,
+          sectionId: selectedSection.value!,
+          levelId: selectedLevel.value!,
+          term: terms[selectedTerm.value],
+          doctorId: doctorId.value!,
+          subjectId: subjectId.value!);
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200 && res.data!= null) {
+        studyPlanElement?.value[res.data!.id] = res.data!;
+        studyPlanElement?.refresh();
+        showSnakeBar(title: "Successful", message: "Update successfully");
+      } else {
+        showSnakeBar(title: "Failed", message: "Update failed");
+      }
+    } else if (val == "Delete") {
+      if (selected?.value == null) return;
+      Result<void> res = await StudyPlanRepository.deleteStudyPlanElement(
+        id: selected!.value,
+      );
+      Navigator.of(Get.overlayContext!).pop();
+      if (res.statusCode == 200) {
+        studyPlanElement?.value.remove(selected?.value);
+        studyPlanElement?.refresh();
+        showSnakeBar(title: "Successful", message: "Delete successfully");
+      } else {
+        showSnakeBar(title: "Failed", message: "Delete failed");
+      }
+    }
   }
 
   bool checkShowStudyPlanElements(StudyPlanElement e) {
     return (e.levelId == selectedLevel.value) &&
         (e.sectionId == selectedSection.value) &&
         (e.term == terms[selectedTerm.value]);
+  }
+
+  void addButtonClick() {
+    Get.dialog(PopUpIAddAndUpdateStudyPlanCard());
   }
 
   @override

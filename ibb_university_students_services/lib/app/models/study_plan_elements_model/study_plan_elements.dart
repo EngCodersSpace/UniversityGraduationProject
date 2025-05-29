@@ -18,10 +18,8 @@ class StudyPlanElement {
   @HiveField(6)
   int? doctorId;
   @HiveField(7)
-  String? name;
-  @HiveField(8)
   String? createdAt;
-  @HiveField(9)
+  @HiveField(8)
   String? updatedAt;
 
   StudyPlanElement({
@@ -32,7 +30,6 @@ class StudyPlanElement {
     this.term,
     this.subject,
     this.doctorId,
-    this.name,
     this.createdAt,
     this.updatedAt,
   });
@@ -54,7 +51,12 @@ class StudyPlanElement {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "name": name,
+      "studyPlaneId":studyPlanId,
+      "sectionId":sectionId,
+      "levelId":levelId,
+      "term":term,
+      "subject":subject?.toJson(),
+      "doctorId":doctorId,
       "created_at": createdAt,
       "updated_at": updatedAt,
     };
