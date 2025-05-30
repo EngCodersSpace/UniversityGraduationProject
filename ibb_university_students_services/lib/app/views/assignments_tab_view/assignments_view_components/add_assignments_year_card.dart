@@ -7,8 +7,7 @@ import '../../../components/text_field.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
-class PopUpAddAssignmentsYearCard
-    extends GetView<AssignmentsTabController> {
+class PopUpAddAssignmentsYearCard extends GetView<AssignmentsTabController> {
   const PopUpAddAssignmentsYearCard({super.key});
 
   @override
@@ -28,7 +27,7 @@ class PopUpAddAssignmentsYearCard
                   width: 3,
                 )),
             child: SizedBox(
-              height: Get.height *0.25,
+                height: Get.height * 0.25,
                 width: Get.width,
                 child: SafeArea(
                     minimum: const EdgeInsets.all(12),

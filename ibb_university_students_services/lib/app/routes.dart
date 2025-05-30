@@ -19,6 +19,7 @@ import 'package:ibb_university_students_services/app/views/login_view/login_view
 import 'package:ibb_university_students_services/app/views/main_view/main_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/news_view/news_list_view.dart';
 import 'package:ibb_university_students_services/app/views/news_view/phones_news_view.dart';
+import 'package:ibb_university_students_services/app/views/notification_tab_view/web_notification_view.dart';
 import 'package:ibb_university_students_services/app/views/pepper_transactions_view/pepper_transactions_view_loader.dart';
 import 'package:ibb_university_students_services/app/views/splash_screen/splash_screen.dart';
 import 'package:ibb_university_students_services/app/views/student_fees_view/student_fees_view_loder.dart';
@@ -44,7 +45,12 @@ class AppRoutes {
     GetPage(
       name: '/main',
       page: () => const MainViewLoader(),
-      binding:  MainViewBinding(),
+      binding: MainViewBinding(),
+    ),
+    GetPage(
+      name: '/notification',
+      page: () => const WebNotificationView(),
+      binding: MainViewBinding(),
     ),
     GetPage(
       name: '/forgotPassword',

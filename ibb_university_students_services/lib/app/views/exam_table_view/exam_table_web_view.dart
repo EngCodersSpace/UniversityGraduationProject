@@ -50,7 +50,7 @@ class ExamTableWebView extends GetView<ExamTableController> {
                       ),
                       padding: const EdgeInsets.only(left: 70),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Row(
                             children: [

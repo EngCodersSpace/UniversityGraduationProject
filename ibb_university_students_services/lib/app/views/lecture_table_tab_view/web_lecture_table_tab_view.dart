@@ -104,7 +104,7 @@ class WebLectureTableTabView extends GetView<LectureController> {
                       ),
                       padding: const EdgeInsets.all(10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Row(children: [
                             SizedBox(
