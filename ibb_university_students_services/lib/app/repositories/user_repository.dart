@@ -139,9 +139,6 @@ class UserRepository {
           "logout?user_id=${_userBox?.get('currentUser')?.id}");
       if (response?.statusCode == 200) {
         await NotificationHandler.unsubscribeFromTopic(getUserTopics() ?? []);
-        Box box = await Hive.openBox('rememberMe');
-        box.clear();
-        box.close();
         await HiveServices.clearAllBox();
         get_x.Get.offAllNamed("/login");
       }

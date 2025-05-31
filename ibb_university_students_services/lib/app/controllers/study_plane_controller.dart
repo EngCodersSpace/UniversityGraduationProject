@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_elements_model/study_plan_elements.dart';
 import 'package:ibb_university_students_services/app/models/study_plan_model/study_plan_model.dart';
 import 'package:ibb_university_students_services/app/repositories/study_plane_repository.dart';
+import 'package:printing/printing.dart';
 import '../models/helper_models/result.dart';
 import '../models/level_model/level.dart';
 import '../models/section_model/section.dart';
@@ -12,6 +13,7 @@ import '../repositories/level_repository.dart';
 import '../repositories/section_repository.dart';
 import '../repositories/subject_repository.dart';
 import '../repositories/user_repository.dart';
+import '../services/printing/print_study_plan.dart';
 import '../styles/app_colors.dart';
 import '../utils/snake_bar.dart';
 import '../views/study_plane/study_plane_view_components/add_and_update_study_plan_card.dart';
@@ -201,6 +203,19 @@ class StudyPlaneController extends GetxController {
     fetchStudyPlaneData();
   }
 
+  void printButtonClick() async {
+    final pdfData = await generateStudyPlanPdfFromElements(
+      studyPlanName: studyPlans[selectedStudyPlan.value]?.name ?? "",
+      studyPlanId: selectedStudyPlan.value??-1,
+      sectionName: sections[selectedSection.value]?.name ?? "",
+      elements: (studyPlanElement?.value.values
+              .where((e) => (e.sectionId == selectedSection.value)) ??
+          []).toList(),
+    );
+
+    await Printing.layoutPdf(onLayout: (_) => pdfData);
+  }
+
   Future<void> more(String val, {Map<String, dynamic>? data}) async {
     if (data != null) {
       selected ??= RxInt(0);
@@ -222,16 +237,17 @@ class StudyPlaneController extends GetxController {
       if (selectedSection.value == null) return;
       if (subjectId.value == null) return;
       if (doctorId.value == null) return;
-      Result<StudyPlanElement> res = await StudyPlanRepository.updateStudyPlanElement(
-          id: selected!.value,
-          studyPlanId: selectedStudyPlan.value!,
-          sectionId: selectedSection.value!,
-          levelId: selectedLevel.value!,
-          term: terms[selectedTerm.value],
-          doctorId: doctorId.value!,
-          subjectId: subjectId.value!);
+      Result<StudyPlanElement> res =
+          await StudyPlanRepository.updateStudyPlanElement(
+              id: selected!.value,
+              studyPlanId: selectedStudyPlan.value!,
+              sectionId: selectedSection.value!,
+              levelId: selectedLevel.value!,
+              term: terms[selectedTerm.value],
+              doctorId: doctorId.value!,
+              subjectId: subjectId.value!);
       Navigator.of(Get.overlayContext!).pop();
-      if (res.statusCode == 200 && res.data!= null) {
+      if (res.statusCode == 200 && res.data != null) {
         studyPlanElement?.value[res.data!.id] = res.data!;
         studyPlanElement?.refresh();
         showSnakeBar(title: "Successful", message: "Update successfully");

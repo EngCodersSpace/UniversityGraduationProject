@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
 import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
+import '../../../services/http_provider.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/text_styles.dart';
 
@@ -76,18 +77,9 @@ class WebBookInfoCard extends GetView<LibraryController> {
                         ),
                         Center(
                           child: SizedBox(
-                              height: (Get.height) * 0.2,
-                              width: (Get.height) * 0.15,
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    controller.selectedBook?.displayImage ??
-                                        "assets/images/library/file.png",
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              )),
+                            height: (Get.height / 6) * 0.6,
+                            width: (Get.height / 5) * 0.5,
+                            child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${controller.selectedBook?.id}"),),
                         ),
                         SizedBox(
                           height: 26,
@@ -301,7 +293,7 @@ class WebBookInfoCard extends GetView<LibraryController> {
                               ),
                               CustomButton(
                                 text: "Download",
-                                onPress: () {},
+                                onPress: controller.downloadBooks,
                                 // size: const Size(120, 40),
                               ),
                               CustomButton(

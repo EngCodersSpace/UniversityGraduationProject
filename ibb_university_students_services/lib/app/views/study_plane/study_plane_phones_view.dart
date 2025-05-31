@@ -50,21 +50,27 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         const SizedBox(
-                          height: 16,
+                          height: 24,
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                                onPressed: () => Get.back(),
-                                icon: Icon(
-                                  Icons.arrow_back_outlined,
-                                  color: AppColors.inverseIconColor,
-                                )),
-                            CustomText(
-                              "Study Planes",
-                              style: AppTextStyles.secStyle(
-                                  textHeader: AppTextHeaders.h2Bold),
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () => Get.back(),
+                                    icon: Icon(
+                                      Icons.arrow_back_outlined,
+                                      color: AppColors.inverseIconColor,
+                                    )),
+                                CustomText(
+                                  "Study Planes",
+                                  style: AppTextStyles.secStyle(
+                                      textHeader: AppTextHeaders.h2Bold),
+                                ),
+                              ],
                             ),
+                            IconButton(onPressed: controller.printButtonClick, icon: Icon(Icons.print,color: AppColors.inverseCardColor,))
                           ],
                         ),
                         if (UserRepository.currentUserType() == Doctor) ...[
@@ -93,11 +99,9 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                                     textHeader: AppTextHeaders.h3Bold),
                               ),
                               if ((UserRepository.checkPermission(
-                                  target: "study_plan", action: "write")))
-                                CustomButton(
-                                  onPress: controller.newButtonClick,
-                                  text: "New".tr,
-                                ),
+                                  target: "study_plan", action: "write")))...[
+                                IconButton(onPressed: controller.newButtonClick, icon: Icon(Icons.add,color: AppColors.inverseCardColor,))
+                              ],
                             ],
                           ),
                           const SizedBox(
