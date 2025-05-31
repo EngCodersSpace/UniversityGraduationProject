@@ -150,7 +150,7 @@ class NotificationCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width: ((Get.width - 32) * 4) / 7,
+                                width: (Get.width * 0.6) / 4,
                                 decoration: BoxDecoration(
                                   color: AppColors.mainCardColor,
                                   borderRadius: const BorderRadius.all(
@@ -163,7 +163,7 @@ class NotificationCard extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: ((Get.width - 32) * 2) / 7,
+                                width: (Get.width * 0.5) / 4,
                                 decoration: BoxDecoration(
                                   color: AppColors.mainCardColor,
                                   borderRadius: const BorderRadius.all(
