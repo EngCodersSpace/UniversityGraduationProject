@@ -18,8 +18,9 @@ class LibraryFileAdapter extends TypeAdapter<LibraryFile> {
     };
     return LibraryFile(
       id: fields[0] as int,
-      levelId: fields[2] as int?,
-      sectionId: fields[1] as int?,
+      sectionsAndLevels: (fields[1] as List?)
+          ?.map((dynamic e) => (e as Map).cast<String, dynamic>())
+          .toList(),
       category: fields[9] as String,
       subject: fields[3] as Subject?,
       addedBy: fields[4] as int?,
@@ -37,13 +38,11 @@ class LibraryFileAdapter extends TypeAdapter<LibraryFile> {
   @override
   void write(BinaryWriter writer, LibraryFile obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.sectionId)
-      ..writeByte(2)
-      ..write(obj.levelId)
+      ..write(obj.sectionsAndLevels)
       ..writeByte(3)
       ..write(obj.subject)
       ..writeByte(4)

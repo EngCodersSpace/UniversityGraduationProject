@@ -39,9 +39,9 @@ class ExamFormsTab extends GetView<LibraryController> {
                 () => PageView(
               physics: AlwaysScrollableScrollPhysics(),
               onPageChanged: controller.onPageChange,
-              controller: controller.myTabsControllers[1],
+              controller: controller.myTabsControllers[2],
               children: [
-                if (controller.books[controller.categories[1]]?.values.where((e)=>controller.checkShowBook2(category: 1, file: e)).isEmpty??
+                if (controller.books[controller.categories[2]]?.values.where((e)=>controller.checkShowBook2(category: 2, file: e)).isEmpty??
                     true) ...[
                   RefreshIndicator(
                     onRefresh: () async => controller.refresh(),
@@ -67,9 +67,9 @@ class ExamFormsTab extends GetView<LibraryController> {
                 for (int i = 0;
                 i <
                     (controller
-                        .books[controller.categories[1]]?.values
+                        .books[controller.categories[2]]?.values
                         .where((e) => controller.checkShowBook2(
-                        category: 1, file: e))
+                        category: 2, file: e))
                         .length ??
                         0);
                 i += 12)
@@ -93,11 +93,11 @@ class ExamFormsTab extends GetView<LibraryController> {
                                       (j <
                                           (controller
                                               .books[controller
-                                              .categories[1]]
+                                              .categories[2]]
                                               ?.values
                                               .where((e) => controller
                                               .checkShowBook2(
-                                              category: 1,
+                                              category: 2,
                                               file: e))
                                               .length ??
                                               0));
@@ -108,22 +108,22 @@ class ExamFormsTab extends GetView<LibraryController> {
                                         return BookContainer(
                                           book: controller
                                               .books[controller
-                                              .categories[1]]
+                                              .categories[2]]
                                           !.values
                                               .where((e) => controller
                                               .checkShowBook2(
-                                              category: 1,
+                                              category: 2,
                                               file: e)).toList()[j],
                                         );
                                       } else {
                                         return WebBookContainar(
                                             book: controller
                                                 .books[controller
-                                                .categories[1]]
+                                                .categories[2]]
                                             !.values
                                                 .where((e) => controller
                                                 .checkShowBook2(
-                                                category: 1,
+                                                category: 2,
                                                 file: e)).toList()[j]);
                                       }
                                     })

@@ -294,7 +294,7 @@ class LibraryRepository {
 
         if (response?.statusCode == 201) {
           List<LibraryFile> libFiles = [];
-          for (Map<String, dynamic> book in (response?.data["books"] ?? [])) {
+          for (Map<String, dynamic> book in (response?.data["book"] ?? [])) {
             LibraryFile resFile = LibraryFile.fromJson(book);
             libFiles.add(resFile);
           }

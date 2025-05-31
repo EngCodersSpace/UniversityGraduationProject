@@ -32,6 +32,7 @@ import 'package:ibb_university_students_services/app/repositories/library_reposi
 import 'package:ibb_university_students_services/app/repositories/news_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/notifictaion_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/student_fee_repository.dart';
+import 'package:ibb_university_students_services/app/repositories/study_plane_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/subject_repository.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../models/data_sync/data_sync.dart';
@@ -86,19 +87,19 @@ class HiveServices{
   }
 
   static clearAllBox() async{
-    await UserRepository.clearBox();
-    await AssignmentsRepository.clearBox();
-    await ExamRepository.clearBox();
-    await GradRepository.clearBox();
-    await LectureRepository.clearBox();
-    await LevelRepository.clearBox();
-    await NotificationRepository.clearBox();
     await SectionRepository.clearBox();
-    await StudentFeeRepository.clearBox();
+    await LevelRepository.clearBox();
     await SubjectRepository.clearBox();
+    await UserRepository.clearBox();
     await LibraryRepository.clearBox();
+    await LectureRepository.clearBox();
+    await StudentFeeRepository.clearBox();
+    await GradRepository.clearBox();
+    await ExamRepository.clearBox();
+    await AssignmentsRepository.clearBox();
+    await StudyPlanRepository.clearBox();
+    await NotificationRepository.clearBox();
     await NewsRepository.clearBox();
-
   }
 
   static closeAllBoxes() async{

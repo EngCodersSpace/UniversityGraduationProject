@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
+import 'package:ibb_university_students_services/app/models/subject_model/subject_model.dart';
 part 'study_plan_elements.g.dart';
 @HiveType(typeId: 10)
 class StudyPlanElement {
@@ -8,15 +8,15 @@ class StudyPlanElement {
   @HiveField(1)
   int? studyPlanId;
   @HiveField(2)
-  int? subjectId;
+  Subject? subject;
   @HiveField(3)
   int? sectionId;
   @HiveField(4)
   int? levelId;
   @HiveField(5)
-  Instructor? doctor;
+  String? term;
   @HiveField(6)
-  String? name;
+  int? doctorId;
   @HiveField(7)
   String? createdAt;
   @HiveField(8)
@@ -27,31 +27,36 @@ class StudyPlanElement {
     this.studyPlanId,
     this.sectionId,
     this.levelId,
-    this.subjectId,
-    this.doctor,
-    this.name,
+    this.term,
+    this.subject,
+    this.doctorId,
     this.createdAt,
     this.updatedAt,
   });
 
-  factory StudyPlanElement.fromJson(Map<String, dynamic> json) {
+  factory StudyPlanElement.fromJson(Map<String, dynamic> json, {Subject? subject}) {
     return StudyPlanElement(
-      id: json['id'],
+      id: json['study_plan_elment_id'],
       studyPlanId: json['study_plan_id'],
       sectionId: json['section_id'],
+      term: json["term"],
       levelId: json['level_id'],
-      subjectId: json['subject_id'],
-      doctor: json['doctor'],
-      name: json['name'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      subject: subject,
+      doctorId: json['doctor_id'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "name": name,
+      "studyPlaneId":studyPlanId,
+      "sectionId":sectionId,
+      "levelId":levelId,
+      "term":term,
+      "subject":subject?.toJson(),
+      "doctorId":doctorId,
       "created_at": createdAt,
       "updated_at": updatedAt,
     };

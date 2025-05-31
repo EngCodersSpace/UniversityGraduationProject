@@ -27,7 +27,7 @@ class LectureController extends GetxController {
   RxString selectedDayName = "Sunday".obs;
   Rx<int?> selectedSection = Rx(null);
   Rx<int?> selectedLevel = Rx(null);
-  // RxString selectedTerm = "Term 1".obs;
+  RxString selectedTerm = "Term 1".obs;
   RxString fieldMessage = "".obs;
   Map<int, Section> sections = {};
   List<DropdownMenuItem<int>> levels = [];

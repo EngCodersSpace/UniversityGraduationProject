@@ -9,8 +9,7 @@ part 'library_files_model.g.dart';
 class LibraryFile {
   LibraryFile({
     required this.id,
-    this.levelId,
-    this.sectionId,
+    this.sectionsAndLevels,
     required this.category,
     this.subject,
     this.addedBy,
@@ -28,10 +27,8 @@ class LibraryFile {
   int id;
 
   @HiveField(1)
-  int? sectionId;
+  List<Map<String,dynamic>>? sectionsAndLevels;
 
-  @HiveField(2)
-  int? levelId;
 
   @HiveField(3)
   Subject? subject;
@@ -82,8 +79,7 @@ class LibraryFile {
 
     return LibraryFile(
       id: json['id'],
-      sectionId: json['section_id'],
-      levelId: json['level_id'],
+      sectionsAndLevels: json["bookSectionLevels"].cast<Map<String,dynamic>>(),
       subject: subject,
       title: json['title'],
       author: json['author'],
@@ -95,13 +91,6 @@ class LibraryFile {
       category: json['category'],
       displayImage: json['display_image'],
     );
-  }
-
-  void updateFromJson(Map<String, dynamic> json, {Subject? subject}) {
-
-    sectionId = json["section_id"] ?? sectionId;
-    levelId = json["level_id"] ?? levelId;
-    this.subject = subject ?? this.subject;
   }
 
   Map<String, dynamic> toJson() {

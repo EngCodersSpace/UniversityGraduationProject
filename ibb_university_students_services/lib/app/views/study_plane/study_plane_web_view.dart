@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
-import 'package:ibb_university_students_services/app/components/text_field.dart';
 import 'package:ibb_university_students_services/app/controllers/study_plane_controller.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
-import 'package:ibb_university_students_services/app/utils/validators.dart';
-import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_card.dart';
 import 'package:ibb_university_students_services/app/views/student_results_view/student_results_view_components/result_header_card.dart';
 
+import '../../utils/screen_utils.dart';
 
 class WebStudyPlaneView extends GetView<StudyPlaneController> {
   const WebStudyPlaneView({super.key});
@@ -66,7 +64,33 @@ class WebStudyPlaneView extends GetView<StudyPlaneController> {
                                   width: Get.width * 0.07,
                                   child: Obx(() => Center(
                                         child: DropdownButton(
-                                          items: controller.levels,
+                                          items: controller.levels.entries
+                                              .map(
+                                                (e) => DropdownMenuItem<int>(
+                                                    value: e.value.id,
+                                                    child: SizedBox(
+                                                      width: (ScreenUtils
+                                                              .isPhoneScreen())
+                                                          ? ((((Get.width - 32) /
+                                                                          7) *
+                                                                      3) -
+                                                                  50) *
+                                                              0.6
+                                                          : (Get.width / 8) *
+                                                              0.4,
+                                                      child: CustomText(
+                                                        e.value.name ??
+                                                            "unknown",
+                                                        style: AppTextStyles
+                                                            .mainStyle(
+                                                          textHeader:
+                                                              AppTextHeaders
+                                                                  .h5Bold,
+                                                        ),
+                                                      ),
+                                                    )),
+                                              )
+                                              .toList(),
                                           onChanged: controller.changeLevel,
                                           value: controller.selectedLevel.value,
                                           underline: const SizedBox(),
@@ -115,7 +139,8 @@ class WebStudyPlaneView extends GetView<StudyPlaneController> {
                                 child: Column(
                                   children: [
                                     SizedBox(height: 8),
-                                    if ((controller.grads?.value.isEmpty ??
+                                    if ((controller
+                                            .studyPlanElement?.value.isEmpty ??
                                         true)) ...[
                                       SizedBox(
                                         height: Get.height * 0.2,
@@ -134,28 +159,6 @@ class WebStudyPlaneView extends GetView<StudyPlaneController> {
                                             size: 40,
                                           ))
                                     ],
-                                    for (int i = 0;
-                                        i <
-                                            (controller.grads?.value.length ??
-                                                0);
-                                        i++) ...[
-                                      (i % 2 == 0)
-                                          ? ResultCard(
-                                              grad: Rx(
-                                                  controller.grads!.value.values.toList()[i]))
-                                          : ResultCard(
-                                              grad: Rx(
-                                                  controller.grads!.value.values.toList()[i]),
-                                              type: "odd",
-                                            ),
-                                      if (i <
-                                          ((controller.grads?.value.length ??
-                                                  0) -
-                                              1))
-                                        SizedBox(
-                                          height: Get.height * 0.005,
-                                        )
-                                    ]
                                   ],
                                 ),
                               ),
