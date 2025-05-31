@@ -1,12 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-// import 'package:excel/excel.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
@@ -440,51 +436,27 @@ class UserRepository {
     }
   }
 
-  static Future<Database> fetchDataBaseStudent() async {
-    String databasePath = await getDatabasesPath();
-    String path = join(databasePath, 'examble.db');
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute("SELECT * FROM students");
-      },
-    );
+  static Future<void> exportDoctors() async {
+    try {
+      await HttpProvider.downloadFileWeb(
+        fileUrl: 'export-to-excel?tables=doctor&relations=true',
+        fileName: 'doctor file',
+        onProgress: (int received, int total) {},
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
-  static Future<String> exportToExcel() async {
+  static Future<void> importFileDoctors({required PlatformFile file}) async {
     try {
-      Database db = await fetchDataBaseStudent();
-      List<Map<String, dynamic>> data = await db.query('student');
-      // var excel =Excel.createExcel();
-      // Sheet sheetObject=excle['sheet1'];
-      List<String> headers = [
-        'student ID'.tr,
-        'name'.tr,
-        'section'.tr,
-        'level'.tr,
-        'date of birth'.tr,
-        'college'.tr,
-        'email'.tr,
-        'phone number'.tr,
-        'role'.tr,
-        'enrollment year'.tr,
-        'student system'.tr,
-        'repeat years'.tr
-      ];
-      // sheetObject.appendRow(headers);
-      for (var row in data) {
-        // sheetObject.appendRow([row['student ID'],row['name'],row['section'],row['level'],row['date of birth'],row['college'],row['email'],row['phone number'],row['role'],row['enrollment year'],row['student system'],row['repeat year'],]);
-        Directory directory = await getApplicationDocumentsDirectory();
-        String filepath = '${directory.path}/stuent_data.xlsx';
-        File file = File(filepath);
-        // file.writeAsBytesSync(excel.save());
-        return filepath;
-      }
-    } catch (error) {
-      return '$error';
+      await HttpProvider.uploadFileWeb(
+        uploadUrl: "import-to-db",
+        fileName: file.name,
+      );
+    } catch (e) {
+      print(e);
     }
-    return '';
   }
 
   static Future<Result<void>> changePassword({

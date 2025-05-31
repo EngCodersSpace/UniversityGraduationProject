@@ -1,6 +1,7 @@
 // ignore: implementation_imports
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
@@ -324,10 +325,21 @@ class DashboardDoctorTableController extends GetxController
   }
 
   @override
-  void export() {}
+  void export() async {
+    await UserRepository.exportDoctors();
+  }
 
   @override
-  void import() {}
+  void import() async {
+    await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: [
+          // Microsoft excel
+          'xls',
+          'xlsx',
+        ]);
+  }
 
   get jsdata => null;
 
