@@ -587,6 +587,103 @@ exports.getCurrentUser = async (req, res) => {
 ///////////////////////////
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "studentservices663@gmail.com", 
+      pass: "mnrbhjjpyrjispkr",  //process.env.
+    },
+  });
+
+  const resetCode = `${resetToken}`;
+  const mailOptions = {
+    from: "studentservices663@gmail.com",
+    to: email,
+    subject: "Password Reset ",
+    text: `Please copy the code below to reset your password. This code will expire in 10 minutes:
+
+-----------------------
+        ${resetCode}
+-----------------------
+
+If you did not request a password reset, please ignore this email.`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+exports.requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const foundUser = await user.findOne({ where: { email } });
+    if (!foundUser) {
+      return res.status(404).json({ message: "Email not found" });
+    }
+
+    const resetToken = Math.floor(100000 + Math.random() * 900000); // 6-digit code
+    foundUser.resetToken = resetToken.toString();
+    foundUser.resetTokenExpiry = Date.now() + 10 * 60 * 1000; // 10 min expiry
+    await foundUser.save();
+
+    await sendPasswordResetEmail(email, resetToken);
+    res.status(200).json({ message: "Reset code sent to email." });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error", error: err.message });
+  }
+};
+
+exports.verifyResetToken = async (req, res) => {
+  const {code } = req.query;
+
+  try {
+    const foundUser = await user.findOne({
+      where: {
+        resetToken: code,
+        resetTokenExpiry: { [Op.gt]: Date.now() },
+      },
+    });
+
+    if (!foundUser) {
+      return res.status(400).json({ message: "Invalid or expired code" });
+    }
+    res.status(200).json({ message: "Code verified successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const {email,newPassword, confirmPassword } = req.body;
+
+  try {
+    const foundUser = await user.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!foundUser) {
+      return res.status(400).json({ message: "Invalid or expired code" });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    foundUser.password = newPassword;
+    foundUser.resetToken = null;
+    foundUser.resetTokenExpiry = null;
+    await foundUser.save();
+
+    res.status(200).json({ message: "Password has been reset successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Error resetting password", error: err.message });
+  }
+};
+/////////////////////
+
+//don't use this now
+const sendPasswordResetEmail1 = async (email, resetToken) => {
+  const transporter = nodemailer.createTransport({
     host: "localhost", // MailHog or other SMTP server
     port: 1025,
     secure: false,
@@ -602,7 +699,7 @@ const sendPasswordResetEmail = async (email, resetToken) => {
 
   await transporter.sendMail(mailOptions);
 };
-exports.requestPasswordReset = async (req, res) => {
+exports.requestPasswordReset1 = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -640,7 +737,7 @@ exports.requestPasswordReset = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
-exports.verifyResetToken = async (req, res) => {
+exports.verifyResetToken1 = async (req, res) => {
   const { token } = req.query; // token come to you on your email put it in the query param to compaire
 
   try {
@@ -672,7 +769,7 @@ exports.verifyResetToken = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
-exports.resetPassword = async (req, res) => {
+exports.resetPassword1 = async (req, res) => {
   try {
     // Get the JWT token from headers
     // const token = req.headers.authorization.split(" ")[1];

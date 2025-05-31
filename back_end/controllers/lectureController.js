@@ -408,18 +408,14 @@ const changeLecStatus = async (req, res) => {
       where:{user_id:lectureCancled.doctor_id}
     });
     const userNameObj = JSON.parse(DoctorName.user_name);
-
     const SubjectName = JSON.parse(lectureCancled.subject.subject_name)?.en || 'Subject';
-    const DoctorNam = JSON.parse(lectureCancled.doctor.user.user_name)?.en || 'Doctor';
-
-    console.log('\n userNameObj:',userNameObj.en,'\n');
-    console.log('\n SubjectName:',SubjectName,'\n');
-    console.log('\n DoctorNam:',DoctorNam,'\n');
+    // console.log('\n userNameObj:',userNameObj.en,'\n');
+    // console.log('\n SubjectName:',SubjectName,'\n');
 
     await sendInfoNotification({
       title:'Lecture Status is changed',
-      message:` Lecture ${SubjectName} , Of -
-      ${DoctorNam}- which was at ${lectureCancled.lecture_day}- 
+      message:` Lecture of subject ${SubjectName} , Of -
+      ${userNameObj.en}- which was at ${lectureCancled.lecture_day}- 
       ${lectureCancled.lecture_time}- has been ${req.body.action}`,
       sender_id:req.user.user_id,
       topic_name:condition,
@@ -436,10 +432,6 @@ const changeLecStatus = async (req, res) => {
 
     return res.status(200).json({ message: `Lecture ${req.body.action}ed successfully` });
 
-
-
-
-
   } catch (error) {
     console.error("Error during lecture status update:", error);
     return res.status(500).json({
@@ -450,7 +442,7 @@ const changeLecStatus = async (req, res) => {
 };
 
 
-cron.schedule('*/5 * * * *', () => { 
+cron.schedule('0 7 * * *', () => { 
   console.log('\n ⏰ Running restoreReplacedLectures...\n \n ');
   restoreReplacedLectures();
   console.log("\n ⏰ Checking today's lectures to reset status...\n \n ");
