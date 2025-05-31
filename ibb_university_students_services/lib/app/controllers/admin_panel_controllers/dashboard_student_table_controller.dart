@@ -365,6 +365,8 @@ class DashboardStudentTableController extends GetxController
     update(["DataTable"]);
   }
 
+  Future<void> exportStudent() async {}
+
   Future<void> addClick() async {
     await getSection();
     await getLevel();

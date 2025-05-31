@@ -440,22 +440,9 @@ class UserRepository {
     }
   }
 
-  static Future<Database> fetchDataBase() async {
+  static Future<Database> fetchDataBaseStudent() async {
     String databasePath = await getDatabasesPath();
     String path = join(databasePath, 'examble.db');
-    try{
-      Database db =await fetchDataBase();
-      List<Map<String,dynamic>> data=await db.query('student');
-      // var excel =Excel.createExcel();
-      // Sheet sheetObject=excle['sheet1'];
-      List<String> headers=['student ID'.tr,'name'.tr,'section'.tr,'level'.tr,'date of birth'.tr,'college'.tr,'email'.tr,'role'.tr,'enrollment year'.tr,'student system'.tr,'repeat years'.tr];
-      // sheetObject.appendRow(headers);
-      for(var row in data){
-        // sheetObject.appendRow([row['student ID'],row['name'],row['section'],row['level'],row['date of birth'],row['college'],row['email'],row['role'],row['enrollment year'],row['student system'],row['repeat year'],]);
-        Directory directory=await getApplicationDocumentsDirectory();
-        String filepath='${directory.path}/stuent'
-      }
-    }
     return openDatabase(
       path,
       version: 1,
@@ -465,7 +452,40 @@ class UserRepository {
     );
   }
 
-  
+  static Future<String> exportToExcel() async {
+    try {
+      Database db = await fetchDataBaseStudent();
+      List<Map<String, dynamic>> data = await db.query('student');
+      // var excel =Excel.createExcel();
+      // Sheet sheetObject=excle['sheet1'];
+      List<String> headers = [
+        'student ID'.tr,
+        'name'.tr,
+        'section'.tr,
+        'level'.tr,
+        'date of birth'.tr,
+        'college'.tr,
+        'email'.tr,
+        'phone number'.tr,
+        'role'.tr,
+        'enrollment year'.tr,
+        'student system'.tr,
+        'repeat years'.tr
+      ];
+      // sheetObject.appendRow(headers);
+      for (var row in data) {
+        // sheetObject.appendRow([row['student ID'],row['name'],row['section'],row['level'],row['date of birth'],row['college'],row['email'],row['phone number'],row['role'],row['enrollment year'],row['student system'],row['repeat year'],]);
+        Directory directory = await getApplicationDocumentsDirectory();
+        String filepath = '${directory.path}/stuent_data.xlsx';
+        File file = File(filepath);
+        // file.writeAsBytesSync(excel.save());
+        return filepath;
+      }
+    } catch (error) {
+      return '$error';
+    }
+    return '';
+  }
 
   static Future<Result<void>> changePassword({
     required String oldPassword,
