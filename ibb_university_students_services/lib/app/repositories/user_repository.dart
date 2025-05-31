@@ -2,6 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+// import 'package:excel/excel.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:ibb_university_students_services/app/components/pop_up_cards/alert_message_card.dart';
 import 'package:ibb_university_students_services/app/components/pop_up_cards/loading_card.dart';
@@ -21,7 +26,7 @@ class UserRepository {
   static get userRule => _userBox?.get('currentUser')?.role;
 
   static Future<void> openBox() async {
-    if(_userBox?.isOpen??false)return;
+    if (_userBox?.isOpen ?? false) return;
     _userBox = await Hive.openBox<User>('userBox');
   }
 
@@ -133,11 +138,11 @@ class UserRepository {
   static Future<void> userLogout() async {
     Response? response;
     try {
-      if(_userBox?.get('currentUser')?.id == null)return;
+      if (_userBox?.get('currentUser')?.id == null) return;
       response = await HttpProvider.post(
           "logout?user_id=${_userBox?.get('currentUser')?.id}");
       if (response?.statusCode == 200) {
-        await NotificationHandler.unsubscribeFromTopic(getUserTopics()??[]);
+        await NotificationHandler.unsubscribeFromTopic(getUserTopics() ?? []);
         Box box = await Hive.openBox('rememberMe');
         box.clear();
         box.close();
@@ -434,6 +439,33 @@ class UserRepository {
           data: null);
     }
   }
+
+  static Future<Database> fetchDataBase() async {
+    String databasePath = await getDatabasesPath();
+    String path = join(databasePath, 'examble.db');
+    try{
+      Database db =await fetchDataBase();
+      List<Map<String,dynamic>> data=await db.query('student');
+      // var excel =Excel.createExcel();
+      // Sheet sheetObject=excle['sheet1'];
+      List<String> headers=['student ID'.tr,'name'.tr,'section'.tr,'level'.tr,'date of birth'.tr,'college'.tr,'email'.tr,'role'.tr,'enrollment year'.tr,'student system'.tr,'repeat years'.tr];
+      // sheetObject.appendRow(headers);
+      for(var row in data){
+        // sheetObject.appendRow([row['student ID'],row['name'],row['section'],row['level'],row['date of birth'],row['college'],row['email'],row['role'],row['enrollment year'],row['student system'],row['repeat year'],]);
+        Directory directory=await getApplicationDocumentsDirectory();
+        String filepath='${directory.path}/stuent'
+      }
+    }
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute("SELECT * FROM students");
+      },
+    );
+  }
+
+  
 
   static Future<Result<void>> changePassword({
     required String oldPassword,

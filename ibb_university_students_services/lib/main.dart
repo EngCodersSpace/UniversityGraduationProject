@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         //IOS UI
         ? GetCupertinoApp(
             title: "StudentServices",
-            initialRoute: "/notification",
+            initialRoute: "/splash_screen",
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         // Android and web UI
         : GetMaterialApp(
             title: "StudentServices",
-            initialRoute: "/notification",
+            initialRoute: "/splash_screen",
             translations: Languages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en'),
