@@ -453,6 +453,7 @@ class UserRepository {
       await HttpProvider.uploadFileWeb(
         uploadUrl: "import-to-db",
         fileName: file.name,
+        fileBytes: file.bytes,
       );
     } catch (e) {
       print(e);

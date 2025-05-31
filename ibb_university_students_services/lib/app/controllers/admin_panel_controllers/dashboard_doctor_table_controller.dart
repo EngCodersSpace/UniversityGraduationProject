@@ -88,6 +88,7 @@ class DashboardDoctorTableController extends GetxController
   ScrollController vertical = ScrollController();
   RxBool selectAll = false.obs;
   RxSet<int> selectedRows = RxSet({});
+  List<PlatformFile> selectedfile = [];
 
   //popup add doctor card
   TextEditingController doctorId = TextEditingController();
@@ -329,16 +330,27 @@ class DashboardDoctorTableController extends GetxController
     await UserRepository.exportDoctors();
   }
 
+  Future<void> filePicker() async {}
+
   @override
   void import() async {
-    await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.custom,
-        allowedExtensions: [
-          // Microsoft excel
-          'xls',
-          'xlsx',
-        ]);
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+          allowMultiple: true,
+          type: FileType.custom,
+          allowedExtensions: [
+            // Microsoft excel
+            'xls',
+            'xlsx',
+          ]);
+      if (result != null) {
+        selectedfile.add(result.files[0]);
+      }
+    } catch (e) {
+      print(e);
+    }
+    await UserRepository.importFileDoctors(file: selectedfile.first);
   }
 
   get jsdata => null;
