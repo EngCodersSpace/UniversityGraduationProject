@@ -348,6 +348,7 @@ class DashboardDoctorTableController extends GetxController
         selectedfile.add(result.files[0]);
       }
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
     await UserRepository.importFileDoctors(file: selectedfile.first);

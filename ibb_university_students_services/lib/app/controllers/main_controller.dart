@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/student_fees_controller.dart';
+import 'package:ibb_university_students_services/app/controllers/study_plane_controller.dart';
 import 'package:ibb_university_students_services/app/views/main_view/main_view_components/custom_float_action_button_location.dart';
 import 'package:ibb_university_students_services/app/utils/internet_connection_cheker.dart';
 import '../models/helper_models/result.dart';
@@ -162,6 +163,14 @@ class MainController extends GetxController {
         }
         controller = Get.put<StudentFeeController>(
           StudentFeeController(),
+        );
+        break;
+      case 10:
+        if (controller != null) {
+          controller.dispose();
+        }
+        controller = Get.put<StudyPlaneController>(
+          StudyPlaneController(),
         );
         break;
     }

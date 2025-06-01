@@ -441,6 +441,7 @@ class UserRepository {
         onProgress: (int received, int total) {},
       );
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }
@@ -453,6 +454,7 @@ class UserRepository {
         fileBytes: file.bytes,
       );
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }
