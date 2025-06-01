@@ -37,7 +37,10 @@ module.exports = {
 
     
     if (attachments.length > 0) {
-      await assignment_file.bulkCreate(attachments);
+      for (let i = 0; i < attachments.length; i += 1000) {
+      const chunk = attachments.slice(i, i + 1000);
+      await assignment_file.bulkCreate(chunk);
+    }
     }
   },
 

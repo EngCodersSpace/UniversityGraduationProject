@@ -5,7 +5,6 @@ const { study_plan_elment, subject, doctor ,user } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-   
   
 
     const studyPlanElements = [];
@@ -22,7 +21,7 @@ let subjectId = 5; // unique subject id for mapped subjects
 
 for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
   const section = sections[sectionIndex];
-    for (let subjectIndex = 0; subjectIndex < 5; subjectIndex++) {
+    for (let subjectIndex = 0; subjectIndex < 20; subjectIndex++) {
       const subjectI = await subject.findOne(
         { where: { subject_id: `subject_${subjectIndex}`},
         include: [{
@@ -37,10 +36,14 @@ for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
               }]
           }]
       });
+      const doctorId = 1;
+      if(!subjectI.doctors){
+        doctorId = subjectI.doctors[0].doctor_id;
+      }
  studyPlanElements.push({
         study_plan_id: section, 
         subject_id: `subject_${subjectIndex}`, 
-        doctor_id: subjectI.doctors[0].doctor_id??1, 
+        doctor_id: doctorId, 
         section_id: section,
         level_id:  1,
         number_of_units: subjectI.number_of_units, 
@@ -79,10 +82,14 @@ for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
               }]
           }]
       });
+      const doctorId = 1;
+      if(!subjectI.doctors){
+        doctorId = subjectI.doctors[0].doctor_id;
+      }
  studyPlanElements.push({
         study_plan_id: section, 
         subject_id: `subject_${subjectId}`, 
-        doctor_id: subjectI.doctors[0].doctor_id??1, 
+        doctor_id: doctorId, 
         section_id:   section,
         level_id:  level,
         number_of_units: subjectI.number_of_units, 

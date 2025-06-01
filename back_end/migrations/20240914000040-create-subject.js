@@ -6,7 +6,7 @@ module.exports = {
       subject_id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING(10),
+        type: Sequelize.STRING(20),
       },
       subject_name: {
         type: Sequelize.JSON,

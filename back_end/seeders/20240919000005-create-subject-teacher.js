@@ -36,14 +36,12 @@ module.exports = {
     // 2) Add more random assignments, avoiding duplicates
     // For example, add 1-3 more random doctors per subject
     for (const subjectItem of subjects) {
-      const numberOfExtraDoctors = faker.number.int({ min: 1, max: 3 });
-
-      for (let i = 0; i < numberOfExtraDoctors; i++) {
-        const randomDoctor = faker.helpers.arrayElement(doctors);
-
+    
+      const randomDoctors = faker.helpers.arrayElements(doctors,faker.number.int({ min: 1, max: 3 }));
+      for (let i = 0; i < randomDoctors; i++) {
         if (!exists(randomDoctor.doctor_id, subjectItem.subject_id)) {
           subject_teachers.push({
-            doctor_id: randomDoctor.doctor_id,
+            doctor_id: randomDoctor[i].doctor_id,
             subject_id: subjectItem.subject_id,
             createdAt: new Date(),
             updatedAt: new Date(),

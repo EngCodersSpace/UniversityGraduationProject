@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     subject_id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(20),
     },
     subject_name: {
       type: DataTypes.JSON,

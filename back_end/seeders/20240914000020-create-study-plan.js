@@ -6,13 +6,13 @@ const { study_plan } = require("../models");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const val = [
-          "Architecture_2025",
-          "Computer_2025",
-          "Communication_2025",
-          "Civil_2025",
+          "2024-2025",
+          "2023-2024",
+          "2022-2023",
+          "2021-2022",
         ]
      const studyPlans = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < val.length; i++) {
       studyPlans.push({
         study_plan_id: i + 1,
         study_plan_name: val[i],

@@ -1,15 +1,23 @@
-'use strict';
-const { faker } = require('@faker-js/faker');
-const { grade, student, subject, section, level, user } = require('../models');
+"use strict";
+const { faker } = require("@faker-js/faker");
+const {
+  grade,
+  student,
+  user,
+  study_plan_elment,
+} = require("../models");
+const { Model } = require("firebase-admin/machine-learning");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-
-    
-    const students = await student.findAll();
-    const subjects = await subject.findAll();
-    const sections = await section.findAll();
-    const levels = await level.findAll();
+    const students = await student.findAll({
+      include: [
+        {
+          model: user,
+          as: "user",
+        },
+      ],
+    });
     const statusOptions = [
       { en: "Freshman", ar: "?????" },
       { en: "Repeater", ar: "?????" },
@@ -18,57 +26,37 @@ module.exports = {
     const grades = [];
 
     for (let i = 0; i < students.length; i++) {
-      const studentData = students[i];
-
-      
-      const userRecord = await user.findOne({
-        where: { user_id: studentData.student_id }
+      const studyPlanElement = await study_plan_elment.findAll({
+        where: {
+          study_plan_id: students[i].study_plan.study_plan_id,
+          section_id: students[i].user.user_section_id,
+        },
       });
-
-      
-      if (!userRecord || !userRecord.user_section_id) {
-        console.log(`Skipping student ${studentData.student_id}: No user or section found.`);
+      if (!studyPlanElement) {
+        console.log(
+          `Skipping student ${students[i].student_id}: No stud plan element.`
+        );
         continue;
       }
-
-      const sectionData = await section.findOne({
-        where: { id: userRecord.user_section_id }
-      });
-
-      
-      if (!sectionData) {
-        console.log(`Skipping student ${studentData.student_id}: No section found for section ID ${userRecord.user_section_id}.`);
-        continue;
-      }
-
-      
-      for (let levelIndex = 1; levelIndex <= 5; levelIndex++) {
-        for (let j = 0; j < subjects.length; j++) {
-          const subjectData = subjects[j];
-          const selectedStatus = faker.helpers.arrayElement(statusOptions);
-
+      for (let j = 0; j < studyPlanElement.length; j++) {
           grades.push({
-            student_id: studentData.student_id,
-            subject_id: subjectData.subject_id,
-            exam_grade: faker.number.int({ min: 30, max: 70 }),
-            work_grade: faker.number.int({ min: 15, max: 30 }),
-            term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
-            section_id: sectionData.id,
-            level_id: levelIndex,
-            year_of_issue: faker.date.past({ years: 3 }).toISOString().split("T")[0], 
-            is_absent: faker.datatype.boolean(),
-            status: {
-              en: selectedStatus.en,
-              ar: selectedStatus.ar,
-            },
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        }
+          student_id: students[i].student_id,
+          subject_id: studyPlanElement[j].subject_id,
+          exam_grade: faker.number.int({min:30,max:70}),
+          work_grade: faker.number.int({min:10,max:30}),
+          term: faker.helpers.arrayElement(['Term 1', 'Term 2']),
+          section_id: studyPlanElement[j].section_id,
+          level_id: studyPlanElement[j].level_id, // taken from the study plan element
+          year_of_issue: new Date().toISOString().split('T')[0], // yyyy-mm-dd format
+          is_absent: false,
+          status: faker.helpers.arrayElement(statusOptions),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
       }
     }
 
-     for (let i = 0; i < grades.length; i += 1000) {
+    for (let i = 0; i < grades.length; i += 1000) {
       const chunk = grades.slice(i, i + 1000);
       await grade.bulkCreate(chunk);
     }
@@ -77,9 +65,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    
     await grade.destroy({ where: {}, truncate: false });
-  }
+  },
 };
-
-
