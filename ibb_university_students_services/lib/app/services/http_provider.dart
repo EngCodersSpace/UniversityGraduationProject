@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as get_x;
 import 'package:hive/hive.dart';
+import 'package:ibb_university_students_services/app/utils/file_utils.dart';
 import 'package:ibb_university_students_services/app/utils/local_lisenter.dart';
 import 'package:ibb_university_students_services/app/utils/snake_bar.dart';
 import '../components/pop_up_cards/alert_message_card.dart';
@@ -289,6 +290,10 @@ class HttpProvider {
     int? fileSize,
   }) async {
     try {
+      if (!(await FileUtils.requestStoragePermission())) {
+        showSnakeBar(title: "Storage Permission Denied", message: "some functionalities maybe not work ");
+        return null;
+      }
       cancelTokens[savePath.hashCode] = CancelToken();
       final response = await _dio.download(
         downloadUrl,

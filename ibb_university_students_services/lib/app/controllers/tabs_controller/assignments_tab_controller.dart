@@ -233,7 +233,7 @@ class AssignmentsTabController extends GetxController {
     years.add(-1);
     years.sort((a, b) => a.compareTo(b));
     if (years.isNotEmpty) {
-      selectedYear = RxInt(years.first);
+      selectedYear = RxInt(years.last);
     } else {
       selectedYear.value = null;
     }

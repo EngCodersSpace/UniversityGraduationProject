@@ -294,10 +294,8 @@ class LibraryRepository {
 
         if (response?.statusCode == 201) {
           List<LibraryFile> libFiles = [];
-          for (Map<String, dynamic> book in (response?.data["book"] ?? [])) {
-            LibraryFile resFile = LibraryFile.fromJson(book);
-            libFiles.add(resFile);
-          }
+          LibraryFile resFile = LibraryFile.fromJson(response?.data["book"]);
+          libFiles.add(resFile);
           await NotificationHandler.showProgressNotification(
             uniqueId: file.hashCode,
             title: "successful upload ",
@@ -314,7 +312,7 @@ class LibraryRepository {
               statusCode: response?.statusCode ?? _uploadError,
               message: response?.data["message"] ?? "error");
         } else {
-          NotificationHandler.showProgressNotification(
+          await NotificationHandler.showProgressNotification(
             uniqueId: file.hashCode,
             title: "failed upload ",
             message: file.name,

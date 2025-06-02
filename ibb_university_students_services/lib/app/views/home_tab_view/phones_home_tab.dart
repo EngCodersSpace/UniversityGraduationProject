@@ -381,20 +381,12 @@ class PhoneMainTab extends GetView<HomeTabController> {
                               size: cardSize,
                               color: Colors.transparent,
                               image: const AssetImage(
-                                  "assets/images/services_cards/bookshelf_4797659.png"),
+                                  "assets/images/services_cards/timetable_4695003.png"),
                             ),
-                            if (Get.locale?.languageCode == "en") ...[
-                              CustomText(
-                                  "${"Academic".tr}\n${"Transactions".tr}",
-                                  style: AppTextStyles.secStyle(
-                                      textHeader: AppTextHeaders.h3Bold)),
-                            ] else
-                              ...[
-                                CustomText(
-                                    "${"Transactions".tr}\n${"Academic".tr}",
-                                    style: AppTextStyles.secStyle(
-                                        textHeader: AppTextHeaders.h3Bold)),
-                              ]
+                            CustomText(
+                                "Study Plan".tr,
+                                style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h3Bold)),
                           ],
                         ),
                       ],

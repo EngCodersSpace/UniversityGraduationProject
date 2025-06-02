@@ -132,7 +132,6 @@ class LibraryController extends GetxController
         selectedDepartment.value = sections.values.first.id;
       }
     }
-
     if (selectedDepartment.value == null || selectedLevel.value == null) return;
 
     for (String cate in categories) {
@@ -436,7 +435,7 @@ class LibraryController extends GetxController
 
   void downloadBooks() async {
     if (selectedBook == null) return;
-    LibraryRepository.downloadLibraryFile(file: selectedBook!);
+    await LibraryRepository.downloadLibraryFile(file: selectedBook!);
   }
 
   void openFile() async {

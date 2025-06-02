@@ -10,6 +10,7 @@ import 'package:ibb_university_students_services/app/models/helper_models/lectur
 import 'package:ibb_university_students_services/app/models/helper_models/library_files_cache/library_files_cache.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/student_assignment_state/student_assignment_state.dart';
 import 'package:ibb_university_students_services/app/models/helper_models/students_fee_cache/student_fee_cache.dart';
+import 'package:ibb_university_students_services/app/models/helper_models/students_grades_cache/students_grades_cache.dart';
 import 'package:ibb_university_students_services/app/models/instructor_model/instructor_model.dart';
 import 'package:ibb_university_students_services/app/models/lecture_model/lecture_model.dart';
 import 'package:ibb_university_students_services/app/models/level_model/level.dart';
@@ -55,6 +56,7 @@ class HiveServices{
     Hive.registerAdapter(ExamAdapter());
     Hive.registerAdapter(LectureAdapter());
     Hive.registerAdapter(GradAdapter());
+    Hive.registerAdapter(StudentGradesCacheAdapter());
     Hive.registerAdapter(StudentFeeAdapter());
     Hive.registerAdapter(StudyPlanAdapter());
     Hive.registerAdapter(StudyPlanElementAdapter());

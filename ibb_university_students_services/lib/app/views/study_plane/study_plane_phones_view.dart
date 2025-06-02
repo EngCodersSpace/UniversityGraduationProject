@@ -84,9 +84,7 @@ class PhoneStudyPlaneView extends GetView<StudyPlaneController> {
                                           textHeader: AppTextHeaders.h3Bold))),
                               TypeAhead(
                                 width: (Get.width * 0.5),
-                                onSelected: (i, v) {
-                                  controller.selectedStudyPlan.value = i;
-                                },
+                                onSelected: (i, v) => controller.changeStudyPlane(i),
                                 label: "Select Study Plan",
                                 value: controller.selectedStudyPlan.value,
                                 items: controller.studyPlans

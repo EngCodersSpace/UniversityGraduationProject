@@ -40,7 +40,7 @@ class PopUpIAddAndUpdateStudyPlanCard extends GetView<StudyPlaneController> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          CustomText("${controller.mode} Payment",
+                          CustomText("${controller.mode} Study Plan Element",
                               style: AppTextStyles.secStyle(
                                   textHeader: AppTextHeaders.h2Bold)),
                           Row(

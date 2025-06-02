@@ -54,11 +54,12 @@ class StudyPlaneController extends GetxController {
     await getSubjects();
     (levels.isNotEmpty) ? selectedLevel.value = levels.values.first.id : null;
     if (UserRepository.currentUserType() == Student) {
-      selectedStudyPlan.value = await UserRepository.fetchUser()
-          .then((e) => (e.data as Student).studyPlane?.id);
+      Student user = await UserRepository.fetchUser()
+          .then((e) => (e.data as Student));
+      selectedStudyPlan.value = user.studyPlane?.id;
+      selectedSection.value = user.section?.id;
       fetchMode = "self";
     }
-    await fetchStudyPlaneData();
 
     BorderSide borderSide =
         BorderSide(color: AppColors.inverseCardColor, width: 1.0);
@@ -75,8 +76,9 @@ class StudyPlaneController extends GetxController {
       ),
     ];
 
-    super.onInit();
+    await fetchStudyPlaneData();
     loadingState.value = false;
+    super.onInit();
   }
 
   @override
@@ -125,11 +127,18 @@ class StudyPlaneController extends GetxController {
   void changeLevel(int? val) async {
     if (val == null) return;
     selectedLevel.value = val;
+    await fetchStudyPlaneData();
   }
 
   void changeDepartment(int? val) async {
     if (val == null) return;
     selectedSection.value = val;
+    await fetchStudyPlaneData();
+  }
+
+  void changeStudyPlane(int? val) async {
+    if (val == null) return;
+    selectedStudyPlan.value = val;
     await fetchStudyPlaneData();
   }
 

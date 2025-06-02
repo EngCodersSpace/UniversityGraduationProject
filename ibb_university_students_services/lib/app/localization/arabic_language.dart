@@ -46,6 +46,8 @@ class Arabic {
     'Academic': 'الاكاديمية',
     'Transactions':'المعاملات',
     'Academic Transactions':'المعاملات الاكاديمية',
+    'Study Plan':'الخطة الدراسية',
+
     'Card': 'البطاقة',
     'Student': 'الطالب',
     'Degrees': 'الدرجات',
@@ -120,6 +122,7 @@ class Arabic {
     'Time': 'الوقت',
     'Date': 'التاريخ',
     '2ec': 'الثاني',
-    '1st': 'الأول'
+    '1st': 'الأول',
+    'all': 'الكل',
   };
 }

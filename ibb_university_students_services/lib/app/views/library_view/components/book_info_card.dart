@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/controllers/library_controller.dart';
+import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import '../../../components/buttons.dart';
 import '../../../components/custom_text_v2.dart';
 import '../../../services/http_provider.dart';
@@ -315,6 +316,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                               text: "Delete From Disk",
                               onPress: controller.deleteBooksFromStorage,
                             ),
+                            if(UserRepository.checkPermission(target: "book", action: "write"))
                             CustomButton(
                               text: "Delete From Server",
                               onPress: controller.deleteBooksFromServer,
