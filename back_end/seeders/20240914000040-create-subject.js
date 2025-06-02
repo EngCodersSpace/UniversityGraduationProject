@@ -6,7 +6,7 @@ const { subject } = require("../models");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const subject_names = [
-      // Level 1 (shared for all) - 10 subjects
+      // Level 1 (shared for all) - 20 subjects
       { en: "Introduction to Engineering", ar: "مقدمة في الهندسة" },
       { en: "Mathematics I", ar: "الرياضيات ١" },
       { en: "Physics I", ar: "الفيزياء ١" },

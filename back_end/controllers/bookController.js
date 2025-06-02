@@ -201,7 +201,7 @@ exports.uploadFile1 = async (req, res) => {
             size: req.file.size,
             hash: req.file.hash
           },
-          books: createdBooks
+          books: {...createdBooks,...{bookSectionLevels:req.query.sectionsAndLevels}}
         });
 
       } catch (error) {
@@ -330,7 +330,8 @@ exports.uploadFile = async (req, res) => {
         await Promise.all(refreshPromises);
 
         await transaction.commit();
-
+        console.log("____________________________");
+        console.log({...newBook.dataValues,...{bookSectionLevels:req.query.sectionsAndLevels}});
         res.status(201).json({
           message: `Book uploaded and associated with ${sectionsAndLevels.length} section/level combinations.`,
           file_info: {
@@ -338,7 +339,7 @@ exports.uploadFile = async (req, res) => {
             size: req.file.size,
             hash: req.file.hash
           },
-          book: newBook
+          book: {...newBook.dataValues,...{bookSectionLevels:JSON.parse(req.query.sectionsAndLevels)}}
         });
 
       } catch (error) {

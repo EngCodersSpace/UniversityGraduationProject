@@ -12,7 +12,7 @@ module.exports = {
 const sections = [4, 1, 2, 3];
 const levels = [2, 3, 4, 5];
 
-const subjectsPerGroup = 5;
+const subjectsPerGroup = 12;
 
 // Starting index after Level 1 subjects
 const startIndex = 5;
