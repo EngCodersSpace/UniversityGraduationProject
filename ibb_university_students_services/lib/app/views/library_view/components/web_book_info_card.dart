@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -79,7 +78,10 @@ class WebBookInfoCard extends GetView<LibraryController> {
                           child: SizedBox(
                             height: (Get.height / 6) * 0.6,
                             width: (Get.height / 5) * 0.5,
-                            child: HttpProvider.httpImage(imageUrl: "get-imageOfbook?id=${controller.selectedBook?.id}"),),
+                            child: HttpProvider.httpImage(
+                                imageUrl:
+                                    "get-imageOfbook?id=${controller.selectedBook?.id}"),
+                          ),
                         ),
                         SizedBox(
                           height: 26,

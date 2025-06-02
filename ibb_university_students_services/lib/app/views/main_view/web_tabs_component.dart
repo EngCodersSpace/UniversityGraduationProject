@@ -22,7 +22,7 @@ class WebTabsComponent extends GetView<MainController> {
     return Obx(
       () => InkWell(
         onTap: () {
-          if (index == 10) {
+          if (index == 11) {
             controller.routeAdmainPanel();
             return;
           }
@@ -40,7 +40,7 @@ class WebTabsComponent extends GetView<MainController> {
           ),
           padding: const EdgeInsets.only(left: 25),
           margin: const EdgeInsets.only(left: 16),
-          height: Get.height * 0.08,
+          height: Get.height * 0.07,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
