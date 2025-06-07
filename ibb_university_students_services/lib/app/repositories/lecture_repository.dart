@@ -179,7 +179,7 @@ class LectureRepository {
         "lecture_section_id": sectionId,
         "lecture_level_id": levelId,
         "lecture_day": day,
-        "subject_id": sectionId,
+        "subject_id": subjectId,
         "doctor_id": doctorId,
         "lecture_time": DateTimeUtils.formatStringTime(
             time: lectureTime,
@@ -439,10 +439,10 @@ class LectureRepository {
     late Response? response;
     try {
       response = await HttpProvider.post("replaceOne-lecture?id=$id", data: {
-        " subject_id ": subjectId,
-        " doctor_id  ": doctorId,
-        " lecture_time ": lectureTime,
-        " lecture_duration ": lectureDuration
+        "subject_id": subjectId,
+        "doctor_id": doctorId,
+        "lecture_time": lectureTime,
+        "lecture_duration": lectureDuration
       });
 
       Lecture? newLecture;
