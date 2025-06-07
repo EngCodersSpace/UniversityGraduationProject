@@ -306,7 +306,7 @@ const replaceOne = async (req, res) => {
       lecture_room: req.body.lecture_room || originalLecture.lecture_room,
     };
 
-    const replacedLecture = await lecture.create(updateFields, { transaction });
+    const replacedLecture = await lecture.create(updateFields,{ transaction });
 
     //  Refresh state
     await upsertRefreshState("lecture", {
@@ -331,29 +331,29 @@ const replaceOne = async (req, res) => {
     const newDoctorName = JSON.parse(doctorName.user_name)?.en || 'New Doctor';
 
     //  Send topic-based and personal notifications
-    await sendInfoNotification({
-      title: 'Lecture Replacement Notice',
-      message: `The lecture for subject ${oldSubjectName}, originally scheduled with Dr. ${oldDoctorName} on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been replaced. The new lecture will be for subject ${newSubjectName}, and it will be conducted by Dr. ${newDoctorName}.`,
-      sender_id: req.user.user_id,
-      topic_name: condition,
-    });
+    // await sendInfoNotification({
+    //   title: 'Lecture Replacement Notice',
+    //   message: `The lecture for subject ${oldSubjectName}, originally scheduled with Dr. ${oldDoctorName} on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been replaced. The new lecture will be for subject ${newSubjectName}, and it will be conducted by Dr. ${newDoctorName}.`,
+    //   sender_id: req.user.user_id,
+    //   topic_name: condition,
+    // });
 
-    await Promise.all([
-      sendSingleSystemNotification({
-        title: 'Lecture Reassignment Notification',
-        message: `Dear Dr. ${newDoctorName}, You have been assigned a new lecture for subject ${newSubjectName}, originally scheduled with Dr. ${oldDoctorName}.`,
-        receiver_id: fullReplacedLecture.doctor.user_id,
-        token: fullReplacedLecture.doctor.fcm_token,
-        sender_id: req.user.user_id,
-      }),
-      sendSingleSystemNotification({
-        title: 'Lecture Reassignment Notification',
-        message: `Dear Dr. ${oldDoctorName}, Your lecture for subject ${oldSubjectName}, scheduled on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been reassigned.`,
-        receiver_id: originalLecture.doctor.user_id,
-        token: originalLecture.doctor.fcm_token,
-        sender_id: req.user.user_id,
-      })
-    ]);
+    // await Promise.all([
+      // sendSingleSystemNotification({
+      //   title: 'Lecture Reassignment Notification',
+      //   message: `Dear Dr. ${newDoctorName}, You have been assigned a new lecture for subject ${newSubjectName}, originally scheduled with Dr. ${oldDoctorName}.`,
+      //   receiver_id: replacedLecture.doctor.user_id,
+      //   token: replacedLecture.doctor.fcm_token,
+      //   sender_id: req.user.user_id,
+      // }),
+      // sendSingleSystemNotification({
+      //   title: 'Lecture Reassignment Notification',
+      //   message: `Dear Dr. ${oldDoctorName}, Your lecture for subject ${oldSubjectName}, scheduled on ${originalLecture.lecture_day} at ${originalLecture.lecture_time}, has been reassigned.`,
+      //   receiver_id: doctorName.user_id,
+      //   token: doctorName.doctor.fcm_token,
+      //   sender_id: req.user.user_id,
+      // })
+    // ]);
 
     // const nextLectureDay = getNextLectureDay(originalLecture.lecture_day);
     // const [hours, minutes, seconds] = originalLecture.lecture_time.split(":").map(Number);
@@ -421,14 +421,14 @@ const changeLecStatus = async (req, res) => {
       topic_name:condition,
     });
 
-    await sendSingleSystemNotification({
-      title: " Lecture ",
-      message: `Your Lecture Of subject ${SubjectName}- which was at ${lectureCancled.lecture_day}-
-      ${lectureCancled.lecture_time}-,has been ${req.body.action}. Please check it.`,
-      receiver_id: DoctorName.user_id,
-      token: DoctorName.fcm_token,
-      sender_id: req.user.user_id,
-    });
+    // await sendSingleSystemNotification({
+    //   title: " Lecture ",
+    //   message: `Your Lecture Of subject ${SubjectName}- which was at ${lectureCancled.lecture_day}-
+    //   ${lectureCancled.lecture_time}-,has been ${req.body.action}. Please check it.`,
+    //   receiver_id: DoctorName.user_id,
+    //   token: DoctorName.fcm_token,
+    //   sender_id: req.user.user_id,
+    // });
 
     return res.status(200).json({ message: `Lecture ${req.body.action}ed successfully` });
 

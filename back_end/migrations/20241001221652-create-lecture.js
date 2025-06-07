@@ -52,14 +52,14 @@ module.exports = {
         onDelete: 'NO ACTION',
         onUpdate: 'CASCADE',
       },
-      term: {
-        type: Sequelize.ENUM('Term 1', 'Term 2'),
-        allowNull: false,
-      },
-      year: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-      },
+      // term: {
+      //   type: Sequelize.ENUM('Term 1', 'Term 2'),
+      //   allowNull: false,
+      // },
+      // year: {
+      //   type: Sequelize.STRING(30),
+      //   allowNull: false,
+      // },
       lecture_time: {
         type: Sequelize.TIME,
         allowNull: false,

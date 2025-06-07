@@ -20,14 +20,14 @@ const createLectureValidator = [
   body('lecture_level_id')
     .isInt({ gt: 0 }).withMessage('User ID must be greater than 0'),
 
-  body('term')
-    .isIn(['Term 1', 'Term 2'])
-    .withMessage('Term must be one of the following: Term 1, Term 2'),
+  // body('term')
+  //   .isIn(['Term 1', 'Term 2'])
+  //   .withMessage('Term must be one of the following: Term 1, Term 2'),
 
-  body('year')
-    .isString()
-    .isLength({ min: 1 })
-    .withMessage('Year is required and should be a valid string'),
+  // body('year')
+  //   .isString()
+  //   .isLength({ min: 1 })
+  //   .withMessage('Year is required and should be a valid string'),
 
   body('lecture_time')
     .isString()
@@ -79,16 +79,16 @@ const updateLectureValidator = [
     .isInt({ gt: 0 })
     .withMessage('lecture-level-ID is required and should be a valid integer'),
 
-  body('term')
-    .optional()
-    .isIn(['Term 1', 'Term 2'])
-    .withMessage('Term must be one of the following: Term 1, Term 2'),
+  // body('term')
+  //   .optional()
+  //   .isIn(['Term 1', 'Term 2'])
+  //   .withMessage('Term must be one of the following: Term 1, Term 2'),
 
-  body('year')
-    .optional()
-    .isString()
-    .isLength({ min: 1 })
-    .withMessage('Year should be a valid string'),
+  // body('year')
+  //   .optional()
+  //   .isString()
+  //   .isLength({ min: 1 })
+  //   .withMessage('Year should be a valid string'),
 
   body('lecture_time')
     .optional()

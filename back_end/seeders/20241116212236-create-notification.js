@@ -8,7 +8,7 @@ module.exports = {
     // Fetch all users (to use their IDs as sender_id)
     const users = await user.findAll();
     const topics  = buildConditions({ sections, levels, roles, targets }, 100);
-    console.log(topics);
+    
     const notifications = [];
     const now = new Date();
     const startOfWeek = new Date(now);
