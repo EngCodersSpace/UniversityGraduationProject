@@ -21,7 +21,7 @@ class WebSchedualContent extends GetView<LectureController> {
     return GetBuilder<LectureController>(
         id: "WebContentBuilder",
         builder: (ctx) => SizedBox(
-              width: width * 0.12,
+              width: width * 0.123,
               child: Column(
                 children: [
                   Align(

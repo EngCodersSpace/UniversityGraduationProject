@@ -186,7 +186,10 @@ class WebLectureCard extends GetView<LectureController> {
                               // CustomText("Doctor: ",
                               //     fontWeight: FontWeight.bold, fontSize: 19),
                               CustomText(
-                                  "Dr.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}")
+                                  "Dr.${content.value?.subject?.instructors?[content.value?.instructorId]?.name ?? "unknown".tr}",
+                                  style: AppTextStyles.secStyle(
+                                    textHeader: AppTextHeaders.h6Bold,
+                                  ))
                             ],
                           ),
                           SizedBox(

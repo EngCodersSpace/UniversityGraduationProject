@@ -48,36 +48,44 @@ class WebProfileView extends GetView<ProfileController> {
                     ),
                     child: Stack(
                       children: [
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              CircleAvatar(
-                                  radius: Get.width * 0.07,
-                                  backgroundColor: AppColors.mainCardColor),
-                              CircleAvatar(
-                                maxRadius: Get.width * 0.07 - 3,
-                                child: HttpProvider.httpImage(
-                                  imageUrl:
-                                  controller.user?.profileImage ??
-                                      "",
-                                  secImageUrl: controller.user?.profileImage,
-                                  errorWidget: (ctx, s, o) =>
-                                      Icon(Icons.person),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Stack(
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
+                                Container(
+                                  alignment: Alignment.topCenter,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                          radius: Get.width * 0.045,
+                                          backgroundColor:
+                                              AppColors.mainCardColor),
+                                      CircleAvatar(
+                                          maxRadius: Get.width * 0.045 - 2,
+                                          child: ClipOval(
+                                            child: HttpProvider.httpImage(
+                                                imageUrl:
+                                                    "get-profile-image?user_id=${controller.user?.id}",
+                                                secImageUrl: controller
+                                                    .user?.profileImage,
+                                                errorWidget: (ctx, s, o) =>
+                                                    Icon(Icons.person),
+                                                fit: BoxFit.fill),
+                                          )),
+                                    ],
+                                  ),
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
+                                    CustomText(
+                                      "Name: ",
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                     CustomText(
                                       controller.user?.name ?? "Unknown".tr,
                                       style: AppTextStyles.secStyle(
@@ -88,6 +96,12 @@ class WebProfileView extends GetView<ProfileController> {
                                 ),
                                 Row(
                                   children: [
+                                    CustomText(
+                                      "ID: ",
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                     CustomText(
                                       controller.user?.id.toString() ??
                                           "Unknown".tr,
@@ -100,6 +114,12 @@ class WebProfileView extends GetView<ProfileController> {
                                 Row(
                                   children: [
                                     CustomText(
+                                      "Email: ",
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
+                                    CustomText(
                                       controller.user?.email ?? "Unknown".tr,
                                       style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h3Normal,
@@ -109,6 +129,12 @@ class WebProfileView extends GetView<ProfileController> {
                                 ),
                                 Row(
                                   children: [
+                                    CustomText(
+                                      "Phone Number: ",
+                                      style: AppTextStyles.secStyle(
+                                        textHeader: AppTextHeaders.h3Normal,
+                                      ),
+                                    ),
                                     CustomText(
                                       (controller.user?.phones != null &&
                                               controller
@@ -125,6 +151,12 @@ class WebProfileView extends GetView<ProfileController> {
                                   Row(
                                     children: [
                                       CustomText(
+                                        "Section: ",
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
+                                      CustomText(
                                         (controller.user as Student)
                                                 .section
                                                 ?.name
@@ -138,6 +170,12 @@ class WebProfileView extends GetView<ProfileController> {
                                   ),
                                   Row(
                                     children: [
+                                      CustomText(
+                                        "Level: ",
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                       CustomText(
                                         (controller.user as Student)
                                                 .level
@@ -154,6 +192,12 @@ class WebProfileView extends GetView<ProfileController> {
                                   Row(
                                     children: [
                                       CustomText(
+                                        "Degree: ",
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
+                                      CustomText(
                                         (controller.user as Doctor)
                                                 .academicDegree
                                                 ?.tr ??
@@ -166,6 +210,12 @@ class WebProfileView extends GetView<ProfileController> {
                                   ),
                                   Row(
                                     children: [
+                                      CustomText(
+                                        "Postion:",
+                                        style: AppTextStyles.secStyle(
+                                          textHeader: AppTextHeaders.h3Normal,
+                                        ),
+                                      ),
                                       CustomText(
                                         (controller.user as Doctor)
                                                 .administrativePosition

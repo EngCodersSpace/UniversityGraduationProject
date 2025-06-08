@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
+import 'package:ibb_university_students_services/app/services/http_provider.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/views/assignments_tab_view/web_assignments_tab_view.dart';
 import 'package:ibb_university_students_services/app/views/home_tab_view/web_home_tab.dart';
@@ -54,14 +55,17 @@ class WebMainView extends GetView<MainController> {
                                           ? AppColors.inverseCardColor
                                           : AppColors.inverseMainTextColor,
                                   maxRadius: Get.width * 0.03 - 2,
-                                  backgroundImage: (controller
-                                              .user?.profileImage) !=
-                                          null
-                                      ? AssetImage(
-                                          controller.user?.profileImage ?? "")
-                                      : null,
                                   child: (controller.user?.profileImage) != null
-                                      ? null
+                                      ? ClipOval(
+                                          child: HttpProvider.httpImage(
+                                              imageUrl:
+                                                  "get-profile-image?user_id=${controller.user?.id}",
+                                              secImageUrl:
+                                                  controller.user?.profileImage,
+                                              errorWidget: (ctx, s, o) =>
+                                                  Icon(Icons.person),
+                                              fit: BoxFit.fill),
+                                        )
                                       : CustomText(
                                           controller.user?.name?[0] ??
                                               "".toUpperCase(),
