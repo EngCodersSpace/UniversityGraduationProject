@@ -92,13 +92,14 @@ class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: SizedBox(
-                                        height: Get.width*0.35,
-                                        width: Get.width*0.24,
+                                        height: Get.width * 0.35,
+                                        width: Get.width * 0.24,
                                         child: HttpProvider.httpImage(
-                                          imageUrl:
-                                          controller.user?.value.profileImage ??
+                                          imageUrl: controller
+                                                  .user?.value.profileImage ??
                                               "",
-                                          secImageUrl: controller.user?.value.profileImage,
+                                          secImageUrl: controller
+                                              .user?.value.profileImage,
                                           errorWidget: (ctx, s, o) =>
                                               Icon(Icons.person),
                                         ),
@@ -320,13 +321,13 @@ class DoctorAcademicCardInfo extends GetView<AcademicCardController> {
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: SizedBox(
-                                          height: Get.width*0.1,
-                                          width: Get.width*0.1,
+                                          height: Get.width * 0.06,
+                                          width: Get.width * 0.049,
                                           child: HttpProvider.httpImage(
                                             imageUrl:
-                                            controller.user?.value.profileImage ??
-                                                "",
-                                            secImageUrl: controller.user?.value.profileImage,
+                                                "get-profile-image?user_id=${controller.user?.value.id}",
+                                            secImageUrl: controller
+                                                .user?.value.profileImage,
                                             errorWidget: (ctx, s, o) =>
                                                 Icon(Icons.person),
                                           ),

@@ -30,11 +30,15 @@ class AcademicCardWebView extends GetView<AcademicCardController> {
                       SizedBox(
                         height: Get.height * 0.02,
                       ),
-                      if (UserRepository.currentUserType() ==  Doctor) ...[
-                        SizedBox(
-                          width: Get.width * 0.4,
-                          height: Get.height * 0.4,
-                          child: const Center(child: DoctorAcademicCardInfo()),
+                      if (UserRepository.currentUserType() == Doctor) ...[
+                        Center(
+                          heightFactor: 2,
+                          child: SizedBox(
+                            width: Get.width * 0.4,
+                            height: Get.height * 0.4,
+                            child:
+                                const Center(child: DoctorAcademicCardInfo()),
+                          ),
                         ),
                       ] else ...[
                         Column(

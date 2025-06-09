@@ -88,32 +88,43 @@ class StudentFeesWebView extends GetView<StudentFeeController> {
                                           size: 40,
                                         ))
                                 ],
+                                SizedBox(
+                                  height: Get.width * 0.02,
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    for (int i = 0;
-                                        i < (controller.studentFees.length);
-                                        i += 2) ...[
-                                      StudentFeeCard(
-                                          studentFee: Rx<StudentFee>(controller
-                                              .studentFees.values
-                                              .toList()[i])),
-                                      const SizedBox(
-                                        height: 24,
-                                      )
-                                    ],
-                                    for (int i = 1;
-                                        i < (controller.studentFees.length);
-                                        i += 2) ...[
-                                      StudentFeeCard(
-                                          studentFee: Rx<StudentFee>(controller
-                                              .studentFees.values
-                                              .toList()[i])),
-                                      const SizedBox(
-                                        height: 24,
-                                      )
-                                    ]
+                                    Column(
+                                      children: [
+                                        for (int i = 0;
+                                            i < (controller.studentFees.length);
+                                            i += 2) ...[
+                                          StudentFeeCard(
+                                              studentFee: Rx<StudentFee>(
+                                                  controller.studentFees.values
+                                                      .toList()[i])),
+                                          const SizedBox(
+                                            height: 24,
+                                          )
+                                        ],
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        for (int i = 1;
+                                            i < (controller.studentFees.length);
+                                            i += 2) ...[
+                                          StudentFeeCard(
+                                              studentFee: Rx<StudentFee>(
+                                                  controller.studentFees.values
+                                                      .toList()[i])),
+                                          const SizedBox(
+                                            height: 24,
+                                          )
+                                        ]
+                                      ],
+                                    )
                                   ],
                                 )
                               ],
