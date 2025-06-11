@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibb_university_students_services/app/components/buttons.dart';
 import 'package:ibb_university_students_services/app/components/custom_text_v2.dart';
 import 'package:ibb_university_students_services/app/components/text_field.dart';
+import 'package:ibb_university_students_services/app/models/doctor_model/doctor.dart';
 import 'package:ibb_university_students_services/app/repositories/user_repository.dart';
 import 'package:ibb_university_students_services/app/styles/app_colors.dart';
 import 'package:ibb_university_students_services/app/styles/text_styles.dart';
@@ -109,9 +110,7 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                                 ),
                               ],
                             ),
-                            if (UserRepository.checkPermission(
-                                target: "Payments",
-                                action: "studentSearch")) ...[
+                            if (UserRepository.currentUserType() == Doctor) ...[
                               CustomTextFormField(
                                 controller: controller.idController,
                                 validator: (id) => Validators.validateID(id),
@@ -218,11 +217,13 @@ class StudentResultsWebView extends GetView<StudentResultController> {
                                         i++) ...[
                                       (i % 2 == 0)
                                           ? ResultCard(
-                                              grad: Rx(
-                                                  controller.grads!.value.values.toList()[i]))
+                                              grad: Rx(controller
+                                                  .grads!.value.values
+                                                  .toList()[i]))
                                           : ResultCard(
-                                              grad: Rx(
-                                                  controller.grads!.value.values.toList()[i]),
+                                              grad: Rx(controller
+                                                  .grads!.value.values
+                                                  .toList()[i]),
                                               type: "odd",
                                             ),
                                       if (i <
