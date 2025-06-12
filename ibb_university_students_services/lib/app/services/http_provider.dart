@@ -443,7 +443,7 @@ class HttpProvider {
               const Center(child: CircularProgressIndicator()),
           errorWidget:
               errorWidget ?? (context, url, error) => Icon(Icons.error),
-          fit: BoxFit.cover,
+          fit: fit,
         ),
         fit: fit,
       );

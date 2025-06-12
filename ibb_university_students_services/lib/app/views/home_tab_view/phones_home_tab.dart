@@ -96,7 +96,7 @@ class PhoneMainTab extends GetView<HomeTabController> {
                                           textHeader: AppTextHeaders.h1Bold,
                                           height: 0)),
                                 ),
-                                CustomText("ID : ${controller.user?.id}",
+                                CustomText("${"ID".tr} : ${controller.user?.id}",
                                     style: AppTextStyles.secStyle(
                                         textHeader: AppTextHeaders.h3Bold))
                               ],
