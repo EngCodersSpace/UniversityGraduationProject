@@ -8,6 +8,7 @@ import '../models/helper_models/result.dart';
 import '../models/student_model/student.dart';
 import '../repositories/level_repository.dart';
 import '../repositories/user_repository.dart';
+import '../utils/date_time_utils.dart';
 import '../utils/snake_bar.dart';
 import '../views/student_fees_view/student_fees_view_components/add_and_update_student_fees_card.dart';
 
@@ -73,6 +74,9 @@ class StudentFeeController extends GetxController {
         await StudentFeeRepository.fetchStudentFees(studentId: studentId!,mode: fetchMode);
     if (res.statusCode == 200) {
       studentFees.value = res.data;
+    // studentFees.value =  Map.fromEntries(
+    //     res.data.entries.toList().sort((a, b) => DateTimeUtils.stringDataIsAfter(b.value.paymentDate , a.value.paymentDate))
+    // );
     } else if (res.statusCode == 404) {
       studentFees.value = {};
       fieldMessage.value = "this student not has fees";

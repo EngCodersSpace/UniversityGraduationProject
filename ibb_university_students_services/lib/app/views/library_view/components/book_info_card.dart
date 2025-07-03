@@ -316,7 +316,7 @@ class PopUpBookInfoCard extends GetView<LibraryController> {
                               text: "Delete From Disk",
                               onPress: controller.deleteBooksFromStorage,
                             ),
-                            if(UserRepository.checkPermission(target: "book", action: "write"))
+                            if(UserRepository.checkPermission(target: "books", action: "write"))
                             CustomButton(
                               text: "Delete From Server",
                               onPress: controller.deleteBooksFromServer,
